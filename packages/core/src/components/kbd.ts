@@ -8,7 +8,7 @@ import { designTokens as t } from '../tokens';
  * <kbd className={kbd()}>⌘K</kbd>
  * ```
  */
-export const kbd = typestyles.styles.component(
+export const kbd = typestyles.recipe(
   'kbd',
   (c) => {
     const v = c.vars({

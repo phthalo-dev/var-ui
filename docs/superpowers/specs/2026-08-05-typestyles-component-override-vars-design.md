@@ -1,13 +1,13 @@
-# Typestyles — typed `vars` in `styles.override()`
+# Typestyles — typed `vars` in `override()`
 
 **Date:** 2026-08-05  
 **Status:** Implemented in [typestyles 0.22.0](https://github.com/type-styles/typestyles/pull/199)  
 **Audience:** typestyles maintainers  
-**Consumer:** [var-ui](https://github.com/var-ui/var-ui) (`createDesignTheme({ components })` → `styles.override`)
+**Consumer:** [var-ui](https://github.com/var-ui/var-ui) (`createDesignTheme({ components })` → `override`)
 
 ## Summary
 
-Library authors declare component-internal CSS custom properties with `c.vars()` inside `styles.component()`. Consumers restyle those surfaces today by setting raw `--{scope}-{recipe}-{var}` strings in override style blocks — untyped, easy to mistype, and mixed with layout CSS.
+Library authors declare component-internal CSS custom properties with `c.vars()` inside `recipe()`. Consumers restyle those surfaces today by setting raw `--{scope}-{recipe}-{var}` strings in override style blocks — untyped, easy to mistype, and mixed with layout CSS.
 
 Typestyles **0.21** already reserves a top-level `vars` key on `OverrideConfig` (`vars?: never`, comment: _"phase 2 — typed component vars"_) and ignores `vars` during override emission. This spec defines phase 2: **typed, first-class `vars` on override configs**, compiled to the same custom properties recipes already register.
 
@@ -50,14 +50,14 @@ sideNav: (t) => ({
 
 ## Goals
 
-| Goal                    | Detail                                                                                                   |
-| ----------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Typed override API**  | Top-level `vars` on `OverrideConfig` / `SlotOverrideConfig` / `FlatOverrideConfig`                       |
-| **Logical keys**        | Consumers use recipe var keys (`border`, `padding.outer.x`), not `--…` names                             |
-| **Compile-time safety** | Unknown keys error in TS when schema is known; dev warnings at runtime otherwise                         |
-| **Runtime parity**      | `styles.override(recipe, { vars })` emits the same CSS as setting custom properties on the var host slot |
-| **Zero recipe churn**   | Existing `c.vars({ … })` declarations continue to work; no migration for authors who only use defaults   |
-| **Downstream wrappers** | `OverrideConfigFor<typeof button>` (and slot variants) gains `vars` without wrapper-specific shims       |
+| Goal                    | Detail                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Typed override API**  | Top-level `vars` on `OverrideConfig` / `SlotOverrideConfig` / `FlatOverrideConfig`                     |
+| **Logical keys**        | Consumers use recipe var keys (`border`, `padding.outer.x`), not `--…` names                           |
+| **Compile-time safety** | Unknown keys error in TS when schema is known; dev warnings at runtime otherwise                       |
+| **Runtime parity**      | `override(recipe, { vars })` emits the same CSS as setting custom properties on the var host slot      |
+| **Zero recipe churn**   | Existing `c.vars({ … })` declarations continue to work; no migration for authors who only use defaults |
+| **Downstream wrappers** | `OverrideConfigFor<typeof button>` (and slot variants) gains `vars` without wrapper-specific shims     |
 
 ## Non-goals (v1)
 
@@ -76,7 +76,7 @@ Relevant existing behavior:
    - Slotted recipes: `root` if present in `slots`, else first slot.
    - Dimensioned / flat: `base`.
 
-3. **`styles.override()`** — `emitFlatOverride` already skips `key === 'vars'`; **no emission** for `vars` today. `transformOverrideConfigWithUtils` also preserves `vars` untouched.
+3. **`override()`** — `emitFlatOverride` already skips `key === 'vars'`; **no emission** for `vars` today. `transformOverrideConfigWithUtils` also preserves `vars` untouched.
 
 4. **`ComponentMeta`** — `{ namespace, kind, base, slots, variants }` — **does not** expose registered var paths/names to overrides.
 
@@ -87,7 +87,7 @@ Relevant existing behavior:
 ### Dimensioned component (button)
 
 ```ts
-styles.override(button, {
+override(button, {
   vars: {
     background: 'crimson',
     foreground: 'white',
@@ -102,7 +102,7 @@ styles.override(button, {
 ### Slotted component (side-nav)
 
 ```ts
-styles.override(sideNav, {
+override(sideNav, {
   vars: {
     border: 'transparent',
     headingColor: 'var(--brand-heading)',
@@ -116,7 +116,7 @@ styles.override(sideNav, {
 ### Nested logical paths (layout-style)
 
 ```ts
-styles.override(layout, {
+override(layout, {
   vars: {
     padding: {
       outer: { x: '24px', y: '16px' },
@@ -223,7 +223,7 @@ Merge order: var declarations and `base[hostSlot]` both target the same selector
 
 **Recommendation:** emit `vars` first, then `base` so explicit layout blocks can still override a var in the same override call if needed.
 
-### 4. `styles.override` utils / conditions
+### 4. `override` utils / conditions
 
 - `vars` is **not** expanded by style utils (`calc`, breakpoints on var values are rare). Keep as-is in `transformOverrideConfigWithUtils`.
 - `conditions` do not apply to `vars` in v1.
@@ -431,4 +431,4 @@ export const forestTheme = createDesignTheme({
 - typestyles 0.21: `OverrideConfig.vars?: never` — `dist/index.d.ts` ~L444
 - Runtime: `mergeComponentVarDefaultsInto`, `createComponentConfigContextPair`, `createOverride` — `dist/index.js`
 - var-ui precedent: `packages/core/src/components/layoutShellVars.ts`
-- var-ui consumer path: `packages/core/src/theme-component-overrides.ts` → `styles.override(…, { selectorPrefix: '.theme-…' })`
+- var-ui consumer path: `packages/core/src/theme-component-overrides.ts` → `override(…, { selectorPrefix: '.theme-…' })`

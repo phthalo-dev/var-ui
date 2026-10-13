@@ -1222,7 +1222,7 @@ export function App() {
                   Component showcase. Switch to <strong>Acme</strong> to preview V7 typed theming
                   and V8 mode/condition overrides — custom brand tokens, pill buttons with glow, and
                   uppercase primary labels — via
-                  <code> createDesignTheme({'{ extend, components }'})</code>.
+                  <code> createDesignTheme({'{ tokens, components }'})</code>.
                 </Text>
                 <Stack gap="xs">
                   <Text as="span" size="sm" tone="secondary">

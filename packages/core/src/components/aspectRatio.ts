@@ -8,7 +8,7 @@ import { typestyles } from '../runtime';
  * <div className={aspectRatio()}><img src={cover} alt="" /></div>
  * ```
  */
-export const aspectRatio = typestyles.styles.component(
+export const aspectRatio = typestyles.recipe(
   'aspect-ratio',
   () => ({
     base: {

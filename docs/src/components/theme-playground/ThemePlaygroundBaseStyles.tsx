@@ -158,8 +158,8 @@ export function ThemePlaygroundAdvancedTab() {
   return (
     <div className={s.deferredTab.className}>
       <Text size="sm">
-        Custom <code>extend</code> namespaces and mode-conditional overrides are exported in v3. For
-        now, use <Link href="/theming/customize">Customize</Link> for advanced token patches.
+        Custom token namespaces and mode-conditional overrides are exported in v3. For now, use{' '}
+        <Link href="/theming/customize">Customize</Link> for advanced token patches.
       </Text>
     </div>
   );

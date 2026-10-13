@@ -5,7 +5,7 @@ import { themeableVars } from './themeableVars';
 /** Icon-only rail width in px when the nav is collapsed. */
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
-/** Internal CSS variables for theme overrides (`vars` on `theme.componentStyles`). */
+/** Internal CSS variables for theme overrides (`vars` on theme `components`). */
 export const sideNavVarDefinitions = {
   background: {
     value: t.color.background.surface.var,
@@ -71,7 +71,7 @@ export const sideNavVarDefinitions = {
  * ```
  */
 
-const sideNavRecipe = typestyles.styles.component(
+const sideNavRecipe = typestyles.recipe(
   'side-nav',
   (c) => {
     const v = c.vars(sideNavVarDefinitions);

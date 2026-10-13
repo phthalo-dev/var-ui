@@ -11,7 +11,7 @@ import { designTokens as t } from '../tokens';
  * </div>
  * ```
  */
-export const resizeHandle = typestyles.styles.component(
+export const resizeHandle = typestyles.recipe(
   'resize-handle',
   (c) => {
     const v = c.vars({

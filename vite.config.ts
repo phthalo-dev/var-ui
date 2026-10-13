@@ -46,7 +46,10 @@ export default defineConfig({
         rules: {
           'typestyles/no-removed-public-classname': [
             'error',
-            { snapshotFile: 'packages/core/.typestyles-public-classnames.json' },
+            {
+              rootDir: 'packages/core',
+              snapshotFile: '.typestyles-public-classnames.json',
+            },
           ],
         },
       },
@@ -54,6 +57,7 @@ export default defineConfig({
   },
   staged: {
     '*.{js,jsx,ts,tsx,json,css,md}': 'vp check --fix',
+    'docs/content/**/*.{md,mdx}': 'vp run -F @var-ui/cli generate',
   },
   run: {
     cache: true,

@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from './field';
 
-export const tokenizer = typestyles.styles.component(
+export const tokenizer = typestyles.recipe(
   'tokenizer',
   (c) => {
     const v = c.vars({

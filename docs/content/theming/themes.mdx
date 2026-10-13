@@ -7,8 +7,8 @@ description: Create and apply custom var-ui themes with createDesignTheme.
 
 A theme is a named TypeStyles surface: light/dark token values (via `tokens` +
 `colorMode`), optional fixed `data-surface` subtrees, optional custom token
-namespaces (`extend`), and optional typed recipe restyles via
-`theme.componentStyles` (see Customize).
+namespaces (`tokens.brand`, …), and optional typed recipe restyles via
+`components` on `createDesignTheme` (see Customize).
 
 Theme class names use the configured scope: `theme-var-ui-<name>` (e.g.
 `theme-var-ui-default`).
@@ -31,7 +31,7 @@ import { createDesignTheme, type DesignThemePreset } from '@var-ui/core';
 export const forestPreset: DesignThemePreset = {
   tokens: {
     color: {
-      /* light-face DesignColorValues */
+      /* light-face color patches */
     },
     shadow: {
       /* mode-invariant overrides */
@@ -40,7 +40,7 @@ export const forestPreset: DesignThemePreset = {
   colorMode: {
     dark: {
       color: {
-        /* dark-face DesignColorValues */
+        /* dark-face color patches */
       },
     },
   },
@@ -49,13 +49,14 @@ export const forestPreset: DesignThemePreset = {
 export const forestTheme = createDesignTheme({
   name: 'forest',
   ...forestPreset,
-  extend: {
-    /* optional custom tokens — see Customize */
+  tokens: {
+    /* optional custom namespaces — see Customize */
+    brand: { glow: '…' },
   },
 });
 
-// Optional recipe restyles after creation — see Customize
-// forestTheme.componentStyles(button, (t) => ({ base: { … } }));
+// Optional recipe restyles — see Customize
+// components: { button: ({ tokens: t }) => ({ base: { … } }) },
 ```
 
 For a full working forest theme, see `docs/src/themes/forest.ts` in the var-ui repo.
@@ -64,10 +65,8 @@ For a full working forest theme, see `docs/src/themes/forest.ts` in the var-ui r
 
 Mark subtrees with `data-surface="light"` or `data-surface="dark"` to pin chrome
 regardless of ambient mode. Import `SURFACE_ATTRIBUTE` from `@var-ui/core` if you
-need the attribute name in code. Global `color-scheme` rules for these markers are
-registered on package load — no theme option required.
-
-> **Note:** `surfaces` on `DesignThemeConfig` is deprecated and has no effect.
+need the attribute name in code. Global `color-scheme` rules for these markers ship
+with `@var-ui/core/styles` — no theme option required.
 
 ## Applying a theme
 
@@ -99,5 +98,5 @@ For SSR without a flash of wrong mode, also use `getColorModeInitScript`.
 
 ## Next
 
-- [Customize](/theming/customize) — `extend`, `componentStyles`, `styles.override`
+- [Customize](/theming/customize) — custom `tokens`, `components`, `styles.override`
 - [Design tokens](/theming/tokens) — what `tokens` / `colorMode` override

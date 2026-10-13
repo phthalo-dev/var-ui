@@ -53,23 +53,23 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
-    "@typestyles/build-runner": "^0.5.2",
+    "@typestyles/build-runner": "catalog:",
     "highlight.js": "^11.11.1",
     "rehype-slug": "^6.0.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@typestyles/vite": "^0.4.5",
+    "@typestyles/vite": "catalog:",
     "@var-ui/astro": "workspace:*",
     "@var-ui/core": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
-    "typestyles": "0.25.0",
+    "typestyles": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "peerDependencies": {
-    "@typestyles/build-runner": "^0.5.2",
+    "@typestyles/build-runner": "catalog:",
     "@typestyles/vite": "catalog:",
     "@var-ui/astro": "workspace:>=0.1.0 <1.0.0",
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",

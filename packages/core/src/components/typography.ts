@@ -9,7 +9,7 @@ import { designTokens as t } from '../tokens';
  * <h3 className={heading({ size: 'lg' })}>Settings</h3>
  * ```
  */
-export const heading = typestyles.styles.component(
+export const heading = typestyles.recipe(
   'heading',
   (c) => {
     const v = c.vars({
@@ -46,13 +46,13 @@ export const heading = typestyles.styles.component(
 
 /**
  * Named body-text recipe (`Text` in React). Distinct from the `text` docs
- * utility in `typestyles.styles.ts`.
+ * utility in `styles.ts`.
  *
  * ```tsx
  * <p className={textBlock({ tone: 'secondary', size: 'sm' })}>hint</p>
  * ```
  */
-export const textBlock = typestyles.styles.component(
+export const textBlock = typestyles.recipe(
   'text-block',
   (c) => {
     const v = c.vars({

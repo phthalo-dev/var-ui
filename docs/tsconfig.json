@@ -6,7 +6,6 @@
       "@/*": ["./src/*"],
       "@var-ui/core/theme-constants": ["../packages/core/src/theme/constants.ts"],
       "@var-ui/core/styles": ["../packages/core/src/styles.ts"],
-      "@var-ui/core/base-styles": ["../packages/core/src/theme/base-styles.ts"],
       "@var-ui/core/internal": ["../packages/core/src/internal.ts"],
       "@var-ui/core": ["../packages/core/src/index.ts"],
       "@var-ui/react": ["../packages/react/src/index.ts"],

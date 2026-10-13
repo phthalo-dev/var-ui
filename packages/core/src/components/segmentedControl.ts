@@ -43,7 +43,7 @@ export const segmentedControlVarDefinitions = {
 /**
  * Segmented toggle group with a sliding surface indicator behind the active segment.
  */
-const segmentedControlRecipe = typestyles.styles.component(
+const segmentedControlRecipe = typestyles.recipe(
   'segmented-control',
   (c) => {
     const v = c.vars(segmentedControlVarDefinitions);

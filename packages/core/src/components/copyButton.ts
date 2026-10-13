@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
  * Standalone copy-to-clipboard button chrome. Extracted from `codeBlock` so
  * apps can pair it with `useCopy` outside code blocks (share links, API keys).
  */
-export const copyButton = typestyles.styles.component(
+export const copyButton = typestyles.recipe(
   'copy-button',
   (c) => {
     const v = c.vars({

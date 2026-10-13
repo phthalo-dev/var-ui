@@ -4,7 +4,7 @@
 
 **Goal:** Ship `DirectionProvider` / `useDirection()` (with RAC `I18nProvider` wrapping) and an SSR-safe `Hidden` utility so RTL `dir` and responsive show/hide work without `useMediaQuery` branch rendering.
 
-**Architecture:** Pure helpers (`hiddenStyle`, `resolveDirection`, `resolveI18nProviderLocale`) sit under testable modules. Static TypeStyles `styles.class` pieces (utilities layer) compose into `hiddenClassName` so CSS extracts at build time. `DesignSystemProvider` composes `DirectionProvider`. Nested islands set `dir` on a `display: contents` wrapper and never write `document.documentElement`.
+**Architecture:** Pure helpers (`hiddenStyle`, `resolveDirection`, `resolveI18nProviderLocale`) sit under testable modules. Static TypeStyles `style` pieces (utilities layer) compose into `hiddenClassName` so CSS extracts at build time. `DesignSystemProvider` composes `DirectionProvider`. Nested islands set `dir` on a `display: contents` wrapper and never write `document.documentElement`.
 
 **Tech Stack:** React 19, react-aria-components, `@react-aria/i18n`, TypeStyles, Vitest via `vp test`, Testing Library, Astro.
 
@@ -28,7 +28,7 @@
 
 | File                                           | Responsibility                                                    |
 | ---------------------------------------------- | ----------------------------------------------------------------- |
-| `packages/core/src/components/hidden.ts`       | `hiddenStyle`, static `styles.class` pieces, `hiddenClassName`    |
+| `packages/core/src/components/hidden.ts`       | `hiddenStyle`, static `style` pieces, `hiddenClassName`           |
 | `packages/core/src/components/hidden.test.ts`  | Style-object + class-name tests                                   |
 | `packages/core/src/styles.ts`                  | Side-effect import so Hidden CSS extracts                         |
 | `packages/core/src/index.ts`                   | Public export of Hidden types/helpers                             |
@@ -86,14 +86,14 @@ describe('hiddenStyle', () => {
   it('hides from md up when hide is { md: true }', () => {
     expect(hiddenStyle({ md: true })).toEqual({
       display: 'contents',
-      [styles.breakpoint('md', 'min')]: { display: 'none' },
+      [breakpoint('md', 'min')]: { display: 'none' },
     });
   });
 
   it('shows from md up when hide is { base: true, md: false }', () => {
     expect(hiddenStyle({ base: true, md: false })).toEqual({
       display: 'none',
-      [styles.breakpoint('md', 'min')]: { display: 'contents' },
+      [breakpoint('md', 'min')]: { display: 'contents' },
     });
   });
 });
@@ -139,66 +139,62 @@ export function hiddenStyle(hide?: boolean | HiddenMap): Record<string, unknown>
   }
   for (const bp of HIDDEN_BREAKPOINTS) {
     if (bp in hide) {
-      style[styles.breakpoint(bp, 'min')] = { display: hide[bp] ? 'none' : 'contents' };
+      style[breakpoint(bp, 'min')] = { display: hide[bp] ? 'none' : 'contents' };
     }
   }
   return style;
 }
 
-const hiddenAlways = typestyles.styles.class('hidden-always', { display: 'none' }, layer);
-const hiddenBaseTrue = typestyles.styles.class('hidden-base-true', { display: 'none' }, layer);
-const hiddenBaseFalse = typestyles.styles.class(
-  'hidden-base-false',
-  { display: 'contents' },
-  layer,
-);
+const hiddenAlways = typestyles.style('hidden-always', { display: 'none' }, layer);
+const hiddenBaseTrue = typestyles.style('hidden-base-true', { display: 'none' }, layer);
+const hiddenBaseFalse = typestyles.style('hidden-base-false', { display: 'contents' }, layer);
 
 const hiddenAt = {
   sm: {
-    true: typestyles.styles.class(
+    true: typestyles.style(
       'hidden-sm-true',
-      { [styles.breakpoint('sm', 'min')]: { display: 'none' } },
+      { [breakpoint('sm', 'min')]: { display: 'none' } },
       layer,
     ),
-    false: typestyles.styles.class(
+    false: typestyles.style(
       'hidden-sm-false',
-      { [styles.breakpoint('sm', 'min')]: { display: 'contents' } },
+      { [breakpoint('sm', 'min')]: { display: 'contents' } },
       layer,
     ),
   },
   md: {
-    true: typestyles.styles.class(
+    true: typestyles.style(
       'hidden-md-true',
-      { [styles.breakpoint('md', 'min')]: { display: 'none' } },
+      { [breakpoint('md', 'min')]: { display: 'none' } },
       layer,
     ),
-    false: typestyles.styles.class(
+    false: typestyles.style(
       'hidden-md-false',
-      { [styles.breakpoint('md', 'min')]: { display: 'contents' } },
+      { [breakpoint('md', 'min')]: { display: 'contents' } },
       layer,
     ),
   },
   lg: {
-    true: typestyles.styles.class(
+    true: typestyles.style(
       'hidden-lg-true',
-      { [styles.breakpoint('lg', 'min')]: { display: 'none' } },
+      { [breakpoint('lg', 'min')]: { display: 'none' } },
       layer,
     ),
-    false: typestyles.styles.class(
+    false: typestyles.style(
       'hidden-lg-false',
-      { [styles.breakpoint('lg', 'min')]: { display: 'contents' } },
+      { [breakpoint('lg', 'min')]: { display: 'contents' } },
       layer,
     ),
   },
   xl: {
-    true: typestyles.styles.class(
+    true: typestyles.style(
       'hidden-xl-true',
-      { [styles.breakpoint('xl', 'min')]: { display: 'none' } },
+      { [breakpoint('xl', 'min')]: { display: 'none' } },
       layer,
     ),
-    false: typestyles.styles.class(
+    false: typestyles.style(
       'hidden-xl-false',
-      { [styles.breakpoint('xl', 'min')]: { display: 'contents' } },
+      { [breakpoint('xl', 'min')]: { display: 'contents' } },
       layer,
     ),
   },

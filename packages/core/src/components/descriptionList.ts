@@ -18,7 +18,7 @@ import { designTokens as t } from '../tokens';
  * </dl>
  * ```
  */
-export const descriptionList = typestyles.styles.component(
+export const descriptionList = typestyles.recipe(
   'description-list',
   (c) => {
     const v = c.vars({

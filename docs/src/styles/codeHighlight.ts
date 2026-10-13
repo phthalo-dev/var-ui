@@ -1,7 +1,12 @@
 import type { SlotComponentFunction, SlotVariantDefinitions } from 'typestyles';
 import type { VariantOptionStyle } from 'typestyles';
-import { atDarkMode, darkSyntaxValues, lightSyntaxValues, typestyles } from '@var-ui/core';
-import type { DesignTokens } from '@var-ui/core';
+import {
+  atDarkMode,
+  darkSyntaxValues,
+  lightSyntaxValues,
+  typestyles,
+  type SyntaxFaceValues,
+} from '@var-ui/core';
 
 /** Layout ancestor must include `codeHljsScope.root` so rules match `CodeBlock` output. */
 const cb = '[data-codeblock]';
@@ -13,7 +18,7 @@ function scopeSelectorList(list: string): string {
     .join(', ');
 }
 
-function hljsSyntaxStyles(colors: DesignTokens['color']['code']): VariantOptionStyle {
+function hljsSyntaxStyles(colors: SyntaxFaceValues): VariantOptionStyle {
   return {
     [`& ${cb} .hljs`]: {
       color: colors.base,
@@ -90,7 +95,7 @@ function hljsSyntaxStyles(colors: DesignTokens['color']['code']): VariantOptionS
 export const codeHljsScope: SlotComponentFunction<
   ['root'],
   SlotVariantDefinitions<'root'>
-> = typestyles.styles.component(
+> = typestyles.recipe(
   'docs-hljs',
   {
     slots: ['root'],

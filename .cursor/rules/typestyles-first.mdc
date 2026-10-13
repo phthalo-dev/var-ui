@@ -8,7 +8,7 @@ alwaysApply: true
 Var UI styles first-party UI with TypeStyles recipes, not new `*.css` files.
 
 - Tokens: `designTokens` (`t.space`, `t.color`, …)
-- Breakpoints: `styles.breakpoint('md', 'max')` — never raw `@media (max-width: …)` for design breakpoints
+- Breakpoints: `breakpoint('md', 'max')` — never raw `@media (max-width: …)` for design breakpoints
 - Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/astro` / `@var-ui/react`)
 - Register site/kit recipes in the TypeStyles extract entry (`docs/src/styles/index.ts`, `@var-ui/docs/styles`)
 
@@ -18,11 +18,11 @@ Var UI styles first-party UI with TypeStyles recipes, not new `*.css` files.
 @media (max-width: 767px) { .foo { display: none; } }
 
 // ✅ GOOD — recipe + tokens
-export const foo = typestyles.styles.component('docs-foo', () => ({
+export const foo = typestyles.recipe('docs-foo', () => ({
   slots: ['root'],
   root: {
     gap: t.space[3].var,
-    [styles.breakpoint('md', 'max')]: { display: 'none' },
+    [breakpoint('md', 'max')]: { display: 'none' },
   },
 }), { layer: 'components' });
 ```

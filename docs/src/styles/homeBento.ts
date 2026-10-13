@@ -1,6 +1,6 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, media, typestyles } from '@var-ui/core';
 
-export const homeBento = typestyles.styles.component(
+export const homeBento = typestyles.recipe(
   'home-bento',
   () => ({
     slots: [
@@ -82,7 +82,7 @@ export const homeBento = typestyles.styles.component(
       gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
       gridAutoFlow: 'dense',
       gap: t.space[4].var,
-      ...styles.media('md', 'max', {
+      ...media('md', 'max', {
         gridTemplateColumns: '1fr',
       }),
     },
@@ -101,7 +101,7 @@ export const homeBento = typestyles.styles.component(
     },
     tileSpan2: {
       gridColumn: 'span 2',
-      ...styles.media('md', 'max', {
+      ...media('md', 'max', {
         gridColumn: 'span 1',
       }),
     },

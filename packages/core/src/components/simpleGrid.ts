@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
  * Equal-column grid (Mantine `SimpleGrid` equivalent). Use `cols` for a fixed
  * number of tracks; unlike `grid`, there is no auto-fill minmax behavior.
  */
-export const simpleGrid = typestyles.styles.component(
+export const simpleGrid = typestyles.recipe(
   'simple-grid',
   (c) => {
     const v = c.vars({

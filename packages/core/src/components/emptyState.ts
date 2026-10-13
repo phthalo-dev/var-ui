@@ -10,7 +10,7 @@ import { designTokens as t } from '../tokens';
  * <div className={e.root}>…</div>
  * ```
  */
-export const emptyState = typestyles.styles.component(
+export const emptyState = typestyles.recipe(
   'empty-state',
   (c) => {
     const v = c.vars({

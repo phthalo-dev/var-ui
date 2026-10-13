@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const outline = typestyles.styles.component(
+export const outline = typestyles.recipe(
   'outline',
   (c) => {
     const v = c.vars({

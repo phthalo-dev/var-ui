@@ -18,7 +18,7 @@ import { designTokens as t } from '../tokens';
  * </ul>
  * ```
  */
-export const list = typestyles.styles.component(
+export const list = typestyles.recipe(
   'list',
   (c) => {
     const v = c.vars({

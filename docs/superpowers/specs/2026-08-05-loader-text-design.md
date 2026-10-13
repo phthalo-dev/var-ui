@@ -53,7 +53,7 @@ Reshaped's `LoaderText` fills this gap with shimmer + `completed` state transiti
 Slots: `root`, `icon`, `label`, `labelCompleted` (or single `label` with data-state)
 
 ```ts
-export const loaderText = typestyles.styles.component('loader-text', (c) => {
+export const loaderText = typestyles.recipe('loader-text', (c) => {
   const v = c.vars({
     shimmerColor: { value: t.color.background.elevated.var, syntax: '<color>' },
     textColor: { value: t.color.text.secondary.var, syntax: '<color>' },

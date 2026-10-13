@@ -12,7 +12,7 @@ import { semanticTone } from '../semanticTone';
  * <div className={chatToolCalls({ status: 'running' }).root}>…</div>
  * ```
  */
-export const chatToolCalls = typestyles.styles.component(
+export const chatToolCalls = typestyles.recipe(
   'chat-tool-calls',
   () => ({
     slots: [

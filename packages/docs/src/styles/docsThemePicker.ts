@@ -6,11 +6,11 @@ type DocsThemePickerSlots = readonly ['root', 'menu', 'itemSwatch', 'itemReset']
 /**
  * No `variants` here, so this is a plain multi-slot recipe (each slot is a
  * className string). Because slot names don't collide with real CSS property
- * names, TS's `styles.component()` overload resolution mistypes the call as
+ * names, TS's `recipe()` overload resolution mistypes the call as
  * the slot-with-variants shape (`ComponentAttrsResult` per slot) — pin the real
  * runtime shape explicitly.
  */
-export const docsThemePicker = typestyles.styles.component(
+export const docsThemePicker = typestyles.recipe(
   'docs-theme-picker',
   () => ({
     slots: ['root', 'menu', 'itemSwatch', 'itemReset'],

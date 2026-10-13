@@ -1,6 +1,6 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, media, typestyles } from '@var-ui/core';
 
-export const configuratorStyles = typestyles.styles.component(
+export const configuratorStyles = typestyles.recipe(
   'component-configurator',
   () => ({
     slots: [
@@ -37,7 +37,7 @@ export const configuratorStyles = typestyles.styles.component(
       borderColor: t.color.border.default.var,
       backgroundColor: t.color.background.surface.var,
       overflow: 'hidden',
-      ...styles.media('md', 'max', {
+      ...media('md', 'max', {
         gridTemplateColumns: '1fr',
       }),
     },
@@ -51,7 +51,7 @@ export const configuratorStyles = typestyles.styles.component(
       borderRightStyle: 'solid',
       borderRightColor: t.color.border.default.var,
       backgroundColor: t.color.background.app.var,
-      ...styles.media('md', 'max', {
+      ...media('md', 'max', {
         borderRight: 'none',
         borderBottomWidth: t.borderWidth.default.var,
         borderBottomStyle: 'solid',

@@ -10,7 +10,6 @@ export default defineConfig({
       'src/index.ts',
       'src/internal.ts',
       'src/styles.ts',
-      'src/theme/base-styles.ts',
       'src/theme/constants.ts',
       'src/theme/register-default.ts',
     ],

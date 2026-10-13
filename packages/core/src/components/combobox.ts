@@ -8,7 +8,7 @@ import { dropdownPopoverChrome, fieldChrome } from './field';
  * Headless combobox primitive recipe. Shares field chrome with `typeahead` and
  * adds an `empty` slot for listbox empty states.
  */
-export const combobox = typestyles.styles.component(
+export const combobox = typestyles.recipe(
   'combobox',
   (c) => {
     const v = c.vars({

@@ -3,7 +3,7 @@ import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome, dropdownPopoverChrome } from './field';
 
-export const select = typestyles.styles.component(
+export const select = typestyles.recipe(
   'select',
   (c) => {
     const v = c.vars({

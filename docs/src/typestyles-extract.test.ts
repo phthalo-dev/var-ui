@@ -22,5 +22,6 @@ describe('typestyles extraction', () => {
     );
     expect(css).toContain('.var-ui-docs-top-nav');
     expect(css).toContain('[data-var-ui-mobile-nav-toggle]');
+    expect(css).toContain('.var-ui-docs-hljs [data-codeblock] .hljs');
   });
 });

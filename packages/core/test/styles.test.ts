@@ -13,18 +13,19 @@ describe('@var-ui/core/styles', () => {
 
   it('registers the default theme surface when the extraction entry loads', async () => {
     reset();
-    const { registerDefaultTheme, registerBaseStyles } = await import('../src/styles');
-    registerDefaultTheme();
-    registerBaseStyles();
+    const { stylesEntry } = await import('../src/styles');
+    stylesEntry.registerDefaultTheme();
+    stylesEntry.registerBaseStyles();
     const css = getRegisteredCss();
     expect(css).toContain('.theme-var-ui-default');
     expect(css).toMatch(/--var-ui-color-tone-accent-foreground:\s*light-dark\(/);
   });
 
-  it('re-exports registrations so vp pack cannot emit an empty styles.mjs', () => {
+  it('exports stylesEntry so vp pack retains the registration graph', () => {
     const source = readFileSync(new URL('../src/styles.ts', import.meta.url), 'utf8');
-    expect(source).toMatch(/export\s*\{[\s\S]*registerDefaultTheme/);
-    expect(source).toMatch(/export\s*\{[\s\S]*themeableComponents/);
-    expect(source).toMatch(/export\s*\{[\s\S]*registerBaseStyles/);
+    expect(source).toMatch(/export const stylesEntry/);
+    expect(source).toMatch(/from ['"]\.\/components['"]/);
+    expect(source).toMatch(/from ['"]\.\/theme\/base-styles['"]/);
+    expect(source).toMatch(/from ['"]\.\/theme\/register-default['"]/);
   });
 });

@@ -10,7 +10,7 @@ import { designTokens as t } from '../tokens';
  * <div className={grid({ columns: 'auto', gap: 'lg' })}>{cards}</div>
  * ```
  */
-export const grid = typestyles.styles.component(
+export const grid = typestyles.recipe(
   'grid',
   (c) => {
     const v = c.vars({

@@ -1,12 +1,3 @@
-import type { OverrideConfigFor, ThemeModeDefinition, ThemeSurface } from 'typestyles';
-import type { ExtendTokenValues, TokenRefsOf } from './theme/extend-tokens';
-import type { FontFaceDefinition } from './fonts/types';
-import type {
-  DesignThemeColorMode,
-  DesignThemePreset,
-  DesignThemeTokenValues,
-} from './tokens/types';
-
 export type {
   ConditionalOverride,
   FlatOverrideConfig,
@@ -19,65 +10,33 @@ export type {
   VariantOptionStyle,
   ComponentVarValues,
   InferVarDefinitions,
+  CreateTokenValues,
+  ThemeComponentsOverrideMap,
+  TokenRefTree,
+  OverrideConfigFor,
 } from 'typestyles';
 
 export { colorModes, conditional } from 'typestyles';
 
-export type { OverrideConfigFor } from './theme/registry';
-
 export type {
-  DesignColorValues,
-  DesignThemeColorMode,
-  DesignThemePreset,
+  ColorTokenPatch,
+  DeepPartialThemeTokens,
+  DeepPartialTokenValues,
   DesignThemeTokenValues,
   DesignTokens,
+  SemanticColorTokens,
+  ThemeModeDefinition,
+  ThemeOverrideInput,
 } from './tokens/types';
 
-type DesignTokenBag = typeof import('./tokens/declare').tokens;
-
-type ExtendMap = Record<string, ExtendTokenValues>;
-
-/**
- * Built-in design tokens plus refs from an `extend` map.
- * Hoist `extend` into a leaf module and use this for per-file component overrides
- * without circular imports (`typeof theme.tokens` would cycle).
- */
-export type DesignThemeTokens<E extends ExtendMap = Record<string, never>> = DesignTokenBag &
-  TokenRefsOf<E>;
-
-/**
- * Theme config: token overrides, ambient color modes, and optional preset base.
- * Recipe restyles belong on {@link DesignTheme.componentStyles} after creation.
- */
-export type DesignThemeConfig<E extends ExtendMap = Record<string, never>> = {
-  name: string;
-  /** Preset to merge onto. Defaults to built-in token values + dark color mode. */
-  from?: DesignThemePreset;
-  /** Mode-invariant token overrides; light `color` lives here by default. */
-  tokens?: DesignThemeTokenValues;
-  /** Ambient light/dark color patches — compiled to `light-dark()` on theme tokens. */
-  colorMode?: DesignThemeColorMode;
-  /** Additional TypeStyles modes (e.g. dark-only shadow overrides). */
-  modes?: ThemeModeDefinition[];
-  /**
-   * @deprecated Surfaces use global `color-scheme` on `data-surface` since V9.
-   * Kept for API compatibility; has no effect.
-   */
-  surfaces?: boolean;
-  /** Custom token namespaces; leaves are a string or `{ light, dark }`. */
-  extend?: E;
-  /** Self-hosted @font-face definitions registered when the theme is created. */
-  fonts?: FontFaceDefinition[];
-};
-
-/** Theme surface with token refs and scoped {@link styles.override} helper. */
-export type DesignTheme<E extends ExtendMap = Record<string, never>> = ThemeSurface & {
-  tokens: DesignThemeTokens<E>;
-  componentStyles<C>(
-    component: C,
-    config: OverrideConfigFor<C> | ((t: DesignThemeTokens<E>) => OverrideConfigFor<C>),
-  ): void;
-};
+export type {
+  DesignTheme,
+  DesignThemeComponentOverrideContext,
+  DesignThemeConfig,
+  DesignThemeTokens,
+  InferCustomThemeTokens,
+  InferThemeExtendFromConfig,
+} from './theme/types';
 
 export type {
   FontFaceDefinition,

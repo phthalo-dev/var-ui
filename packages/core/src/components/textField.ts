@@ -3,7 +3,7 @@ import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
 
-export const textField = typestyles.styles.component(
+export const textField = typestyles.recipe(
   'text-field',
   (c) => {
     const v = c.vars({

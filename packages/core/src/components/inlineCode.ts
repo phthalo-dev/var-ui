@@ -8,7 +8,7 @@ import { designTokens as t } from '../tokens';
  * <code className={inlineCode()}>theme.className</code>
  * ```
  */
-export const inlineCode = typestyles.styles.component(
+export const inlineCode = typestyles.recipe(
   'inline-code',
   (c) => {
     const v = c.vars({

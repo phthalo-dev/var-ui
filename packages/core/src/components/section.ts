@@ -10,7 +10,7 @@ import { designTokens as t } from '../tokens';
  * <section className={s.root}><h2 className={s.title}>Forms</h2>…</section>
  * ```
  */
-export const section = typestyles.styles.component(
+export const section = typestyles.recipe(
   'section',
   (c) => {
     const v = c.vars({

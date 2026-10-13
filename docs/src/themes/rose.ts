@@ -1,13 +1,13 @@
 import { color } from 'typestyles/color';
 import {
-  createDesignTheme,
   createToneFace,
+  defaultTheme,
   designTokens as p,
   darkSyntaxValues,
   lightSyntaxValues,
   shadowElevationValues,
-  type DesignThemePreset,
-  type DesignTokens,
+  type ColorTokenPatch,
+  type DesignThemeTokenValues,
 } from '@var-ui/core';
 import {
   neoBrutalistBorderDarkDefault,
@@ -15,7 +15,6 @@ import {
   neoBrutalistShadowOffsetDark,
   neoBrutalistShadowOffsetLight,
   neoBrutalistShadowValues,
-  resolvedDarkColorModeWhen,
 } from './neo-brutalist-shadows';
 
 const roseDarkHue = 355;
@@ -85,86 +84,119 @@ const roseTone = {
   }),
 };
 
-const roseLightColorValues = {
-  background: {
-    app: p.color.palette['rose-1'].var,
-    surface: p.color.palette['neutral-1'].var,
-    subtle: roseLightSubtle,
-    elevated: p.color.palette['neutral-1'].var,
-    popover: p.color.palette['neutral-1'].var,
-    muted: roseLightSubtle,
-  },
-  text: {
-    primary: p.color.palette['rose-10'].var,
-    secondary: p.color.palette['rose-7'].var,
-  },
-  tone: roseTone,
-  border: {
-    default: '#000',
-    strong: '#000',
-    focus: p.color.palette['crimson-5'].var,
-  },
-  overlay: {
-    default: color.alpha(p.color.palette['rose-10'].var, 0.55, 'oklch'),
-    panel: p.color.palette['neutral-1'].var,
-  },
-  link: { default: p.color.palette['crimson-7'].var, hover: p.color.palette['crimson-8'].var },
-  code: lightSyntaxValues,
-};
+const roseLightNeoShadow = neoBrutalistShadowValues(neoBrutalistShadowOffsetLight(roseLightSubtle));
+const roseDarkNeoShadow = neoBrutalistShadowValues(neoBrutalistShadowOffsetDark(roseDarkHue));
 
-const roseDarkColorValues = {
-  background: {
-    app: color.oklch('23%', 0.024, 355),
-    surface: color.oklch('27%', 0.022, 355),
-    subtle: color.oklch('31%', 0.02, 355),
-    elevated: color.oklch('27%', 0.022, 355),
-    popover: color.oklch('27%', 0.022, 355),
-    muted: color.oklch('31%', 0.02, 355),
-  },
-  text: {
-    primary: p.color.palette['rose-1'].var,
-    secondary: p.color.palette['rose-3'].var,
-  },
-  border: {
-    default: neoBrutalistBorderDarkDefault(roseDarkHue),
-    strong: neoBrutalistBorderDarkStrong(roseDarkHue),
-    focus: p.color.palette['rose-4'].var,
-  },
-  overlay: {
-    panel: color.oklch('27%', 0.022, 355),
-  },
-  link: { default: p.color.palette['rose-3'].var, hover: p.color.palette['rose-2'].var },
-  code: darkSyntaxValues,
-};
+const roseOverlayDefault = color.alpha(p.color.palette['rose-10'].var, 0.55, 'oklch');
 
-const roseLightShadowValues = {
-  ...neoBrutalistShadowValues(neoBrutalistShadowOffsetLight(roseLightSubtle)),
-  elevation: shadowElevationValues,
-} satisfies DesignTokens['shadow'];
-
-const roseDarkShadowValues = {
-  ...neoBrutalistShadowValues(neoBrutalistShadowOffsetDark(roseDarkHue)),
-  elevation: shadowElevationValues,
-} satisfies DesignTokens['shadow'];
-
-export const rosePreset: DesignThemePreset = {
-  tokens: {
-    color: roseLightColorValues,
-    shadow: roseLightShadowValues,
-  },
-  colorMode: {
-    dark: roseDarkColorValues,
-  },
-};
-
-export const roseTheme = createDesignTheme({
-  name: 'rose',
-  ...rosePreset,
-  modes: [
-    {
-      id: 'dark-shadow',
-      overrides: { shadow: roseDarkShadowValues },
-      when: resolvedDarkColorModeWhen,
+export const roseThemeTokens = {
+  color: {
+    background: {
+      app: {
+        light: p.color.palette['rose-1'].var,
+        dark: color.oklch('23%', 0.024, 355),
+      },
+      surface: {
+        light: p.color.palette['neutral-1'].var,
+        dark: color.oklch('27%', 0.022, 355),
+      },
+      subtle: {
+        light: roseLightSubtle,
+        dark: color.oklch('31%', 0.02, 355),
+      },
+      elevated: {
+        light: p.color.palette['neutral-1'].var,
+        dark: color.oklch('27%', 0.022, 355),
+      },
+      popover: {
+        light: p.color.palette['neutral-1'].var,
+        dark: color.oklch('27%', 0.022, 355),
+      },
+      muted: {
+        light: roseLightSubtle,
+        dark: color.oklch('31%', 0.02, 355),
+      },
     },
-  ],
+    text: {
+      primary: {
+        light: p.color.palette['rose-10'].var,
+        dark: p.color.palette['rose-1'].var,
+      },
+      secondary: {
+        light: p.color.palette['rose-7'].var,
+        dark: p.color.palette['rose-3'].var,
+      },
+    },
+    tone: roseTone,
+    border: {
+      default: {
+        light: '#000',
+        dark: neoBrutalistBorderDarkDefault(roseDarkHue),
+      },
+      strong: {
+        light: '#000',
+        dark: neoBrutalistBorderDarkStrong(roseDarkHue),
+      },
+      focus: {
+        light: p.color.palette['crimson-5'].var,
+        dark: p.color.palette['rose-4'].var,
+      },
+    },
+    overlay: {
+      default: { light: roseOverlayDefault, dark: roseOverlayDefault },
+      panel: {
+        light: p.color.palette['neutral-1'].var,
+        dark: color.oklch('27%', 0.022, 355),
+      },
+    },
+    link: {
+      default: {
+        light: p.color.palette['crimson-7'].var,
+        dark: p.color.palette['rose-3'].var,
+      },
+      hover: {
+        light: p.color.palette['crimson-8'].var,
+        dark: p.color.palette['rose-2'].var,
+      },
+    },
+    code: {
+      base: { light: lightSyntaxValues.base, dark: darkSyntaxValues.base },
+      keyword: { light: lightSyntaxValues.keyword, dark: darkSyntaxValues.keyword },
+      title: { light: lightSyntaxValues.title, dark: darkSyntaxValues.title },
+      attr: { light: lightSyntaxValues.attr, dark: darkSyntaxValues.attr },
+      string: { light: lightSyntaxValues.string, dark: darkSyntaxValues.string },
+      builtIn: { light: lightSyntaxValues.builtIn, dark: darkSyntaxValues.builtIn },
+      comment: { light: lightSyntaxValues.comment, dark: darkSyntaxValues.comment },
+      name: { light: lightSyntaxValues.name, dark: darkSyntaxValues.name },
+      section: { light: lightSyntaxValues.section, dark: darkSyntaxValues.section },
+      bullet: { light: lightSyntaxValues.bullet, dark: darkSyntaxValues.bullet },
+      addition: { light: lightSyntaxValues.addition, dark: darkSyntaxValues.addition },
+      additionBackground: {
+        light: lightSyntaxValues.additionBackground,
+        dark: darkSyntaxValues.additionBackground,
+      },
+      deletion: { light: lightSyntaxValues.deletion, dark: darkSyntaxValues.deletion },
+      deletionBackground: {
+        light: lightSyntaxValues.deletionBackground,
+        dark: darkSyntaxValues.deletionBackground,
+      },
+    } as ColorTokenPatch['code'],
+  },
+  shadow: {
+    xs: { light: roseLightNeoShadow.xs, dark: roseDarkNeoShadow.xs },
+    sm: { light: roseLightNeoShadow.sm, dark: roseDarkNeoShadow.sm },
+    md: { light: roseLightNeoShadow.md, dark: roseDarkNeoShadow.md },
+    lg: { light: roseLightNeoShadow.lg, dark: roseDarkNeoShadow.lg },
+    xl: { light: roseLightNeoShadow.xl, dark: roseDarkNeoShadow.xl },
+    elevation: {
+      low: { light: shadowElevationValues.low, dark: shadowElevationValues.low },
+      med: { light: shadowElevationValues.med, dark: shadowElevationValues.med },
+      high: { light: shadowElevationValues.high, dark: shadowElevationValues.high },
+    },
+  },
+} satisfies DesignThemeTokenValues;
+
+export const roseTheme = defaultTheme.override({
+  name: 'rose',
+  tokens: roseThemeTokens,
 });

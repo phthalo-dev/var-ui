@@ -10,7 +10,7 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessageList({ density: 'balanced' }).root}>…</div>
  * ```
  */
-export const chatMessageList = typestyles.styles.component(
+export const chatMessageList = typestyles.recipe(
   'chat-message-list',
   () => ({
     slots: ['root', 'inner', 'emptyState'],

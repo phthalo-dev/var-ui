@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
  * Blocks interaction over a relatively-positioned parent while async work
  * runs. Compose with `LoadingOverlay` in React or apply slots manually.
  */
-export const loadingOverlay = typestyles.styles.component(
+export const loadingOverlay = typestyles.recipe(
   'loading-overlay',
   (c) => {
     const v = c.vars({

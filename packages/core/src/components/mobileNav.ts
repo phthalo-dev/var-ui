@@ -24,7 +24,7 @@ import { designTokens as t } from '../tokens';
  * </>
  * ```
  */
-export const mobileNav = typestyles.styles.component(
+export const mobileNav = typestyles.recipe(
   'mobile-nav',
   (c) => {
     const v = c.vars({

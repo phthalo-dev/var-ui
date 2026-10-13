@@ -14,9 +14,11 @@
 
 ### Breaking (@var-ui/core)
 
-- **`createDesignTheme({ components: … })`** is removed. After `createDesignTheme`, call **`theme.componentStyles(recipe, override)`** for typed recipe restyles.
-- Theme implementation files live under **`packages/core/src/theme/`**; published export paths (`@var-ui/core/theme-constants`, `./base-styles`, etc.) are unchanged.
-- **`typestyles`** is pinned to **0.25.0** on `@var-ui/core`.
+- **`theme.componentStyles(recipe, override)`** is removed. Pass TypeStyles **`components`** on **`createDesignTheme`** (namespace keys such as `button`) for typed recipe restyles.
+- **`extendTokens`** (and the **`ModeAwareTokenLeaf`** re-export) are removed. Mint custom namespaces via **`createDesignTheme({ tokens: { brand: … } })`**.
+- Theme implementation files live under **`packages/core/src/theme/`**; published export paths (`@var-ui/core/theme-constants`, etc.) are unchanged except as noted below.
+- **`@var-ui/core/base-styles`** is removed. Document globals (CSS reset, base HTML styles, and `color-scheme` for root / `data-surface`) ship with **`@var-ui/core/styles`** and **`styles.css`**.
+- **`typestyles`** is upgraded to **0.26.x** on `@var-ui/core` (native theme `components`).
 - **Spinner** recipe uses **`root`** and **`indicator`** slots (update static HTML markup accordingly).
 
 ### Additions
@@ -38,6 +40,17 @@
 ### Migration (theming)
 
 ```ts
-const theme = createDesignTheme({ name: 'acme', extend: { … } });
-theme.componentStyles(button, (t) => ({ base: { borderRadius: t.radius.lg.var } }));
+// Before
+extendTokens('brand', { glow: { light: '…', dark: '…' } });
+
+// After — custom namespaces live on the theme
+createDesignTheme({
+  name: 'acme',
+  tokens: {
+    brand: { glow: { light: '…', dark: '…' } },
+  },
+  components: {
+    button: ({ tokens: t }) => ({ base: { borderRadius: t.radius.lg.var } }),
+  },
+});
 ```

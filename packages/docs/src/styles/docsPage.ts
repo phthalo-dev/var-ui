@@ -1,6 +1,6 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
 
-const belowLg = styles.breakpoint('lg', 'max');
+const belowLg = breakpoint('lg', 'max');
 
 type DocsPageVariantDefs = {
   contentWidth: { default: object; full: object };
@@ -8,7 +8,7 @@ type DocsPageVariantDefs = {
 };
 
 /** Full-height docs shell: page grid, prose column, sticky TOC, and body overflow lock. */
-export const docsPage = typestyles.styles.component<
+export const docsPage = typestyles.recipe<
   readonly ['siteLayout', 'pageBody', 'content', 'toc'],
   DocsPageVariantDefs
 >(
@@ -101,20 +101,20 @@ export const docsPage = typestyles.styles.component<
 );
 
 /** Lock the docs chrome to the viewport; targets AppShell main from @var-ui/astro. */
-typestyles.global.style('html, body.docs-body', {
-  height: '100%',
-  margin: 0,
-});
-
-typestyles.global.style('body.docs-body', {
-  overflow: 'hidden',
-});
-
-typestyles.global.style('body.docs-body #var-ui-app-shell-main', {
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  padding: 0,
+typestyles.global.rules({
+  'html, body.docs-body': {
+    height: '100%',
+    margin: 0,
+  },
+  'body.docs-body': {
+    overflow: 'hidden',
+  },
+  'body.docs-body #var-ui-app-shell-main': {
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    padding: 0,
+  },
 });
 
 export function docsPageContent(

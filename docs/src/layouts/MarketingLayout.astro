@@ -1,5 +1,6 @@
 ---
 import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
+import { cx } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
 import DocsThemePicker from '../components/DocsThemePicker.astro';
@@ -12,7 +13,7 @@ import { buildDocsSearchIndex } from '../lib/search-index';
 const { title = 'Var UI' } = Astro.props as { title?: string };
 
 const framework = Astro.locals.framework;
-const hljsScopeClass = (codeHljsScope().root).className;
+const hljsScopeClass = cx(codeHljsScope().root);
 const searchItems = buildDocsSearchIndex();
 ---
 

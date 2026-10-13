@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
  * HSV color picker panel: saturation/value area, hue slider, optional alpha
  * slider, and preset swatches. Pair with `ColorPicker` in React.
  */
-export const colorPicker = typestyles.styles.component(
+export const colorPicker = typestyles.recipe(
   'color-picker',
   (c) => {
     const v = c.vars({
@@ -165,7 +165,7 @@ export const colorPicker = typestyles.styles.component(
 /**
  * Standalone color swatch chip — display or selection affordance.
  */
-export const colorSwatch = typestyles.styles.component(
+export const colorSwatch = typestyles.recipe(
   'color-swatch',
   (c) => {
     const v = c.vars({

@@ -20,7 +20,7 @@ import {
  *
  * **Shared:** `semanticTone.ts` — one table for tone channels; subtle mixes match badge.
  */
-export const alert = typestyles.styles.component(
+export const alert = typestyles.recipe(
   'alert',
   (c) => {
     const v = c.vars({

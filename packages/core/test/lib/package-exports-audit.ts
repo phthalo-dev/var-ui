@@ -1,7 +1,8 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { themeableComponents } from '../../src/theme/registry';
+import '../../src/components';
+import { typestyles } from '../../src/runtime';
 
 const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -46,7 +47,7 @@ export type PackageExportsAudit = {
   runtimeExports: Record<ExportCategory, string[]>;
 };
 
-const recipeNames = new Set(Object.keys(themeableComponents));
+const recipeNames = new Set(typestyles.getThemeableComponents().keys());
 
 const recipeAdjacent = new Set([
   'linkButton',
@@ -89,7 +90,7 @@ function categorizeRuntimeExport(name: string): ExportCategory {
   if (name.endsWith('Chrome')) return 'chrome';
   if (semanticToneExports.has(name)) return 'semantic-tone';
   if (
-    /^(designTokens|tokens|tokenValues|palette|generateColors|createToneFace|buildToneFace|onBackground|TONE_|shadowElevation|darkSyntaxValues|lightSyntaxValues|PALETTE_|extendTokens|registerExtendMap|resetExtendTokenRegistry)/.test(
+    /^(designTokens|tokenValues|palette|generateColors|createToneFace|buildToneFace|onBackground|TONE_|shadowElevation|darkSyntaxValues|lightSyntaxValues|PALETTE_)/.test(
       name,
     ) ||
     name.startsWith('Palette')
@@ -97,14 +98,16 @@ function categorizeRuntimeExport(name: string): ExportCategory {
     return 'tokens';
   }
   if (
-    /^(createDesignTheme|disposeDesignTheme|deepMergeThemeOverrides|mergeThemeOverrides|themeableComponents|themeWhen|when|atReducedMotion|DEFAULT_THEME_NAME|SURFACE_ATTRIBUTE|defaultThemeClassName|colorModes|conditional)/.test(
+    /^(createDesignTheme|disposeDesignTheme|defaultTheme|registerDefaultTheme|mergeThemeOverrides|themeWhen|when|atReducedMotion|DEFAULT_THEME_NAME|SURFACE_ATTRIBUTE|defaultThemeClassName|colorModes|conditional)/.test(
       name,
     ) ||
     name.startsWith('Theme')
   ) {
     return 'theme';
   }
-  if (/^(typestyles|styles|global|registerColorSchemeGlobals)/.test(name)) return 'runtime';
+  if (/^(typestyles|style|recipe|tokens|global|override|breakpoint|media)$/.test(name)) {
+    return 'runtime';
+  }
   if (
     /^(toc|Toc|positionToc|TOC_|collectArticle|createTocSpy|findScrollContainer|pickActive|resolveActive)/.test(
       name,

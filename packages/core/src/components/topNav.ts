@@ -86,7 +86,7 @@ export const topNavVarDefinitions = {
  * ```
  */
 
-const topNavRecipe = typestyles.styles.component(
+const topNavRecipe = typestyles.recipe(
   'top-nav',
   (c) => {
     const v = c.vars(topNavVarDefinitions);

@@ -29,7 +29,7 @@ import { designTokens as t } from '../tokens';
  * </ul>
  * ```
  */
-export const tree = typestyles.styles.component(
+export const tree = typestyles.recipe(
   'tree',
   (c) => {
     const v = c.vars({

@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from './field';
 
-export const slider = typestyles.styles.component(
+export const slider = typestyles.recipe(
   'slider',
   (c) => {
     const v = c.vars({

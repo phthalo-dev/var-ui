@@ -20,10 +20,6 @@ export function coreReservedExports() {
       import: './dist/styles.mjs',
     },
     './styles.css': './dist/styles.css',
-    './base-styles': {
-      types: './dist/theme/base-styles.d.mts',
-      import: './dist/theme/base-styles.mjs',
-    },
     './internal': {
       types: './dist/internal.d.mts',
       import: './dist/internal.mjs',

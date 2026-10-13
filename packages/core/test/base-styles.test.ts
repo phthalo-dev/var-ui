@@ -2,9 +2,12 @@ import { describe, it, expect } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
 
 describe('base-styles', () => {
-  it('registers reset, document defaults, and element typography', async () => {
+  it('registers color-scheme, reset, document defaults, and element typography', async () => {
     await import('../src/theme/base-styles');
     const css = getRegisteredCss();
+    expect(css).toMatch(/color-scheme:\s*light\s+dark/);
+    expect(css).toContain('[data-surface="dark"]');
+    expect(css).toContain('[data-surface="light"]');
     expect(css).toContain('box-sizing: border-box');
     expect(css).toContain('scroll-behavior: smooth');
     expect(css).toContain('scroll-behavior: auto');

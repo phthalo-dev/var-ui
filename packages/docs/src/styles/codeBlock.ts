@@ -1,7 +1,7 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
 /** Docs kit chrome for `@var-ui/docs/CodeBlock` (preview + source). */
-export const codeBlock = typestyles.styles.component(
+export const codeBlock = typestyles.recipe(
   'docs-code-block',
   () => ({
     slots: [

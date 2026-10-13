@@ -8,7 +8,7 @@ import { fieldChrome } from './field';
  * Password text field with an inline visibility toggle. Shares field chrome
  * with `textField` but wraps the input in a bordered group for the toggle.
  */
-export const passwordField = typestyles.styles.component(
+export const passwordField = typestyles.recipe(
   'password-field',
   (c) => {
     const v = c.vars({

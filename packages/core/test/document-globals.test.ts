@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
 
-describe('document-globals', () => {
+describe('base document styles', () => {
   it('registers html scroll and body reset styles', async () => {
-    await import('../src/theme/document-globals');
+    await import('../src/theme/base-styles');
     const css = getRegisteredCss();
     expect(css).toContain('scroll-behavior: smooth');
     expect(css).toContain('scroll-behavior: auto');

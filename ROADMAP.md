@@ -39,7 +39,7 @@ them. See TypeStyles' `IMPROVEMENTS.md` P5 section for that side of the work.
 | `typestyles/token-scale` (geometric/linear scale + duration-band generators) | **Shipped** (0.8)  | V2 ready — spec: `type-motion-radius-scale-generation.md` |
 | `styles.scope()` + classname-stability contract + lint rule                  | **Shipped** (0.8)  | V3 ready — spec: `component-override-contract.md`         |
 | `descendant` scope on the theme condition engine                             | **Shipped** (0.8)  | V4 ready — spec: `surface-tone-override.md`               |
-| `styles.override()` + `__tsMeta` component metadata contract                 | **Shipped** (0.10) | V7 ready — spec: `typed-component-theming.md`             |
+| `override()` + `__tsMeta` component metadata contract                        | **Shipped** (0.10) | V7 ready — spec: `typed-component-theming.md`             |
 
 Don't re-derive these designs here — when picking up a blocked item, check
 TypeStyles' `IMPROVEMENTS.md`/`specs/` for current status first.
@@ -63,7 +63,7 @@ TypeStyles' `IMPROVEMENTS.md`/`specs/` for current status first.
 ## V3 — Component override contract
 
 - [ ] **V3 — Adopt the classname-stability contract across `packages/core`
-      recipes** — treat every `styles.component()` semantic class name as public
+      recipes** — treat every `recipe()` semantic class name as public
       API once published; audit recipes for anything themeable that isn't
       already exposed as a component-scoped CSS variable (the `c.vars()` pattern
       `button.ts` already uses) and expose it; commit classname snapshot + lint

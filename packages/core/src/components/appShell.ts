@@ -37,7 +37,7 @@ type AppShellVariantDefs = {
  * </div>
  * ```
  */
-export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppShellVariantDefs>(
+export const appShell = typestyles.recipe<typeof APP_SHELL_SLOTS, AppShellVariantDefs>(
   'app-shell',
   (c) => {
     const v = c.vars({

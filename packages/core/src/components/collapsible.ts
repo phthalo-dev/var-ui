@@ -15,7 +15,7 @@ import { designTokens as t } from '../tokens';
  * </div>
  * ```
  */
-export const collapsible = typestyles.styles.component(
+export const collapsible = typestyles.recipe(
   'collapsible',
   (c) => {
     const v = c.vars({

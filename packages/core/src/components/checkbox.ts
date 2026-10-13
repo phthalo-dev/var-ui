@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const checkbox = typestyles.styles.component(
+export const checkbox = typestyles.recipe(
   'checkbox',
   (c) => {
     const v = c.vars({

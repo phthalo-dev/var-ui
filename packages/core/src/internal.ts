@@ -3,17 +3,8 @@
  * Prefer `@var-ui/core` for recipes, tokens, and theme APIs.
  */
 export * from './components/semanticTone';
-export {
-  createDesignThemeBase,
-  deepMergeThemeOverrides,
-  mergeThemeOverrides,
-  type ExtendMap,
-} from './theme/create-theme-base';
-export { registerExtendMap, resetExtendTokenRegistry } from './theme/extend-tokens';
 export { resetRegisteredFontFaces } from './fonts/register-font-face';
 export { registerBaseStyles } from './theme/base-styles';
-export { registerDocumentGlobals, registerGlobals } from './theme/document-globals';
-export { registerColorSchemeGlobals } from './runtime';
 export * from './components/toc/spy';
 export * from './components/indicators/tabs';
 export * from './components/indicators/segmented-control';

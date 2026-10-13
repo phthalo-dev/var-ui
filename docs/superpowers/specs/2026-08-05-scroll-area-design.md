@@ -47,7 +47,7 @@ Reshaped's v4.1 approach uses CSS scroll-driven animations for fade visibility â
 Slots: `root`, `viewport`, `content` (optional â€” single-slot `root` acceptable for v1)
 
 ```ts
-export const scrollArea = typestyles.styles.component('scroll-area', (c) => {
+export const scrollArea = typestyles.recipe('scroll-area', (c) => {
   const v = c.vars({
     fadeSize: { value: '24px', syntax: '<length>' },
     fadeColor: { value: t.color.background.app.var, syntax: '<color>' },

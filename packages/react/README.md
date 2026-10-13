@@ -127,7 +127,8 @@ Core-only recipes without wrappers (use the class helpers from `@var-ui/core`):
 `skeleton`, `statusDot`, `kbd`, `overlay`, plus everything in the core README's
 inventory.
 
-Side effect on import: `@var-ui/core` registers base document styles (see `document-globals.ts`).
+Document globals (reset, base HTML styles, `color-scheme`) ship with `@var-ui/core/styles`
+or `@var-ui/core/styles.css`.
 
 ## Structure
 

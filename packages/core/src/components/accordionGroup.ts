@@ -4,7 +4,7 @@ import { designTokens as t } from '../tokens';
 /**
  * Outer chrome for stacked `Accordion` panels — border, radius, and overflow clip.
  */
-export const accordionGroup = typestyles.styles.component(
+export const accordionGroup = typestyles.recipe(
   'accordion-group',
   (c) => {
     const v = c.vars({

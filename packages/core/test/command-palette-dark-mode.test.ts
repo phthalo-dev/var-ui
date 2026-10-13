@@ -7,9 +7,9 @@ describe('atDarkMode in command palette', () => {
   it('emits dark-mode box-shadow override for dialog slot', () => {
     commandPalette();
     const css = getRegisteredCss();
-    expect(css).toContain('html[data-mode="dark"] .var-ui-command-palette__dialog');
+    expect(css).toContain('[data-mode="dark"] .var-ui-command-palette__dialog');
     expect(css).toMatch(
-      /prefers-color-scheme:\s*dark[\s\S]*html:not\(\[data-mode="light"\]\) \.var-ui-command-palette__dialog/,
+      /prefers-color-scheme:\s*dark[\s\S]*:root:not\(\[data-mode="light"\]\) \.var-ui-command-palette__dialog/,
     );
     expect(css).toContain('box-shadow: none');
   });

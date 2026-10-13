@@ -9,7 +9,7 @@ import { designTokens as t } from '../tokens';
  * <span className={s.root}><img className={s.image} … /></span>
  * ```
  */
-export const thumbnail = typestyles.styles.component(
+export const thumbnail = typestyles.recipe(
   'thumbnail',
   (c) => {
     const v = c.vars({

@@ -14,7 +14,7 @@ import { designTokens as t } from '../tokens';
  * </div>
  * ```
  */
-export const overflowList = typestyles.styles.component(
+export const overflowList = typestyles.recipe(
   'overflow-list',
   (c) => {
     const v = c.vars({

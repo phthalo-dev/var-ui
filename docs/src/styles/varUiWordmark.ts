@@ -1,7 +1,7 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
-export const varUiWordmark = typestyles.styles.component(
+export const varUiWordmark = typestyles.recipe(
   'wordmark',
   () => ({
     slots: ['root', 'keyword', 'punctuation', 'customProperty'],

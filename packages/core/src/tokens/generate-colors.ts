@@ -2,8 +2,8 @@ import { color } from 'typestyles/color';
 import { contrastRatio, generateRamp, parseColor } from 'typestyles/color-scale';
 import { darkSyntaxValues, lightSyntaxValues } from './defaults/color';
 import { paletteHue } from './defaults/color/palette';
-import { buildToneFace } from './tone-face';
-import type { DesignColorValues, DesignTokens } from './types';
+import { buildToneFace, createToneFace } from './tone-face';
+import type { ColorTokenPatch, DesignTokens } from './types';
 
 export type NeutralStyle = 'neutral' | 'cool' | 'warm';
 export type ColorContrast = 'standard' | 'high';
@@ -14,10 +14,8 @@ export type GenerateColorsInput = {
   contrast?: ColorContrast;
 };
 
-export type GenerateColorsResult = {
-  light: DesignColorValues;
-  dark: DesignColorValues;
-};
+/** Mode-aware semantic color tree for `createDesignTheme` / `Theme.override` `tokens.color`. */
+export type GenerateColorsResult = ColorTokenPatch;
 
 /**
  * Calibration notes (`#0064E0`, standard contrast, neutral style):
@@ -68,6 +66,10 @@ function mirrorStep(step: number): number {
   return 11 - step;
 }
 
+function mode(light: string, dark: string) {
+  return { light, dark };
+}
+
 function resolveNeutralHue(style: NeutralStyle, accentHue: number): number {
   if (style === 'cool') return 250;
   if (style === 'warm') return 70;
@@ -78,157 +80,157 @@ function resolveLightnessRange(contrast: ColorContrast): [number, number] {
   return contrast === 'high' ? [12, 99] : [22, 97];
 }
 
-function buildToneFaces(
+function toneAnchors(
   neutral: Ramp,
   accent: Ramp,
   danger: Ramp,
   success: Ramp,
   warning: Ramp,
   info: Ramp,
-  mode: 'light' | 'dark',
-): DesignTokens['color']['tone'] {
-  const m = mode === 'light' ? (step: number) => step : mirrorStep;
+  modeName: 'light' | 'dark',
+) {
+  const m = modeName === 'light' ? (step: number) => step : mirrorStep;
   const slots = LIGHT_SLOTS.tone;
   const onFilledFallback = rampAt(neutral, 10);
 
-  const accentForeground = rampAt(accent, m(slots.accent.foreground));
-  const accentBackground = rampAt(accent, m(slots.accent.background));
-
-  const dangerForeground = rampAt(danger, m(slots.danger.foreground));
-  const dangerBackground =
-    mode === 'light' ? rampAt(danger, slots.danger.background) : rampAt(danger, 7);
-
-  const successForeground = rampAt(success, m(slots.success.foreground));
-  const successBackground =
-    mode === 'light' ? rampAt(success, slots.success.background) : rampAt(success, 7);
-
-  const warningForeground = rampAt(warning, m(slots.warning.foreground));
-  const warningBackground = rampAt(warning, m(slots.warning.background));
-
-  const infoForeground = rampAt(info, m(slots.info.foreground));
-  const infoBackground = rampAt(info, m(slots.info.background));
-
   return {
-    accent: buildToneFace({
-      foreground: accentForeground,
-      background: accentBackground,
-      onFilledFallback: onFilledFallback,
-    }),
-    danger: buildToneFace({
-      foreground: dangerForeground,
-      background: dangerBackground,
-      onFilledFallback: onFilledFallback,
-    }),
-    success: buildToneFace({
-      foreground: successForeground,
-      background: successBackground,
-      onFilledFallback: onFilledFallback,
-    }),
-    warning: buildToneFace({
-      foreground: warningForeground,
-      background: warningBackground,
-      onFilledFallback: onFilledFallback,
-    }),
-    info: buildToneFace({
-      foreground: infoForeground,
-      background: infoBackground,
-      onFilledFallback: onFilledFallback,
-    }),
+    accent: {
+      foreground: rampAt(accent, m(slots.accent.foreground)),
+      background: rampAt(accent, m(slots.accent.background)),
+      onFilledFallback,
+    },
+    danger: {
+      foreground: rampAt(danger, m(slots.danger.foreground)),
+      background:
+        modeName === 'light' ? rampAt(danger, slots.danger.background) : rampAt(danger, 7),
+      onFilledFallback,
+    },
+    success: {
+      foreground: rampAt(success, m(slots.success.foreground)),
+      background:
+        modeName === 'light' ? rampAt(success, slots.success.background) : rampAt(success, 7),
+      onFilledFallback,
+    },
+    warning: {
+      foreground: rampAt(warning, m(slots.warning.foreground)),
+      background: rampAt(warning, m(slots.warning.background)),
+      onFilledFallback,
+    },
+    info: {
+      foreground: rampAt(info, m(slots.info.foreground)),
+      background: rampAt(info, m(slots.info.background)),
+      onFilledFallback,
+    },
   };
 }
 
-function mapLightColors(
+function mapModeAwareColors(
   neutral: Ramp,
   accent: Ramp,
   danger: Ramp,
   success: Ramp,
   warning: Ramp,
   info: Ramp,
-) {
+): ColorTokenPatch {
   const slots = LIGHT_SLOTS;
-  const background = {
-    app: rampAt(neutral, slots.background.app),
-    surface: rampAt(neutral, slots.background.surface),
-    subtle: rampAt(neutral, slots.background.subtle),
-    elevated: rampAt(neutral, slots.background.elevated),
-    popover: rampAt(neutral, slots.background.popover),
-    muted: rampAt(neutral, slots.background.muted),
-    secondary: rampAt(neutral, slots.background.secondary),
-    tertiary: rampAt(neutral, slots.background.tertiary),
-  };
-
-  const accentForeground = rampAt(accent, slots.tone.accent.foreground);
-
-  return {
-    background,
-    text: {
-      primary: rampAt(neutral, slots.text.primary),
-      secondary: rampAt(neutral, slots.text.secondary),
-    },
-    tone: buildToneFaces(neutral, accent, danger, success, warning, info, 'light'),
-    border: {
-      default: rampAt(neutral, slots.border.default),
-      strong: rampAt(neutral, slots.border.strong),
-      focus: rampAt(accent, slots.border.focus),
-      subtle: rampAt(neutral, slots.border.subtle),
-    },
-    overlay: {
-      default: color.alpha(rampAt(neutral, 10), 0.55, 'oklch'),
-      panel: background.elevated,
-    },
-    link: {
-      default: accentForeground,
-      hover: rampAt(accent, slots.tone.accent.linkHover),
-    },
-    code: lightSyntaxValues,
-  };
-}
-
-function mapDarkColors(
-  neutral: Ramp,
-  accent: Ramp,
-  danger: Ramp,
-  success: Ramp,
-  warning: Ramp,
-  info: Ramp,
-) {
   const m = mirrorStep;
-  const slots = LIGHT_SLOTS;
-  const background = {
-    app: rampAt(neutral, m(slots.background.app)),
-    surface: rampAt(neutral, m(slots.background.surface)),
-    subtle: rampAt(neutral, m(slots.background.subtle)),
-    elevated: rampAt(neutral, m(slots.background.elevated)),
-    popover: rampAt(neutral, m(slots.background.popover)),
-    muted: rampAt(neutral, m(slots.background.muted)),
-    secondary: rampAt(neutral, m(slots.background.secondary)),
-    tertiary: rampAt(neutral, m(slots.background.tertiary)),
-  };
-
-  const accentForeground = rampAt(accent, m(slots.tone.accent.foreground));
+  const lightTone = toneAnchors(neutral, accent, danger, success, warning, info, 'light');
+  const darkTone = toneAnchors(neutral, accent, danger, success, warning, info, 'dark');
 
   return {
-    background,
-    text: {
-      primary: rampAt(neutral, m(slots.text.primary)),
-      secondary: rampAt(neutral, m(slots.text.secondary)),
+    background: {
+      app: mode(rampAt(neutral, slots.background.app), rampAt(neutral, m(slots.background.app))),
+      surface: mode(
+        rampAt(neutral, slots.background.surface),
+        rampAt(neutral, m(slots.background.surface)),
+      ),
+      subtle: mode(
+        rampAt(neutral, slots.background.subtle),
+        rampAt(neutral, m(slots.background.subtle)),
+      ),
+      elevated: mode(
+        rampAt(neutral, slots.background.elevated),
+        rampAt(neutral, m(slots.background.elevated)),
+      ),
+      popover: mode(
+        rampAt(neutral, slots.background.popover),
+        rampAt(neutral, m(slots.background.popover)),
+      ),
+      muted: mode(
+        rampAt(neutral, slots.background.muted),
+        rampAt(neutral, m(slots.background.muted)),
+      ),
+      secondary: mode(
+        rampAt(neutral, slots.background.secondary),
+        rampAt(neutral, m(slots.background.secondary)),
+      ),
+      tertiary: mode(
+        rampAt(neutral, slots.background.tertiary),
+        rampAt(neutral, m(slots.background.tertiary)),
+      ),
     },
-    tone: buildToneFaces(neutral, accent, danger, success, warning, info, 'dark'),
+    text: {
+      primary: mode(rampAt(neutral, slots.text.primary), rampAt(neutral, m(slots.text.primary))),
+      secondary: mode(
+        rampAt(neutral, slots.text.secondary),
+        rampAt(neutral, m(slots.text.secondary)),
+      ),
+    },
+    tone: {
+      accent: createToneFace({ light: lightTone.accent, dark: darkTone.accent }),
+      danger: createToneFace({ light: lightTone.danger, dark: darkTone.danger }),
+      success: createToneFace({ light: lightTone.success, dark: darkTone.success }),
+      warning: createToneFace({ light: lightTone.warning, dark: darkTone.warning }),
+      info: createToneFace({ light: lightTone.info, dark: darkTone.info }),
+    },
     border: {
-      default: rampAt(neutral, m(slots.border.default)),
-      strong: rampAt(neutral, m(slots.border.strong)),
-      focus: rampAt(accent, m(slots.border.focus)),
-      subtle: rampAt(neutral, m(slots.border.subtle)),
+      default: mode(
+        rampAt(neutral, slots.border.default),
+        rampAt(neutral, m(slots.border.default)),
+      ),
+      strong: mode(rampAt(neutral, slots.border.strong), rampAt(neutral, m(slots.border.strong))),
+      focus: mode(rampAt(accent, slots.border.focus), rampAt(accent, m(slots.border.focus))),
+      subtle: mode(rampAt(neutral, slots.border.subtle), rampAt(neutral, m(slots.border.subtle))),
     },
     overlay: {
-      default: color.alpha(rampAt(neutral, m(10)), 0.7, 'oklch'),
-      panel: background.elevated,
+      default: mode(
+        color.alpha(rampAt(neutral, 10), 0.55, 'oklch'),
+        color.alpha(rampAt(neutral, m(10)), 0.7, 'oklch'),
+      ),
+      panel: mode(
+        rampAt(neutral, slots.background.elevated),
+        rampAt(neutral, m(slots.background.elevated)),
+      ),
     },
     link: {
-      default: accentForeground,
-      hover: rampAt(accent, m(slots.tone.accent.linkHover)),
+      default: mode(lightTone.accent.foreground, darkTone.accent.foreground),
+      hover: mode(
+        rampAt(accent, slots.tone.accent.linkHover),
+        rampAt(accent, m(slots.tone.accent.linkHover)),
+      ),
     },
-    code: darkSyntaxValues,
+    code: {
+      base: mode(lightSyntaxValues.base, darkSyntaxValues.base),
+      keyword: mode(lightSyntaxValues.keyword, darkSyntaxValues.keyword),
+      title: mode(lightSyntaxValues.title, darkSyntaxValues.title),
+      attr: mode(lightSyntaxValues.attr, darkSyntaxValues.attr),
+      string: mode(lightSyntaxValues.string, darkSyntaxValues.string),
+      builtIn: mode(lightSyntaxValues.builtIn, darkSyntaxValues.builtIn),
+      comment: mode(lightSyntaxValues.comment, darkSyntaxValues.comment),
+      name: mode(lightSyntaxValues.name, darkSyntaxValues.name),
+      section: mode(lightSyntaxValues.section, darkSyntaxValues.section),
+      bullet: mode(lightSyntaxValues.bullet, darkSyntaxValues.bullet),
+      addition: mode(lightSyntaxValues.addition, darkSyntaxValues.addition),
+      additionBackground: mode(
+        lightSyntaxValues.additionBackground,
+        darkSyntaxValues.additionBackground,
+      ),
+      deletion: mode(lightSyntaxValues.deletion, darkSyntaxValues.deletion),
+      deletionBackground: mode(
+        lightSyntaxValues.deletionBackground,
+        darkSyntaxValues.deletionBackground,
+      ),
+    },
   };
 }
 
@@ -248,42 +250,38 @@ function asColorString(value: DesignTokens['color']['text']['primary']): string 
   return scalarTokenValue(value);
 }
 
-type GeneratedColorFace = ReturnType<typeof mapLightColors>;
-
 function validateContrast(
-  mode: 'light' | 'dark',
-  colors: GeneratedColorFace,
+  modeName: 'light' | 'dark',
+  anchors: ReturnType<typeof toneAnchors>,
+  backgroundApp: string,
+  textPrimary: string,
+  textSecondary: string,
   threshold: number,
 ): void {
   if (process.env.NODE_ENV === 'production') return;
 
+  const accent = buildToneFace(anchors.accent);
+  const danger = buildToneFace(anchors.danger);
+
   const pairs: ContrastPair[] = [
-    [
-      'text.primary / background.app',
-      asColorString(colors.text.primary),
-      asColorString(colors.background.app),
-    ],
-    [
-      'text.secondary / background.app',
-      asColorString(colors.text.secondary),
-      asColorString(colors.background.app),
-    ],
+    ['text.primary / background.app', asColorString(textPrimary), asColorString(backgroundApp)],
+    ['text.secondary / background.app', asColorString(textSecondary), asColorString(backgroundApp)],
     [
       'tone.accent.foregroundOnBackground / tone.accent.background',
-      asColorString(colors.tone.accent.foregroundOnBackground),
-      asColorString(colors.tone.accent.background),
+      asColorString(accent.foregroundOnBackground),
+      asColorString(accent.background),
     ],
     [
       'tone.danger.foregroundOnBackground / tone.danger.background',
-      asColorString(colors.tone.danger.foregroundOnBackground),
-      asColorString(colors.tone.danger.background),
+      asColorString(danger.foregroundOnBackground),
+      asColorString(danger.background),
     ],
   ];
 
   for (const [label, foreground, background] of pairs) {
     if (contrastRatio(foreground, background) < threshold) {
       console.warn(
-        `[design-system] generateColors (${mode}): contrast below ${threshold} for ${label}.`,
+        `[design-system] generateColors (${modeName}): contrast below ${threshold} for ${label}.`,
       );
     }
   }
@@ -323,7 +321,43 @@ export function generateColors(input: GenerateColorsInput): GenerateColorsResult
     ...rampOpts,
   });
 
-  const light = mapLightColors(
+  const lightTone = toneAnchors(
+    neutralRamp,
+    accentRamp,
+    dangerRamp,
+    successRamp,
+    warningRamp,
+    infoRamp,
+    'light',
+  );
+  const darkTone = toneAnchors(
+    neutralRamp,
+    accentRamp,
+    dangerRamp,
+    successRamp,
+    warningRamp,
+    infoRamp,
+    'dark',
+  );
+
+  validateContrast(
+    'light',
+    lightTone,
+    rampAt(neutralRamp, LIGHT_SLOTS.background.app),
+    rampAt(neutralRamp, LIGHT_SLOTS.text.primary),
+    rampAt(neutralRamp, LIGHT_SLOTS.text.secondary),
+    contrastThreshold,
+  );
+  validateContrast(
+    'dark',
+    darkTone,
+    rampAt(neutralRamp, mirrorStep(LIGHT_SLOTS.background.app)),
+    rampAt(neutralRamp, mirrorStep(LIGHT_SLOTS.text.primary)),
+    rampAt(neutralRamp, mirrorStep(LIGHT_SLOTS.text.secondary)),
+    contrastThreshold,
+  );
+
+  return mapModeAwareColors(
     neutralRamp,
     accentRamp,
     dangerRamp,
@@ -331,17 +365,4 @@ export function generateColors(input: GenerateColorsInput): GenerateColorsResult
     warningRamp,
     infoRamp,
   );
-  const dark = mapDarkColors(
-    neutralRamp,
-    accentRamp,
-    dangerRamp,
-    successRamp,
-    warningRamp,
-    infoRamp,
-  );
-
-  validateContrast('light', light, contrastThreshold);
-  validateContrast('dark', dark, contrastThreshold);
-
-  return { light, dark };
 }

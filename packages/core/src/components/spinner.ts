@@ -17,7 +17,7 @@ const spin = keyframes.create('var-ui-spin', {
 /**
  * Indeterminate loading ring. Use `progressBar` when progress is measurable.
  */
-export const spinner = typestyles.styles.component(
+export const spinner = typestyles.recipe(
   'spinner',
   (c) => {
     const v = c.vars({

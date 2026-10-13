@@ -9,7 +9,7 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatLayout().root}>…</div>
  * ```
  */
-export const chatLayout = typestyles.styles.component(
+export const chatLayout = typestyles.recipe(
   'chat-layout',
   (c) => {
     const v = c.vars({

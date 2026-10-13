@@ -10,7 +10,7 @@ import { designTokens as t } from '../tokens';
  * <nav className={b.root}><ol className={b.list}>…</ol></nav>
  * ```
  */
-export const breadcrumbs = typestyles.styles.component(
+export const breadcrumbs = typestyles.recipe(
   'breadcrumbs',
   (c) => {
     const v = c.vars({

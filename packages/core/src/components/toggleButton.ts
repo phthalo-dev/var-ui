@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 
 /** Single toggle button and segmented-control item styling. */
-export const toggleButton = typestyles.styles.component(
+export const toggleButton = typestyles.recipe(
   'toggle-button',
   (c) => {
     const v = c.vars({

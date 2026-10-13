@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
 
-export const dialog = typestyles.styles.component(
+export const dialog = typestyles.recipe(
   'dialog',
   (c) => {
     const v = c.vars({

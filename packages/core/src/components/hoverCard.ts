@@ -12,7 +12,7 @@ import { overlayPresenceStyles } from './overlayPresence';
  * <div className={hc.root}>…</div>
  * ```
  */
-export const hoverCard = typestyles.styles.component(
+export const hoverCard = typestyles.recipe(
   'hover-card',
   (c) => {
     const v = c.vars({

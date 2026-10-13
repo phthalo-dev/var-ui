@@ -15,7 +15,7 @@ import {
  * <span className={c.root}><span className={c.label}>React</span></span>
  * ```
  */
-export const chip = typestyles.styles.component(
+export const chip = typestyles.recipe(
   'chip',
   (c) => {
     const v = c.vars({

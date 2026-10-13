@@ -7,7 +7,7 @@ import { typestyles } from '../runtime';
  * <div className={center()} style={{ minHeight: '200px' }}>{spinner}</div>
  * ```
  */
-export const center = typestyles.styles.component(
+export const center = typestyles.recipe(
   'center',
   () => ({
     base: {

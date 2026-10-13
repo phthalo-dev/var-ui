@@ -10,7 +10,7 @@ import { overlayPresenceStyles } from './overlayPresence';
  * <div className={p.root}>…</div>
  * ```
  */
-export const popover = typestyles.styles.component(
+export const popover = typestyles.recipe(
   'popover',
   (c) => {
     const v = c.vars({

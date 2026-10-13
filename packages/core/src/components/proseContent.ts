@@ -1,8 +1,8 @@
-import { styles, typestyles } from '../runtime';
+import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
 /** Mobile prose density — uses TypeStyles breakpoint map from `runtime.ts`. */
-const belowMd = styles.breakpoint('md', 'max');
+const belowMd = breakpoint('md', 'max');
 
 /**
  * Long-form / markdown prose primitives: blockquote, kbd, inline badges, tables, dividers,
@@ -14,7 +14,7 @@ const belowMd = styles.breakpoint('md', 'max');
  * prose tracks `--color-text-*` / `--color-accent-*` without per-element component vars.
  * Surface chrome (blockquote, fenced pre, tables) uses `c.vars()` for theme overrides.
  */
-export const proseContent = typestyles.styles.component(
+export const proseContent = typestyles.recipe(
   'docs-prose',
   (c) => {
     const v = c.vars({

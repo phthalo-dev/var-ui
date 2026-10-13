@@ -2,9 +2,8 @@ import { describe, it, expect, beforeEach } from 'vite-plus/test';
 import { getRegisteredCss, reset } from 'typestyles';
 import { createDesignTheme } from '../src/theme/create-theme';
 import { when } from '../src/theme/conditions';
-import { resetExtendTokenRegistry } from '../src/theme/extend-tokens';
-import { registerGlobals } from '../src/theme/document-globals';
-import { styles } from '../src/runtime';
+import { registerTestGlobals } from './lib/register-test-globals';
+import { override } from '../src/runtime';
 import { button, resolveButtonProps } from '../src/components/button';
 
 const themeClass = (name: string) => `.theme-var-ui-${name}`;
@@ -12,18 +11,21 @@ const themeClass = (name: string) => `.theme-var-ui-${name}`;
 describe('theme conditions and colorModes', () => {
   beforeEach(() => {
     reset();
-    resetExtendTokenRegistry();
-    registerGlobals();
+    registerTestGlobals();
   });
 
   it('emits light-dark() for color mode values on override properties', () => {
     button(resolveButtonProps({ intent: 'primary', size: 'md' }));
-    const theme = createDesignTheme({ name: 'mode-values' });
-    theme.componentStyles(button, () => ({
-      base: {
-        color: { light: '#111111', dark: '#eeeeee' },
+    createDesignTheme({
+      name: 'mode-values',
+      components: {
+        button: () => ({
+          base: {
+            color: { light: '#111111', dark: '#eeeeee' },
+          },
+        }),
       },
-    }));
+    });
 
     const css = getRegisteredCss();
     expect(css).toContain(`${themeClass('mode-values')} .var-ui-button`);
@@ -32,12 +34,16 @@ describe('theme conditions and colorModes', () => {
 
   it('emits conditional override rules for when.dark', () => {
     button(resolveButtonProps({ intent: 'primary', size: 'md' }));
-    const theme = createDesignTheme({ name: 'conditions' });
-    theme.componentStyles(button, () => ({
-      base: {
-        conditions: [when.dark({ letterSpacing: '0.06em' })],
+    createDesignTheme({
+      name: 'conditions',
+      components: {
+        button: () => ({
+          base: {
+            conditions: [when.dark({ letterSpacing: '0.06em' })],
+          },
+        }),
       },
-    }));
+    });
 
     const css = getRegisteredCss();
     expect(css).toContain(`${themeClass('conditions')} [data-mode="dark"] .var-ui-button`);
@@ -46,16 +52,16 @@ describe('theme conditions and colorModes', () => {
   });
 
   it('emits global color-scheme rules for root and surfaces', () => {
-    createDesignTheme({ name: 'scheme-fixture' });
+    createDesignTheme({ name: 'scheme-fixture', tokens: {} });
     const css = getRegisteredCss();
     expect(css).toMatch(/color-scheme:\s*light\s+dark/);
     expect(css).toContain('[data-surface="dark"]');
     expect(css).toContain('[data-surface="light"]');
   });
 
-  it('styles.override accepts conditions and color mode values directly', () => {
+  it('override accepts conditions and color mode values directly', () => {
     button(resolveButtonProps({ intent: 'secondary', size: 'sm' }));
-    styles.override(
+    override(
       button,
       {
         base: {

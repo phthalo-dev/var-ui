@@ -12,7 +12,7 @@ import { designTokens as t } from '../tokens';
  * <nav className={p.root}>…</nav>
  * ```
  */
-export const pagination = typestyles.styles.component(
+export const pagination = typestyles.recipe(
   'pagination',
   (c) => {
     const v = c.vars({

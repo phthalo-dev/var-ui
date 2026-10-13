@@ -15,7 +15,7 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessageBubble({ sender: 'user' }).root}>Hi!</div>
  * ```
  */
-export const chatMessageBubble = typestyles.styles.component(
+export const chatMessageBubble = typestyles.recipe(
   'chat-message-bubble',
   (c) => {
     const v = c.vars({

@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const switchStyles = typestyles.styles.component(
+export const switchStyles = typestyles.recipe(
   'switch',
   (c) => {
     const v = c.vars({

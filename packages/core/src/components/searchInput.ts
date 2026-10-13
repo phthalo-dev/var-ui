@@ -1,11 +1,11 @@
-import { styles, typestyles } from '../runtime';
+import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeMetrics, controlSizeVariants, controlSurfaceSize } from './controlSize';
 import type { ControlSize } from './semanticTone';
 
 /** Command-trigger chrome collapses to an icon button below this width. */
-const belowXl = styles.breakpoint('xl', 'max');
+const belowXl = breakpoint('xl', 'max');
 
 /**
  * Compact search field for toolbars and nav chrome.
@@ -14,7 +14,7 @@ const belowXl = styles.breakpoint('xl', 'max');
  * - `command` — read-only trigger chrome with a shortcut hint; pair with
  *   `CommandPalette` via `data-command-palette` on the Astro component.
  */
-export const searchInput = typestyles.styles.component(
+export const searchInput = typestyles.recipe(
   'search-input',
   (c) => {
     const v = c.vars({

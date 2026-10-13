@@ -165,3 +165,17 @@ export { tabList } from './tabList';
 export { thumbnail } from './thumbnail';
 export { textAreaField } from './textAreaField';
 export { textField } from './textField';
+export * from './breakpoints';
+export { hiddenClassName, hiddenStyle, type HiddenBreakpoint, type HiddenMap } from './hidden';
+export type {
+  SemanticToneKey,
+  ToneAppearance,
+  SurfaceAppearance,
+  FeedbackTone,
+  ButtonTone,
+  ControlSize,
+  SpinnerAppearance,
+  ProgressBarAppearance,
+  ProgressBarTone,
+} from './semanticTone';
+export type { TocHeading } from './toc/spy';

@@ -6,7 +6,7 @@
 
 **Architecture:** One `layout.ts` core file exports five slot-based recipes sharing CSS custom properties for padding and content width. React `Layout` sets data attributes + thin context for zone awareness. `useResizable` gains a `regions` overload without breaking SideNav. `LayoutPanel` responsive modes reuse RAC `Modal` patterns from `MobileNav`.
 
-**Tech Stack:** TypeStyles recipes (`typestyles.styles.component`), React Aria Components, `@var-ui/core` tokens, Vite+ (`vp test`, `vp check`), Astro static components.
+**Tech Stack:** TypeStyles recipes (`typestyles.recipe`), React Aria Components, `@var-ui/core` tokens, Vite+ (`vp test`, `vp check`), Astro static components.
 
 ## Global Constraints
 
@@ -59,7 +59,7 @@
 
 **Interfaces:**
 
-- Produces: `layout()`, `layoutHeader()`, `layoutFooter()`, `layoutContent()`, `layoutPanel()` — each returns slot class map via `typestyles.styles.component`
+- Produces: `layout()`, `layoutHeader()`, `layoutFooter()`, `layoutContent()`, `layoutPanel()` — each returns slot class map via `typestyles.recipe`
 
 - [ ] **Step 1: Create `layout.ts` with `layout()` recipe**
 
@@ -72,7 +72,7 @@ export type LayoutPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
 
 const paddingValue = (step: LayoutPadding) => t.space[step].var;
 
-export const layout = typestyles.styles.component(
+export const layout = typestyles.recipe(
   'layout',
   (c) => {
     const v = c.vars({

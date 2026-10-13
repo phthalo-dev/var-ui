@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
  * Visually groups adjacent buttons with shared borders and connected corners.
  * Apply `root` to a wrapper; direct child buttons pick up grouped styling.
  */
-export const buttonGroup = typestyles.styles.component(
+export const buttonGroup = typestyles.recipe(
   'button-group',
   () => ({
     slots: ['root'],

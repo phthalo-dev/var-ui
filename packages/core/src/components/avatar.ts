@@ -11,7 +11,7 @@ import type { ButtonTone } from './semanticTone';
  * <span className={a.root}><img className={a.image} … /></span>
  * ```
  */
-export const avatar = typestyles.styles.component(
+export const avatar = typestyles.recipe(
   'avatar',
   (c) => {
     const v = c.vars({
@@ -106,7 +106,7 @@ export const avatarVariantPropDocs = [
  * <span className={g.root}>{avatars.map(a => <span className={g.item}>{a}</span>)}</span>
  * ```
  */
-export const avatarGroup = typestyles.styles.component(
+export const avatarGroup = typestyles.recipe(
   'avatar-group',
   (c) => {
     const v = c.vars({
