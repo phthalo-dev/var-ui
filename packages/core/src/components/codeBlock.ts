@@ -50,7 +50,7 @@ export const codeBlockVarDefinitions = {
   },
 } as const;
 
-const codeBlockRecipe = typestyles.styles.component(
+const codeBlockRecipe = typestyles.recipe(
   'code-block',
   (c) => {
     const v = c.vars(codeBlockVarDefinitions);

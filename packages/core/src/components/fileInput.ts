@@ -8,7 +8,7 @@ import { fieldChrome } from './field';
  * validation and drag state; this recipe only styles the resulting DOM
  * states (`data-drag-over`, `data-disabled`).
  */
-export const fileInput = typestyles.styles.component(
+export const fileInput = typestyles.recipe(
   'file-input',
   (c) => {
     const v = c.vars({

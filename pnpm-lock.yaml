@@ -16,11 +16,11 @@ catalogs:
       specifier: ^18.2.0
       version: 18.3.7
     '@typestyles/build-runner':
-      specifier: ^0.5.3
-      version: 0.5.3
+      specifier: ^0.6.0
+      version: 0.6.0
     '@typestyles/vite':
-      specifier: ^0.4.5
-      version: 0.4.5
+      specifier: ^0.5.0
+      version: 0.5.0
     '@vitejs/plugin-react':
       specifier: ^5.0.0
       version: 5.2.0
@@ -40,8 +40,8 @@ catalogs:
       specifier: ^6.0.0
       version: 6.0.3
     typestyles:
-      specifier: ^0.28.0
-      version: 0.28.0
+      specifier: ^0.29.0
+      version: 0.29.0
     vite-plus:
       specifier: 0.2.2
       version: 0.2.2
@@ -69,8 +69,8 @@ importers:
         specifier: ^24.0.0
         version: 24.13.2
       '@typestyles/eslint-plugin':
-        specifier: ^0.3.1
-        version: 0.3.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.4.1
+        version: 0.4.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -133,7 +133,7 @@ importers:
         version: 6.0.0
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.9
@@ -152,10 +152,10 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@typestyles/build-runner':
         specifier: 'catalog:'
-        version: 0.5.3
+        version: 0.6.0
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
@@ -189,13 +189,13 @@ importers:
         version: 0.9.9(prettier@3.9.4)(typescript@6.0.3)
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
 
   examples/astro-docs:
     dependencies:
@@ -216,17 +216,17 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(prettier@3.9.4)(typescript@6.0.3)
       '@typestyles/build-runner':
-        specifier: ^0.5.2
-        version: 0.5.2
+        specifier: 'catalog:'
+        version: 0.6.0
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
 
   examples/bundle-fixtures/button-only:
     dependencies:
@@ -251,13 +251,13 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.2(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))(yaml@2.9.0)
@@ -288,13 +288,13 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.2(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))(yaml@2.9.0)
@@ -322,13 +322,13 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.2(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))(yaml@2.9.0)
@@ -362,13 +362,13 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@typestyles/vite':
         specifier: 'catalog:'
-        version: 0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.2(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))(yaml@2.9.0)
@@ -386,7 +386,7 @@ importers:
         version: 26.1.0
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
         version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -410,17 +410,17 @@ importers:
     dependencies:
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
     devDependencies:
       '@typestyles/build-runner':
-        specifier: ^0.5.2
-        version: 0.5.2
+        specifier: 'catalog:'
+        version: 0.6.0
       '@typestyles/cli':
-        specifier: ^0.2.1
-        version: 0.2.1
-      '@typestyles/eslint-plugin':
         specifier: ^0.3.1
-        version: 0.3.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
+        version: 0.3.1
+      '@typestyles/eslint-plugin':
+        specifier: ^0.4.1
+        version: 0.4.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
         version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -434,8 +434,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.14(astro@5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
       '@typestyles/build-runner':
-        specifier: ^0.5.2
-        version: 0.5.2
+        specifier: 'catalog:'
+        version: 0.6.0
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -447,8 +447,8 @@ importers:
         version: 4.4.3
     devDependencies:
       '@typestyles/vite':
-        specifier: ^0.4.5
-        version: 0.4.5(@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
+        specifier: 'catalog:'
+        version: 0.5.0(@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
       '@var-ui/astro':
         specifier: workspace:*
         version: link:../astro
@@ -463,7 +463,7 @@ importers:
         version: 26.1.0
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
         version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -494,7 +494,7 @@ importers:
         version: 26.1.0
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
         version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -548,7 +548,7 @@ importers:
         version: 3.13.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typestyles:
         specifier: 'catalog:'
-        version: 0.28.0
+        version: 0.29.0
     devDependencies:
       '@internationalized/date':
         specifier: 'catalog:'
@@ -1513,12 +1513,6 @@ packages:
 
   '@eslint-community/eslint-utils@4.10.1':
     resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
-
-  '@eslint-community/eslint-utils@4.9.1':
-    resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -2786,23 +2780,20 @@ packages:
     resolution: {integrity: sha512-4g3BLxfdTMy8iZG0MaBkadnlRrCJ74cQiFbyEVMrkwIoqdyaXXQM22cotDvrl4x28wgIZ9rEJRoM+mmhSJpJ1g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typestyles/build-runner@0.5.2':
-    resolution: {integrity: sha512-WGjJoRc0e+UbzgSZytq5AZFNSQ6EdiqN9hGkpAFNOvy3sSIF/VIHx/PX05BHHARqPGEA8A1LQ5BqmP1gUOitXw==}
+  '@typestyles/build-runner@0.6.0':
+    resolution: {integrity: sha512-rMbLJM2j+0lMTu0jlVZKKzKpzXrCl3R9lCGoAB5zxJy7X23MFXf1ppo3j1HlxgFFV+ZjusCR99FVsW/9LGoRKA==}
 
-  '@typestyles/build-runner@0.5.3':
-    resolution: {integrity: sha512-EbTFJlfk4dICWLs1KKqZcbl0mKFKRP40ctq17uzcXOHv0Jar9HzwNtN6PEM7ooPZE736lzJbxebxSD0DHxZvmQ==}
-
-  '@typestyles/cli@0.2.1':
-    resolution: {integrity: sha512-8gkdL1oE2JngdjeswqzvHTynqj91Fm3ntSvSa60EetngNcQGLcxG2OX10OPO60ET3S8qoEeC6+37jw7JgTi+gA==}
+  '@typestyles/cli@0.3.1':
+    resolution: {integrity: sha512-09U5BI30zKKKs9BjKffySTmkHh+Lb6X+OdpMp6G6uDNGq8ykZFDHOcWsMtufx7R+6uloUkuZAMk12jW024vaCQ==}
     hasBin: true
 
-  '@typestyles/eslint-plugin@0.3.1':
-    resolution: {integrity: sha512-Gjzsijznoz1eJdF091afJ7RkHAH3r3qLXWd+awMvSrCYBR4bkx2tw0rtSbS1fc7wWIX+lulKxcOx1SxltvW30g==}
+  '@typestyles/eslint-plugin@0.4.1':
+    resolution: {integrity: sha512-I1OqjEKv7sfjhElaUJbxflA8yeQaY1R7JbpPgIJEZ/vFwPwfDSx/pRMfv4GZ4ETMCVKSEqG6peidRfNjUyCgzg==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@typestyles/vite@0.4.5':
-    resolution: {integrity: sha512-QPnz9087RJQ0P3aSPuPoTfgvOnTw3scDxak8LaMoC36nMzbDmWV5G+GQgEKCFdljBgMh/oAWmEAWOmzz+qj1oQ==}
+  '@typestyles/vite@0.5.0':
+    resolution: {integrity: sha512-DpRB6zfVKTyOYkcbCryRuD2QJS6YIDolE7r5Wt3YoVIrLUSp1hiYkLRmOpeeJoE2/u0JN1xHbxoc8hxH9tvpMA==}
     peerDependencies:
       vite: '>=5.0.0'
 
@@ -6243,8 +6234,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typestyles@0.28.0:
-    resolution: {integrity: sha512-bL4kb3QNeAdZSPz/DT562tIGL186lAZLR31/eRXudk4zVuq99Yti1wWJzLCUpUhIZT/sx6w9bligH1B9l2yVvg==}
+  typestyles@0.29.0:
+    resolution: {integrity: sha512-4vm3WtrxBxIM+PVsKO7R4JFWiBQhM/E/xGnyMjfcrJpOsBu0pqdkP+RJe4jbC49RI/Fpt5zhbuXIP8Qo//xkNQ==}
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
@@ -7745,11 +7736,6 @@ snapshots:
       eslint: 9.39.4(jiti@2.7.0)
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.9.1(eslint@9.39.4(jiti@2.7.0))':
-    dependencies:
-      eslint: 9.39.4(jiti@2.7.0)
-      eslint-visitor-keys: 3.4.3
-
   '@eslint-community/regexpp@4.12.2': {}
 
   '@eslint/config-array@0.21.2':
@@ -9064,7 +9050,7 @@ snapshots:
 
   '@typescript-eslint/utils@8.62.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@2.7.0))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.4(jiti@2.7.0))
       '@typescript-eslint/scope-manager': 8.62.1
       '@typescript-eslint/types': 8.62.1
       '@typescript-eslint/typescript-estree': 8.62.1(typescript@6.0.3)
@@ -9078,41 +9064,37 @@ snapshots:
       '@typescript-eslint/types': 8.62.1
       eslint-visitor-keys: 5.0.1
 
-  '@typestyles/build-runner@0.5.2':
+  '@typestyles/build-runner@0.6.0':
     dependencies:
       esbuild: 0.27.7
 
-  '@typestyles/build-runner@0.5.3':
-    dependencies:
-      esbuild: 0.27.7
-
-  '@typestyles/cli@0.2.1':
+  '@typestyles/cli@0.3.1':
     dependencies:
       fast-glob: 3.3.3
       typescript: 5.9.3
 
-  '@typestyles/eslint-plugin@0.3.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)':
+  '@typestyles/eslint-plugin@0.4.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.62.1(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
-      '@typestyles/cli': 0.2.1
+      '@typestyles/cli': 0.3.1
       eslint: 9.39.4(jiti@2.7.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@typestyles/vite@0.4.5(@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))':
+  '@typestyles/vite@0.5.0(@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))':
     dependencies:
-      '@typestyles/build-runner': 0.5.3
+      '@typestyles/build-runner': 0.6.0
       vite: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
 
-  '@typestyles/vite@0.4.5(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
+  '@typestyles/vite@0.5.0(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
-      '@typestyles/build-runner': 0.5.3
+      '@typestyles/build-runner': 0.6.0
       vite: 6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
 
-  '@typestyles/vite@0.4.5(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
+  '@typestyles/vite@0.5.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
-      '@typestyles/build-runner': 0.5.3
+      '@typestyles/build-runner': 0.6.0
       vite: 8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
 
   '@ungap/structured-clone@1.3.2': {}
@@ -13533,7 +13515,7 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typestyles@0.28.0:
+  typestyles@0.29.0:
     dependencies:
       csstype: 3.2.3
 

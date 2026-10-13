@@ -1,6 +1,6 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, media, typestyles } from '@var-ui/core';
 
-export const cssVariableReferenceStyles = typestyles.styles.component(
+export const cssVariableReferenceStyles = typestyles.recipe(
   'css-variable-reference',
   () => ({
     slots: [
@@ -104,7 +104,7 @@ export const cssVariableReferenceStyles = typestyles.styles.component(
       maxWidth: '16rem',
       overflowWrap: 'anywhere',
     },
-    ...styles.media('sm', 'max', {
+    ...media('sm', 'max', {
       defaultCell: {
         maxWidth: '10rem',
       },

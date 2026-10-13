@@ -1,4 +1,4 @@
-import { styles } from '../runtime';
+import { breakpoint } from '../runtime';
 import { designBreakpoints } from '../tokens/defaults/breakpoint';
 
 /** Breakpoint names used by `AppShell` for `data-mobile` / `matchMedia`. */
@@ -11,9 +11,9 @@ const toMatchMediaQuery = (mediaKey: `@media ${string}`) => mediaKey.slice('@med
 
 /** `matchMedia` conditions for `AppShell` mobile layout, derived from TypeStyles breakpoints. */
 export const appShellMobileBreakpointQueries = {
-  sm: toMatchMediaQuery(styles.breakpoint('sm', 'max')),
-  md: toMatchMediaQuery(styles.breakpoint('md', 'max')),
-  lg: toMatchMediaQuery(styles.breakpoint('lg', 'max')),
+  sm: toMatchMediaQuery(breakpoint('sm', 'max')),
+  md: toMatchMediaQuery(breakpoint('md', 'max')),
+  lg: toMatchMediaQuery(breakpoint('lg', 'max')),
   none: 'not all',
 } as const satisfies Record<AppShellMobileBreakpoint, string>;
 

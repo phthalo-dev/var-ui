@@ -1,8 +1,8 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
 
-const belowXl = styles.breakpoint('xl', 'max');
-const belowMd = styles.breakpoint('md', 'max');
-const belowSm = styles.breakpoint('sm', 'max');
+const belowXl = breakpoint('xl', 'max');
+const belowMd = breakpoint('md', 'max');
+const belowSm = breakpoint('sm', 'max');
 
 const toolsCluster = {
   display: 'flex',
@@ -23,7 +23,7 @@ const toolsCluster = {
  * (hamburger + MobileNav), search compact is owned by `searchInput`, and
  * optional toolbar extras hide below `sm`.
  */
-export const docsTopNav = typestyles.styles.component(
+export const docsTopNav = typestyles.recipe(
   'docs-top-nav',
   () => ({
     slots: ['root', 'tools', 'toolsPersist', 'toolbar', 'toolbarExtra', 'mobileNavBody'],

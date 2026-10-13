@@ -11,7 +11,7 @@ import { designTokens as t } from '../tokens';
  * <div className={s.viewport}>{items.map(i => <div className={s.item}>{i}</div>)}</div>
  * ```
  */
-export const carousel = typestyles.styles.component(
+export const carousel = typestyles.recipe(
   'carousel',
   (c) => {
     const v = c.vars({

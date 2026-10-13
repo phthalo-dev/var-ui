@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { calendarGridChrome, dateFieldChrome } from './field';
 
-export const dateTimeInput = typestyles.styles.component(
+export const dateTimeInput = typestyles.recipe(
   'dateTimeInput',
   (c) => {
     const v = c.vars({

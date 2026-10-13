@@ -1,7 +1,8 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { themeableComponents } from '../../src/styles';
+import '../../src/components';
+import { typestyles } from '../../src/runtime';
 
 const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -46,7 +47,7 @@ export type PackageExportsAudit = {
   runtimeExports: Record<ExportCategory, string[]>;
 };
 
-const recipeNames = new Set(Object.keys(themeableComponents));
+const recipeNames = new Set(typestyles.getThemeableComponents().keys());
 
 const recipeAdjacent = new Set([
   'linkButton',
@@ -104,7 +105,9 @@ function categorizeRuntimeExport(name: string): ExportCategory {
   ) {
     return 'theme';
   }
-  if (/^(typestyles|styles|global)/.test(name)) return 'runtime';
+  if (/^(typestyles|style|recipe|tokens|global|override|breakpoint|media)$/.test(name)) {
+    return 'runtime';
+  }
   if (
     /^(toc|Toc|positionToc|TOC_|collectArticle|createTocSpy|findScrollContainer|pickActive|resolveActive)/.test(
       name,

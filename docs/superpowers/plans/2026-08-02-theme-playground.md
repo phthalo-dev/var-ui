@@ -6,7 +6,7 @@
 
 **Architecture:** React island with `DesignSystemProvider` color-mode sync (same as `HomepageIsland`). Controls sidebar left, preview right. State drives preset selection and viewport; `generateThemeCode()` mirrors `buttonCode.ts`. Reuses `SHOWCASE_THEMES`, `ThemeShowcaseSwitcher`, `BentoShowcase`, and `ComponentConfigurator` layout patterns.
 
-**Tech Stack:** Astro MDX, React islands (`client:load`), TypeStyles (`typestyles.styles.component`), `@var-ui/react`, Vite+ (`vp test`, `vp check`).
+**Tech Stack:** Astro MDX, React islands (`client:load`), TypeStyles (`typestyles.recipe`), `@var-ui/react`, Vite+ (`vp test`, `vp check`).
 
 ## Global Constraints
 
@@ -235,7 +235,7 @@ Mirror `configurator.ts` but flip columns (`15rem 1fr` → controls first):
 ```ts
 import { designTokens as t, styles, typestyles } from '@var-ui/core';
 
-export const themePlaygroundStyles = typestyles.styles.component(
+export const themePlaygroundStyles = typestyles.recipe(
   'theme-playground',
   () => ({
     slots: [

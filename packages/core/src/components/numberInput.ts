@@ -3,7 +3,7 @@ import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
 
-export const numberInput = typestyles.styles.component(
+export const numberInput = typestyles.recipe(
   'number-input',
   (c) => {
     const v = c.vars({

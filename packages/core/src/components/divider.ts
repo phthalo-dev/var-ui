@@ -9,7 +9,7 @@ import { designTokens as t } from '../tokens';
  * <hr className={divider()} />
  * ```
  */
-export const divider = typestyles.styles.component(
+export const divider = typestyles.recipe(
   'divider',
   (c) => {
     const v = c.vars({

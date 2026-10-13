@@ -1,6 +1,6 @@
 import { typestyles } from '@var-ui/core';
 
-export const playgroundShellStyles = typestyles.styles.component(
+export const playgroundShellStyles = typestyles.recipe(
   'playground-shell',
   () => ({
     slots: ['root', 'layout'],

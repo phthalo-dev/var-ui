@@ -174,7 +174,7 @@ Unspecified keys inherit the previous value. Default at `base` is visible (`fals
 
 `base` is required so “hide on small screens” does not leave `0–639px` visible: `sm` is min-width `640px`, not “from 0”.
 
-**CSS:** one hashed TypeStyles class (token breakpoints via `styles.breakpoint(name, 'min')`). When shown: `display: contents` so the wrapper is not a flex/grid item. When hidden: `display: none`. No `!important`. No HTML `hidden` attribute.
+**CSS:** one hashed TypeStyles class (token breakpoints via `breakpoint(name, 'min')`). When shown: `display: contents` so the wrapper is not a flex/grid item. When hidden: `display: none`. No `!important`. No HTML `hidden` attribute.
 
 Astro: `<Hidden hide={...}>` wraps the slot the same way; raw HTML uses `hiddenClassName` on a real tag (`<aside class={hiddenClassName({ hide: { md: true } })}>`).
 

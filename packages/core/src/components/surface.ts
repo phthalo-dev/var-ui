@@ -8,7 +8,7 @@ import { designTokens as t } from '../tokens';
  * <div className={surface({ padding: 'md' })}>…</div>
  * ```
  */
-export const surface = typestyles.styles.component(
+export const surface = typestyles.recipe(
   'surface',
   (c) => {
     const v = c.vars({

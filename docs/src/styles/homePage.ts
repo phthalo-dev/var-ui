@@ -1,9 +1,9 @@
-import { designTokens as t, styles, typestyles } from '@var-ui/core';
+import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
 
-const belowMd = styles.breakpoint('md', 'max');
+const belowMd = breakpoint('md', 'max');
 
 /** Marketing homepage layout: centered hero, feature grid, showcase band, and explore cards. */
-export const homePage = typestyles.styles.component(
+export const homePage = typestyles.recipe(
   'home-page',
   () => ({
     slots: [

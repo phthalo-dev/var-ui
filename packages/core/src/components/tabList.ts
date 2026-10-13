@@ -6,7 +6,7 @@ const TAB_LIST_SLOTS = ['root', 'tab', 'indicator', 'menu', 'menuTrigger'] as co
 
 /**
  * Explicit variant-dimension shape (values left as `{}` — only the keys matter for the
- * `typestyles.styles.component` call signature); see `appShell.ts` for why this pins the
+ * `typestyles.recipe` call signature); see `appShell.ts` for why this pins the
  * slot-with-variants overload.
  */
 type TabListVariantDefs = {
@@ -33,7 +33,7 @@ type TabListVariantDefs = {
  * </nav>
  * ```
  */
-export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabListVariantDefs>(
+export const tabList = typestyles.recipe<typeof TAB_LIST_SLOTS, TabListVariantDefs>(
   'tab-list',
   (c) => {
     const v = c.vars({

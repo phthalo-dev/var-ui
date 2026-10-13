@@ -2,17 +2,16 @@ import { describe, it, expect, expectTypeOf } from 'vite-plus/test';
 import { getComponentMeta } from 'typestyles';
 import type { OverrideConfigFor } from '../src/types';
 import * as components from '../src/components';
-import { themeableComponents } from '../src/styles';
-import { styles } from '../src/runtime';
+import { typestyles } from '../src/runtime';
 import { button } from '../src/components/button';
 import { card } from '../src/components/card';
 import { badge } from '../src/components/badge';
 import { menu } from '../src/components/menu';
 import { createDesignTheme } from '../src/theme/create-theme';
 
-describe('themeableComponents', () => {
+describe('themeable recipe registry', () => {
   it('includes every exported recipe function from components/', () => {
-    const themeable = styles.getThemeableComponents();
+    const themeable = typestyles.getThemeableComponents();
 
     const recipeExports = Object.entries(components).filter(
       ([name, value]) =>
@@ -44,12 +43,6 @@ describe('themeableComponents', () => {
     }
 
     expect(missing, `Themeable registry missing namespaces: ${missing.join(', ')}`).toEqual([]);
-  });
-
-  it('matches getRegisteredComponentRefs keys to themeable namespaces', () => {
-    expect(Object.keys(themeableComponents).sort()).toEqual(
-      [...styles.getThemeableComponents().keys()].sort(),
-    );
   });
 
   it('infers dimensioned button override shape with CSS + variant keys', () => {

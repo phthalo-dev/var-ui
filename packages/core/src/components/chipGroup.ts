@@ -4,7 +4,7 @@ import { designTokens as t } from '../tokens';
 /**
  * Layout wrapper for grouped filter chips.
  */
-export const chipGroup = typestyles.styles.component(
+export const chipGroup = typestyles.recipe(
   'chip-group',
   () => ({
     slots: ['root'],

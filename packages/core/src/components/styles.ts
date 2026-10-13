@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const layout = typestyles.styles.component(
+export const layout = typestyles.recipe(
   'ds-layout',
   (c) => {
     const v = c.vars({
@@ -49,7 +49,7 @@ export const layout = typestyles.styles.component(
   { layer: 'utilities' },
 );
 
-export const text = typestyles.styles.component(
+export const text = typestyles.recipe(
   'ds-text',
   (c) => {
     const v = c.vars({

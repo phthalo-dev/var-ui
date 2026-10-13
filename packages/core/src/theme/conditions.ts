@@ -30,18 +30,18 @@ const reducedMotionAtRule = toMediaAtRuleKey(reducedMotionQuery);
 
 /** Reduced-motion styles for variant slots — spread into a style object. */
 export function atReducedMotion(style: VariantOptionStyle) {
-  return typestyles.styles.atRuleBlock(reducedMotionAtRule, style);
+  return typestyles.atRuleBlock(reducedMotionAtRule, style);
 }
 
 /**
  * Resolved dark-mode styles for component recipe slots — spread into a style object.
- * Uses TypeStyles `styles.when` + {@link themeWhen.colorModeResolvedDark}.
+ * Uses TypeStyles `when` + {@link themeWhen.colorModeResolvedDark}.
  */
 export function atDarkMode(style: VariantOptionStyle) {
-  return typestyles.styles.when(themeWhen.colorModeResolvedDark, style);
+  return typestyles.when(themeWhen.colorModeResolvedDark, style);
 }
 
-/** Build a `conditions` entry for `styles.override()` — prefer `{ light, dark }` on color properties when possible. */
+/** Build a `conditions` entry for `override()` — prefer `{ light, dark }` on color properties when possible. */
 export const when = {
   dark: (style: VariantOptionStyle, id?: string): ConditionalOverride =>
     conditional(themeWhen.colorModeResolvedDark, style, id),

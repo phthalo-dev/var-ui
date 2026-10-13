@@ -1,7 +1,7 @@
-import { styles, typestyles } from '../runtime';
+import { media, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const card = typestyles.styles.component(
+export const card = typestyles.recipe(
   'card',
   (c) => {
     const v = c.vars({
@@ -66,7 +66,7 @@ export const card = typestyles.styles.component(
         display: 'grid',
         gap: t.space[4].var,
         gridTemplateColumns: '1fr',
-        ...styles.media('sm', 'min', {
+        ...media('sm', 'min', {
           gridTemplateColumns: 'repeat(2, 1fr)',
         }),
       },

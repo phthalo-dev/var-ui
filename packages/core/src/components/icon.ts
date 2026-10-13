@@ -15,7 +15,7 @@ export const iconMirrorStyle = {
  * <span className={icon({ size: 'md' })}>{svg}</span>
  * ```
  */
-export const icon = typestyles.styles.component(
+export const icon = typestyles.recipe(
   'icon',
   (c) => {
     const v = c.vars({

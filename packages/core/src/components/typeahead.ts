@@ -4,7 +4,7 @@ import { controlFocusStyles } from './controlFocus';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { dropdownPopoverChrome, fieldChrome } from './field';
 
-export const typeahead = typestyles.styles.component(
+export const typeahead = typestyles.recipe(
   'typeahead',
   (c) => {
     const v = c.vars({

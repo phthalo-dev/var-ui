@@ -21,7 +21,7 @@ import { designTokens as t } from '../tokens';
  * </div>
  * ```
  */
-export const table = typestyles.styles.component(
+export const table = typestyles.recipe(
   'table',
   (c) => {
     const v = c.vars({

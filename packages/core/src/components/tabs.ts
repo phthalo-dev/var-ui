@@ -57,7 +57,7 @@ export const tabsVarDefinitions = {
  * `aria-selected="true"`; the sliding indicator is the list `::after` pseudo,
  * positioned via `positionTabsIndicator`.
  */
-const tabsRecipe = typestyles.styles.component(
+const tabsRecipe = typestyles.recipe(
   'tabs',
   (c) => {
     const v = c.vars(tabsVarDefinitions);

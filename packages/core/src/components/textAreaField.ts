@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from './field';
 
-export const textAreaField = typestyles.styles.component(
+export const textAreaField = typestyles.recipe(
   'text-area-field',
   (c) => {
     const v = c.vars({

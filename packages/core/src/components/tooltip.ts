@@ -10,7 +10,7 @@ import { overlayPresenceStyles } from './overlayPresence';
  * <div className={tip.root}>More info</div>
  * ```
  */
-export const tooltip = typestyles.styles.component(
+export const tooltip = typestyles.recipe(
   'tooltip',
   (c) => {
     const v = c.vars({

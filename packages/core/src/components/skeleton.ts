@@ -15,7 +15,7 @@ const shimmer = keyframes.create('var-ui-shimmer', {
  * <div className={skeleton({ shape: 'text' })} style={{ width: '12ch' }} />
  * ```
  */
-export const skeleton = typestyles.styles.component(
+export const skeleton = typestyles.recipe(
   'skeleton',
   (c) => {
     const v = c.vars({

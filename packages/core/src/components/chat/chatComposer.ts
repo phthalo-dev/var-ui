@@ -13,7 +13,7 @@ import { designTokens as t } from '../../tokens';
  * </div>
  * ```
  */
-export const chatComposer = typestyles.styles.component(
+export const chatComposer = typestyles.recipe(
   'chat-composer',
   (c) => {
     const v = c.vars({

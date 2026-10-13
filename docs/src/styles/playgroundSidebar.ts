@@ -1,6 +1,6 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
-export const playgroundSidebarStyles = typestyles.styles.component(
+export const playgroundSidebarStyles = typestyles.recipe(
   'playground-sidebar',
   () => ({
     slots: ['root', 'controlGroup', 'controlLabel', 'editorTabs', 'navLinks'],

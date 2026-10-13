@@ -8,7 +8,7 @@ import { fieldChrome } from './field';
  * Hex color input with a swatch trigger for a native color picker. Intended
  * for theme builders and settings forms — not a full HSV color picker.
  */
-export const colorField = typestyles.styles.component(
+export const colorField = typestyles.recipe(
   'color-field',
   (c) => {
     const v = c.vars({

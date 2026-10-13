@@ -6,7 +6,7 @@ import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPres
  * General-purpose slide-in panel built on RAC Modal. Supports start/end/bottom
  * placement and sm/md/lg widths. Pair with the React `Drawer` compound component.
  */
-export const drawer = typestyles.styles.component(
+export const drawer = typestyles.recipe(
   'drawer',
   (c) => {
     const v = c.vars({

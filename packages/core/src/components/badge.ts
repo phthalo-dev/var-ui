@@ -10,7 +10,7 @@ import {
 /**
  * Flat component: `tone` sets semantic channels; `appearance` applies shared resolver paint.
  */
-export const badge = typestyles.styles.component(
+export const badge = typestyles.recipe(
   'badge',
   (c) => {
     const v = c.vars({

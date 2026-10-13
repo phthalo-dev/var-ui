@@ -9,7 +9,7 @@ import {
   type ToneAppearance,
 } from './semanticTone';
 
-export const button = typestyles.styles.component(
+export const button = typestyles.recipe(
   'button',
   (c) => {
     const v = c.vars({

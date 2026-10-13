@@ -15,7 +15,7 @@ const toneKeys: ProgressBarTone[] = ['accent', 'success', 'warning', 'danger'];
  * Linear progress. Fill width is set inline by the React wrapper
  * (percentage); the `indeterminate` variant animates a sliding segment.
  */
-export const progressBar = typestyles.styles.component(
+export const progressBar = typestyles.recipe(
   'progress-bar',
   (c) => {
     const v = c.vars({

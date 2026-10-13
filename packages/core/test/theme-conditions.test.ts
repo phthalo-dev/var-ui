@@ -3,7 +3,7 @@ import { getRegisteredCss, reset } from 'typestyles';
 import { createDesignTheme } from '../src/theme/create-theme';
 import { when } from '../src/theme/conditions';
 import { registerTestGlobals } from './lib/register-test-globals';
-import { styles } from '../src/runtime';
+import { override } from '../src/runtime';
 import { button, resolveButtonProps } from '../src/components/button';
 
 const themeClass = (name: string) => `.theme-var-ui-${name}`;
@@ -59,9 +59,9 @@ describe('theme conditions and colorModes', () => {
     expect(css).toContain('[data-surface="light"]');
   });
 
-  it('styles.override accepts conditions and color mode values directly', () => {
+  it('override accepts conditions and color mode values directly', () => {
     button(resolveButtonProps({ intent: 'secondary', size: 'sm' }));
-    styles.override(
+    override(
       button,
       {
         base: {

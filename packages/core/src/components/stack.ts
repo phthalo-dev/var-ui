@@ -9,7 +9,7 @@ import { designTokens as t } from '../tokens';
  * <div className={stack({ gap: 'lg' })}>…</div>
  * ```
  */
-export const stack = typestyles.styles.component(
+export const stack = typestyles.recipe(
   'stack',
   (c) => {
     const v = c.vars({

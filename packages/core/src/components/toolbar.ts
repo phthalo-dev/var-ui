@@ -6,7 +6,7 @@ import { controlSizeMetrics, controlSizeVariants } from './controlSize';
  * start/center/end slots. Purely visual — no keyboard navigation logic lives
  * here, that's the React wrapper's concern.
  */
-export const toolbar = typestyles.styles.component(
+export const toolbar = typestyles.recipe(
   'toolbar',
   () => ({
     slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],

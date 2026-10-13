@@ -16,7 +16,7 @@ import {
  * <div className={b.root} role="alert">…</div>
  * ```
  */
-export const banner = typestyles.styles.component(
+export const banner = typestyles.recipe(
   'banner',
   (c) => {
     const v = c.vars({

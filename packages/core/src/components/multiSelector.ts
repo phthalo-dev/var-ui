@@ -2,7 +2,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { dropdownPopoverChrome, fieldChrome } from './field';
 
-export const multiSelector = typestyles.styles.component(
+export const multiSelector = typestyles.recipe(
   'multiSelector',
   (c) => {
     const v = c.vars({

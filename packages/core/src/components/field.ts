@@ -262,7 +262,7 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
   } as const;
 }
 
-export const field = typestyles.styles.component(
+export const field = typestyles.recipe(
   'field',
   (c) => {
     const v = c.vars({

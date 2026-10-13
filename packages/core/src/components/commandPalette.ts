@@ -12,7 +12,7 @@ import { designTokens as t } from '../tokens';
  * Multi-part UI: use the **slots** API (`commandPalette().dialog`) rather than flat
  * `component({ key: true })`, which is meant for optional style toggles on one surface.
  */
-export const commandPalette = typestyles.styles.component(
+export const commandPalette = typestyles.recipe(
   'command-palette',
   (c) => {
     const v = c.vars({

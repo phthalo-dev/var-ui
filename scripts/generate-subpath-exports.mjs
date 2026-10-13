@@ -53,6 +53,8 @@ function generateCoreExports() {
   const exports = { ...coreReservedExports() };
 
   for (const recipe of listMjsFiles(join(distDir, 'components'))) {
+    // Components barrel is not a public subpath.
+    if (recipe === 'index') continue;
     const distRel = `components/${recipe}`;
     addExport(exports, `./components/${recipe}`, distRel);
     // `./styles` is reserved for the typestyles extraction entry (`src/styles.ts`).

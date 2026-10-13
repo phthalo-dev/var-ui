@@ -14,7 +14,7 @@ import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPres
  * <div className={o.positioner}>{panel}</div>
  * ```
  */
-export const overlay = typestyles.styles.component(
+export const overlay = typestyles.recipe(
   'overlay',
   (c) => {
     const v = c.vars({

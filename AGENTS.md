@@ -17,4 +17,4 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 
 # TypeStyles first
 
-First-party UI chrome uses TypeStyles recipes (`typestyles.styles.component`) and design tokens — not new `*.css` files or ad-hoc `@media` queries. Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/react` and `@var-ui/astro`). Register site recipes in the TypeStyles extract entry. See `.cursor/rules/typestyles-first.mdc`.
+First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design tokens — not new `*.css` files or ad-hoc `@media` queries. Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/react` and `@var-ui/astro`). Register site recipes in the TypeStyles extract entry. See `.cursor/rules/typestyles-first.mdc`.

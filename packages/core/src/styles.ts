@@ -1,25 +1,26 @@
 /**
  * Build-time CSS extraction entry for `@typestyles/vite`.
  *
- * Re-export registrations (do not use side-effect-only imports). `themeableComponents`
- * pins every themeable recipe handle so `vp pack` cannot emit an empty `dist/styles.mjs`
- * (hosts would otherwise miss recipes, document globals, and the default theme).
+ * App code should import helpers from `@var-ui/core` (or `@var-ui/core/internal`), not here.
+ * The {@link stylesEntry} binding exists so `vp pack` keeps the registration graph — bare
+ * side-effect imports are tree-shaken out of `dist/styles.mjs`.
  *
  * ```ts
  * // typestyles-entry.ts
  * import '@var-ui/core/styles';
  *
- * // Optional: custom themes and app-owned `styles.component()` modules
+ * // Optional: custom themes and app-owned `recipe()` modules
  * import './my-theme';
  * ```
  */
-import { getRegisteredComponentRefs } from 'typestyles';
-import './components';
-import { styles } from './runtime';
+import * as components from './components';
+import { registerBaseStyles } from './theme/base-styles';
+import { defaultTheme, registerDefaultTheme } from './theme/register-default';
 
-/** Pins every themeable recipe handle for the extract bundle — not part of `@var-ui/core` main exports. */
-export const themeableComponents = getRegisteredComponentRefs(styles);
-export { hiddenClassName, hiddenStyle } from './components/hidden';
-export { layout, text } from './components/styles';
-export { registerBaseStyles } from './theme/base-styles';
-export { defaultTheme, registerDefaultTheme } from './theme/register-default';
+/** Retained export so the packed `@var-ui/core/styles` entry keeps recipe + theme registrations. */
+export const stylesEntry = {
+  components,
+  defaultTheme,
+  registerBaseStyles,
+  registerDefaultTheme,
+};

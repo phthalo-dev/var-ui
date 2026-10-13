@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const radio = typestyles.styles.component(
+export const radio = typestyles.recipe(
   'radio',
   (c) => {
     const v = c.vars({

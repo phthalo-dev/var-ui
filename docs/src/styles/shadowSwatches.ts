@@ -1,6 +1,6 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
-export const shadowSwatchesStyles = typestyles.styles.component(
+export const shadowSwatchesStyles = typestyles.recipe(
   'shadow-swatches',
   () => ({
     slots: [

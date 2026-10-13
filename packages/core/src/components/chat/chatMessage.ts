@@ -10,7 +10,7 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessage({ sender: 'assistant' }).root}>…</div>
  * ```
  */
-export const chatMessage = typestyles.styles.component(
+export const chatMessage = typestyles.recipe(
   'chat-message',
   () => ({
     slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],

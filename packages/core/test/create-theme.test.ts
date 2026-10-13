@@ -5,7 +5,7 @@ import { defaultTheme, registerDefaultTheme } from '../src/theme/register-defaul
 import { DEFAULT_THEME_NAME, SURFACE_ATTRIBUTE } from '../src/theme/constants';
 import { resetRegisteredFontFaces } from '../src/fonts/register-font-face';
 import { registerTestGlobals } from './lib/register-test-globals';
-import { styles } from '../src/runtime';
+import { override } from '../src/runtime';
 import { button, resolveButtonProps } from '../src/components/button';
 import { badge } from '../src/components/badge';
 import { layoutPanel } from '../src/components/layout';
@@ -364,9 +364,9 @@ describe('createDesignTheme', () => {
     expect(css).toContain('border-radius: 999px');
   });
 
-  it('styles.override without selectorPrefix applies globally in overrides layer', () => {
+  it('override without selectorPrefix applies globally in overrides layer', () => {
     button(resolveButtonProps({ intent: 'secondary', size: 'sm' }));
-    styles.override(
+    override(
       button,
       {
         base: { borderRadius: '999px' },

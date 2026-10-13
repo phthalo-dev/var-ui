@@ -19,6 +19,9 @@ describe('package subpath exports', () => {
     expect(exports['./internal']?.import).toBe('./dist/internal.mjs');
     expect(exports['./register-default-theme']?.import).toBe('./dist/theme/register-default.mjs');
     expect(exports['./styles']?.import).toBe('./dist/styles.mjs');
+    expect(exports['./base-styles']).toBeUndefined();
+    expect(exports['./index']).toBeUndefined();
+    expect(exports['./components/index']).toBeUndefined();
   });
 
   it('react exposes button entry points', () => {

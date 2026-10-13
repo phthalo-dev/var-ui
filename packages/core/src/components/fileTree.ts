@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const fileTree = typestyles.styles.component(
+export const fileTree = typestyles.recipe(
   'fileTree',
   (c) => {
     const v = c.vars({

@@ -3,7 +3,7 @@
 **Date:** 2026-08-05  
 **Status:** Proposal  
 **Inspired by:** [Reshaped `View` responsive properties](https://reshaped.so/docs/utilities/view)  
-**Related:** `stack`, `grid`, `section`, `breakpoint` tokens, `styles.breakpoint()`
+**Related:** `stack`, `grid`, `section`, `breakpoint` tokens, `breakpoint()`
 
 ## Summary
 
@@ -37,7 +37,7 @@ Reshaped solves this with responsive object syntax on `View` props, compiled to 
 | **Backward compatible**    | `direction="row"` continues to work; responsive is opt-in                       |
 | **Typed**                  | `Responsive<T>` generic with breakpoint keys `sm \| md \| lg \| xl`             |
 | **Recipe-agnostic helper** | Shared `responsive()` utility reusable by future primitives (`Section`, `Text`) |
-| **Token-aligned**          | Media queries use `designBreakpoints` via `styles.breakpoint()`                 |
+| **Token-aligned**          | Media queries use `designBreakpoints` via `breakpoint()`                        |
 
 ## Non-goals (v1)
 
@@ -104,7 +104,7 @@ flex-direction: column;
 
 1. If value is scalar → single declaration, no media queries.
 2. If object → smallest defined breakpoint is also the **base** (unprefixed) value.
-3. Larger breakpoints override via `min-width` media queries from `styles.breakpoint(name, 'min')`.
+3. Larger breakpoints override via `min-width` media queries from `breakpoint(name, 'min')`.
 
 ### Recipe integration — `stack`
 

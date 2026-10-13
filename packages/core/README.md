@@ -37,7 +37,7 @@ Add a build entry that side-effect-imports the styles bundle, then point
 // typestyles-entry.ts
 import '@var-ui/core/styles';
 
-// Optional: custom theme presets and app-owned styles.component() modules
+// Optional: custom theme presets and app-owned recipe() modules
 import './acme-theme';
 ```
 
@@ -67,7 +67,7 @@ See [`examples/vite-app`](../../examples/vite-app/README.md) and [`examples/astr
 | **Themes**        | `createDesignTheme`, `defaultTheme`, `disposeDesignTheme`, `DEFAULT_THEME_NAME`, `defaultThemeClassName`, `SURFACE_ATTRIBUTE`, `mergeThemeOverrides` |
 | **Tokens**        | `designTokens`, `tokens`, `tokenValues`, `generateColors`, `lightSyntaxValues`, `darkSyntaxValues`                                                   |
 | **Customization** | `when`, `themeWhen`, `defineFonts`, `groteskMono`                                                                                                    |
-| **TypeStyles**    | `typestyles`, `styles`, `global`                                                                                                                     |
+| **TypeStyles**    | `typestyles`, `style`, `recipe`, `tokens`, `global`, `breakpoint`, `media`, `override`                                                               |
 | **Types**         | `DesignTheme`, `DesignThemeConfig`, `DesignThemeTokenValues`, `OverrideConfigFor`, …                                                                 |
 
 ## Recipe inventory
@@ -237,7 +237,7 @@ defaultTheme.override({ name: 'forest', tokens: { color: { … } } });
 ```
 
 Each return value is a **`DesignTheme`**: TypeStyles `Theme` (`className`, `name`, `source`,
-`override`, `tokens`). Recipe restyles belong in `components` (or ad-hoc `styles.override`).
+`override`, `tokens`). Recipe restyles belong in `components` (or ad-hoc `override`).
 
 ### Ambient light / dark mode
 
@@ -384,7 +384,7 @@ See [TypeStyles theming docs](https://typestyles.dev/docs/theming) for engine de
 
 ## Public class name contract
 
-Semantic class names emitted by `styles.component()` / `styles.class()` in this package are
+Semantic class names emitted by `recipe()` / `style()` in this package are
 **public API**. Consumers may target them with plain CSS or `styles.scope()`. Renaming a
 namespace or variant key is a **semver-major** change for `@var-ui/core`.
 

@@ -52,7 +52,7 @@ type LayoutFooterVariantDefs = {
  * </div>
  * ```
  */
-export const layout = typestyles.styles.component<typeof LAYOUT_SLOTS, LayoutVariantDefs>(
+export const layout = typestyles.recipe<typeof LAYOUT_SLOTS, LayoutVariantDefs>(
   'layout',
   (c) => {
     const shell = defineLayoutShellVars(c);
@@ -115,10 +115,7 @@ export const layout = typestyles.styles.component<typeof LAYOUT_SLOTS, LayoutVar
  * `data-divider` or the layout root has `data-divider-header` (set by React
  * `Layout` in Task 3). Edge padding reads layout shell vars from the ancestor root.
  */
-export const layoutHeader = typestyles.styles.component<
-  typeof LAYOUT_HEADER_SLOTS,
-  LayoutHeaderVariantDefs
->(
+export const layoutHeader = typestyles.recipe<typeof LAYOUT_HEADER_SLOTS, LayoutHeaderVariantDefs>(
   'layout-header',
   (c) => {
     const shell = getLayoutShellVars();
@@ -164,10 +161,7 @@ export const layoutHeader = typestyles.styles.component<
  * `data-divider` or the layout root has `data-divider-footer` (set by React
  * `Layout` in Task 3). Edge padding reads layout shell vars from the ancestor root.
  */
-export const layoutFooter = typestyles.styles.component<
-  typeof LAYOUT_FOOTER_SLOTS,
-  LayoutFooterVariantDefs
->(
+export const layoutFooter = typestyles.recipe<typeof LAYOUT_FOOTER_SLOTS, LayoutFooterVariantDefs>(
   'layout-footer',
   (c) => {
     const shell = getLayoutShellVars();
@@ -212,7 +206,7 @@ export const layoutFooter = typestyles.styles.component<
  * Flex-1 main column for {@link layout}. Edge-aware padding uses `data-has-*`
  * attributes on the layout root; defaults to outer padding on exposed edges.
  */
-export const layoutContent = typestyles.styles.component(
+export const layoutContent = typestyles.recipe(
   'layout-content',
   () => {
     const shell = getLayoutShellVars();
@@ -288,10 +282,7 @@ type LayoutPanelVariantDefs = {
  * slots for responsive drawer mode. Divider borders target the content-facing
  * edge via `data-side`; negative margins collapse inner padding when seamless.
  */
-const layoutPanelRecipe = typestyles.styles.component<
-  typeof LAYOUT_PANEL_SLOTS,
-  LayoutPanelVariantDefs
->(
+const layoutPanelRecipe = typestyles.recipe<typeof LAYOUT_PANEL_SLOTS, LayoutPanelVariantDefs>(
   'layout-panel',
   (c) => {
     const shell = getLayoutShellVars();

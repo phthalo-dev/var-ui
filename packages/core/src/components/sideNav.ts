@@ -71,7 +71,7 @@ export const sideNavVarDefinitions = {
  * ```
  */
 
-const sideNavRecipe = typestyles.styles.component(
+const sideNavRecipe = typestyles.recipe(
   'side-nav',
   (c) => {
     const v = c.vars(sideNavVarDefinitions);

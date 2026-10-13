@@ -17,7 +17,7 @@ function pinCellSize(size: ControlSize) {
   };
 }
 
-export const pinInput = typestyles.styles.component(
+export const pinInput = typestyles.recipe(
   'pin-input',
   (c) => {
     const v = c.vars({

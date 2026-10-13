@@ -1,6 +1,6 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
-export const themePlaygroundStyles = typestyles.styles.component(
+export const themePlaygroundStyles = typestyles.recipe(
   'theme-playground',
   () => ({
     slots: [

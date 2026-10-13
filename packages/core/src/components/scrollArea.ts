@@ -30,7 +30,7 @@ export type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both';
  * </div>
  * ```
  */
-export const scrollArea = typestyles.styles.component(
+export const scrollArea = typestyles.recipe(
   'scroll-area',
   (c) => {
     const v = c.vars({

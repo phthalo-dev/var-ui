@@ -95,7 +95,7 @@ function hljsSyntaxStyles(colors: SyntaxFaceValues): VariantOptionStyle {
 export const codeHljsScope: SlotComponentFunction<
   ['root'],
   SlotVariantDefinitions<'root'>
-> = typestyles.styles.component(
+> = typestyles.recipe(
   'docs-hljs',
   {
     slots: ['root'],

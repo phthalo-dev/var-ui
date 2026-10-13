@@ -23,7 +23,7 @@ function tonePaint(
  * <div className={chatSystemMessage({ tone: 'info' }).root}>…</div>
  * ```
  */
-export const chatSystemMessage = typestyles.styles.component(
+export const chatSystemMessage = typestyles.recipe(
   'chat-system-message',
   (c) => {
     const v = c.vars({

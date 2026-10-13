@@ -1,7 +1,7 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 
 /** Full-width marketing main: no sidebar, no TOC column, scrollable centered content. */
-export const docsMarketingPage = typestyles.styles.component(
+export const docsMarketingPage = typestyles.recipe(
   'docs-marketing-page',
   () => ({
     slots: ['siteLayout', 'main'],

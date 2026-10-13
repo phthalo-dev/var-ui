@@ -15,7 +15,7 @@ import {
  * <div className={t.region}><div className={t.item}>…</div></div>
  * ```
  */
-export const toast = typestyles.styles.component(
+export const toast = typestyles.recipe(
   'toast',
   (c) => {
     const v = c.vars({

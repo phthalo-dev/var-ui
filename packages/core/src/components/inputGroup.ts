@@ -14,7 +14,7 @@ import { fieldChrome } from './field';
  * technique: interior borders overlap by 1px and only the first/last child
  * keep the container's outer corner radius.
  */
-export const inputGroup = typestyles.styles.component(
+export const inputGroup = typestyles.recipe(
   'input-group',
   (c) => {
     const v = c.vars({

@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const steps = typestyles.styles.component(
+export const steps = typestyles.recipe(
   'steps',
   (c) => {
     const v = c.vars({

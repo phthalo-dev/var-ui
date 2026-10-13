@@ -1,5 +1,5 @@
 import { atProperty } from 'typestyles';
-import { styles, typestyles } from '../runtime';
+import { breakpoint, typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
@@ -7,7 +7,7 @@ import { transition } from '../tokens/defaults/transition';
 import { designTokens as t } from '../tokens';
 import { themeableVars } from './themeableVars';
 
-const belowXl = styles.breakpoint('xl', 'max');
+const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space[3].var;
 const nestedIndent = t.space[2].var;
 const indicatorTransition = `transform ${duration.medium} ${easing.standard}, height ${duration.fast} ${easing.standard}, opacity ${duration.fast} ${easing.standard}`;
@@ -75,7 +75,7 @@ export const tocVarDefinitions = {
  * The active-row indicator is the list `::after` pseudo, positioned via
  * `positionTocIndicator`.
  */
-const tocRecipe = typestyles.styles.component(
+const tocRecipe = typestyles.recipe(
   'toc',
   (c) => {
     const v = c.vars(tocVarDefinitions);

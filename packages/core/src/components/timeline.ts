@@ -5,7 +5,7 @@ import { semanticChannelAssignments } from './semanticTone';
 /**
  * Vertical activity timeline with bullets and connecting lines.
  */
-export const timeline = typestyles.styles.component(
+export const timeline = typestyles.recipe(
   'timeline',
   (c) => {
     const v = c.vars({

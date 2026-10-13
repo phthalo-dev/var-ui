@@ -21,7 +21,7 @@ function toneColor(key: SemanticToneKey) {
  * Semantic presence/status indicator. Pair with visible text or an
  * `aria-label` on the host element — the dot alone is decorative.
  */
-export const statusDot = typestyles.styles.component(
+export const statusDot = typestyles.recipe(
   'status-dot',
   (c) => {
     const v = c.vars({

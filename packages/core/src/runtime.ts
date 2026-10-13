@@ -2,8 +2,7 @@ import { colorModes, createTypeStyles } from 'typestyles';
 import { designBreakpoints } from './tokens/defaults/breakpoint';
 
 const scopeId = 'var-ui';
-const layers = ['reset', 'base', 'tokens', 'components', 'overrides', 'utilities'] as const;
-const tokenLayer = 'tokens';
+const layerOrder = ['reset', 'base', 'tokens', 'components', 'overrides', 'utilities'] as const;
 
 /**
  * Shared TypeStyles instance: scope, attribute mode, and cascade layer stack for
@@ -13,12 +12,15 @@ const tokenLayer = 'tokens';
 export const typestyles = createTypeStyles({
   scopeId,
   mode: 'attribute',
-  layers,
-  tokenLayer,
-  globalLayer: tokenLayer,
   colorModes,
   breakpoints: designBreakpoints,
+  layers: {
+    order: layerOrder,
+    token: 'tokens',
+    style: 'components',
+    /** Default for `global.rule` / `global.rules` when `{ layer }` is omitted. */
+    global: 'tokens',
+  },
 });
 
-/** Var UI's configured TypeStyles `styles` API (`component`, `override`, `scope`, …). */
-export const { styles, global } = typestyles;
+export const { style, recipe, tokens, global, override, breakpoint, media } = typestyles;

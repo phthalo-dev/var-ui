@@ -39,7 +39,7 @@ export const menuVarDefinitions = {
   },
 } as const;
 
-const menuRecipe = typestyles.styles.component(
+const menuRecipe = typestyles.recipe(
   'menu',
   (c) => {
     const v = c.vars(menuVarDefinitions);

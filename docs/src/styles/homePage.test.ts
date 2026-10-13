@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
-import { styles } from '@var-ui/core';
+import { breakpoint } from '@var-ui/core';
 import { homePage } from './homePage';
 
 describe('homePage CSS', () => {
   it('registers hero, feature grid, and responsive layout slots', () => {
     homePage();
     const css = getRegisteredCss();
-    const belowMd = styles.breakpoint('md', 'max');
+    const belowMd = breakpoint('md', 'max');
 
     expect(css).toContain('72rem');
     expect(css).toContain('grid-template-columns');

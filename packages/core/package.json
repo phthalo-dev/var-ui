@@ -40,10 +40,6 @@
       "import": "./dist/styles.mjs"
     },
     "./styles.css": "./dist/styles.css",
-    "./base-styles": {
-      "types": "./dist/theme/base-styles.d.mts",
-      "import": "./dist/theme/base-styles.mjs"
-    },
     "./internal": {
       "types": "./dist/internal.d.mts",
       "import": "./dist/internal.mjs"
@@ -969,9 +965,9 @@
     "typestyles": "catalog:"
   },
   "devDependencies": {
-    "@typestyles/build-runner": "^0.5.2",
-    "@typestyles/cli": "^0.2.1",
-    "@typestyles/eslint-plugin": "^0.3.1",
+    "@typestyles/build-runner": "catalog:",
+    "@typestyles/cli": "^0.3.1",
+    "@typestyles/eslint-plugin": "^0.4.1",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

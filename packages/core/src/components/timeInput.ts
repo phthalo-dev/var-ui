@@ -17,7 +17,7 @@ import { dateFieldChrome } from './field';
  * </AriaTimeField>
  * ```
  */
-export const timeInput = typestyles.styles.component(
+export const timeInput = typestyles.recipe(
   'timeInput',
   (c) => {
     const v = c.vars({

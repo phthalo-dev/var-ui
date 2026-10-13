@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { themeableComponents } from '../src/styles';
+import '../src/components';
+import { typestyles } from '../src/runtime';
 
 describe('recipe smoke', () => {
   it('invokes every themeable recipe without throwing', () => {
-    for (const [name, recipe] of Object.entries(themeableComponents)) {
+    for (const [name, recipe] of typestyles.getThemeableComponents()) {
       if (typeof recipe === 'function') {
         expect(
           () => (recipe as (props?: object) => unknown)({}),

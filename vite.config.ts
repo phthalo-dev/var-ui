@@ -46,7 +46,10 @@ export default defineConfig({
         rules: {
           'typestyles/no-removed-public-classname': [
             'error',
-            { snapshotFile: 'packages/core/.typestyles-public-classnames.json' },
+            {
+              rootDir: 'packages/core',
+              snapshotFile: '.typestyles-public-classnames.json',
+            },
           ],
         },
       },

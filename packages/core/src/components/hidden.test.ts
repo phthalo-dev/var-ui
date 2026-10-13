@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { styles } from '../runtime';
+import { breakpoint } from '../runtime';
 import { hiddenClassName, hiddenStyle } from './hidden';
 
 describe('hiddenStyle', () => {
@@ -16,14 +16,14 @@ describe('hiddenStyle', () => {
   it('hides from md up when hide is { md: true }', () => {
     expect(hiddenStyle({ md: true })).toEqual({
       display: 'contents',
-      [styles.breakpoint('md', 'min')]: { display: 'none' },
+      [breakpoint('md', 'min')]: { display: 'none' },
     });
   });
 
   it('shows from md up when hide is { base: true, md: false }', () => {
     expect(hiddenStyle({ base: true, md: false })).toEqual({
       display: 'none',
-      [styles.breakpoint('md', 'min')]: { display: 'contents' },
+      [breakpoint('md', 'min')]: { display: 'contents' },
     });
   });
 });
