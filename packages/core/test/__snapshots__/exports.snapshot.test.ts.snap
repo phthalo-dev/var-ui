@@ -101,6 +101,11 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tabsVarDefinitions",
       "topNavVarDefinitions",
     ],
+    "prop-docs": [
+      "accordionGroupVariantPropDocs",
+      "buttonVariantPropDocs",
+      "drawerVariantPropDocs",
+    ],
     "recipe": [
       "alert",
       "avatar",
@@ -226,6 +231,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "icons": 4,
       "layout": 6,
       "object": 8,
+      "prop-docs": 3,
       "recipe": 55,
       "recipe-adjacent": 7,
       "runtime": 8,
@@ -237,10 +243,10 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByKind": {
       "function": 149,
       "number": 4,
-      "object": 31,
+      "object": 34,
       "string": 4,
     },
-    "runtimeExports": 188,
+    "runtimeExports": 191,
     "typeOnlyExports": 122,
   },
   "typeOnlyExports": [

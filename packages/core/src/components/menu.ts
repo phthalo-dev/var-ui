@@ -46,6 +46,7 @@ const menuRecipe = typestyles.recipe(
     return {
       vars: menuVarDefinitions,
       slots: [
+        'root',
         'popover',
         'menu',
         'section',
@@ -55,9 +56,19 @@ const menuRecipe = typestyles.recipe(
         'itemLabel',
         'itemShortcut',
         'itemCheck',
+        'itemSwatch',
         'separator',
         'submenuChevron',
       ],
+      /**
+       * Anchor wrapper for frameworks without JS overlay positioning (Astro).
+       * React renders `display: contents`-style through react-aria and never
+       * applies this slot.
+       */
+      root: {
+        display: 'inline-flex',
+        position: 'relative',
+      },
       popover: {
         ...overlayPresenceStyles({ scale: true }),
         borderWidth: t.borderWidth.default.var,
@@ -68,6 +79,36 @@ const menuRecipe = typestyles.recipe(
         boxShadow: t.shadow.md.var,
         padding: t.space[1].var,
         minWidth: '12rem',
+        // CSS-only placement relative to the `root` anchor (Astro). React Aria
+        // positions inline and never emits these `data-placement` values.
+        '&[data-placement="bottom-start"]': {
+          position: 'absolute',
+          zIndex: t.zIndex.dropdown.var,
+          top: `calc(100% + ${t.space[2].var})`,
+          left: 0,
+          '--var-ui-transform-origin': 'top left',
+        },
+        '&[data-placement="bottom-end"]': {
+          position: 'absolute',
+          zIndex: t.zIndex.dropdown.var,
+          top: `calc(100% + ${t.space[2].var})`,
+          right: 0,
+          '--var-ui-transform-origin': 'top right',
+        },
+        '&[data-placement="top-start"]': {
+          position: 'absolute',
+          zIndex: t.zIndex.dropdown.var,
+          bottom: `calc(100% + ${t.space[2].var})`,
+          left: 0,
+          '--var-ui-transform-origin': 'bottom left',
+        },
+        '&[data-placement="top-end"]': {
+          position: 'absolute',
+          zIndex: t.zIndex.dropdown.var,
+          bottom: `calc(100% + ${t.space[2].var})`,
+          right: 0,
+          '--var-ui-transform-origin': 'bottom right',
+        },
       },
       menu: {
         outline: 'none',
@@ -84,6 +125,17 @@ const menuRecipe = typestyles.recipe(
         padding: `${t.space[1].var} ${t.space[3].var}`,
       },
       item: {
+        // Reset UA button/link chrome so the slot works on <button>/<a>
+        // (Astro) as well as React Aria's element items.
+        appearance: 'none',
+        borderWidth: 0,
+        borderStyle: 'none',
+        background: 'transparent',
+        margin: 0,
+        font: 'inherit',
+        width: '100%',
+        textAlign: 'start',
+        textDecoration: 'none',
         display: 'flex',
         alignItems: 'center',
         gap: t.space[2].var,
@@ -99,6 +151,14 @@ const menuRecipe = typestyles.recipe(
         '&[data-disabled]': {
           color: v.itemDisabledForeground.var,
           cursor: 'not-allowed',
+        },
+        // Radio-item check reveal (Astro renders the attr; hidden via
+        // `visibility` so checked and unchecked rows stay aligned).
+        '& [data-var-ui-menu-item-check]': {
+          visibility: 'hidden',
+        },
+        '&[aria-checked="true"] [data-var-ui-menu-item-check]': {
+          visibility: 'visible',
         },
       },
       itemDanger: {
@@ -116,6 +176,14 @@ const menuRecipe = typestyles.recipe(
         display: 'inline-flex',
         width: '1rem',
         flexShrink: 0,
+      },
+      itemSwatch: {
+        display: 'block',
+        width: '0.875rem',
+        height: '0.875rem',
+        borderRadius: t.radius.full.var,
+        flexShrink: 0,
+        boxShadow: `inset 0 0 0 1px ${t.color.border.default.var}`,
       },
       separator: {
         height: '1px',

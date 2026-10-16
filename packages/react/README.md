@@ -1,6 +1,6 @@
 # @var-ui/react
 
-React component library built with [typestyles](https://github.com/type-styles/typestyles) and [`@var-ui/core`](../core/README.md) tokens. Consumed by the docs site and `examples/vite-app`.
+React component library built with [typestyles](https://typestyles.dev) and [`@var-ui/core`](../core/README.md) tokens. Consumed by the docs site and `examples/vite-app`.
 
 Framework-specific wrappers around accessible primitives ([React Aria Components](https://react-spectrum.adobe.com/react-aria/)) with typed variants, design tokens, and theme context.
 
