@@ -1,13 +1,13 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import {
   mapTone,
   semanticTone,
   subtleBackgroundColor,
   tone,
   type SemanticToneKey,
-} from '../semanticTone';
+} from '../../shared/semanticTone';
 
 function tonePaint(
   v: { color: { name: string }; background: { name: string } },
@@ -38,8 +38,8 @@ export const chatSystemMessage = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      color: { value: t.color.text.secondary.var, syntax: '<color>' },
-      background: { value: t.color.background.subtle.var, syntax: '<color>' },
+      color: { ...atProperty.color, value: t.color.text.secondary.var },
+      background: { ...atProperty.color, value: t.color.background.subtle.var },
     });
     return {
       base: {

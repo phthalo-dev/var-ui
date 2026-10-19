@@ -12,7 +12,7 @@ import {
   type SegmentedControlVariantProps,
   type ToggleButtonVariantProps,
 } from '@var-ui/core';
-import { observeSegmentedControlIndicator } from '@var-ui/core/internal';
+import { observeSegmentedControlIndicator } from '@var-ui/core/components/indicators/segmented-control';
 import { mergeProps } from './utils';
 
 export type SegmentedControlOption = {

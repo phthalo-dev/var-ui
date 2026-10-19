@@ -1,7 +1,8 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { paneVariant } from './variantAxes';
+
+const accordionPane = variant.enum(['flush', 'bordered'], { default: 'bordered' });
 
 /**
  * Outer chrome for stacked `Accordion` panels — border, radius, and overflow clip.
@@ -11,18 +12,18 @@ export const accordionGroup = typestyles.recipe(
   {
     slots: ['root'],
     variants: {
-      variant: paneVariant,
+      variant: accordionPane,
     },
   },
   (c) => {
     const v = c.vars({
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: atProperty.color.syntax,
       },
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: atProperty.color.syntax,
       },
     });
     return {
@@ -56,17 +57,5 @@ export const accordionGroup = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type AccordionGroupRecipeProps = NonNullable<Parameters<typeof accordionGroup>[0]>;
-export type AccordionGroupVariant = NonNullable<AccordionGroupRecipeProps['variant']>;
-
-export type AccordionGroupVariantProps = {
-  variant?: AccordionGroupVariant;
-};
-
-export const accordionGroupVariantPropDocs = [
-  { name: 'variant', type: "'flush' | 'bordered'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof AccordionGroupVariantProps;
-  type: string;
-  required: false;
-}>;
+export type AccordionGroupVariant = VariantOptions<typeof accordionPane>;
+export type AccordionGroupVariantProps = RecipeVariants<typeof accordionGroup>;

@@ -1,10 +1,9 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
-import { fieldChrome } from './field';
-import type { ControlSize } from './semanticTone';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { fieldChrome } from './fieldChrome';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 function pinCellSize(size: ControlSize) {
   const { height, fontSize } = controlSizeMetrics[size];
@@ -28,28 +27,28 @@ export const pinInput = typestyles.recipe(
   (c) => {
     const v = c.vars({
       labelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       cellBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       cellBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       cellForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       errorColor: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
     });
     const chrome = fieldChrome({

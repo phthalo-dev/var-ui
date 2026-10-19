@@ -7,8 +7,6 @@ import {
 import { progressBar, type ProgressBarVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 
-export type { ProgressBarAppearance } from '@var-ui/core';
-
 export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className'> &
   ProgressBarVariantProps & {
     /** Label rendered above the track. */

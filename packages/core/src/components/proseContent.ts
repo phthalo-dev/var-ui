@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -19,44 +20,44 @@ export const proseContent = typestyles.recipe(
   (c) => {
     const v = c.vars({
       foreground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       secondaryColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       blockquoteBorder: {
+        ...atProperty.color,
         value: t.color.border.strong.var,
-        syntax: '<color>',
       },
       blockquoteBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       preBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       preBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       inlineCodeBackground: {
+        ...atProperty.color,
         value: `color-mix(in srgb, ${t.color.tone.accent.foreground.var} 10%, ${t.color.background.subtle.var})`,
-        syntax: '<color>',
       },
       tableBorder: {
+        ...atProperty.color,
         value: t.color.border.strong.var,
-        syntax: '<color>',
       },
       tableHeaderBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       tableCellBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
     });
     return {

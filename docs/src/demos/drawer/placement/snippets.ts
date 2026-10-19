@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const [open, setOpen] = useState(false);
 
-<Button intent="secondary" onPress={() => setOpen(true)}>
+<Button onPress={() => setOpen(true)}>
   Open from start
 </Button>
 <Drawer

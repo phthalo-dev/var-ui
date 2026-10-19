@@ -1,9 +1,9 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { fieldChrome } from './field';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { fieldChrome } from './fieldChrome';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Connected-border group for bare `<input>`s and text addons (e.g. a
@@ -25,40 +25,40 @@ export const inputGroup = typestyles.recipe(
   (c) => {
     const v = c.vars({
       labelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       errorColor: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
       inputBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       inputBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       inputForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       placeholderColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       textBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       textForeground: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     const chrome = fieldChrome({

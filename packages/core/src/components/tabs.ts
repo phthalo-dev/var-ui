@@ -1,51 +1,52 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 export const tabsVarDefinitions = {
   railColor: {
+    ...atProperty.color,
     value: t.color.border.subtle.var,
-    syntax: '<color>' as const,
   },
   railWidth: {
+    ...atProperty.length,
     value: t.borderWidth.thick.var,
-    syntax: '<length>' as const,
   },
   railRadius: {
+    ...atProperty.length,
     value: t.borderWidth.thick.var,
-    syntax: '<length>' as const,
   },
   tabColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   tabSelectedColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   tabIndicatorColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   indicatorX: {
+    ...atProperty.length,
     value: '0px',
-    syntax: '<length>' as const,
   },
   indicatorWidth: {
+    ...atProperty.length,
     value: '0px',
-    syntax: '<length>' as const,
   },
   indicatorOpacity: {
+    ...atProperty.number,
     value: '0',
-    syntax: '<number>' as const,
   },
   panelBackground: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   panelBorder: {
+    ...atProperty.color,
     value: t.color.border.default.var,
-    syntax: '<color>' as const,
   },
 } as const;
 

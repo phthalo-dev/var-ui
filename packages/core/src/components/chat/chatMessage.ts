@@ -1,6 +1,6 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { sender } from '../variantAxes';
+import { sender } from '../../shared/variantAxes';
 import { type RecipeVariants } from 'typestyles';
 
 /**

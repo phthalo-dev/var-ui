@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { gap } from './variantAxes';
+import { gap } from '../shared/variantAxes';
 
 /**
  * Single-row flex chrome for a horizontally overflowing list of items. Pair with
@@ -27,7 +27,7 @@ export const overflowList = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      gap: { value: t.space[3].var, syntax: '<length>' },
+      gap: { ...atProperty.length, value: t.space[3].var },
     });
     return {
       base: {

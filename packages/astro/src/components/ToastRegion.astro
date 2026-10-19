@@ -1,6 +1,9 @@
 ---
-import { toast as toastRecipe, type ToastPlacement } from '@var-ui/core';
+import type { VariantOptions } from 'typestyles';
+import { placement as toastPlacement, toast as toastRecipe } from '@var-ui/core';
 import { mergeProps } from '../utils';
+
+type ToastPlacement = VariantOptions<typeof toastPlacement>;
 
 type Props = {
   /** Screen corner the region anchors to. @default bottom-end */

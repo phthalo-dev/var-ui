@@ -40,8 +40,6 @@ import { mergeProps } from './utils';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
-export type { DrawerSize } from '@var-ui/core';
-
 export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
   DrawerVariantProps & {
     /** Panel title rendered in the header when `title` is set. */

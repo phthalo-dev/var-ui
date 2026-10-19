@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 /** Icon-only rail width in px when the nav is collapsed. */
@@ -6,36 +7,36 @@ export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 /** Internal CSS variables for theme overrides (`vars` on theme `components`). */
 export const sideNavVarDefinitions = {
   background: {
+    ...atProperty.color,
     value: t.color.background.surface.var,
-    syntax: '<color>' as const,
   },
   border: {
+    ...atProperty.color,
     value: t.color.border.default.var,
-    syntax: '<color>' as const,
   },
   headingColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   sectionTitleColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   itemColor: {
+    ...atProperty.color,
     value: t.color.navItem.foreground.var,
-    syntax: '<color>' as const,
   },
   itemHoverBackground: {
+    ...atProperty.color,
     value: t.color.navItem.hoverBackground.var,
-    syntax: '<color>' as const,
   },
   itemSelectedBackground: {
+    ...atProperty.color,
     value: t.color.navItem.selectedBackground.var,
-    syntax: '<color>' as const,
   },
   itemSelectedColor: {
+    ...atProperty.color,
     value: t.color.navItem.selectedForeground.var,
-    syntax: '<color>' as const,
   },
 } as const;
 

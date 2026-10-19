@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -6,16 +7,16 @@ export const radio = typestyles.recipe(
   (c) => {
     const v = c.vars({
       controlBorder: {
+        ...atProperty.color,
         value: t.color.border.strong.var,
-        syntax: '<color>',
       },
       indicatorBackground: {
+        ...atProperty.color,
         value: 'transparent',
-        syntax: '<color>',
       },
       groupLabelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {

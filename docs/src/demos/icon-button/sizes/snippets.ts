@@ -10,10 +10,10 @@ export const snippets = {
     <IconButton name="search" aria-label="Search large" size="lg" />
   </HStack>
   <HStack gap="sm">
-    <IconButton name="close" aria-label="Close" intent="secondary" />
-    <IconButton name="search" aria-label="Search" intent="primary" />
-    <IconButton name="menu" aria-label="Menu" intent="ghost" />
-    <IconButton name="close" aria-label="Delete" intent="danger" />
+    <IconButton name="close" aria-label="Close" />
+    <IconButton name="search" aria-label="Search" tone="accent" appearance="filled" />
+    <IconButton name="menu" aria-label="Menu" tone="accent" appearance="ghost" />
+    <IconButton name="close" aria-label="Delete" tone="danger" appearance="filled" />
   </HStack>
 </VStack>`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,

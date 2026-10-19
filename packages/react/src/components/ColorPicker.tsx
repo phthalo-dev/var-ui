@@ -1,7 +1,7 @@
 import type { JSX, KeyboardEvent } from 'react';
 import { useRef } from 'react';
-import { colorPicker, hueToPureHex, type ColorPickerVariantProps } from '@var-ui/core';
-import { hsvToHex, normalizeHex } from '@var-ui/core';
+import { colorPicker, type ColorPickerVariantProps } from '@var-ui/core';
+import { hsvToHex, hueToPureHex, normalizeHex } from '../color/convert';
 import {
   alphaFromPointer,
   bindPointerDrag,

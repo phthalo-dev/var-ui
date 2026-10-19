@@ -1,4 +1,4 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -21,8 +21,8 @@ export const surface = typestyles.recipe(
   (c) => {
     const v = c.vars({
       padding: {
+        ...atProperty.length,
         value: t.space[4].var,
-        syntax: '<length>',
       },
     });
     return {

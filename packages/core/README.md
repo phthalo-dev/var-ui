@@ -8,18 +8,11 @@ This is a **library package** (not a standalone app). Import it from apps or the
 
 ```ts
 import '@var-ui/core/styles.css';
-import {
-  button,
-  layout,
-  layoutUtility,
-  text,
-  designTokens,
-  defaultThemeClassName,
-} from '@var-ui/core';
+import { button, layout, designTokens, defaultThemeClassName } from '@var-ui/core';
 
 document.body.className = defaultThemeClassName; // `theme-var-ui-default`
-element.className = button({ intent: 'primary' });
-// `layout` — multi-pane page shell recipe; `layoutUtility` — legacy docs stack/section helpers
+element.className = button({ tone: 'accent', appearance: 'filled' });
+// `layout` — multi-pane page shell; `stack` and `textBlock` — section and body text
 ```
 
 Custom themes return a `DesignTheme` from `createDesignTheme({ name: 'acme' })` — use
@@ -75,16 +68,16 @@ See [`examples/vite-app`](../../examples/vite-app/README.md) and [`examples/astr
 Every recipe follows the [`c.vars()` override contract](#authoring-recipes) and
 emits stable public class names.
 
-| Category       | Recipes                                                                                                            |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Actions**    | `button`, `linkButton`, `link`                                                                                     |
-| **Data input** | `textField`, `textAreaField`, `checkbox`, `radio`, `switchStyles`, `select`, `field` (+ `fieldChrome` helper)      |
-| **Feedback**   | `alert`, `banner`, `badge`, `spinner`, `skeleton`, `progressBar`, `statusDot`                                      |
-| **Layout**     | `stack`, `grid`, `section`, `center`, `aspectRatio`, `divider`, `layout` (shell), `layoutUtility`/`text` utilities |
-| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `proseContent`, `steps`, `fileTree`                      |
-| **Containers** | `card`, `carousel`, `thumbnail`, `avatar`, `avatarGroup`                                                           |
-| **Overlay**    | `dialog`, `overlay`, `commandPalette`, `tabs`                                                                      |
-| **Icons**      | `icon` recipe + `IconName` union / `iconNameList` (glyphs live in `@var-ui/icons`)                                 |
+| Category       | Recipes                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Actions**    | `button`, `linkButton`, `link`                                                                                |
+| **Data input** | `textField`, `textAreaField`, `checkbox`, `radio`, `switchStyles`, `select`, `field` (+ `fieldChrome` helper) |
+| **Feedback**   | `alert`, `banner`, `badge`, `spinner`, `skeleton`, `progressBar`, `statusDot`                                 |
+| **Layout**     | `stack`, `grid`, `section`, `center`, `aspectRatio`, `divider`, `layout` (shell)                              |
+| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `proseContent`, `steps`, `fileTree`                 |
+| **Containers** | `card`, `carousel`, `thumbnail`, `avatar`, `avatarGroup`                                                      |
+| **Overlay**    | `dialog`, `overlay`, `commandPalette`, `tabs`                                                                 |
+| **Icons**      | `icon` recipe + `IconName` union / `iconNameList` (glyphs live in `@var-ui/icons`)                            |
 
 ## Token layers
 

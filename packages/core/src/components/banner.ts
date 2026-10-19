@@ -1,3 +1,4 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
@@ -6,9 +7,7 @@ import {
   surfaceAppearance,
   toneChannelAssignments,
   toneWithDefault,
-  type SurfaceAppearance,
-  type Tone,
-} from './semanticTone';
+} from '../shared/semanticTone';
 
 /**
  * Page-level announcement bar. Same tone system as `alert`, but full-width
@@ -30,9 +29,9 @@ export const banner = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
-      solidBg: { value: t.color.tone.accent.background.var, syntax: '<color>' },
-      solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
+      semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+      solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+      solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
     });
     return {
       base: {
@@ -103,17 +102,4 @@ export const banner = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type BannerRecipeProps = NonNullable<Parameters<typeof banner>[0]>;
-export type BannerVariantProps = {
-  tone?: Tone;
-  appearance?: SurfaceAppearance;
-};
-
-export const bannerVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof BannerVariantProps;
-  type: string;
-  required: false;
-}>;
+export type BannerVariantProps = RecipeVariants<typeof banner>;

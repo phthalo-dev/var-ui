@@ -1,4 +1,4 @@
-import { button, stack, resolveButtonProps } from '@var-ui/core';
+import { button, stack } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -9,12 +9,8 @@ function toneLabel(tone: (typeof tones)[number]) {
   return tone.charAt(0).toUpperCase() + tone.slice(1);
 }
 
-function buttonTag(label: string, options: Parameters<typeof resolveButtonProps>[0]): string {
-  return serializeHtmlTag(
-    'button',
-    { type: 'button', ...mergeProps(button(resolveButtonProps(options))) },
-    label,
-  );
+function buttonTag(label: string, options: NonNullable<Parameters<typeof button>[0]>): string {
+  return serializeHtmlTag('button', { type: 'button', ...mergeProps(button(options)) }, label);
 }
 
 export function render(): string {

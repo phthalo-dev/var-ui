@@ -4,7 +4,7 @@ export default function Preview() {
   return (
     <Popover>
       <Popover.Trigger>
-        <Button intent="secondary">Open</Button>
+        <Button>Open</Button>
       </Popover.Trigger>
       <Popover.Popup>
         <Popover.Arrow />

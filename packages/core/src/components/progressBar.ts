@@ -1,15 +1,9 @@
-import { keyframes, variant } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import {
-  semanticTone,
-  toneValues,
-  toneWithDefault,
-  type ProgressBarAppearance,
-  type Tone,
-} from './semanticTone';
-import { fillAppearance } from './variantAxes';
+import { semanticTone, toneValues, toneWithDefault, type Tone } from '../shared/semanticTone';
+import { fillAppearance } from '../shared/variantAxes';
 
 const slide = keyframes.create('var-ui-progress-slide', {
   from: { transform: 'translateX(-100%)' },
@@ -33,12 +27,12 @@ export const progressBar = typestyles.recipe(
   (c) => {
     const v = c.vars({
       trackColor: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       fillColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -100,18 +94,4 @@ export const progressBar = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type ProgressBarRecipeProps = NonNullable<Parameters<typeof progressBar>[0]>;
-
-export type ProgressBarVariantProps = {
-  tone?: Tone;
-  appearance?: ProgressBarAppearance;
-};
-
-export const progressBarVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'ProgressBarAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ProgressBarVariantProps;
-  type: string;
-  required: false;
-}>;
+export type ProgressBarVariantProps = RecipeVariants<typeof progressBar>;

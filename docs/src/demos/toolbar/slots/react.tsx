@@ -10,8 +10,12 @@ export default function Preview() {
           <IconButton name="search" aria-label="Search" />
         </>
       }
-      centerContent={<Button intent="secondary">Untitled</Button>}
-      endContent={<Button intent="primary">Share</Button>}
+      centerContent={<Button>Untitled</Button>}
+      endContent={
+        <Button tone="accent" appearance="filled">
+          Share
+        </Button>
+      }
     />
   );
 }

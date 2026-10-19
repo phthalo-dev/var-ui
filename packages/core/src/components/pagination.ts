@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Pagination chrome. Page-number and prev/next buttons reuse the existing
@@ -31,8 +31,8 @@ export const pagination = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      textColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      dotColor: { value: t.color.border.default.var, syntax: '<color>' },
+      textColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      dotColor: { ...atProperty.color, value: t.color.border.default.var },
     });
     return {
       base: {

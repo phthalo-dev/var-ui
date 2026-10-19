@@ -1,4 +1,4 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -33,11 +33,11 @@ export const descriptionList = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      termColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      detailsColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      gap: { value: t.space[4].var, syntax: '<length>' },
-      termWidth: { value: '8rem', syntax: '<length>' },
-      columns: { value: '2', syntax: '<integer>' },
+      termColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      detailsColor: { ...atProperty.color, value: t.color.text.primary.var },
+      gap: { ...atProperty.length, value: t.space[4].var },
+      termWidth: { ...atProperty.length, value: '8rem' },
+      columns: { ...atProperty.integer, value: '2' },
     });
     return {
       base: {

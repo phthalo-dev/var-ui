@@ -1,4 +1,4 @@
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
@@ -8,7 +8,7 @@ import {
   surfaceAppearance,
   tone,
   toneChannelAssignments,
-} from './semanticTone';
+} from '../shared/semanticTone';
 
 /**
  * Compact pill-shaped label for filters, tags, and removable tokens.
@@ -30,32 +30,32 @@ export const chip = typestyles.recipe(
   (c) => {
     const v = c.vars({
       semantic: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       solidBg: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       solidFg: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       borderColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       backgroundColor: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       textColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       removeHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.elevated.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -158,12 +158,3 @@ export const chip = typestyles.recipe(
 
 /** Visual props derived from the schema. */
 export type ChipVariantProps = RecipeVariants<typeof chip>;
-
-export const chipVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ChipVariantProps;
-  type: string;
-  required: false;
-}>;

@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { sender } from '../variantAxes';
+import { sender } from '../../shared/variantAxes';
 
 const bubbleVariant = variant.enum(['filled', 'ghost'], { default: 'filled' });
 const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
@@ -33,12 +33,12 @@ export const chatMessageBubble = typestyles.recipe(
   (c) => {
     const v = c.vars({
       senderBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       senderText: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {

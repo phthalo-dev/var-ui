@@ -1,7 +1,8 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { mapTone, toneChannelAssignments, toneWithDefault, type Tone } from './semanticTone';
-import { controlSize } from './variantAxes';
+import { mapTone, toneChannelAssignments, toneWithDefault } from '../shared/semanticTone';
+import { controlSize } from '../shared/variantAxes';
 
 /**
  * Vertical activity timeline with bullets and connecting lines.
@@ -17,18 +18,18 @@ export const timeline = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      line: { value: t.color.border.default.var, syntax: '<color>' },
-      bulletBorder: { value: t.color.border.default.var, syntax: '<color>' },
-      bulletBackground: { value: t.color.background.surface.var, syntax: '<color>' },
-      bulletForeground: { value: t.color.text.secondary.var, syntax: '<color>' },
-      titleColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      descriptionColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      timestampColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
-      solidBg: { value: t.color.tone.accent.background.var, syntax: '<color>' },
-      solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
-      bulletSize: { value: t.space[3].var, syntax: '<length>' },
-      lineWidth: { value: t.borderWidth.default.var, syntax: '<length>' },
+      line: { ...atProperty.color, value: t.color.border.default.var },
+      bulletBorder: { ...atProperty.color, value: t.color.border.default.var },
+      bulletBackground: { ...atProperty.color, value: t.color.background.surface.var },
+      bulletForeground: { ...atProperty.color, value: t.color.text.secondary.var },
+      titleColor: { ...atProperty.color, value: t.color.text.primary.var },
+      descriptionColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      timestampColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+      solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+      solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+      bulletSize: { ...atProperty.length, value: t.space[3].var },
+      lineWidth: { ...atProperty.length, value: t.borderWidth.default.var },
     });
     return {
       base: {
@@ -130,18 +131,4 @@ export const timeline = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type TimelineRecipeProps = NonNullable<Parameters<typeof timeline>[0]>;
-export type TimelineSize = NonNullable<TimelineRecipeProps['size']>;
-export type TimelineVariantProps = {
-  size?: TimelineSize;
-  tone?: Tone;
-};
-
-export const timelineVariantPropDocs = [
-  { name: 'size', type: "'sm' | 'md' | 'lg'", required: false },
-  { name: 'tone', type: 'Tone', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof TimelineVariantProps;
-  type: string;
-  required: false;
-}>;
+export type TimelineVariantProps = RecipeVariants<typeof timeline>;

@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
-import { button, resolveButtonProps, type ButtonVariantProps, type IconName } from '@var-ui/core';
+import { button, type ButtonVariantProps, type IconName } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
 
@@ -10,12 +10,11 @@ export type IconButtonProps = Omit<RACButtonProps, 'className' | 'children'> & {
   className?: string;
   icon?: ReactNode;
   'data-mirror'?: boolean | '';
-} & ButtonVariantProps;
+} & Omit<ButtonVariantProps, 'layout'>;
 
 export function IconButton({
   name,
   icon,
-  intent = 'secondary',
   tone,
   appearance,
   size = 'md',
@@ -24,13 +23,7 @@ export function IconButton({
   'data-mirror': dataMirror,
   ...props
 }: IconButtonProps): JSX.Element {
-  const styles = button(
-    resolveButtonProps(
-      tone != null
-        ? { tone, appearance, size, layout: 'icon', elevated }
-        : { intent, appearance, size, layout: 'icon', elevated },
-    ),
-  );
+  const styles = button({ tone, appearance, size, layout: 'icon', elevated });
   return (
     <AriaButton {...props} {...mergeProps(styles, className)}>
       {icon ?? (

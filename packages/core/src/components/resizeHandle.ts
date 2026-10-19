@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -16,16 +17,16 @@ export const resizeHandle = typestyles.recipe(
   (c) => {
     const v = c.vars({
       lineColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       pillColor: {
+        ...atProperty.color,
         value: t.color.border.strong.var,
-        syntax: '<color>',
       },
       focusRing: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
     });
     return {

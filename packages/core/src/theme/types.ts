@@ -23,11 +23,6 @@ export type DesignThemeCreateConfig = {
   fonts?: FontFaceDefinition[];
 };
 
-/** @deprecated Prefer {@link DesignThemeCreateConfig} */
-export type DesignThemeConfigFields = DesignThemeCreateConfig & {
-  tokens?: Record<string, CreateTokenValues>;
-};
-
 export type CustomNamespacesFromTokenMap<Tokens> =
   Tokens extends Record<string, unknown>
     ? Omit<Tokens, keyof DesignThemeTokenValues>
@@ -75,7 +70,3 @@ export type DesignThemeConfig = DesignThemeCreateConfig &
   ThemeComponentsFor<{ tokens: Record<string, CreateTokenValues> }>;
 
 export type { InferThemeTokensFromConfig, ThemeComponentsFor };
-
-/** @deprecated Use {@link InferCustomThemeTokens} */
-export type InferThemeExtendFromConfig<C extends DesignThemeCreateConfig> =
-  InferCustomThemeTokens<C>;

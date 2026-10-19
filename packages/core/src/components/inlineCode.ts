@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -13,12 +14,12 @@ export const inlineCode = typestyles.recipe(
   (c) => {
     const v = c.vars({
       background: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       border: {
+        ...atProperty.color,
         value: t.color.border.subtle.var,
-        syntax: '<color>',
       },
     });
     return {

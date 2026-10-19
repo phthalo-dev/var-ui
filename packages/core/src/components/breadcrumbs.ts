@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -15,8 +16,8 @@ export const breadcrumbs = typestyles.recipe(
   (c) => {
     const v = c.vars({
       separator: { value: '"/"', syntax: '*' },
-      textColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      currentColor: { value: t.color.text.primary.var, syntax: '<color>' },
+      textColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      currentColor: { ...atProperty.color, value: t.color.text.primary.var },
     });
     return {
       slots: ['root', 'list', 'item', 'ellipsisItem', 'link'],

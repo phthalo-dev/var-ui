@@ -10,8 +10,6 @@ import {
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
 
-export type { TimelineSize } from '@var-ui/core';
-
 export type TimelineItemData = {
   id: string;
   title: ReactNode;

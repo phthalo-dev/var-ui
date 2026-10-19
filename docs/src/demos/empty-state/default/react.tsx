@@ -6,7 +6,11 @@ export default function Preview() {
       icon={<Icon name="search" size="lg" />}
       title="No results"
       description="Try a different filter, or clear the search."
-      action={<Button intent="primary">Clear filters</Button>}
+      action={
+        <Button tone="accent" appearance="filled">
+          Clear filters
+        </Button>
+      }
     />
   );
 }

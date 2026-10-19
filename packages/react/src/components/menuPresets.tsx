@@ -103,7 +103,15 @@ export function MenuOverflow({
   return (
     <MenuFromSections
       sections={sections}
-      trigger={<IconButton name="moreHorizontal" aria-label={ariaLabel} intent="ghost" size="sm" />}
+      trigger={
+        <IconButton
+          name="moreHorizontal"
+          aria-label={ariaLabel}
+          tone="accent"
+          appearance="ghost"
+          size="sm"
+        />
+      }
     />
   );
 }

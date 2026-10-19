@@ -1,4 +1,4 @@
-import { keyframes } from 'typestyles';
+import { atProperty, keyframes, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
@@ -6,11 +6,8 @@ import {
   semanticTone,
   subtleBackgroundColor,
   toneWithDefault,
-  type ControlSize,
-  type SpinnerAppearance,
-  type Tone,
-} from './semanticTone';
-import { controlSize, fillAppearance } from './variantAxes';
+} from '../shared/semanticTone';
+import { controlSize, fillAppearance } from '../shared/variantAxes';
 
 const spin = keyframes.create('var-ui-spin', {
   from: { transform: 'rotate(0deg)' },
@@ -33,14 +30,14 @@ export const spinner = typestyles.recipe(
   (c) => {
     const v = c.vars({
       indicatorColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
       trackColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
-      size: { value: '20px', syntax: '<length>' },
+      size: { ...atProperty.length, value: '20px' },
     });
     return {
       base: {
@@ -86,20 +83,4 @@ export const spinner = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type SpinnerRecipeProps = NonNullable<Parameters<typeof spinner>[0]>;
-
-export type SpinnerVariantProps = {
-  size?: ControlSize;
-  tone?: Tone;
-  appearance?: SpinnerAppearance;
-};
-
-export const spinnerVariantPropDocs = [
-  { name: 'size', type: 'ControlSize', required: false },
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'SpinnerAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof SpinnerVariantProps;
-  type: string;
-  required: false;
-}>;
+export type SpinnerVariantProps = RecipeVariants<typeof spinner>;

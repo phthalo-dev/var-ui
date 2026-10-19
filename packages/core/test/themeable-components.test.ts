@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vite-plus/test';
 import { getComponentMeta } from 'typestyles';
-import type { OverrideConfigFor } from '../src/types';
+import type { OverrideConfigFor } from '../src/theme';
 import * as components from '../src/components';
 import { typestyles } from '../src/runtime';
 import { button } from '../src/components/button';
@@ -18,18 +18,10 @@ describe('themeable recipe registry', () => {
       ([name, value]) =>
         typeof value === 'function' &&
         ![
-          'layoutUtility',
-          'text',
-          'namedContainerQuery',
           'getLayoutShellVars',
           'layoutContentWidthAssignment',
           'layoutShellPaddingAssignments',
-          'resolveButtonProps',
           'resolveScrollAreaFade',
-          'controlSurfaceSize',
-          'controlSizeVariants',
-          'controlFocusStyles',
-          'overlayPresenceStyles',
         ].includes(name) &&
         !name.endsWith('Chrome') &&
         !name.startsWith('create'),

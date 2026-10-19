@@ -23,9 +23,13 @@ export function QuickActionsTile({ className, portalContainer }: QuickActionsTil
         <TextField label="Email" placeholder="ada@example.com" />
         <Select label="Role" options={ROLE_OPTIONS} portalContainer={portalContainer} />
         <HStack gap="sm" wrap>
-          <Button intent="primary">Send invite</Button>
-          <Button intent="secondary">Cancel</Button>
-          <Button intent="ghost">Learn more</Button>
+          <Button tone="accent" appearance="filled">
+            Send invite
+          </Button>
+          <Button>Cancel</Button>
+          <Button tone="accent" appearance="ghost">
+            Learn more
+          </Button>
         </HStack>
       </VStack>
     </div>

@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -5,10 +6,10 @@ export const outline = typestyles.recipe(
   'outline',
   (c) => {
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      titleColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      linkColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      linkActiveColor: { value: t.color.text.primary.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      titleColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      linkColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      linkActiveColor: { ...atProperty.color, value: t.color.text.primary.var },
     });
     return {
       slots: ['root', 'title', 'list', 'link', 'linkActive', 'linkNested'],

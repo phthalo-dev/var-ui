@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { gap } from './variantAxes';
+import { gap } from '../shared/variantAxes';
 
 const stackDirection = variant.enum(['column', 'row'], { default: 'column' });
 const stackAlign = variant.enum(['start', 'center', 'end', 'stretch'], { default: 'stretch' });
@@ -29,7 +29,7 @@ export const stack = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      gap: { value: t.space[3].var, syntax: '<length>' },
+      gap: { ...atProperty.length, value: t.space[3].var },
     });
     return {
       base: {

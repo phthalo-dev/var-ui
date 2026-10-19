@@ -1,52 +1,52 @@
-import { type RecipeVariants, variant, type VariantOptions } from 'typestyles';
+import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 export const codeBlockVarDefinitions = {
   border: {
+    ...atProperty.color,
     value: t.color.border.default.var,
-    syntax: '<color>' as const,
   },
   background: {
+    ...atProperty.color,
     value: t.color.background.surface.var,
-    syntax: '<color>' as const,
   },
   backgroundInline: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   backgroundHeader: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   filenameColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   languageColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   copyButtonColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   copyButtonHoverBackground: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   feedbackColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   lineNumberColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   lineHighlightBackground: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
 } as const;
 
@@ -323,11 +323,3 @@ export type CodeBlockVariant = VariantOptions<typeof codeBlockVariant>;
 
 /** Visual props derived from the schema. */
 export type CodeBlockVariantProps = RecipeVariants<typeof codeBlock>;
-
-export const codeBlockVariantPropDocs = [
-  { name: 'variant', type: "'default' | 'inline' | 'diff' | 'terminal'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof CodeBlockVariantProps;
-  type: string;
-  required: false;
-}>;

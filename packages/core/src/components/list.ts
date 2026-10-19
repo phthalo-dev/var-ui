@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { density } from './variantAxes';
+import { density } from '../shared/variantAxes';
 
 const listStyle = variant.enum(['none', 'disc', 'decimal'], { default: 'none' });
 const listHasDividers = variant.boolean({ default: false });
@@ -35,23 +35,23 @@ export const list = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      root: { value: 'transparent', syntax: '<color>' },
-      labelColor: { value: t.color.text.primary.var, syntax: '<color>' },
+      root: { ...atProperty.color, value: 'transparent' },
+      labelColor: { ...atProperty.color, value: t.color.text.primary.var },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       hoverBg: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       pressBg: {
+        ...atProperty.color,
         value: t.color.background.elevated.var,
-        syntax: '<color>',
       },
-      dividerColor: { value: t.color.border.default.var, syntax: '<color>' },
-      itemPaddingY: { value: t.space[2].var, syntax: '<length>' },
-      itemPaddingX: { value: t.space[3].var, syntax: '<length>' },
+      dividerColor: { ...atProperty.color, value: t.color.border.default.var },
+      itemPaddingY: { ...atProperty.length, value: t.space[2].var },
+      itemPaddingX: { ...atProperty.length, value: t.space[3].var },
     });
     return {
       base: {

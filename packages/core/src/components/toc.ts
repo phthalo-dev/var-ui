@@ -45,24 +45,24 @@ export const tocVarDefinitions = {
     value: '0px',
   },
   indicatorOpacity: {
+    ...atProperty.number,
     value: '0',
-    syntax: '<number>' as const,
   },
   linkColor: {
+    ...atProperty.color,
     value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
   },
   linkHoverColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   linkSelectedColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   linkSelectedIndicator: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
 } as const;
 

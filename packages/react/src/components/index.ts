@@ -207,13 +207,7 @@ export { Grid, type GridProps } from './Grid';
 export { Section, type SectionProps } from './Section';
 export { ScrollArea, type ScrollAreaProps } from './ScrollArea';
 export { HStack, Stack, VStack, type StackProps } from './Stack';
-export {
-  Avatar,
-  AvatarGroup,
-  type AvatarGroupProps,
-  type AvatarProps,
-  type AvatarSize,
-} from './Avatar';
+export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from './Avatar';
 export { Badge, type BadgeProps } from './Badge';
 export {
   Chip,

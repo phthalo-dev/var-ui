@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -6,16 +7,16 @@ export const steps = typestyles.recipe(
   (c) => {
     const v = c.vars({
       stepForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       indicatorBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.background.var,
-        syntax: '<color>',
       },
       indicatorForeground: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
       },
     });
     return {

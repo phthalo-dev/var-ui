@@ -1,9 +1,7 @@
-import { type RecipeVariants, variant, type VariantOptions } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import type { Tone } from './semanticTone';
-
-const avatarSize = variant.enum(['xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
+import { size } from '../shared/variantAxes';
 
 /**
  * Identity avatar: image with initials fallback and an optional status well
@@ -18,18 +16,18 @@ export const avatar = typestyles.recipe(
   'avatar',
   {
     slots: ['root', 'image', 'initials', 'status'],
-    variants: { size: avatarSize },
+    variants: { size },
   },
   (c) => {
     const v = c.vars({
-      size: { value: '32px', syntax: '<length>' },
+      size: { ...atProperty.length, value: '32px' },
       background: {
+        ...atProperty.color,
         value: t.color.tone.accent.subtleBackground.var,
-        syntax: '<color>',
       },
       foreground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -87,20 +85,8 @@ export const avatar = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type AvatarSize = VariantOptions<typeof avatarSize>;
-/** Presence indicator tones for the avatar status well. */
-export type AvatarStatusTone = Extract<Tone, 'success' | 'warning' | 'danger' | 'neutral'>;
-
 /** Visual props derived from the schema. */
 export type AvatarVariantProps = RecipeVariants<typeof avatar>;
-
-export const avatarVariantPropDocs = [
-  { name: 'size', type: 'AvatarSize', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof AvatarVariantProps;
-  type: string;
-  required: false;
-}>;
 
 /**
  * Overlapping avatar row with a "+N" overflow chip.
@@ -115,8 +101,8 @@ export const avatarGroup = typestyles.recipe(
   (c) => {
     const v = c.vars({
       ringColor: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
     });
     return {

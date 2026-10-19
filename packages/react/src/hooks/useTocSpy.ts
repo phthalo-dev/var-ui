@@ -4,7 +4,7 @@ import {
   createTocSpy,
   type TocHeading,
   type TocSpyOptions,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/toc/spy';
 
 export type UseTocSpyOptions = Omit<
   TocSpyOptions,

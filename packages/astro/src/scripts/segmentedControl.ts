@@ -1,7 +1,7 @@
 import {
   observeSegmentedControlIndicator,
   syncSegmentedControlIndicator,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/indicators/segmented-control';
 
 /**
  * Event dispatched (bubbling) from the control root after the selection changes.

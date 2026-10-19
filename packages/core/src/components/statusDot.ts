@@ -1,14 +1,7 @@
-import { keyframes, variant } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import {
-  mapTone,
-  semanticTone,
-  tone,
-  type SemanticToneKey,
-  type Tone,
-  type ToneAppearance,
-} from './semanticTone';
+import { mapTone, semanticTone, tone, type SemanticToneKey } from '../shared/semanticTone';
 
 const pulse = keyframes.create('var-ui-status-pulse', {
   from: { boxShadow: '0 0 0 0 color-mix(in srgb, currentColor 45%, transparent)' },
@@ -36,7 +29,7 @@ export const statusDot = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      size: { value: '8px', syntax: '<length>' },
+      size: { ...atProperty.length, value: '8px' },
     });
     return {
       base: {
@@ -76,22 +69,4 @@ export const statusDot = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type StatusDotRecipeProps = NonNullable<Parameters<typeof statusDot>[0]>;
-
-export type StatusDotAppearance = Extract<ToneAppearance, 'filled' | 'outline' | 'subtle'>;
-
-export type StatusDotVariantProps = {
-  tone?: Tone;
-  appearance?: StatusDotAppearance;
-  pulse?: boolean;
-};
-
-export const statusDotVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'StatusDotAppearance', required: false },
-  { name: 'pulse', type: 'boolean', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof StatusDotVariantProps;
-  type: string;
-  required: false;
-}>;
+export type StatusDotVariantProps = RecipeVariants<typeof statusDot>;

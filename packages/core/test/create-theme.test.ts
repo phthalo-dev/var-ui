@@ -6,7 +6,7 @@ import { DEFAULT_THEME_NAME, SURFACE_ATTRIBUTE } from '../src/theme/constants';
 import { resetRegisteredFontFaces } from '../src/fonts/register-font-face';
 import { registerTestGlobals } from './lib/register-test-globals';
 import { override } from '../src/runtime';
-import { button, resolveButtonProps } from '../src/components/button';
+import { button } from '../src/components/button';
 import { badge } from '../src/components/badge';
 import { layoutPanel } from '../src/components/layout';
 import { sideNav } from '../src/components/sideNav';
@@ -274,7 +274,7 @@ describe('createDesignTheme', () => {
   });
 
   it('components emits overrides under the theme class', () => {
-    button(resolveButtonProps({ intent: 'primary', size: 'md' }));
+    button({ tone: 'accent', appearance: 'filled', size: 'md' });
 
     defaultTheme.override({
       name: 'acme-components',
@@ -336,7 +336,7 @@ describe('createDesignTheme', () => {
   });
 
   it('components accepts plain objects and per-key factories', () => {
-    button(resolveButtonProps({ intent: 'primary', size: 'md' }));
+    button({ tone: 'accent', appearance: 'filled', size: 'md' });
     badge({});
 
     createDesignTheme({
@@ -365,7 +365,7 @@ describe('createDesignTheme', () => {
   });
 
   it('override without selectorPrefix applies globally in overrides layer', () => {
-    button(resolveButtonProps({ intent: 'secondary', size: 'sm' }));
+    button({ size: 'sm' });
     override(
       button,
       {

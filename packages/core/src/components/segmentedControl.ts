@@ -4,8 +4,39 @@ import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
-import { controlSizeVariants, segmentedControlSize } from './controlSize';
-import { controlSize } from './variantAxes';
+import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
+
+const segmentedSegmentPaddingInline: Record<ControlSize, string> = {
+  sm: t.space[3].var,
+  md: t.space[4].var,
+  lg: t.space[4].var,
+};
+
+/** Track + segment metrics for segmented controls (icon-friendly square segments). */
+function segmentedControlSize(size: ControlSize) {
+  const height = controlSizeMetrics[size].height;
+  const trackPadding = t.space[1].var;
+  return {
+    root: {
+      boxSizing: 'border-box' as const,
+      height,
+      minHeight: height,
+    },
+    segment: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      minHeight: 0,
+      paddingInline: segmentedSegmentPaddingInline[size],
+      fontSize: controlSizeMetrics[size].fontSize,
+      lineHeight: 1,
+    },
+    indicatorInset: trackPadding,
+    segmentMinWidth: `calc(${height} - 2 * ${trackPadding})`,
+  };
+}
 
 /**
  * Segmented toggle group with a sliding surface indicator behind the active segment.

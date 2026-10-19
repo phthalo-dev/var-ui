@@ -1,4 +1,4 @@
-import { variant } from 'typestyles';
+import { variant, type VariantOptions } from 'typestyles';
 
 /**
  * Shared variant axes for schema-first recipes.
@@ -9,11 +9,26 @@ import { variant } from 'typestyles';
  * coupling the visual treatments.
  */
 
+const controlSizeValues = ['sm', 'md', 'lg'] as const;
+
 /**
  * `sm` / `md` / `lg` size axis for controls, compact widgets, and rows.
- * Used by button, inputs, select, tabs, toolbar, drawer, spinner, and friends.
+ * The middle of {@link size}. Used by button, inputs, select, tabs, toolbar,
+ * drawer, spinner, and friends.
  */
-export const controlSize = variant.enum(['sm', 'md', 'lg'], { default: 'md' });
+export const controlSize = variant.enum(controlSizeValues, { default: 'md' });
+
+export type ControlSize = VariantOptions<typeof controlSize>;
+
+/**
+ * `xs` / `sm` / `md` / `lg` / `xl` size axis. `controlSize` is this scale
+ * without `xs` and `xl`.
+ */
+const sizeValues = ['xs', ...controlSizeValues, 'xl'] as const;
+
+export const size = variant.enum(sizeValues, { default: 'md' });
+
+export type Size = VariantOptions<typeof size>;
 
 /** Vertical density axis for list-like surfaces (list, tree, table, chat). */
 export const density = variant.enum(['compact', 'balanced', 'spacious'], {
@@ -32,6 +47,8 @@ export const orientation = variant.enum(['horizontal', 'vertical'], { default: '
  */
 export const fillAppearance = variant.enum(['solid', 'subtle'], { default: 'solid' });
 
+export type FillAppearance = VariantOptions<typeof fillAppearance>;
+
 /** Chat message author axis (`chat-message`, `chat-message-bubble`). */
 export const sender = variant.enum(['user', 'assistant'], { default: 'assistant' });
 
@@ -39,6 +56,3 @@ export const sender = variant.enum(['user', 'assistant'], { default: 'assistant'
 export const placement = variant.enum(['top-start', 'top-end', 'bottom-start', 'bottom-end'], {
   default: 'bottom-end',
 });
-
-/** Border treatment shared by disclosure-style panels (`accordion-group`). */
-export const paneVariant = variant.enum(['flush', 'bordered'], { default: 'bordered' });

@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -10,8 +11,8 @@ export const loadingOverlay = typestyles.recipe(
   (c) => {
     const v = c.vars({
       backdrop: {
+        ...atProperty.color,
         value: t.color.overlay.backdrop.var,
-        syntax: '<color>',
       },
     });
     return {

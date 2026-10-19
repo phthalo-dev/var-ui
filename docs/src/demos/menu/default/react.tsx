@@ -4,7 +4,7 @@ export default function Preview() {
   return (
     <Menu>
       <Menu.Trigger>
-        <Button intent="secondary">Song</Button>
+        <Button>Song</Button>
       </Menu.Trigger>
       <Menu.Popup>
         <Menu.Item id="lib" onAction={() => {}}>

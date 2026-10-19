@@ -1,17 +1,12 @@
 ---
-import {
-  avatar,
-  statusDot,
-  type AvatarStatusTone,
-  type AvatarVariantProps,
-} from '@var-ui/core';
+import { avatar, statusDot, type AvatarVariantProps, type Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 interface Props extends AvatarVariantProps {
   src?: string;
   alt?: string;
   name?: string;
-  status?: AvatarStatusTone;
+  status?: Tone;
   className?: string;
 }
 

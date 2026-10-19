@@ -4,7 +4,7 @@ export default function Preview() {
   return (
     <Dialog>
       <Dialog.Trigger>
-        <Button intent="secondary">Open dialog</Button>
+        <Button>Open dialog</Button>
       </Dialog.Trigger>
       <Dialog.Backdrop>
         <Dialog.Popup>

@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -6,20 +7,20 @@ export const checkbox = typestyles.recipe(
   (c) => {
     const v = c.vars({
       boxBorder: {
+        ...atProperty.color,
         value: t.color.border.strong.var,
-        syntax: '<color>',
       },
       boxBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       boxForeground: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
       },
       groupLabelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {

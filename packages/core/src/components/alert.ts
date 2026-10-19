@@ -7,7 +7,7 @@ import {
   surfaceAppearance,
   toneChannelAssignments,
   toneWithDefault,
-} from './semanticTone';
+} from '../shared/semanticTone';
 
 /**
  * Slot recipe. The schema definition is the source of the visual props:
@@ -17,7 +17,7 @@ import {
  * - **appearance** chooses how those tokens are applied (tinted surface vs solid fill).
  * - **contentGap** spaces the body under a title. React and Astro derive it from `title`.
  *
- * Tone channels and the shared appearance axis live in `semanticTone.ts`.
+ * Tone channels and the shared appearance axis live in `shared/semanticTone.ts`.
  */
 const alertTone = toneWithDefault('info');
 const alertContentGap = variant.enum(['spaced', 'flush'], { default: 'spaced' });
@@ -35,16 +35,16 @@ export const alert = typestyles.recipe(
   (c) => {
     const v = c.vars({
       semantic: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: atProperty.color.syntax,
       },
       solidBg: {
+        ...atProperty.color,
         value: t.color.tone.accent.background.var,
-        syntax: atProperty.color.syntax,
       },
       solidFg: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: atProperty.color.syntax,
       },
     });
 

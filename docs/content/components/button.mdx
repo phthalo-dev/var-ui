@@ -24,8 +24,6 @@ Use `tone` and `appearance` to control color and surface treatment — the same 
 
 Each row below is one appearance; each button in the row is a different tone.
 
-`intent` is an optional shorthand for common pairs: `primary` (accent + filled), `secondary` (neutral + subtle), `ghost` (accent + ghost), `danger` (danger + filled), `outline` (accent + outline).
-
 <Demo id="button.variants" />
 
 ### Disabled
@@ -36,7 +34,7 @@ Pass `isDisabled` to remove the button from the tab order and block press events
 
 ## HTML
 
-Set `data-tone` and `data-appearance` on a `.var-ui-button` element (plus `data-size` and `data-layout` when needed). In TypeScript, use `button({ tone, appearance })` from `@var-ui/core`, or `resolveButtonProps({ intent })` for the shorthand mapping.
+Set `data-tone` and `data-appearance` on a `.var-ui-button` element (plus `data-size` and `data-layout` when needed). In TypeScript, use `button({ tone, appearance })` from `@var-ui/core`.
 
 ## Props
 

@@ -3,7 +3,7 @@ import { Button, Menu } from '@var-ui/react';
 export default function Preview() {
   return (
     <Menu.FromSections
-      trigger={<Button intent="secondary">File</Button>}
+      trigger={<Button>File</Button>}
       sections={[
         {
           label: 'Edit',

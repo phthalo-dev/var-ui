@@ -1,7 +1,7 @@
 /**
  * Build-time CSS extraction entry for `@typestyles/vite`.
  *
- * App code should import helpers from `@var-ui/core` (or `@var-ui/core/internal`), not here.
+ * App code should import helpers from `@var-ui/core`, not here.
  * The {@link stylesEntry} binding exists so `vp pack` keeps the registration graph — bare
  * side-effect imports are tree-shaken out of `dist/styles.mjs`.
  *

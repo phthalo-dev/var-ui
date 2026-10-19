@@ -1,62 +1,63 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 export const topNavVarDefinitions = {
   background: {
+    ...atProperty.color,
     value: t.color.background.surface.var,
-    syntax: '<color>' as const,
   },
   border: {
+    ...atProperty.color,
     value: t.color.border.strong.var,
-    syntax: '<color>' as const,
   },
   headingColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   itemColor: {
+    ...atProperty.color,
     value: t.color.navItem.foreground.var,
-    syntax: '<color>' as const,
   },
   itemHoverBackground: {
+    ...atProperty.color,
     value: t.color.navItem.hoverBackground.var,
-    syntax: '<color>' as const,
   },
   itemSelectedBackground: {
+    ...atProperty.color,
     value: t.color.navItem.selectedBackground.var,
-    syntax: '<color>' as const,
   },
   itemSelectedColor: {
+    ...atProperty.color,
     value: t.color.navItem.selectedForeground.var,
-    syntax: '<color>' as const,
   },
   menuTriggerColor: {
+    ...atProperty.color,
     value: t.color.navItem.foreground.var,
-    syntax: '<color>' as const,
   },
   megaPanelBackground: {
+    ...atProperty.color,
     value: t.color.background.surface.var,
-    syntax: '<color>' as const,
   },
   megaPanelBorder: {
+    ...atProperty.color,
     value: t.color.border.default.var,
-    syntax: '<color>' as const,
   },
   megaItemColor: {
+    ...atProperty.color,
     value: t.color.text.primary.var,
-    syntax: '<color>' as const,
   },
   megaItemHoverBackground: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   featuredCardBackground: {
+    ...atProperty.color,
     value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
   },
   featuredCardBorder: {
+    ...atProperty.color,
     value: t.color.border.default.var,
-    syntax: '<color>' as const,
   },
 } as const;
 

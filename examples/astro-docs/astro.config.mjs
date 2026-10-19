@@ -35,7 +35,7 @@ export default defineConfig({
       alias: {
         '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
         '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
-        '@var-ui/core/internal': `${root}/packages/core/src/internal.ts`,
+        '@var-ui/core/components': `${root}/packages/core/src/components`,
         '@var-ui/core': `${root}/packages/core/src/index.ts`,
         '@var-ui/astro': `${root}/packages/astro/index.ts`,
         '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,

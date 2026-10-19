@@ -5,7 +5,7 @@ export const snippets = {
 
 <Dialog>
   <Dialog.Trigger>
-    <Button intent="secondary">Open dialog</Button>
+    <Button>Open dialog</Button>
   </Dialog.Trigger>
   <Dialog.Backdrop>
     <Dialog.Popup>
@@ -25,10 +25,10 @@ export const snippets = {
   astro: `---
 // No @var-ui/astro Dialog — static core-recipe chrome (open state, non-interactive).
 // Full open/close interaction is React-only via react-aria-components.
-import { button, dialog, resolveButtonProps } from '@var-ui/core';
+import { button, dialog } from '@var-ui/core';
 
 const d = dialog();
-const trigger = button(resolveButtonProps({ intent: 'secondary' }));
+const trigger = button({});
 const closeAction = button({});
 ---
 

@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Square media preview with an optional floating remove control.
@@ -21,10 +21,10 @@ export const thumbnail = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      size: { value: '64px', syntax: '<length>' },
+      size: { ...atProperty.length, value: '64px' },
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
     });
     return {

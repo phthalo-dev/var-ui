@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { controlSize } from './variantAxes';
+import { controlSize } from '../shared/variantAxes';
 
 /**
  * HSV color picker panel: saturation/value area, hue slider, optional alpha
@@ -28,16 +28,16 @@ export const colorPicker = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      panelHeight: { value: '10rem', syntax: '<length>' },
-      sliderHeight: { value: '0.75rem', syntax: '<length>' },
-      thumbSize: { value: '0.875rem', syntax: '<length>' },
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      thumbBorder: { value: t.color.background.surface.var, syntax: '<color>' },
+      panelHeight: { ...atProperty.length, value: '10rem' },
+      sliderHeight: { ...atProperty.length, value: '0.75rem' },
+      thumbSize: { ...atProperty.length, value: '0.875rem' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      thumbBorder: { ...atProperty.color, value: t.color.background.surface.var },
       thumbShadow: { value: t.shadow.sm.var, syntax: '*', initial: 'none' },
-      swatchSize: { value: '1.25rem', syntax: '<length>' },
-      swatchSelectedRing: { value: t.color.border.focus.var, syntax: '<color>' },
-      checkerLight: { value: t.color.background.subtle.var, syntax: '<color>' },
-      checkerDark: { value: t.color.border.subtle.var, syntax: '<color>' },
+      swatchSize: { ...atProperty.length, value: '1.25rem' },
+      swatchSelectedRing: { ...atProperty.color, value: t.color.border.focus.var },
+      checkerLight: { ...atProperty.color, value: t.color.background.subtle.var },
+      checkerDark: { ...atProperty.color, value: t.color.border.subtle.var },
     });
     return {
       base: {
@@ -181,9 +181,9 @@ export const colorSwatch = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      size: { value: '1.5rem', syntax: '<length>' },
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      selectedRing: { value: t.color.border.focus.var, syntax: '<color>' },
+      size: { ...atProperty.length, value: '1.5rem' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      selectedRing: { ...atProperty.color, value: t.color.border.focus.var },
     });
     return {
       base: {

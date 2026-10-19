@@ -1,15 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { Children, useState } from 'react';
-import {
-  avatar,
-  avatarGroup,
-  statusDot,
-  type AvatarStatusTone,
-  type AvatarVariantProps,
-} from '@var-ui/core';
+import { avatar, avatarGroup, statusDot, type AvatarVariantProps, type Tone } from '@var-ui/core';
 import { mergeProps } from './utils';
-
-export type { AvatarSize, AvatarStatusTone } from '@var-ui/core';
 
 export type AvatarProps = AvatarVariantProps & {
   /** Image URL. When missing or on load error, initials are shown instead. */
@@ -19,7 +11,7 @@ export type AvatarProps = AvatarVariantProps & {
   /** Display name — initials fallback uses the first letter of the first two words. */
   name?: string;
   /** Optional presence indicator shown on the avatar rim. */
-  status?: AvatarStatusTone;
+  status?: Tone;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
 };

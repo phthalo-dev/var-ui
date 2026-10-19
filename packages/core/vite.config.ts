@@ -8,8 +8,11 @@ export default defineConfig({
   pack: {
     entry: [
       'src/index.ts',
-      'src/internal.ts',
       'src/styles.ts',
+      'src/components/indicators/tabs.ts',
+      'src/components/indicators/segmented-control.ts',
+      'src/components/indicators/toc.ts',
+      'src/components/toc/spy.ts',
       'src/theme/constants.ts',
       'src/theme/register-default.ts',
     ],

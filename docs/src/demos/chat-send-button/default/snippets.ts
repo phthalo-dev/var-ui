@@ -17,9 +17,9 @@ function SendToggle() {
   astro: `---
 // No @var-ui/astro ChatSendButton — static Button chrome (send state only).
 // Send ↔ stop streaming toggle is React-only.
-import { button, resolveButtonProps } from '@var-ui/core';
+import { button } from '@var-ui/core';
 
-const send = button(resolveButtonProps({ intent: 'primary' }));
+const send = button({ tone: 'accent', appearance: 'filled' });
 ---
 
 <button type="button" class:list={[send]} aria-label="Send message">↑</button>`,

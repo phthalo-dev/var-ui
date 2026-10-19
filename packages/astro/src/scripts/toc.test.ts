@@ -3,7 +3,7 @@ import {
   collectArticleHeadings,
   pickActiveHeadingByPosition,
   resolveActiveHeading,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/toc/spy';
 import { setActive } from './toc';
 
 describe('collectArticleHeadings', () => {
