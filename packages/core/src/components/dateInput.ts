@@ -1,82 +1,83 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { calendarGridChrome, dateFieldChrome } from './field';
+import { calendarGridChrome, dateFieldChrome } from './fieldChrome';
 
 export const dateInput = typestyles.recipe(
   'dateInput',
   (c) => {
     const v = c.vars({
       labelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       errorColor: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
       groupBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       groupBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       segmentColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       segmentPlaceholderColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       popoverBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       popoverBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       headingColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       navButtonColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       navButtonHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       headerCellColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       cellColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       cellHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       cellSelectedBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.background.var,
-        syntax: '<color>',
       },
       cellSelectedColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
       },
       cellDisabledColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
 

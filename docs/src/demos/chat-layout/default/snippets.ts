@@ -56,7 +56,6 @@ import {
   chatMessage,
   chatMessageBubble,
   chatMessageList,
-  resolveButtonProps,
 } from '@var-ui/core';
 
 const l = chatLayout();
@@ -65,7 +64,7 @@ const m = chatMessage({ sender: 'assistant' });
 const bubble = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'none' });
 const a = avatar({ size: 'sm' });
 const c = chatComposer();
-const send = button(resolveButtonProps({ intent: 'primary' }));
+const send = button({ tone: 'accent', appearance: 'filled' });
 ---
 
 <div style="height: 280px">

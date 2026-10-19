@@ -1,6 +1,7 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
+import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 
 /**
  * Shared floating-layer chrome: a dimmed fixed backdrop plus a centered
@@ -18,7 +19,7 @@ export const overlay = typestyles.recipe(
   'overlay',
   (c) => {
     const v = c.vars({
-      background: { value: t.color.overlay.backdrop.var, syntax: '<color>' },
+      background: { ...atProperty.color, value: t.color.overlay.backdrop.var },
     });
     return {
       slots: ['backdrop', 'positioner'],

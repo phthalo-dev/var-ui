@@ -1,66 +1,67 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { fieldChrome } from './field';
+import { fieldChrome } from './fieldChrome';
 
 export const slider = typestyles.recipe(
   'slider',
   (c) => {
     const v = c.vars({
       labelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       trackBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       fillBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
       thumbBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       thumbBorder: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
       outputColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       errorColor: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
       trackHeight: {
+        ...atProperty.length,
         value: t.space[1].var,
-        syntax: '<length>',
       },
       thumbSize: {
+        ...atProperty.length,
         value: t.size.icon.md.var,
-        syntax: '<length>',
       },
       controlHeight: {
+        ...atProperty.length,
         value: t.size.icon.lg.var,
-        syntax: '<length>',
       },
       thumbBorderWidth: {
+        ...atProperty.length,
         value: t.borderWidth.thick.var,
-        syntax: '<length>',
       },
       focusOutlineWidth: {
+        ...atProperty.length,
         value: t.borderWidth.thick.var,
-        syntax: '<length>',
       },
       focusOutlineOffset: {
+        ...atProperty.length,
         value: t.space[1].var,
-        syntax: '<length>',
       },
     });
     const chrome = fieldChrome({

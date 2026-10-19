@@ -5,7 +5,7 @@ export const snippets = {
 
 <Menu>
   <Menu.Trigger>
-    <Button intent="secondary">Song</Button>
+    <Button>Song</Button>
   </Menu.Trigger>
   <Menu.Popup>
     <Menu.Item id="lib" onAction={() => {}}>Add to Library</Menu.Item>

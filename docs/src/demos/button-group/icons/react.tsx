@@ -5,7 +5,7 @@ export default function Preview() {
     <ButtonGroup>
       <IconButton name="search" aria-label="Search" />
       <IconButton name="copy" aria-label="Copy" />
-      <Button intent="secondary">More</Button>
+      <Button>More</Button>
     </ButtonGroup>
   );
 }

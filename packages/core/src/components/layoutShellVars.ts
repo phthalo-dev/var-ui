@@ -1,4 +1,4 @@
-import type { ComponentConfigContext, ComponentVarRefTree } from 'typestyles';
+import { atProperty, type ComponentConfigContext, type ComponentVarRefTree } from 'typestyles';
 import { designTokens as t } from '../tokens';
 
 export type LayoutPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
@@ -14,16 +14,16 @@ const shellPadding = t.space[4].var;
 export const layoutShellVarDefinitions = {
   padding: {
     outer: {
-      x: { value: shellPadding, syntax: '<length>' as const },
-      y: { value: shellPadding, syntax: '<length>' as const },
+      x: { ...atProperty.length, value: shellPadding },
+      y: { ...atProperty.length, value: shellPadding },
     },
     inner: {
-      x: { value: shellPadding, syntax: '<length>' as const },
-      y: { value: shellPadding, syntax: '<length>' as const },
+      x: { ...atProperty.length, value: shellPadding },
+      y: { ...atProperty.length, value: shellPadding },
     },
   },
   content: {
-    width: { value: 'none', syntax: '<length> | none' as const },
+    width: { ...atProperty.union(atProperty.length, { syntax: 'none' }), value: 'none' },
   },
 } as const;
 

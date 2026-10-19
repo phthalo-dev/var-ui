@@ -4,7 +4,7 @@ export type ResolvedColorMode = 'light' | 'dark';
 import {
   observeSegmentedControlIndicator,
   syncSegmentedControlIndicator,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/indicators/segmented-control';
 
 const VALID: ReadonlySet<string> = new Set(['light', 'dark', 'system']);
 

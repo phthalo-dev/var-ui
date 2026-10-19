@@ -6,16 +6,15 @@ import { typestyles } from '../../src/runtime';
 
 const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-export function entryPathFor(subpath: 'index' | 'internal' = 'index'): string {
-  return join(pkgRoot, 'src', subpath === 'internal' ? 'internal.ts' : 'index.ts');
+export function entryPathFor(): string {
+  return join(pkgRoot, 'src', 'index.ts');
 }
 
-const defaultEntryPath = entryPathFor('index');
+const defaultEntryPath = entryPathFor();
 
 export type ExportCategory =
   | 'recipe'
   | 'recipe-adjacent'
-  | 'prop-docs'
   | 'chrome'
   | 'semantic-tone'
   | 'tokens'
@@ -52,8 +51,6 @@ const recipeNames = new Set(typestyles.getThemeableComponents().keys());
 const recipeAdjacent = new Set([
   'linkButton',
   'switchStyles',
-  'layoutUtility',
-  'text',
   'fieldChrome',
   'dateFieldChrome',
   'calendarGridChrome',
@@ -62,7 +59,6 @@ const recipeAdjacent = new Set([
   'layoutFooter',
   'layoutContent',
   'layoutPanel',
-  'namedContainerQuery',
   'proseContent',
 ]);
 
@@ -77,7 +73,6 @@ const semanticToneExports = new Set([
   'neutralChannelAssignments',
   'controlAppearancePaint',
   'tonePaint',
-  'badgeTonePaint',
   'appearanceSurface',
   'mapTone',
   'surfaceAppearance',
@@ -85,14 +80,11 @@ const semanticToneExports = new Set([
   'toneChannelAssignments',
   'toneValues',
   'toneWithDefault',
-  'buttonTonePaint',
-  'resolveButtonProps',
 ]);
 
 function categorizeRuntimeExport(name: string): ExportCategory {
   if (recipeNames.has(name)) return 'recipe';
   if (recipeAdjacent.has(name)) return 'recipe-adjacent';
-  if (name.endsWith('VariantPropDocs')) return 'prop-docs';
   if (name.endsWith('Chrome')) return 'chrome';
   if (semanticToneExports.has(name)) return 'semantic-tone';
   if (

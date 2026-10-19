@@ -1,4 +1,4 @@
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
@@ -8,7 +8,7 @@ import {
   surfaceAppearance,
   tone,
   toneChannelAssignments,
-} from './semanticTone';
+} from '../shared/semanticTone';
 
 /**
  * Flat component: `tone` sets semantic channels; `appearance` applies shared resolver paint.
@@ -24,28 +24,28 @@ export const badge = typestyles.recipe(
   (c) => {
     const v = c.vars({
       semantic: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       solidBg: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       solidFg: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       borderColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       backgroundColor: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       textColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -91,12 +91,3 @@ export const badge = typestyles.recipe(
 
 /** Visual props derived from the schema. */
 export type BadgeVariantProps = RecipeVariants<typeof badge>;
-
-export const badgeVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof BadgeVariantProps;
-  type: string;
-  required: false;
-}>;

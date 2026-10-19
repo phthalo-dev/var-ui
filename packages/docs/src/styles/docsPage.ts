@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
 
 const belowLg = breakpoint('lg', 'max');
@@ -16,8 +17,8 @@ export const docsPage = typestyles.recipe<
   (c) => {
     const v = c.vars({
       headerHeight: {
+        ...atProperty.length,
         value: t.size.nav.bar.var,
-        syntax: '<length>',
       },
     });
 

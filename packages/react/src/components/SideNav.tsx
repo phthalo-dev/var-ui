@@ -319,7 +319,8 @@ export function SideNavItem({
           <IconButton
             name={isExpanded ? 'chevronDown' : 'chevronRight'}
             aria-label={isExpanded ? `Collapse ${label}` : `Expand ${label}`}
-            intent="ghost"
+            tone="accent"
+            appearance="ghost"
             size="sm"
             onPress={() => setIsExpanded((expanded) => !expanded)}
             data-mirror={isRtl && !isExpanded ? true : undefined}

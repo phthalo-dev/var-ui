@@ -1,7 +1,7 @@
 import {
   observeSegmentedControlIndicator,
   syncSegmentedControlIndicator,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/indicators/segmented-control';
 import { FRAMEWORK_COOKIE, type DocsFramework } from '../framework';
 
 const ONE_YEAR = 60 * 60 * 24 * 365;

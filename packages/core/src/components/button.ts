@@ -1,16 +1,14 @@
-import { variant } from 'typestyles';
+import { atProperty, type RecipeVariants, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { controlSize } from './variantAxes';
+import { controlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,
   mapTone,
   tone,
   toneChannelAssignments,
-  type Tone,
-  type ToneAppearance,
-} from './semanticTone';
+} from '../shared/semanticTone';
 
 const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], {
   default: 'subtle',
@@ -31,28 +29,28 @@ export const button = typestyles.recipe(
   (c) => {
     const v = c.vars({
       semantic: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       solidBg: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       solidFg: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       foreground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -118,73 +116,7 @@ export const button = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type ButtonIntent = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
-
-const INTENT_TO_VARIANTS: Record<ButtonIntent, { tone: Tone; appearance: ToneAppearance }> = {
-  primary: { tone: 'accent', appearance: 'filled' },
-  secondary: { tone: 'neutral', appearance: 'subtle' },
-  ghost: { tone: 'accent', appearance: 'ghost' },
-  danger: { tone: 'danger', appearance: 'filled' },
-  outline: { tone: 'accent', appearance: 'outline' },
-};
-
-export type ButtonRecipeProps = NonNullable<Parameters<typeof button>[0]>;
-
-export type ButtonOptions = Omit<ButtonRecipeProps, 'elevated'> & {
-  /** Shorthand for common `tone` + `appearance` pairs. */
-  intent?: ButtonIntent;
-  /** Applies a soft elevation shadow from the shadow design tokens. */
-  elevated?: boolean;
-};
-
-/** Recipe variant props shared by React, Astro, and other Button wrappers. */
-export type ButtonVariantProps = {
-  /** Shorthand for common `tone` + `appearance` pairs. Ignored when `tone` is set. */
-  intent?: ButtonIntent;
-  /** Semantic color family. */
-  tone?: Tone;
-  /** Surface treatment from the shared tone resolver. */
-  appearance?: ToneAppearance;
-  size?: ButtonRecipeProps['size'];
-  layout?: ButtonRecipeProps['layout'];
-  /** Applies a soft elevation shadow from the shadow design tokens. */
-  elevated?: boolean;
-};
-
-/** Prop metadata for Astro/docs props tables when `Props extends ButtonVariantProps`. */
-export const buttonVariantPropDocs = [
-  { name: 'intent', type: 'ButtonIntent', required: false },
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'ToneAppearance', required: false },
-  { name: 'size', type: 'ControlSize', required: false },
-  { name: 'layout', type: "'default' | 'icon'", required: false },
-  { name: 'elevated', type: 'boolean', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ButtonVariantProps;
-  type: string;
-  required: false;
-}>;
-
-/** Maps `intent` shorthand onto `tone` + `appearance` for `button(...)`. */
-export function resolveButtonProps(props?: ButtonOptions): ButtonRecipeProps {
-  const { intent, tone, appearance, elevated, ...rest } = props ?? {};
-  const elevatedVariant: Pick<ButtonRecipeProps, 'elevated'> | Record<string, never> =
-    elevated != null ? { elevated } : {};
-  if (intent) {
-    const mapped = INTENT_TO_VARIANTS[intent];
-    return {
-      ...rest,
-      ...elevatedVariant,
-      tone: tone ?? mapped.tone,
-      appearance: appearance ?? mapped.appearance,
-    };
-  }
-  return {
-    ...rest,
-    ...elevatedVariant,
-    ...(tone != null ? { tone } : {}),
-    ...(appearance != null ? { appearance } : {}),
-  };
-}
+/** Visual props derived from the schema. */
+export type ButtonVariantProps = RecipeVariants<typeof button>;
 
 export const linkButton = button;

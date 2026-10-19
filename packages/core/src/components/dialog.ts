@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
+import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 
 export const dialog = typestyles.recipe(
   'dialog',
@@ -23,20 +23,20 @@ export const dialog = typestyles.recipe(
   (c) => {
     const v = c.vars({
       overlayBackground: {
+        ...atProperty.color,
         value: t.color.overlay.default.var,
-        syntax: '<color>',
       },
       modalBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       modalBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {

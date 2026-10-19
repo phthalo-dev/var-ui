@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { Button, Menu } from '@var-ui/react';
 
 <Menu.FromSections
-  trigger={<Button intent="secondary">File</Button>}
+  trigger={<Button>File</Button>}
   sections={[
     {
       label: 'Edit',

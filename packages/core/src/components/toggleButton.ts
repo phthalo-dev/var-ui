@@ -1,10 +1,10 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { controlSize } from './variantAxes';
+import { controlSize } from '../shared/variantAxes';
 
 /** Single toggle button and segmented-control item styling. */
 export const toggleButton = typestyles.recipe(
@@ -18,24 +18,24 @@ export const toggleButton = typestyles.recipe(
   (c) => {
     const v = c.vars({
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       foreground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       selectedBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.background.var,
-        syntax: '<color>',
       },
       selectedForeground: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
       },
     });
     return {

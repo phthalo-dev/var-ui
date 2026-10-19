@@ -1,4 +1,4 @@
-import { button, emptyState, resolveButtonProps } from '@var-ui/core';
+import { button, emptyState } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -20,7 +20,7 @@ export function render(): string {
   );
   const btn = serializeHtmlTag(
     'button',
-    { type: 'button', ...mergeProps(button(resolveButtonProps({ intent: 'primary' }))) },
+    { type: 'button', ...mergeProps(button({ tone: 'accent', appearance: 'filled' })) },
     'Clear filters',
   );
   const action = serializeHtmlTag('div', mergeProps(e.action), btn);

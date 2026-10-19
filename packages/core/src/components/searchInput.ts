@@ -1,10 +1,9 @@
-import { variant } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeMetrics, controlSizeVariants, controlSurfaceSize } from './controlSize';
-import type { ControlSize } from './semanticTone';
-import { controlSize } from './variantAxes';
+import { controlSize } from '../shared/variantAxes';
 
 /** Command-trigger chrome collapses to an icon button below this width. */
 const belowXl = breakpoint('xl', 'max');
@@ -28,24 +27,24 @@ export const searchInput = typestyles.recipe(
   (c) => {
     const v = c.vars({
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       foreground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       placeholder: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       iconColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -170,7 +169,4 @@ export const searchInput = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type SearchInputVariantProps = {
-  variant?: 'default' | 'command';
-  size?: ControlSize;
-};
+export type SearchInputVariantProps = RecipeVariants<typeof searchInput>;

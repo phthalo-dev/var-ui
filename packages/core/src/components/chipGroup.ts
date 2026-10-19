@@ -17,5 +17,3 @@ export const chipGroup = typestyles.recipe(
   }),
   { layer: 'components' },
 );
-
-export type ChipGroupRecipeProps = NonNullable<Parameters<typeof chipGroup>[0]>;

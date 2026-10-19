@@ -1,7 +1,8 @@
 import type { CSSProperties, JSX, ReactNode } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link as AriaLink } from 'react-aria-components';
-import { positionTocIndicator, type TocHeading } from '@var-ui/core/internal';
+import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
+import type { TocHeading } from '@var-ui/core/components/toc/spy';
 import { toc as tocStyles } from '@var-ui/core';
 import { useTocSpy } from '../hooks/useTocSpy';
 import { mergeProps } from './utils';

@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -29,36 +30,36 @@ export const mobileNav = typestyles.recipe(
   (c) => {
     const v = c.vars({
       overlayBackground: {
+        ...atProperty.color,
         value: t.color.overlay.default.var,
-        syntax: '<color>',
       },
       panelBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       panelBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       panelWidth: {
+        ...atProperty.length,
         value: '320px',
-        syntax: '<length>',
       },
       headerColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       toggleColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       toggleHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       closeButtonColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {

@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import {
-  hexToHsv,
-  hsvToHex,
-  normalizeHex,
-  parseHex,
-  rgbToHex,
-  rgbToHsv,
-} from '../../src/color/convert';
+import { hexToHsv, hsvToHex, normalizeHex, parseHex, rgbToHex, rgbToHsv } from './convert';
 
 describe('color convert', () => {
   it('normalizes short hex', () => {

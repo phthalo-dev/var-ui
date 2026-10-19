@@ -1,4 +1,4 @@
-import { variant, type RecipeVariants, type VariantOptions } from 'typestyles';
+import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -44,24 +44,24 @@ export const appShell = typestyles.recipe(
   (c) => {
     const v = c.vars({
       background: {
+        ...atProperty.color,
         value: t.color.background.app.var,
-        syntax: '<color>',
       },
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       contentPadding: {
+        ...atProperty.length,
         value: '0px',
-        syntax: '<length>',
       },
       asideWidth: {
+        ...atProperty.length,
         value: '12.5rem',
-        syntax: '<length>',
       },
       sideNavWidth: {
+        ...atProperty.union(atProperty.length, { syntax: 'auto' }),
         value: 'auto',
-        syntax: '<length> | auto',
       },
     });
     const transition = `transform ${t.duration.fast.var} ${t.easing.standard.var}`;

@@ -6,7 +6,7 @@ export const snippets = {
 <ButtonGroup>
   <IconButton name="search" aria-label="Search" />
   <IconButton name="copy" aria-label="Copy" />
-  <Button intent="secondary">More</Button>
+  <Button>More</Button>
 </ButtonGroup>`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

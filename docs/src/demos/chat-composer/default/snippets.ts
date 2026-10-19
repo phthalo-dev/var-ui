@@ -19,10 +19,10 @@ function Composer() {
 }`,
   astro: `---
 // No @var-ui/astro ChatComposer — static core-recipe chrome (non-interactive).
-import { button, chatComposer, resolveButtonProps } from '@var-ui/core';
+import { button, chatComposer } from '@var-ui/core';
 
 const c = chatComposer();
-const send = button(resolveButtonProps({ intent: 'primary' }));
+const send = button({ tone: 'accent', appearance: 'filled' });
 ---
 
 <div class:list={[c.root]}>

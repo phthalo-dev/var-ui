@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { Button, HStack } from '@var-ui/react';
 
 <HStack gap="sm">
-  <Button intent="secondary">Cancel</Button>
+  <Button>Cancel</Button>
   <Button>Save</Button>
 </HStack>`,
   astro: `---
@@ -12,7 +12,7 @@ import { Button, HStack } from '@var-ui/astro';
 ---
 
 <HStack gap="sm">
-  <Button intent="secondary">Cancel</Button>
+  <Button>Cancel</Button>
   <Button>Save</Button>
 </HStack>`,
   html: `<div data-direction="row" data-gap="sm" data-align="center" data-justify="start" data-wrap="nowrap" class="var-ui-stack">

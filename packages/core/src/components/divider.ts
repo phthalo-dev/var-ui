@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { orientation } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { orientation } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Hairline separator; vertical orientation stretches to the parent's cross
@@ -20,7 +20,7 @@ export const divider = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      color: { value: t.color.border.default.var, syntax: '<color>' },
+      color: { ...atProperty.color, value: t.color.border.default.var },
     });
     return {
       base: {

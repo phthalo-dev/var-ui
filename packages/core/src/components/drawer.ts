@@ -1,7 +1,8 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
-import { controlSize } from './variantAxes';
+import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
+import { controlSize } from '../shared/variantAxes';
 
 /**
  * General-purpose slide-in panel built on RAC Modal. Supports start/end/bottom
@@ -16,32 +17,32 @@ export const drawer = typestyles.recipe(
   (c) => {
     const v = c.vars({
       overlayBackground: {
+        ...atProperty.color,
         value: t.color.overlay.default.var,
-        syntax: '<color>',
       },
       panelBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       panelBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       panelWidth: {
+        ...atProperty.length,
         value: '400px',
-        syntax: '<length>',
       },
       panelHeight: {
+        ...atProperty.length,
         value: '50vh',
-        syntax: '<length>',
       },
       headerColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       closeButtonColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {
@@ -151,17 +152,4 @@ export const drawer = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type DrawerRecipeProps = NonNullable<Parameters<typeof drawer>[0]>;
-export type DrawerSize = NonNullable<DrawerRecipeProps['size']>;
-
-export type DrawerVariantProps = {
-  size?: DrawerSize;
-};
-
-export const drawerVariantPropDocs = [
-  { name: 'size', type: 'DrawerSize', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof DrawerVariantProps;
-  type: string;
-  required: false;
-}>;
+export type DrawerVariantProps = RecipeVariants<typeof drawer>;

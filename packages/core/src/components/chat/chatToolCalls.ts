@@ -1,7 +1,7 @@
 import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { semanticTone } from '../semanticTone';
+import { semanticTone } from '../../shared/semanticTone';
 
 const toolCallsStatus = variant.enum(['pending', 'running', 'complete', 'error'], {
   default: 'complete',

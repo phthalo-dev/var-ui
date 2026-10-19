@@ -4,7 +4,6 @@ import {
   defaultIconSvgs,
   icon,
   menu,
-  resolveButtonProps,
   type ButtonVariantProps,
 } from "@var-ui/core";
 import { combine, mergeProps } from "../utils";
@@ -44,7 +43,6 @@ const {
   placement = "bottom-start",
   selectionMode = "none",
   selectedId,
-  intent,
   tone,
   appearance = "outline",
   size = "md",
@@ -59,9 +57,7 @@ const resolvedMenuLabel = menuLabel ?? triggerLabel ?? ariaLabel ?? "Menu";
 const m = menu();
 const rootRecipe = mergeProps(m.root, className);
 const triggerRecipe = mergeProps(
-  button(
-    resolveButtonProps({ intent, tone, appearance, size, layout, elevated }),
-  ),
+  button({ tone, appearance, size, layout, elevated }),
 );
 const chevronRecipe = mergeProps(icon({ size: "sm" }));
 const popoverRecipe = mergeProps(m.popover);

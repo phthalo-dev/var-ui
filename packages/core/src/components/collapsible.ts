@@ -1,6 +1,8 @@
-import { variant } from 'typestyles';
+import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' });
 
 /**
  * Expand/collapse panel chrome for Disclosure-backed Collapsible.
@@ -21,15 +23,15 @@ export const collapsible = typestyles.recipe(
   {
     slots: ['root', 'trigger', 'triggerIcon', 'panel'],
     variants: {
-      variant: variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' }),
+      variant: collapsibleVariant,
     },
   },
   (c) => {
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-      triggerColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      hoverBg: { value: t.color.background.subtle.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      background: { ...atProperty.color, value: t.color.background.surface.var },
+      triggerColor: { ...atProperty.color, value: t.color.text.primary.var },
+      hoverBg: { ...atProperty.color, value: t.color.background.subtle.var },
     });
     return {
       base: {
@@ -124,17 +126,5 @@ export const collapsible = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type CollapsibleRecipeProps = NonNullable<Parameters<typeof collapsible>[0]>;
-export type CollapsibleVariant = NonNullable<CollapsibleRecipeProps['variant']>;
-
-export type CollapsibleVariantProps = {
-  variant?: CollapsibleVariant;
-};
-
-export const collapsibleVariantPropDocs = [
-  { name: 'variant', type: "'flush' | 'bordered' | 'accordion'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof CollapsibleVariantProps;
-  type: string;
-  required: false;
-}>;
+export type CollapsibleVariant = VariantOptions<typeof collapsibleVariant>;
+export type CollapsibleVariantProps = RecipeVariants<typeof collapsible>;

@@ -1,11 +1,11 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
 const iconSize = variant.enum(['sm', 'md', 'lg', 'inherit'], { default: 'md' });
 
 /** Opt-in horizontal flip for directional icons in RTL. */
-export const iconMirrorStyle = {
+const iconMirrorStyle = {
   '&[data-mirror]': { transform: 'scaleX(-1)' },
 } as const;
 
@@ -27,7 +27,7 @@ export const icon = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      size: { value: t.size.icon.md.var, syntax: '<length>' },
+      size: { ...atProperty.length, value: t.size.icon.md.var },
       color: { value: 'currentColor', syntax: '*' },
     });
     return {

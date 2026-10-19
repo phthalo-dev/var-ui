@@ -72,7 +72,6 @@ export function ChatLayout({
   const showButton = scroll.isScrolledUp || newMessages.hasNewMessages;
   const defaultButton = showButton ? (
     <Button
-      intent="secondary"
       onPress={() => {
         newMessages.dismiss();
         scroll.scrollToBottom();

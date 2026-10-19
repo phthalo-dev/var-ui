@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
 import { badge } from '../../src/components/badge';
-import { button, resolveButtonProps } from '../../src/components/button';
-import { tonePaint } from '../../src/components/semanticTone';
+import { button } from '../../src/components/button';
+import { tonePaint } from '../../src/shared/semanticTone';
 
 describe('semanticTone resolver', () => {
   it('registers outline appearance via controlAppearancePaint', () => {
-    button(resolveButtonProps({ tone: 'accent', appearance: 'outline' }));
+    button({ tone: 'accent', appearance: 'outline' });
     const css = getRegisteredCss();
     expect(css).toContain('.var-ui-button[data-tone="accent"]');
     expect(css).toContain('[data-appearance="outline"]');

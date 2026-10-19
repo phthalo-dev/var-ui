@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { gap } from './variantAxes';
+import { gap } from '../shared/variantAxes';
 
 const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four'], { default: 'auto' });
 
@@ -24,8 +24,8 @@ export const grid = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      gap: { value: t.space[4].var, syntax: '<length>' },
-      minColumnWidth: { value: '240px', syntax: '<length>' },
+      gap: { ...atProperty.length, value: t.space[4].var },
+      minColumnWidth: { ...atProperty.length, value: '240px' },
     });
     return {
       base: {

@@ -1,6 +1,7 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from './overlayPresence';
+import { overlayPresenceStyles } from '../shared/overlayMotion';
 
 /**
  * Compact dark-surface tooltip chrome.
@@ -14,8 +15,8 @@ export const tooltip = typestyles.recipe(
   'tooltip',
   (c) => {
     const v = c.vars({
-      background: { value: t.color.text.primary.var, syntax: '<color>' },
-      foreground: { value: t.color.background.surface.var, syntax: '<color>' },
+      background: { ...atProperty.color, value: t.color.text.primary.var },
+      foreground: { ...atProperty.color, value: t.color.background.surface.var },
     });
     return {
       slots: ['root'],

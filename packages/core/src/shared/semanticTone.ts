@@ -1,7 +1,6 @@
 import { variant, type VariantOptions } from 'typestyles';
 import { designTokens as t } from '../tokens';
 import { TONE_KEYS } from '../tokens/schema/color/tone';
-import { controlSize } from './variantAxes';
 
 /**
  * Every component tone. `neutral` sits outside the color tokens; the rest are
@@ -105,12 +104,6 @@ type TonePaintRefs = {
 
 type ControlPaintRefs = TonePaintRefs & ControlChannelRefs;
 
-type BadgePaintRefs = {
-  borderColor: { name: string };
-  backgroundColor: { name: string };
-  textColor: { name: string };
-};
-
 type SurfacePaintRefs = {
   semantic: { var: string };
   solidBg: { var: string };
@@ -123,15 +116,6 @@ export const surfaceAppearance = variant.enum(['subtle', 'solid', 'outline'], {
 });
 
 export type SurfaceAppearance = VariantOptions<typeof surfaceAppearance>;
-
-/** Shared sm/md/lg size axis for controls (button, spinner, drawer, etc.). */
-export type ControlSize = VariantOptions<typeof controlSize>;
-
-/** Spinner fill weight (distinct from `SurfaceAppearance`). */
-export type SpinnerAppearance = 'solid' | 'subtle';
-
-/** Progress bar fill weight. */
-export type ProgressBarAppearance = 'solid' | 'subtle';
 
 /** Root custom properties for a component `tone` (solid + inherited semantic for subtle / title). */
 export function semanticChannelAssignments(v: SemanticChannelRefs, key: SemanticToneKey) {
@@ -286,41 +270,6 @@ export function tonePaint(v: TonePaintRefs, key: SemanticToneKey, appearance: To
   }
 }
 
-/** Flat badge paint from tone + appearance (neutral uses token defaults when tone is unset). */
-export function badgeTonePaint(
-  v: BadgePaintRefs,
-  key: SemanticToneKey,
-  appearance: ToneAppearance = 'subtle',
-) {
-  const ch = semanticTone[key];
-  switch (appearance) {
-    case 'filled':
-      return {
-        [v.borderColor.name]: ch.background,
-        [v.backgroundColor.name]: ch.background,
-        [v.textColor.name]: ch.foregroundOnBackground,
-      };
-    case 'outline':
-      return {
-        [v.borderColor.name]: ch.foreground,
-        [v.backgroundColor.name]: 'transparent',
-        [v.textColor.name]: ch.foreground,
-      };
-    case 'subtle':
-      return {
-        [v.borderColor.name]: ch.border,
-        [v.backgroundColor.name]: ch.subtleBackground,
-        [v.textColor.name]: ch.foreground,
-      };
-    case 'ghost':
-      return {
-        [v.borderColor.name]: 'transparent',
-        [v.backgroundColor.name]: 'transparent',
-        [v.textColor.name]: ch.foreground,
-      };
-  }
-}
-
 /** Multi-slot surface paint for alert/banner/toast `appearance` (reads vars set by `tone`). */
 export function appearanceSurface(
   v: SurfacePaintRefs,
@@ -375,50 +324,4 @@ export function appearanceSurface(
           borderBlockColor: subtleBorder,
         }),
   };
-}
-
-/** Button paint including the neutral tone (not in the semantic palette). */
-export function buttonTonePaint(v: TonePaintRefs, tone: Tone, appearance: ToneAppearance) {
-  if (tone === 'neutral') {
-    switch (appearance) {
-      case 'filled':
-        return {
-          [v.border.name]: t.color.text.primary.var,
-          [v.background.name]: t.color.text.primary.var,
-          [v.foreground.name]: t.color.background.surface.var,
-          [hoverWhenEnabled]: {
-            [v.background.name]: `color-mix(in oklch, ${t.color.text.primary.var} 88%, black)`,
-            [v.border.name]: `color-mix(in oklch, ${t.color.text.primary.var} 88%, black)`,
-          },
-        };
-      case 'outline':
-        return {
-          [v.border.name]: t.color.border.strong.var,
-          [v.background.name]: 'transparent',
-          [v.foreground.name]: t.color.text.primary.var,
-          [hoverWhenEnabled]: {
-            backgroundColor: t.color.background.subtle.var,
-          },
-        };
-      case 'subtle':
-        return {
-          [v.border.name]: t.color.border.default.var,
-          [v.background.name]: t.color.background.surface.var,
-          [v.foreground.name]: t.color.text.primary.var,
-          [hoverWhenEnabled]: {
-            [v.border.name]: t.color.border.strong.var,
-          },
-        };
-      case 'ghost':
-        return {
-          [v.border.name]: 'transparent',
-          [v.background.name]: 'transparent',
-          [v.foreground.name]: t.color.text.primary.var,
-          [hoverWhenEnabled]: {
-            backgroundColor: t.color.background.subtle.var,
-          },
-        };
-    }
-  }
-  return tonePaint(v, tone, appearance);
 }

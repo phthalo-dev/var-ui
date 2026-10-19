@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -14,8 +15,8 @@ export const section = typestyles.recipe(
   'section',
   (c) => {
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      background: { ...atProperty.color, value: t.color.background.surface.var },
     });
     return {
       slots: ['root', 'title'],

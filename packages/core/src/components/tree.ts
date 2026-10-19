@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { density } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { density } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Hierarchical expandable list chrome for file explorers and nested navigation.
@@ -39,22 +39,22 @@ export const tree = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      labelColor: { value: t.color.text.primary.var, syntax: '<color>' },
+      labelColor: { ...atProperty.color, value: t.color.text.primary.var },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       hoverBg: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       selectedBg: {
+        ...atProperty.color,
         value: t.color.tone.accent.subtleBackground.var,
-        syntax: '<color>',
       },
-      indentSize: { value: t.space[4].var, syntax: '<length>' },
-      rowPaddingY: { value: t.space[2].var, syntax: '<length>' },
-      rowPaddingX: { value: t.space[2].var, syntax: '<length>' },
+      indentSize: { ...atProperty.length, value: t.space[4].var },
+      rowPaddingY: { ...atProperty.length, value: t.space[2].var },
+      rowPaddingX: { ...atProperty.length, value: t.space[2].var },
     });
     return {
       base: {

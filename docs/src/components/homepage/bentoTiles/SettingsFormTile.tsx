@@ -33,7 +33,9 @@ export function SettingsFormTile({ className }: SettingsFormTileProps) {
           ]}
         />
         <Slider defaultValue={40} description="Applies instantly." label="Alert volume" />
-        <Button intent="primary">Save preferences</Button>
+        <Button tone="accent" appearance="filled">
+          Save preferences
+        </Button>
       </VStack>
     </div>
   );

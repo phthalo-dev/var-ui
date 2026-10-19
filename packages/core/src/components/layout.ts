@@ -107,7 +107,7 @@ export const layoutHeader = typestyles.recipe(
   (c) => {
     const shell = getLayoutShellVars();
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
     });
     return {
       slots: ['header', 'headerInner'],
@@ -145,7 +145,7 @@ export const layoutFooter = typestyles.recipe(
   (c) => {
     const shell = getLayoutShellVars();
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
     });
     return {
       slots: ['footer', 'footerInner'],

@@ -1,4 +1,4 @@
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
@@ -7,8 +7,8 @@ import {
   surfaceAppearance,
   toneChannelAssignments,
   toneWithDefault,
-} from './semanticTone';
-import { placement } from './variantAxes';
+} from '../shared/semanticTone';
+import { placement } from '../shared/variantAxes';
 
 /**
  * Toast viewport + toast item chrome.
@@ -30,15 +30,15 @@ export const toast = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
-      solidBg: { value: t.color.tone.accent.background.var, syntax: '<color>' },
-      solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
-      titleColor: { value: t.color.text.primary.var, syntax: '<color>' },
+      semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+      solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+      solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+      titleColor: { ...atProperty.color, value: t.color.text.primary.var },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
-      closeColor: { value: t.color.text.secondary.var, syntax: '<color>' },
+      closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
     });
     return {
       base: {
@@ -133,16 +133,4 @@ export const toast = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type ToastRecipeProps = NonNullable<Parameters<typeof toast>[0]>;
 export type ToastVariantProps = RecipeVariants<typeof toast>;
-export type ToastPlacement = NonNullable<ToastVariantProps['placement']>;
-
-export const toastVariantPropDocs = [
-  { name: 'tone', type: 'Tone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-  { name: 'placement', type: 'ToastPlacement', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ToastVariantProps;
-  type: string;
-  required: false;
-}>;

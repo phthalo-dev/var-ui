@@ -1,6 +1,6 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { density } from '../variantAxes';
+import { density } from '../../shared/variantAxes';
 import { type RecipeVariants } from 'typestyles';
 
 /**

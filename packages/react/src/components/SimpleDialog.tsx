@@ -32,7 +32,7 @@ export function SimpleDialog({
   return (
     <Dialog.Root portalContainer={portalContainer}>
       <Dialog.Trigger>
-        <Button intent="secondary">{triggerLabel}</Button>
+        <Button>{triggerLabel}</Button>
       </Dialog.Trigger>
       <Dialog.Backdrop>
         <Dialog.Popup>

@@ -1,6 +1,7 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from './overlayPresence';
+import { overlayPresenceStyles } from '../shared/overlayMotion';
 
 /**
  * Non-modal rich preview card chrome — surface treatment like `popover`, with
@@ -17,16 +18,16 @@ export const hoverCard = typestyles.recipe(
   (c) => {
     const v = c.vars({
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       titleForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
     });
     return {

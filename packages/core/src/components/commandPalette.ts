@@ -1,4 +1,4 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
@@ -38,64 +38,64 @@ export const commandPalette = typestyles.recipe(
   (c) => {
     const v = c.vars({
       backdropBackground: {
+        ...atProperty.color,
         value: t.color.overlay.backdrop.var,
-        syntax: '<color>',
       },
       dialogBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       dialogBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       inputRowBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       inputIconColor: {
+        ...atProperty.color,
         value: t.color.text.placeholder.var,
-        syntax: '<color>',
       },
       inputForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       inputPlaceholder: {
+        ...atProperty.color,
         value: t.color.text.placeholder.var,
-        syntax: '<color>',
       },
       resultForeground: {
+        ...atProperty.color,
         value: t.color.navItem.foreground.var,
-        syntax: '<color>',
       },
       resultHoverBackground: {
+        ...atProperty.color,
         value: t.color.navItem.hoverBackground.var,
-        syntax: '<color>',
       },
       resultSelectedBackground: {
+        ...atProperty.color,
         value: t.color.navItem.selectedBackground.var,
-        syntax: '<color>',
       },
       resultSelectedForeground: {
+        ...atProperty.color,
         value: t.color.navItem.selectedForeground.var,
-        syntax: '<color>',
       },
       resultMetaColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       markBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.subtleBackground.var,
-        syntax: '<color>',
       },
       markForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       emptyColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {

@@ -287,7 +287,7 @@ Props:
   renders items as `menuitemradio` with a check affordance and tracks one
   `aria-checked` item. Pair with `selectedId` for the initial checked item.
 - `className` — applied to the menu root.
-- Trigger appearance accepts the same variant props as `Button` (`intent`, `tone`,
+- Trigger appearance accepts the same variant props as `Button` (`tone`,
   `appearance`, `size`, `layout`, `elevated`); defaults to an `outline` `md` button.
 
 Slots:

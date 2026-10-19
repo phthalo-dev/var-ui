@@ -4,7 +4,6 @@ import {
   button,
   descriptionList as descriptionListStyles,
   iconNameList,
-  resolveButtonProps,
   type IconName,
   type DescriptionListVariantProps,
 } from '@var-ui/core';
@@ -137,7 +136,7 @@ export function DescriptionList({
             type="button"
             {...mergeProps(
               s.toggle,
-              button(resolveButtonProps({ intent: 'ghost', size: 'sm' })).className,
+              button({ tone: 'accent', appearance: 'ghost', size: 'sm' }).className,
             )}
             onClick={() => setExpanded((value) => !value)}
           >

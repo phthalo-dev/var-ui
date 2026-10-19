@@ -35,7 +35,8 @@ export default function Preview() {
               {ITEMS.map((item) => (
                 <Button
                   key={item.id}
-                  intent={item.id === selectedId ? 'primary' : 'secondary'}
+                  tone={item.id === selectedId ? 'accent' : 'neutral'}
+                  appearance={item.id === selectedId ? 'filled' : 'subtle'}
                   onPress={() => setSelectedId(item.id)}
                 >
                   {item.label}

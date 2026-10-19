@@ -1,4 +1,4 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -21,7 +21,7 @@ export const heading = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      color: { value: t.color.text.primary.var, syntax: '<color>' },
+      color: { ...atProperty.color, value: t.color.text.primary.var },
     });
     return {
       base: {
@@ -71,10 +71,10 @@ export const textBlock = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      color: { value: t.color.text.primary.var, syntax: '<color>' },
+      color: { ...atProperty.color, value: t.color.text.primary.var },
       secondaryColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     return {

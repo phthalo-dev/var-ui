@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { media, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -6,24 +7,24 @@ export const card = typestyles.recipe(
   (c) => {
     const v = c.vars({
       border: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       background: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       titleColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       bodyColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       linkTitleColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
     });
     return {

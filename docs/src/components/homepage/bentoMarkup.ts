@@ -20,7 +20,6 @@ import {
   pinInput,
   progressBar,
   radio,
-  resolveButtonProps,
   section,
   select,
   spinner,
@@ -98,10 +97,14 @@ function renderHeading(text: string, size: 'sm' | 'md' = 'sm', level: 'h2' | 'h3
   return serializeHtmlTag(level, mergeProps(heading({ size })), text);
 }
 
-function renderButton(label: string, intent?: 'primary' | 'secondary' | 'ghost'): string {
+function renderButton(
+  label: string,
+  tone: 'accent' | 'neutral' = 'neutral',
+  appearance: 'filled' | 'subtle' | 'ghost' = 'subtle',
+): string {
   return serializeHtmlTag(
     'button',
-    { type: 'button', ...mergeProps(button(resolveButtonProps({ intent }))) },
+    { type: 'button', ...mergeProps(button({ tone, appearance })) },
     label,
   );
 }
@@ -151,7 +154,7 @@ export function renderQuickActionsTileMarkup(): string {
 
   return vstack(
     'md',
-    `${renderHeading('Invite a teammate')}${serializeHtmlTag('div', mergeProps(tf.root), `${emailLabel}${emailInput}`)}${roleField}${hstack('sm', `${renderButton('Send invite', 'primary')}${renderButton('Cancel', 'secondary')}${renderButton('Learn more', 'ghost')}`, { wrap: true })}`,
+    `${renderHeading('Invite a teammate')}${serializeHtmlTag('div', mergeProps(tf.root), `${emailLabel}${emailInput}`)}${roleField}${hstack('sm', `${renderButton('Send invite', 'accent', 'filled')}${renderButton('Cancel')}${renderButton('Learn more', 'accent', 'ghost')}`, { wrap: true })}`,
   );
 }
 
@@ -318,7 +321,7 @@ export function renderSettingsFormTileMarkup(): string {
 
   return vstack(
     'md',
-    `${renderHeading('Notification preferences')}${pinEl}${switchEl}${checkboxEl}${radioGroup}${fieldEl}${renderButton('Save preferences', 'primary')}`,
+    `${renderHeading('Notification preferences')}${pinEl}${switchEl}${checkboxEl}${radioGroup}${fieldEl}${renderButton('Save preferences', 'accent', 'filled')}`,
   );
 }
 
@@ -335,7 +338,7 @@ export function renderEmptyStateDialogTileMarkup(): string {
     mergeProps(e.description),
     'Create your first project to get started.',
   );
-  const trigger = renderButton('New project', 'secondary');
+  const trigger = renderButton('New project');
   const action = serializeHtmlTag('div', mergeProps(e.action), trigger);
   return serializeHtmlTag('div', mergeProps(e.root), `${iconWell}${title}${description}${action}`);
 }
@@ -639,7 +642,7 @@ export function renderBannerTileMarkup(): string {
   const actions = serializeHtmlTag(
     'div',
     mergeProps(b.actions),
-    renderButton('Upgrade plan', 'primary'),
+    renderButton('Upgrade plan', 'accent', 'filled'),
   );
   return serializeHtmlTag(
     'div',

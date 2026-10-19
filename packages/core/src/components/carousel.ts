@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -15,14 +16,14 @@ export const carousel = typestyles.recipe(
   'carousel',
   (c) => {
     const v = c.vars({
-      itemWidth: { value: '280px', syntax: '<length>' },
+      itemWidth: { ...atProperty.length, value: '280px' },
       controlBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       controlBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
     });
     return {

@@ -1,4 +1,4 @@
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 
@@ -14,8 +14,8 @@ export const chatLayout = typestyles.recipe(
   'chat-layout',
   (c) => {
     const v = c.vars({
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-      border: { value: t.color.border.default.var, syntax: '<color>' },
+      background: { ...atProperty.color, value: t.color.background.surface.var },
+      border: { ...atProperty.color, value: t.color.border.default.var },
     });
     return {
       slots: ['root', 'messageArea', 'dock'],

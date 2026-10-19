@@ -2,9 +2,9 @@ import {
   createDesignTheme,
   groteskMono,
   tokenValues,
-  type CreateTokenValues,
   type DesignThemeTokenValues,
 } from '@var-ui/core';
+import type { CreateTokenValues } from 'typestyles';
 
 /**
  * Ensures the default theme surface CSS is extracted into `typestyles.css`.

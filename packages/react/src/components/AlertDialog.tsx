@@ -20,7 +20,7 @@ export type AlertDialogProps = {
   cancelLabel?: string;
   /** Label for the confirm action. @default Confirm */
   confirmLabel?: string;
-  /** Renders the confirm action with `danger` intent and autofocuses Cancel. @default false */
+  /** Renders the confirm action with `tone="danger"` and autofocuses Cancel. @default false */
   isDestructive?: boolean;
   /** Called when the confirm action is pressed. Never called on cancel or Escape dismissal. */
   onConfirm: () => void;
@@ -77,12 +77,14 @@ function AlertDialogPreset({
         <Dialog.Description>{description}</Dialog.Description>
         <AlertDialogActions>
           <Dialog.Close>
-            <Button intent="secondary" autoFocus={isDestructive}>
-              {cancelLabel}
-            </Button>
+            <Button autoFocus={isDestructive}>{cancelLabel}</Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button intent={isDestructive ? 'danger' : 'primary'} onPress={onConfirm}>
+            <Button
+              tone={isDestructive ? 'danger' : 'accent'}
+              appearance="filled"
+              onPress={onConfirm}
+            >
               {confirmLabel}
             </Button>
           </Dialog.Close>
@@ -95,7 +97,7 @@ function AlertDialogPreset({
     <AlertDialogRoot isOpen={isOpen} onOpenChange={onOpenChange} portalContainer={portalContainer}>
       {triggerLabel ? (
         <AlertDialogTrigger>
-          <Button intent="secondary">{triggerLabel}</Button>
+          <Button>{triggerLabel}</Button>
         </AlertDialogTrigger>
       ) : null}
       {popup}

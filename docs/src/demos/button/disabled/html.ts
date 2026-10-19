@@ -1,4 +1,4 @@
-import { button, resolveButtonProps, stack } from '@var-ui/core';
+import { button, stack } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -16,7 +16,7 @@ export function render(): string {
     {
       type: 'button',
       disabled: true,
-      ...mergeProps(button(resolveButtonProps({ intent: 'primary' }))),
+      ...mergeProps(button({ tone: 'accent', appearance: 'filled' })),
     },
     'Disabled primary',
   );

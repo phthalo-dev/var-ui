@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
-import { button, resolveButtonProps, type ButtonVariantProps } from '@var-ui/core';
+import { button, type ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 
 export type ButtonProps = Omit<RACButtonProps, 'className'> &
@@ -9,18 +9,14 @@ export type ButtonProps = Omit<RACButtonProps, 'className'> &
   };
 
 export function Button({
-  intent = 'secondary',
   tone,
   appearance,
   size = 'md',
+  layout,
   elevated,
   className,
   ...props
 }: ButtonProps): JSX.Element {
-  const styles = button(
-    resolveButtonProps(
-      tone != null ? { tone, appearance, size, elevated } : { intent, appearance, size, elevated },
-    ),
-  );
+  const styles = button({ tone, appearance, size, layout, elevated });
   return <AriaButton {...props} {...mergeProps(styles, className)} />;
 }

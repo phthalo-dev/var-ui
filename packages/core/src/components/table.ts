@@ -1,7 +1,7 @@
-import { variant, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { density } from './variantAxes';
+import { density } from '../shared/variantAxes';
 
 const tableDividers = variant.enum(['rows', 'columns', 'grid', 'none'], { default: 'rows' });
 const tableTextOverflow = variant.enum(['wrap', 'truncate'], { default: 'wrap' });
@@ -58,15 +58,15 @@ export const table = typestyles.recipe(
   },
   (c) => {
     const v = c.vars({
-      headerBg: { value: t.color.background.surface.var, syntax: '<color>' },
-      headerColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      bodyColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      captionColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      borderColor: { value: t.color.border.default.var, syntax: '<color>' },
-      stripeBg: { value: t.color.background.subtle.var, syntax: '<color>' },
-      hoverBg: { value: t.color.background.elevated.var, syntax: '<color>' },
-      cellPaddingY: { value: t.space[2].var, syntax: '<length>' },
-      cellPaddingX: { value: t.space[3].var, syntax: '<length>' },
+      headerBg: { ...atProperty.color, value: t.color.background.surface.var },
+      headerColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      bodyColor: { ...atProperty.color, value: t.color.text.primary.var },
+      captionColor: { ...atProperty.color, value: t.color.text.secondary.var },
+      borderColor: { ...atProperty.color, value: t.color.border.default.var },
+      stripeBg: { ...atProperty.color, value: t.color.background.subtle.var },
+      hoverBg: { ...atProperty.color, value: t.color.background.elevated.var },
+      cellPaddingY: { ...atProperty.length, value: t.space[2].var },
+      cellPaddingX: { ...atProperty.length, value: t.space[3].var },
     });
 
     const rowDivider = {

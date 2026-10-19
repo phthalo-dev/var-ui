@@ -26,15 +26,17 @@ Peer dependencies: `react`, `react-dom`, `react-aria-components`, and `@var-ui/c
 
 ```tsx
 import '@var-ui/core/styles.css';
-import { Button, DesignSystemProvider, layout, text } from '@var-ui/react';
+import { Button, DesignSystemProvider, Stack, Text } from '@var-ui/react';
 
 export function App() {
   return (
     <DesignSystemProvider applyToDocument>
-      <main className={layout({ stack: true })}>
-        <h1 className={text({ title: true })}>Hello</h1>
-        <Button intent="primary">Click me</Button>
-      </main>
+      <Stack>
+        <Text>Hello</Text>
+        <Button tone="accent" appearance="filled">
+          Click me
+        </Button>
+      </Stack>
     </DesignSystemProvider>
   );
 }
@@ -108,20 +110,19 @@ for your own UI, or `<Icon>{node}</Icon>` for one-off custom glyphs.
 
 ## Exports
 
-| Category             | Examples                                                                                              |
-| -------------------- | ----------------------------------------------------------------------------------------------------- |
-| **Actions & forms**  | `Button`, `Link`, `TextField`, `TextAreaField`, `Checkbox`, `Switch`, `RadioGroup`, `Select`, `Field` |
-| **Layout**           | `Stack` / `HStack` / `VStack`, `Grid`, `Section`, `Center`, `AspectRatio`, `Divider`                  |
-| **Content**          | `Heading`, `Text`, `Timestamp`, `EmptyState`, `CodeBlock`                                             |
-| **Containers**       | `Card`, `ClickableCard`, `Carousel`, `Thumbnail`, `Avatar`, `AvatarGroup`, `Badge`                    |
-| **Feedback**         | `Alert`, `Banner`, `Spinner`, `ProgressBar`                                                           |
-| **Overlay & nav**    | `Dialog`, `Tabs`                                                                                      |
-| **Icons**            | `Icon`, `IconProvider`, `useIcons` (+ optional `@var-ui/icons` glyph package)                         |
-| **Layers**           | `LayerProvider`, `useLayer` — z-index coordination for floating UI                                    |
-| **Hooks**            | `useMediaQuery`, `useScrollLock`                                                                      |
-| **Layout utilities** | `layout`, `text` — re-exported from `@var-ui/core`                                                    |
-| **Tokens**           | `designTokens`, typed value exports                                                                   |
-| **Theming**          | `DesignSystemProvider`, `useColorMode`, `ColorModeToggle`                                             |
+| Category            | Examples                                                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Actions & forms** | `Button`, `Link`, `TextField`, `TextAreaField`, `Checkbox`, `Switch`, `RadioGroup`, `Select`, `Field` |
+| **Layout**          | `Stack` / `HStack` / `VStack`, `Grid`, `Section`, `Center`, `AspectRatio`, `Divider`                  |
+| **Content**         | `Heading`, `Text`, `Timestamp`, `EmptyState`, `CodeBlock`                                             |
+| **Containers**      | `Card`, `ClickableCard`, `Carousel`, `Thumbnail`, `Avatar`, `AvatarGroup`, `Badge`                    |
+| **Feedback**        | `Alert`, `Banner`, `Spinner`, `ProgressBar`                                                           |
+| **Overlay & nav**   | `Dialog`, `Tabs`                                                                                      |
+| **Icons**           | `Icon`, `IconProvider`, `useIcons` (+ optional `@var-ui/icons` glyph package)                         |
+| **Layers**          | `LayerProvider`, `useLayer` — z-index coordination for floating UI                                    |
+| **Hooks**           | `useMediaQuery`, `useScrollLock`                                                                      |
+| **Tokens**          | `designTokens`, typed value exports                                                                   |
+| **Theming**         | `DesignSystemProvider`, `useColorMode`, `ColorModeToggle`                                             |
 
 Core-only recipes without wrappers (use the class helpers from `@var-ui/core`):
 `skeleton`, `statusDot`, `kbd`, `overlay`, plus everything in the core README's
@@ -138,7 +139,6 @@ src/
   icons/          # IconProvider, useIcons, Icon, empty fallback
   layers/         # LayerProvider / useLayer z-index coordination
   hooks/          # useMediaQuery, useScrollLock, …
-  styles.ts       # re-exports layout + text from @var-ui/core
   tokens.ts       # Re-exports / aliases @var-ui/core tokens
   color-mode.tsx            # useColorMode, getColorModeInitScript
   DesignSystemProvider.tsx  # DesignSystemProvider

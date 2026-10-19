@@ -1,4 +1,4 @@
-import { button, dialog, resolveButtonProps } from '@var-ui/core';
+import { button, dialog } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -11,7 +11,7 @@ export function render(): string {
     'button',
     {
       type: 'button',
-      ...mergeProps(button(resolveButtonProps({ intent: 'secondary' }))),
+      ...mergeProps(button({})),
       disabled: true,
     },
     'Open dialog',

@@ -1,41 +1,54 @@
 ---
-import { resolveScrollAreaFade, scrollArea, type ScrollAreaVariantProps, } from '@var-ui/core';
+import type { VariantOptions } from 'typestyles';
+import {
+  resolveScrollAreaFade,
+  scrollArea,
+  scrollAreaFade,
+  scrollAreaFadeEdgesFor,
+  scrollAreaOrientation,
+} from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  orientation?: NonNullable<ScrollAreaVariantProps['orientation']>;
-  fade?: boolean | NonNullable<ScrollAreaVariantProps['fade']>;
+  /** @default 'vertical' */
+  orientation?: VariantOptions<typeof scrollAreaOrientation>;
+  /** Edge fade masks. @default false */
+  fade?: boolean | VariantOptions<typeof scrollAreaFade>;
   className?: string;
   viewportClassName?: string;
 };
 
-const { orientation = 'vertical', fade = false, className, viewportClassName } = Astro.props;
+const {
+  orientation = scrollAreaOrientation.default,
+  fade = false,
+  className,
+  viewportClassName,
+} = Astro.props;
 const fadeMode = resolveScrollAreaFade(fade, orientation);
 const s = scrollArea({ fade: fadeMode, orientation });
-const showVerticalFade = fadeMode === 'vertical' || fadeMode === 'both';
-const showHorizontalFade = fadeMode === 'horizontal' || fadeMode === 'both';
+const edges = scrollAreaFadeEdgesFor(fadeMode);
 ---
 
 <div {...mergeProps(s.root, className)}>
   <div {...mergeProps(s.viewport, viewportClassName)}>
     {
-      showVerticalFade ? (
+      edges.block ? (
         <div aria-hidden="true" {...mergeProps(s.fadeTop)} data-edge="block-start" />
       ) : null
     }
     {
-      showHorizontalFade ? (
+      edges.inline ? (
         <div aria-hidden="true" {...mergeProps(s.fadeStart)} data-edge="inline-start" />
       ) : null
-      }
+    }
     <slot />
     {
-      showHorizontalFade ? (
+      edges.inline ? (
         <div aria-hidden="true" {...mergeProps(s.fadeEnd)} data-edge="inline-end" />
       ) : null
     }
     {
-      showVerticalFade ? (
+      edges.block ? (
         <div aria-hidden="true" {...mergeProps(s.fadeBottom)} data-edge="block-end" />
       ) : null
     }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { overlayPresenceStyles } from '../../src/components/overlayPresence';
+import { overlayPresenceStyles } from '../../src/shared/overlayMotion';
 
 describe('overlayPresenceStyles', () => {
   it('adds scale to popup starting and ending styles when requested', () => {

@@ -1,6 +1,7 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from './overlayPresence';
+import { overlayPresenceStyles } from '../shared/overlayMotion';
 
 /**
  * Slot recipe with no variants — placement is driven purely by the
@@ -12,36 +13,36 @@ export const menu = typestyles.recipe(
   (c) => {
     const v = c.vars({
       popoverBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       popoverBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       itemForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       itemFocusedBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       itemDisabledForeground: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       sectionHeaderForeground: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       separatorColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       dangerForeground: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
     });
     const anchorGap = `calc(100% + ${t.space[2].var})`;

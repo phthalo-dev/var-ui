@@ -1,8 +1,8 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Nav landmark tabs for switching between views/routes — no panels. Pair with
@@ -33,24 +33,24 @@ export const tabList = typestyles.recipe(
   (c) => {
     const v = c.vars({
       tabColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       tabSelectedColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       tabHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       indicatorColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
       dividerColor: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
     });
 

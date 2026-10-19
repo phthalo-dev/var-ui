@@ -16,17 +16,21 @@ export type AstroComponentDoc = {
   slots: AstroSlotDoc[];
 };
 
+import { getComponentMeta, type RecipeSchemaAxis } from 'typestyles';
 import {
-  buttonVariantPropDocs,
-  badgeVariantPropDocs,
-  bannerVariantPropDocs,
-  statusDotVariantPropDocs,
-  spinnerVariantPropDocs,
-  progressBarVariantPropDocs,
-  avatarVariantPropDocs,
-  codeBlockVariantPropDocs,
-  collapsibleVariantPropDocs,
-} from '@var-ui/core/internal';
+  accordionGroup,
+  avatar,
+  badge,
+  banner,
+  button,
+  chip,
+  codeBlock,
+  collapsible,
+  progressBar,
+  spinner,
+  statusDot,
+  timeline,
+} from '@var-ui/core';
 
 const astroSources = import.meta.glob('../../../packages/astro/src/components/*.astro', {
   query: '?raw',
@@ -34,17 +38,56 @@ const astroSources = import.meta.glob('../../../packages/astro/src/components/*.
   eager: true,
 }) as Record<string, string>;
 
-const EXTENDED_PROP_DOCS: Record<string, AstroPropDoc[]> = {
-  ButtonVariantProps: buttonVariantPropDocs.map((prop) => ({ ...prop })),
-  BadgeVariantProps: badgeVariantPropDocs.map((prop) => ({ ...prop })),
-  BannerVariantProps: bannerVariantPropDocs.map((prop) => ({ ...prop })),
-  StatusDotVariantProps: statusDotVariantPropDocs.map((prop) => ({ ...prop })),
-  SpinnerVariantProps: spinnerVariantPropDocs.map((prop) => ({ ...prop })),
-  ProgressBarVariantProps: progressBarVariantPropDocs.map((prop) => ({ ...prop })),
-  AvatarVariantProps: avatarVariantPropDocs.map((prop) => ({ ...prop })),
-  CodeBlockVariantProps: codeBlockVariantPropDocs.map((prop) => ({ ...prop })),
-  CollapsibleVariantProps: collapsibleVariantPropDocs.map((prop) => ({ ...prop })),
-};
+/** Recipes behind `interface Props extends …VariantProps`. */
+const VARIANT_RECIPES = {
+  AccordionGroupVariantProps: accordionGroup,
+  AvatarVariantProps: avatar,
+  BadgeVariantProps: badge,
+  BannerVariantProps: banner,
+  ButtonVariantProps: button,
+  ChipVariantProps: chip,
+  CodeBlockVariantProps: codeBlock,
+  CollapsibleVariantProps: collapsible,
+  ProgressBarVariantProps: progressBar,
+  SpinnerVariantProps: spinner,
+  StatusDotVariantProps: statusDot,
+  TimelineVariantProps: timeline,
+} as const;
+
+function axisType(axis: RecipeSchemaAxis): string {
+  if (axis.kind === 'boolean') return 'boolean';
+  return axis.options.map((option) => `'${option}'`).join(' | ');
+}
+
+function schemaPropDocs(recipe: object): AstroPropDoc[] {
+  const variants = getComponentMeta(recipe)?.schema?.variants;
+  if (!variants) return [];
+  return Object.entries(variants).map(([name, axis]) => ({
+    name,
+    type: axisType(axis),
+    required: false,
+  }));
+}
+
+/** Prop names read from `Astro.props`. Schema axes the component does not read stay out of the table. */
+function destructuredPropNames(source: string): Set<string> {
+  const match = source.match(/const\s*\{([\s\S]*?)\}\s*=\s*Astro\.props/);
+  if (!match?.[1]) return new Set();
+
+  const names = new Set<string>();
+  for (const part of match[1].split(',')) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const renamed = trimmed.match(/^(?:(["'])([^"']+)\1|([A-Za-z_][\w]*))\s*:/);
+    if (renamed) {
+      names.add((renamed[2] ?? renamed[3])!);
+      continue;
+    }
+    const ident = trimmed.match(/^([A-Za-z_][\w]*)/);
+    if (ident?.[1]) names.add(ident[1]);
+  }
+  return names;
+}
 
 function slugToComponentName(slug: string): string {
   return slug
@@ -210,7 +253,11 @@ export function getAstroComponentDoc(slug: string): AstroComponentDoc | null {
 
   const extracted = extractProps(source);
   const defaults = parseDefaults(source);
-  const extended = extracted?.extendsType ? (EXTENDED_PROP_DOCS[extracted.extendsType] ?? []) : [];
+  const recipe = extracted?.extendsType
+    ? VARIANT_RECIPES[extracted.extendsType as keyof typeof VARIANT_RECIPES]
+    : undefined;
+  const bound = destructuredPropNames(source);
+  const extended = recipe ? schemaPropDocs(recipe).filter((prop) => bound.has(prop.name)) : [];
   const local = extracted?.block ? parseProps(extracted.block) : [];
   const props = [...extended, ...local].map((prop) => ({
     ...prop,

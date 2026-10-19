@@ -6,7 +6,7 @@
  * program. That is neither the authored order nor stable:
  *
  * - `variant.enum(['subtle', 'solid', 'outline'])` prints as `"outline" | "subtle" | "solid"`,
- *   because `'outline'` is also used by `ButtonIntent` and is interned earlier.
+ *   because a shared literal can be interned earlier than the enum that owns it.
  * - Adding or removing an unrelated source file reorders unrelated unions such as
  *   `enterKeyHint` (`@types/react` shares the `'search'` literal with first-party code).
  *

@@ -1,9 +1,9 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { fieldChrome, dropdownPopoverChrome } from './field';
-import { controlSize } from './variantAxes';
-import { type RecipeVariants } from 'typestyles';
+import { fieldChrome, dropdownPopoverChrome } from './fieldChrome';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 export const select = typestyles.recipe(
   'select',
@@ -25,48 +25,48 @@ export const select = typestyles.recipe(
   (c) => {
     const v = c.vars({
       labelColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       triggerBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       triggerBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       triggerForeground: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       placeholderColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       descriptionColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       errorColor: {
+        ...atProperty.color,
         value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
       },
       popoverBackground: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
       popoverBorder: {
+        ...atProperty.color,
         value: t.color.border.default.var,
-        syntax: '<color>',
       },
       itemSelectedColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
       },
       itemFocusedBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
     });
     const chrome = fieldChrome({

@@ -1,13 +1,20 @@
 import type { HTMLAttributes, JSX, ReactNode, Ref } from 'react';
-import { resolveScrollAreaFade, scrollArea, type ScrollAreaVariantProps } from '@var-ui/core';
+import type { VariantOptions } from 'typestyles';
+import {
+  resolveScrollAreaFade,
+  scrollArea,
+  scrollAreaFade,
+  scrollAreaFadeEdgesFor,
+  scrollAreaOrientation,
+} from '@var-ui/core';
 import { mergeProps } from './utils';
 
 export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   children: ReactNode;
   /** @default 'vertical' */
-  orientation?: NonNullable<ScrollAreaVariantProps['orientation']>;
+  orientation?: VariantOptions<typeof scrollAreaOrientation>;
   /** Edge fade masks. @default false */
-  fade?: boolean | NonNullable<ScrollAreaVariantProps['fade']>;
+  fade?: boolean | VariantOptions<typeof scrollAreaFade>;
   className?: string;
   viewportClassName?: string;
   /** Ref for the scrollable viewport element. */
@@ -25,7 +32,7 @@ export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> &
  */
 export function ScrollArea({
   children,
-  orientation = 'vertical',
+  orientation = scrollAreaOrientation.default,
   fade = false,
   className,
   viewportClassName,
@@ -34,23 +41,22 @@ export function ScrollArea({
 }: ScrollAreaProps): JSX.Element {
   const fadeMode = resolveScrollAreaFade(fade, orientation);
   const s = scrollArea({ fade: fadeMode, orientation });
-  const showVerticalFade = fadeMode === 'vertical' || fadeMode === 'both';
-  const showHorizontalFade = fadeMode === 'horizontal' || fadeMode === 'both';
+  const edges = scrollAreaFadeEdgesFor(fadeMode);
 
   return (
     <div {...props} {...mergeProps(s.root, className)}>
       <div ref={viewportRef} {...mergeProps(s.viewport, viewportClassName)}>
-        {showVerticalFade ? (
+        {edges.block ? (
           <div aria-hidden {...mergeProps(s.fadeTop)} data-edge="block-start" />
         ) : null}
-        {showHorizontalFade ? (
+        {edges.inline ? (
           <div aria-hidden {...mergeProps(s.fadeStart)} data-edge="inline-start" />
         ) : null}
         {children}
-        {showHorizontalFade ? (
+        {edges.inline ? (
           <div aria-hidden {...mergeProps(s.fadeEnd)} data-edge="inline-end" />
         ) : null}
-        {showVerticalFade ? (
+        {edges.block ? (
           <div aria-hidden {...mergeProps(s.fadeBottom)} data-edge="block-end" />
         ) : null}
       </div>

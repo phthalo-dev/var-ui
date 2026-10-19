@@ -1,4 +1,4 @@
-import { button, resolveButtonProps, stack } from '@var-ui/core';
+import { button, stack } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -8,7 +8,7 @@ export function render(): string {
   );
   const cancel = serializeHtmlTag(
     'button',
-    { type: 'button', ...mergeProps(button(resolveButtonProps({ intent: 'secondary' }))) },
+    { type: 'button', ...mergeProps(button({})) },
     'Cancel',
   );
   const save = serializeHtmlTag('button', { type: 'button', ...mergeProps(button({})) }, 'Save');

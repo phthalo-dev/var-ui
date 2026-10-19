@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -15,12 +16,12 @@ export const emptyState = typestyles.recipe(
   (c) => {
     const v = c.vars({
       iconColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       iconBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
     });
     return {

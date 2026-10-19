@@ -172,7 +172,6 @@ export {
   AvatarGroup,
   type AvatarGroupProps,
   type AvatarProps,
-  type AvatarSize,
   Badge,
   Chip,
   ChipGroup,
@@ -462,7 +461,6 @@ export {
   type ResolvedColorMode,
   type GetColorModeInitScriptOptions,
 } from './color-mode';
-export { layout, text } from './styles';
 export {
   Icon,
   IconProvider,

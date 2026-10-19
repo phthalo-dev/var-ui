@@ -99,7 +99,7 @@ describe('AlertDialog', () => {
     });
   });
 
-  it('uses primary intent for confirm when not destructive', async () => {
+  it('uses accent tone for confirm when not destructive', async () => {
     wrap(
       <AlertDialog
         triggerLabel="Open archive"

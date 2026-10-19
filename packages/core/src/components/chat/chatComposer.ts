@@ -1,4 +1,4 @@
-import { type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 
@@ -18,8 +18,8 @@ export const chatComposer = typestyles.recipe(
   'chat-composer',
   (c) => {
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
+      border: { ...atProperty.color, value: t.color.border.default.var },
+      background: { ...atProperty.color, value: t.color.background.surface.var },
     });
     return {
       slots: ['root', 'inputRow', 'input', 'actions'],

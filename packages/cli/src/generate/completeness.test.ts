@@ -26,15 +26,15 @@ describe('catalog completeness', () => {
     const button = catalog.components.find((record) => record.slug === 'button');
     expect(button).toBeDefined();
     expect(button!.props.length).toBeGreaterThan(0);
-    expect(button!.props.some((prop) => prop.name === 'intent')).toBe(true);
+    expect(button!.props.some((prop) => prop.name === 'tone')).toBe(true);
     expect(button!.markdown).toContain('| Name | Type |');
-    expect(button!.markdown).toContain('| intent |');
+    expect(button!.markdown).toContain('| tone |');
 
     const formatted = formatComponent(button!, false);
     expect(formatted.startsWith("# Button\n\nimport { Button } from '@var-ui/react';\n\n")).toBe(
       true,
     );
-    expect(formatted).toContain('| intent |');
+    expect(formatted).toContain('| tone |');
     expect(formatted).toContain(
       "```tsx\nimport { Button } from '@var-ui/react';\n\n<Button>Click me</Button>\n```",
     );

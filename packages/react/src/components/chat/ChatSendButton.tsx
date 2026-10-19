@@ -32,7 +32,8 @@ export function ChatSendButton({
 }: ChatSendButtonProps): JSX.Element {
   return (
     <Button
-      intent="primary"
+      tone="accent"
+      appearance="filled"
       className={className}
       isDisabled={isStreaming ? false : isDisabled}
       aria-label={isStreaming ? 'Stop generating' : 'Send message'}

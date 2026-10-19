@@ -6,7 +6,6 @@ function ToastDemoButtons() {
   return (
     <HStack gap="sm" wrap>
       <Button
-        intent="secondary"
         onPress={() =>
           add({
             tone: 'success',
@@ -18,7 +17,6 @@ function ToastDemoButtons() {
         useToast
       </Button>
       <Button
-        intent="secondary"
         onPress={() =>
           toast.show({
             tone: 'info',
@@ -30,7 +28,8 @@ function ToastDemoButtons() {
         toast.show
       </Button>
       <Button
-        intent="ghost"
+        tone="accent"
+        appearance="ghost"
         onPress={() => {
           const id = toast.show({ tone: 'info', title: 'Uploading…', durationMs: 0 });
           window.setTimeout(() => {

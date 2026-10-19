@@ -1,4 +1,4 @@
-import { keyframes, variant, type RecipeVariants } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -25,12 +25,12 @@ export const skeleton = typestyles.recipe(
   (c) => {
     const v = c.vars({
       baseColor: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       highlightColor: {
+        ...atProperty.color,
         value: t.color.background.surface.var,
-        syntax: '<color>',
       },
     });
     return {

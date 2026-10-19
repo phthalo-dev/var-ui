@@ -20,9 +20,5 @@ export function coreReservedExports() {
       import: './dist/styles.mjs',
     },
     './styles.css': './dist/styles.css',
-    './internal': {
-      types: './dist/internal.d.mts',
-      import: './dist/internal.mjs',
-    },
   };
 }

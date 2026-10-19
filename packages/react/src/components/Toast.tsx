@@ -7,11 +7,11 @@ import {
   UNSTABLE_ToastContent as AriaToastContent,
   UNSTABLE_ToastRegion as AriaToastRegion,
 } from 'react-aria-components';
-import type { ComponentAttrsResult } from 'typestyles';
+import { type ComponentAttrsResult, type VariantOptions } from 'typestyles';
 import {
+  placement as toastPlacement,
   toast as toastRecipe,
   type IconName,
-  type ToastPlacement,
   type ToastVariantProps,
   type Tone,
 } from '@var-ui/core';
@@ -22,7 +22,7 @@ import { ToastQueue } from '../toast/toastQueue';
 import type { ToastContentData } from '../toast/types';
 import { mergeProps } from './utils';
 
-export type { ToastPlacement } from '@var-ui/core';
+export type ToastPlacement = VariantOptions<typeof toastPlacement>;
 export type { ToastContentData } from '../toast/types';
 export { toast, type ImperativeToast, type ToastShowInput } from '../toast/imperativeToast';
 export { ToastQueue } from '../toast/toastQueue';

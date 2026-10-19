@@ -1,4 +1,10 @@
-import { keyframes, variant, type RecipeVariants } from 'typestyles';
+import {
+  atProperty,
+  keyframes,
+  variant,
+  type RecipeVariants,
+  type VariantOptions,
+} from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -12,8 +18,26 @@ const scrollFadeOut = keyframes.create('var-ui-scroll-fade-out', {
   to: { opacity: '0' },
 });
 
-export type ScrollAreaFade = 'none' | 'vertical' | 'horizontal' | 'both';
-export type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both';
+/** Edge-mask axis. `none` hides every fade; `both` paints block and inline edges. */
+export const scrollAreaFade = variant.enum(['none', 'vertical', 'horizontal', 'both'], {
+  default: 'none',
+});
+
+/** Scroll-axis. `both` allows overflow on block and inline. */
+export const scrollAreaOrientation = variant.enum(['vertical', 'horizontal', 'both'], {
+  default: 'vertical',
+});
+
+/** Which physical edges a fade option paints. Exhaustive over `scrollAreaFade`. */
+const scrollAreaFadeEdges = {
+  none: { block: false, inline: false },
+  vertical: { block: true, inline: false },
+  horizontal: { block: false, inline: true },
+  both: { block: true, inline: true },
+} as const satisfies Record<
+  VariantOptions<typeof scrollAreaFade>,
+  { readonly block: boolean; readonly inline: boolean }
+>;
 
 /**
  * Scroll container with optional edge fade masks driven by CSS scroll-driven
@@ -35,14 +59,14 @@ export const scrollArea = typestyles.recipe(
   {
     slots: ['root', 'viewport', 'fadeTop', 'fadeBottom', 'fadeStart', 'fadeEnd'],
     variants: {
-      fade: variant.enum(['none', 'vertical', 'horizontal', 'both'], { default: 'none' }),
-      orientation: variant.enum(['vertical', 'horizontal', 'both'], { default: 'vertical' }),
+      fade: scrollAreaFade,
+      orientation: scrollAreaOrientation,
     },
   },
   (c) => {
     const v = c.vars({
-      fadeSize: { value: '24px', syntax: '<length>' },
-      fadeColor: { value: t.color.background.surface.var, syntax: '<color>' },
+      fadeSize: { ...atProperty.length, value: '24px' },
+      fadeColor: { ...atProperty.color, value: t.color.background.surface.var },
     });
 
     const fadeAnimationBase = {
@@ -202,19 +226,22 @@ export const scrollArea = typestyles.recipe(
   { layer: 'components' },
 );
 
-export type ScrollAreaRecipeProps = NonNullable<Parameters<typeof scrollArea>[0]>;
 export type ScrollAreaVariantProps = RecipeVariants<typeof scrollArea>;
-export type ScrollAreaFadeVariant = NonNullable<ScrollAreaVariantProps['fade']>;
-export type ScrollAreaOrientationVariant = NonNullable<ScrollAreaVariantProps['orientation']>;
 
-/** Map boolean `fade` prop to a concrete fade axis variant. */
+/** Map a boolean `fade` prop onto `scrollAreaFade`. `true` follows `orientation`. */
 export function resolveScrollAreaFade(
-  fade: boolean | ScrollAreaFadeVariant | undefined,
-  orientation: ScrollAreaOrientation = 'vertical',
-): ScrollAreaFade {
-  if (!fade || fade === 'none') return 'none';
-  if (fade === true) {
-    return orientation === 'both' ? 'both' : orientation;
-  }
+  fade: boolean | VariantOptions<typeof scrollAreaFade> | undefined,
+  orientation: VariantOptions<typeof scrollAreaOrientation> = scrollAreaOrientation.default,
+): VariantOptions<typeof scrollAreaFade> {
+  if (!fade || fade === scrollAreaFade.default) return scrollAreaFade.default;
+  if (fade === true) return orientation;
   return fade;
+}
+
+/** Block (top/bottom) and inline (start/end) fade edges for a resolved fade option. */
+export function scrollAreaFadeEdgesFor(fade: VariantOptions<typeof scrollAreaFade>): {
+  readonly block: boolean;
+  readonly inline: boolean;
+} {
+  return scrollAreaFadeEdges[fade];
 }

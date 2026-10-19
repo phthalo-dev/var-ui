@@ -1,46 +1,47 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { calendarGridChrome } from './field';
+import { calendarGridChrome } from './fieldChrome';
 
 export const calendar = typestyles.recipe(
   'calendar',
   (c) => {
     const v = c.vars({
       headingColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       navButtonColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       navButtonHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       headerCellColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
       cellColor: {
+        ...atProperty.color,
         value: t.color.text.primary.var,
-        syntax: '<color>',
       },
       cellHoverBackground: {
+        ...atProperty.color,
         value: t.color.background.subtle.var,
-        syntax: '<color>',
       },
       cellSelectedBackground: {
+        ...atProperty.color,
         value: t.color.tone.accent.background.var,
-        syntax: '<color>',
       },
       cellSelectedColor: {
+        ...atProperty.color,
         value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
       },
       cellDisabledColor: {
+        ...atProperty.color,
         value: t.color.text.secondary.var,
-        syntax: '<color>',
       },
     });
     const grid = calendarGridChrome({
