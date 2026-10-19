@@ -3,7 +3,7 @@ import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
-export const tabsVarDefinitions = {
+const tabsVarDefinitions = {
   railColor: {
     ...atProperty.color,
     value: t.color.border.subtle.var,

@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vite-plus/test';
 import { act, render, waitFor } from '@testing-library/react';
-import { parseFrameworkCookie } from './framework';
+import { parseFrameworkCookie } from '@var-ui/docs-components/framework';
 import { readDocsFrameworkFromDocument, useDocsFramework } from './useDocsFramework';
 
 describe('readDocsFrameworkFromDocument', () => {

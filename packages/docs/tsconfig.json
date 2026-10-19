@@ -10,7 +10,9 @@
     "types": ["vite/client"],
     "paths": {
       "@var-ui/core": ["../core/src/index.ts"],
-      "@var-ui/core/*": ["../core/src/*"]
+      "@var-ui/core/*": ["../core/src/*"],
+      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"],
+      "@var-ui/icons/glyphs/*": ["../icons/src/glyph-data/*"]
     }
   },
   "include": ["index.ts", "src/**/*.ts", "src/**/*.astro", "src/env.d.ts", "src/virtual.d.ts"]

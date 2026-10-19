@@ -11,7 +11,7 @@ const nestedIndent = t.space[2].var;
 const indicatorTransition = `transform ${duration.medium} ${easing.standard}, height ${duration.fast} ${easing.standard}, opacity ${duration.fast} ${easing.standard}`;
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
-export const tocVarDefinitions = {
+const tocVarDefinitions = {
   stickyTop: {
     ...atProperty.length,
     value: t.space[5].var,

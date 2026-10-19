@@ -59,7 +59,7 @@ See [`examples/vite-app`](../../examples/vite-app/README.md) and [`examples/astr
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Themes**        | `createDesignTheme`, `defaultTheme`, `disposeDesignTheme`, `DEFAULT_THEME_NAME`, `defaultThemeClassName`, `SURFACE_ATTRIBUTE`, `mergeThemeOverrides` |
 | **Tokens**        | `designTokens`, `tokens`, `tokenValues`, `generateColors`, `lightSyntaxValues`, `darkSyntaxValues`                                                   |
-| **Customization** | `when`, `themeWhen`, `defineFonts`, `groteskMono`                                                                                                    |
+| **Customization** | `when`, `defineFonts`, `groteskMono`                                                                                                                 |
 | **TypeStyles**    | `typestyles`, `style`, `recipe`, `tokens`, `global`, `breakpoint`, `media`, `override`                                                               |
 | **Types**         | `DesignTheme`, `DesignThemeConfig`, `DesignThemeTokenValues`, `OverrideConfigFor`, …                                                                 |
 
@@ -70,7 +70,7 @@ emits stable public class names.
 
 | Category       | Recipes                                                                                                       |
 | -------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Actions**    | `button`, `linkButton`, `link`                                                                                |
+| **Actions**    | `button`, `link`                                                                                              |
 | **Data input** | `textField`, `textAreaField`, `checkbox`, `radio`, `switchStyles`, `select`, `field` (+ `fieldChrome` helper) |
 | **Feedback**   | `alert`, `banner`, `badge`, `spinner`, `skeleton`, `progressBar`, `statusDot`                                 |
 | **Layout**     | `stack`, `grid`, `section`, `center`, `aspectRatio`, `divider`, `layout` (shell)                              |

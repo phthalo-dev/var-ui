@@ -12,7 +12,7 @@ const tsWhen = typestyles.tokens.when;
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 
 /** Canonical `ThemeCondition` presets for var-ui color mode and a11y media queries. */
-export const themeWhen = {
+const themeWhen = {
   /** Explicit `data-mode="dark"` or system dark when not pinned to light. */
   colorModeResolvedDark: resolvedDarkWhen('data-mode', 'ancestor'),
   colorModeExplicitDark: tsWhen.attr('data-mode', 'dark', { scope: 'ancestor' }),

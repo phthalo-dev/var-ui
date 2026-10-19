@@ -1,5 +1,9 @@
-import { defaultIconSvgs } from '@var-ui/core';
 import type { Tone } from '@var-ui/core';
+import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
+import { svg as errorSvg } from '@var-ui/icons/glyphs/error';
+import { svg as infoSvg } from '@var-ui/icons/glyphs/info';
+import { svg as successSvg } from '@var-ui/icons/glyphs/success';
+import { svg as warningSvg } from '@var-ui/icons/glyphs/warning';
 
 export type ToastShowInput = {
   title: string;
@@ -27,13 +31,13 @@ const ROOT_SELECTOR = '[data-var-ui-toast-region]';
 const INITIALIZED_ATTR = 'data-var-ui-toast-region-initialized';
 const DEFAULT_DURATION = 4000;
 
-const toneIcon: Record<Tone, keyof typeof defaultIconSvgs> = {
-  neutral: 'info',
-  accent: 'info',
-  info: 'info',
-  success: 'success',
-  warning: 'warning',
-  danger: 'error',
+const toneIcon: Record<Tone, string> = {
+  neutral: infoSvg,
+  accent: infoSvg,
+  info: infoSvg,
+  success: successSvg,
+  warning: warningSvg,
+  danger: errorSvg,
 };
 
 const controllers = new WeakMap<HTMLElement, ToastController>();
@@ -75,7 +79,7 @@ function createToastElement(
   icon.className = 'var-ui-toast__icon';
   applyDataTone(icon, tone, appearance);
   icon.setAttribute('aria-hidden', 'true');
-  icon.innerHTML = defaultIconSvgs[toneIcon[tone]];
+  icon.innerHTML = toneIcon[tone];
 
   const body = document.createElement('div');
   body.className = 'var-ui-toast__body';
@@ -101,7 +105,7 @@ function createToastElement(
   close.className = 'var-ui-toast__close';
   applyDataTone(close, tone, appearance);
   close.setAttribute('aria-label', 'Dismiss');
-  close.innerHTML = defaultIconSvgs.close;
+  close.innerHTML = closeSvg;
   close.addEventListener('click', () => onDismiss(id));
 
   item.append(icon, body, close);
@@ -119,7 +123,7 @@ function updateToastElement(el: HTMLElement, patch: Partial<ToastShowInput>): vo
 
   if (patch.tone) {
     const icon = el.querySelector<HTMLElement>('.var-ui-toast__icon');
-    if (icon) icon.innerHTML = defaultIconSvgs[toneIcon[tone]];
+    if (icon) icon.innerHTML = toneIcon[tone];
   }
 
   if (patch.title !== undefined) {

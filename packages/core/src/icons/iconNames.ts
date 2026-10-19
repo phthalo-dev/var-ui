@@ -2,7 +2,7 @@
  * Semantic icon names var-ui components reference internally. Names describe
  * *function*, not glyph (`close`, not `x-mark`). Glyphs resolve exclusively
  * through `IconProvider` in `@var-ui/react`. Default glyph SVGs live in
- * `default-glyphs` (framework-agnostic strings); `@var-ui/icons` wraps them
+ * `@var-ui/icons/glyphs` (framework-agnostic strings); `@var-ui/icons` wraps them
  * for React. Extend this union as new components ship.
  */
 export const iconNameList = [

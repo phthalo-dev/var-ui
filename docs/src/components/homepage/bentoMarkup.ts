@@ -31,7 +31,7 @@ import {
   textField,
   thumbnail,
 } from '@var-ui/core';
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { mergeProps } from '@/lib/mergeProps';
 import { serializeHtmlTag } from '@/demos/serializeHtml';
 

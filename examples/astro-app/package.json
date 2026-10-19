@@ -11,6 +11,7 @@
   "dependencies": {
     "@var-ui/astro": "workspace:*",
     "@var-ui/core": "workspace:*",
+    "@var-ui/icons": "workspace:*",
     "astro": "catalog:"
   },
   "devDependencies": {

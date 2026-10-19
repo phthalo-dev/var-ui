@@ -1,5 +1,8 @@
 ---
-import { defaultIconSvgs, icon, segmentedControl, toggleButton, type SegmentedControlVariantProps, } from "@var-ui/core";
+import { icon, segmentedControl, toggleButton, type SegmentedControlVariantProps, } from "@var-ui/core";
+import { svg as colorModeDark } from '@var-ui/icons/glyphs/colorModeDark';
+import { svg as colorModeLight } from '@var-ui/icons/glyphs/colorModeLight';
+import { svg as colorModeSystem } from '@var-ui/icons/glyphs/colorModeSystem';
 import { mergeProps } from "../utils";
 
 type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
@@ -32,9 +35,9 @@ const buttonRecipe = mergeProps(t);
 const iconRecipe = mergeProps(i);
 
 const MODE_META = {
-  light: { label: "Light", icon: "colorModeLight" },
-  dark: { label: "Dark", icon: "colorModeDark" },
-  system: { label: "System", icon: "colorModeSystem" },
+  light: { label: "Light", icon: colorModeLight },
+  dark: { label: "Dark", icon: colorModeDark },
+  system: { label: "System", icon: colorModeSystem },
 } as const;
 ---
 
@@ -62,11 +65,11 @@ const MODE_META = {
           meta.label
         ) : appearance === "iconsAndLabels" ? (
           <>
-            <span {...iconRecipe} set:html={defaultIconSvgs[meta.icon]} />
+            <span {...iconRecipe} set:html={meta.icon} />
             {meta.label}
           </>
         ) : (
-          <span {...iconRecipe} set:html={defaultIconSvgs[meta.icon]} />
+          <span {...iconRecipe} set:html={meta.icon} />
         )}
       </button>
     );

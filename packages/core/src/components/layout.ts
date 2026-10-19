@@ -3,11 +3,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { defineLayoutShellVars, getLayoutShellVars } from './layoutShellVars';
 export type { LayoutPadding } from './layoutShellVars';
-export {
-  getLayoutShellVars,
-  layoutContentWidthAssignment,
-  layoutShellPaddingAssignments,
-} from './layoutShellVars';
+export { layoutContentWidthAssignment, layoutShellPaddingAssignments } from './layoutShellVars';
 
 const layoutHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
 const zoneScrollable = variant.boolean({ default: true });

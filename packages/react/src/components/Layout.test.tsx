@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
-import { getLayoutShellVars, layoutShellPaddingAssignments } from '@var-ui/core';
+import { layoutContentWidthAssignment, layoutShellPaddingAssignments } from '@var-ui/core';
 import {
   Layout,
   LayoutContent,
@@ -169,14 +169,16 @@ describe('Layout', () => {
   it('does not set shell padding inline when padding is omitted', () => {
     const { container } = render(<Layout content={<div>Main</div>} />);
     const root = container.firstElementChild as HTMLElement;
-    const shell = getLayoutShellVars();
-    expect(root.style.getPropertyValue(shell.padding.outer.x.name)).toBe('');
+    for (const name of Object.keys(layoutShellPaddingAssignments(2))) {
+      expect(root.style.getPropertyValue(name)).toBe('');
+    }
   });
 
   it('sets the content-width CSS variable when contentWidth is provided', () => {
     const { container } = render(<Layout contentWidth={720} content={<div>Main</div>} />);
     const root = container.firstElementChild as HTMLElement;
-    expect(root.style.getPropertyValue(getLayoutShellVars().content.width.name)).toBe('720px');
+    const [widthVar] = Object.keys(layoutContentWidthAssignment(720));
+    expect(root.style.getPropertyValue(widthVar!)).toBe('720px');
   });
 
   it('sets data-divider on LayoutHeader/LayoutFooter when hasDivider is explicit', () => {

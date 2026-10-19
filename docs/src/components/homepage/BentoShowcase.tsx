@@ -1,6 +1,6 @@
 'use client';
 
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { cx } from '@var-ui/react';
 import { useState, type CSSProperties } from 'react';
 import { homeBento } from '@/styles/homeBento';

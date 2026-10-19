@@ -27,7 +27,7 @@ jobs:
 
       # Source-shipped Astro packages (@var-ui/astro, @var-ui/docs,
       # @var-ui/docs-components) need no vp pack build before publish.
-      - run: vp run -F @var-ui/core -F @var-ui/react -F @var-ui/form -F @var-ui/icons -F @var-ui/cli build
+      - run: vp run -F @var-ui/core -F @var-ui/react -F @var-ui/icons -F @var-ui/cli build
 
       - uses: changesets/action@v1
         with:

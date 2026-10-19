@@ -49,7 +49,6 @@ export type PackageExportsAudit = {
 const recipeNames = new Set(typestyles.getThemeableComponents().keys());
 
 const recipeAdjacent = new Set([
-  'linkButton',
   'switchStyles',
   'fieldChrome',
   'dateFieldChrome',
@@ -96,7 +95,7 @@ function categorizeRuntimeExport(name: string): ExportCategory {
     return 'tokens';
   }
   if (
-    /^(createDesignTheme|disposeDesignTheme|defaultTheme|registerDefaultTheme|mergeThemeOverrides|themeWhen|when|atReducedMotion|DEFAULT_THEME_NAME|SURFACE_ATTRIBUTE|defaultThemeClassName|colorModes|conditional)/.test(
+    /^(createDesignTheme|disposeDesignTheme|defaultTheme|registerDefaultTheme|mergeThemeOverrides|when|atReducedMotion|DEFAULT_THEME_NAME|SURFACE_ATTRIBUTE|defaultThemeClassName)/.test(
       name,
     ) ||
     name.startsWith('Theme')

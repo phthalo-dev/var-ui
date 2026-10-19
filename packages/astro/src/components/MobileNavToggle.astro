@@ -1,5 +1,6 @@
 ---
-import { defaultIconSvgs, icon, mobileNav } from '@var-ui/core';
+import { icon, mobileNav } from '@var-ui/core';
+import { svg as menuSvg } from '@var-ui/icons/glyphs/menu';
 import { mergeProps } from '../utils';
 
 type Props = {
@@ -20,7 +21,7 @@ const iconRecipe = mergeProps(icon({ size: 'md' }));
   aria-expanded="false"
   {...mergeProps(s.toggle, className)}
 >
-  {hasIcon ? <slot /> : <span {...iconRecipe} set:html={defaultIconSvgs.menu} />}
+  {hasIcon ? <slot /> : <span {...iconRecipe} set:html={menuSvg} />}
 </button>
 
 <script>

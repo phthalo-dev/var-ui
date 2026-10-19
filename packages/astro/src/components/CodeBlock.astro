@@ -1,5 +1,6 @@
 ---
-import { codeBlock, defaultIconSvgs, type CodeBlockVariantProps } from '@var-ui/core';
+import { codeBlock, type CodeBlockVariantProps } from '@var-ui/core';
+import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { combine, cx, mergeProps } from '../utils';
 
 interface Props extends CodeBlockVariantProps {
@@ -84,7 +85,7 @@ const feedbackProps = combine(cb.feedback, cb.feedbackInline);
               data-class-error={cb.copyButtonError.className}
               aria-label={copyLabel}
             >
-              <span data-codeblock-copy-icon set:html={defaultIconSvgs.copy} />
+              <span data-codeblock-copy-icon set:html={copySvg} />
               <span data-codeblock-copy-text>Copy</span>
             </button>
             <span

@@ -37,6 +37,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@var-ui/core": "workspace:*",
+    "@var-ui/icons": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
     "typescript": "catalog:",
@@ -46,6 +47,7 @@
   },
   "peerDependencies": {
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",
+    "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "astro": "catalog:"
   }
 }

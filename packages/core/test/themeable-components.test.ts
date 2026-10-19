@@ -18,7 +18,6 @@ describe('themeable recipe registry', () => {
       ([name, value]) =>
         typeof value === 'function' &&
         ![
-          'getLayoutShellVars',
           'layoutContentWidthAssignment',
           'layoutShellPaddingAssignments',
           'resolveScrollAreaFade',

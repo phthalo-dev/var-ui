@@ -84,7 +84,6 @@ export default defineConfig({
     projects: [
       'packages/core',
       'packages/react',
-      'packages/form',
       'packages/icons',
       'packages/astro',
       'packages/docs',

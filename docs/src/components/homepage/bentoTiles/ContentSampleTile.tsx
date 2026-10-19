@@ -1,6 +1,6 @@
 'use client';
 
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { HighlightedCodeBlock } from '../../HighlightedCodeBlock';
 import { Heading, Link, Text, Timestamp, VStack } from '@var-ui/react';
 

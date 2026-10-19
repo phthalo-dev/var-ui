@@ -3,7 +3,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
-export const codeBlockVarDefinitions = {
+const codeBlockVarDefinitions = {
   border: {
     ...atProperty.color,
     value: t.color.border.default.var,

@@ -14,7 +14,7 @@ import {
 import type { Selection } from 'react-aria-components';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDocsFramework } from '@/lib/useDocsFramework';
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { HighlightedCodeBlock } from '../HighlightedCodeBlock';
 import { BentoShowcase } from '../homepage/BentoShowcase';
 import { themePlaygroundStyles } from '@/styles/themePlayground';
