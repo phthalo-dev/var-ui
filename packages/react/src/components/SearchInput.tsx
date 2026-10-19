@@ -1,11 +1,11 @@
 import type { ChangeEvent, JSX } from 'react';
-import { searchInput, type ControlSize } from '@var-ui/core';
+import { searchInput, type SearchInputVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
 
 export type SearchInputProps = {
-  variant?: 'default' | 'command';
-  size?: ControlSize;
+  variant?: NonNullable<SearchInputVariantProps['variant']>;
+  size?: NonNullable<SearchInputVariantProps['size']>;
   /** Controlled value for the default search field variant. */
   value?: string;
   /** Uncontrolled initial value. */

@@ -1,10 +1,13 @@
+import { type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
-  semanticChannelAssignments,
+  mapTone,
   subtleBackgroundColor,
   subtleBorderColor,
-  type SurfaceAppearance,
+  surfaceAppearance,
+  tone,
+  toneChannelAssignments,
 } from './semanticTone';
 
 /**
@@ -12,6 +15,12 @@ import {
  */
 export const badge = typestyles.recipe(
   'badge',
+  {
+    variants: {
+      tone,
+      appearance: surfaceAppearance,
+    },
+  },
   (c) => {
     const v = c.vars({
       semantic: {
@@ -40,6 +49,7 @@ export const badge = typestyles.recipe(
       },
     });
     return {
+      vars: v,
       base: {
         display: 'inline-flex',
         alignItems: 'center',
@@ -55,18 +65,7 @@ export const badge = typestyles.recipe(
         color: v.textColor.var,
       },
       variants: {
-        tone: {
-          neutral: {
-            [v.semantic.name]: t.color.text.secondary.var,
-            [v.solidBg.name]: t.color.text.primary.var,
-            [v.solidFg.name]: t.color.background.surface.var,
-          },
-          accent: semanticChannelAssignments(v, 'accent'),
-          success: semanticChannelAssignments(v, 'success'),
-          warning: semanticChannelAssignments(v, 'warning'),
-          danger: semanticChannelAssignments(v, 'danger'),
-          tip: semanticChannelAssignments(v, 'info'),
-        },
+        tone: mapTone((key) => toneChannelAssignments(v, key)),
         appearance: {
           subtle: {
             [v.borderColor.name]: subtleBorderColor(v.semantic.var),
@@ -85,21 +84,16 @@ export const badge = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'subtle' },
     };
   },
   { layer: 'components' },
 );
 
-export type BadgeRecipeProps = NonNullable<Parameters<typeof badge>[0]>;
-export type BadgeTone = NonNullable<BadgeRecipeProps['tone']>;
-export type BadgeVariantProps = {
-  tone?: BadgeTone;
-  appearance?: SurfaceAppearance;
-};
+/** Visual props derived from the schema. */
+export type BadgeVariantProps = RecipeVariants<typeof badge>;
 
 export const badgeVariantPropDocs = [
-  { name: 'tone', type: 'BadgeTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'SurfaceAppearance', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof BadgeVariantProps;

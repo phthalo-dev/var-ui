@@ -38,17 +38,20 @@
     "access": "public"
   },
   "scripts": {
+    "check": "astro check",
     "test": "vp test run"
   },
   "dependencies": {
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@var-ui/astro": "workspace:*",
     "@var-ui/core": "workspace:*",
     "@var-ui/docs": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
+    "typescript": "catalog:",
     "typestyles": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

@@ -74,7 +74,7 @@ import CommandPaletteDefault from './command-palette/default/astro.astro';
 import SearchInputDefault from './search-input/default/astro.astro';
 
 /** Static Astro preview map — DemoHost imports this (Astro cannot dynamic-import by string). */
-export const astroDemoMap = {
+const astroDemos = {
   'button.default': ButtonDefault,
   'button.variants': ButtonVariants,
   'button.disabled': ButtonDisabled,
@@ -149,5 +149,14 @@ export const astroDemoMap = {
   'command-palette.default': CommandPaletteDefault,
   'search-input.default': SearchInputDefault,
 } as const satisfies Partial<Record<DemoId, unknown>>;
+
+/** Component type shared by every Astro demo preview. */
+type AstroDemoPreview = (typeof astroDemos)[keyof typeof astroDemos];
+
+/**
+ * Demos with an Astro preview, keyed by demo id. Typed as `Partial` because some demos are
+ * React-only (see `REACT_ONLY_DEMO_IDS`); callers must handle a missing preview.
+ */
+export const astroDemoMap: Partial<Record<DemoId, AstroDemoPreview>> = astroDemos;
 
 export const astroDemoIds = Object.keys(astroDemoMap) as DemoId[];

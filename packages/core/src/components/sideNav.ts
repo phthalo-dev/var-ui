@@ -1,7 +1,5 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { themeableVars } from './themeableVars';
-
 /** Icon-only rail width in px when the nav is collapsed. */
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
@@ -71,12 +69,12 @@ export const sideNavVarDefinitions = {
  * ```
  */
 
-const sideNavRecipe = typestyles.recipe(
+export const sideNav = typestyles.recipe(
   'side-nav',
   (c) => {
     const v = c.vars(sideNavVarDefinitions);
     return {
-      vars: sideNavVarDefinitions,
+      vars: v,
       slots: [
         'root',
         'stickyTop',
@@ -338,5 +336,3 @@ const sideNavRecipe = typestyles.recipe(
   },
   { layer: 'components' },
 );
-
-export const sideNav = themeableVars(sideNavRecipe, sideNavVarDefinitions);

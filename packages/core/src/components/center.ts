@@ -1,3 +1,4 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 
 /**
@@ -9,6 +10,11 @@ import { typestyles } from '../runtime';
  */
 export const center = typestyles.recipe(
   'center',
+  {
+    variants: {
+      inline: variant.boolean({ default: false }),
+    },
+  },
   () => ({
     base: {
       display: 'grid',
@@ -20,7 +26,9 @@ export const center = typestyles.recipe(
         false: {},
       },
     },
-    defaultVariants: { inline: 'false' },
   }),
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type CenterVariantProps = RecipeVariants<typeof center>;

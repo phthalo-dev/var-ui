@@ -1,14 +1,14 @@
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
-import { passwordField, type ControlSize } from '@var-ui/core';
+import { passwordField, type PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import type { BaseTextFieldProps } from './utils';
 import { mergeProps } from './utils';
 
 export type PasswordInputProps = BaseTextFieldProps & {
   placeholder?: string;
-  size?: ControlSize;
+  size?: NonNullable<PasswordFieldVariantProps['size']>;
 };
 
 /**

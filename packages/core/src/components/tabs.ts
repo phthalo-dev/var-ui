@@ -1,8 +1,6 @@
 import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { themeableVars } from './themeableVars';
-
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 export const tabsVarDefinitions = {
   railColor: {
@@ -57,7 +55,7 @@ export const tabsVarDefinitions = {
  * `aria-selected="true"`; the sliding indicator is the list `::after` pseudo,
  * positioned via `positionTabsIndicator`.
  */
-const tabsRecipe = typestyles.recipe(
+export const tabs = typestyles.recipe(
   'tabs',
   (c) => {
     const v = c.vars(tabsVarDefinitions);
@@ -65,7 +63,7 @@ const tabsRecipe = typestyles.recipe(
     // const indicatorTransition = `transform ${t.duration.medium.var} ${t.easing.standard.var}, width ${t.duration.fast.var} ${t.easing.standard.var}, opacity ${t.duration.fast.var} ${t.easing.standard.var}`;
 
     return {
-      vars: tabsVarDefinitions,
+      vars: v,
       slots: ['root', 'list', 'tab', 'panel'],
       root: {
         display: 'grid',
@@ -125,5 +123,3 @@ const tabsRecipe = typestyles.recipe(
   },
   { layer: 'components' },
 );
-
-export const tabs = themeableVars(tabsRecipe, tabsVarDefinitions);

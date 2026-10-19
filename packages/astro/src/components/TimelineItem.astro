@@ -1,12 +1,12 @@
 ---
-import { timeline, type TimelineTone, type TimelineVariantProps } from '@var-ui/core';
+import { timeline, type TimelineVariantProps, type Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 interface Props extends TimelineVariantProps {
   title?: string;
   description?: string;
   timestamp?: string;
-  tone?: TimelineTone;
+  tone?: Tone;
   className?: string;
 }
 

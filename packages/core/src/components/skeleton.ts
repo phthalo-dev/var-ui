@@ -1,4 +1,4 @@
-import { keyframes } from 'typestyles';
+import { keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -17,6 +17,11 @@ const shimmer = keyframes.create('var-ui-shimmer', {
  */
 export const skeleton = typestyles.recipe(
   'skeleton',
+  {
+    variants: {
+      shape: variant.enum(['text', 'rect', 'circle'], { default: 'text' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       baseColor: {
@@ -47,8 +52,10 @@ export const skeleton = typestyles.recipe(
           circle: { borderRadius: '50%', aspectRatio: '1' },
         },
       },
-      defaultVariants: { shape: 'text' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type SkeletonVariantProps = RecipeVariants<typeof skeleton>;

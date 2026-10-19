@@ -1,12 +1,20 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { semanticChannelAssignments } from './semanticTone';
+import { mapTone, toneChannelAssignments, toneWithDefault, type Tone } from './semanticTone';
+import { controlSize } from './variantAxes';
 
 /**
  * Vertical activity timeline with bullets and connecting lines.
  */
 export const timeline = typestyles.recipe(
   'timeline',
+  {
+    slots: ['root', 'item', 'bullet', 'body', 'title', 'description', 'timestamp'],
+    variants: {
+      size: controlSize,
+      tone: toneWithDefault('accent'),
+    },
+  },
   (c) => {
     const v = c.vars({
       line: { value: t.color.border.default.var, syntax: '<color>' },
@@ -23,7 +31,6 @@ export const timeline = typestyles.recipe(
       lineWidth: { value: t.borderWidth.default.var, syntax: '<length>' },
     });
     return {
-      slots: ['root', 'item', 'bullet', 'body', 'title', 'description', 'timestamp'],
       base: {
         root: {
           listStyle: 'none',
@@ -110,23 +117,14 @@ export const timeline = typestyles.recipe(
             },
           },
           md: {},
-        },
-        tone: {
-          accent: { bullet: semanticChannelAssignments(v, 'accent') },
-          success: { bullet: semanticChannelAssignments(v, 'success') },
-          warning: { bullet: semanticChannelAssignments(v, 'warning') },
-          danger: { bullet: semanticChannelAssignments(v, 'danger') },
-          tip: { bullet: semanticChannelAssignments(v, 'info') },
-          neutral: {
-            bullet: {
-              [v.semantic.name]: t.color.text.secondary.var,
-              [v.solidBg.name]: t.color.text.primary.var,
-              [v.solidFg.name]: t.color.background.surface.var,
+          lg: {
+            item: {
+              [v.bulletSize.name]: t.space[4].var,
             },
           },
         },
+        tone: mapTone((key) => ({ bullet: toneChannelAssignments(v, key) })),
       },
-      defaultVariants: { size: 'md', tone: 'accent' },
     };
   },
   { layer: 'components' },
@@ -134,15 +132,14 @@ export const timeline = typestyles.recipe(
 
 export type TimelineRecipeProps = NonNullable<Parameters<typeof timeline>[0]>;
 export type TimelineSize = NonNullable<TimelineRecipeProps['size']>;
-export type TimelineTone = NonNullable<TimelineRecipeProps['tone']>;
 export type TimelineVariantProps = {
   size?: TimelineSize;
-  tone?: TimelineTone;
+  tone?: Tone;
 };
 
 export const timelineVariantPropDocs = [
-  { name: 'size', type: "'sm' | 'md'", required: false },
-  { name: 'tone', type: 'TimelineTone', required: false },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", required: false },
+  { name: 'tone', type: 'Tone', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof TimelineVariantProps;
   type: string;

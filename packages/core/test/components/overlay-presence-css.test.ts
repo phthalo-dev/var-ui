@@ -37,6 +37,8 @@ describe('overlay presence recipe CSS', () => {
       expect(css).toContain(`.${className}[data-ending-style]`);
     }
     expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(css).toContain('.var-ui-menu__popover[data-placement="bottom-start"]');
+    expect(css).toContain('.var-ui-menu__popover[data-placement="top-end"]');
   });
 
   it('keeps the iOS dialog overlay centered in the visual viewport', () => {

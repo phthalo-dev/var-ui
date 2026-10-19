@@ -16,7 +16,7 @@ export function StatusDot({
 }: StatusDotProps): JSX.Element {
   return (
     <span
-      {...mergeProps(statusDot({ tone, appearance, pulse: pulse ? 'true' : 'false' }), className)}
+      {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
       aria-label={ariaLabel}
       role={ariaLabel ? 'img' : undefined}
       aria-hidden={ariaLabel ? undefined : true}

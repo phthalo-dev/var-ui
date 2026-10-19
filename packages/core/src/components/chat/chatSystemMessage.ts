@@ -1,6 +1,13 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { semanticTone, subtleBackgroundColor, type SemanticToneKey } from '../semanticTone';
+import { type RecipeVariants } from 'typestyles';
+import {
+  mapTone,
+  semanticTone,
+  subtleBackgroundColor,
+  tone,
+  type SemanticToneKey,
+} from '../semanticTone';
 
 function tonePaint(
   v: { color: { name: string }; background: { name: string } },
@@ -17,7 +24,7 @@ function tonePaint(
 
 /**
  * Centered inline system message ("Alex joined", "Model switched to GPT-5").
- * Same tone vocabulary as `Alert`/`Badge`, plus a `neutral` default.
+ * Same tone vocabulary as every other component. Default is `neutral`.
  *
  * ```tsx
  * <div className={chatSystemMessage({ tone: 'info' }).root}>…</div>
@@ -25,13 +32,16 @@ function tonePaint(
  */
 export const chatSystemMessage = typestyles.recipe(
   'chat-system-message',
+  {
+    slots: ['root', 'icon', 'text'],
+    variants: { tone },
+  },
   (c) => {
     const v = c.vars({
       color: { value: t.color.text.secondary.var, syntax: '<color>' },
       background: { value: t.color.background.subtle.var, syntax: '<color>' },
     });
     return {
-      slots: ['root', 'icon', 'text'],
       base: {
         root: {
           display: 'inline-flex',
@@ -54,17 +64,12 @@ export const chatSystemMessage = typestyles.recipe(
         },
       },
       variants: {
-        tone: {
-          neutral: { root: {} },
-          accent: tonePaint(v, 'accent'),
-          success: tonePaint(v, 'success'),
-          warning: tonePaint(v, 'warning'),
-          danger: tonePaint(v, 'danger'),
-          info: tonePaint(v, 'info'),
-        },
+        tone: mapTone((key) => (key === 'neutral' ? { root: {} } : tonePaint(v, key))),
       },
-      defaultVariants: { tone: 'neutral' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ChatSystemMessageVariantProps = RecipeVariants<typeof chatSystemMessage>;

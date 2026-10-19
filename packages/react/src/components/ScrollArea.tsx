@@ -1,18 +1,13 @@
 import type { HTMLAttributes, JSX, ReactNode, Ref } from 'react';
-import {
-  resolveScrollAreaFade,
-  scrollArea,
-  type ScrollAreaFade,
-  type ScrollAreaOrientation,
-} from '@var-ui/core';
+import { resolveScrollAreaFade, scrollArea, type ScrollAreaVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 
 export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   children: ReactNode;
   /** @default 'vertical' */
-  orientation?: ScrollAreaOrientation;
+  orientation?: NonNullable<ScrollAreaVariantProps['orientation']>;
   /** Edge fade masks. @default false */
-  fade?: boolean | ScrollAreaFade;
+  fade?: boolean | NonNullable<ScrollAreaVariantProps['fade']>;
   className?: string;
   viewportClassName?: string;
   /** Ref for the scrollable viewport element. */

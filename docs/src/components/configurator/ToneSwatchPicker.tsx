@@ -1,11 +1,11 @@
-import type { ButtonTone } from '@var-ui/core';
+import type { Tone } from '@var-ui/core';
 import { Icon } from '@var-ui/react';
 import { configuratorStyles } from '@/styles/configurator';
 import { TONE_OPTIONS } from './buttonCode';
 
 export type ToneSwatchPickerProps = {
-  value: ButtonTone;
-  onChange: (tone: ButtonTone) => void;
+  value: Tone;
+  onChange: (tone: Tone) => void;
 };
 
 export function ToneSwatchPicker({ value, onChange }: ToneSwatchPickerProps) {

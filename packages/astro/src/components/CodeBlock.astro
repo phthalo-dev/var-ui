@@ -1,10 +1,8 @@
 ---
-import { codeBlock, defaultIconSvgs } from '@var-ui/core';
-import { cx, mergeProps } from '../utils';
+import { codeBlock, defaultIconSvgs, type CodeBlockVariantProps } from '@var-ui/core';
+import { combine, cx, mergeProps } from '../utils';
 
-type CodeBlockVariant = 'default' | 'inline' | 'diff' | 'terminal';
-
-type Props = {
+interface Props extends CodeBlockVariantProps {
   code: string;
   language?: string;
   codeHtml?: string;
@@ -13,14 +11,13 @@ type Props = {
   filename?: string;
   className?: string;
   copyable?: boolean;
-  variant?: CodeBlockVariant;
   wrapLongLines?: boolean;
   showLineNumbers?: boolean;
   highlightedLines?: number[];
   copyLabel?: string;
   copiedLabel?: string;
   copyErrorLabel?: string;
-};
+}
 
 function escapeHtml(text: string): string {
   return text
@@ -48,80 +45,53 @@ const {
   copyErrorLabel = 'Copy failed',
 } = Astro.props as Props;
 
-const cb = codeBlock();
-const variantRootClass: Record<CodeBlockVariant, string> = {
-  default: (cb.rootDefault).className,
-  inline: (cb.rootInline).className,
-  diff: (cb.rootDiff).className,
-  terminal: (cb.rootTerminal).className,
-};
+const cb = codeBlock({ variant });
 
 const highlightedSet = new Set(highlightedLines);
 const lines = code.replace(/\n$/, '').split('\n');
 const terminal = variant === 'terminal';
 const inline = variant === 'inline';
 const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-const resolvedCodeClassName = cx((cb.code).className, highlightedCodeClassName);
+const resolvedCodeClassName = cx(cb.code, highlightedCodeClassName);
 
-const feedbackClassName = cx(
-  (cb.feedback).className,
-  (cb.feedbackInline).className,
-);
+const feedbackProps = combine(cb.feedback, cb.feedbackInline);
 ---
 
 {
   inline ? (
-    <code
-      {...mergeProps(
-        cb.root,
-        cx(variantRootClass[variant], (cb.code).className, className),
-      )}
-      data-codeblock
-    >
+    <code {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
       {code}
     </code>
   ) : (
-    <div {...mergeProps(cb.root, cx(variantRootClass[variant], className))} data-codeblock>
-      <div
-        {...mergeProps(cb.header, cx(terminal && (cb.headerTerminal).className))}
-        data-codeblock-header
-      >
+    <div {...mergeProps(cb.root, className)} data-codeblock>
+      <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? (
-            <span
-              {...mergeProps(cb.language, cx(terminal && (cb.languageTerminal).className))}
-            >
-              {language}
-            </span>
-          ) : null}
+          {language ? <span {...mergeProps(cb.language)}>{language}</span> : null}
         </div>
         {copyable ? (
           <div {...mergeProps(cb.actions)}>
             <button
               type="button"
-              {...mergeProps(
-                cb.copyButton,
-                cx((cb.copyButtonIdle).className),
-              )}
+              {...combine(cb.copyButton, cb.copyButtonIdle)}
               data-var-ui-code-copy
               data-code={code}
               data-copy-label={copyLabel}
               data-copied-label={copiedLabel}
               data-copy-error-label={copyErrorLabel}
-              data-class-idle={(cb.copyButtonIdle).className}
-              data-class-copied={(cb.copyButtonCopied).className}
-              data-class-error={(cb.copyButtonError).className}
+              data-class-idle={cb.copyButtonIdle.className}
+              data-class-copied={cb.copyButtonCopied.className}
+              data-class-error={cb.copyButtonError.className}
               aria-label={copyLabel}
             >
               <span data-codeblock-copy-icon set:html={defaultIconSvgs.copy} />
               <span data-codeblock-copy-text>Copy</span>
             </button>
             <span
-              class={feedbackClassName}
+              {...feedbackProps}
               data-codeblock-feedback
-              data-class-success={(cb.feedbackSuccess).className}
-              data-class-error={(cb.feedbackError).className}
+              data-class-success={cb.feedbackSuccess.className}
+              data-class-error={cb.feedbackError.className}
               role="status"
               aria-live="polite"
             />
@@ -130,30 +100,21 @@ const feedbackClassName = cx(
       </div>
 
       <div
-        {...mergeProps(
-          cb.body,
-          cx((cb.bodyScrollable).className, terminal && (cb.bodyTerminal).className),
-        )}
+        {...combine(cb.body, cb.bodyScrollable)}
         data-codeblock-body
       >
         <pre
-          {...mergeProps(
-            cb.pre,
-            cx(
-              wrapLongLines ? (cb.preWrap).className : (cb.preScrollX).className,
-              terminal && (cb.preTerminal).className,
-            ),
-          )}
+          {...combine(cb.pre, wrapLongLines ? cb.preWrap : cb.preScrollX)}
           data-codeblock-pre>{showLineNumbers ? (
-            <code {...mergeProps(cb.code, (cb.lines).className)}>
+            <code {...combine(cb.code, cb.lines)}>
               {lines.map((line, index) => {
                 const lineNumber = index + 1;
                 const lineContentHtml = lineHtml?.[index];
                 return (
                   <span
-                    {...mergeProps(
+                    {...combine(
                       cb.line,
-                      cx(highlightedSet.has(lineNumber) && (cb.lineHighlighted).className),
+                      highlightedSet.has(lineNumber) && cb.lineHighlighted,
                     )}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">

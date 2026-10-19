@@ -1,3 +1,4 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
@@ -14,6 +15,26 @@ import { designTokens as t } from '../tokens';
  */
 export const commandPalette = typestyles.recipe(
   'command-palette',
+  {
+    slots: [
+      'root',
+      'dialog',
+      'inputRow',
+      'inputIcon',
+      'input',
+      'results',
+      'result',
+      'resultLink',
+      'resultLinkActive',
+      'resultTitle',
+      'resultMeta',
+      'mark',
+      'empty',
+    ],
+    variants: {
+      open: variant.boolean({ default: false }),
+    },
+  },
   (c) => {
     const v = c.vars({
       backdropBackground: {
@@ -78,21 +99,6 @@ export const commandPalette = typestyles.recipe(
       },
     });
     return {
-      slots: [
-        'root',
-        'dialog',
-        'inputRow',
-        'inputIcon',
-        'input',
-        'results',
-        'result',
-        'resultLink',
-        'resultLinkActive',
-        'resultTitle',
-        'resultMeta',
-        'mark',
-        'empty',
-      ],
       base: {
         root: {
           [v.backdropBackground.name]: t.color.overlay.backdrop.var,
@@ -262,8 +268,10 @@ export const commandPalette = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { open: false },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type CommandPaletteVariantProps = RecipeVariants<typeof commandPalette>;

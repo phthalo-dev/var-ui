@@ -2,9 +2,26 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome, dropdownPopoverChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 export const select = typestyles.recipe(
   'select',
+  {
+    slots: [
+      'root',
+      'label',
+      'trigger',
+      'selectValue',
+      'triggerIcon',
+      'description',
+      'error',
+      'popover',
+      'listbox',
+      'item',
+    ],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -64,18 +81,6 @@ export const select = typestyles.recipe(
       itemSelectedColor: v.itemSelectedColor,
     });
     return {
-      slots: [
-        'root',
-        'label',
-        'trigger',
-        'selectValue',
-        'triggerIcon',
-        'description',
-        'error',
-        'popover',
-        'listbox',
-        'item',
-      ],
       base: {
         root: {
           ...chrome.root,
@@ -138,8 +143,10 @@ export const select = typestyles.recipe(
           trigger: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type SelectVariantProps = RecipeVariants<typeof select>;

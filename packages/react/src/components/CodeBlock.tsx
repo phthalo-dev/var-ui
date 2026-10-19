@@ -1,10 +1,11 @@
 import type { JSX } from 'react';
 import { useMemo, useState } from 'react';
-import { codeBlock } from '@var-ui/core';
+import { codeBlock, type CodeBlockVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { combine, cx, mergeProps } from './utils';
 
-type CodeBlockVariant = 'default' | 'inline' | 'diff' | 'terminal';
+export type { CodeBlockVariant } from '@var-ui/core';
+
 type FeedbackTone = 'success' | 'error' | null;
 
 function escapeHtml(text: string): string {
@@ -15,7 +16,7 @@ function escapeHtml(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
-export type CodeBlockProps = {
+export type CodeBlockProps = CodeBlockVariantProps & {
   /** Source code string to display and copy. */
   code: string;
   /** Language tag shown in the header (e.g. `tsx`, `bash`). */
@@ -32,8 +33,6 @@ export type CodeBlockProps = {
   className?: string;
   /** Whether to show the copy-to-clipboard button. @default true */
   copyable?: boolean;
-  /** Visual variant of the code block. @default default */
-  variant?: CodeBlockVariant;
   /** Wrap long lines instead of horizontal scrolling. @default false */
   wrapLongLines?: boolean;
   /** Show line numbers in a gutter column. @default false */
@@ -65,13 +64,7 @@ export function CodeBlock({
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
 }: CodeBlockProps): JSX.Element {
-  const cb = codeBlock();
-  const variantRootClass: Record<CodeBlockVariant, string> = {
-    default: cb.rootDefault.className,
-    inline: cb.rootInline.className,
-    diff: cb.rootDiff.className,
-    terminal: cb.rootTerminal.className,
-  };
+  const cb = codeBlock({ variant });
 
   const [isCopied, setIsCopied] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -83,13 +76,13 @@ export function CodeBlock({
   const terminal = variant === 'terminal';
   const inline = variant === 'inline';
   const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-  const resolvedCodeClassName = cx(cb.code.className, highlightedCodeClassName);
+  const resolvedCodeClassName = cx(cb.code, highlightedCodeClassName);
 
-  const feedbackClassName = cx(
-    cb.feedback.className,
-    cb.feedbackInline.className,
-    feedbackTone === 'success' && cb.feedbackSuccess.className,
-    feedbackTone === 'error' && cb.feedbackError.className,
+  const feedbackProps = combine(
+    cb.feedback,
+    cb.feedbackInline,
+    feedbackTone === 'success' && cb.feedbackSuccess,
+    feedbackTone === 'error' && cb.feedbackError,
   );
 
   const resetCopyState = () => {
@@ -119,28 +112,18 @@ export function CodeBlock({
 
   if (inline) {
     return (
-      <code
-        {...mergeProps(cb.root, cx(variantRootClass[variant], cb.code.className, className))}
-        data-codeblock
-      >
+      <code {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
         {code}
       </code>
     );
   }
 
   return (
-    <div {...mergeProps(cb.root, cx(variantRootClass[variant], className))} data-codeblock>
-      <div
-        {...mergeProps(cb.header, cx(terminal && cb.headerTerminal.className))}
-        data-codeblock-header
-      >
+    <div {...mergeProps(cb.root, className)} data-codeblock>
+      <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? (
-            <span {...mergeProps(cb.language, cx(terminal && cb.languageTerminal.className))}>
-              {language}
-            </span>
-          ) : null}
+          {language ? <span {...mergeProps(cb.language)}>{language}</span> : null}
         </div>
         {copyable ? (
           <div {...mergeProps(cb.actions)}>
@@ -160,42 +143,24 @@ export function CodeBlock({
               <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
               {isCopied ? 'Copied' : hasError ? 'Error' : 'Copy'}
             </button>
-            <span className={feedbackClassName} role="status" aria-live="polite">
+            <span {...feedbackProps} role="status" aria-live="polite">
               {feedbackText}
             </span>
           </div>
         ) : null}
       </div>
 
-      <div
-        {...mergeProps(
-          cb.body,
-          cx(cb.bodyScrollable.className, terminal && cb.bodyTerminal.className),
-        )}
-        data-codeblock-body
-      >
-        <pre
-          {...mergeProps(
-            cb.pre,
-            cx(
-              wrapLongLines ? cb.preWrap.className : cb.preScrollX.className,
-              terminal && cb.preTerminal.className,
-            ),
-          )}
-          data-codeblock-pre
-        >
+      <div {...combine(cb.body, cb.bodyScrollable)} data-codeblock-body>
+        <pre {...combine(cb.pre, wrapLongLines ? cb.preWrap : cb.preScrollX)} data-codeblock-pre>
           {showLineNumbers ? (
-            <code {...mergeProps(cb.code, cb.lines.className)}>
+            <code {...combine(cb.code, cb.lines)}>
               {lines.map((line, index) => {
                 const lineNumber = index + 1;
                 const lineContentHtml = lineHtml?.[index];
                 return (
                   <span
                     key={lineNumber}
-                    {...mergeProps(
-                      cb.line,
-                      cx(highlightedSet.has(lineNumber) && cb.lineHighlighted.className),
-                    )}
+                    {...combine(cb.line, highlightedSet.has(lineNumber) && cb.lineHighlighted)}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}

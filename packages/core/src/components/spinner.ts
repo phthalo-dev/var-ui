@@ -2,12 +2,15 @@ import { keyframes } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
+  mapTone,
   semanticTone,
   subtleBackgroundColor,
-  type ButtonTone,
+  toneWithDefault,
   type ControlSize,
   type SpinnerAppearance,
+  type Tone,
 } from './semanticTone';
+import { controlSize, fillAppearance } from './variantAxes';
 
 const spin = keyframes.create('var-ui-spin', {
   from: { transform: 'rotate(0deg)' },
@@ -19,6 +22,14 @@ const spin = keyframes.create('var-ui-spin', {
  */
 export const spinner = typestyles.recipe(
   'spinner',
+  {
+    slots: ['root', 'indicator'],
+    variants: {
+      size: controlSize,
+      tone: toneWithDefault('accent'),
+      appearance: fillAppearance,
+    },
+  },
   (c) => {
     const v = c.vars({
       indicatorColor: {
@@ -32,7 +43,6 @@ export const spinner = typestyles.recipe(
       size: { value: '20px', syntax: '<length>' },
     });
     return {
-      slots: ['root', 'indicator'],
       base: {
         root: {},
         indicator: {
@@ -56,14 +66,12 @@ export const spinner = typestyles.recipe(
           md: { indicator: { [v.size.name]: '20px' } },
           lg: { indicator: { [v.size.name]: '32px', borderWidth: '3px' } },
         },
-        tone: {
-          accent: { indicator: { [v.indicatorColor.name]: semanticTone.accent.foreground } },
-          success: { indicator: { [v.indicatorColor.name]: semanticTone.success.foreground } },
-          warning: { indicator: { [v.indicatorColor.name]: semanticTone.warning.foreground } },
-          danger: { indicator: { [v.indicatorColor.name]: semanticTone.danger.foreground } },
-          info: { indicator: { [v.indicatorColor.name]: semanticTone.info.foreground } },
-          neutral: { indicator: { [v.indicatorColor.name]: t.color.text.secondary.var } },
-        },
+        tone: mapTone((key) => ({
+          indicator: {
+            [v.indicatorColor.name]:
+              key === 'neutral' ? t.color.text.secondary.var : semanticTone[key].foreground,
+          },
+        })),
         appearance: {
           solid: { indicator: {} },
           subtle: {
@@ -73,7 +81,6 @@ export const spinner = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { size: 'md', tone: 'accent', appearance: 'solid' },
     };
   },
   { layer: 'components' },
@@ -83,13 +90,13 @@ export type SpinnerRecipeProps = NonNullable<Parameters<typeof spinner>[0]>;
 
 export type SpinnerVariantProps = {
   size?: ControlSize;
-  tone?: ButtonTone;
+  tone?: Tone;
   appearance?: SpinnerAppearance;
 };
 
 export const spinnerVariantPropDocs = [
   { name: 'size', type: 'ControlSize', required: false },
-  { name: 'tone', type: 'ButtonTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'SpinnerAppearance', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof SpinnerVariantProps;

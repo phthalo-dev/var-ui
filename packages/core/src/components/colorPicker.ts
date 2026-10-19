@@ -1,5 +1,7 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSize } from './variantAxes';
 
 /**
  * HSV color picker panel: saturation/value area, hue slider, optional alpha
@@ -7,6 +9,23 @@ import { designTokens as t } from '../tokens';
  */
 export const colorPicker = typestyles.recipe(
   'color-picker',
+  {
+    slots: [
+      'root',
+      'saturation',
+      'saturationThumb',
+      'hue',
+      'hueThumb',
+      'alpha',
+      'alphaThumb',
+      'alphaGradient',
+      'swatches',
+      'swatch',
+    ],
+    variants: {
+      swatchColumns: variant.enum(['seven', 'ten'], { default: 'seven' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       panelHeight: { value: '10rem', syntax: '<length>' },
@@ -21,18 +40,6 @@ export const colorPicker = typestyles.recipe(
       checkerDark: { value: t.color.border.subtle.var, syntax: '<color>' },
     });
     return {
-      slots: [
-        'root',
-        'saturation',
-        'saturationThumb',
-        'hue',
-        'hueThumb',
-        'alpha',
-        'alphaThumb',
-        'alphaGradient',
-        'swatches',
-        'swatch',
-      ],
       base: {
         root: {
           display: 'grid',
@@ -156,7 +163,6 @@ export const colorPicker = typestyles.recipe(
           ten: { swatches: { gridTemplateColumns: 'repeat(10, 1fr)' } },
         },
       },
-      defaultVariants: { swatchColumns: 'seven' },
     };
   },
   { layer: 'components' },
@@ -167,6 +173,12 @@ export const colorPicker = typestyles.recipe(
  */
 export const colorSwatch = typestyles.recipe(
   'color-swatch',
+  {
+    slots: ['root'],
+    variants: {
+      size: controlSize,
+    },
+  },
   (c) => {
     const v = c.vars({
       size: { value: '1.5rem', syntax: '<length>' },
@@ -174,7 +186,6 @@ export const colorSwatch = typestyles.recipe(
       selectedRing: { value: t.color.border.focus.var, syntax: '<color>' },
     });
     return {
-      slots: ['root'],
       base: {
         root: {
           display: 'inline-block',
@@ -198,8 +209,13 @@ export const colorSwatch = typestyles.recipe(
           lg: { root: { [v.size.name]: '2rem' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ColorPickerVariantProps = RecipeVariants<typeof colorPicker>;
+
+/** Visual props derived from the schema. */
+export type ColorSwatchVariantProps = RecipeVariants<typeof colorSwatch>;

@@ -1,3 +1,4 @@
+import { variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -17,6 +18,12 @@ import { designTokens as t } from '../tokens';
  */
 export const collapsible = typestyles.recipe(
   'collapsible',
+  {
+    slots: ['root', 'trigger', 'triggerIcon', 'panel'],
+    variants: {
+      variant: variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       border: { value: t.color.border.default.var, syntax: '<color>' },
@@ -25,7 +32,6 @@ export const collapsible = typestyles.recipe(
       hoverBg: { value: t.color.background.subtle.var, syntax: '<color>' },
     });
     return {
-      slots: ['root', 'trigger', 'triggerIcon', 'panel'],
       base: {
         root: {
           [v.border.name]: t.color.border.default.var,
@@ -113,7 +119,6 @@ export const collapsible = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { variant: 'flush' },
     };
   },
   { layer: 'components' },

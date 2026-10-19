@@ -16,6 +16,12 @@ declare module 'virtual:var-docs/mdx-components' {
   export const ShadowSwatches: unknown;
 }
 
+/** Populated by `lib/homepage-preload-plugin.ts` after a build; empty on a cold cache. */
+declare module 'virtual:homepage-preloads' {
+  const preloads: string[];
+  export default preloads;
+}
+
 declare module '*.astro' {
   const Component: import('astro').AstroComponentFactory;
   export default Component;

@@ -3,13 +3,31 @@ import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { dropdownPopoverChrome, fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
- * Headless combobox primitive recipe. Shares field chrome with `typeahead` and
- * adds an `empty` slot for listbox empty states.
+ * Headless combobox primitive recipe. Shares field chrome with the other
+ * field controls and adds an `empty` slot for listbox empty states.
  */
 export const combobox = typestyles.recipe(
   'combobox',
+  {
+    slots: [
+      'root',
+      'label',
+      'description',
+      'error',
+      'inputWrapper',
+      'input',
+      'clearButton',
+      'popover',
+      'listbox',
+      'item',
+      'empty',
+    ],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -69,19 +87,6 @@ export const combobox = typestyles.recipe(
       itemSelectedColor: v.itemSelectedColor,
     });
     return {
-      slots: [
-        'root',
-        'label',
-        'description',
-        'error',
-        'inputWrapper',
-        'input',
-        'clearButton',
-        'popover',
-        'listbox',
-        'item',
-        'empty',
-      ],
       base: {
         root: {
           ...chrome.root,
@@ -144,8 +149,10 @@ export const combobox = typestyles.recipe(
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ComboboxVariantProps = RecipeVariants<typeof combobox>;

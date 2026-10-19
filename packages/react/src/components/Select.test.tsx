@@ -20,6 +20,24 @@ describe('Select', () => {
     expect(screen.getByRole('button', { name: /Fruit/ })).toBeTruthy();
   });
 
+  it('passes its size down to the trigger', () => {
+    render(
+      <IconProvider icons={{}}>
+        <Select label="Fruit" options={OPTIONS} size="lg" />
+      </IconProvider>,
+    );
+    expect(screen.getByRole('button', { name: /Fruit/ }).getAttribute('data-size')).toBe('lg');
+  });
+
+  it('uses the recipe default size when none is given', () => {
+    render(
+      <IconProvider icons={{}}>
+        <Select label="Fruit" options={OPTIONS} />
+      </IconProvider>,
+    );
+    expect(screen.getByRole('button', { name: /Fruit/ }).getAttribute('data-size')).toBe('md');
+  });
+
   it('portals the listbox into document.body by default', async () => {
     const { container } = render(
       <IconProvider icons={{}}>

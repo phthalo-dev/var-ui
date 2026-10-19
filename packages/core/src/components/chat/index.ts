@@ -1,7 +1,7 @@
-export { chatMessage } from './chatMessage';
-export { chatMessageBubble } from './chatMessageBubble';
-export { chatMessageList } from './chatMessageList';
-export { chatSystemMessage } from './chatSystemMessage';
-export { chatToolCalls } from './chatToolCalls';
-export { chatComposer } from './chatComposer';
-export { chatLayout } from './chatLayout';
+export { chatMessage, type ChatMessageVariantProps } from './chatMessage';
+export { chatMessageBubble, type ChatMessageBubbleVariantProps } from './chatMessageBubble';
+export { chatMessageList, type ChatMessageListVariantProps } from './chatMessageList';
+export { chatSystemMessage, type ChatSystemMessageVariantProps } from './chatSystemMessage';
+export { chatToolCalls, type ChatToolCallsVariantProps } from './chatToolCalls';
+export { chatComposer, type ChatComposerVariantProps } from './chatComposer';
+export { chatLayout, type ChatLayoutVariantProps } from './chatLayout';

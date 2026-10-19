@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX, ReactNode } from 'react';
 import { createContext, useContext } from 'react';
-import { table as tableStyles, designTokens as t } from '@var-ui/core';
+import { table as tableStyles, designTokens as t, type TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
 import type { SortDescriptor, SortDirection } from '../hooks/useTableSort';
@@ -17,14 +17,14 @@ export type TableColumnDef<T extends Record<string, unknown> = Record<string, un
 };
 
 export type TableProps<T extends Record<string, unknown> = Record<string, unknown>> = {
-  density?: 'compact' | 'balanced' | 'spacious';
-  dividers?: 'rows' | 'columns' | 'grid' | 'none';
-  isStriped?: boolean;
-  hasHover?: boolean;
-  stickyHeader?: boolean;
-  textOverflow?: 'wrap' | 'truncate';
+  density?: NonNullable<TableVariantProps['density']>;
+  dividers?: NonNullable<TableVariantProps['dividers']>;
+  isStriped?: NonNullable<TableVariantProps['isStriped']>;
+  hasHover?: NonNullable<TableVariantProps['hasHover']>;
+  stickyHeader?: NonNullable<TableVariantProps['stickyHeader']>;
+  textOverflow?: NonNullable<TableVariantProps['textOverflow']>;
   /** @default 'auto' */
-  layout?: 'auto' | 'fixed';
+  layout?: NonNullable<TableVariantProps['layout']>;
   /** Column keys in display order — required with `columnWidths` for `<colgroup>`. */
   columnOrder?: string[];
   /** Explicit column widths keyed by column id. */

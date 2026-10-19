@@ -1,5 +1,5 @@
 import type { JSX, ReactNode } from 'react';
-import { icon, type IconName } from '@var-ui/core';
+import { icon, type IconName, type IconVariantProps } from '@var-ui/core';
 import { mergeProps } from '../components/utils';
 import { emptyFallback } from './emptyFallback';
 import { useIcons } from './IconProvider';
@@ -9,7 +9,7 @@ export type IconProps = {
   name?: IconName;
   /** Caller-supplied node — bypasses the registry entirely. */
   children?: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'inherit';
+  size?: NonNullable<IconVariantProps['size']>;
   className?: string;
   'aria-label'?: string;
   'data-mirror'?: boolean | '';

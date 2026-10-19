@@ -66,6 +66,28 @@ describe('InputGroup', () => {
     expect(group.hasAttribute('data-disabled')).toBe(false);
   });
 
+  it('passes its size down to the group, input, and addon parts', () => {
+    render(
+      <InputGroup label="Price" size="lg">
+        <InputGroupText>$</InputGroupText>
+        <InputGroupInput aria-label="Price" />
+      </InputGroup>,
+    );
+    expect(screen.getByRole('group').getAttribute('data-size')).toBe('lg');
+    expect(screen.getByRole('textbox', { name: 'Price' }).getAttribute('data-size')).toBe('lg');
+    expect(screen.getByText('$').getAttribute('data-size')).toBe('lg');
+  });
+
+  it('uses the recipe default size when none is given', () => {
+    render(
+      <InputGroup label="Price">
+        <InputGroupText>$</InputGroupText>
+        <InputGroupInput aria-label="Price" />
+      </InputGroup>,
+    );
+    expect(screen.getByRole('group').getAttribute('data-size')).toBe('md');
+  });
+
   it('sets aria-disabled and data-disabled when isDisabled is true', () => {
     render(
       <InputGroup label="Price" isDisabled>

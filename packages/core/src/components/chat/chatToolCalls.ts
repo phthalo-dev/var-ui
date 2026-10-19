@@ -1,6 +1,12 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 import { semanticTone } from '../semanticTone';
+
+const toolCallsStatus = variant.enum(['pending', 'running', 'complete', 'error'], {
+  default: 'complete',
+});
+const toolCallsExpanded = variant.boolean({ default: false });
 
 /**
  * Tool/function call display. One call renders inline; the React wrapper
@@ -14,7 +20,7 @@ import { semanticTone } from '../semanticTone';
  */
 export const chatToolCalls = typestyles.recipe(
   'chat-tool-calls',
-  () => ({
+  {
     slots: [
       'root',
       'header',
@@ -26,6 +32,12 @@ export const chatToolCalls = typestyles.recipe(
       'list',
       'detail',
     ],
+    variants: {
+      status: toolCallsStatus,
+      expanded: toolCallsExpanded,
+    },
+  },
+  () => ({
     base: {
       root: {
         display: 'flex',
@@ -96,7 +108,9 @@ export const chatToolCalls = typestyles.recipe(
         false: {},
       },
     },
-    defaultVariants: { status: 'complete', expanded: 'false' },
   }),
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ChatToolCallsVariantProps = RecipeVariants<typeof chatToolCalls>;

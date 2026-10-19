@@ -1,5 +1,9 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const descriptionListColumns = variant.enum(['single', 'multi'], { default: 'single' });
+const descriptionListLabelPosition = variant.enum(['start', 'top'], { default: 'start' });
 
 /**
  * Semantic key/value display chrome for `<dl>` / `<dt>` / `<dd>` pairs. Pair with
@@ -20,6 +24,13 @@ import { designTokens as t } from '../tokens';
  */
 export const descriptionList = typestyles.recipe(
   'description-list',
+  {
+    slots: ['root', 'title', 'item', 'term', 'details', 'toggle'],
+    variants: {
+      columns: descriptionListColumns,
+      labelPosition: descriptionListLabelPosition,
+    },
+  },
   (c) => {
     const v = c.vars({
       termColor: { value: t.color.text.secondary.var, syntax: '<color>' },
@@ -29,7 +40,6 @@ export const descriptionList = typestyles.recipe(
       columns: { value: '2', syntax: '<integer>' },
     });
     return {
-      slots: ['root', 'title', 'item', 'term', 'details', 'toggle'],
       base: {
         root: {
           display: 'grid',
@@ -92,8 +102,10 @@ export const descriptionList = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { columns: 'single', labelPosition: 'start' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type DescriptionListVariantProps = RecipeVariants<typeof descriptionList>;

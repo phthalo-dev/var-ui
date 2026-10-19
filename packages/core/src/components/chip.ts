@@ -1,10 +1,13 @@
+import { type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
-  semanticChannelAssignments,
+  mapTone,
   subtleBackgroundColor,
   subtleBorderColor,
-  type SurfaceAppearance,
+  surfaceAppearance,
+  tone,
+  toneChannelAssignments,
 } from './semanticTone';
 
 /**
@@ -17,6 +20,13 @@ import {
  */
 export const chip = typestyles.recipe(
   'chip',
+  {
+    slots: ['root', 'label', 'removeButton'],
+    variants: {
+      tone,
+      appearance: surfaceAppearance,
+    },
+  },
   (c) => {
     const v = c.vars({
       semantic: {
@@ -49,7 +59,7 @@ export const chip = typestyles.recipe(
       },
     });
     return {
-      slots: ['root', 'label', 'removeButton'],
+      vars: v,
       base: {
         root: {
           display: 'inline-flex',
@@ -116,20 +126,7 @@ export const chip = typestyles.recipe(
         },
       },
       variants: {
-        tone: {
-          neutral: {
-            root: {
-              [v.semantic.name]: t.color.text.secondary.var,
-              [v.solidBg.name]: t.color.text.primary.var,
-              [v.solidFg.name]: t.color.background.surface.var,
-            },
-          },
-          accent: { root: semanticChannelAssignments(v, 'accent') },
-          success: { root: semanticChannelAssignments(v, 'success') },
-          warning: { root: semanticChannelAssignments(v, 'warning') },
-          danger: { root: semanticChannelAssignments(v, 'danger') },
-          tip: { root: semanticChannelAssignments(v, 'info') },
-        },
+        tone: mapTone((key) => ({ root: toneChannelAssignments(v, key) })),
         appearance: {
           subtle: {
             root: {
@@ -154,21 +151,16 @@ export const chip = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'subtle' },
     };
   },
   { layer: 'components' },
 );
 
-export type ChipRecipeProps = NonNullable<Parameters<typeof chip>[0]>;
-export type ChipTone = NonNullable<ChipRecipeProps['tone']>;
-export type ChipVariantProps = {
-  tone?: ChipTone;
-  appearance?: SurfaceAppearance;
-};
+/** Visual props derived from the schema. */
+export type ChipVariantProps = RecipeVariants<typeof chip>;
 
 export const chipVariantPropDocs = [
-  { name: 'tone', type: 'ChipTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'SurfaceAppearance', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof ChipVariantProps;

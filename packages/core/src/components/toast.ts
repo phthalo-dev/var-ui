@@ -1,11 +1,14 @@
+import { type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
   appearanceSurface,
-  semanticChannelAssignments,
-  type FeedbackTone,
-  type SurfaceAppearance,
+  mapTone,
+  surfaceAppearance,
+  toneChannelAssignments,
+  toneWithDefault,
 } from './semanticTone';
+import { placement } from './variantAxes';
 
 /**
  * Toast viewport + toast item chrome.
@@ -17,6 +20,14 @@ import {
  */
 export const toast = typestyles.recipe(
   'toast',
+  {
+    slots: ['region', 'item', 'icon', 'body', 'title', 'description', 'close'],
+    variants: {
+      tone: toneWithDefault('info'),
+      appearance: surfaceAppearance,
+      placement,
+    },
+  },
   (c) => {
     const v = c.vars({
       semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
@@ -30,7 +41,6 @@ export const toast = typestyles.recipe(
       closeColor: { value: t.color.text.secondary.var, syntax: '<color>' },
     });
     return {
-      slots: ['region', 'item', 'icon', 'body', 'title', 'description', 'close'],
       base: {
         region: {
           position: 'fixed',
@@ -101,12 +111,7 @@ export const toast = typestyles.recipe(
         },
       },
       variants: {
-        tone: {
-          info: { item: semanticChannelAssignments(v, 'accent') },
-          success: { item: semanticChannelAssignments(v, 'success') },
-          warning: { item: semanticChannelAssignments(v, 'warning') },
-          danger: { item: semanticChannelAssignments(v, 'danger') },
-        },
+        tone: mapTone((key) => ({ item: toneChannelAssignments(v, key) })),
         appearance: {
           subtle: { item: appearanceSurface(v, 'subtle') },
           solid: {
@@ -123,23 +128,17 @@ export const toast = typestyles.recipe(
           'bottom-start': { region: { bottom: 0, left: 0 } },
         },
       },
-      defaultVariants: { tone: 'info', appearance: 'subtle', placement: 'bottom-end' },
     };
   },
   { layer: 'components' },
 );
 
 export type ToastRecipeProps = NonNullable<Parameters<typeof toast>[0]>;
-export type ToastTone = FeedbackTone;
-export type ToastPlacement = NonNullable<ToastRecipeProps['placement']>;
-export type ToastVariantProps = {
-  tone?: ToastTone;
-  appearance?: SurfaceAppearance;
-  placement?: ToastPlacement;
-};
+export type ToastVariantProps = RecipeVariants<typeof toast>;
+export type ToastPlacement = NonNullable<ToastVariantProps['placement']>;
 
 export const toastVariantPropDocs = [
-  { name: 'tone', type: 'ToastTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'SurfaceAppearance', required: false },
   { name: 'placement', type: 'ToastPlacement', required: false },
 ] as const satisfies ReadonlyArray<{

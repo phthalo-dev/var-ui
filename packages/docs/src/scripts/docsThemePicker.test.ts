@@ -2,6 +2,11 @@ import { defaultThemeClassName } from '@var-ui/core';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { applyDocsThemePickerSelection, initDocsThemePicker } from './docsThemePicker';
 
+// Action event dispatched by the `@var-ui/astro` Menu inside the picker.
+// Mirrored as a literal because vitest cannot resolve the `.astro`-re-exporting
+// package barrel; keep in sync with `MENU_ACTION_EVENT`.
+const MENU_ACTION_EVENT = 'var-ui:menu-action';
+
 const PRESETS = [
   {
     id: 'default',
@@ -28,21 +33,40 @@ function mountPicker(storageKey = 'docs-theme-id'): HTMLElement {
       data-storage-key="${storageKey}"
       data-fallback-class="${defaultThemeClassName}"
     >
-      <button type="button" data-docs-theme-picker-trigger aria-expanded="false">
-        <svg viewBox="0 0 24 24">
-          <rect data-docs-theme-picker-swatch fill="#64748b"></rect>
-        </svg>
-      </button>
-      <div data-docs-theme-picker-menu hidden>
-        <div role="menu">
-          <button type="button" role="menuitemradio" data-theme-id="default" aria-checked="false">
-            <span data-docs-theme-picker-check>✓</span>
-            Default
-          </button>
-          <button type="button" role="menuitemradio" data-theme-id="forest" aria-checked="false">
-            <span data-docs-theme-picker-check>✓</span>
-            Forest
-          </button>
+      <div data-var-ui-menu-root data-selection-mode="single">
+        <button
+          type="button"
+          data-var-ui-menu-trigger
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <svg viewBox="0 0 24 24">
+            <rect data-docs-theme-picker-swatch fill="#64748b"></rect>
+          </svg>
+        </button>
+        <div data-var-ui-menu-popover data-placement="bottom-end" hidden>
+          <div role="menu" aria-label="Site theme">
+            <button
+              type="button"
+              role="menuitemradio"
+              aria-checked="false"
+              data-var-ui-menu-item
+              data-item-id="default"
+            >
+              <span data-var-ui-menu-item-check>✓</span>
+              Default
+            </button>
+            <button
+              type="button"
+              role="menuitemradio"
+              aria-checked="false"
+              data-var-ui-menu-item
+              data-item-id="forest"
+            >
+              <span data-var-ui-menu-item-check>✓</span>
+              Forest
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +76,11 @@ function mountPicker(storageKey = 'docs-theme-id'): HTMLElement {
 }
 
 function item(root: HTMLElement, id: string): HTMLButtonElement {
-  return root.querySelector(`[data-theme-id="${id}"]`) as HTMLButtonElement;
+  return root.querySelector(`[data-item-id="${id}"]`) as HTMLButtonElement;
+}
+
+function dispatchMenuAction(root: HTMLElement, id: string): void {
+  root.dispatchEvent(new CustomEvent(MENU_ACTION_EVENT, { bubbles: true, detail: { id } }));
 }
 
 describe('applyDocsThemePickerSelection', () => {
@@ -85,43 +113,25 @@ describe('initDocsThemePicker', () => {
     expect(item(root, 'default').getAttribute('aria-checked')).toBe('false');
   });
 
-  it('persists and applies a theme when an item is chosen', () => {
+  it('persists and applies a theme when a menu action fires', () => {
     const root = mountPicker();
     initDocsThemePicker(root);
 
-    item(root, 'forest').click();
+    dispatchMenuAction(root, 'forest');
 
     expect(localStorage.getItem('docs-theme-id')).toBe('forest');
     expect(item(root, 'forest').getAttribute('aria-checked')).toBe('true');
     expect(document.documentElement.classList.contains('theme-forest')).toBe(true);
   });
 
-  it('opens and closes the menu from the trigger', () => {
+  it('ignores menu actions with unknown theme ids', () => {
     const root = mountPicker();
     initDocsThemePicker(root);
-    const trigger = root.querySelector('[data-docs-theme-picker-trigger]') as HTMLButtonElement;
-    const menu = root.querySelector('[data-docs-theme-picker-menu]') as HTMLElement;
 
-    trigger.click();
-    expect(menu.hidden).toBe(false);
-    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    dispatchMenuAction(root, 'unknown');
 
-    trigger.click();
-    expect(menu.hidden).toBe(true);
-    expect(trigger.getAttribute('aria-expanded')).toBe('false');
-  });
-
-  it('closes the menu after selecting a theme', () => {
-    const root = mountPicker();
-    initDocsThemePicker(root);
-    const trigger = root.querySelector('[data-docs-theme-picker-trigger]') as HTMLButtonElement;
-    const menu = root.querySelector('[data-docs-theme-picker-menu]') as HTMLElement;
-
-    trigger.click();
-    item(root, 'forest').click();
-
-    expect(menu.hidden).toBe(true);
-    expect(document.activeElement).toBe(trigger);
+    expect(localStorage.getItem('docs-theme-id')).toBeNull();
+    expect(document.documentElement.classList.contains('theme-forest')).toBe(false);
   });
 
   it('syncs selection when storage changes in another tab', () => {
@@ -137,20 +147,6 @@ describe('initDocsThemePicker', () => {
     );
 
     expect(item(root, 'forest').getAttribute('aria-checked')).toBe('true');
-  });
-
-  it('moves focus with arrow keys while the menu is open', () => {
-    const root = mountPicker();
-    initDocsThemePicker(root);
-    const trigger = root.querySelector('[data-docs-theme-picker-trigger]') as HTMLButtonElement;
-
-    trigger.click();
-    item(root, 'default').focus();
-    item(root, 'default').dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
-    );
-
-    expect(document.activeElement).toBe(item(root, 'forest'));
   });
 
   it('ignores duplicate initialization', () => {

@@ -1,13 +1,7 @@
 ---
 import config from "virtual:var-docs/config";
-import {
-  button,
-  defaultIconSvgs,
-  icon,
-  menu,
-  resolveButtonProps,
-} from "@var-ui/core";
-import { mergeProps } from "@var-ui/astro";
+import { icon } from "@var-ui/core";
+import { Menu, mergeProps } from "@var-ui/astro";
 import { docsThemePicker } from "../styles/docsThemePicker";
 import { resolveThemePresets } from "../utils/theme/presets";
 
@@ -17,20 +11,7 @@ const fallbackClassName = config.theme.defaultClassName;
 const defaultThemeId = presets[0]?.id ?? "default";
 
 const s = docsThemePicker();
-const m = menu();
-const triggerRecipe = mergeProps(
-  button(
-    resolveButtonProps({ appearance: "outline", layout: "icon", size: "md" }),
-  ),
-);
 const iconRecipe = mergeProps(icon({ size: "md" }));
-const checkIconRecipe = mergeProps(icon({ size: "sm" }));
-const popoverRecipe = mergeProps(m.popover, s.menu);
-const menuRecipe = mergeProps(m.menu);
-const sectionHeaderRecipe = mergeProps(m.sectionHeader);
-const itemRecipe = mergeProps(m.item, s.itemReset);
-const itemCheckRecipe = mergeProps(m.itemCheck);
-const itemLabelRecipe = mergeProps(m.itemLabel);
 
 const presetsJson = JSON.stringify(
   presets.map((theme) => ({
@@ -43,6 +24,17 @@ const presetsJson = JSON.stringify(
 );
 
 const defaultSwatch = presets[0]?.swatch ?? "#64748b";
+
+const sections = [
+  {
+    label: "Theme",
+    items: presets.map((theme) => ({
+      id: theme.id,
+      label: theme.label,
+      swatch: theme.swatch ?? "currentColor",
+    })),
+  },
+];
 ---
 
 {presets.length > 0 ? (
@@ -54,91 +46,66 @@ const defaultSwatch = presets[0]?.swatch ?? "#64748b";
       data-storage-key={storageKey}
       data-fallback-class={fallbackClassName}
     >
-      <button
-        type="button"
-        data-docs-theme-picker-trigger
+      <Menu
+        sections={sections}
+        selectionMode="single"
         aria-label="Choose site theme"
-        aria-haspopup="menu"
-        aria-expanded="false"
-        {...triggerRecipe}
+        menuLabel="Site theme"
+        appearance="outline"
+        layout="icon"
+        size="md"
+        placement="bottom-end"
       >
-        <span {...iconRecipe} aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <rect
-              x="4"
-              y="4"
-              width="7"
-              height="7"
-              rx="1.75"
-              fill={defaultSwatch}
-              stroke="currentColor"
-              stroke-width="1.25"
-              data-docs-theme-picker-swatch
-            />
-            <rect
-              x="13"
-              y="4"
-              width="7"
-              height="7"
-              rx="1.75"
-              fill="currentColor"
-              opacity="0.22"
-            />
-            <rect
-              x="4"
-              y="13"
-              width="7"
-              height="7"
-              rx="1.75"
-              fill="currentColor"
-              opacity="0.38"
-            />
-            <rect
-              x="13"
-              y="13"
-              width="7"
-              height="7"
-              rx="1.75"
-              fill="currentColor"
-              opacity="0.55"
-            />
-          </svg>
-        </span>
-      </button>
-      <div data-docs-theme-picker-menu hidden {...popoverRecipe}>
-        <div role="menu" aria-label="Site theme" {...menuRecipe}>
-          <div role="presentation" {...sectionHeaderRecipe}>
-            Theme
-          </div>
-          {presets.map((theme) => (
-            <button
-              type="button"
-              role="menuitemradio"
-              data-theme-id={theme.id}
-              aria-checked="false"
-              {...itemRecipe}
+        <Fragment slot="trigger">
+          <span {...iconRecipe} aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              focusable="false"
             >
-              <span
-                {...itemCheckRecipe}
-                data-docs-theme-picker-check
-                aria-hidden="true"
-              >
-                <span {...checkIconRecipe} set:html={defaultIconSvgs.check} />
-              </span>
-              <span
-                class={s.itemSwatch}
-                style={{ backgroundColor: theme.swatch ?? "currentColor" }}
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.75"
+                fill={defaultSwatch}
+                stroke="currentColor"
+                stroke-width="1.25"
+                data-docs-theme-picker-swatch
               />
-              <span {...itemLabelRecipe}>{theme.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.75"
+                fill="currentColor"
+                opacity="0.22"
+              />
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.75"
+                fill="currentColor"
+                opacity="0.38"
+              />
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.75"
+                fill="currentColor"
+                opacity="0.55"
+              />
+            </svg>
+          </span>
+        </Fragment>
+      </Menu>
     </div>
     <script
       is:inline
@@ -173,8 +140,8 @@ const defaultSwatch = presets[0]?.swatch ?? "#64748b";
               );
               if (swatch)
                 swatch.setAttribute("fill", selected.swatch || "#64748b");
-              root.querySelectorAll("[data-theme-id]").forEach(function (item) {
-                var id = item.getAttribute("data-theme-id");
+              root.querySelectorAll("[data-item-id]").forEach(function (item) {
+                var id = item.getAttribute("data-item-id");
                 var isSelected = id === selectedId;
                 item.setAttribute("aria-checked", String(isSelected));
               });

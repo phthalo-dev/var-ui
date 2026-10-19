@@ -27,7 +27,7 @@ const {
 const p = progressBar({
   tone,
   appearance,
-  indeterminate: isIndeterminate ? 'true' : 'false',
+  indeterminate: isIndeterminate,
 });
 const showValue = showValueText && !isIndeterminate;
 const percentage =

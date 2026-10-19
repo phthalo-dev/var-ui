@@ -2,9 +2,15 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 export const textField = typestyles.recipe(
   'text-field',
+  {
+    slots: ['root', 'label', 'input', 'description', 'error'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -42,7 +48,6 @@ export const textField = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'input', 'description', 'error'],
       base: {
         root: {
           ...chrome.root,
@@ -74,8 +79,10 @@ export const textField = typestyles.recipe(
           input: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type TextFieldVariantProps = RecipeVariants<typeof textField>;

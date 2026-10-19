@@ -1,5 +1,8 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const surfacePadding = variant.enum(['sm', 'md'], { default: 'md' });
 
 /**
  * Bordered content box — a single-slot surface without title/body slots (see `card`).
@@ -10,6 +13,11 @@ import { designTokens as t } from '../tokens';
  */
 export const surface = typestyles.recipe(
   'surface',
+  {
+    variants: {
+      padding: surfacePadding,
+    },
+  },
   (c) => {
     const v = c.vars({
       padding: {
@@ -32,10 +40,10 @@ export const surface = typestyles.recipe(
           md: { [v.padding.name]: t.space[4].var },
         },
       },
-      defaultVariants: {
-        padding: 'md',
-      },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type SurfaceVariantProps = RecipeVariants<typeof surface>;

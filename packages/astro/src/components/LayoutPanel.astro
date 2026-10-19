@@ -1,5 +1,6 @@
 ---
-import { layoutPanel, type LayoutPadding } from '@var-ui/core';
+import type { HTMLAttributes } from 'astro/types';
+import { layoutPanel, type LayoutPadding, type LayoutPanelVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
@@ -8,12 +9,15 @@ type Props = {
   isScrollable?: boolean;
   padding?: LayoutPadding;
   side?: 'start' | 'end';
-  role?: string;
+  role?: NonNullable<HTMLAttributes<'div'>['role']>;
   label?: string;
   className?: string;
 };
 
-function toZonePaddingVariant(padding: LayoutPadding | undefined): 'inherit' | '0' {
+/** `layoutPanel()` only supports seamless (`inherit`, the default) or `0`. */
+function toZonePaddingVariant(
+  padding: LayoutPadding | undefined,
+): NonNullable<LayoutPanelVariantProps['padding']> {
   return padding === 0 ? '0' : 'inherit';
 }
 

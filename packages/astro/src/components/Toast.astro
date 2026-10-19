@@ -1,15 +1,17 @@
 ---
-import { toast as toastRecipe, defaultIconSvgs, type ToastTone } from '@var-ui/core';
+import { toast as toastRecipe, defaultIconSvgs, type Tone, type ToastVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  tone?: ToastTone;
+  tone?: NonNullable<ToastVariantProps['tone']>;
   title: string;
   description?: string;
   className?: string;
 };
 
-const toneIcon: Record<ToastTone, keyof typeof defaultIconSvgs> = {
+const toneIcon: Record<Tone, keyof typeof defaultIconSvgs> = {
+  neutral: 'info',
+  accent: 'info',
   info: 'info',
   success: 'success',
   warning: 'warning',

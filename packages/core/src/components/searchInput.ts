@@ -1,11 +1,16 @@
+import { variant } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeMetrics, controlSizeVariants, controlSurfaceSize } from './controlSize';
 import type { ControlSize } from './semanticTone';
+import { controlSize } from './variantAxes';
 
 /** Command-trigger chrome collapses to an icon button below this width. */
 const belowXl = breakpoint('xl', 'max');
+
+/** `default` — inline search input; `command` — read-only command-palette trigger. */
+const searchInputVariant = variant.enum(['default', 'command'], { default: 'default' });
 
 /**
  * Compact search field for toolbars and nav chrome.
@@ -16,6 +21,10 @@ const belowXl = breakpoint('xl', 'max');
  */
 export const searchInput = typestyles.recipe(
   'search-input',
+  {
+    slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
+    variants: { variant: searchInputVariant, size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       background: {
@@ -40,7 +49,6 @@ export const searchInput = typestyles.recipe(
       },
     });
     return {
-      slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
       base: {
         root: {
           [v.background.name]: t.color.background.surface.var,
@@ -157,7 +165,6 @@ export const searchInput = typestyles.recipe(
           triggerLabel: { fontSize: controlSizeMetrics[size].fontSize },
         })),
       },
-      defaultVariants: { variant: 'default', size: 'md' },
     };
   },
   { layer: 'components' },

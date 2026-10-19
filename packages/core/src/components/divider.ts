@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { orientation } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Hairline separator; vertical orientation stretches to the parent's cross
@@ -11,6 +13,11 @@ import { designTokens as t } from '../tokens';
  */
 export const divider = typestyles.recipe(
   'divider',
+  {
+    variants: {
+      orientation,
+    },
+  },
   (c) => {
     const v = c.vars({
       color: { value: t.color.border.default.var, syntax: '<color>' },
@@ -28,8 +35,10 @@ export const divider = typestyles.recipe(
           vertical: { width: '1px', height: 'auto', alignSelf: 'stretch' },
         },
       },
-      defaultVariants: { orientation: 'horizontal' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type DividerVariantProps = RecipeVariants<typeof divider>;

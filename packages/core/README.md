@@ -499,7 +499,7 @@ Covered primitives:
 
 GFM does not have native admonitions. Options:
 
-1. **`Alert` recipe** — Prefer Astro/React components (`alert` + `Alert.astro` / `Alert.tsx`) for `info` | `success` | `warning` | `danger` | `tip` with solid/subtle modes.
+1. **`Alert` recipe** — Prefer Astro/React components (`alert` + `Alert.astro` / `Alert.tsx`) for `neutral` | `accent` | `success` | `warning` | `danger` | `info` with solid/subtle modes.
 2. **Blockquote convention** — Use a leading label line:
 
    ```md

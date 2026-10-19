@@ -1,5 +1,14 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { density } from './variantAxes';
+
+const tableDividers = variant.enum(['rows', 'columns', 'grid', 'none'], { default: 'rows' });
+const tableTextOverflow = variant.enum(['wrap', 'truncate'], { default: 'wrap' });
+const tableLayout = variant.enum(['auto', 'fixed'], { default: 'auto' });
+const tableIsStriped = variant.boolean({ default: false });
+const tableHasHover = variant.boolean({ default: false });
+const tableStickyHeader = variant.boolean({ default: false });
 
 /**
  * Presentational semantic `<table>` chrome for admin data grids. Pair with the
@@ -23,6 +32,30 @@ import { designTokens as t } from '../tokens';
  */
 export const table = typestyles.recipe(
   'table',
+  {
+    slots: [
+      'root',
+      'table',
+      'caption',
+      'header',
+      'headerCell',
+      'resizeHandle',
+      'body',
+      'row',
+      'cell',
+      'footer',
+      'empty',
+    ],
+    variants: {
+      density,
+      dividers: tableDividers,
+      isStriped: tableIsStriped,
+      hasHover: tableHasHover,
+      stickyHeader: tableStickyHeader,
+      textOverflow: tableTextOverflow,
+      layout: tableLayout,
+    },
+  },
   (c) => {
     const v = c.vars({
       headerBg: { value: t.color.background.surface.var, syntax: '<color>' },
@@ -71,19 +104,6 @@ export const table = typestyles.recipe(
     };
 
     return {
-      slots: [
-        'root',
-        'table',
-        'caption',
-        'header',
-        'headerCell',
-        'resizeHandle',
-        'body',
-        'row',
-        'cell',
-        'footer',
-        'empty',
-      ],
       base: {
         root: {
           position: 'relative',
@@ -204,16 +224,10 @@ export const table = typestyles.recipe(
           fixed: { table: { tableLayout: 'fixed' } },
         },
       },
-      defaultVariants: {
-        density: 'balanced',
-        dividers: 'rows',
-        isStriped: false,
-        hasHover: false,
-        stickyHeader: false,
-        textOverflow: 'wrap',
-        layout: 'auto',
-      },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type TableVariantProps = RecipeVariants<typeof table>;

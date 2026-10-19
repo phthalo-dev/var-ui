@@ -1,10 +1,10 @@
 import type { CSSProperties, JSX, ReactElement, ReactNode, RefObject } from 'react';
 import { Children, createContext, useContext, useMemo } from 'react';
-import { overflowList as overflowListStyles } from '@var-ui/core';
+import { overflowList as overflowListStyles, type OverflowListVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 import { useOverflow } from '../hooks/useOverflow';
 
-type OverflowGapToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type OverflowGapToken = NonNullable<OverflowListVariantProps['gap']>;
 
 /** Mirrors the `space` primitive steps backing each named gap variant in the `overflowList` recipe. */
 const GAP_PX: Record<OverflowGapToken, number> = {
@@ -24,8 +24,8 @@ export type OverflowListProps<T = unknown> = {
   renderOverflow: (hidden: T[] | ReactElement[]) => ReactNode;
   /** Hard cap applied in addition to measure-to-fit. */
   maxVisible?: number;
-  fillParent?: boolean;
-  gap?: OverflowGapToken | number;
+  fillParent?: NonNullable<OverflowListVariantProps['fillParent']>;
+  gap?: NonNullable<OverflowListVariantProps['gap']> | number;
   className?: string;
 };
 

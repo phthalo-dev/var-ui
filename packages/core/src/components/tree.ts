@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { density } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Hierarchical expandable list chrome for file explorers and nested navigation.
@@ -31,6 +33,10 @@ import { designTokens as t } from '../tokens';
  */
 export const tree = typestyles.recipe(
   'tree',
+  {
+    slots: ['root', 'item', 'row', 'toggle', 'label', 'description', 'group', 'start', 'end'],
+    variants: { density },
+  },
   (c) => {
     const v = c.vars({
       labelColor: { value: t.color.text.primary.var, syntax: '<color>' },
@@ -51,7 +57,6 @@ export const tree = typestyles.recipe(
       rowPaddingX: { value: t.space[2].var, syntax: '<length>' },
     });
     return {
-      slots: ['root', 'item', 'row', 'toggle', 'label', 'description', 'group', 'start', 'end'],
       base: {
         root: {
           listStyle: 'none',
@@ -146,8 +151,10 @@ export const tree = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { density: 'balanced' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type TreeVariantProps = RecipeVariants<typeof tree>;

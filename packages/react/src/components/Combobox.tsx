@@ -15,9 +15,15 @@ import {
   type ListBoxItemProps,
   type PopoverProps,
 } from 'react-aria-components';
-import { combobox } from '@var-ui/core';
+import { combobox, type ComboboxVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
+import { ControlSizeContext, useControlSize } from './controlSizeContext';
 import { mergeProps } from './utils';
+
+/** Shared across every part so `size` set on `Combobox.Root` reaches the input shell. */
+function useComboboxStyles(): ReturnType<typeof combobox> {
+  return combobox({ size: useControlSize() });
+}
 
 export type ComboboxOption = {
   id: string;
@@ -30,6 +36,8 @@ export type ComboboxRootProps<T extends ComboboxOption = ComboboxOption> = Omit<
 > & {
   children: ReactNode;
   className?: string;
+  /** Control density. @default md */
+  size?: NonNullable<ComboboxVariantProps['size']>;
 };
 
 /** Alias for docs and consumers referring to the root combobox props. */
@@ -38,20 +46,23 @@ export type ComboboxProps<T extends ComboboxOption = ComboboxOption> = ComboboxR
 function ComboboxRoot<T extends ComboboxOption>({
   children,
   className,
+  size,
   ...props
 }: ComboboxRootProps<T>): JSX.Element {
-  const styles = combobox();
+  const styles = combobox({ size });
   return (
-    <AriaComboBox {...props} {...mergeProps(styles.root, className)}>
-      {children}
-    </AriaComboBox>
+    <ControlSizeContext.Provider value={size}>
+      <AriaComboBox {...props} {...mergeProps(styles.root, className)}>
+        {children}
+      </AriaComboBox>
+    </ControlSizeContext.Provider>
   );
 }
 
 export type ComboboxLabelProps = { children: ReactNode; className?: string };
 
 function ComboboxLabel({ children, className }: ComboboxLabelProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return <Label {...mergeProps(styles.label, className)}>{children}</Label>;
 }
 
@@ -66,7 +77,7 @@ function ComboboxInput({
   className,
   clearable = false,
 }: ComboboxInputProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return (
     <Group {...mergeProps(styles.inputWrapper, className)}>
       <Input {...mergeProps(styles.input)} placeholder={placeholder} />
@@ -77,7 +88,7 @@ function ComboboxInput({
 
 function ComboboxClearButton(): JSX.Element {
   const state = useContext(ComboBoxStateContext);
-  const styles = combobox();
+  const styles = useComboboxStyles();
   const isEmpty = !state?.selectedKey && !state?.inputValue;
   return (
     <Button
@@ -99,7 +110,7 @@ function ComboboxClearButton(): JSX.Element {
 export type ComboboxDescriptionProps = { children: ReactNode; className?: string };
 
 function ComboboxDescription({ children, className }: ComboboxDescriptionProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return (
     <Text slot="description" {...mergeProps(styles.description, className)}>
       {children}
@@ -110,14 +121,14 @@ function ComboboxDescription({ children, className }: ComboboxDescriptionProps):
 export type ComboboxErrorProps = { children?: ReactNode; className?: string };
 
 function ComboboxError({ children, className }: ComboboxErrorProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return <FieldError {...mergeProps(styles.error, className)}>{children ?? ''}</FieldError>;
 }
 
 export type ComboboxPopoverProps = PopoverProps & { className?: string };
 
 function ComboboxPopover({ children, className, ...props }: ComboboxPopoverProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return (
     <Popover {...props} {...mergeProps(styles.popover, className)}>
       {children}
@@ -136,7 +147,7 @@ function ComboboxListBox<T extends ComboboxOption>({
   children,
   emptyContent = 'No results',
 }: ComboboxListBoxProps<T>): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return (
     <ListBox
       {...mergeProps(styles.listbox)}
@@ -151,7 +162,7 @@ function ComboboxListBox<T extends ComboboxOption>({
 export type ComboboxItemProps = ListBoxItemProps & { className?: string };
 
 function ComboboxItem({ children, className, ...props }: ComboboxItemProps): JSX.Element {
-  const styles = combobox();
+  const styles = useComboboxStyles();
   return (
     <ListBoxItem {...props} {...mergeProps(styles.item, className)}>
       {children}

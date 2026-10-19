@@ -66,6 +66,7 @@ export { default as MobileNav } from './src/components/MobileNav.astro';
 export { default as MobileNavToggle } from './src/components/MobileNavToggle.astro';
 export { default as SearchInput } from './src/components/SearchInput.astro';
 export { default as CommandPalette } from './src/components/CommandPalette.astro';
+export { default as Menu } from './src/components/Menu.astro';
 export type { ColorMode, ResolvedColorMode } from './src/scripts/colorMode';
 export { APP_SHELL_MAIN_ID, initAppShell, initAppShells } from './src/scripts/appShell';
 export {
@@ -117,6 +118,18 @@ export {
   type CommandPaletteItem,
 } from './src/scripts/commandPaletteUtils';
 export { initSearchInput, initSearchInputs } from './src/scripts/searchInput';
+export {
+  getMenuController,
+  initMenu,
+  initMenus,
+  MENU_ACTION_EVENT,
+  type MenuActionDetail,
+  type MenuController,
+  type MenuItemDefinition,
+  type MenuPlacement,
+  type MenuSectionDefinition,
+  type MenuSelectionMode,
+} from './src/scripts/menu';
 export {
   initSegmentedControl,
   initSegmentedControls,

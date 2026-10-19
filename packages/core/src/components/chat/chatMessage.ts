@@ -1,5 +1,7 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { sender } from '../variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * A message row: avatar + name/content/metadata. `sender` drives horizontal
@@ -12,8 +14,11 @@ import { designTokens as t } from '../../tokens';
  */
 export const chatMessage = typestyles.recipe(
   'chat-message',
-  () => ({
+  {
     slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],
+    variants: { sender },
+  },
+  () => ({
     base: {
       root: {
         display: 'flex',
@@ -60,7 +65,9 @@ export const chatMessage = typestyles.recipe(
         },
       },
     },
-    defaultVariants: { sender: 'assistant' },
   }),
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ChatMessageVariantProps = RecipeVariants<typeof chatMessage>;

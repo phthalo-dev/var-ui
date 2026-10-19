@@ -240,6 +240,75 @@ import {
 `defaultExpanded` on each item for the initial open state. When `variant="flush"` is used on
 `Accordion`, pass `variant="flush"` to each `AccordionItem` as well.
 
+## Menu
+
+Dropdown action menu (trigger button + popup list) with a small vanilla controller —
+no React Aria. Data-driven via `sections`, mirroring the React `Menu.FromSections`
+preset. The popover is positioned with CSS relative to the trigger (`placement` prop);
+no portaling or JS positioning.
+
+```astro
+---
+import { Menu } from '@var-ui/astro';
+---
+<Menu
+  triggerLabel="Actions"
+  sections={[
+    {
+      label: 'File',
+      items: [
+        { id: 'new', label: 'New file', shortcut: '⌘N' },
+        { id: 'open', label: 'Open…' },
+        { id: 'save', label: 'Save', disabled: true },
+      ],
+    },
+    {
+      items: [
+        { id: 'docs', label: 'Documentation', href: '/docs' },
+        { id: 'delete', label: 'Delete', danger: true },
+      ],
+    },
+  ]}
+/>
+```
+
+Props:
+
+- `sections` (required) — `{ label?: string; items: MenuItemDefinition[] }[]`. Items are
+  `{ id, label, shortcut?, disabled?, danger?, href?, swatch? }`; `href` renders a link
+  that navigates natively, `swatch` renders a leading color dot (theme pickers).
+  Sections are separated by a rule; `label` renders a section header.
+- `triggerLabel` — text for the default trigger button (a chevron icon is added).
+- `aria-label` — accessible name for the trigger; required when the trigger has no text.
+- `menuLabel` — accessible name for the menu list (defaults to `triggerLabel` / `aria-label`).
+- `placement` — `'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'`
+  (default `'bottom-start'`).
+- `selectionMode` — `'none'` (default, mirrors the React Menu) or `'single'`, which
+  renders items as `menuitemradio` with a check affordance and tracks one
+  `aria-checked` item. Pair with `selectedId` for the initial checked item.
+- `className` — applied to the menu root.
+- Trigger appearance accepts the same variant props as `Button` (`intent`, `tone`,
+  `appearance`, `size`, `layout`, `elevated`); defaults to an `outline` `md` button.
+
+Slots:
+
+- `trigger` — custom trigger button content. Combine with `layout="icon"` and
+  `aria-label` for icon-only triggers.
+- `<item-id>` — replaces the inner content of the item with that `id` (e.g. leading
+  icons or swatches); `trigger` is a reserved slot name.
+
+Behavior:
+
+- Opens on trigger click, `ArrowDown`/`ArrowUp`, or `Enter`/`Space`; closes on `Escape`,
+  `Tab`, outside press, or item activation. In `single` selection mode the checked
+  item receives initial focus.
+- Arrow keys, `Home`/`End`, and single-character typeahead move focus between items
+  (including disabled items, which are focusable but not activatable).
+- On activation the root dispatches a bubbling `var-ui:menu-action` CustomEvent with
+  `event.detail.id`; use `initMenus()` / `getMenuController()` from the package barrel
+  for imperative control. `controller.select(id)` moves `aria-checked` in `single`
+  mode (e.g. when the selection changes elsewhere).
+
 ## Toast
 
 Presentational toast markup for static docs or SSR previews:
@@ -284,9 +353,9 @@ Components climb only as far as needed — no React, no React Aria:
 
 1. **Zero JS** — styled markup + recipes.
 2. **Native platform** — `<button>`/`<a>`, `<details>`, semantic lists.
-3. **Small vanilla TS** — color mode, Tabs selection/keyboard; scripts enhance SSR
-   markup.
-4. **Zag.js (post–v0.1)** — Dialog, Menu, Select, complex overlays.
+3. **Small vanilla TS** — color mode, Tabs selection/keyboard, Menu; scripts enhance
+   SSR markup.
+4. **Zag.js (post–v0.1)** — Dialog, Select, complex overlays.
 
 ## Utilities
 

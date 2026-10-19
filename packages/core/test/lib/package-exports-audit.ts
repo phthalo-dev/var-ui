@@ -79,6 +79,12 @@ const semanticToneExports = new Set([
   'tonePaint',
   'badgeTonePaint',
   'appearanceSurface',
+  'mapTone',
+  'surfaceAppearance',
+  'tone',
+  'toneChannelAssignments',
+  'toneValues',
+  'toneWithDefault',
   'buttonTonePaint',
   'resolveButtonProps',
 ]);

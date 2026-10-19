@@ -1,5 +1,9 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from './variantAxes';
+
+const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four'], { default: 'auto' });
 
 /**
  * Responsive grid. `columns: 'auto'` packs `minmax(minColumnWidth, 1fr)`
@@ -12,6 +16,12 @@ import { designTokens as t } from '../tokens';
  */
 export const grid = typestyles.recipe(
   'grid',
+  {
+    variants: {
+      columns: gridColumns,
+      gap,
+    },
+  },
   (c) => {
     const v = c.vars({
       gap: { value: t.space[4].var, syntax: '<length>' },
@@ -40,8 +50,10 @@ export const grid = typestyles.recipe(
           xl: { [v.gap.name]: t.space[8].var },
         },
       },
-      defaultVariants: { columns: 'auto', gap: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type GridVariantProps = RecipeVariants<typeof grid>;

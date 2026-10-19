@@ -88,7 +88,7 @@ export function ChatToolCalls({ calls, className }: ChatToolCallsProps): JSX.Ele
     return null;
   }
 
-  const classes = chatToolCalls({ expanded: isExpanded ? 'true' : 'false' });
+  const classes = chatToolCalls({ expanded: isExpanded });
 
   if (calls.length === 1) {
     return (

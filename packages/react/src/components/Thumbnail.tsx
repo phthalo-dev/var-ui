@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { thumbnail } from '@var-ui/core';
+import { thumbnail, type ThumbnailVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
 
@@ -10,7 +10,7 @@ export type ThumbnailProps = {
   /** Accessible description of the image. */
   alt: string;
   /** Tile dimensions. @default md */
-  size?: 'sm' | 'md' | 'lg';
+  size?: NonNullable<ThumbnailVariantProps['size']>;
   /** When provided, renders a remove button that calls this handler on press. */
   onDismiss?: () => void;
   /** Accessible label for the remove button. @default Remove */

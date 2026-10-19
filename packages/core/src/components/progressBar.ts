@@ -1,15 +1,20 @@
-import { keyframes } from 'typestyles';
+import { keyframes, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { semanticTone, type ProgressBarAppearance, type ProgressBarTone } from './semanticTone';
+import {
+  semanticTone,
+  toneValues,
+  toneWithDefault,
+  type ProgressBarAppearance,
+  type Tone,
+} from './semanticTone';
+import { fillAppearance } from './variantAxes';
 
 const slide = keyframes.create('var-ui-progress-slide', {
   from: { transform: 'translateX(-100%)' },
   to: { transform: 'translateX(400%)' },
 });
-
-const toneKeys: ProgressBarTone[] = ['accent', 'success', 'warning', 'danger'];
 
 /**
  * Linear progress. Fill width is set inline by the React wrapper
@@ -17,6 +22,14 @@ const toneKeys: ProgressBarTone[] = ['accent', 'success', 'warning', 'danger'];
  */
 export const progressBar = typestyles.recipe(
   'progress-bar',
+  {
+    slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
+    variants: {
+      tone: toneWithDefault('accent'),
+      appearance: fillAppearance,
+      indeterminate: variant.boolean({ default: false }),
+    },
+  },
   (c) => {
     const v = c.vars({
       trackColor: {
@@ -29,7 +42,6 @@ export const progressBar = typestyles.recipe(
       },
     });
     return {
-      slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
       base: {
         root: { display: 'grid', gap: t.space[1].var, minWidth: '160px' },
         header: { display: 'flex', justifyContent: 'space-between', gap: t.space[3].var },
@@ -50,11 +62,16 @@ export const progressBar = typestyles.recipe(
       },
       variants: {
         tone: Object.fromEntries(
-          toneKeys.map((key) => [
+          toneValues.map((key) => [
             key,
-            { root: { [v.fillColor.name]: semanticTone[key].background } },
+            {
+              root: {
+                [v.fillColor.name]:
+                  key === 'neutral' ? t.color.text.secondary.var : semanticTone[key].background,
+              },
+            },
           ]),
-        ) as Record<ProgressBarTone, { root: Record<string, string> }>,
+        ) as Record<Tone, { root: Record<string, string> }>,
         appearance: {
           solid: {},
           subtle: {
@@ -78,7 +95,6 @@ export const progressBar = typestyles.recipe(
           false: {},
         },
       },
-      defaultVariants: { tone: 'accent', appearance: 'solid', indeterminate: 'false' },
     };
   },
   { layer: 'components' },
@@ -87,12 +103,12 @@ export const progressBar = typestyles.recipe(
 export type ProgressBarRecipeProps = NonNullable<Parameters<typeof progressBar>[0]>;
 
 export type ProgressBarVariantProps = {
-  tone?: ProgressBarTone;
+  tone?: Tone;
   appearance?: ProgressBarAppearance;
 };
 
 export const progressBarVariantPropDocs = [
-  { name: 'tone', type: 'ProgressBarTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'ProgressBarAppearance', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof ProgressBarVariantProps;

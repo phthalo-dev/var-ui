@@ -1,9 +1,9 @@
 ---
-import { skeleton } from '@var-ui/core';
+import { skeleton, type SkeletonVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  shape?: 'text' | 'rect' | 'circle';
+  shape?: NonNullable<SkeletonVariantProps['shape']>;
   className?: string;
   style?: string;
 };

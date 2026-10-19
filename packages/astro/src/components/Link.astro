@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { link } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
@@ -9,7 +10,7 @@ type Props = {
   rel?: string;
   download?: string | boolean;
   hreflang?: string;
-  referrerpolicy?: string;
+  referrerpolicy?: NonNullable<HTMLAttributes<'a'>['referrerpolicy']>;
   title?: string;
 };
 

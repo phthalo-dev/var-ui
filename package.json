@@ -22,7 +22,7 @@
     "docs:dev": "vp run @var-ui/docs-site#dev",
     "docs:build": "vp run @var-ui/docs-site#build",
     "docs:preview": "vp run @var-ui/docs-site#preview",
-    "astro:check": "vp run @var-ui/example-astro-app#check",
+    "astro:check": "vp run @var-ui/astro#check && vp run @var-ui/docs#check && vp run @var-ui/docs-components#check && vp run @var-ui/docs-site#check && vp run @var-ui/example-astro-app#check && vp run @var-ui/example-astro-docs#check",
     "ready": "vp check && vp test run && vp run build && vp run test:bundle-budgets",
     "changeset": "changeset",
     "version": "changeset version"
@@ -31,7 +31,7 @@
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.29.8",
     "@types/node": "^24.0.0",
-    "@typestyles/eslint-plugin": "^0.4.1",
+    "@typestyles/eslint-plugin": "^0.4.2",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

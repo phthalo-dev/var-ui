@@ -1,5 +1,12 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from './variantAxes';
+
+const stackDirection = variant.enum(['column', 'row'], { default: 'column' });
+const stackAlign = variant.enum(['start', 'center', 'end', 'stretch'], { default: 'stretch' });
+const stackJustify = variant.enum(['start', 'center', 'end', 'between'], { default: 'start' });
+const stackWrap = variant.enum(['wrap', 'nowrap'], { default: 'nowrap' });
 
 /**
  * Flex stack — the workhorse layout primitive. Vertical by default; use
@@ -11,6 +18,15 @@ import { designTokens as t } from '../tokens';
  */
 export const stack = typestyles.recipe(
   'stack',
+  {
+    variants: {
+      direction: stackDirection,
+      gap,
+      align: stackAlign,
+      justify: stackJustify,
+      wrap: stackWrap,
+    },
+  },
   (c) => {
     const v = c.vars({
       gap: { value: t.space[3].var, syntax: '<length>' },
@@ -52,14 +68,10 @@ export const stack = typestyles.recipe(
           nowrap: {},
         },
       },
-      defaultVariants: {
-        direction: 'column',
-        gap: 'md',
-        align: 'stretch',
-        justify: 'start',
-        wrap: 'nowrap',
-      },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type StackVariantProps = RecipeVariants<typeof stack>;
