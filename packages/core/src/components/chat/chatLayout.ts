@@ -1,3 +1,4 @@
+import { type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 
@@ -18,39 +19,34 @@ export const chatLayout = typestyles.recipe(
     });
     return {
       slots: ['root', 'messageArea', 'dock'],
-      base: {
-        root: {
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          minHeight: 0,
-        },
-        messageArea: {
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
-        },
-        dock: {
-          position: 'sticky',
-          bottom: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: t.space[2].var,
-          padding: t.space[3].var,
-          backgroundColor: v.background.var,
-          borderTopWidth: t.borderWidth.default.var,
-          borderTopStyle: 'solid',
-          borderTopColor: v.border.var,
-        },
+      root: {
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
       },
-      variants: {
-        appearance: {
-          default: {},
-        },
+      messageArea: {
+        flex: 1,
+        minHeight: 0,
+        overflowY: 'auto',
       },
-      defaultVariants: { appearance: 'default' },
+      dock: {
+        position: 'sticky',
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: t.space[2].var,
+        padding: t.space[3].var,
+        backgroundColor: v.background.var,
+        borderTopWidth: t.borderWidth.default.var,
+        borderTopStyle: 'solid',
+        borderTopColor: v.border.var,
+      },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ChatLayoutVariantProps = RecipeVariants<typeof chatLayout>;

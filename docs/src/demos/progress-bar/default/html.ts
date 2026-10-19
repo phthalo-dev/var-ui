@@ -3,7 +3,7 @@ import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
-  const p = progressBar({ tone: 'accent', indeterminate: 'false' });
+  const p = progressBar({ tone: 'accent', indeterminate: false });
   const header = serializeHtmlTag(
     'div',
     mergeProps(p.header),

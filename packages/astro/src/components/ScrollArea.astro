@@ -1,10 +1,10 @@
 ---
-import { resolveScrollAreaFade, scrollArea, type ScrollAreaFade, type ScrollAreaOrientation } from '@var-ui/core';
+import { resolveScrollAreaFade, scrollArea, type ScrollAreaVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  orientation?: ScrollAreaOrientation;
-  fade?: boolean | ScrollAreaFade;
+  orientation?: NonNullable<ScrollAreaVariantProps['orientation']>;
+  fade?: boolean | NonNullable<ScrollAreaVariantProps['fade']>;
   className?: string;
   viewportClassName?: string;
 };

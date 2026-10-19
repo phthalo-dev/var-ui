@@ -1,6 +1,6 @@
 import type { JSX, KeyboardEvent } from 'react';
 import { useRef } from 'react';
-import { colorPicker, hueToPureHex } from '@var-ui/core';
+import { colorPicker, hueToPureHex, type ColorPickerVariantProps } from '@var-ui/core';
 import { hsvToHex, normalizeHex } from '@var-ui/core';
 import {
   alphaFromPointer,
@@ -44,7 +44,9 @@ export type ColorPickerProps = {
   className?: string;
 };
 
-function swatchColumnsVariant(perRow: 7 | 10): 'seven' | 'ten' {
+function swatchColumnsVariant(
+  perRow: NonNullable<ColorPickerProps['swatchesPerRow']>,
+): NonNullable<ColorPickerVariantProps['swatchColumns']> {
   return perRow === 10 ? 'ten' : 'seven';
 }
 

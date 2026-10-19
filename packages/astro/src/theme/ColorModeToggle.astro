@@ -1,11 +1,5 @@
 ---
-import {
-  defaultIconSvgs,
-  icon,
-  segmentedControl,
-  toggleButton,
-  type ControlSize,
-} from "@var-ui/core";
+import { defaultIconSvgs, icon, segmentedControl, toggleButton, type SegmentedControlVariantProps, } from "@var-ui/core";
 import { mergeProps } from "../utils";
 
 type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
@@ -13,7 +7,7 @@ type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
 type Props = {
   includeSystem?: boolean;
   appearance?: ColorModeToggleAppearance;
-  size?: ControlSize;
+  size?: NonNullable<SegmentedControlVariantProps['size']>;
   className?: string;
   "aria-label"?: string;
   storageKey?: string;

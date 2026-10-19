@@ -47,7 +47,7 @@ const s = codeBlockRecipe();
       ) : null
     }
     <section
-      {...combine(hasPreview ? s.code : {}, s.codeBlock)}
+      {...combine(hasPreview ? s.code : undefined, s.codeBlock)}
       data-code-block-code
       data-demo-code={code}
       {...(framework ? { 'data-demo-framework': framework } : {})}

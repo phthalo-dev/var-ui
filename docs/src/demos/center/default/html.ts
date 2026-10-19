@@ -3,7 +3,7 @@ import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
-  const centerRp = mergeProps(center({ inline: 'false' }));
+  const centerRp = mergeProps(center({ inline: false }));
   const text = serializeHtmlTag('p', mergeProps(textBlock({})), 'Centered');
   return serializeHtmlTag(
     'div',

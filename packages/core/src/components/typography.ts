@@ -1,5 +1,8 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const headingSize = variant.enum(['xs', 'sm', 'md', 'lg', 'xl', 'display'], { default: 'md' });
 
 /**
  * Named heading recipe. Visual `size` is independent of the semantic level
@@ -11,6 +14,11 @@ import { designTokens as t } from '../tokens';
  */
 export const heading = typestyles.recipe(
   'heading',
+  {
+    variants: {
+      size: headingSize,
+    },
+  },
   (c) => {
     const v = c.vars({
       color: { value: t.color.text.primary.var, syntax: '<color>' },
@@ -38,7 +46,6 @@ export const heading = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
@@ -54,6 +61,14 @@ export const heading = typestyles.recipe(
  */
 export const textBlock = typestyles.recipe(
   'text-block',
+  {
+    variants: {
+      size: variant.enum(['xs', 'sm', 'md', 'lg'], { default: 'md' }),
+      tone: variant.enum(['primary', 'secondary'], { default: 'primary' }),
+      weight: variant.enum(['normal', 'medium', 'semibold'], { default: 'normal' }),
+      lineClamp: variant.enum(['false', '1', '2', '3'], { default: 'false' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       color: { value: t.color.text.primary.var, syntax: '<color>' },
@@ -105,8 +120,13 @@ export const textBlock = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { size: 'md', tone: 'primary', weight: 'normal', lineClamp: 'false' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type HeadingVariantProps = RecipeVariants<typeof heading>;
+
+/** Visual props derived from the schema. */
+export type TextBlockVariantProps = RecipeVariants<typeof textBlock>;

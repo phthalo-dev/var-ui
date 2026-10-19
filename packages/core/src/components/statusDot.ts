@@ -1,10 +1,12 @@
-import { keyframes } from 'typestyles';
+import { keyframes, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
+  mapTone,
   semanticTone,
-  type ButtonTone,
+  tone,
   type SemanticToneKey,
+  type Tone,
   type ToneAppearance,
 } from './semanticTone';
 
@@ -12,6 +14,8 @@ const pulse = keyframes.create('var-ui-status-pulse', {
   from: { boxShadow: '0 0 0 0 color-mix(in srgb, currentColor 45%, transparent)' },
   to: { boxShadow: '0 0 0 6px color-mix(in srgb, currentColor 0%, transparent)' },
 });
+
+const statusDotAppearance = variant.enum(['filled', 'outline', 'subtle'], { default: 'filled' });
 
 function toneColor(key: SemanticToneKey) {
   return { color: semanticTone[key].foreground };
@@ -23,6 +27,13 @@ function toneColor(key: SemanticToneKey) {
  */
 export const statusDot = typestyles.recipe(
   'status-dot',
+  {
+    variants: {
+      tone,
+      appearance: statusDotAppearance,
+      pulse: variant.boolean({ default: false }),
+    },
+  },
   (c) => {
     const v = c.vars({
       size: { value: '8px', syntax: '<length>' },
@@ -39,14 +50,7 @@ export const statusDot = typestyles.recipe(
         boxSizing: 'border-box',
       },
       variants: {
-        tone: {
-          neutral: {},
-          accent: toneColor('accent'),
-          success: toneColor('success'),
-          warning: toneColor('warning'),
-          danger: toneColor('danger'),
-          info: toneColor('info'),
-        },
+        tone: mapTone((key) => (key === 'neutral' ? {} : toneColor(key))),
         appearance: {
           filled: {},
           outline: {
@@ -67,7 +71,6 @@ export const statusDot = typestyles.recipe(
           false: {},
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'filled', pulse: 'false' },
     };
   },
   { layer: 'components' },
@@ -78,13 +81,13 @@ export type StatusDotRecipeProps = NonNullable<Parameters<typeof statusDot>[0]>;
 export type StatusDotAppearance = Extract<ToneAppearance, 'filled' | 'outline' | 'subtle'>;
 
 export type StatusDotVariantProps = {
-  tone?: ButtonTone;
+  tone?: Tone;
   appearance?: StatusDotAppearance;
   pulse?: boolean;
 };
 
 export const statusDotVariantPropDocs = [
-  { name: 'tone', type: 'ButtonTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'StatusDotAppearance', required: false },
   { name: 'pulse', type: 'boolean', required: false },
 ] as const satisfies ReadonlyArray<{

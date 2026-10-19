@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { tree as treeStyles } from '@var-ui/core';
+import { tree as treeStyles, type TreeVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { Icon } from '../icons';
 import { useTreeFocus, type TreeFocusItem } from '../hooks/useTreeFocus';
@@ -31,7 +31,7 @@ export type TreeSelectionMode = 'none' | 'single' | 'multiple';
 export type TreeProps = {
   items?: TreeItemData[];
   children?: ReactNode;
-  density?: 'compact' | 'balanced' | 'spacious';
+  density?: NonNullable<TreeVariantProps['density']>;
   expandedKeys?: Iterable<string>;
   defaultExpandedKeys?: Iterable<string>;
   onExpandedChange?: (keys: Set<string>) => void;

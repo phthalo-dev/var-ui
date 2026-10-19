@@ -3,6 +3,8 @@ import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Password text field with an inline visibility toggle. Shares field chrome
@@ -10,6 +12,10 @@ import { fieldChrome } from './field';
  */
 export const passwordField = typestyles.recipe(
   'password-field',
+  {
+    slots: ['root', 'label', 'inputWrapper', 'input', 'visibilityToggle', 'description', 'error'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -55,7 +61,6 @@ export const passwordField = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'inputWrapper', 'input', 'visibilityToggle', 'description', 'error'],
       base: {
         root: {
           ...chrome.root,
@@ -134,8 +139,10 @@ export const passwordField = typestyles.recipe(
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type PasswordFieldVariantProps = RecipeVariants<typeof passwordField>;

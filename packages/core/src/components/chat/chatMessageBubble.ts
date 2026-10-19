@@ -1,5 +1,10 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { sender } from '../variantAxes';
+
+const bubbleVariant = variant.enum(['filled', 'ghost'], { default: 'filled' });
+const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
 
 /**
  * The chat "bubble." Sender drives background/text color via `c.vars()` so
@@ -17,6 +22,14 @@ import { designTokens as t } from '../../tokens';
  */
 export const chatMessageBubble = typestyles.recipe(
   'chat-message-bubble',
+  {
+    slots: ['root'],
+    variants: {
+      sender,
+      variant: bubbleVariant,
+      group: bubbleGroup,
+    },
+  },
   (c) => {
     const v = c.vars({
       senderBackground: {
@@ -29,7 +42,6 @@ export const chatMessageBubble = typestyles.recipe(
       },
     });
     return {
-      slots: ['root'],
       base: {
         root: {
           display: 'inline-flex',
@@ -94,8 +106,10 @@ export const chatMessageBubble = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { sender: 'assistant', variant: 'filled', group: 'none' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ChatMessageBubbleVariantProps = RecipeVariants<typeof chatMessageBubble>;

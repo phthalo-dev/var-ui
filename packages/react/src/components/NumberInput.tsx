@@ -8,7 +8,7 @@ import {
   NumberField as AriaNumberField,
   type NumberFieldProps as RACNumberFieldProps,
 } from 'react-aria-components';
-import { numberInput } from '@var-ui/core';
+import { numberInput, type NumberInputVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 import type { FieldMeta } from './utils';
 
@@ -16,6 +16,8 @@ export type NumberInputProps = Omit<RACNumberFieldProps, 'className'> &
   FieldMeta & {
     className?: string;
     placeholder?: string;
+    /** Control density. @default md */
+    size?: NonNullable<NumberInputVariantProps['size']>;
   };
 
 export function NumberInput({
@@ -23,10 +25,11 @@ export function NumberInput({
   description,
   errorMessage,
   placeholder,
+  size,
   className,
   ...props
 }: NumberInputProps): JSX.Element {
-  const n = numberInput();
+  const n = numberInput({ size });
   return (
     <AriaNumberField {...props} {...mergeProps(n.root, className)}>
       {label ? <Label {...mergeProps(n.label)}>{label}</Label> : null}

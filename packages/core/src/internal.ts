@@ -3,6 +3,7 @@
  * Prefer `@var-ui/core` for recipes, tokens, and theme APIs.
  */
 export * from './components/semanticTone';
+export * from './components/variantAxes';
 export { resetRegisteredFontFaces } from './fonts/register-font-face';
 export { registerBaseStyles } from './theme/base-styles';
 export * from './components/toc/spy';
@@ -20,11 +21,11 @@ export {
   type DateFieldChromeColors,
   type CalendarGridChromeColors,
 } from './components/field';
-export { alertVariantPropDocs } from './components/alert';
 export { avatarVariantPropDocs } from './components/avatar';
 export { badgeVariantPropDocs } from './components/badge';
 export { bannerVariantPropDocs } from './components/banner';
 export { buttonVariantPropDocs } from './components/button';
+export { codeBlockVariantPropDocs } from './components/codeBlock';
 export { collapsibleVariantPropDocs } from './components/collapsible';
 export { drawerVariantPropDocs } from './components/drawer';
 export { progressBarVariantPropDocs } from './components/progressBar';

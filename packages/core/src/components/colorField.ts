@@ -3,6 +3,8 @@ import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Hex color input with a swatch trigger for a native color picker. Intended
@@ -10,6 +12,20 @@ import { fieldChrome } from './field';
  */
 export const colorField = typestyles.recipe(
   'color-field',
+  {
+    slots: [
+      'root',
+      'label',
+      'inputWrapper',
+      'swatchButton',
+      'swatchPreview',
+      'nativePicker',
+      'input',
+      'description',
+      'error',
+    ],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -47,17 +63,6 @@ export const colorField = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: [
-        'root',
-        'label',
-        'inputWrapper',
-        'swatchButton',
-        'swatchPreview',
-        'nativePicker',
-        'input',
-        'description',
-        'error',
-      ],
       base: {
         root: {
           ...chrome.root,
@@ -149,8 +154,10 @@ export const colorField = typestyles.recipe(
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ColorFieldVariantProps = RecipeVariants<typeof colorField>;

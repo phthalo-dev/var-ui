@@ -1,5 +1,5 @@
 import type { JSX, ReactNode } from 'react';
-import { chatMessageBubble } from '@var-ui/core';
+import { chatMessageBubble, type ChatMessageBubbleVariantProps } from '@var-ui/core';
 import { useChatMessageContext } from './ChatContext';
 import { mergeProps } from '../utils';
 
@@ -7,9 +7,9 @@ export type ChatMessageBubbleProps = {
   /** Bubble content — plain text or a consumer-rendered markdown tree. */
   children: ReactNode;
   /** Visual variant. `ghost` drops the background but keeps padding for alignment. @default filled */
-  variant?: 'filled' | 'ghost';
+  variant?: NonNullable<ChatMessageBubbleVariantProps['variant']>;
   /** Position within a multi-bubble group from the same sender — tightens corners. */
-  group?: 'first' | 'middle' | 'last';
+  group?: NonNullable<ChatMessageBubbleVariantProps['group']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
 };

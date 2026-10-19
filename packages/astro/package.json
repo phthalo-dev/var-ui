@@ -31,12 +31,15 @@
     "access": "public"
   },
   "scripts": {
+    "check": "astro check",
     "test": "vp test run"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@var-ui/core": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
+    "typescript": "catalog:",
     "typestyles": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

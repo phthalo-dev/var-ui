@@ -1,12 +1,12 @@
 ---
-import { textBlock } from '@var-ui/core';
+import { textBlock, type TextBlockVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
   as?: 'p' | 'span' | 'div';
-  size?: 'sm' | 'md' | 'lg';
-  tone?: 'primary' | 'secondary';
-  weight?: 'normal' | 'medium' | 'semibold';
+  size?: NonNullable<TextBlockVariantProps['size']>;
+  tone?: NonNullable<TextBlockVariantProps['tone']>;
+  weight?: NonNullable<TextBlockVariantProps['weight']>;
   className?: string;
 };
 

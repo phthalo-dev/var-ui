@@ -1,5 +1,11 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from './variantAxes';
+
+const simpleGridCols = variant.enum(['one', 'two', 'three', 'four', 'five', 'six', 'eight'], {
+  default: 'two',
+});
 
 /**
  * Equal-column grid (Mantine `SimpleGrid` equivalent). Use `cols` for a fixed
@@ -7,6 +13,12 @@ import { designTokens as t } from '../tokens';
  */
 export const simpleGrid = typestyles.recipe(
   'simple-grid',
+  {
+    variants: {
+      cols: simpleGridCols,
+      spacing: gap,
+    },
+  },
   (c) => {
     const v = c.vars({
       gap: { value: t.space[4].var, syntax: '<length>' },
@@ -35,8 +47,10 @@ export const simpleGrid = typestyles.recipe(
           xl: { [v.gap.name]: t.space[8].var },
         },
       },
-      defaultVariants: { cols: 'two', spacing: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type SimpleGridVariantProps = RecipeVariants<typeof simpleGrid>;

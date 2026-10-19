@@ -181,7 +181,7 @@ export function renderStatusFeedbackTileMarkup(): string {
     { wrap: true },
   );
 
-  const p = progressBar({ tone: 'accent', indeterminate: 'false' });
+  const p = progressBar({ tone: 'accent', indeterminate: false });
   const progressHeader = serializeHtmlTag(
     'div',
     mergeProps(p.header),
@@ -418,7 +418,7 @@ export function renderContentSampleTileMarkup(framework: DocsFramework): string 
   const codeBlockEl = serializeHtmlTag(
     'div',
     {
-      ...mergeProps(cb.root, classOf(cb.rootDefault)),
+      ...mergeProps(cb.root),
       'data-codeblock': true,
     },
     `${codeHeader}${codeBody}`,
@@ -572,7 +572,7 @@ export function renderLayoutTabsTileMarkup(): string {
   const centerContent = serializeHtmlTag(
     'div',
     {
-      ...mergeProps(center({ inline: 'false' })),
+      ...mergeProps(center({ inline: false })),
       style: 'height: 80px',
     },
     serializeHtmlTag('p', mergeProps(textBlock({ tone: 'secondary' })), 'Centered content'),

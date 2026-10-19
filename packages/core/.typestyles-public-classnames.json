@@ -82,7 +82,6 @@
     "code-block__actions",
     "code-block__body",
     "code-block__bodyScrollable",
-    "code-block__bodyTerminal",
     "code-block__code",
     "code-block__copyButton",
     "code-block__copyButtonCopied",
@@ -95,9 +94,7 @@
     "code-block__feedbackToast",
     "code-block__filename",
     "code-block__header",
-    "code-block__headerTerminal",
     "code-block__language",
-    "code-block__languageTerminal",
     "code-block__line",
     "code-block__lineAdded",
     "code-block__lineContent",
@@ -107,12 +104,7 @@
     "code-block__lines",
     "code-block__pre",
     "code-block__preScrollX",
-    "code-block__preTerminal",
     "code-block__preWrap",
-    "code-block__rootDefault",
-    "code-block__rootDiff",
-    "code-block__rootInline",
-    "code-block__rootTerminal",
     "code-block__title",
     "collapsible",
     "collapsible__panel",
@@ -489,17 +481,7 @@
     "tree__label",
     "tree__row",
     "tree__start",
-    "tree__toggle",
-    "typeahead",
-    "typeahead__clearButton",
-    "typeahead__description",
-    "typeahead__error",
-    "typeahead__input",
-    "typeahead__inputWrapper",
-    "typeahead__item",
-    "typeahead__label",
-    "typeahead__listbox",
-    "typeahead__popover"
+    "tree__toggle"
   ],
   "entries": [
     {
@@ -1151,14 +1133,6 @@
       "line": 5
     },
     {
-      "className": "code-block__bodyTerminal",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "bodyTerminal",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
       "className": "code-block__code",
       "kind": "component",
       "namespace": "code-block",
@@ -1255,26 +1229,10 @@
       "line": 5
     },
     {
-      "className": "code-block__headerTerminal",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "headerTerminal",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
       "className": "code-block__language",
       "kind": "component",
       "namespace": "code-block",
       "suffix": "language",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
-      "className": "code-block__languageTerminal",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "languageTerminal",
       "file": "src/components/codeBlock.ts",
       "line": 5
     },
@@ -1351,50 +1309,10 @@
       "line": 5
     },
     {
-      "className": "code-block__preTerminal",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "preTerminal",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
       "className": "code-block__preWrap",
       "kind": "component",
       "namespace": "code-block",
       "suffix": "preWrap",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
-      "className": "code-block__rootDefault",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "rootDefault",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
-      "className": "code-block__rootDiff",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "rootDiff",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
-      "className": "code-block__rootInline",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "rootInline",
-      "file": "src/components/codeBlock.ts",
-      "line": 5
-    },
-    {
-      "className": "code-block__rootTerminal",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "rootTerminal",
       "file": "src/components/codeBlock.ts",
       "line": 5
     },
@@ -4410,86 +4328,6 @@
       "suffix": "toggle",
       "file": "src/components/tree.ts",
       "line": 33
-    },
-    {
-      "className": "typeahead",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "base",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__clearButton",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "clearButton",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__description",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "description",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__error",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "error",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__input",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "input",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__inputWrapper",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "inputWrapper",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__item",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "item",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__label",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "label",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__listbox",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "listbox",
-      "file": "src/components/typeahead.ts",
-      "line": 8
-    },
-    {
-      "className": "typeahead__popover",
-      "kind": "component",
-      "namespace": "typeahead",
-      "suffix": "popover",
-      "file": "src/components/typeahead.ts",
-      "line": 8
     }
   ]
 }

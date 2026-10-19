@@ -7,7 +7,7 @@ import {
   resolveButtonProps,
   type ButtonVariantProps,
 } from "@var-ui/core";
-import { cx, mergeProps } from "../utils";
+import { combine, mergeProps } from "../utils";
 import {
   nextMenuId,
   type MenuPlacement,
@@ -134,10 +134,7 @@ const itemContents = await Promise.all(
               (entry) => entry.id === item.id,
             )?.content;
             const disabled = item.disabled === true;
-            const itemRecipe = mergeProps(
-              m.item,
-              cx(item.danger && m.itemDanger),
-            );
+            const itemRecipe = combine(m.item, item.danger && m.itemDanger);
             const inner = (
               <>
                 {singleSelection ? (

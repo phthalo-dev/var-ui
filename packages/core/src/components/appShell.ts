@@ -1,25 +1,19 @@
+import { variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-const APP_SHELL_SLOTS = [
-  'root',
-  'banner',
-  'frame',
-  'topNav',
-  'sideNav',
-  'main',
-  'aside',
-  'skipLink',
-] as const;
+const appShellHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
+const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
+  default: 'wash',
+});
+const appShellContentPaddingValues = ['0', '1', '2', '3', '4', '5', '6', '8'] as const;
+const appShellContentPadding = variant.enum(appShellContentPaddingValues, { default: '0' });
+
+/** Turns the numeric-string axis options into the public numeric space steps. */
+type NumericSteps<S extends string> = S extends `${infer Step extends number}` ? Step : never;
 
 /** `appShell` `contentPadding` variant — design-token space steps. */
-export type AppShellContentPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
-
-type AppShellVariantDefs = {
-  height: { fill: object; auto: object };
-  variant: { wash: object; surface: object; section: object; elevated: object };
-  contentPadding: Record<`${AppShellContentPadding}`, object>;
-};
+export type AppShellContentPadding = NumericSteps<VariantOptions<typeof appShellContentPadding>>;
 
 /**
  * Application chrome shell: optional banner, top nav, side nav, main, and
@@ -37,8 +31,16 @@ type AppShellVariantDefs = {
  * </div>
  * ```
  */
-export const appShell = typestyles.recipe<typeof APP_SHELL_SLOTS, AppShellVariantDefs>(
+export const appShell = typestyles.recipe(
   'app-shell',
+  {
+    slots: ['root', 'banner', 'frame', 'topNav', 'sideNav', 'main', 'aside', 'skipLink'],
+    variants: {
+      height: appShellHeight,
+      variant: appShellVariant,
+      contentPadding: appShellContentPadding,
+    },
+  },
   (c) => {
     const v = c.vars({
       background: {
@@ -65,7 +67,7 @@ export const appShell = typestyles.recipe<typeof APP_SHELL_SLOTS, AppShellVarian
     const transition = `transform ${t.duration.fast.var} ${t.easing.standard.var}`;
 
     return {
-      slots: APP_SHELL_SLOTS,
+      vars: v,
       base: {
         root: {
           position: 'relative',
@@ -301,12 +303,10 @@ export const appShell = typestyles.recipe<typeof APP_SHELL_SLOTS, AppShellVarian
           '8': { root: { [v.contentPadding.name]: t.space[8].var } },
         },
       },
-      defaultVariants: {
-        height: 'fill',
-        variant: 'wash',
-        contentPadding: '0',
-      },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type AppShellVariantProps = RecipeVariants<typeof appShell>;

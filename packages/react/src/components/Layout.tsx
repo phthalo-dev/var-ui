@@ -11,7 +11,9 @@ import {
   layoutPanel,
   layoutShellPaddingAssignments,
   type LayoutBreakpoint,
+  type LayoutContentVariantProps,
   type LayoutPadding,
+  type LayoutVariantProps,
 } from '@var-ui/core';
 import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';
@@ -21,7 +23,9 @@ import { mergeProps } from './utils';
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
 /** `layoutContent()`/`layoutPanel()` only support seamless (`inherit`, the default) or `0`. */
-function toZonePaddingVariant(padding: LayoutPadding | undefined): 'inherit' | '0' {
+function toZonePaddingVariant(
+  padding: LayoutPadding | undefined,
+): NonNullable<LayoutContentVariantProps['padding']> {
   return padding === 0 ? '0' : 'inherit';
 }
 
@@ -86,7 +90,7 @@ export type LayoutProps = {
   /** Bottom chrome band, usually a `LayoutFooter`. */
   footer?: ReactNode;
   /** @default 'fill' */
-  height?: 'fill' | 'auto';
+  height?: NonNullable<LayoutVariantProps['height']>;
   /** Constrains header/content/footer inner wrappers via `margin-inline: auto`. */
   contentWidth?: number;
   /** Outer/inner spacing step for all zones — sets shell CSS vars on the root. Omit for recipe default (`space[4]`). */

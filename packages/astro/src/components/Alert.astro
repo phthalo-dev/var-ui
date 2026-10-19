@@ -1,16 +1,16 @@
 ---
-import { alert, type AlertTone, type SurfaceAppearance } from '@var-ui/core';
+import { alert, type AlertVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  variant: AlertTone;
-  appearance?: SurfaceAppearance;
+  variant: NonNullable<AlertVariantProps['tone']>;
+  appearance?: NonNullable<AlertVariantProps['appearance']>;
   title?: string;
   action?: { href: string; label: string };
   className?: string;
 };
 
-const { variant, appearance = 'subtle', title, action, className } = Astro.props;
+const { variant, appearance = alert.defaults.appearance, title, action, className } = Astro.props;
 const a = alert({
   tone: variant,
   appearance,

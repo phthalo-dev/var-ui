@@ -5,8 +5,6 @@ import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { transition } from '../tokens/defaults/transition';
 import { designTokens as t } from '../tokens';
-import { themeableVars } from './themeableVars';
-
 const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space[3].var;
 const nestedIndent = t.space[2].var;
@@ -75,13 +73,13 @@ export const tocVarDefinitions = {
  * The active-row indicator is the list `::after` pseudo, positioned via
  * `positionTocIndicator`.
  */
-const tocRecipe = typestyles.recipe(
+export const toc = typestyles.recipe(
   'toc',
   (c) => {
     const v = c.vars(tocVarDefinitions);
 
     return {
-      vars: tocVarDefinitions,
+      vars: v,
       slots: ['root', 'title', 'list', 'item', 'link'],
       root: {
         position: 'sticky',
@@ -168,5 +166,3 @@ const tocRecipe = typestyles.recipe(
   },
   { layer: 'components' },
 );
-
-export const toc = themeableVars(tocRecipe, tocVarDefinitions);

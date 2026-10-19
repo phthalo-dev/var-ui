@@ -1,5 +1,10 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { density } from './variantAxes';
+
+const listStyle = variant.enum(['none', 'disc', 'decimal'], { default: 'none' });
+const listHasDividers = variant.boolean({ default: false });
 
 /**
  * Generic vertical list chrome for settings rows, member lists, and static
@@ -20,6 +25,14 @@ import { designTokens as t } from '../tokens';
  */
 export const list = typestyles.recipe(
   'list',
+  {
+    slots: ['root', 'header', 'item', 'label', 'description', 'start', 'end', 'divider'],
+    variants: {
+      density,
+      listStyle,
+      hasDividers: listHasDividers,
+    },
+  },
   (c) => {
     const v = c.vars({
       root: { value: 'transparent', syntax: '<color>' },
@@ -41,7 +54,6 @@ export const list = typestyles.recipe(
       itemPaddingX: { value: t.space[3].var, syntax: '<length>' },
     });
     return {
-      slots: ['root', 'header', 'item', 'label', 'description', 'start', 'end', 'divider'],
       base: {
         root: {
           listStyle: 'none',
@@ -116,8 +128,10 @@ export const list = typestyles.recipe(
         listStyle: { none: {}, disc: {}, decimal: {} },
         hasDividers: { true: {}, false: {} },
       },
-      defaultVariants: { density: 'balanced', listStyle: 'none', hasDividers: false },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ListVariantProps = RecipeVariants<typeof list>;

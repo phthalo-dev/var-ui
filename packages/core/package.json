@@ -824,14 +824,6 @@
       "types": "./dist/components/textField.d.mts",
       "import": "./dist/components/textField.mjs"
     },
-    "./components/themeableVars": {
-      "types": "./dist/components/themeableVars.d.mts",
-      "import": "./dist/components/themeableVars.mjs"
-    },
-    "./themeableVars": {
-      "types": "./dist/components/themeableVars.d.mts",
-      "import": "./dist/components/themeableVars.mjs"
-    },
     "./components/thumbnail": {
       "types": "./dist/components/thumbnail.d.mts",
       "import": "./dist/components/thumbnail.mjs"
@@ -928,14 +920,6 @@
       "types": "./dist/components/tree.d.mts",
       "import": "./dist/components/tree.mjs"
     },
-    "./components/typeahead": {
-      "types": "./dist/components/typeahead.d.mts",
-      "import": "./dist/components/typeahead.mjs"
-    },
-    "./typeahead": {
-      "types": "./dist/components/typeahead.d.mts",
-      "import": "./dist/components/typeahead.mjs"
-    },
     "./components/typography": {
       "types": "./dist/components/typography.d.mts",
       "import": "./dist/components/typography.mjs"
@@ -943,6 +927,14 @@
     "./typography": {
       "types": "./dist/components/typography.d.mts",
       "import": "./dist/components/typography.mjs"
+    },
+    "./components/variantAxes": {
+      "types": "./dist/components/variantAxes.d.mts",
+      "import": "./dist/components/variantAxes.mjs"
+    },
+    "./variantAxes": {
+      "types": "./dist/components/variantAxes.d.mts",
+      "import": "./dist/components/variantAxes.mjs"
     },
     "./components/visuallyHidden": {
       "types": "./dist/components/visuallyHidden.d.mts",
@@ -966,8 +958,8 @@
   },
   "devDependencies": {
     "@typestyles/build-runner": "catalog:",
-    "@typestyles/cli": "^0.3.1",
-    "@typestyles/eslint-plugin": "^0.4.1",
+    "@typestyles/cli": "^0.3.2",
+    "@typestyles/eslint-plugin": "^0.4.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

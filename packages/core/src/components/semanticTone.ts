@@ -1,8 +1,27 @@
+import { variant, type VariantOptions } from 'typestyles';
 import { designTokens as t } from '../tokens';
-import type { ToneKey } from '../tokens/schema/color/tone';
+import { TONE_KEYS } from '../tokens/schema/color/tone';
+import { controlSize } from './variantAxes';
 
-/** Shared semantic keys: alert `info` maps to `accent`; badge `accent` / `tip` map here directly. */
-export type SemanticToneKey = ToneKey;
+/**
+ * Every component tone. `neutral` sits outside the color tokens; the rest are
+ * `TONE_KEYS`, so a new token tone has to be styled wherever this axis is used.
+ * Each name paints that token. There is no `tip` alias.
+ */
+export const toneValues = ['neutral', ...TONE_KEYS] as const;
+
+/** Shared tone axis. Default is `neutral` (badge, button, chip, status). */
+export const tone = variant.enum(toneValues, { default: 'neutral' });
+
+export type Tone = VariantOptions<typeof tone>;
+
+/** Same options as `tone`, with a component-specific default. */
+export function toneWithDefault<const Default extends Tone>(defaultTone: Default) {
+  return variant.enum(toneValues, { default: defaultTone });
+}
+
+/** Chromatic keys. Indexes `t.color.tone`. */
+export type SemanticToneKey = Exclude<Tone, 'neutral'>;
 
 /** Cross-component appearance axis (Mantine-style variants mapped to var-ui naming). */
 export type ToneAppearance = 'filled' | 'outline' | 'subtle' | 'ghost';
@@ -98,16 +117,15 @@ type SurfacePaintRefs = {
   solidFg: { var: string };
 };
 
-/** Surface appearances for multi-slot components (alert, banner, toast). */
-export type SurfaceAppearance = 'subtle' | 'solid' | 'outline';
+/** Surface appearances for alert, badge, chip, banner, and toast. */
+export const surfaceAppearance = variant.enum(['subtle', 'solid', 'outline'], {
+  default: 'subtle',
+});
 
-/** Shared tone for banner, toast, and other feedback surfaces (no neutral/tip). */
-export type FeedbackTone = 'info' | 'success' | 'warning' | 'danger';
-
-export type ButtonTone = SemanticToneKey | 'neutral';
+export type SurfaceAppearance = VariantOptions<typeof surfaceAppearance>;
 
 /** Shared sm/md/lg size axis for controls (button, spinner, drawer, etc.). */
-export type ControlSize = 'sm' | 'md' | 'lg';
+export type ControlSize = VariantOptions<typeof controlSize>;
 
 /** Spinner fill weight (distinct from `SurfaceAppearance`). */
 export type SpinnerAppearance = 'solid' | 'subtle';
@@ -115,10 +133,7 @@ export type SpinnerAppearance = 'solid' | 'subtle';
 /** Progress bar fill weight. */
 export type ProgressBarAppearance = 'solid' | 'subtle';
 
-/** Progress bar tone axis (no `info`). */
-export type ProgressBarTone = Exclude<SemanticToneKey, 'info'>;
-
-/** Root custom properties for alert `tone` (solid + inherited semantic for subtle / title). */
+/** Root custom properties for a component `tone` (solid + inherited semantic for subtle / title). */
 export function semanticChannelAssignments(v: SemanticChannelRefs, key: SemanticToneKey) {
   const ch = semanticTone[key];
   return {
@@ -135,6 +150,17 @@ export function neutralChannelAssignments(v: SemanticChannelRefs) {
     [v.solidBg.name]: t.color.text.primary.var,
     [v.solidFg.name]: t.color.background.surface.var,
   };
+}
+
+/** Channel assignments for any shared tone, including `neutral`. */
+export function toneChannelAssignments(v: SemanticChannelRefs, key: Tone) {
+  if (key === 'neutral') return neutralChannelAssignments(v);
+  return semanticChannelAssignments(v, key);
+}
+
+/** One style entry per shared tone. */
+export function mapTone<Style>(paint: (key: Tone) => Style): Record<Tone, Style> {
+  return Object.fromEntries(toneValues.map((key) => [key, paint(key)])) as Record<Tone, Style>;
 }
 
 /**
@@ -352,7 +378,7 @@ export function appearanceSurface(
 }
 
 /** Button paint including the neutral tone (not in the semantic palette). */
-export function buttonTonePaint(v: TonePaintRefs, tone: ButtonTone, appearance: ToneAppearance) {
+export function buttonTonePaint(v: TonePaintRefs, tone: Tone, appearance: ToneAppearance) {
   if (tone === 'neutral') {
     switch (appearance) {
       case 'filled':

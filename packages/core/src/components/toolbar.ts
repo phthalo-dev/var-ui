@@ -1,5 +1,9 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { controlSize, orientation } from './variantAxes';
+
+const toolbarLayout = variant.enum(['flex', 'grid'], { default: 'flex' });
 
 /**
  * Layout chrome for a toolbar: a flex (or grid, when `layout: 'grid'`) row of
@@ -8,8 +12,15 @@ import { controlSizeMetrics, controlSizeVariants } from './controlSize';
  */
 export const toolbar = typestyles.recipe(
   'toolbar',
-  () => ({
+  {
     slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],
+    variants: {
+      size: controlSize,
+      orientation,
+      layout: toolbarLayout,
+    },
+  },
+  () => ({
     base: {
       root: {
         display: 'flex',
@@ -50,7 +61,9 @@ export const toolbar = typestyles.recipe(
         },
       },
     },
-    defaultVariants: { size: 'md', orientation: 'horizontal', layout: 'flex' },
   }),
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ToolbarVariantProps = RecipeVariants<typeof toolbar>;

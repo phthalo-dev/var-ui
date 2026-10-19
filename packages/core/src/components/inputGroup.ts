@@ -2,6 +2,8 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Connected-border group for bare `<input>`s and text addons (e.g. a
@@ -16,6 +18,10 @@ import { fieldChrome } from './field';
  */
 export const inputGroup = typestyles.recipe(
   'input-group',
+  {
+    slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -61,7 +67,6 @@ export const inputGroup = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
       base: {
         root: {
           ...chrome.root,
@@ -144,8 +149,10 @@ export const inputGroup = typestyles.recipe(
           },
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type InputGroupVariantProps = RecipeVariants<typeof inputGroup>;

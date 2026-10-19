@@ -1,5 +1,7 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from './variantAxes';
 
 /**
  * Single-row flex chrome for a horizontally overflowing list of items. Pair with
@@ -16,12 +18,18 @@ import { designTokens as t } from '../tokens';
  */
 export const overflowList = typestyles.recipe(
   'overflow-list',
+  {
+    slots: ['root', 'item', 'overflow'],
+    variants: {
+      gap,
+      fillParent: variant.boolean({ default: false }),
+    },
+  },
   (c) => {
     const v = c.vars({
       gap: { value: t.space[3].var, syntax: '<length>' },
     });
     return {
-      slots: ['root', 'item', 'overflow'],
       base: {
         root: {
           display: 'flex',
@@ -57,8 +65,10 @@ export const overflowList = typestyles.recipe(
           false: {},
         },
       },
-      defaultVariants: { gap: 'md', fillParent: false },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type OverflowListVariantProps = RecipeVariants<typeof overflowList>;

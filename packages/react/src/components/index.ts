@@ -128,8 +128,8 @@ export {
   type HoverCardTriggerProps,
 } from './HoverCard';
 export { Code, type CodeProps } from './Code';
-export { CodeBlock, type CodeBlockProps } from './CodeBlock';
-export { Alert, type AlertAppearance, type AlertProps, type AlertVariant } from './Alert';
+export { CodeBlock, type CodeBlockProps, type CodeBlockVariant } from './CodeBlock';
+export { Alert, type AlertAppearance, type AlertProps } from './Alert';
 export {
   Field,
   type FieldControlProps,
@@ -225,7 +225,7 @@ export {
   type ChipProps,
   type PillProps,
 } from './Chip';
-export { Banner, type BannerProps, type BannerTone } from './Banner';
+export { Banner, type BannerProps } from './Banner';
 export { Card, ClickableCard, type CardProps, type ClickableCardProps } from './Card';
 export { Carousel, type CarouselProps } from './Carousel';
 export { Thumbnail, type ThumbnailProps } from './Thumbnail';
@@ -267,7 +267,6 @@ export {
   type ToastProviderProps,
   type ToastRegionProps,
   type ToastShowInput,
-  type ToastTone,
   type UseToastReturn,
 } from './Toast';
 export { Toolbar, type ToolbarProps } from './Toolbar';

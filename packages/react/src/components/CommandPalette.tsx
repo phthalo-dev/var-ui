@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Autocomplete, Input, ListBox, ListBoxItem, TextField } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
-import { commandPalette } from '@var-ui/core';
+import { commandPalette, type CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useOverlayPresence } from '../overlays';
@@ -22,7 +22,7 @@ export type CommandPaletteItem = {
 
 export type CommandPaletteProps = {
   /** Controls the open state. */
-  isOpen?: boolean;
+  isOpen?: NonNullable<CommandPaletteVariantProps['open']>;
   /** Called when the open state changes (Escape, backdrop click, hotkey, or item selection). */
   onOpenChange?: (open: boolean) => void;
   /** Commands shown in the results list. */

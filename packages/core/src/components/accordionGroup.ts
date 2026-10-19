@@ -1,18 +1,31 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { paneVariant } from './variantAxes';
 
 /**
  * Outer chrome for stacked `Accordion` panels — border, radius, and overflow clip.
  */
 export const accordionGroup = typestyles.recipe(
   'accordion-group',
+  {
+    slots: ['root'],
+    variants: {
+      variant: paneVariant,
+    },
+  },
   (c) => {
     const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
+      border: {
+        value: t.color.border.default.var,
+        syntax: atProperty.color.syntax,
+      },
+      background: {
+        value: t.color.background.surface.var,
+        syntax: atProperty.color.syntax,
+      },
     });
     return {
-      slots: ['root'],
       base: {
         root: {
           display: 'flex',
@@ -38,7 +51,6 @@ export const accordionGroup = typestyles.recipe(
           bordered: {},
         },
       },
-      defaultVariants: { variant: 'bordered' },
     };
   },
   { layer: 'components' },

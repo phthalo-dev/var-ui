@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
+import { controlSize } from './variantAxes';
 
 /**
  * General-purpose slide-in panel built on RAC Modal. Supports start/end/bottom
@@ -8,6 +9,10 @@ import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPres
  */
 export const drawer = typestyles.recipe(
   'drawer',
+  {
+    slots: ['overlay', 'panel', 'header', 'title', 'body', 'closeButton'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       overlayBackground: {
@@ -40,7 +45,6 @@ export const drawer = typestyles.recipe(
       },
     });
     return {
-      slots: ['overlay', 'panel', 'header', 'title', 'body', 'closeButton'],
       base: {
         overlay: {
           ...overlayPresenceStyles(),
@@ -142,7 +146,6 @@ export const drawer = typestyles.recipe(
           lg: { panel: { [v.panelWidth.name]: '560px', [v.panelHeight.name]: '70vh' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },

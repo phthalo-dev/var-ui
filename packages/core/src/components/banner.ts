@@ -2,9 +2,12 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
   appearanceSurface,
-  semanticChannelAssignments,
-  type FeedbackTone,
+  mapTone,
+  surfaceAppearance,
+  toneChannelAssignments,
+  toneWithDefault,
   type SurfaceAppearance,
+  type Tone,
 } from './semanticTone';
 
 /**
@@ -18,6 +21,13 @@ import {
  */
 export const banner = typestyles.recipe(
   'banner',
+  {
+    slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
+    variants: {
+      tone: toneWithDefault('info'),
+      appearance: surfaceAppearance,
+    },
+  },
   (c) => {
     const v = c.vars({
       semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
@@ -25,7 +35,6 @@ export const banner = typestyles.recipe(
       solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
     });
     return {
-      slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
       base: {
         root: {
           display: 'flex',
@@ -74,12 +83,7 @@ export const banner = typestyles.recipe(
         },
       },
       variants: {
-        tone: {
-          info: { root: semanticChannelAssignments(v, 'accent') },
-          success: { root: semanticChannelAssignments(v, 'success') },
-          warning: { root: semanticChannelAssignments(v, 'warning') },
-          danger: { root: semanticChannelAssignments(v, 'danger') },
-        },
+        tone: mapTone((key) => ({ root: toneChannelAssignments(v, key) })),
         appearance: {
           subtle: {
             root: appearanceSurface(v, 'subtle', { includeBorder: false }),
@@ -94,21 +98,19 @@ export const banner = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { tone: 'info', appearance: 'subtle' },
     };
   },
   { layer: 'components' },
 );
 
 export type BannerRecipeProps = NonNullable<Parameters<typeof banner>[0]>;
-export type BannerTone = FeedbackTone;
 export type BannerVariantProps = {
-  tone?: BannerTone;
+  tone?: Tone;
   appearance?: SurfaceAppearance;
 };
 
 export const bannerVariantPropDocs = [
-  { name: 'tone', type: 'BannerTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'SurfaceAppearance', required: false },
 ] as const satisfies ReadonlyArray<{
   name: keyof BannerVariantProps;

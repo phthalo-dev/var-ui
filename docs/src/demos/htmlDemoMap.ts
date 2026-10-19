@@ -74,7 +74,7 @@ import { render as renderCommandPaletteDefault } from './command-palette/default
 import { render as renderSearchInputDefault } from './search-input/default/html';
 
 /** Static HTML preview renderers keyed by demo id — consumed by DemoHost. */
-export const htmlDemoMap = {
+const htmlDemos = {
   'button.default': renderButtonDefault,
   'button.variants': renderButtonVariants,
   'button.disabled': renderButtonDisabled,
@@ -149,5 +149,11 @@ export const htmlDemoMap = {
   'command-palette.default': renderCommandPaletteDefault,
   'search-input.default': renderSearchInputDefault,
 } as const satisfies Partial<Record<DemoId, () => string>>;
+
+/**
+ * Demos with an HTML renderer, keyed by demo id. Typed as `Partial` because some demos are
+ * React-only (see `REACT_ONLY_DEMO_IDS`); callers must handle a missing renderer.
+ */
+export const htmlDemoMap: Partial<Record<DemoId, () => string>> = htmlDemos;
 
 export const htmlDemoIds = Object.keys(htmlDemoMap) as DemoId[];

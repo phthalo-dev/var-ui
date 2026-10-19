@@ -1,11 +1,11 @@
 import type { JSX, ReactNode } from 'react';
-import { chatMessage } from '@var-ui/core';
-import { ChatMessageContext, type ChatSender, useChatListContext } from './ChatContext';
+import { chatMessage, type ChatMessageVariantProps } from '@var-ui/core';
+import { ChatMessageContext, useChatListContext } from './ChatContext';
 import { mergeProps } from '../utils';
 
 export type ChatMessageProps = {
   /** Who sent this message — drives alignment and the default bubble color. */
-  sender: ChatSender;
+  sender: NonNullable<ChatMessageVariantProps['sender']>;
   /** Sender name shown above the content. */
   name?: ReactNode;
   /** Avatar element — typically an existing `<Avatar>`. */

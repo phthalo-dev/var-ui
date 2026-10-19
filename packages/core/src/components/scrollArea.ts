@@ -1,4 +1,4 @@
-import { keyframes } from 'typestyles';
+import { keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -32,6 +32,13 @@ export type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both';
  */
 export const scrollArea = typestyles.recipe(
   'scroll-area',
+  {
+    slots: ['root', 'viewport', 'fadeTop', 'fadeBottom', 'fadeStart', 'fadeEnd'],
+    variants: {
+      fade: variant.enum(['none', 'vertical', 'horizontal', 'both'], { default: 'none' }),
+      orientation: variant.enum(['vertical', 'horizontal', 'both'], { default: 'vertical' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       fadeSize: { value: '24px', syntax: '<length>' },
@@ -121,7 +128,6 @@ export const scrollArea = typestyles.recipe(
     };
 
     return {
-      slots: ['root', 'viewport', 'fadeTop', 'fadeBottom', 'fadeStart', 'fadeEnd'],
       base: {
         root: {
           display: 'flex',
@@ -191,23 +197,15 @@ export const scrollArea = typestyles.recipe(
           },
         },
       },
-      defaultVariants: {
-        fade: 'none',
-        orientation: 'vertical',
-      },
     };
   },
   { layer: 'components' },
 );
 
 export type ScrollAreaRecipeProps = NonNullable<Parameters<typeof scrollArea>[0]>;
-export type ScrollAreaFadeVariant = NonNullable<ScrollAreaRecipeProps['fade']>;
-export type ScrollAreaOrientationVariant = NonNullable<ScrollAreaRecipeProps['orientation']>;
-
-export type ScrollAreaVariantProps = {
-  fade?: ScrollAreaFadeVariant;
-  orientation?: ScrollAreaOrientationVariant;
-};
+export type ScrollAreaVariantProps = RecipeVariants<typeof scrollArea>;
+export type ScrollAreaFadeVariant = NonNullable<ScrollAreaVariantProps['fade']>;
+export type ScrollAreaOrientationVariant = NonNullable<ScrollAreaVariantProps['orientation']>;
 
 /** Map boolean `fade` prop to a concrete fade axis variant. */
 export function resolveScrollAreaFade(

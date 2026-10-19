@@ -1366,6 +1366,18 @@
       "types": "./dist/components/chat/ChatToolCalls.d.mts",
       "import": "./dist/components/chat/ChatToolCalls.mjs"
     },
+    "./components/controlSizeContext": {
+      "types": "./dist/components/controlSizeContext.d.mts",
+      "import": "./dist/components/controlSizeContext.mjs"
+    },
+    "./control-size-context": {
+      "types": "./dist/components/controlSizeContext.d.mts",
+      "import": "./dist/components/controlSizeContext.mjs"
+    },
+    "./controlSizeContext": {
+      "types": "./dist/components/controlSizeContext.d.mts",
+      "import": "./dist/components/controlSizeContext.mjs"
+    },
     "./components/menuContent": {
       "types": "./dist/components/menuContent.d.mts",
       "import": "./dist/components/menuContent.mjs"

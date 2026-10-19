@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Pagination chrome. Page-number and prev/next buttons reuse the existing
@@ -14,22 +16,25 @@ import { designTokens as t } from '../tokens';
  */
 export const pagination = typestyles.recipe(
   'pagination',
+  {
+    slots: [
+      'root',
+      'controls',
+      'ellipsis',
+      'infoText',
+      'dotsContainer',
+      'dot',
+      'dotActive',
+      'pageSizeGroup',
+    ],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       textColor: { value: t.color.text.secondary.var, syntax: '<color>' },
       dotColor: { value: t.color.border.default.var, syntax: '<color>' },
     });
     return {
-      slots: [
-        'root',
-        'controls',
-        'ellipsis',
-        'infoText',
-        'dotsContainer',
-        'dot',
-        'dotActive',
-        'pageSizeGroup',
-      ],
       base: {
         root: {
           display: 'flex',
@@ -101,10 +106,16 @@ export const pagination = typestyles.recipe(
             dot: { width: t.space[1].var, height: t.space[1].var },
           },
           md: {},
+          lg: {
+            ellipsis: { minWidth: '2.5rem', height: '2.5rem', fontSize: t.fontSize.md.var },
+            dot: { width: t.space[2].var, height: t.space[2].var },
+          },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type PaginationVariantProps = RecipeVariants<typeof pagination>;

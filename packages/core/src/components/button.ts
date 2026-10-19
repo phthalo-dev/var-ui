@@ -1,16 +1,33 @@
+import { variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
+import { controlSize } from './variantAxes';
 import {
   controlAppearancePaint,
-  neutralChannelAssignments,
-  semanticChannelAssignments,
-  type ButtonTone,
+  mapTone,
+  tone,
+  toneChannelAssignments,
+  type Tone,
   type ToneAppearance,
 } from './semanticTone';
 
+const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], {
+  default: 'subtle',
+});
+const buttonLayout = variant.enum(['default', 'icon'], { default: 'default' });
+
 export const button = typestyles.recipe(
   'button',
+  {
+    variants: {
+      tone,
+      appearance: buttonAppearance,
+      size: controlSize,
+      layout: buttonLayout,
+      elevated: variant.boolean({ default: false }),
+    },
+  },
   (c) => {
     const v = c.vars({
       semantic: {
@@ -73,14 +90,7 @@ export const button = typestyles.recipe(
         },
       },
       variants: {
-        tone: {
-          neutral: neutralChannelAssignments(v),
-          accent: semanticChannelAssignments(v, 'accent'),
-          success: semanticChannelAssignments(v, 'success'),
-          warning: semanticChannelAssignments(v, 'warning'),
-          danger: semanticChannelAssignments(v, 'danger'),
-          info: semanticChannelAssignments(v, 'info'),
-        },
+        tone: mapTone((key) => toneChannelAssignments(v, key)),
         appearance: {
           filled: controlAppearancePaint(v, 'filled'),
           outline: controlAppearancePaint(v, 'outline'),
@@ -103,13 +113,6 @@ export const button = typestyles.recipe(
           false: {},
         },
       },
-      defaultVariants: {
-        tone: 'neutral',
-        appearance: 'subtle',
-        size: 'md',
-        layout: 'default',
-        elevated: 'false',
-      },
     };
   },
   { layer: 'components' },
@@ -117,7 +120,7 @@ export const button = typestyles.recipe(
 
 export type ButtonIntent = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
 
-const INTENT_TO_VARIANTS: Record<ButtonIntent, { tone: ButtonTone; appearance: ToneAppearance }> = {
+const INTENT_TO_VARIANTS: Record<ButtonIntent, { tone: Tone; appearance: ToneAppearance }> = {
   primary: { tone: 'accent', appearance: 'filled' },
   secondary: { tone: 'neutral', appearance: 'subtle' },
   ghost: { tone: 'accent', appearance: 'ghost' },
@@ -139,7 +142,7 @@ export type ButtonVariantProps = {
   /** Shorthand for common `tone` + `appearance` pairs. Ignored when `tone` is set. */
   intent?: ButtonIntent;
   /** Semantic color family. */
-  tone?: ButtonTone;
+  tone?: Tone;
   /** Surface treatment from the shared tone resolver. */
   appearance?: ToneAppearance;
   size?: ButtonRecipeProps['size'];
@@ -151,7 +154,7 @@ export type ButtonVariantProps = {
 /** Prop metadata for Astro/docs props tables when `Props extends ButtonVariantProps`. */
 export const buttonVariantPropDocs = [
   { name: 'intent', type: 'ButtonIntent', required: false },
-  { name: 'tone', type: 'ButtonTone', required: false },
+  { name: 'tone', type: 'Tone', required: false },
   { name: 'appearance', type: 'ToneAppearance', required: false },
   { name: 'size', type: 'ControlSize', required: false },
   { name: 'layout', type: "'default' | 'icon'", required: false },
@@ -166,7 +169,7 @@ export const buttonVariantPropDocs = [
 export function resolveButtonProps(props?: ButtonOptions): ButtonRecipeProps {
   const { intent, tone, appearance, elevated, ...rest } = props ?? {};
   const elevatedVariant: Pick<ButtonRecipeProps, 'elevated'> | Record<string, never> =
-    elevated != null ? { elevated: elevated ? 'true' : 'false' } : {};
+    elevated != null ? { elevated } : {};
   if (intent) {
     const mapped = INTENT_TO_VARIANTS[intent];
     return {

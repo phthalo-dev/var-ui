@@ -24,6 +24,7 @@ import {
   spinnerVariantPropDocs,
   progressBarVariantPropDocs,
   avatarVariantPropDocs,
+  codeBlockVariantPropDocs,
   collapsibleVariantPropDocs,
 } from '@var-ui/core/internal';
 
@@ -41,6 +42,7 @@ const EXTENDED_PROP_DOCS: Record<string, AstroPropDoc[]> = {
   SpinnerVariantProps: spinnerVariantPropDocs.map((prop) => ({ ...prop })),
   ProgressBarVariantProps: progressBarVariantPropDocs.map((prop) => ({ ...prop })),
   AvatarVariantProps: avatarVariantPropDocs.map((prop) => ({ ...prop })),
+  CodeBlockVariantProps: codeBlockVariantPropDocs.map((prop) => ({ ...prop })),
   CollapsibleVariantProps: collapsibleVariantPropDocs.map((prop) => ({ ...prop })),
 };
 

@@ -1,6 +1,9 @@
+import { type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import type { ButtonTone } from './semanticTone';
+import type { Tone } from './semanticTone';
+
+const avatarSize = variant.enum(['xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
 
 /**
  * Identity avatar: image with initials fallback and an optional status well
@@ -13,6 +16,10 @@ import type { ButtonTone } from './semanticTone';
  */
 export const avatar = typestyles.recipe(
   'avatar',
+  {
+    slots: ['root', 'image', 'initials', 'status'],
+    variants: { size: avatarSize },
+  },
   (c) => {
     const v = c.vars({
       size: { value: '32px', syntax: '<length>' },
@@ -26,7 +33,7 @@ export const avatar = typestyles.recipe(
       },
     });
     return {
-      slots: ['root', 'image', 'initials', 'status'],
+      vars: v,
       base: {
         root: {
           position: 'relative',
@@ -75,20 +82,17 @@ export const avatar = typestyles.recipe(
           xl: { root: { [v.size.name]: '56px' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
 
-export type AvatarRecipeProps = NonNullable<Parameters<typeof avatar>[0]>;
-export type AvatarSize = NonNullable<AvatarRecipeProps['size']>;
+export type AvatarSize = VariantOptions<typeof avatarSize>;
 /** Presence indicator tones for the avatar status well. */
-export type AvatarStatusTone = Extract<ButtonTone, 'success' | 'warning' | 'danger' | 'neutral'>;
+export type AvatarStatusTone = Extract<Tone, 'success' | 'warning' | 'danger' | 'neutral'>;
 
-export type AvatarVariantProps = {
-  size?: AvatarSize;
-};
+/** Visual props derived from the schema. */
+export type AvatarVariantProps = RecipeVariants<typeof avatar>;
 
 export const avatarVariantPropDocs = [
   { name: 'size', type: 'AvatarSize', required: false },

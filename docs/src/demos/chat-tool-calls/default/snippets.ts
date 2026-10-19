@@ -14,7 +14,7 @@ export const snippets = {
 // Expand/collapse of 2+ calls is React-only.
 import { chatToolCalls } from '@var-ui/core';
 
-const t = chatToolCalls({ status: 'complete', expanded: 'false' });
+const t = chatToolCalls({ status: 'complete', expanded: false });
 ---
 
 <div class:list={[t.root]}>

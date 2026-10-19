@@ -29,7 +29,9 @@ const {
 } = Astro.props;
 
 const resolvedLabel = label ?? title;
-const s = toc({ hideBelow: hideBelowXl ? 'xl' : 'none' });
+// The recipe always hides the rail below `xl`; `hideBelowXl` predates that and has no
+// selection of its own, so the recipe is called without arguments.
+const s = toc();
 const rootStyle = stickyTop ? `--var-ui-toc-sticky-top: ${stickyTop}` : undefined;
 ---
 

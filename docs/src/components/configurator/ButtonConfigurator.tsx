@@ -1,6 +1,6 @@
 'use client';
 
-import type { ButtonTone, ToneAppearance } from '@var-ui/core';
+import type { Tone, ToneAppearance } from '@var-ui/core';
 import { defaultIcons } from '@var-ui/icons';
 import { Button, IconProvider, Switch } from '@var-ui/react';
 import { useMemo, useState } from 'react';
@@ -66,7 +66,7 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
             <ControlGroup label="Tone">
               <ToneSwatchPicker
                 value={state.tone}
-                onChange={(tone: ButtonTone) => setState((s) => ({ ...s, tone }))}
+                onChange={(tone: Tone) => setState((s) => ({ ...s, tone }))}
               />
             </ControlGroup>
 

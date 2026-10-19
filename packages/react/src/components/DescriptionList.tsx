@@ -6,6 +6,7 @@ import {
   iconNameList,
   resolveButtonProps,
   type IconName,
+  type DescriptionListVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from './utils';
@@ -18,8 +19,8 @@ export type DescriptionListItemData = {
 };
 
 export type DescriptionListProps = {
-  columns?: 'single' | 'multi' | number;
-  labelPosition?: 'start' | 'top';
+  columns?: NonNullable<DescriptionListVariantProps['columns']> | number;
+  labelPosition?: NonNullable<DescriptionListVariantProps['labelPosition']>;
   maxItems?: number;
   title?: ReactNode;
   items?: DescriptionListItemData[];

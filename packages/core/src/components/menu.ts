@@ -1,50 +1,62 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { overlayPresenceStyles } from './overlayPresence';
-import { themeableVars } from './themeableVars';
 
-/** Internal CSS variables for theme overrides (`vars` on theme `components`). */
-export const menuVarDefinitions = {
-  popoverBackground: {
-    value: t.color.background.surface.var,
-    syntax: '<color>' as const,
-  },
-  popoverBorder: {
-    value: t.color.border.default.var,
-    syntax: '<color>' as const,
-  },
-  itemForeground: {
-    value: t.color.text.primary.var,
-    syntax: '<color>' as const,
-  },
-  itemFocusedBackground: {
-    value: t.color.background.subtle.var,
-    syntax: '<color>' as const,
-  },
-  itemDisabledForeground: {
-    value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
-  },
-  sectionHeaderForeground: {
-    value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
-  },
-  separatorColor: {
-    value: t.color.border.default.var,
-    syntax: '<color>' as const,
-  },
-  dangerForeground: {
-    value: t.color.tone.danger.foreground.var,
-    syntax: '<color>' as const,
-  },
-} as const;
-
-const menuRecipe = typestyles.recipe(
+/**
+ * Slot recipe with no variants — placement is driven purely by the
+ * `data-placement` attribute the Astro wrapper sets on the popover, so it is
+ * CSS-only and kept out of the recipe schema.
+ */
+export const menu = typestyles.recipe(
   'menu',
   (c) => {
-    const v = c.vars(menuVarDefinitions);
+    const v = c.vars({
+      popoverBackground: {
+        value: t.color.background.surface.var,
+        syntax: '<color>',
+      },
+      popoverBorder: {
+        value: t.color.border.default.var,
+        syntax: '<color>',
+      },
+      itemForeground: {
+        value: t.color.text.primary.var,
+        syntax: '<color>',
+      },
+      itemFocusedBackground: {
+        value: t.color.background.subtle.var,
+        syntax: '<color>',
+      },
+      itemDisabledForeground: {
+        value: t.color.text.secondary.var,
+        syntax: '<color>',
+      },
+      sectionHeaderForeground: {
+        value: t.color.text.secondary.var,
+        syntax: '<color>',
+      },
+      separatorColor: {
+        value: t.color.border.default.var,
+        syntax: '<color>',
+      },
+      dangerForeground: {
+        value: t.color.tone.danger.foreground.var,
+        syntax: '<color>',
+      },
+    });
+    const anchorGap = `calc(100% + ${t.space[2].var})`;
+    const anchoredPopover = (
+      origin: 'top left' | 'top right' | 'bottom left' | 'bottom right',
+      edge: { top?: string; right?: 0; bottom?: string; left?: 0 },
+    ) => ({
+      position: 'absolute' as const,
+      zIndex: t.zIndex.dropdown.var,
+      ...edge,
+      '--var-ui-transform-origin': origin,
+    });
+
     return {
-      vars: menuVarDefinitions,
+      vars: v,
       slots: [
         'root',
         'popover',
@@ -79,36 +91,25 @@ const menuRecipe = typestyles.recipe(
         boxShadow: t.shadow.md.var,
         padding: t.space[1].var,
         minWidth: '12rem',
-        // CSS-only placement relative to the `root` anchor (Astro). React Aria
-        // positions inline and never emits these `data-placement` values.
-        '&[data-placement="bottom-start"]': {
-          position: 'absolute',
-          zIndex: t.zIndex.dropdown.var,
-          top: `calc(100% + ${t.space[2].var})`,
+        // CSS-only placement relative to the `root` anchor, keyed off the
+        // `data-placement` attribute the Astro wrapper sets on this element.
+        // React Aria positions the popover inline and never sets it.
+        '&[data-placement="bottom-start"]': anchoredPopover('top left', {
+          top: anchorGap,
           left: 0,
-          '--var-ui-transform-origin': 'top left',
-        },
-        '&[data-placement="bottom-end"]': {
-          position: 'absolute',
-          zIndex: t.zIndex.dropdown.var,
-          top: `calc(100% + ${t.space[2].var})`,
+        }),
+        '&[data-placement="bottom-end"]': anchoredPopover('top right', {
+          top: anchorGap,
           right: 0,
-          '--var-ui-transform-origin': 'top right',
-        },
-        '&[data-placement="top-start"]': {
-          position: 'absolute',
-          zIndex: t.zIndex.dropdown.var,
-          bottom: `calc(100% + ${t.space[2].var})`,
+        }),
+        '&[data-placement="top-start"]': anchoredPopover('bottom left', {
+          bottom: anchorGap,
           left: 0,
-          '--var-ui-transform-origin': 'bottom left',
-        },
-        '&[data-placement="top-end"]': {
-          position: 'absolute',
-          zIndex: t.zIndex.dropdown.var,
-          bottom: `calc(100% + ${t.space[2].var})`,
+        }),
+        '&[data-placement="top-end"]': anchoredPopover('bottom right', {
+          bottom: anchorGap,
           right: 0,
-          '--var-ui-transform-origin': 'bottom right',
-        },
+        }),
       },
       menu: {
         outline: 'none',
@@ -199,5 +200,3 @@ const menuRecipe = typestyles.recipe(
   },
   { layer: 'components' },
 );
-
-export const menu = themeableVars(menuRecipe, menuVarDefinitions);

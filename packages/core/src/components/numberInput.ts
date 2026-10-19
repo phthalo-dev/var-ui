@@ -2,9 +2,15 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './field';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 export const numberInput = typestyles.recipe(
   'number-input',
+  {
+    slots: ['root', 'label', 'group', 'input', 'stepper', 'description', 'error'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -46,7 +52,6 @@ export const numberInput = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'group', 'input', 'stepper', 'description', 'error'],
       base: {
         root: {
           ...chrome.root,
@@ -108,8 +113,10 @@ export const numberInput = typestyles.recipe(
           input: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type NumberInputVariantProps = RecipeVariants<typeof numberInput>;

@@ -1,10 +1,18 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
+import { variant } from 'typestyles';
+
+const wordmarkSize = variant.enum(['hero', 'header'], { default: 'hero' });
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
 export const varUiWordmark = typestyles.recipe(
   'wordmark',
-  () => ({
+  {
     slots: ['root', 'keyword', 'punctuation', 'customProperty'],
+    variants: {
+      size: wordmarkSize,
+    },
+  },
+  () => ({
     base: {
       root: {
         display: 'inline-flex',
@@ -45,9 +53,6 @@ export const varUiWordmark = typestyles.recipe(
           },
         },
       },
-    },
-    defaultVariants: {
-      size: 'hero',
     },
   }),
   { layer: 'components' },

@@ -36,7 +36,7 @@ export function render(): string {
   return serializeHtmlTag(
     'div',
     {
-      ...mergeProps(cb.root, classOf(cb.rootDefault)),
+      ...mergeProps(cb.root),
       'data-codeblock': true,
     },
     `${header}${body}`,

@@ -1,9 +1,25 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
 
 export const dialog = typestyles.recipe(
   'dialog',
+  {
+    slots: [
+      'overlay',
+      'modal',
+      'content',
+      'header',
+      'heading',
+      'description',
+      'closeButton',
+      'actions',
+    ],
+    variants: {
+      role: variant.enum(['dialog', 'alertdialog'], { default: 'dialog' }),
+    },
+  },
   (c) => {
     const v = c.vars({
       overlayBackground: {
@@ -24,16 +40,6 @@ export const dialog = typestyles.recipe(
       },
     });
     return {
-      slots: [
-        'overlay',
-        'modal',
-        'content',
-        'header',
-        'heading',
-        'description',
-        'closeButton',
-        'actions',
-      ],
       base: {
         overlay: {
           ...overlayPresenceStyles(),
@@ -112,8 +118,10 @@ export const dialog = typestyles.recipe(
           },
         },
       },
-      defaultVariants: { role: 'dialog' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type DialogVariantProps = RecipeVariants<typeof dialog>;

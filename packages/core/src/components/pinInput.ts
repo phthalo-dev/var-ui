@@ -3,6 +3,8 @@ import { designTokens as t } from '../tokens';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
 import { fieldChrome } from './field';
 import type { ControlSize } from './semanticTone';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 function pinCellSize(size: ControlSize) {
   const { height, fontSize } = controlSizeMetrics[size];
@@ -19,6 +21,10 @@ function pinCellSize(size: ControlSize) {
 
 export const pinInput = typestyles.recipe(
   'pin-input',
+  {
+    slots: ['root', 'label', 'group', 'cell', 'description', 'error'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       labelColor: {
@@ -52,7 +58,6 @@ export const pinInput = typestyles.recipe(
       error: v.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'group', 'cell', 'description', 'error'],
       base: {
         root: {
           ...chrome.root,
@@ -96,8 +101,10 @@ export const pinInput = typestyles.recipe(
           cell: pinCellSize(size),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type PinInputVariantProps = RecipeVariants<typeof pinInput>;

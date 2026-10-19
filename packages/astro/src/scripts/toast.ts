@@ -1,10 +1,10 @@
 import { defaultIconSvgs } from '@var-ui/core';
-import type { ToastTone } from '@var-ui/core';
+import type { Tone } from '@var-ui/core';
 
 export type ToastShowInput = {
   title: string;
   description?: string;
-  tone?: ToastTone;
+  tone?: Tone;
   /** Auto-dismiss delay in ms. Pass `0` to disable. @default 4000 */
   durationMs?: number;
 };
@@ -27,7 +27,9 @@ const ROOT_SELECTOR = '[data-var-ui-toast-region]';
 const INITIALIZED_ATTR = 'data-var-ui-toast-region-initialized';
 const DEFAULT_DURATION = 4000;
 
-const toneIcon: Record<ToastTone, keyof typeof defaultIconSvgs> = {
+const toneIcon: Record<Tone, keyof typeof defaultIconSvgs> = {
+  neutral: 'info',
+  accent: 'info',
   info: 'info',
   success: 'success',
   warning: 'warning',
@@ -50,7 +52,7 @@ function createId(): string {
   return `_${Math.random().toString(36).slice(2)}`;
 }
 
-function applyDataTone(el: HTMLElement, tone: ToastTone, appearance = 'subtle'): void {
+function applyDataTone(el: HTMLElement, tone: Tone, appearance = 'subtle'): void {
   el.setAttribute('data-tone', tone);
   el.setAttribute('data-appearance', appearance);
 }
@@ -107,7 +109,7 @@ function createToastElement(
 }
 
 function updateToastElement(el: HTMLElement, patch: Partial<ToastShowInput>): void {
-  const tone = patch.tone ?? (el.getAttribute('data-tone') as ToastTone | null) ?? 'info';
+  const tone = patch.tone ?? (el.getAttribute('data-tone') as Tone | null) ?? 'info';
   const appearance = 'subtle';
 
   applyDataTone(el, tone, appearance);

@@ -1,7 +1,7 @@
 import type { ChangeEvent, ClipboardEvent, JSX, KeyboardEvent } from 'react';
 import { useCallback, useId, useRef, useState } from 'react';
 import { Label } from 'react-aria-components';
-import { pinInput, type ControlSize } from '@var-ui/core';
+import { pinInput, type PinInputVariantProps } from '@var-ui/core';
 import { mergeProps } from './utils';
 import type { FieldMeta } from './utils';
 
@@ -20,7 +20,7 @@ export type PinInputProps = FieldMeta & {
   onComplete?: (value: string) => void;
   /** Accepted characters. @default numeric */
   type?: PinInputType;
-  size?: ControlSize;
+  size?: NonNullable<PinInputVariantProps['size']>;
   isDisabled?: boolean;
   isRequired?: boolean;
   autoFocus?: boolean;

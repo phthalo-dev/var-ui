@@ -12,8 +12,8 @@ import {
   toast as toastRecipe,
   type IconName,
   type ToastPlacement,
-  type ToastTone,
   type ToastVariantProps,
+  type Tone,
 } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
@@ -22,12 +22,14 @@ import { ToastQueue } from '../toast/toastQueue';
 import type { ToastContentData } from '../toast/types';
 import { mergeProps } from './utils';
 
-export type { ToastTone, ToastPlacement } from '@var-ui/core';
+export type { ToastPlacement } from '@var-ui/core';
 export type { ToastContentData } from '../toast/types';
 export { toast, type ImperativeToast, type ToastShowInput } from '../toast/imperativeToast';
 export { ToastQueue } from '../toast/toastQueue';
 
-const toneIcon: Record<ToastTone, IconName> = {
+const toneIcon: Record<Tone, IconName> = {
+  neutral: 'info',
+  accent: 'info',
   info: 'info',
   success: 'success',
   warning: 'warning',

@@ -2,10 +2,17 @@
 /** @deprecated Import from `@var-ui/docs-components/ComponentDocTabs` */
 import ComponentDocTabs from '@var-ui/docs-components/ComponentDocTabs';
 
-const props = Astro.props;
+type Props = {
+  tabs: Array<{ id: string; label: string }>;
+  tocContentSelector: string;
+  defaultSelectedId?: string;
+  className?: string;
+};
+
+const { tabs, tocContentSelector, ...rest } = Astro.props;
 ---
 
-<ComponentDocTabs {...props}>
+<ComponentDocTabs {tabs} {tocContentSelector} {...rest}>
   <slot name="documentation" slot="documentation" />
   <slot name="playground" slot="playground" />
   <slot name="props" slot="props" />

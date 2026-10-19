@@ -1,17 +1,8 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
-
-const TAB_LIST_SLOTS = ['root', 'tab', 'indicator', 'menu', 'menuTrigger'] as const;
-
-/**
- * Explicit variant-dimension shape (values left as `{}` — only the keys matter for the
- * `typestyles.recipe` call signature); see `appShell.ts` for why this pins the
- * slot-with-variants overload.
- */
-type TabListVariantDefs = {
-  size: { sm: object; md: object; lg: object };
-};
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Nav landmark tabs for switching between views/routes — no panels. Pair with
@@ -33,8 +24,12 @@ type TabListVariantDefs = {
  * </nav>
  * ```
  */
-export const tabList = typestyles.recipe<typeof TAB_LIST_SLOTS, TabListVariantDefs>(
+export const tabList = typestyles.recipe(
   'tab-list',
+  {
+    slots: ['root', 'tab', 'indicator', 'menu', 'menuTrigger'],
+    variants: { size: controlSize },
+  },
   (c) => {
     const v = c.vars({
       tabColor: {
@@ -60,7 +55,7 @@ export const tabList = typestyles.recipe<typeof TAB_LIST_SLOTS, TabListVariantDe
     });
 
     return {
-      slots: TAB_LIST_SLOTS,
+      vars: v,
       base: {
         root: {
           position: 'relative',
@@ -189,8 +184,10 @@ export const tabList = typestyles.recipe<typeof TAB_LIST_SLOTS, TabListVariantDe
           },
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type TabListVariantProps = RecipeVariants<typeof tabList>;

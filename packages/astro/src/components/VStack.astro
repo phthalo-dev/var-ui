@@ -1,11 +1,11 @@
 ---
-import { stack } from '@var-ui/core';
+import { stack, type StackVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  align?: 'start' | 'center' | 'end' | 'stretch';
-  justify?: 'start' | 'center' | 'end' | 'between';
+  gap?: NonNullable<StackVariantProps['gap']>;
+  align?: NonNullable<StackVariantProps['align']>;
+  justify?: NonNullable<StackVariantProps['justify']>;
   wrap?: boolean;
   className?: string;
 };

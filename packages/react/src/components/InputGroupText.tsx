@@ -1,5 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { inputGroup } from '@var-ui/core';
+import { useControlSize } from './controlSizeContext';
 import { mergeProps } from './utils';
 
 export type InputGroupTextProps = {
@@ -21,6 +22,6 @@ export type InputGroupTextProps = {
  * ```
  */
 export function InputGroupText({ children, className }: InputGroupTextProps): JSX.Element {
-  const g = inputGroup();
+  const g = inputGroup({ size: useControlSize() });
   return <div {...mergeProps(g.text, className)}>{children}</div>;
 }

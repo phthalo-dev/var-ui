@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSize } from './variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Square media preview with an optional floating remove control.
@@ -11,6 +13,12 @@ import { designTokens as t } from '../tokens';
  */
 export const thumbnail = typestyles.recipe(
   'thumbnail',
+  {
+    slots: ['root', 'image', 'dismiss'],
+    variants: {
+      size: controlSize,
+    },
+  },
   (c) => {
     const v = c.vars({
       size: { value: '64px', syntax: '<length>' },
@@ -20,7 +28,6 @@ export const thumbnail = typestyles.recipe(
       },
     });
     return {
-      slots: ['root', 'image', 'dismiss'],
       base: {
         root: {
           position: 'relative',
@@ -67,8 +74,10 @@ export const thumbnail = typestyles.recipe(
           lg: { root: { [v.size.name]: '96px' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
   { layer: 'components' },
 );
+
+/** Visual props derived from the schema. */
+export type ThumbnailVariantProps = RecipeVariants<typeof thumbnail>;

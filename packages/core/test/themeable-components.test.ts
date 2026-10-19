@@ -7,6 +7,7 @@ import { button } from '../src/components/button';
 import { card } from '../src/components/card';
 import { badge } from '../src/components/badge';
 import { menu } from '../src/components/menu';
+import { tabs } from '../src/components/tabs';
 import { createDesignTheme } from '../src/theme/create-theme';
 
 describe('themeable recipe registry', () => {
@@ -96,10 +97,20 @@ describe('themeable recipe registry', () => {
     void ok;
   });
 
-  it('infers menu vars on createDesignTheme components overrides', () => {
+  it('infers tabs vars from the recipe ref tree', () => {
+    type TabsOverride = OverrideConfigFor<typeof tabs>;
+    const ok: TabsOverride = {
+      vars: { railColor: 'red' },
+    };
+    void ok;
+  });
+
+  it('infers menu popover overrides', () => {
     type MenuOverride = OverrideConfigFor<typeof menu>;
     const ok: MenuOverride = {
-      vars: { popoverBackground: 'red' },
+      base: {
+        popover: { minWidth: '16rem' },
+      },
     };
     void ok;
   });
