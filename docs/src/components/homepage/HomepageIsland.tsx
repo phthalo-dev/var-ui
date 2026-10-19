@@ -7,7 +7,7 @@ import {
   type ColorMode,
 } from '@var-ui/react';
 import { useCallback, useEffect, useState } from 'react';
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { useDocsFramework } from '@/lib/useDocsFramework';
 import { BentoShowcase } from './BentoShowcase';
 import { ThemeShowcaseSwitcher, type ShowcaseThemeId } from './ThemeShowcaseSwitcher';

@@ -5,7 +5,7 @@ description: Native-constraint form that focuses the first invalid field.
 
 # Form
 
-Native-constraint form that focuses the first invalid field. `Form` is a React `<form>` that runs `checkValidity()`, accepts a server `errors` map keyed by field `name`, and does not replace `@var-ui/form` `useForm`. A truthy `errors` entry blocks submit; the app owns clearing it — `Form` does not reset `errors` when the control changes.
+Native-constraint form that focuses the first invalid field. `Form` is a React `<form>` that runs `checkValidity()` and accepts a server `errors` map keyed by field `name`. A truthy `errors` entry blocks submit; the app owns clearing it — `Form` does not reset `errors` when the control changes.
 
 There is no `@var-ui/astro` Form. Native `required` works in Astro without `Form`; focus-first-invalid is React-only.
 
@@ -17,19 +17,14 @@ Submit with empty required fields to see native messages and focus on the first 
 
 <Demo id="form.default" />
 
-## Composition with useForm
+## Server errors
 
-`useForm` stays the values, touched, and validators helper. Pass `errors={form.errors}` and keep FieldMeta on TextField:
+Pass an `errors` map keyed by field `name`. A truthy entry blocks submit until the app clears it.
 
 ```tsx
-const form = useForm({
-  initialValues: { email: '' },
-  validate: { email: isEmail('Enter a valid email') },
-});
-
-<Form onSubmit={() => void form.handleSubmit(save)()} errors={form.errors}>
-  <TextField {...form.getInputProps('email')} label="Email" />
-</Form>;
+<Form errors={{ email: 'Enter a valid email' }}>
+  <TextField name="email" label="Email" />
+</Form>
 ```
 
 ## Props

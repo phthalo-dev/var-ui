@@ -4,7 +4,7 @@ import type { Tone, ToneAppearance } from '@var-ui/core';
 import { defaultIcons } from '@var-ui/icons';
 import { Button, IconProvider, Switch } from '@var-ui/react';
 import { useMemo, useState } from 'react';
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { configuratorStyles } from '@/styles/configurator';
 import { AppearancePicker } from './AppearancePicker';
 import { ComponentConfigurator } from './ComponentConfigurator';

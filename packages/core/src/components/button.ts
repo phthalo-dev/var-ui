@@ -118,5 +118,3 @@ export const button = typestyles.recipe(
 
 /** Visual props derived from the schema. */
 export type ButtonVariantProps = RecipeVariants<typeof button>;
-
-export const linkButton = button;

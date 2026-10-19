@@ -7,7 +7,10 @@
     "skipLibCheck": true,
     "noEmit": true,
     "jsx": "preserve",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"]
+    }
   },
   "include": ["index.ts", "src/**/*.ts", "src/**/*.astro", "src/env.d.ts"]
 }

@@ -1,12 +1,8 @@
+import { iconNameList } from '@var-ui/core';
 import { describe, expect, it } from 'vite-plus/test';
-import { iconNameList } from '../../src/icons/iconNames';
-import {
-  defaultGlyphInnerHtml,
-  defaultIconSvg,
-  defaultIconSvgs,
-} from '../../src/icons/default-glyphs';
+import { defaultGlyphInnerHtml, defaultIconSvg, defaultIconSvgs } from './glyphs';
 
-describe('default-glyphs (core)', () => {
+describe('default glyphs', () => {
   it('ships an SVG string for every semantic icon name', () => {
     for (const name of iconNameList) {
       expect(defaultIconSvgs[name], `missing default glyph: ${name}`).toBeTypeOf('string');

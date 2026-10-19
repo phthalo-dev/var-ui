@@ -37,6 +37,7 @@ export default defineConfig({
         '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
         '@var-ui/core/components': `${root}/packages/core/src/components`,
         '@var-ui/core': `${root}/packages/core/src/index.ts`,
+        '@var-ui/icons/glyphs': `${root}/packages/icons/src/glyphs.ts`,
         '@var-ui/astro': `${root}/packages/astro/index.ts`,
         '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
         '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,

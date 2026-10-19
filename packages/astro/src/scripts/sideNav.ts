@@ -1,5 +1,5 @@
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 import { createResizeHandle } from './resizeHandle';
-import { defaultIconSvgs } from '@var-ui/core';
 
 /** Keep in sync with `SIDE_NAV_COLLAPSED_WIDTH` in `@var-ui/core`. */
 const SIDE_NAV_COLLAPSED_WIDTH = 56;

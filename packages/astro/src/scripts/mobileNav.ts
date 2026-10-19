@@ -1,4 +1,4 @@
-import { defaultIconSvgs } from '@var-ui/core';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 
 type MobileNavController = {
   isOpen: boolean;

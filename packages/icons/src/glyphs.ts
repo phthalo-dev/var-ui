@@ -1,4 +1,4 @@
-import type { IconName } from './iconNames';
+import type { IconName } from '@var-ui/core';
 
 /** Inner SVG markup for a default glyph (children of the root `<svg>`). */
 export const defaultGlyphInnerHtml = {

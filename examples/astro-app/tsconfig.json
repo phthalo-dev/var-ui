@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@var-ui/core": ["../../packages/core/src/index.ts"],
-      "@var-ui/astro": ["../../packages/astro/index.ts"]
+      "@var-ui/astro": ["../../packages/astro/index.ts"],
+      "@var-ui/icons/glyphs": ["../../packages/icons/src/glyphs.ts"]
     }
   },
   "include": ["src/**/*", "astro.config.mjs", "typestyles-entry.ts"],

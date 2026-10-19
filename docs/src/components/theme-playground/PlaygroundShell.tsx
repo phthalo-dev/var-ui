@@ -1,6 +1,6 @@
 'use client';
 
-import type { DocsFramework } from '@/lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { Layout, LayoutContent, LayoutPanel, ResizeHandle, useResizable } from '@var-ui/react';
 import PlaygroundEditorSidebar from './PlaygroundEditorSidebar';
 import ThemePlayground from './ThemePlayground';

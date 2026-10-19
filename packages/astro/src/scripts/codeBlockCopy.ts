@@ -1,4 +1,4 @@
-import { defaultIconSvgs } from '@var-ui/core';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 
 const INIT_ATTR = 'data-var-ui-code-copy-initialized';
 const RESET_MS = 1200;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { parseFrameworkCookie, type DocsFramework } from './framework';
+import { parseFrameworkCookie, type DocsFramework } from '@var-ui/docs-components/framework';
 
 export function readDocsFrameworkFromDocument(): DocsFramework {
   if (typeof document === 'undefined') {

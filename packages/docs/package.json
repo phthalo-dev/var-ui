@@ -64,6 +64,7 @@
     "@typestyles/vite": "catalog:",
     "@var-ui/astro": "workspace:*",
     "@var-ui/core": "workspace:*",
+    "@var-ui/icons": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
     "typescript": "catalog:",
@@ -76,6 +77,7 @@
     "@typestyles/vite": "catalog:",
     "@var-ui/astro": "workspace:>=0.1.0 <1.0.0",
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",
+    "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "astro": "catalog:",
     "typestyles": "catalog:"
   }

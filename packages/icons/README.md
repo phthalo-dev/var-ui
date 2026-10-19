@@ -4,11 +4,12 @@ Optional default glyphs for the [var-ui](https://github.com/var-ui/var-ui) desig
 
 var-ui components never bundle SVGs — they resolve semantic icon names
 (`close`, `chevronDown`, `search`, …) through `IconProvider` from
-`@var-ui/react`. Default glyph SVGs live in `@var-ui/core` as framework-
-agnostic strings (`defaultIconSvgs`); this package wraps them as React
-nodes so apps don't have to bring their own icon library. It is an
-**optional** peer of `@var-ui/react`; apps that skip it pay zero icon
-payload (unmapped names render a shared empty placeholder).
+`@var-ui/react`. Default glyph SVGs live here as framework-agnostic
+strings (`defaultIconSvgs` from `@var-ui/icons/glyphs`); this package
+also wraps them as React nodes so apps don't have to bring their own
+icon library. It is an **optional** peer of `@var-ui/react` and a peer
+of `@var-ui/astro`. Apps that skip it pay zero icon payload in React
+(unmapped names render a shared empty placeholder).
 
 ## Install
 

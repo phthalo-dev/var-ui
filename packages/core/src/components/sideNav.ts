@@ -5,7 +5,7 @@ import { designTokens as t } from '../tokens';
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
 /** Internal CSS variables for theme overrides (`vars` on theme `components`). */
-export const sideNavVarDefinitions = {
+const sideNavVarDefinitions = {
   background: {
     ...atProperty.color,
     value: t.color.background.surface.var,

@@ -1,5 +1,5 @@
-import { defaultIconSvgs } from '@var-ui/core';
 import type { Tone } from '@var-ui/core';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 
 export type ToastShowInput = {
   title: string;

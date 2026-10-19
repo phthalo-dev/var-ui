@@ -180,6 +180,9 @@ importers:
       '@var-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@var-ui/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       astro:
         specifier: 'catalog:'
         version: 5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -208,6 +211,9 @@ importers:
       '@var-ui/docs':
         specifier: workspace:*
         version: link:../../packages/docs
+      '@var-ui/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       astro:
         specifier: 'catalog:'
         version: 5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -381,6 +387,9 @@ importers:
       '@var-ui/core':
         specifier: workspace:*
         version: link:../core
+      '@var-ui/icons':
+        specifier: workspace:*
+        version: link:../icons
       astro:
         specifier: 'catalog:'
         version: 5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -464,6 +473,9 @@ importers:
       '@var-ui/core':
         specifier: workspace:*
         version: link:../core
+      '@var-ui/icons':
+        specifier: workspace:*
+        version: link:../icons
       astro:
         specifier: 'catalog:'
         version: 5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -501,6 +513,9 @@ importers:
       '@var-ui/docs':
         specifier: workspace:*
         version: link:../docs
+      '@var-ui/icons':
+        specifier: workspace:*
+        version: link:../icons
       astro:
         specifier: 'catalog:'
         version: 5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -513,27 +528,6 @@ importers:
       typestyles:
         specifier: 'catalog:'
         version: 0.30.1
-      vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
-        version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
-      vite-plus:
-        specifier: 'catalog:'
-        version: 0.2.2(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
-
-  packages/form:
-    devDependencies:
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@types/react':
-        specifier: 'catalog:'
-        version: 18.3.31
-      react:
-        specifier: 'catalog:'
-        version: 19.2.7
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.7(react@19.2.7)
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@0.2.2
         version: '@voidzero-dev/vite-plus-core@0.2.2(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'

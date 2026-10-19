@@ -2,7 +2,7 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
-export const topNavVarDefinitions = {
+const topNavVarDefinitions = {
   background: {
     ...atProperty.color,
     value: t.color.background.surface.var,

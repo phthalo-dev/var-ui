@@ -9,6 +9,7 @@
       "@var-ui/core/components/*": ["../packages/core/src/components/*"],
       "@var-ui/core": ["../packages/core/src/index.ts"],
       "@var-ui/react": ["../packages/react/src/index.ts"],
+      "@var-ui/icons/glyphs": ["../packages/icons/src/glyphs.ts"],
       "@var-ui/icons": ["../packages/icons/src/index.ts"],
       "@var-ui/astro": ["../packages/astro/index.ts"],
       "@var-ui/docs": ["../packages/docs/index.ts"],
