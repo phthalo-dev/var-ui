@@ -1,5 +1,6 @@
 ---
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { svg as checkSvg } from '@var-ui/icons/glyphs/check';
+import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import {
   button,
   icon,
@@ -106,7 +107,7 @@ const itemContents = await Promise.all(
         <span
           {...chevronRecipe}
           aria-hidden="true"
-          set:html={defaultIconSvgs.chevronDown}
+          set:html={chevronDownSvg}
         />
       </>
     )}
@@ -141,7 +142,7 @@ const itemContents = await Promise.all(
                   >
                     <span
                       {...checkIconRecipe}
-                      set:html={defaultIconSvgs.check}
+                      set:html={checkSvg}
                     />
                   </span>
                 ) : null}

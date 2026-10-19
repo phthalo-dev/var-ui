@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-/** Wrap shared inner SVG markup from `@var-ui/core` as a React glyph. */
+/** Wrap one glyph's inner SVG markup as a React element. */
 export function glyphFromInnerHtml(innerHtml: string): ReactNode {
   return (
     <svg

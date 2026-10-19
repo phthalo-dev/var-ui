@@ -8,7 +8,8 @@
     "noEmit": true,
     "types": ["vite/client"],
     "paths": {
-      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"]
+      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"],
+      "@var-ui/icons/glyphs/*": ["../icons/src/glyph-data/*"]
     }
   },
   "include": [

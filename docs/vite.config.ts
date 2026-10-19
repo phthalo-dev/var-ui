@@ -45,6 +45,7 @@ export default defineConfig({
       '@var-ui/core/components': `${root}/packages/core/src/components`,
       '@var-ui/core': `${root}/packages/core/src/index.ts`,
       '@var-ui/react': `${root}/packages/react/src/index.ts`,
+      '@var-ui/icons/glyphs/': `${root}/packages/icons/src/glyph-data/`,
       '@var-ui/icons/glyphs': `${root}/packages/icons/src/glyphs.ts`,
       '@var-ui/icons': `${root}/packages/icons/src/index.ts`,
       '@var-ui/astro': `${root}/packages/astro/index.ts`,

@@ -1,53 +1,100 @@
 import type { IconName } from '@var-ui/core';
+import { innerHtml as arrowDownInner, svg as arrowDownSvg } from './glyph-data/arrowDown';
+import { innerHtml as arrowUpInner, svg as arrowUpSvg } from './glyph-data/arrowUp';
+import { innerHtml as arrowsUpDownInner, svg as arrowsUpDownSvg } from './glyph-data/arrowsUpDown';
+import { innerHtml as checkInner, svg as checkSvg } from './glyph-data/check';
+import { innerHtml as chevronDownInner, svg as chevronDownSvg } from './glyph-data/chevronDown';
+import { innerHtml as chevronLeftInner, svg as chevronLeftSvg } from './glyph-data/chevronLeft';
+import { innerHtml as chevronRightInner, svg as chevronRightSvg } from './glyph-data/chevronRight';
+import { innerHtml as clockInner, svg as clockSvg } from './glyph-data/clock';
+import { innerHtml as closeInner, svg as closeSvg } from './glyph-data/close';
+import {
+  innerHtml as colorModeDarkInner,
+  svg as colorModeDarkSvg,
+} from './glyph-data/colorModeDark';
+import {
+  innerHtml as colorModeLightInner,
+  svg as colorModeLightSvg,
+} from './glyph-data/colorModeLight';
+import {
+  innerHtml as colorModeSystemInner,
+  svg as colorModeSystemSvg,
+} from './glyph-data/colorModeSystem';
+import { innerHtml as copyInner, svg as copySvg } from './glyph-data/copy';
+import { innerHtml as errorInner, svg as errorSvg } from './glyph-data/error';
+import { innerHtml as eyeInner, svg as eyeSvg } from './glyph-data/eye';
+import { innerHtml as eyeOffInner, svg as eyeOffSvg } from './glyph-data/eyeOff';
+import { innerHtml as infoInner, svg as infoSvg } from './glyph-data/info';
+import { innerHtml as menuInner, svg as menuSvg } from './glyph-data/menu';
+import {
+  innerHtml as moreHorizontalInner,
+  svg as moreHorizontalSvg,
+} from './glyph-data/moreHorizontal';
+import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
+import { innerHtml as stopInner, svg as stopSvg } from './glyph-data/stop';
+import { innerHtml as successInner, svg as successSvg } from './glyph-data/success';
+import { innerHtml as warningInner, svg as warningSvg } from './glyph-data/warning';
+import { innerHtml as wrenchInner, svg as wrenchSvg } from './glyph-data/wrench';
 
 /** Inner SVG markup for a default glyph (children of the root `<svg>`). */
 export const defaultGlyphInnerHtml = {
-  close: '<path d="M6 6l12 12M18 6L6 18" />',
-  chevronDown: '<path d="M6 9.5l6 6 6-6" />',
-  chevronLeft: '<path d="M14.5 6l-6 6 6 6" />',
-  chevronRight: '<path d="M9.5 6l6 6-6 6" />',
-  check: '<path d="M4.5 12.5l5 5L19.5 7" />',
-  copy: '<rect x="9" y="9" width="11" height="11" rx="2" /><path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />',
-  search: '<circle cx="11" cy="11" r="7" /><path d="M16.5 16.5L21 21" />',
-  info: '<circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" />',
-  success: '<circle cx="12" cy="12" r="9" /><path d="M8.5 12.5l2.5 2.5 4.5-5.5" />',
-  warning:
-    '<path d="M12 3.5L2.8 19.5a1 1 0 0 0 .87 1.5h16.66a1 1 0 0 0 .87-1.5L12 3.5z" /><path d="M12 9.5v5M12 17.5h.01" />',
-  error: '<circle cx="12" cy="12" r="9" /><path d="M12 7.5v5.5M12 16.5h.01" />',
-  arrowDown: '<path d="M12 5v14M6 13l6 6 6-6" />',
-  arrowUp: '<path d="M12 19V5M6 11l6-6 6 6" />',
-  arrowsUpDown: '<path d="M12 5v5M8 9l4-4 4 4" /><path d="M12 19v-5M8 15l4 4 4-4" />',
-  stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none" />',
-  wrench:
-    '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.65 2.65-2-2z" />',
-  clock: '<circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />',
-  menu: '<path d="M4 7h16M4 12h16M4 17h16" />',
-  moreHorizontal:
-    '<circle cx="5" cy="12" r="1" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" /><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none" />',
-  colorModeLight:
-    '<circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />',
-  colorModeDark: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />',
-  colorModeSystem:
-    '<rect height="12" rx="1.5" width="18" x="3" y="4" /><path d="M8 20h8M12 16v4" />',
-  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />',
-  eyeOff:
-    '<path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19M6.12 6.12A18.5 18.5 0 0 0 2 12s3.5 7 10 7a10.94 10.94 0 0 0 4.24-.9M2 2l20 20" />',
-} as const satisfies Partial<Record<IconName, string>>;
+  arrowDown: arrowDownInner,
+  arrowUp: arrowUpInner,
+  arrowsUpDown: arrowsUpDownInner,
+  check: checkInner,
+  chevronDown: chevronDownInner,
+  chevronLeft: chevronLeftInner,
+  chevronRight: chevronRightInner,
+  clock: clockInner,
+  close: closeInner,
+  colorModeDark: colorModeDarkInner,
+  colorModeLight: colorModeLightInner,
+  colorModeSystem: colorModeSystemInner,
+  copy: copyInner,
+  error: errorInner,
+  eye: eyeInner,
+  eyeOff: eyeOffInner,
+  info: infoInner,
+  menu: menuInner,
+  moreHorizontal: moreHorizontalInner,
+  search: searchInner,
+  stop: stopInner,
+  success: successInner,
+  warning: warningInner,
+  wrench: wrenchInner,
+} as const satisfies Record<IconName, string>;
 
 export type DefaultGlyphName = keyof typeof defaultGlyphInnerHtml;
 
-const defaultIconSvgOpenTag =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">';
+/** All default glyph SVG strings keyed by semantic icon name. */
+export const defaultIconSvgs = {
+  arrowDown: arrowDownSvg,
+  arrowUp: arrowUpSvg,
+  arrowsUpDown: arrowsUpDownSvg,
+  check: checkSvg,
+  chevronDown: chevronDownSvg,
+  chevronLeft: chevronLeftSvg,
+  chevronRight: chevronRightSvg,
+  clock: clockSvg,
+  close: closeSvg,
+  colorModeDark: colorModeDarkSvg,
+  colorModeLight: colorModeLightSvg,
+  colorModeSystem: colorModeSystemSvg,
+  copy: copySvg,
+  error: errorSvg,
+  eye: eyeSvg,
+  eyeOff: eyeOffSvg,
+  info: infoSvg,
+  menu: menuSvg,
+  moreHorizontal: moreHorizontalSvg,
+  search: searchSvg,
+  stop: stopSvg,
+  success: successSvg,
+  warning: warningSvg,
+  wrench: wrenchSvg,
+} as const satisfies Record<DefaultGlyphName, string>;
 
 /** Full inline SVG string for a default glyph (24×24, `currentColor`). */
 export function defaultIconSvg(name: DefaultGlyphName): string {
-  return `${defaultIconSvgOpenTag}${defaultGlyphInnerHtml[name]}</svg>`;
+  return defaultIconSvgs[name];
 }
-
-/** All default glyph SVG strings keyed by semantic icon name. */
-export const defaultIconSvgs = Object.fromEntries(
-  (Object.keys(defaultGlyphInnerHtml) as DefaultGlyphName[]).map((name) => [
-    name,
-    defaultIconSvg(name),
-  ]),
-) as Record<DefaultGlyphName, string>;

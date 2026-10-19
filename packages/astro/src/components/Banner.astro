@@ -1,6 +1,6 @@
 ---
 import { banner, type BannerVariantProps } from '@var-ui/core';
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
 import { mergeProps } from '../utils';
 
 interface Props extends BannerVariantProps {
@@ -51,7 +51,7 @@ const role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status';
         {...mergeProps(b.dismiss)}
         aria-label={dismissLabel}
         data-var-ui-banner-dismiss
-        set:html={defaultIconSvgs.close}
+        set:html={closeSvg}
       />
     ) : null
   }

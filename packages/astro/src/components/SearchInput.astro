@@ -1,5 +1,5 @@
 ---
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { svg as searchSvg } from '@var-ui/icons/glyphs/search';
 import {
   icon,
   searchInput,
@@ -43,7 +43,7 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
   data-command-palette={commandPaletteId}
 >
   <span {...mergeProps(s.icon)} aria-hidden="true">
-    <span {...iconRecipe} set:html={defaultIconSvgs.search} />
+    <span {...iconRecipe} set:html={searchSvg} />
   </span>
   {
     variant === 'command' ? (

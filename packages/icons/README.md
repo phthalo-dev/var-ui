@@ -28,8 +28,17 @@ import { defaultIcons } from '@var-ui/icons';
 </IconProvider>;
 ```
 
-Icons are minimal inline SVGs — 24×24 viewBox, `currentColor`, `aria-hidden` —
-and tree-shake with your bundler since nothing is auto-imported.
+Import one glyph when you do not need the full registry. The React element and the
+SVG string are separate subpaths, so the rest of the set stays out of the bundle:
+
+```tsx
+import { close } from '@var-ui/icons/close';
+import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
+```
+
+`import { close, search } from '@var-ui/icons'` tree-shakes the same way. Icons are
+minimal inline SVGs — 24×24 viewBox, `currentColor`, `aria-hidden` — and nothing is
+auto-imported.
 
 To use a third-party icon library instead, map its glyphs onto `IconName`
 keys — see the `@var-ui/react` README.

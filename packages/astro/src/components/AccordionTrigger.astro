@@ -1,6 +1,6 @@
 ---
 import { collapsible, type CollapsibleVariantProps } from '@var-ui/core';
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { mergeProps } from '../utils';
 
 interface Props extends CollapsibleVariantProps {}
@@ -10,6 +10,6 @@ const c = collapsible({ variant });
 ---
 
 <span slot="trigger">
-  <span {...mergeProps(c.triggerIcon)} set:html={defaultIconSvgs.chevronDown} />
+  <span {...mergeProps(c.triggerIcon)} set:html={chevronDownSvg} />
   <slot />
 </span>

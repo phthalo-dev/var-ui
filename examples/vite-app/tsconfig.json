@@ -17,6 +17,7 @@
       "@var-ui/core": ["./../../packages/core/src/index.ts"],
       "@var-ui/react": ["./../../packages/react/src/index.ts"],
       "@var-ui/icons/glyphs": ["./../../packages/icons/src/glyphs.ts"],
+      "@var-ui/icons/glyphs/*": ["./../../packages/icons/src/glyph-data/*"],
       "@var-ui/icons": ["./../../packages/icons/src/index.ts"]
     }
   },

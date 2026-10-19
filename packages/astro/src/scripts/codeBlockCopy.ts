@@ -1,10 +1,11 @@
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { svg as checkSvg } from '@var-ui/icons/glyphs/check';
+import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 
 const INIT_ATTR = 'data-var-ui-code-copy-initialized';
 const RESET_MS = 1200;
 
-const COPY_ICON = defaultIconSvgs.copy;
-const CHECK_ICON = defaultIconSvgs.check;
+const COPY_ICON = copySvg;
+const CHECK_ICON = checkSvg;
 
 export async function copyText(text: string): Promise<boolean> {
   try {
