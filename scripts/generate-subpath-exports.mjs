@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Generate package.json export maps for unbundled @var-ui/core and @var-ui/react dist.
+ * Generate the @var-ui/core package.json export map from its unbundled dist.
+ * @var-ui/react uses a `./components/*` wildcard instead of a generated list.
  *
  * Usage: node scripts/generate-subpath-exports.mjs
  */
@@ -74,31 +75,5 @@ function generateCoreExports() {
   console.log(`Updated core exports (${Object.keys(exports).length} subpaths)`);
 }
 
-function generateReactExports() {
-  const pkgPath = join(root, 'packages/react/package.json');
-  const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
-  const componentsDir = join(root, 'packages/react/dist/components');
-  const exports = {
-    '.': { types: './dist/index.d.mts', import: './dist/index.mjs' },
-  };
-
-  const skip = new Set(['utils', 'index']);
-
-  for (const file of listMjsFiles(componentsDir)) {
-    const parts = file.split('/');
-    const base = parts.at(-1);
-    if (!base || skip.has(base)) continue;
-    addExport(exports, `./components/${file}`, `components/${file}`);
-  }
-
-  pkg.exports = exports;
-  writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-  console.log(`Updated react exports (${Object.keys(exports).length} subpaths)`);
-}
-
 const targets = process.argv.slice(2);
-const runCore = targets.length === 0 || targets.includes('core');
-const runReact = targets.length === 0 || targets.includes('react');
-
-if (runCore) generateCoreExports();
-if (runReact) generateReactExports();
+if (targets.length === 0 || targets.includes('core')) generateCoreExports();

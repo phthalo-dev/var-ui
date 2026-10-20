@@ -25,4 +25,4 @@ pnpm test:bundle-budgets:update
 
 Baselines live in `baselines.json` (5% regression tolerance).
 
-Library packages use `vp pack` with `unbundle: true` so consumer bundlers can tree-shake per module. Subpath exports are regenerated after each pack via `scripts/generate-subpath-exports.mjs`.
+Library packages use `vp pack` with `unbundle: true` so consumer bundlers can tree-shake per module. `@var-ui/core` regenerates its export map after each pack via `scripts/generate-subpath-exports.mjs`. `@var-ui/react` publishes `./components/*`.
