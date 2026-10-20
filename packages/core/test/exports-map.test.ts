@@ -30,9 +30,10 @@ describe('package subpath exports', () => {
     expect(exports['./components/index']).toBeUndefined();
   });
 
-  it('react exposes button entry points', () => {
+  it('react exposes component entry points under ./components', () => {
     const { exports } = readPkg('react');
-    expect(exports['./button']?.import).toBe('./dist/components/Button.mjs');
-    expect(exports['./Button']?.import).toBe('./dist/components/Button.mjs');
+    expect(exports['./components/Button']?.import).toBe('./dist/components/Button.mjs');
+    expect(exports['./button']).toBeUndefined();
+    expect(exports['./Button']).toBeUndefined();
   });
 });

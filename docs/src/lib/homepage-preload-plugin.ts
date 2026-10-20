@@ -13,7 +13,6 @@ const PRELOAD_CHUNK_PATTERNS = [
   'HighlightedCodeBlock',
   'rolldown-runtime',
   'default-icons',
-  'showcaseThemes',
   'homeBento',
   'client.',
 ];

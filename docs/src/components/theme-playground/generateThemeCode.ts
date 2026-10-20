@@ -1,5 +1,5 @@
 import type { ThemePlaygroundState } from './themePlaygroundState';
-import type { ShowcaseThemeId } from '../homepage/showcaseThemes';
+import type { ShowcaseThemeId } from '@/themes/presets';
 import { buildExportTokens, formatTokensLiteral, hasTokenOverrides } from './themePlaygroundTokens';
 
 const PRESET_EXPORTS: Record<

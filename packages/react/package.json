@@ -26,23 +26,7 @@
       "types": "./dist/components/Accordion.d.mts",
       "import": "./dist/components/Accordion.mjs"
     },
-    "./accordion": {
-      "types": "./dist/components/Accordion.d.mts",
-      "import": "./dist/components/Accordion.mjs"
-    },
-    "./Accordion": {
-      "types": "./dist/components/Accordion.d.mts",
-      "import": "./dist/components/Accordion.mjs"
-    },
     "./components/Alert": {
-      "types": "./dist/components/Alert.d.mts",
-      "import": "./dist/components/Alert.mjs"
-    },
-    "./alert": {
-      "types": "./dist/components/Alert.d.mts",
-      "import": "./dist/components/Alert.mjs"
-    },
-    "./Alert": {
       "types": "./dist/components/Alert.d.mts",
       "import": "./dist/components/Alert.mjs"
     },
@@ -50,23 +34,7 @@
       "types": "./dist/components/AlertDialog.d.mts",
       "import": "./dist/components/AlertDialog.mjs"
     },
-    "./alert-dialog": {
-      "types": "./dist/components/AlertDialog.d.mts",
-      "import": "./dist/components/AlertDialog.mjs"
-    },
-    "./AlertDialog": {
-      "types": "./dist/components/AlertDialog.d.mts",
-      "import": "./dist/components/AlertDialog.mjs"
-    },
     "./components/AppShell": {
-      "types": "./dist/components/AppShell.d.mts",
-      "import": "./dist/components/AppShell.mjs"
-    },
-    "./app-shell": {
-      "types": "./dist/components/AppShell.d.mts",
-      "import": "./dist/components/AppShell.mjs"
-    },
-    "./AppShell": {
       "types": "./dist/components/AppShell.d.mts",
       "import": "./dist/components/AppShell.mjs"
     },
@@ -74,23 +42,7 @@
       "types": "./dist/components/AspectRatio.d.mts",
       "import": "./dist/components/AspectRatio.mjs"
     },
-    "./aspect-ratio": {
-      "types": "./dist/components/AspectRatio.d.mts",
-      "import": "./dist/components/AspectRatio.mjs"
-    },
-    "./AspectRatio": {
-      "types": "./dist/components/AspectRatio.d.mts",
-      "import": "./dist/components/AspectRatio.mjs"
-    },
     "./components/Avatar": {
-      "types": "./dist/components/Avatar.d.mts",
-      "import": "./dist/components/Avatar.mjs"
-    },
-    "./avatar": {
-      "types": "./dist/components/Avatar.d.mts",
-      "import": "./dist/components/Avatar.mjs"
-    },
-    "./Avatar": {
       "types": "./dist/components/Avatar.d.mts",
       "import": "./dist/components/Avatar.mjs"
     },
@@ -98,23 +50,7 @@
       "types": "./dist/components/Badge.d.mts",
       "import": "./dist/components/Badge.mjs"
     },
-    "./badge": {
-      "types": "./dist/components/Badge.d.mts",
-      "import": "./dist/components/Badge.mjs"
-    },
-    "./Badge": {
-      "types": "./dist/components/Badge.d.mts",
-      "import": "./dist/components/Badge.mjs"
-    },
     "./components/Banner": {
-      "types": "./dist/components/Banner.d.mts",
-      "import": "./dist/components/Banner.mjs"
-    },
-    "./banner": {
-      "types": "./dist/components/Banner.d.mts",
-      "import": "./dist/components/Banner.mjs"
-    },
-    "./Banner": {
       "types": "./dist/components/Banner.d.mts",
       "import": "./dist/components/Banner.mjs"
     },
@@ -122,23 +58,7 @@
       "types": "./dist/components/Breadcrumbs.d.mts",
       "import": "./dist/components/Breadcrumbs.mjs"
     },
-    "./breadcrumbs": {
-      "types": "./dist/components/Breadcrumbs.d.mts",
-      "import": "./dist/components/Breadcrumbs.mjs"
-    },
-    "./Breadcrumbs": {
-      "types": "./dist/components/Breadcrumbs.d.mts",
-      "import": "./dist/components/Breadcrumbs.mjs"
-    },
     "./components/Button": {
-      "types": "./dist/components/Button.d.mts",
-      "import": "./dist/components/Button.mjs"
-    },
-    "./button": {
-      "types": "./dist/components/Button.d.mts",
-      "import": "./dist/components/Button.mjs"
-    },
-    "./Button": {
       "types": "./dist/components/Button.d.mts",
       "import": "./dist/components/Button.mjs"
     },
@@ -146,23 +66,7 @@
       "types": "./dist/components/ButtonGroup.d.mts",
       "import": "./dist/components/ButtonGroup.mjs"
     },
-    "./button-group": {
-      "types": "./dist/components/ButtonGroup.d.mts",
-      "import": "./dist/components/ButtonGroup.mjs"
-    },
-    "./ButtonGroup": {
-      "types": "./dist/components/ButtonGroup.d.mts",
-      "import": "./dist/components/ButtonGroup.mjs"
-    },
     "./components/Calendar": {
-      "types": "./dist/components/Calendar.d.mts",
-      "import": "./dist/components/Calendar.mjs"
-    },
-    "./calendar": {
-      "types": "./dist/components/Calendar.d.mts",
-      "import": "./dist/components/Calendar.mjs"
-    },
-    "./Calendar": {
       "types": "./dist/components/Calendar.d.mts",
       "import": "./dist/components/Calendar.mjs"
     },
@@ -170,23 +74,7 @@
       "types": "./dist/components/Card.d.mts",
       "import": "./dist/components/Card.mjs"
     },
-    "./card": {
-      "types": "./dist/components/Card.d.mts",
-      "import": "./dist/components/Card.mjs"
-    },
-    "./Card": {
-      "types": "./dist/components/Card.d.mts",
-      "import": "./dist/components/Card.mjs"
-    },
     "./components/Carousel": {
-      "types": "./dist/components/Carousel.d.mts",
-      "import": "./dist/components/Carousel.mjs"
-    },
-    "./carousel": {
-      "types": "./dist/components/Carousel.d.mts",
-      "import": "./dist/components/Carousel.mjs"
-    },
-    "./Carousel": {
       "types": "./dist/components/Carousel.d.mts",
       "import": "./dist/components/Carousel.mjs"
     },
@@ -194,23 +82,7 @@
       "types": "./dist/components/Center.d.mts",
       "import": "./dist/components/Center.mjs"
     },
-    "./center": {
-      "types": "./dist/components/Center.d.mts",
-      "import": "./dist/components/Center.mjs"
-    },
-    "./Center": {
-      "types": "./dist/components/Center.d.mts",
-      "import": "./dist/components/Center.mjs"
-    },
     "./components/Checkbox": {
-      "types": "./dist/components/Checkbox.d.mts",
-      "import": "./dist/components/Checkbox.mjs"
-    },
-    "./checkbox": {
-      "types": "./dist/components/Checkbox.d.mts",
-      "import": "./dist/components/Checkbox.mjs"
-    },
-    "./Checkbox": {
       "types": "./dist/components/Checkbox.d.mts",
       "import": "./dist/components/Checkbox.mjs"
     },
@@ -218,23 +90,7 @@
       "types": "./dist/components/CheckboxGroup.d.mts",
       "import": "./dist/components/CheckboxGroup.mjs"
     },
-    "./checkbox-group": {
-      "types": "./dist/components/CheckboxGroup.d.mts",
-      "import": "./dist/components/CheckboxGroup.mjs"
-    },
-    "./CheckboxGroup": {
-      "types": "./dist/components/CheckboxGroup.d.mts",
-      "import": "./dist/components/CheckboxGroup.mjs"
-    },
     "./components/Chip": {
-      "types": "./dist/components/Chip.d.mts",
-      "import": "./dist/components/Chip.mjs"
-    },
-    "./chip": {
-      "types": "./dist/components/Chip.d.mts",
-      "import": "./dist/components/Chip.mjs"
-    },
-    "./Chip": {
       "types": "./dist/components/Chip.d.mts",
       "import": "./dist/components/Chip.mjs"
     },
@@ -242,23 +98,7 @@
       "types": "./dist/components/Code.d.mts",
       "import": "./dist/components/Code.mjs"
     },
-    "./code": {
-      "types": "./dist/components/Code.d.mts",
-      "import": "./dist/components/Code.mjs"
-    },
-    "./Code": {
-      "types": "./dist/components/Code.d.mts",
-      "import": "./dist/components/Code.mjs"
-    },
     "./components/CodeBlock": {
-      "types": "./dist/components/CodeBlock.d.mts",
-      "import": "./dist/components/CodeBlock.mjs"
-    },
-    "./code-block": {
-      "types": "./dist/components/CodeBlock.d.mts",
-      "import": "./dist/components/CodeBlock.mjs"
-    },
-    "./CodeBlock": {
       "types": "./dist/components/CodeBlock.d.mts",
       "import": "./dist/components/CodeBlock.mjs"
     },
@@ -266,23 +106,7 @@
       "types": "./dist/components/Collapsible.d.mts",
       "import": "./dist/components/Collapsible.mjs"
     },
-    "./collapsible": {
-      "types": "./dist/components/Collapsible.d.mts",
-      "import": "./dist/components/Collapsible.mjs"
-    },
-    "./Collapsible": {
-      "types": "./dist/components/Collapsible.d.mts",
-      "import": "./dist/components/Collapsible.mjs"
-    },
     "./components/ColorInput": {
-      "types": "./dist/components/ColorInput.d.mts",
-      "import": "./dist/components/ColorInput.mjs"
-    },
-    "./color-input": {
-      "types": "./dist/components/ColorInput.d.mts",
-      "import": "./dist/components/ColorInput.mjs"
-    },
-    "./ColorInput": {
       "types": "./dist/components/ColorInput.d.mts",
       "import": "./dist/components/ColorInput.mjs"
     },
@@ -290,23 +114,7 @@
       "types": "./dist/components/ColorModeToggle.d.mts",
       "import": "./dist/components/ColorModeToggle.mjs"
     },
-    "./color-mode-toggle": {
-      "types": "./dist/components/ColorModeToggle.d.mts",
-      "import": "./dist/components/ColorModeToggle.mjs"
-    },
-    "./ColorModeToggle": {
-      "types": "./dist/components/ColorModeToggle.d.mts",
-      "import": "./dist/components/ColorModeToggle.mjs"
-    },
     "./components/ColorPicker": {
-      "types": "./dist/components/ColorPicker.d.mts",
-      "import": "./dist/components/ColorPicker.mjs"
-    },
-    "./color-picker": {
-      "types": "./dist/components/ColorPicker.d.mts",
-      "import": "./dist/components/ColorPicker.mjs"
-    },
-    "./ColorPicker": {
       "types": "./dist/components/ColorPicker.d.mts",
       "import": "./dist/components/ColorPicker.mjs"
     },
@@ -314,23 +122,7 @@
       "types": "./dist/components/ColorSwatch.d.mts",
       "import": "./dist/components/ColorSwatch.mjs"
     },
-    "./color-swatch": {
-      "types": "./dist/components/ColorSwatch.d.mts",
-      "import": "./dist/components/ColorSwatch.mjs"
-    },
-    "./ColorSwatch": {
-      "types": "./dist/components/ColorSwatch.d.mts",
-      "import": "./dist/components/ColorSwatch.mjs"
-    },
     "./components/Combobox": {
-      "types": "./dist/components/Combobox.d.mts",
-      "import": "./dist/components/Combobox.mjs"
-    },
-    "./combobox": {
-      "types": "./dist/components/Combobox.d.mts",
-      "import": "./dist/components/Combobox.mjs"
-    },
-    "./Combobox": {
       "types": "./dist/components/Combobox.d.mts",
       "import": "./dist/components/Combobox.mjs"
     },
@@ -338,23 +130,7 @@
       "types": "./dist/components/CommandPalette.d.mts",
       "import": "./dist/components/CommandPalette.mjs"
     },
-    "./command-palette": {
-      "types": "./dist/components/CommandPalette.d.mts",
-      "import": "./dist/components/CommandPalette.mjs"
-    },
-    "./CommandPalette": {
-      "types": "./dist/components/CommandPalette.d.mts",
-      "import": "./dist/components/CommandPalette.mjs"
-    },
     "./components/CopyButton": {
-      "types": "./dist/components/CopyButton.d.mts",
-      "import": "./dist/components/CopyButton.mjs"
-    },
-    "./copy-button": {
-      "types": "./dist/components/CopyButton.d.mts",
-      "import": "./dist/components/CopyButton.mjs"
-    },
-    "./CopyButton": {
       "types": "./dist/components/CopyButton.d.mts",
       "import": "./dist/components/CopyButton.mjs"
     },
@@ -362,23 +138,7 @@
       "types": "./dist/components/DateInput.d.mts",
       "import": "./dist/components/DateInput.mjs"
     },
-    "./date-input": {
-      "types": "./dist/components/DateInput.d.mts",
-      "import": "./dist/components/DateInput.mjs"
-    },
-    "./DateInput": {
-      "types": "./dist/components/DateInput.d.mts",
-      "import": "./dist/components/DateInput.mjs"
-    },
     "./components/DateRangeInput": {
-      "types": "./dist/components/DateRangeInput.d.mts",
-      "import": "./dist/components/DateRangeInput.mjs"
-    },
-    "./date-range-input": {
-      "types": "./dist/components/DateRangeInput.d.mts",
-      "import": "./dist/components/DateRangeInput.mjs"
-    },
-    "./DateRangeInput": {
       "types": "./dist/components/DateRangeInput.d.mts",
       "import": "./dist/components/DateRangeInput.mjs"
     },
@@ -386,23 +146,7 @@
       "types": "./dist/components/DateTimeInput.d.mts",
       "import": "./dist/components/DateTimeInput.mjs"
     },
-    "./date-time-input": {
-      "types": "./dist/components/DateTimeInput.d.mts",
-      "import": "./dist/components/DateTimeInput.mjs"
-    },
-    "./DateTimeInput": {
-      "types": "./dist/components/DateTimeInput.d.mts",
-      "import": "./dist/components/DateTimeInput.mjs"
-    },
     "./components/DescriptionList": {
-      "types": "./dist/components/DescriptionList.d.mts",
-      "import": "./dist/components/DescriptionList.mjs"
-    },
-    "./description-list": {
-      "types": "./dist/components/DescriptionList.d.mts",
-      "import": "./dist/components/DescriptionList.mjs"
-    },
-    "./DescriptionList": {
       "types": "./dist/components/DescriptionList.d.mts",
       "import": "./dist/components/DescriptionList.mjs"
     },
@@ -410,23 +154,7 @@
       "types": "./dist/components/Dialog.d.mts",
       "import": "./dist/components/Dialog.mjs"
     },
-    "./dialog": {
-      "types": "./dist/components/Dialog.d.mts",
-      "import": "./dist/components/Dialog.mjs"
-    },
-    "./Dialog": {
-      "types": "./dist/components/Dialog.d.mts",
-      "import": "./dist/components/Dialog.mjs"
-    },
     "./components/Divider": {
-      "types": "./dist/components/Divider.d.mts",
-      "import": "./dist/components/Divider.mjs"
-    },
-    "./divider": {
-      "types": "./dist/components/Divider.d.mts",
-      "import": "./dist/components/Divider.mjs"
-    },
-    "./Divider": {
       "types": "./dist/components/Divider.d.mts",
       "import": "./dist/components/Divider.mjs"
     },
@@ -434,23 +162,7 @@
       "types": "./dist/components/Drawer.d.mts",
       "import": "./dist/components/Drawer.mjs"
     },
-    "./drawer": {
-      "types": "./dist/components/Drawer.d.mts",
-      "import": "./dist/components/Drawer.mjs"
-    },
-    "./Drawer": {
-      "types": "./dist/components/Drawer.d.mts",
-      "import": "./dist/components/Drawer.mjs"
-    },
     "./components/EmptyState": {
-      "types": "./dist/components/EmptyState.d.mts",
-      "import": "./dist/components/EmptyState.mjs"
-    },
-    "./empty-state": {
-      "types": "./dist/components/EmptyState.d.mts",
-      "import": "./dist/components/EmptyState.mjs"
-    },
-    "./EmptyState": {
       "types": "./dist/components/EmptyState.d.mts",
       "import": "./dist/components/EmptyState.mjs"
     },
@@ -458,23 +170,7 @@
       "types": "./dist/components/Field.d.mts",
       "import": "./dist/components/Field.mjs"
     },
-    "./field": {
-      "types": "./dist/components/Field.d.mts",
-      "import": "./dist/components/Field.mjs"
-    },
-    "./Field": {
-      "types": "./dist/components/Field.d.mts",
-      "import": "./dist/components/Field.mjs"
-    },
     "./components/FileInput": {
-      "types": "./dist/components/FileInput.d.mts",
-      "import": "./dist/components/FileInput.mjs"
-    },
-    "./file-input": {
-      "types": "./dist/components/FileInput.d.mts",
-      "import": "./dist/components/FileInput.mjs"
-    },
-    "./FileInput": {
       "types": "./dist/components/FileInput.d.mts",
       "import": "./dist/components/FileInput.mjs"
     },
@@ -482,23 +178,7 @@
       "types": "./dist/components/FileTree.d.mts",
       "import": "./dist/components/FileTree.mjs"
     },
-    "./file-tree": {
-      "types": "./dist/components/FileTree.d.mts",
-      "import": "./dist/components/FileTree.mjs"
-    },
-    "./FileTree": {
-      "types": "./dist/components/FileTree.d.mts",
-      "import": "./dist/components/FileTree.mjs"
-    },
     "./components/Form": {
-      "types": "./dist/components/Form.d.mts",
-      "import": "./dist/components/Form.mjs"
-    },
-    "./form": {
-      "types": "./dist/components/Form.d.mts",
-      "import": "./dist/components/Form.mjs"
-    },
-    "./Form": {
       "types": "./dist/components/Form.d.mts",
       "import": "./dist/components/Form.mjs"
     },
@@ -506,23 +186,7 @@
       "types": "./dist/components/Grid.d.mts",
       "import": "./dist/components/Grid.mjs"
     },
-    "./grid": {
-      "types": "./dist/components/Grid.d.mts",
-      "import": "./dist/components/Grid.mjs"
-    },
-    "./Grid": {
-      "types": "./dist/components/Grid.d.mts",
-      "import": "./dist/components/Grid.mjs"
-    },
     "./components/Hidden": {
-      "types": "./dist/components/Hidden.d.mts",
-      "import": "./dist/components/Hidden.mjs"
-    },
-    "./hidden": {
-      "types": "./dist/components/Hidden.d.mts",
-      "import": "./dist/components/Hidden.mjs"
-    },
-    "./Hidden": {
       "types": "./dist/components/Hidden.d.mts",
       "import": "./dist/components/Hidden.mjs"
     },
@@ -530,23 +194,7 @@
       "types": "./dist/components/HoverCard.d.mts",
       "import": "./dist/components/HoverCard.mjs"
     },
-    "./hover-card": {
-      "types": "./dist/components/HoverCard.d.mts",
-      "import": "./dist/components/HoverCard.mjs"
-    },
-    "./HoverCard": {
-      "types": "./dist/components/HoverCard.d.mts",
-      "import": "./dist/components/HoverCard.mjs"
-    },
     "./components/IconButton": {
-      "types": "./dist/components/IconButton.d.mts",
-      "import": "./dist/components/IconButton.mjs"
-    },
-    "./icon-button": {
-      "types": "./dist/components/IconButton.d.mts",
-      "import": "./dist/components/IconButton.mjs"
-    },
-    "./IconButton": {
       "types": "./dist/components/IconButton.d.mts",
       "import": "./dist/components/IconButton.mjs"
     },
@@ -554,23 +202,7 @@
       "types": "./dist/components/InputGroup.d.mts",
       "import": "./dist/components/InputGroup.mjs"
     },
-    "./input-group": {
-      "types": "./dist/components/InputGroup.d.mts",
-      "import": "./dist/components/InputGroup.mjs"
-    },
-    "./InputGroup": {
-      "types": "./dist/components/InputGroup.d.mts",
-      "import": "./dist/components/InputGroup.mjs"
-    },
     "./components/InputGroupText": {
-      "types": "./dist/components/InputGroupText.d.mts",
-      "import": "./dist/components/InputGroupText.mjs"
-    },
-    "./input-group-text": {
-      "types": "./dist/components/InputGroupText.d.mts",
-      "import": "./dist/components/InputGroupText.mjs"
-    },
-    "./InputGroupText": {
       "types": "./dist/components/InputGroupText.d.mts",
       "import": "./dist/components/InputGroupText.mjs"
     },
@@ -578,23 +210,7 @@
       "types": "./dist/components/Kbd.d.mts",
       "import": "./dist/components/Kbd.mjs"
     },
-    "./kbd": {
-      "types": "./dist/components/Kbd.d.mts",
-      "import": "./dist/components/Kbd.mjs"
-    },
-    "./Kbd": {
-      "types": "./dist/components/Kbd.d.mts",
-      "import": "./dist/components/Kbd.mjs"
-    },
     "./components/Layout": {
-      "types": "./dist/components/Layout.d.mts",
-      "import": "./dist/components/Layout.mjs"
-    },
-    "./layout": {
-      "types": "./dist/components/Layout.d.mts",
-      "import": "./dist/components/Layout.mjs"
-    },
-    "./Layout": {
       "types": "./dist/components/Layout.d.mts",
       "import": "./dist/components/Layout.mjs"
     },
@@ -602,23 +218,7 @@
       "types": "./dist/components/Link.d.mts",
       "import": "./dist/components/Link.mjs"
     },
-    "./link": {
-      "types": "./dist/components/Link.d.mts",
-      "import": "./dist/components/Link.mjs"
-    },
-    "./Link": {
-      "types": "./dist/components/Link.d.mts",
-      "import": "./dist/components/Link.mjs"
-    },
     "./components/List": {
-      "types": "./dist/components/List.d.mts",
-      "import": "./dist/components/List.mjs"
-    },
-    "./list": {
-      "types": "./dist/components/List.d.mts",
-      "import": "./dist/components/List.mjs"
-    },
-    "./List": {
       "types": "./dist/components/List.d.mts",
       "import": "./dist/components/List.mjs"
     },
@@ -626,23 +226,7 @@
       "types": "./dist/components/LoadingOverlay.d.mts",
       "import": "./dist/components/LoadingOverlay.mjs"
     },
-    "./loading-overlay": {
-      "types": "./dist/components/LoadingOverlay.d.mts",
-      "import": "./dist/components/LoadingOverlay.mjs"
-    },
-    "./LoadingOverlay": {
-      "types": "./dist/components/LoadingOverlay.d.mts",
-      "import": "./dist/components/LoadingOverlay.mjs"
-    },
     "./components/Menu": {
-      "types": "./dist/components/Menu.d.mts",
-      "import": "./dist/components/Menu.mjs"
-    },
-    "./menu": {
-      "types": "./dist/components/Menu.d.mts",
-      "import": "./dist/components/Menu.mjs"
-    },
-    "./Menu": {
       "types": "./dist/components/Menu.d.mts",
       "import": "./dist/components/Menu.mjs"
     },
@@ -650,23 +234,7 @@
       "types": "./dist/components/MobileNav.d.mts",
       "import": "./dist/components/MobileNav.mjs"
     },
-    "./mobile-nav": {
-      "types": "./dist/components/MobileNav.d.mts",
-      "import": "./dist/components/MobileNav.mjs"
-    },
-    "./MobileNav": {
-      "types": "./dist/components/MobileNav.d.mts",
-      "import": "./dist/components/MobileNav.mjs"
-    },
     "./components/MultiSelector": {
-      "types": "./dist/components/MultiSelector.d.mts",
-      "import": "./dist/components/MultiSelector.mjs"
-    },
-    "./multi-selector": {
-      "types": "./dist/components/MultiSelector.d.mts",
-      "import": "./dist/components/MultiSelector.mjs"
-    },
-    "./MultiSelector": {
       "types": "./dist/components/MultiSelector.d.mts",
       "import": "./dist/components/MultiSelector.mjs"
     },
@@ -674,23 +242,7 @@
       "types": "./dist/components/NumberInput.d.mts",
       "import": "./dist/components/NumberInput.mjs"
     },
-    "./number-input": {
-      "types": "./dist/components/NumberInput.d.mts",
-      "import": "./dist/components/NumberInput.mjs"
-    },
-    "./NumberInput": {
-      "types": "./dist/components/NumberInput.d.mts",
-      "import": "./dist/components/NumberInput.mjs"
-    },
     "./components/Outline": {
-      "types": "./dist/components/Outline.d.mts",
-      "import": "./dist/components/Outline.mjs"
-    },
-    "./outline": {
-      "types": "./dist/components/Outline.d.mts",
-      "import": "./dist/components/Outline.mjs"
-    },
-    "./Outline": {
       "types": "./dist/components/Outline.d.mts",
       "import": "./dist/components/Outline.mjs"
     },
@@ -698,23 +250,7 @@
       "types": "./dist/components/OverflowList.d.mts",
       "import": "./dist/components/OverflowList.mjs"
     },
-    "./overflow-list": {
-      "types": "./dist/components/OverflowList.d.mts",
-      "import": "./dist/components/OverflowList.mjs"
-    },
-    "./OverflowList": {
-      "types": "./dist/components/OverflowList.d.mts",
-      "import": "./dist/components/OverflowList.mjs"
-    },
     "./components/Pagination": {
-      "types": "./dist/components/Pagination.d.mts",
-      "import": "./dist/components/Pagination.mjs"
-    },
-    "./pagination": {
-      "types": "./dist/components/Pagination.d.mts",
-      "import": "./dist/components/Pagination.mjs"
-    },
-    "./Pagination": {
       "types": "./dist/components/Pagination.d.mts",
       "import": "./dist/components/Pagination.mjs"
     },
@@ -722,23 +258,7 @@
       "types": "./dist/components/PasswordInput.d.mts",
       "import": "./dist/components/PasswordInput.mjs"
     },
-    "./password-input": {
-      "types": "./dist/components/PasswordInput.d.mts",
-      "import": "./dist/components/PasswordInput.mjs"
-    },
-    "./PasswordInput": {
-      "types": "./dist/components/PasswordInput.d.mts",
-      "import": "./dist/components/PasswordInput.mjs"
-    },
     "./components/PinInput": {
-      "types": "./dist/components/PinInput.d.mts",
-      "import": "./dist/components/PinInput.mjs"
-    },
-    "./pin-input": {
-      "types": "./dist/components/PinInput.d.mts",
-      "import": "./dist/components/PinInput.mjs"
-    },
-    "./PinInput": {
       "types": "./dist/components/PinInput.d.mts",
       "import": "./dist/components/PinInput.mjs"
     },
@@ -746,23 +266,7 @@
       "types": "./dist/components/Popover.d.mts",
       "import": "./dist/components/Popover.mjs"
     },
-    "./popover": {
-      "types": "./dist/components/Popover.d.mts",
-      "import": "./dist/components/Popover.mjs"
-    },
-    "./Popover": {
-      "types": "./dist/components/Popover.d.mts",
-      "import": "./dist/components/Popover.mjs"
-    },
     "./components/ProgressBar": {
-      "types": "./dist/components/ProgressBar.d.mts",
-      "import": "./dist/components/ProgressBar.mjs"
-    },
-    "./progress-bar": {
-      "types": "./dist/components/ProgressBar.d.mts",
-      "import": "./dist/components/ProgressBar.mjs"
-    },
-    "./ProgressBar": {
       "types": "./dist/components/ProgressBar.d.mts",
       "import": "./dist/components/ProgressBar.mjs"
     },
@@ -770,23 +274,7 @@
       "types": "./dist/components/RadioGroup.d.mts",
       "import": "./dist/components/RadioGroup.mjs"
     },
-    "./radio-group": {
-      "types": "./dist/components/RadioGroup.d.mts",
-      "import": "./dist/components/RadioGroup.mjs"
-    },
-    "./RadioGroup": {
-      "types": "./dist/components/RadioGroup.d.mts",
-      "import": "./dist/components/RadioGroup.mjs"
-    },
     "./components/ResizeHandle": {
-      "types": "./dist/components/ResizeHandle.d.mts",
-      "import": "./dist/components/ResizeHandle.mjs"
-    },
-    "./resize-handle": {
-      "types": "./dist/components/ResizeHandle.d.mts",
-      "import": "./dist/components/ResizeHandle.mjs"
-    },
-    "./ResizeHandle": {
       "types": "./dist/components/ResizeHandle.d.mts",
       "import": "./dist/components/ResizeHandle.mjs"
     },
@@ -794,23 +282,7 @@
       "types": "./dist/components/ScrollArea.d.mts",
       "import": "./dist/components/ScrollArea.mjs"
     },
-    "./scroll-area": {
-      "types": "./dist/components/ScrollArea.d.mts",
-      "import": "./dist/components/ScrollArea.mjs"
-    },
-    "./ScrollArea": {
-      "types": "./dist/components/ScrollArea.d.mts",
-      "import": "./dist/components/ScrollArea.mjs"
-    },
     "./components/SearchInput": {
-      "types": "./dist/components/SearchInput.d.mts",
-      "import": "./dist/components/SearchInput.mjs"
-    },
-    "./search-input": {
-      "types": "./dist/components/SearchInput.d.mts",
-      "import": "./dist/components/SearchInput.mjs"
-    },
-    "./SearchInput": {
       "types": "./dist/components/SearchInput.d.mts",
       "import": "./dist/components/SearchInput.mjs"
     },
@@ -818,23 +290,7 @@
       "types": "./dist/components/Section.d.mts",
       "import": "./dist/components/Section.mjs"
     },
-    "./section": {
-      "types": "./dist/components/Section.d.mts",
-      "import": "./dist/components/Section.mjs"
-    },
-    "./Section": {
-      "types": "./dist/components/Section.d.mts",
-      "import": "./dist/components/Section.mjs"
-    },
     "./components/SegmentedControl": {
-      "types": "./dist/components/SegmentedControl.d.mts",
-      "import": "./dist/components/SegmentedControl.mjs"
-    },
-    "./segmented-control": {
-      "types": "./dist/components/SegmentedControl.d.mts",
-      "import": "./dist/components/SegmentedControl.mjs"
-    },
-    "./SegmentedControl": {
       "types": "./dist/components/SegmentedControl.d.mts",
       "import": "./dist/components/SegmentedControl.mjs"
     },
@@ -842,23 +298,7 @@
       "types": "./dist/components/Select.d.mts",
       "import": "./dist/components/Select.mjs"
     },
-    "./select": {
-      "types": "./dist/components/Select.d.mts",
-      "import": "./dist/components/Select.mjs"
-    },
-    "./Select": {
-      "types": "./dist/components/Select.d.mts",
-      "import": "./dist/components/Select.mjs"
-    },
     "./components/SideNav": {
-      "types": "./dist/components/SideNav.d.mts",
-      "import": "./dist/components/SideNav.mjs"
-    },
-    "./side-nav": {
-      "types": "./dist/components/SideNav.d.mts",
-      "import": "./dist/components/SideNav.mjs"
-    },
-    "./SideNav": {
       "types": "./dist/components/SideNav.d.mts",
       "import": "./dist/components/SideNav.mjs"
     },
@@ -866,23 +306,7 @@
       "types": "./dist/components/SimpleDialog.d.mts",
       "import": "./dist/components/SimpleDialog.mjs"
     },
-    "./simple-dialog": {
-      "types": "./dist/components/SimpleDialog.d.mts",
-      "import": "./dist/components/SimpleDialog.mjs"
-    },
-    "./SimpleDialog": {
-      "types": "./dist/components/SimpleDialog.d.mts",
-      "import": "./dist/components/SimpleDialog.mjs"
-    },
     "./components/SimpleGrid": {
-      "types": "./dist/components/SimpleGrid.d.mts",
-      "import": "./dist/components/SimpleGrid.mjs"
-    },
-    "./simple-grid": {
-      "types": "./dist/components/SimpleGrid.d.mts",
-      "import": "./dist/components/SimpleGrid.mjs"
-    },
-    "./SimpleGrid": {
       "types": "./dist/components/SimpleGrid.d.mts",
       "import": "./dist/components/SimpleGrid.mjs"
     },
@@ -890,23 +314,7 @@
       "types": "./dist/components/SimplePopover.d.mts",
       "import": "./dist/components/SimplePopover.mjs"
     },
-    "./simple-popover": {
-      "types": "./dist/components/SimplePopover.d.mts",
-      "import": "./dist/components/SimplePopover.mjs"
-    },
-    "./SimplePopover": {
-      "types": "./dist/components/SimplePopover.d.mts",
-      "import": "./dist/components/SimplePopover.mjs"
-    },
     "./components/SimpleTooltip": {
-      "types": "./dist/components/SimpleTooltip.d.mts",
-      "import": "./dist/components/SimpleTooltip.mjs"
-    },
-    "./simple-tooltip": {
-      "types": "./dist/components/SimpleTooltip.d.mts",
-      "import": "./dist/components/SimpleTooltip.mjs"
-    },
-    "./SimpleTooltip": {
       "types": "./dist/components/SimpleTooltip.d.mts",
       "import": "./dist/components/SimpleTooltip.mjs"
     },
@@ -914,23 +322,7 @@
       "types": "./dist/components/Skeleton.d.mts",
       "import": "./dist/components/Skeleton.mjs"
     },
-    "./skeleton": {
-      "types": "./dist/components/Skeleton.d.mts",
-      "import": "./dist/components/Skeleton.mjs"
-    },
-    "./Skeleton": {
-      "types": "./dist/components/Skeleton.d.mts",
-      "import": "./dist/components/Skeleton.mjs"
-    },
     "./components/Slider": {
-      "types": "./dist/components/Slider.d.mts",
-      "import": "./dist/components/Slider.mjs"
-    },
-    "./slider": {
-      "types": "./dist/components/Slider.d.mts",
-      "import": "./dist/components/Slider.mjs"
-    },
-    "./Slider": {
       "types": "./dist/components/Slider.d.mts",
       "import": "./dist/components/Slider.mjs"
     },
@@ -938,23 +330,7 @@
       "types": "./dist/components/Spinner.d.mts",
       "import": "./dist/components/Spinner.mjs"
     },
-    "./spinner": {
-      "types": "./dist/components/Spinner.d.mts",
-      "import": "./dist/components/Spinner.mjs"
-    },
-    "./Spinner": {
-      "types": "./dist/components/Spinner.d.mts",
-      "import": "./dist/components/Spinner.mjs"
-    },
     "./components/Stack": {
-      "types": "./dist/components/Stack.d.mts",
-      "import": "./dist/components/Stack.mjs"
-    },
-    "./stack": {
-      "types": "./dist/components/Stack.d.mts",
-      "import": "./dist/components/Stack.mjs"
-    },
-    "./Stack": {
       "types": "./dist/components/Stack.d.mts",
       "import": "./dist/components/Stack.mjs"
     },
@@ -962,23 +338,7 @@
       "types": "./dist/components/StatusDot.d.mts",
       "import": "./dist/components/StatusDot.mjs"
     },
-    "./status-dot": {
-      "types": "./dist/components/StatusDot.d.mts",
-      "import": "./dist/components/StatusDot.mjs"
-    },
-    "./StatusDot": {
-      "types": "./dist/components/StatusDot.d.mts",
-      "import": "./dist/components/StatusDot.mjs"
-    },
     "./components/Steps": {
-      "types": "./dist/components/Steps.d.mts",
-      "import": "./dist/components/Steps.mjs"
-    },
-    "./steps": {
-      "types": "./dist/components/Steps.d.mts",
-      "import": "./dist/components/Steps.mjs"
-    },
-    "./Steps": {
       "types": "./dist/components/Steps.d.mts",
       "import": "./dist/components/Steps.mjs"
     },
@@ -986,23 +346,7 @@
       "types": "./dist/components/Surface.d.mts",
       "import": "./dist/components/Surface.mjs"
     },
-    "./surface": {
-      "types": "./dist/components/Surface.d.mts",
-      "import": "./dist/components/Surface.mjs"
-    },
-    "./Surface": {
-      "types": "./dist/components/Surface.d.mts",
-      "import": "./dist/components/Surface.mjs"
-    },
     "./components/Switch": {
-      "types": "./dist/components/Switch.d.mts",
-      "import": "./dist/components/Switch.mjs"
-    },
-    "./switch": {
-      "types": "./dist/components/Switch.d.mts",
-      "import": "./dist/components/Switch.mjs"
-    },
-    "./Switch": {
       "types": "./dist/components/Switch.d.mts",
       "import": "./dist/components/Switch.mjs"
     },
@@ -1010,23 +354,7 @@
       "types": "./dist/components/TabList.d.mts",
       "import": "./dist/components/TabList.mjs"
     },
-    "./tab-list": {
-      "types": "./dist/components/TabList.d.mts",
-      "import": "./dist/components/TabList.mjs"
-    },
-    "./TabList": {
-      "types": "./dist/components/TabList.d.mts",
-      "import": "./dist/components/TabList.mjs"
-    },
     "./components/Table": {
-      "types": "./dist/components/Table.d.mts",
-      "import": "./dist/components/Table.mjs"
-    },
-    "./table": {
-      "types": "./dist/components/Table.d.mts",
-      "import": "./dist/components/Table.mjs"
-    },
-    "./Table": {
       "types": "./dist/components/Table.d.mts",
       "import": "./dist/components/Table.mjs"
     },
@@ -1034,23 +362,7 @@
       "types": "./dist/components/Tabs.d.mts",
       "import": "./dist/components/Tabs.mjs"
     },
-    "./tabs": {
-      "types": "./dist/components/Tabs.d.mts",
-      "import": "./dist/components/Tabs.mjs"
-    },
-    "./Tabs": {
-      "types": "./dist/components/Tabs.d.mts",
-      "import": "./dist/components/Tabs.mjs"
-    },
     "./components/TextAreaField": {
-      "types": "./dist/components/TextAreaField.d.mts",
-      "import": "./dist/components/TextAreaField.mjs"
-    },
-    "./text-area-field": {
-      "types": "./dist/components/TextAreaField.d.mts",
-      "import": "./dist/components/TextAreaField.mjs"
-    },
-    "./TextAreaField": {
       "types": "./dist/components/TextAreaField.d.mts",
       "import": "./dist/components/TextAreaField.mjs"
     },
@@ -1058,23 +370,7 @@
       "types": "./dist/components/TextField.d.mts",
       "import": "./dist/components/TextField.mjs"
     },
-    "./text-field": {
-      "types": "./dist/components/TextField.d.mts",
-      "import": "./dist/components/TextField.mjs"
-    },
-    "./TextField": {
-      "types": "./dist/components/TextField.d.mts",
-      "import": "./dist/components/TextField.mjs"
-    },
     "./components/Thumbnail": {
-      "types": "./dist/components/Thumbnail.d.mts",
-      "import": "./dist/components/Thumbnail.mjs"
-    },
-    "./thumbnail": {
-      "types": "./dist/components/Thumbnail.d.mts",
-      "import": "./dist/components/Thumbnail.mjs"
-    },
-    "./Thumbnail": {
       "types": "./dist/components/Thumbnail.d.mts",
       "import": "./dist/components/Thumbnail.mjs"
     },
@@ -1082,23 +378,7 @@
       "types": "./dist/components/TimeInput.d.mts",
       "import": "./dist/components/TimeInput.mjs"
     },
-    "./time-input": {
-      "types": "./dist/components/TimeInput.d.mts",
-      "import": "./dist/components/TimeInput.mjs"
-    },
-    "./TimeInput": {
-      "types": "./dist/components/TimeInput.d.mts",
-      "import": "./dist/components/TimeInput.mjs"
-    },
     "./components/Timeline": {
-      "types": "./dist/components/Timeline.d.mts",
-      "import": "./dist/components/Timeline.mjs"
-    },
-    "./timeline": {
-      "types": "./dist/components/Timeline.d.mts",
-      "import": "./dist/components/Timeline.mjs"
-    },
-    "./Timeline": {
       "types": "./dist/components/Timeline.d.mts",
       "import": "./dist/components/Timeline.mjs"
     },
@@ -1106,23 +386,7 @@
       "types": "./dist/components/Timestamp.d.mts",
       "import": "./dist/components/Timestamp.mjs"
     },
-    "./timestamp": {
-      "types": "./dist/components/Timestamp.d.mts",
-      "import": "./dist/components/Timestamp.mjs"
-    },
-    "./Timestamp": {
-      "types": "./dist/components/Timestamp.d.mts",
-      "import": "./dist/components/Timestamp.mjs"
-    },
     "./components/Toast": {
-      "types": "./dist/components/Toast.d.mts",
-      "import": "./dist/components/Toast.mjs"
-    },
-    "./toast": {
-      "types": "./dist/components/Toast.d.mts",
-      "import": "./dist/components/Toast.mjs"
-    },
-    "./Toast": {
       "types": "./dist/components/Toast.d.mts",
       "import": "./dist/components/Toast.mjs"
     },
@@ -1130,23 +394,7 @@
       "types": "./dist/components/Toc.d.mts",
       "import": "./dist/components/Toc.mjs"
     },
-    "./toc": {
-      "types": "./dist/components/Toc.d.mts",
-      "import": "./dist/components/Toc.mjs"
-    },
-    "./Toc": {
-      "types": "./dist/components/Toc.d.mts",
-      "import": "./dist/components/Toc.mjs"
-    },
     "./components/Tokenizer": {
-      "types": "./dist/components/Tokenizer.d.mts",
-      "import": "./dist/components/Tokenizer.mjs"
-    },
-    "./tokenizer": {
-      "types": "./dist/components/Tokenizer.d.mts",
-      "import": "./dist/components/Tokenizer.mjs"
-    },
-    "./Tokenizer": {
       "types": "./dist/components/Tokenizer.d.mts",
       "import": "./dist/components/Tokenizer.mjs"
     },
@@ -1154,23 +402,7 @@
       "types": "./dist/components/Toolbar.d.mts",
       "import": "./dist/components/Toolbar.mjs"
     },
-    "./toolbar": {
-      "types": "./dist/components/Toolbar.d.mts",
-      "import": "./dist/components/Toolbar.mjs"
-    },
-    "./Toolbar": {
-      "types": "./dist/components/Toolbar.d.mts",
-      "import": "./dist/components/Toolbar.mjs"
-    },
     "./components/Tooltip": {
-      "types": "./dist/components/Tooltip.d.mts",
-      "import": "./dist/components/Tooltip.mjs"
-    },
-    "./tooltip": {
-      "types": "./dist/components/Tooltip.d.mts",
-      "import": "./dist/components/Tooltip.mjs"
-    },
-    "./Tooltip": {
       "types": "./dist/components/Tooltip.d.mts",
       "import": "./dist/components/Tooltip.mjs"
     },
@@ -1178,23 +410,7 @@
       "types": "./dist/components/TopNav.d.mts",
       "import": "./dist/components/TopNav.mjs"
     },
-    "./top-nav": {
-      "types": "./dist/components/TopNav.d.mts",
-      "import": "./dist/components/TopNav.mjs"
-    },
-    "./TopNav": {
-      "types": "./dist/components/TopNav.d.mts",
-      "import": "./dist/components/TopNav.mjs"
-    },
     "./components/TopNavMegaMenu": {
-      "types": "./dist/components/TopNavMegaMenu.d.mts",
-      "import": "./dist/components/TopNavMegaMenu.mjs"
-    },
-    "./top-nav-mega-menu": {
-      "types": "./dist/components/TopNavMegaMenu.d.mts",
-      "import": "./dist/components/TopNavMegaMenu.mjs"
-    },
-    "./TopNavMegaMenu": {
       "types": "./dist/components/TopNavMegaMenu.d.mts",
       "import": "./dist/components/TopNavMegaMenu.mjs"
     },
@@ -1202,23 +418,7 @@
       "types": "./dist/components/Tree.d.mts",
       "import": "./dist/components/Tree.mjs"
     },
-    "./tree": {
-      "types": "./dist/components/Tree.d.mts",
-      "import": "./dist/components/Tree.mjs"
-    },
-    "./Tree": {
-      "types": "./dist/components/Tree.d.mts",
-      "import": "./dist/components/Tree.mjs"
-    },
     "./components/Typeahead": {
-      "types": "./dist/components/Typeahead.d.mts",
-      "import": "./dist/components/Typeahead.mjs"
-    },
-    "./typeahead": {
-      "types": "./dist/components/Typeahead.d.mts",
-      "import": "./dist/components/Typeahead.mjs"
-    },
-    "./Typeahead": {
       "types": "./dist/components/Typeahead.d.mts",
       "import": "./dist/components/Typeahead.mjs"
     },
@@ -1226,23 +426,7 @@
       "types": "./dist/components/Typography.d.mts",
       "import": "./dist/components/Typography.mjs"
     },
-    "./typography": {
-      "types": "./dist/components/Typography.d.mts",
-      "import": "./dist/components/Typography.mjs"
-    },
-    "./Typography": {
-      "types": "./dist/components/Typography.d.mts",
-      "import": "./dist/components/Typography.mjs"
-    },
     "./components/chat/ChatComposer": {
-      "types": "./dist/components/chat/ChatComposer.d.mts",
-      "import": "./dist/components/chat/ChatComposer.mjs"
-    },
-    "./chat-composer": {
-      "types": "./dist/components/chat/ChatComposer.d.mts",
-      "import": "./dist/components/chat/ChatComposer.mjs"
-    },
-    "./ChatComposer": {
       "types": "./dist/components/chat/ChatComposer.d.mts",
       "import": "./dist/components/chat/ChatComposer.mjs"
     },
@@ -1250,23 +434,7 @@
       "types": "./dist/components/chat/ChatComposerInput.d.mts",
       "import": "./dist/components/chat/ChatComposerInput.mjs"
     },
-    "./chat-composer-input": {
-      "types": "./dist/components/chat/ChatComposerInput.d.mts",
-      "import": "./dist/components/chat/ChatComposerInput.mjs"
-    },
-    "./ChatComposerInput": {
-      "types": "./dist/components/chat/ChatComposerInput.d.mts",
-      "import": "./dist/components/chat/ChatComposerInput.mjs"
-    },
     "./components/chat/ChatContext": {
-      "types": "./dist/components/chat/ChatContext.d.mts",
-      "import": "./dist/components/chat/ChatContext.mjs"
-    },
-    "./chat-context": {
-      "types": "./dist/components/chat/ChatContext.d.mts",
-      "import": "./dist/components/chat/ChatContext.mjs"
-    },
-    "./ChatContext": {
       "types": "./dist/components/chat/ChatContext.d.mts",
       "import": "./dist/components/chat/ChatContext.mjs"
     },
@@ -1274,23 +442,7 @@
       "types": "./dist/components/chat/ChatLayout.d.mts",
       "import": "./dist/components/chat/ChatLayout.mjs"
     },
-    "./chat-layout": {
-      "types": "./dist/components/chat/ChatLayout.d.mts",
-      "import": "./dist/components/chat/ChatLayout.mjs"
-    },
-    "./ChatLayout": {
-      "types": "./dist/components/chat/ChatLayout.d.mts",
-      "import": "./dist/components/chat/ChatLayout.mjs"
-    },
     "./components/chat/ChatMessage": {
-      "types": "./dist/components/chat/ChatMessage.d.mts",
-      "import": "./dist/components/chat/ChatMessage.mjs"
-    },
-    "./chat-message": {
-      "types": "./dist/components/chat/ChatMessage.d.mts",
-      "import": "./dist/components/chat/ChatMessage.mjs"
-    },
-    "./ChatMessage": {
       "types": "./dist/components/chat/ChatMessage.d.mts",
       "import": "./dist/components/chat/ChatMessage.mjs"
     },
@@ -1298,23 +450,7 @@
       "types": "./dist/components/chat/ChatMessageBubble.d.mts",
       "import": "./dist/components/chat/ChatMessageBubble.mjs"
     },
-    "./chat-message-bubble": {
-      "types": "./dist/components/chat/ChatMessageBubble.d.mts",
-      "import": "./dist/components/chat/ChatMessageBubble.mjs"
-    },
-    "./ChatMessageBubble": {
-      "types": "./dist/components/chat/ChatMessageBubble.d.mts",
-      "import": "./dist/components/chat/ChatMessageBubble.mjs"
-    },
     "./components/chat/ChatMessageList": {
-      "types": "./dist/components/chat/ChatMessageList.d.mts",
-      "import": "./dist/components/chat/ChatMessageList.mjs"
-    },
-    "./chat-message-list": {
-      "types": "./dist/components/chat/ChatMessageList.d.mts",
-      "import": "./dist/components/chat/ChatMessageList.mjs"
-    },
-    "./ChatMessageList": {
       "types": "./dist/components/chat/ChatMessageList.d.mts",
       "import": "./dist/components/chat/ChatMessageList.mjs"
     },
@@ -1322,23 +458,7 @@
       "types": "./dist/components/chat/ChatMessageMetadata.d.mts",
       "import": "./dist/components/chat/ChatMessageMetadata.mjs"
     },
-    "./chat-message-metadata": {
-      "types": "./dist/components/chat/ChatMessageMetadata.d.mts",
-      "import": "./dist/components/chat/ChatMessageMetadata.mjs"
-    },
-    "./ChatMessageMetadata": {
-      "types": "./dist/components/chat/ChatMessageMetadata.d.mts",
-      "import": "./dist/components/chat/ChatMessageMetadata.mjs"
-    },
     "./components/chat/ChatSendButton": {
-      "types": "./dist/components/chat/ChatSendButton.d.mts",
-      "import": "./dist/components/chat/ChatSendButton.mjs"
-    },
-    "./chat-send-button": {
-      "types": "./dist/components/chat/ChatSendButton.d.mts",
-      "import": "./dist/components/chat/ChatSendButton.mjs"
-    },
-    "./ChatSendButton": {
       "types": "./dist/components/chat/ChatSendButton.d.mts",
       "import": "./dist/components/chat/ChatSendButton.mjs"
     },
@@ -1346,23 +466,7 @@
       "types": "./dist/components/chat/ChatSystemMessage.d.mts",
       "import": "./dist/components/chat/ChatSystemMessage.mjs"
     },
-    "./chat-system-message": {
-      "types": "./dist/components/chat/ChatSystemMessage.d.mts",
-      "import": "./dist/components/chat/ChatSystemMessage.mjs"
-    },
-    "./ChatSystemMessage": {
-      "types": "./dist/components/chat/ChatSystemMessage.d.mts",
-      "import": "./dist/components/chat/ChatSystemMessage.mjs"
-    },
     "./components/chat/ChatToolCalls": {
-      "types": "./dist/components/chat/ChatToolCalls.d.mts",
-      "import": "./dist/components/chat/ChatToolCalls.mjs"
-    },
-    "./chat-tool-calls": {
-      "types": "./dist/components/chat/ChatToolCalls.d.mts",
-      "import": "./dist/components/chat/ChatToolCalls.mjs"
-    },
-    "./ChatToolCalls": {
       "types": "./dist/components/chat/ChatToolCalls.d.mts",
       "import": "./dist/components/chat/ChatToolCalls.mjs"
     },
@@ -1370,35 +474,11 @@
       "types": "./dist/components/controlSizeContext.d.mts",
       "import": "./dist/components/controlSizeContext.mjs"
     },
-    "./control-size-context": {
-      "types": "./dist/components/controlSizeContext.d.mts",
-      "import": "./dist/components/controlSizeContext.mjs"
-    },
-    "./controlSizeContext": {
-      "types": "./dist/components/controlSizeContext.d.mts",
-      "import": "./dist/components/controlSizeContext.mjs"
-    },
     "./components/menuContent": {
       "types": "./dist/components/menuContent.d.mts",
       "import": "./dist/components/menuContent.mjs"
     },
-    "./menu-content": {
-      "types": "./dist/components/menuContent.d.mts",
-      "import": "./dist/components/menuContent.mjs"
-    },
-    "./menuContent": {
-      "types": "./dist/components/menuContent.d.mts",
-      "import": "./dist/components/menuContent.mjs"
-    },
     "./components/menuPresets": {
-      "types": "./dist/components/menuPresets.d.mts",
-      "import": "./dist/components/menuPresets.mjs"
-    },
-    "./menu-presets": {
-      "types": "./dist/components/menuPresets.d.mts",
-      "import": "./dist/components/menuPresets.mjs"
-    },
-    "./menuPresets": {
       "types": "./dist/components/menuPresets.d.mts",
       "import": "./dist/components/menuPresets.mjs"
     }

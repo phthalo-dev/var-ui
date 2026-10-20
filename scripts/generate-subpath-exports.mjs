@@ -32,13 +32,6 @@ function listMjsFiles(dir, relativeDir = '') {
   return entries.sort();
 }
 
-function pascalToKebab(name) {
-  return name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
-    .toLowerCase();
-}
-
 function addExport(exports, key, distRel) {
   if (exports[key]) return;
   exports[key] = {
@@ -95,10 +88,7 @@ function generateReactExports() {
     const parts = file.split('/');
     const base = parts.at(-1);
     if (!base || skip.has(base)) continue;
-    const distRel = `components/${file}`;
-    addExport(exports, `./components/${file}`, distRel);
-    addExport(exports, `./${pascalToKebab(base)}`, distRel);
-    addExport(exports, `./${base}`, distRel);
+    addExport(exports, `./components/${file}`, `components/${file}`);
   }
 
   pkg.exports = exports;

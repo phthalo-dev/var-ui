@@ -25,7 +25,7 @@ import { QuickActionsTile } from './bentoTiles/QuickActionsTile';
 import { SettingsFormTile } from './bentoTiles/SettingsFormTile';
 import { StatusFeedbackTile } from './bentoTiles/StatusFeedbackTile';
 import { MarkupTile } from './MarkupTile';
-import { SHOWCASE_THEMES, type ShowcaseThemeId } from './showcaseThemes';
+import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
 
 export type BentoShowcaseProps = {
   themeId: ShowcaseThemeId;
@@ -36,7 +36,7 @@ export type BentoShowcaseProps = {
 export function BentoShowcase({ themeId, framework = 'react', previewStyle }: BentoShowcaseProps) {
   const b = homeBento();
   const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
-  const theme = SHOWCASE_THEMES.find((entry) => entry.id === themeId) ?? SHOWCASE_THEMES[0];
+  const theme = docsThemePresets.find((entry) => entry.id === themeId) ?? docsThemePresets[0];
   const useReactTiles = framework === 'react';
 
   return (
