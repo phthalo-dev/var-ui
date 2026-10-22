@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI for discovering Var UI components, guides, and agent docs",
   "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/cli#readme",
   "bugs": "https://github.com/var-ui/var-ui/issues",

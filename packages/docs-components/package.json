@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/docs-components",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Optional Var UI docs plugin for design-system catalogs — demos, props extract, framework switcher, component page chrome",
   "keywords": [
     "astro",

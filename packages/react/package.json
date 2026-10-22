@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/react",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "React components for the var-ui design system",
   "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/react#readme",
   "bugs": "https://github.com/var-ui/var-ui/issues",

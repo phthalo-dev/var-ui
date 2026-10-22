@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Optional default icon glyphs for the var-ui design system",
   "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/icons#readme",
   "bugs": "https://github.com/var-ui/var-ui/issues",

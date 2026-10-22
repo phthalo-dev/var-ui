@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Framework-agnostic design tokens and component styles for var-ui",
   "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/core#readme",
   "bugs": "https://github.com/var-ui/var-ui/issues",
