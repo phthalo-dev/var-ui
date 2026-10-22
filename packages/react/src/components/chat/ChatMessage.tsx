@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { chatMessage, type ChatMessageVariantProps } from '@var-ui/core';
 import { ChatMessageContext, useChatListContext } from './ChatContext';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatMessageProps = {
   /** Who sent this message — drives alignment and the default bubble color. */

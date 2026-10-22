@@ -18,26 +18,25 @@ const toolCallsExpanded = variant.boolean({ default: false });
  * <div className={chatToolCalls({ status: 'running' }).root}>…</div>
  * ```
  */
-export const chatToolCalls = typestyles.recipe(
-  'chat-tool-calls',
-  {
-    slots: [
-      'root',
-      'header',
-      'statusIcon',
-      'name',
-      'target',
-      'duration',
-      'chevron',
-      'list',
-      'detail',
-    ],
-    variants: {
-      status: toolCallsStatus,
-      expanded: toolCallsExpanded,
-    },
+export const chatToolCalls = typestyles.recipe({
+  name: 'chat-tool-calls',
+  layer: 'components',
+  slots: [
+    'root',
+    'header',
+    'statusIcon',
+    'name',
+    'target',
+    'duration',
+    'chevron',
+    'list',
+    'detail',
+  ],
+  variants: {
+    status: toolCallsStatus,
+    expanded: toolCallsExpanded,
   },
-  () => ({
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -109,8 +108,7 @@ export const chatToolCalls = typestyles.recipe(
       },
     },
   }),
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ChatToolCallsVariantProps = RecipeVariants<typeof chatToolCalls>;

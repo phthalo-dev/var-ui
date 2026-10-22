@@ -15,29 +15,31 @@ import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/ove
  * <div className={o.positioner}>{panel}</div>
  * ```
  */
-export const overlay = typestyles.recipe(
-  'overlay',
-  (c) => {
-    const v = c.vars({
-      background: { ...atProperty.color, value: t.color.overlay.backdrop.var },
-    });
+export const overlay = typestyles.recipe({
+  name: 'overlay',
+  layer: 'components',
+  slots: ['backdrop', 'positioner'],
+  vars: {
+    background: { ...atProperty.color, value: t.color.overlay.backdrop.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['backdrop', 'positioner'],
-      backdrop: {
-        ...overlayPresenceStyles(),
-        ...overlayIosAbsoluteBackdrop,
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: v.background.var,
-      },
-      positioner: {
-        position: 'fixed',
-        inset: 0,
-        display: 'grid',
-        placeItems: 'center',
-        padding: t.space[4].var,
+      base: {
+        backdrop: {
+          ...overlayPresenceStyles(),
+          ...overlayIosAbsoluteBackdrop,
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: vars.background.var,
+        },
+        positioner: {
+          position: 'fixed',
+          inset: 0,
+          display: 'grid',
+          placeItems: 'center',
+          padding: t.space[4].var,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

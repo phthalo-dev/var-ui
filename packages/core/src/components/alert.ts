@@ -22,34 +22,31 @@ import {
 const alertTone = toneWithDefault('info');
 const alertContentGap = variant.enum(['spaced', 'flush'], { default: 'spaced' });
 
-export const alert = typestyles.recipe(
-  'alert',
-  {
-    slots: ['root', 'icon', 'body', 'title', 'content', 'action', 'actionLink'],
-    variants: {
-      tone: alertTone,
-      appearance: surfaceAppearance,
-      contentGap: alertContentGap,
+export const alert = typestyles.recipe({
+  name: 'alert',
+  layer: 'components',
+  slots: ['root', 'icon', 'body', 'title', 'content', 'action', 'actionLink'],
+  variants: {
+    tone: alertTone,
+    appearance: surfaceAppearance,
+    contentGap: alertContentGap,
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.tone.accent.background.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foregroundOnBackground.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foreground.var,
-      },
-      solidBg: {
-        ...atProperty.color,
-        value: t.color.tone.accent.background.var,
-      },
-      solidFg: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foregroundOnBackground.var,
-      },
-    });
-
+  styles: ({ vars }) => {
     return {
-      vars: v,
       base: {
         root: {
           display: 'flex',
@@ -74,7 +71,7 @@ export const alert = typestyles.recipe(
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.semibold.var,
           margin: 0,
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         content: {
           fontSize: t.fontSize.md.var,
@@ -101,18 +98,18 @@ export const alert = typestyles.recipe(
         },
       },
       variants: {
-        tone: mapTone((key) => ({ root: toneChannelAssignments(v, key) })),
+        tone: mapTone((key) => ({ root: toneChannelAssignments(vars, key) })),
         appearance: {
           subtle: {
-            root: appearanceSurface(v, 'subtle'),
+            root: appearanceSurface(vars, 'subtle'),
           },
           solid: {
-            root: appearanceSurface(v, 'solid'),
+            root: appearanceSurface(vars, 'solid'),
             title: { color: 'inherit' },
             icon: { color: 'inherit' },
           },
           outline: {
-            root: appearanceSurface(v, 'outline'),
+            root: appearanceSurface(vars, 'outline'),
           },
         },
         contentGap: {
@@ -122,8 +119,7 @@ export const alert = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type AlertVariantProps = RecipeVariants<typeof alert>;

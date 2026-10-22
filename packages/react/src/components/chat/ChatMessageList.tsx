@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { chatMessageList, type ChatMessageListVariantProps } from '@var-ui/core';
 import { ChatListContext } from './ChatContext';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatMessageListProps = {
   /** Message elements — typically `ChatMessage`. */

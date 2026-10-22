@@ -10,7 +10,7 @@ import {
 import { useHeadroom, type UseHeadroomOptions } from '../hooks/useHeadroom';
 import { useMediaQuery } from '../hooks';
 import { MobileNavProvider } from './MobileNav';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** `id` of the `<main>` landmark — target of the skip-to-content link. */
 export const APP_SHELL_MAIN_ID = 'var-ui-app-shell-main';

@@ -36,7 +36,6 @@ describe('package subpath exports', () => {
       types: './dist/components/*.d.mts',
       import: './dist/components/*.mjs',
     });
-    expect(exports['./components/utils']).toBeNull();
     expect(exports['./components/Button']).toBeUndefined();
     expect(exports['./button']).toBeUndefined();
     expect(exports['./Button']).toBeUndefined();

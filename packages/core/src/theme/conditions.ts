@@ -1,25 +1,40 @@
 import {
   conditional,
   type ConditionalOverride,
-  resolvedDarkWhen,
   type ThemeCondition,
   toMediaAtRuleKey,
   type VariantOptionStyle,
 } from 'typestyles';
 import { typestyles } from '../runtime';
+import { COLOR_MODE_ATTRIBUTE } from './constants';
 
 const tsWhen = typestyles.tokens.when;
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 
+const explicitDark = tsWhen.or(
+  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'ancestor' }),
+  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'self' }),
+);
+const explicitLight = tsWhen.or(
+  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' }),
+  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'self' }),
+);
+
+/** OS dark when the document root is not explicitly light. Nested pins use {@link atDarkMode}. */
+const systemDark = tsWhen.and(
+  tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' })),
+  tsWhen.prefersDark,
+);
+
 /** Canonical `ThemeCondition` presets for var-ui color mode and a11y media queries. */
 const themeWhen = {
-  /** Explicit `data-mode="dark"` or system dark when not pinned to light. */
-  colorModeResolvedDark: resolvedDarkWhen('data-mode', 'ancestor'),
-  colorModeExplicitDark: tsWhen.attr('data-mode', 'dark', { scope: 'ancestor' }),
-  colorModeExplicitLight: tsWhen.attr('data-mode', 'light', { scope: 'ancestor' }),
+  /** Explicit `data-color-mode="dark"` or system dark when the root is not pinned to light. */
+  colorModeResolvedDark: tsWhen.or(explicitDark, systemDark),
+  colorModeExplicitDark: explicitDark,
+  colorModeExplicitLight: explicitLight,
   colorModeSystemDark: tsWhen.and(
-    tsWhen.not(tsWhen.attr('data-mode', 'light', { scope: 'ancestor' })),
-    tsWhen.not(tsWhen.attr('data-mode', 'dark', { scope: 'ancestor' })),
+    tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' })),
+    tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'ancestor' })),
     tsWhen.prefersDark,
   ),
   reducedMotion: tsWhen.media(reducedMotionQuery),
@@ -34,11 +49,18 @@ export function atReducedMotion(style: VariantOptionStyle) {
 }
 
 /**
- * Resolved dark-mode styles for component recipe slots — spread into a style object.
- * Uses TypeStyles `when` + {@link themeWhen.colorModeResolvedDark}.
+ * Dark styles for a component slot. An explicit `data-color-mode` on the component
+ * or an ancestor wins over the OS preference, including a light pin inside an OS-dark page.
  */
 export function atDarkMode(style: VariantOptionStyle) {
-  return typestyles.when(themeWhen.colorModeResolvedDark, style);
+  const pinnedDark = `[${COLOR_MODE_ATTRIBUTE}="dark"]`;
+  const pinnedLight = `[${COLOR_MODE_ATTRIBUTE}="light"]`;
+  return {
+    [`${pinnedDark} &, &${pinnedDark}`]: style,
+    '@media (prefers-color-scheme: dark)': {
+      [`&:not(${pinnedLight}):not(${pinnedLight} *)`]: style,
+    },
+  };
 }
 
 /** Build a `conditions` entry for `override()` — prefer `{ light, dark }` on color properties when possible. */

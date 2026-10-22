@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { createContext, useContext, useId } from 'react';
 import { list as listStyles, type ListVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ListItemData = {
   id: string;

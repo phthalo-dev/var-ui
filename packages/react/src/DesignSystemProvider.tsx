@@ -1,28 +1,29 @@
 import type { JSX, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   ColorModeContext,
   type ColorMode,
   type ColorModeContextValue,
   readStoredColorMode,
-  useIsomorphicLayoutEffect,
   useResolvedColorMode,
-} from './color-mode';
-import { defaultThemeClassName } from '@var-ui/core/theme-constants';
-import { DirectionProvider, type Direction } from './DirectionProvider';
+} from './colorMode';
+import { COLOR_MODE_ATTRIBUTE, defaultThemeClassName } from '@var-ui/core/theme-constants';
+import { type Direction, resolveDirection } from './direction';
+import { DirectionProvider } from './DirectionProvider';
+import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect';
 
 export type DesignSystemProviderProps = {
   children: ReactNode;
   defaultColorMode?: ColorMode;
   colorMode?: ColorMode;
   onColorModeChange?: (colorMode: ColorMode) => void;
-  customThemeClassName?: string;
-  /** Prefer this over `customThemeClassName` when you have a `createDesignTheme` return. */
-  customTheme?: { className: string };
+  /** Theme class name, or a `createDesignTheme` result (`{ className }`). */
+  customTheme?: { className: string } | string;
   /**
-   * When true, apply the design theme class, `data-mode`, and `color-scheme` on
+   * When true, apply the design theme class and `data-color-mode` on
    * `document.documentElement` instead of a wrapper, so page chrome (`body` background /
    * text from core document globals) and portals resolve the same color mode as the app.
+   * `color-scheme` comes from the stylesheet (`:root` and `[data-color-mode]`).
    * @default false
    */
   applyToDocument?: boolean;
@@ -40,7 +41,6 @@ export function DesignSystemProvider({
   defaultColorMode = 'light',
   colorMode: controlledColorMode,
   onColorModeChange,
-  customThemeClassName,
   customTheme,
   applyToDocument = false,
   storageKey,
@@ -89,57 +89,45 @@ export function DesignSystemProvider({
     onColorModeChange?.(nextColorMode);
   };
 
-  const value = useMemo<ColorModeContextValue>(
-    () => ({
-      colorMode,
-      resolvedColorMode,
-      setColorMode,
-      toggleColorMode: () =>
-        setColorMode(colorMode === 'light' ? 'dark' : colorMode === 'dark' ? 'system' : 'light'),
-      colorModeReady,
-    }),
-    [colorMode, resolvedColorMode, colorModeReady],
-  );
+  const value: ColorModeContextValue = {
+    colorMode,
+    resolvedColorMode,
+    setColorMode,
+    colorModeReady,
+  };
 
-  const themeClassName = customTheme?.className ?? customThemeClassName ?? defaultThemeClassName;
+  const themeClassName =
+    typeof customTheme === 'string'
+      ? customTheme
+      : (customTheme?.className ?? defaultThemeClassName);
+  const resolvedDirection = resolveDirection({ direction, locale });
 
   useIsomorphicLayoutEffect(() => {
-    if (!applyToDocument || typeof document === 'undefined') return;
+    if (!applyToDocument || typeof document === 'undefined' || !colorModeReady) return;
     const root = document.documentElement;
 
-    // When `storageKey` is set, React state still starts at `defaultColorMode` for SSR
-    // hydration safety. Reading storage here (before writing the document) avoids stomping
-    // `getColorModeInitScript`'s pre-paint attrs with that default for one frame.
-    const stored =
-      controlledColorMode === undefined && storageKey ? readStoredColorMode(storageKey) : undefined;
-    const modeForDocument = stored ?? colorMode;
-    const colorScheme =
-      modeForDocument === 'system'
-        ? ''
-        : modeForDocument === colorMode
-          ? resolvedColorMode
-          : modeForDocument;
-
     root.classList.add(themeClassName);
-    root.setAttribute('data-mode', modeForDocument);
-    root.style.colorScheme = colorScheme;
+    root.style.colorScheme = '';
+    if (colorMode === 'light' || colorMode === 'dark') {
+      root.setAttribute(COLOR_MODE_ATTRIBUTE, colorMode);
+    } else {
+      root.removeAttribute(COLOR_MODE_ATTRIBUTE);
+    }
 
     return () => {
-      // Only remove the theme class we manage. Leave `data-mode` / `color-scheme` in place so
+      // Only remove the theme class we manage. Leave `data-color-mode` in place so
       // Strict Mode remounts (and the init script's correct attrs) aren't cleared mid-flash.
       root.classList.remove(themeClassName);
     };
-  }, [
-    applyToDocument,
-    themeClassName,
-    colorMode,
-    resolvedColorMode,
-    storageKey,
-    controlledColorMode,
-  ]);
+  }, [applyToDocument, themeClassName, colorMode, colorModeReady]);
 
   const directed = (
-    <DirectionProvider direction={direction} locale={locale} applyToDocument={applyToDocument}>
+    <DirectionProvider
+      direction={direction}
+      locale={locale}
+      applyToDocument={applyToDocument}
+      suppressWrapper={!applyToDocument}
+    >
       {children}
     </DirectionProvider>
   );
@@ -152,14 +140,12 @@ export function DesignSystemProvider({
     <ColorModeContext.Provider value={value}>
       <div
         className={themeClassName}
-        data-mode={colorMode}
-        style={{
-          display: 'contents',
-          // `inherit` (not `light dark`) so a nested provider follows a parent pin
-          // such as ThemeScript's `html { color-scheme: light }`. `light dark` would
-          // re-enable prefers-color-scheme for light-dark() tokens in this subtree.
-          colorScheme: colorMode === 'system' ? 'inherit' : resolvedColorMode,
-        }}
+        dir={resolvedDirection}
+        {...(locale ? { lang: locale } : {})}
+        {...(colorMode === 'light' || colorMode === 'dark'
+          ? { [COLOR_MODE_ATTRIBUTE]: colorMode }
+          : {})}
+        style={{ display: 'contents' }}
       >
         {directed}
       </div>

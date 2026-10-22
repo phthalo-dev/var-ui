@@ -13,43 +13,41 @@ import {
 /**
  * Flat component: `tone` sets semantic channels; `appearance` applies shared resolver paint.
  */
-export const badge = typestyles.recipe(
-  'badge',
-  {
-    variants: {
-      tone,
-      appearance: surfaceAppearance,
+export const badge = typestyles.recipe({
+  name: 'badge',
+  layer: 'components',
+  variants: {
+    tone,
+    appearance: surfaceAppearance,
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    borderColor: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    backgroundColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    textColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      solidBg: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      solidFg: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      borderColor: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      backgroundColor: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      textColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
-      vars: v,
       base: {
         display: 'inline-flex',
         alignItems: 'center',
@@ -60,34 +58,33 @@ export const badge = typestyles.recipe(
         borderRadius: t.radius.full.var,
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.borderColor.var,
-        backgroundColor: v.backgroundColor.var,
-        color: v.textColor.var,
+        borderColor: vars.borderColor.var,
+        backgroundColor: vars.backgroundColor.var,
+        color: vars.textColor.var,
       },
       variants: {
-        tone: mapTone((key) => toneChannelAssignments(v, key)),
+        tone: mapTone((key) => toneChannelAssignments(vars, key)),
         appearance: {
           subtle: {
-            [v.borderColor.name]: subtleBorderColor(v.semantic.var),
-            [v.backgroundColor.name]: subtleBackgroundColor(v.semantic.var),
-            [v.textColor.name]: v.semantic.var,
+            [vars.borderColor.name]: subtleBorderColor(vars.semantic.var),
+            [vars.backgroundColor.name]: subtleBackgroundColor(vars.semantic.var),
+            [vars.textColor.name]: vars.semantic.var,
           },
           solid: {
-            [v.borderColor.name]: v.solidBg.var,
-            [v.backgroundColor.name]: v.solidBg.var,
-            [v.textColor.name]: v.solidFg.var,
+            [vars.borderColor.name]: vars.solidBg.var,
+            [vars.backgroundColor.name]: vars.solidBg.var,
+            [vars.textColor.name]: vars.solidFg.var,
           },
           outline: {
-            [v.borderColor.name]: v.semantic.var,
-            [v.backgroundColor.name]: 'transparent',
-            [v.textColor.name]: v.semantic.var,
+            [vars.borderColor.name]: vars.semantic.var,
+            [vars.backgroundColor.name]: 'transparent',
+            [vars.textColor.name]: vars.semantic.var,
           },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type BadgeVariantProps = RecipeVariants<typeof badge>;

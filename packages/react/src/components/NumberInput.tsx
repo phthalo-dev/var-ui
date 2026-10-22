@@ -9,8 +9,8 @@ import {
   type NumberFieldProps as RACNumberFieldProps,
 } from 'react-aria-components';
 import { numberInput, type NumberInputVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
-import type { FieldMeta } from './utils';
+import { mergeProps } from 'typestyles';
+import type { FieldMeta } from './Field';
 
 export type NumberInputProps = Omit<RACNumberFieldProps, 'className'> &
   FieldMeta & {

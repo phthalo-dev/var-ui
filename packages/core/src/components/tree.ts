@@ -31,31 +31,41 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * </ul>
  * ```
  */
-export const tree = typestyles.recipe(
-  'tree',
-  {
-    slots: ['root', 'item', 'row', 'toggle', 'label', 'description', 'group', 'start', 'end'],
-    variants: { density },
+export const tree = typestyles.recipe({
+  name: 'tree',
+  layer: 'components',
+  slots: [
+    'root',
+    'item',
+    'row',
+    'toggle',
+    'label',
+    'description',
+    'group',
+    'start',
+    'end',
+    'overlayLink',
+  ],
+  variants: { density },
+  vars: {
+    labelColor: { ...atProperty.color, value: t.color.text.primary.var },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    hoverBg: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    selectedBg: {
+      ...atProperty.color,
+      value: t.color.tone.accent.subtleBackground.var,
+    },
+    indentSize: { ...atProperty.length, value: t.space[4].var },
+    rowPaddingY: { ...atProperty.length, value: t.space[2].var },
+    rowPaddingX: { ...atProperty.length, value: t.space[2].var },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: { ...atProperty.color, value: t.color.text.primary.var },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      hoverBg: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      selectedBg: {
-        ...atProperty.color,
-        value: t.color.tone.accent.subtleBackground.var,
-      },
-      indentSize: { ...atProperty.length, value: t.space[4].var },
-      rowPaddingY: { ...atProperty.length, value: t.space[2].var },
-      rowPaddingX: { ...atProperty.length, value: t.space[2].var },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -77,22 +87,25 @@ export const tree = typestyles.recipe(
           },
         },
         row: {
+          position: 'relative',
           display: 'flex',
           alignItems: 'center',
           gap: t.space[2].var,
-          padding: `${v.rowPaddingY.var} ${v.rowPaddingX.var}`,
+          padding: `${vars.rowPaddingY.var} ${vars.rowPaddingX.var}`,
           borderRadius: t.radius.md.var,
-          color: v.labelColor.var,
+          color: vars.labelColor.var,
           cursor: 'default',
           minWidth: 0,
-          '&:hover': { backgroundColor: v.hoverBg.var },
+          '&:hover': { backgroundColor: vars.hoverBg.var },
           '&[data-selected]': {
-            backgroundColor: v.selectedBg.var,
+            backgroundColor: vars.selectedBg.var,
             fontWeight: t.fontWeight.medium.var,
           },
           '&[data-disabled]': { opacity: t.opacity.disabled.var, pointerEvents: 'none' },
         },
         toggle: {
+          position: 'relative',
+          zIndex: 2,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -107,11 +120,28 @@ export const tree = typestyles.recipe(
           // (scaleX(-1) on the icon), so +90deg would point up — use -90deg.
           '&[data-expanded]': { transform: 'rotate(90deg)' },
           '[dir="rtl"] &[data-expanded]': { transform: 'rotate(-90deg)' },
+          '&[data-placeholder]': { visibility: 'hidden' },
+        },
+        overlayLink: {
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          insetInlineEnd: 0,
+          insetInlineStart: 0,
+          zIndex: 1,
+          margin: 0,
+          padding: 0,
+          border: 'none',
+          background: 'transparent',
+          textDecoration: 'none',
+          '&[data-inset="after-toggle"]': {
+            insetInlineStart: `calc(${t.size.icon.sm.var} + ${t.space[2].var})`,
+          },
         },
         label: {
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
-          color: v.labelColor.var,
+          color: vars.labelColor.var,
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -119,7 +149,7 @@ export const tree = typestyles.recipe(
         },
         description: {
           fontSize: t.fontSize.sm.var,
-          color: v.descriptionColor.var,
+          color: vars.descriptionColor.var,
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -129,7 +159,7 @@ export const tree = typestyles.recipe(
           listStyle: 'none',
           margin: 0,
           padding: 0,
-          paddingLeft: v.indentSize.var,
+          paddingLeft: vars.indentSize.var,
         },
         start: { display: 'flex', flexShrink: 0, alignItems: 'center' },
         end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginLeft: 'auto' },
@@ -138,23 +168,22 @@ export const tree = typestyles.recipe(
         density: {
           compact: {
             row: {
-              [v.rowPaddingY.name]: t.space[1].var,
-              [v.rowPaddingX.name]: t.space[2].var,
+              [vars.rowPaddingY.name]: t.space[1].var,
+              [vars.rowPaddingX.name]: t.space[2].var,
             },
           },
           balanced: {},
           spacious: {
             row: {
-              [v.rowPaddingY.name]: t.space[3].var,
-              [v.rowPaddingX.name]: t.space[4].var,
+              [vars.rowPaddingY.name]: t.space[3].var,
+              [vars.rowPaddingX.name]: t.space[4].var,
             },
           },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type TreeVariantProps = RecipeVariants<typeof tree>;

@@ -54,21 +54,19 @@ const scrollAreaFadeEdges = {
  * </div>
  * ```
  */
-export const scrollArea = typestyles.recipe(
-  'scroll-area',
-  {
-    slots: ['root', 'viewport', 'fadeTop', 'fadeBottom', 'fadeStart', 'fadeEnd'],
-    variants: {
-      fade: scrollAreaFade,
-      orientation: scrollAreaOrientation,
-    },
+export const scrollArea = typestyles.recipe({
+  name: 'scroll-area',
+  layer: 'components',
+  slots: ['root', 'viewport', 'fadeTop', 'fadeBottom', 'fadeStart', 'fadeEnd'],
+  variants: {
+    fade: scrollAreaFade,
+    orientation: scrollAreaOrientation,
   },
-  (c) => {
-    const v = c.vars({
-      fadeSize: { ...atProperty.length, value: '24px' },
-      fadeColor: { ...atProperty.color, value: t.color.background.surface.var },
-    });
-
+  vars: {
+    fadeSize: { ...atProperty.length, value: '24px' },
+    fadeColor: { ...atProperty.color, value: t.color.background.surface.var },
+  },
+  styles: ({ vars }) => {
     const fadeAnimationBase = {
       animationDuration: '1ms',
       animationFillMode: 'both' as const,
@@ -78,79 +76,74 @@ export const scrollArea = typestyles.recipe(
         opacity: 0,
       },
     };
-
     const verticalFadeStart = {
       position: 'sticky' as const,
       top: 0,
       alignSelf: 'stretch' as const,
       width: '100%',
       flexShrink: 0,
-      height: v.fadeSize.var,
-      marginBlockEnd: `calc(-1 * ${v.fadeSize.var})`,
+      height: vars.fadeSize.var,
+      marginBlockEnd: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
       zIndex: 1,
       opacity: 0,
-      backgroundImage: `linear-gradient(to bottom, ${v.fadeColor.var}, transparent)`,
+      backgroundImage: `linear-gradient(to bottom, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
       animationName: scrollFadeIn,
       animationTimeline: 'scroll(nearest block)',
-      animationRange: `1px ${v.fadeSize.var}`,
+      animationRange: `1px ${vars.fadeSize.var}`,
     };
-
     const verticalFadeEnd = {
       position: 'sticky' as const,
       bottom: 0,
       alignSelf: 'stretch' as const,
       width: '100%',
       flexShrink: 0,
-      height: v.fadeSize.var,
-      marginBlockStart: `calc(-1 * ${v.fadeSize.var})`,
+      height: vars.fadeSize.var,
+      marginBlockStart: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
       zIndex: 1,
       opacity: 0,
-      backgroundImage: `linear-gradient(to top, ${v.fadeColor.var}, transparent)`,
+      backgroundImage: `linear-gradient(to top, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
       animationName: scrollFadeOut,
       animationTimeline: 'scroll(nearest block)',
       animationRange: 'exit 0% exit 100%',
     };
-
     const horizontalFadeStart = {
       position: 'sticky' as const,
       insetInlineStart: 0,
       alignSelf: 'flex-start' as const,
       flexShrink: 0,
-      width: v.fadeSize.var,
+      width: vars.fadeSize.var,
       minHeight: '100%',
-      marginInlineEnd: `calc(-1 * ${v.fadeSize.var})`,
+      marginInlineEnd: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
       zIndex: 1,
       opacity: 0,
-      backgroundImage: `linear-gradient(to right, ${v.fadeColor.var}, transparent)`,
+      backgroundImage: `linear-gradient(to right, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
       animationName: scrollFadeIn,
       animationTimeline: 'scroll(nearest inline)',
-      animationRange: `1px ${v.fadeSize.var}`,
+      animationRange: `1px ${vars.fadeSize.var}`,
     };
-
     const horizontalFadeEnd = {
       position: 'sticky' as const,
       insetInlineEnd: 0,
       alignSelf: 'flex-end' as const,
       flexShrink: 0,
-      width: v.fadeSize.var,
+      width: vars.fadeSize.var,
       minHeight: '100%',
-      marginInlineStart: `calc(-1 * ${v.fadeSize.var})`,
+      marginInlineStart: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
       zIndex: 1,
       opacity: 0,
-      backgroundImage: `linear-gradient(to left, ${v.fadeColor.var}, transparent)`,
+      backgroundImage: `linear-gradient(to left, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
       animationName: scrollFadeOut,
       animationTimeline: 'scroll(nearest inline)',
       animationRange: 'exit 0% exit 100%',
     };
-
     return {
       base: {
         root: {
@@ -160,7 +153,7 @@ export const scrollArea = typestyles.recipe(
           minHeight: 0,
           minWidth: 0,
           overflow: 'hidden',
-          [v.fadeSize.name]: '24px',
+          [vars.fadeSize.name]: '24px',
           '@supports not (animation-timeline: scroll())': {
             [`& .var-ui-scroll-area__fadeTop,
               & .var-ui-scroll-area__fadeBottom,
@@ -223,8 +216,7 @@ export const scrollArea = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type ScrollAreaVariantProps = RecipeVariants<typeof scrollArea>;
 

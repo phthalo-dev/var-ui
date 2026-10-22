@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import { textBlock } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type TimestampProps = {
   /** Date value to format. Accepts a `Date`, ISO string, or epoch milliseconds. */

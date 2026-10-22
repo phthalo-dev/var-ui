@@ -11,54 +11,56 @@ import { designTokens as t } from '../tokens';
  * <div className={e.root}>…</div>
  * ```
  */
-export const emptyState = typestyles.recipe(
-  'empty-state',
-  (c) => {
-    const v = c.vars({
-      iconColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      iconBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-    });
+export const emptyState = typestyles.recipe({
+  name: 'empty-state',
+  layer: 'components',
+  slots: ['root', 'icon', 'title', 'description', 'action'],
+  vars: {
+    iconColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    iconBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'icon', 'title', 'description', 'action'],
-      root: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        gap: t.space[2].var,
-        padding: `${t.space[8].var} ${t.space[4].var}`,
-      },
-      icon: {
-        display: 'grid',
-        placeItems: 'center',
-        width: '48px',
-        height: '48px',
-        borderRadius: '50%',
-        color: v.iconColor.var,
-        backgroundColor: v.iconBackground.var,
-        marginBottom: t.space[1].var,
-      },
-      title: {
-        margin: 0,
-        fontSize: t.fontSize.lg.var,
-        fontWeight: t.fontWeight.semibold.var,
-      },
-      description: {
-        margin: 0,
-        fontSize: t.fontSize.md.var,
-        color: t.color.text.secondary.var,
-        maxWidth: '40ch',
-      },
-      action: {
-        marginTop: t.space[2].var,
+      base: {
+        root: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: t.space[2].var,
+          padding: `${t.space[8].var} ${t.space[4].var}`,
+        },
+        icon: {
+          display: 'grid',
+          placeItems: 'center',
+          width: '48px',
+          height: '48px',
+          borderRadius: '50%',
+          color: vars.iconColor.var,
+          backgroundColor: vars.iconBackground.var,
+          marginBottom: t.space[1].var,
+        },
+        title: {
+          margin: 0,
+          fontSize: t.fontSize.lg.var,
+          fontWeight: t.fontWeight.semibold.var,
+        },
+        description: {
+          margin: 0,
+          fontSize: t.fontSize.md.var,
+          color: t.color.text.secondary.var,
+          maxWidth: '40ch',
+        },
+        action: {
+          marginTop: t.space[2].var,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

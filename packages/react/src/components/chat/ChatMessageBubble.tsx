@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { chatMessageBubble, type ChatMessageBubbleVariantProps } from '@var-ui/core';
 import { useChatMessageContext } from './ChatContext';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatMessageBubbleProps = {
   /** Bubble content — plain text or a consumer-rendered markdown tree. */

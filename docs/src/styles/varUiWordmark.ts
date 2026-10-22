@@ -4,15 +4,14 @@ import { variant } from 'typestyles';
 const wordmarkSize = variant.enum(['hero', 'header'], { default: 'hero' });
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
-export const varUiWordmark = typestyles.recipe(
-  'wordmark',
-  {
-    slots: ['root', 'keyword', 'punctuation', 'customProperty'],
-    variants: {
-      size: wordmarkSize,
-    },
+export const varUiWordmark = typestyles.recipe({
+  name: 'wordmark',
+  layer: 'components',
+  slots: ['root', 'keyword', 'punctuation', 'customProperty'],
+  variants: {
+    size: wordmarkSize,
   },
-  () => ({
+  styles: () => ({
     base: {
       root: {
         display: 'inline-flex',
@@ -55,5 +54,4 @@ export const varUiWordmark = typestyles.recipe(
       },
     },
   }),
-  { layer: 'components' },
-);
+});

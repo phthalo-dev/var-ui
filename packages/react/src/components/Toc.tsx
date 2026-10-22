@@ -5,7 +5,7 @@ import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
 import type { TocHeading } from '@var-ui/core/components/toc/spy';
 import { toc as tocStyles } from '@var-ui/core';
 import { useTocSpy } from '../hooks/useTocSpy';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type TocItemProps = {
   label: string;

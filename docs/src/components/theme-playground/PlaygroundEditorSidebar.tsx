@@ -7,10 +7,10 @@ import {
   LayerProvider,
   Select,
   Tabs,
-  readStoredColorMode,
   type ColorMode,
 } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { readStoredColorMode } from '@/lib/storedColorMode';
 import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
 import { playgroundSidebarStyles } from '@/styles/playgroundSidebar';
 import {
@@ -58,7 +58,7 @@ export default function PlaygroundEditorSidebar() {
     const observer = new MutationObserver(() => syncColorModeFromStorage());
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-mode'],
+      attributeFilter: ['data-color-mode'],
     });
     return () => observer.disconnect();
   }, [syncColorModeFromStorage]);

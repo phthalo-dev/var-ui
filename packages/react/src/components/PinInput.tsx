@@ -2,8 +2,8 @@ import type { ChangeEvent, ClipboardEvent, JSX, KeyboardEvent } from 'react';
 import { useCallback, useId, useRef, useState } from 'react';
 import { Label } from 'react-aria-components';
 import { pinInput, type PinInputVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
-import type { FieldMeta } from './utils';
+import { mergeProps } from 'typestyles';
+import type { FieldMeta } from './Field';
 
 export type PinInputType = 'numeric' | 'alphanumeric';
 

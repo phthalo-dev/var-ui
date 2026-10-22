@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { inputGroup } from '@var-ui/core';
 import { useControlSize } from './controlSizeContext';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type InputGroupTextProps = {
   /** Text or a small icon rendered inside the addon. */

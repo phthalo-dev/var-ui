@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { surface, type SurfaceVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
   /** @default md */

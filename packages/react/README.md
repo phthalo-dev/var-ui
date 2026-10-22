@@ -121,8 +121,7 @@ for your own UI, or `<Icon>{node}</Icon>` for one-off custom glyphs.
 | **Icons**           | `Icon`, `IconProvider`, `useIcons` (+ optional `@var-ui/icons` glyph package)                         |
 | **Layers**          | `LayerProvider`, `useLayer` — z-index coordination for floating UI                                    |
 | **Hooks**           | `useMediaQuery`, `useScrollLock`                                                                      |
-| **Tokens**          | `designTokens`, typed value exports                                                                   |
-| **Theming**         | `DesignSystemProvider`, `useColorMode`, `ColorModeToggle`                                             |
+| **Theming**         | `DesignSystemProvider`, `useColorMode`, `ColorModeToggle`, `DirectionProvider`                        |
 
 Core-only recipes without wrappers (use the class helpers from `@var-ui/core`):
 `skeleton`, `statusDot`, `kbd`, `overlay`, plus everything in the core README's
@@ -138,11 +137,12 @@ src/
   components/     # React Aria–based UI
   icons/          # IconProvider, useIcons, Icon, empty fallback
   layers/         # LayerProvider / useLayer z-index coordination
-  hooks/          # useMediaQuery, useScrollLock, …
-  tokens.ts       # Re-exports / aliases @var-ui/core tokens
-  color-mode.tsx            # useColorMode, getColorModeInitScript
+  hooks/                    # useMediaQuery, useScrollLock, …
+  colorMode.tsx             # useColorMode, getColorModeInitScript
   DesignSystemProvider.tsx  # DesignSystemProvider
-  index.ts        # Public API
+  DirectionProvider.tsx     # DirectionProvider
+  direction.ts              # direction resolution helpers
+  index.ts                  # Public API
 ```
 
 ## Learn more

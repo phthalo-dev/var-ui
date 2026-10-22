@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { outline } from '@var-ui/core';
-import { cx, mergeProps } from './utils';
+import { cx, mergeProps } from 'typestyles';
 
 export type OutlineItemData = {
   id: string;

@@ -31,50 +31,47 @@ export type AppShellContentPadding = NumericSteps<VariantOptions<typeof appShell
  * </div>
  * ```
  */
-export const appShell = typestyles.recipe(
-  'app-shell',
-  {
-    slots: ['root', 'banner', 'frame', 'topNav', 'sideNav', 'main', 'aside', 'skipLink'],
-    variants: {
-      height: appShellHeight,
-      variant: appShellVariant,
-      contentPadding: appShellContentPadding,
+export const appShell = typestyles.recipe({
+  name: 'app-shell',
+  layer: 'components',
+  slots: ['root', 'banner', 'frame', 'topNav', 'sideNav', 'main', 'aside', 'skipLink'],
+  variants: {
+    height: appShellHeight,
+    variant: appShellVariant,
+    contentPadding: appShellContentPadding,
+  },
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.app.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    contentPadding: {
+      ...atProperty.length,
+      value: '0px',
+    },
+    asideWidth: {
+      ...atProperty.length,
+      value: '12.5rem',
+    },
+    sideNavWidth: {
+      ...atProperty.union(atProperty.length, { syntax: 'auto' }),
+      value: 'auto',
     },
   },
-  (c) => {
-    const v = c.vars({
-      background: {
-        ...atProperty.color,
-        value: t.color.background.app.var,
-      },
-      border: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      contentPadding: {
-        ...atProperty.length,
-        value: '0px',
-      },
-      asideWidth: {
-        ...atProperty.length,
-        value: '12.5rem',
-      },
-      sideNavWidth: {
-        ...atProperty.union(atProperty.length, { syntax: 'auto' }),
-        value: 'auto',
-      },
-    });
+  styles: ({ vars }) => {
     const transition = `transform ${t.duration.fast.var} ${t.easing.standard.var}`;
-
     return {
-      vars: v,
       base: {
         root: {
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
         },
         skipLink: {
           position: 'absolute',
@@ -122,18 +119,18 @@ export const appShell = typestyles.recipe(
           gridTemplateColumns: 'auto 1fr',
           gridTemplateRows: 'auto 1fr',
           '[data-has-side-nav] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-aside] &': {
             gridTemplateAreas: '"top top top" "side main aside"',
-            gridTemplateColumns: `auto 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `auto 1fr ${vars.asideWidth.var}`,
           },
           '[data-has-side-nav][data-aside] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr ${vars.asideWidth.var}`,
           },
           '[data-aside]:not([data-has-side-nav]) &': {
             gridTemplateAreas: '"top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-side-nav-collapsed] &': {
             gridTemplateAreas: '"top top" "main main"',
@@ -141,7 +138,7 @@ export const appShell = typestyles.recipe(
           },
           '[data-side-nav-collapsed][data-aside] &': {
             gridTemplateAreas: '"top top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-side-nav-collapsed][data-aside-collapsed] &': {
             gridTemplateAreas: '"top top" "main main"',
@@ -152,16 +149,16 @@ export const appShell = typestyles.recipe(
             gridTemplateColumns: 'auto 1fr',
           },
           '[data-aside-collapsed][data-has-side-nav] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-layout="alt"] &': {
             gridTemplateAreas: '"side top" "side main"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
             gridTemplateRows: 'auto 1fr',
           },
           '[data-layout="alt"][data-aside] &': {
             gridTemplateAreas: '"side top top" "side main aside"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr ${vars.asideWidth.var}`,
           },
           '[data-layout="alt"][data-side-nav-collapsed] &': {
             gridTemplateAreas: '"top" "main"',
@@ -169,7 +166,7 @@ export const appShell = typestyles.recipe(
           },
           '[data-layout="alt"][data-side-nav-collapsed][data-aside] &': {
             gridTemplateAreas: '"top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-layout="alt"][data-side-nav-collapsed][data-aside-collapsed] &': {
             gridTemplateAreas: '"top" "main"',
@@ -177,7 +174,7 @@ export const appShell = typestyles.recipe(
           },
           '[data-layout="alt"][data-aside-collapsed] &': {
             gridTemplateAreas: '"side top" "side main"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-header-hidden]:not([data-header-offset]) &': {
             gridTemplateRows: '0fr 1fr',
@@ -214,7 +211,7 @@ export const appShell = typestyles.recipe(
           overflow: 'hidden',
           transition,
           '[data-has-side-nav] &': {
-            width: v.sideNavWidth.var,
+            width: vars.sideNavWidth.var,
           },
           '[data-side-nav-collapsed] &': {
             display: 'none',
@@ -228,7 +225,7 @@ export const appShell = typestyles.recipe(
           minHeight: 0,
           minWidth: 0,
           overflow: 'auto',
-          padding: v.contentPadding.var,
+          padding: vars.contentPadding.var,
         },
         aside: {
           gridArea: 'aside',
@@ -241,7 +238,7 @@ export const appShell = typestyles.recipe(
           maxHeight: '100%',
           transition,
           '[data-aside] &': {
-            width: v.asideWidth.var,
+            width: vars.asideWidth.var,
           },
           '[data-aside-collapsed] &': {
             display: 'none',
@@ -270,43 +267,42 @@ export const appShell = typestyles.recipe(
         },
         variant: {
           wash: {
-            root: { [v.background.name]: t.color.background.app.var },
+            root: { [vars.background.name]: t.color.background.app.var },
           },
           surface: {
-            root: { [v.background.name]: t.color.background.surface.var },
+            root: { [vars.background.name]: t.color.background.surface.var },
           },
           section: {
             root: {
-              [v.background.name]: t.color.background.surface.var,
+              [vars.background.name]: t.color.background.surface.var,
               borderWidth: t.borderWidth.default.var,
               borderStyle: 'solid',
-              borderColor: v.border.var,
+              borderColor: vars.border.var,
               borderRadius: t.radius.lg.var,
               boxShadow: t.shadow.xs.var,
             },
           },
           elevated: {
             root: {
-              [v.background.name]: t.color.background.elevated.var,
+              [vars.background.name]: t.color.background.elevated.var,
               boxShadow: t.shadow.sm.var,
             },
           },
         },
         contentPadding: {
-          '0': { root: { [v.contentPadding.name]: '0px' } },
-          '1': { root: { [v.contentPadding.name]: t.space[1].var } },
-          '2': { root: { [v.contentPadding.name]: t.space[2].var } },
-          '3': { root: { [v.contentPadding.name]: t.space[3].var } },
-          '4': { root: { [v.contentPadding.name]: t.space[4].var } },
-          '5': { root: { [v.contentPadding.name]: t.space[5].var } },
-          '6': { root: { [v.contentPadding.name]: t.space[6].var } },
-          '8': { root: { [v.contentPadding.name]: t.space[8].var } },
+          '0': { root: { [vars.contentPadding.name]: '0px' } },
+          '1': { root: { [vars.contentPadding.name]: t.space[1].var } },
+          '2': { root: { [vars.contentPadding.name]: t.space[2].var } },
+          '3': { root: { [vars.contentPadding.name]: t.space[3].var } },
+          '4': { root: { [vars.contentPadding.name]: t.space[4].var } },
+          '5': { root: { [vars.contentPadding.name]: t.space[5].var } },
+          '6': { root: { [vars.contentPadding.name]: t.space[6].var } },
+          '8': { root: { [vars.contentPadding.name]: t.space[8].var } },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type AppShellVariantProps = RecipeVariants<typeof appShell>;

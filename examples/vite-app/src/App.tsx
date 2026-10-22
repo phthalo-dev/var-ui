@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { layoutBreakpointQueries } from '@var-ui/core';
+import { defaultThemeClassName, layoutBreakpointQueries } from '@var-ui/core';
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { ChatDemo } from './ChatDemo';
 import { acmeTheme } from './acmeTheme';
-import { defaultThemeClassName, SURFACE_ATTRIBUTE } from '@var-ui/core';
 import { defaultIcons } from '@var-ui/icons';
 import {
   Alert,
@@ -1259,12 +1259,10 @@ export function App() {
               <OverlaysSection />
               <ChatSection />
 
-              <Section {...{ [SURFACE_ATTRIBUTE]: 'dark' }} title="Fixed dark surface">
-                <Text>
-                  This section keeps the theme&apos;s dark token face while the page stays light.
-                </Text>
-                <Alert variant="info" appearance="subtle" title="Always-dark chrome">
-                  Mark subtrees with <code>{SURFACE_ATTRIBUTE}=&quot;dark&quot;</code>.
+              <Section {...{ [COLOR_MODE_ATTRIBUTE]: 'dark' }} title="Dark section">
+                <Text>This section pins dark color mode while the page stays light.</Text>
+                <Alert variant="info" appearance="subtle" title="Pinned dark chrome">
+                  Mark subtrees with <code>{COLOR_MODE_ATTRIBUTE}=&quot;dark&quot;</code>.
                 </Alert>
               </Section>
             </Stack>

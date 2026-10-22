@@ -35,7 +35,7 @@ import {
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DialogRootProps = {
   children: ReactNode;

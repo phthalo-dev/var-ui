@@ -13,6 +13,19 @@ describe('DesignSystemProvider direction', () => {
     expect(result.current.isRtl).toBe(true);
   });
 
+  it('puts dir and lang on the theme wrapper', () => {
+    const { container } = render(
+      <DesignSystemProvider direction="rtl" locale="he-IL">
+        <span>app</span>
+      </DesignSystemProvider>,
+    );
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(wrapper.getAttribute('dir')).toBe('rtl');
+    expect(wrapper.getAttribute('lang')).toBe('he-IL');
+    expect(wrapper.style.display).toBe('contents');
+    expect(wrapper.querySelector('[dir]')).toBeNull();
+  });
+
   it('sets html dir when applyToDocument is set', () => {
     render(
       <DesignSystemProvider direction="rtl" applyToDocument>
@@ -21,7 +34,7 @@ describe('DesignSystemProvider direction', () => {
     );
     expect(document.documentElement.getAttribute('dir')).toBe('rtl');
     document.documentElement.removeAttribute('dir');
-    document.documentElement.removeAttribute('data-mode');
+    document.documentElement.removeAttribute('data-color-mode');
     document.documentElement.className = '';
   });
 });

@@ -22,7 +22,6 @@
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
-    "./components/utils": null,
     "./components/*": {
       "types": "./dist/components/*.d.mts",
       "import": "./dist/components/*.mjs"
@@ -38,7 +37,7 @@
   },
   "dependencies": {
     "@react-aria/i18n": "^3.13.1",
-    "typestyles": "catalog:"
+    "typestyles": "0.32.1"
   },
   "devDependencies": {
     "@internationalized/date": "catalog:",

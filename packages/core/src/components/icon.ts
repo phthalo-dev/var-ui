@@ -18,27 +18,26 @@ const iconMirrorStyle = {
  * <span className={icon({ size: 'md' })}>{svg}</span>
  * ```
  */
-export const icon = typestyles.recipe(
-  'icon',
-  {
-    variants: {
-      size: iconSize,
-    },
+export const icon = typestyles.recipe({
+  name: 'icon',
+  layer: 'components',
+  variants: {
+    size: iconSize,
   },
-  (c) => {
-    const v = c.vars({
-      size: { ...atProperty.length, value: t.size.icon.md.var },
-      color: { value: 'currentColor', syntax: '*' },
-    });
+  vars: {
+    size: { ...atProperty.length, value: t.size.icon.md.var },
+    color: { value: 'currentColor', syntax: '*' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
-        width: v.size.var,
-        height: v.size.var,
-        color: v.color.var,
+        width: vars.size.var,
+        height: vars.size.var,
+        color: vars.color.var,
         '& svg': {
           width: '100%',
           height: '100%',
@@ -47,16 +46,15 @@ export const icon = typestyles.recipe(
       },
       variants: {
         size: {
-          sm: { [v.size.name]: t.size.icon.sm.var },
-          md: { [v.size.name]: t.size.icon.md.var },
-          lg: { [v.size.name]: t.size.icon.lg.var },
-          inherit: { [v.size.name]: '1em' },
+          sm: { [vars.size.name]: t.size.icon.sm.var },
+          md: { [vars.size.name]: t.size.icon.md.var },
+          lg: { [vars.size.name]: t.size.icon.lg.var },
+          inherit: { [vars.size.name]: '1em' },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type IconVariantProps = RecipeVariants<typeof icon>;

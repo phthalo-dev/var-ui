@@ -1,6 +1,7 @@
 'use client';
 
-import { AspectRatio, Card, Carousel, designTokens as t, Text, VStack } from '@var-ui/react';
+import { designTokens as t } from '@var-ui/core';
+import { AspectRatio, Card, Carousel, Text, VStack } from '@var-ui/react';
 
 const SLIDES = ['Onboarding', 'Billing', 'Reports', 'Integrations', 'Security'];
 

@@ -1,7 +1,13 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { defineLayoutShellVars, getLayoutShellVars } from './layoutShellVars';
+import {
+  getLayoutShellVars,
+  layoutShellVarDefinitions,
+  setLayoutShellVars,
+} from './layoutShellVars';
+import { layerZIndex } from './layerVars';
+
 export type { LayoutPadding } from './layoutShellVars';
 export { layoutContentWidthAssignment, layoutShellPaddingAssignments } from './layoutShellVars';
 
@@ -19,10 +25,10 @@ const panelDivider = variant.boolean({ default: false });
  *
  * ```tsx
  * const l = layout({ height: 'fill' });
- * <div className={l.root} data-has-header data-has-start data-has-end>
- *   <div className={l.outer}><div className={l.inner}>
+ * <div className={l.root.className} data-has-header data-has-start data-has-end>
+ *   <div className={l.outer.className}><div className={l.inner.className}>
  *     <LayoutHeader>…</LayoutHeader>
- *     <div className={l.middle}>
+ *     <div className={l.middle.className}>
  *       <LayoutPanel data-side="start">…</LayoutPanel>
  *       <LayoutContent>…</LayoutContent>
  *       <LayoutPanel data-side="end">…</LayoutPanel>
@@ -32,26 +38,24 @@ const panelDivider = variant.boolean({ default: false });
  * </div>
  * ```
  */
-export const layout = typestyles.recipe(
-  'layout',
-  {
-    slots: ['root', 'outer', 'inner', 'middle'],
-    variants: { height: layoutHeight },
-  },
-  (c) => {
-    const shell = defineLayoutShellVars(c);
+export const layout = typestyles.recipe({
+  name: 'layout',
+  layer: 'components',
+  slots: ['root', 'outer', 'inner', 'middle'],
+  variants: { height: layoutHeight },
+  vars: layoutShellVarDefinitions,
+  styles: ({ vars }) => {
     return {
-      vars: shell,
       base: {
         root: {
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
           minHeight: 0,
-          [shell.padding.outer.x.name]: t.space[4].var,
-          [shell.padding.outer.y.name]: t.space[4].var,
-          [shell.padding.inner.x.name]: t.space[4].var,
-          [shell.padding.inner.y.name]: t.space[4].var,
+          [vars.padding.outer.x.name]: t.space[4].var,
+          [vars.padding.outer.y.name]: t.space[4].var,
+          [vars.padding.inner.x.name]: t.space[4].var,
+          [vars.padding.inner.y.name]: t.space[4].var,
         },
         outer: {
           marginInlineStart: 'calc(-1 * var(--container-padding-inline-start, 0px))',
@@ -90,99 +94,109 @@ export const layout = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
+
+setLayoutShellVars(layout.vars);
 
 /**
  * Top chrome band for {@link layout}. Divider when the header slot has
  * `data-divider` or the layout root has `data-divider-header` (set by React
  * `Layout` in Task 3). Edge padding reads layout shell vars from the ancestor root.
+ * Assign `layoutHeader.vars.blockSize` to set the band height.
  */
-export const layoutHeader = typestyles.recipe(
-  'layout-header',
-  (c) => {
+export const layoutHeader = typestyles.recipe({
+  name: 'layout-header',
+  layer: 'components',
+  slots: ['header', 'headerInner'],
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    blockSize: { syntax: '*', value: 'auto' },
+  },
+  styles: ({ vars }) => {
     const shell = getLayoutShellVars();
-    const v = c.vars({
-      border: { ...atProperty.color, value: t.color.border.default.var },
-    });
     return {
-      slots: ['header', 'headerInner'],
-      header: {
-        flexShrink: 0,
-        minWidth: 0,
-        paddingInline: shell.padding.outer.x.var,
-        paddingBlockStart: shell.padding.outer.y.var,
-        paddingBlockEnd: shell.padding.outer.y.var,
-        '&[data-divider], [data-divider-header] &': {
-          paddingBlockEnd: shell.padding.inner.y.var,
-          borderBlockEndWidth: t.borderWidth.default.var,
-          borderBlockEndStyle: 'solid',
-          borderBlockEndColor: v.border.var,
+      base: {
+        header: {
+          height: vars.blockSize.var,
+          flexShrink: 0,
+          minWidth: 0,
+          paddingInline: shell.padding.outer.x.var,
+          paddingBlockStart: shell.padding.outer.y.var,
+          paddingBlockEnd: shell.padding.outer.y.var,
+          '&[data-divider], [data-divider-header] &': {
+            paddingBlockEnd: shell.padding.inner.y.var,
+            borderBlockEndWidth: t.borderWidth.default.var,
+            borderBlockEndStyle: 'solid',
+            borderBlockEndColor: vars.border.var,
+          },
         },
-      },
-      headerInner: {
-        maxWidth: shell.content.width.var,
-        marginInline: 'auto',
-        width: '100%',
-        minWidth: 0,
+        headerInner: {
+          maxWidth: shell.content.width.var,
+          marginInline: 'auto',
+          width: '100%',
+          minWidth: 0,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /**
  * Bottom chrome band for {@link layout}. Divider when the footer slot has
  * `data-divider` or the layout root has `data-divider-footer` (set by React
  * `Layout` in Task 3). Edge padding reads layout shell vars from the ancestor root.
+ * Assign `layoutFooter.vars.blockSize` to set the band height.
  */
-export const layoutFooter = typestyles.recipe(
-  'layout-footer',
-  (c) => {
+export const layoutFooter = typestyles.recipe({
+  name: 'layout-footer',
+  layer: 'components',
+  slots: ['footer', 'footerInner'],
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    blockSize: { syntax: '*', value: 'auto' },
+  },
+  styles: ({ vars }) => {
     const shell = getLayoutShellVars();
-    const v = c.vars({
-      border: { ...atProperty.color, value: t.color.border.default.var },
-    });
     return {
-      slots: ['footer', 'footerInner'],
-      footer: {
-        flexShrink: 0,
-        minWidth: 0,
-        paddingInline: shell.padding.outer.x.var,
-        paddingBlockEnd: shell.padding.outer.y.var,
-        paddingBlockStart: shell.padding.outer.y.var,
-        '&[data-divider], [data-divider-footer] &': {
-          paddingBlockStart: shell.padding.inner.y.var,
-          borderBlockStartWidth: t.borderWidth.default.var,
-          borderBlockStartStyle: 'solid',
-          borderBlockStartColor: v.border.var,
+      base: {
+        footer: {
+          height: vars.blockSize.var,
+          flexShrink: 0,
+          minWidth: 0,
+          paddingInline: shell.padding.outer.x.var,
+          paddingBlockEnd: shell.padding.outer.y.var,
+          paddingBlockStart: shell.padding.outer.y.var,
+          '&[data-divider], [data-divider-footer] &': {
+            paddingBlockStart: shell.padding.inner.y.var,
+            borderBlockStartWidth: t.borderWidth.default.var,
+            borderBlockStartStyle: 'solid',
+            borderBlockStartColor: vars.border.var,
+          },
         },
-      },
-      footerInner: {
-        maxWidth: shell.content.width.var,
-        marginInline: 'auto',
-        width: '100%',
-        minWidth: 0,
+        footerInner: {
+          maxWidth: shell.content.width.var,
+          marginInline: 'auto',
+          width: '100%',
+          minWidth: 0,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /**
  * Flex-1 main column for {@link layout}. Edge-aware padding uses `data-has-*`
  * attributes on the layout root; defaults to outer padding on exposed edges.
  */
-export const layoutContent = typestyles.recipe(
-  'layout-content',
-  {
-    slots: ['content'],
-    variants: {
-      isScrollable: zoneScrollable,
-      padding: zonePadding,
-    },
+export const layoutContent = typestyles.recipe({
+  name: 'layout-content',
+  layer: 'components',
+  slots: ['content'],
+  variants: {
+    isScrollable: zoneScrollable,
+    padding: zonePadding,
   },
-  () => {
+  styles: () => {
     const shell = getLayoutShellVars();
     return {
       base: {
@@ -226,35 +240,34 @@ export const layoutContent = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /**
  * Fixed-width side panel for {@link layout} start/end slots, plus overlay
  * slots for responsive drawer mode. Divider borders target the content-facing
  * edge via `data-side`; negative margins collapse inner padding when seamless.
  */
-export const layoutPanel = typestyles.recipe(
-  'layout-panel',
-  {
-    slots: ['panel', 'overlay', 'overlayBackdrop'],
-    variants: {
-      isScrollable: zoneScrollable,
-      hasDivider: panelDivider,
-      padding: zonePadding,
-    },
+export const layoutPanel = typestyles.recipe({
+  name: 'layout-panel',
+  layer: 'components',
+  slots: ['panel', 'overlay', 'overlayBackdrop'],
+  variants: {
+    isScrollable: zoneScrollable,
+    hasDivider: panelDivider,
+    padding: zonePadding,
   },
-  (c) => {
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    overlayBackground: { ...atProperty.color, value: t.color.overlay.backdrop.var },
+    panelBackground: { ...atProperty.color, value: t.color.background.surface.var },
+    panelWidth: { syntax: '*', value: 'auto' },
+  },
+  styles: ({ vars }) => {
     const shell = getLayoutShellVars();
-    const v = c.vars({
-      border: { ...atProperty.color, value: t.color.border.default.var },
-      overlayBackground: { ...atProperty.color, value: t.color.overlay.backdrop.var },
-      panelBackground: { ...atProperty.color, value: t.color.background.surface.var },
-    });
     return {
-      vars: v,
       base: {
         panel: {
+          width: vars.panelWidth.var,
           flexShrink: 0,
           minWidth: 0,
           minHeight: 0,
@@ -288,7 +301,8 @@ export const layoutPanel = typestyles.recipe(
         overlayBackdrop: {
           position: 'fixed',
           inset: 0,
-          backgroundColor: v.overlayBackground.var,
+          ...layerZIndex(t.zIndex.overlay.var),
+          backgroundColor: vars.overlayBackground.var,
         },
         overlay: {
           position: 'fixed',
@@ -298,19 +312,19 @@ export const layoutPanel = typestyles.recipe(
           flexDirection: 'column',
           minWidth: 0,
           minHeight: 0,
-          backgroundColor: v.panelBackground.var,
+          backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           '&[data-side="start"]': {
             insetInlineStart: 0,
             borderInlineEndWidth: t.borderWidth.default.var,
             borderInlineEndStyle: 'solid',
-            borderInlineEndColor: v.border.var,
+            borderInlineEndColor: vars.border.var,
           },
           '&[data-side="end"]': {
             insetInlineEnd: 0,
             borderInlineStartWidth: t.borderWidth.default.var,
             borderInlineStartStyle: 'solid',
-            borderInlineStartColor: v.border.var,
+            borderInlineStartColor: vars.border.var,
           },
         },
       },
@@ -331,12 +345,12 @@ export const layoutPanel = typestyles.recipe(
               '&[data-side="start"]': {
                 borderInlineEndWidth: t.borderWidth.default.var,
                 borderInlineEndStyle: 'solid',
-                borderInlineEndColor: v.border.var,
+                borderInlineEndColor: vars.border.var,
               },
               '&[data-side="end"]': {
                 borderInlineStartWidth: t.borderWidth.default.var,
                 borderInlineStartStyle: 'solid',
-                borderInlineStartColor: v.border.var,
+                borderInlineStartColor: vars.border.var,
               },
             },
           },
@@ -360,8 +374,7 @@ export const layoutPanel = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type LayoutVariantProps = RecipeVariants<typeof layout>;

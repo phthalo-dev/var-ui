@@ -5,7 +5,7 @@ import {
   type ProgressBarProps as RACProgressBarProps,
 } from 'react-aria-components';
 import { progressBar, type ProgressBarVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className'> &
   ProgressBarVariantProps & {

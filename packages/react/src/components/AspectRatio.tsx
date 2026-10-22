@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { aspectRatio } from '@var-ui/core';
-import { cx } from './utils';
+import { cx } from 'typestyles';
 
 export type AspectRatioProps = HTMLAttributes<HTMLDivElement> & {
   /** width / height, e.g. `16 / 9` or `1`. Defaults to the recipe's 16/9. */

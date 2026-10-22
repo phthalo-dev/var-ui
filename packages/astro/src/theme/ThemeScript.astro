@@ -1,31 +1,28 @@
 ---
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
+
 type Props = {
   themeClass: string;
   storageKey?: string;
 };
 const { themeClass, storageKey = 'theme-mode' } = Astro.props;
+const colorModeAttribute = COLOR_MODE_ATTRIBUTE;
 ---
 <meta name="color-scheme" content="light dark" />
 <style is:inline>
   /* Must match `layers` in packages/core/src/runtime.ts */
   @layer reset, base, tokens, components, overrides, utilities;
 </style>
-<script is:inline define:vars={{ themeClass, storageKey }}>
+<script is:inline define:vars={{ themeClass, storageKey, colorModeAttribute }}>
   function applyThemeTo(doc) {
     const root = doc.documentElement;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const stored = localStorage.getItem(storageKey);
     root.classList.add(themeClass);
-    if (stored === 'system') {
-      root.removeAttribute('data-mode');
-      root.style.colorScheme = '';
-    } else if (stored === 'light' || stored === 'dark') {
-      root.setAttribute('data-mode', stored);
-      root.style.colorScheme = stored;
+    root.style.colorScheme = '';
+    if (stored === 'light' || stored === 'dark') {
+      root.setAttribute(colorModeAttribute, stored);
     } else {
-      const fallback = prefersDark ? 'dark' : 'light';
-      root.setAttribute('data-mode', fallback);
-      root.style.colorScheme = fallback;
+      root.removeAttribute(colorModeAttribute);
     }
   }
 

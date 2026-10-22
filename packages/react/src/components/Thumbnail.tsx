@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { thumbnail, type ThumbnailVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ThumbnailProps = {
   /** Image URL for the preview. */

@@ -15,55 +15,54 @@ const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], 
 });
 const buttonLayout = variant.enum(['default', 'icon'], { default: 'default' });
 
-export const button = typestyles.recipe(
-  'button',
-  {
-    variants: {
-      tone,
-      appearance: buttonAppearance,
-      size: controlSize,
-      layout: buttonLayout,
-      elevated: variant.boolean({ default: false }),
+export const button = typestyles.recipe({
+  name: 'button',
+  layer: 'components',
+  variants: {
+    tone,
+    appearance: buttonAppearance,
+    size: controlSize,
+    layout: buttonLayout,
+    elevated: variant.boolean({ default: false }),
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    foreground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      solidBg: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      solidFg: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      border: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      background: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      foreground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         appearance: 'none',
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.border.var,
+        borderColor: vars.border.var,
         borderRadius: t.radius.md.var,
-        backgroundColor: v.background.var,
+        backgroundColor: vars.background.var,
         // background: `linear-gradient(to bottom, transparent, ${v.border.var}), ${v.background.var}`,
         // backgroundBlendMode: "screen",
-        color: v.foreground.var,
+        color: vars.foreground.var,
         fontSize: t.fontSize.md.var,
         fontWeight: t.fontWeight.medium.var,
         boxSizing: 'border-box',
@@ -88,12 +87,12 @@ export const button = typestyles.recipe(
         },
       },
       variants: {
-        tone: mapTone((key) => toneChannelAssignments(v, key)),
+        tone: mapTone((key) => toneChannelAssignments(vars, key)),
         appearance: {
-          filled: controlAppearancePaint(v, 'filled'),
-          outline: controlAppearancePaint(v, 'outline'),
-          subtle: controlAppearancePaint(v, 'subtle'),
-          ghost: controlAppearancePaint(v, 'ghost'),
+          filled: controlAppearancePaint(vars, 'filled'),
+          outline: controlAppearancePaint(vars, 'outline'),
+          subtle: controlAppearancePaint(vars, 'subtle'),
+          ghost: controlAppearancePaint(vars, 'ghost'),
         },
         size: controlSizeVariants((size) => controlSurfaceSize(size)),
         layout: {
@@ -113,8 +112,7 @@ export const button = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ButtonVariantProps = RecipeVariants<typeof button>;

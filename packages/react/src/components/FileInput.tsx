@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { fileInput } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type FileInputProps = {
   /** Visible label rendered above the dropzone. */

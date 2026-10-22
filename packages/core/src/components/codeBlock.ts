@@ -58,52 +58,50 @@ const codeBlockVariant = variant.enum(['default', 'inline', 'diff', 'terminal'],
  * Fenced code chrome. `variant` is a recipe axis (`default`, `inline`, `diff`, `terminal`)
  * applied as `data-variant` on every slot.
  */
-export const codeBlock = typestyles.recipe(
-  'code-block',
-  {
-    slots: [
-      'root',
-      'header',
-      'title',
-      'filename',
-      'language',
-      'actions',
-      'copyButton',
-      'copyButtonIdle',
-      'copyButtonCopied',
-      'copyButtonError',
-      'feedback',
-      'feedbackInline',
-      'feedbackToast',
-      'feedbackSuccess',
-      'feedbackError',
-      'body',
-      'bodyScrollable',
-      'pre',
-      'preWrap',
-      'preScrollX',
-      'code',
-      'lines',
-      'line',
-      'lineNumber',
-      'lineContent',
-      'lineHighlighted',
-      'lineAdded',
-      'lineDeleted',
-    ],
-    variants: { variant: codeBlockVariant },
-  },
-  (c) => {
-    const v = c.vars(codeBlockVarDefinitions);
+export const codeBlock = typestyles.recipe({
+  name: 'code-block',
+  layer: 'components',
+  slots: [
+    'root',
+    'header',
+    'title',
+    'filename',
+    'language',
+    'actions',
+    'copyButton',
+    'copyButtonIdle',
+    'copyButtonCopied',
+    'copyButtonError',
+    'feedback',
+    'feedbackInline',
+    'feedbackToast',
+    'feedbackSuccess',
+    'feedbackError',
+    'body',
+    'bodyScrollable',
+    'pre',
+    'preWrap',
+    'preScrollX',
+    'code',
+    'lines',
+    'line',
+    'lineNumber',
+    'lineContent',
+    'lineHighlighted',
+    'lineAdded',
+    'lineDeleted',
+  ],
+  variants: { variant: codeBlockVariant },
+  vars: codeBlockVarDefinitions,
+  styles: ({ vars }) => {
     return {
-      vars: v,
       base: {
         root: {
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.lg.var,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
           overflow: 'hidden',
           boxShadow: t.shadow.lg.var,
         },
@@ -116,8 +114,8 @@ export const codeBlock = typestyles.recipe(
           paddingInline: t.space[3].var,
           borderBottomWidth: t.borderWidth.default.var,
           borderBottomStyle: 'solid',
-          borderBottomColor: v.border.var,
-          backgroundColor: v.backgroundHeader.var,
+          borderBottomColor: vars.border.var,
+          backgroundColor: vars.backgroundHeader.var,
         },
         title: {
           display: 'flex',
@@ -128,7 +126,7 @@ export const codeBlock = typestyles.recipe(
         filename: {
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
-          color: v.filenameColor.var,
+          color: vars.filenameColor.var,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -139,7 +137,7 @@ export const codeBlock = typestyles.recipe(
           fontFamily: t.fontFamily.mono.var,
           textTransform: 'uppercase',
           letterSpacing: '0.06em',
-          color: v.languageColor.var,
+          color: vars.languageColor.var,
           whiteSpace: 'nowrap',
         },
         actions: {
@@ -160,7 +158,7 @@ export const codeBlock = typestyles.recipe(
           gap: t.space[1].var,
           border: 'none',
           backgroundColor: 'transparent',
-          color: v.copyButtonColor.var,
+          color: vars.copyButtonColor.var,
           borderRadius: t.radius.sm.var,
           paddingBlock: t.space[1].var,
           paddingInline: t.space[2].var,
@@ -172,8 +170,8 @@ export const codeBlock = typestyles.recipe(
           cursor: 'pointer',
           transition: t.transition.colorShift.var,
           '&:hover': {
-            color: v.filenameColor.var,
-            backgroundColor: v.copyButtonHoverBackground.var,
+            color: vars.filenameColor.var,
+            backgroundColor: vars.copyButtonHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `${t.borderWidth.thin.var} solid ${t.color.border.focus.var}`,
@@ -195,7 +193,7 @@ export const codeBlock = typestyles.recipe(
         },
         feedback: {
           fontSize: t.fontSize.sm.var,
-          color: v.feedbackColor.var,
+          color: vars.feedbackColor.var,
           minHeight: '1lh',
         },
         feedbackInline: {
@@ -210,8 +208,8 @@ export const codeBlock = typestyles.recipe(
           zIndex: 1,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
-          backgroundColor: v.background.var,
+          borderColor: vars.border.var,
+          backgroundColor: vars.background.var,
           borderRadius: t.radius.md.var,
           padding: `2px ${t.space[2].var}`,
           boxShadow: t.shadow.sm.var,
@@ -224,7 +222,7 @@ export const codeBlock = typestyles.recipe(
         },
         body: {
           padding: 0,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
         },
         bodyScrollable: {
           overflowX: 'auto',
@@ -268,7 +266,7 @@ export const codeBlock = typestyles.recipe(
           minWidth: '2ch',
           textAlign: 'right',
           fontSize: t.fontSize.sm.var,
-          color: v.lineNumberColor.var,
+          color: vars.lineNumberColor.var,
           opacity: 0.8,
           userSelect: 'none',
         },
@@ -276,7 +274,7 @@ export const codeBlock = typestyles.recipe(
           minWidth: 0,
         },
         lineHighlighted: {
-          backgroundColor: v.lineHighlightBackground.var,
+          backgroundColor: vars.lineHighlightBackground.var,
         },
         lineAdded: {
           backgroundColor: 'rgb(16 185 129 / 0.12)',
@@ -296,9 +294,9 @@ export const codeBlock = typestyles.recipe(
               borderRadius: t.radius.md.var,
               borderWidth: t.borderWidth.default.var,
               borderStyle: 'solid',
-              borderColor: v.border.var,
+              borderColor: vars.border.var,
               padding: '2px 8px',
-              backgroundColor: v.backgroundInline.var,
+              backgroundColor: vars.backgroundInline.var,
             },
           },
           diff: {
@@ -316,8 +314,7 @@ export const codeBlock = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type CodeBlockVariant = VariantOptions<typeof codeBlockVariant>;
 

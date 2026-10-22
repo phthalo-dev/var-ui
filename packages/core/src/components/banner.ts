@@ -18,21 +18,20 @@ import {
  * <div className={b.root} role="alert">…</div>
  * ```
  */
-export const banner = typestyles.recipe(
-  'banner',
-  {
-    slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
-    variants: {
-      tone: toneWithDefault('info'),
-      appearance: surfaceAppearance,
-    },
+export const banner = typestyles.recipe({
+  name: 'banner',
+  layer: 'components',
+  slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
+  variants: {
+    tone: toneWithDefault('info'),
+    appearance: surfaceAppearance,
   },
-  (c) => {
-    const v = c.vars({
-      semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
-      solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
-      solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
-    });
+  vars: {
+    semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+    solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+    solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -47,7 +46,7 @@ export const banner = typestyles.recipe(
         icon: {
           flexShrink: 0,
           display: 'inline-flex',
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         content: {
           flex: 1,
@@ -58,7 +57,7 @@ export const banner = typestyles.recipe(
         },
         title: {
           fontWeight: t.fontWeight.semibold.var,
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         actions: {
           display: 'flex',
@@ -74,7 +73,7 @@ export const banner = typestyles.recipe(
           display: 'inline-flex',
           padding: t.space[1].var,
           borderRadius: t.radius.sm.var,
-          '&:hover': { backgroundColor: appearanceSurface(v, 'subtle').backgroundColor },
+          '&:hover': { backgroundColor: appearanceSurface(vars, 'subtle').backgroundColor },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
@@ -82,24 +81,23 @@ export const banner = typestyles.recipe(
         },
       },
       variants: {
-        tone: mapTone((key) => ({ root: toneChannelAssignments(v, key) })),
+        tone: mapTone((key) => ({ root: toneChannelAssignments(vars, key) })),
         appearance: {
           subtle: {
-            root: appearanceSurface(v, 'subtle', { includeBorder: false }),
+            root: appearanceSurface(vars, 'subtle', { includeBorder: false }),
           },
           solid: {
-            root: appearanceSurface(v, 'solid', { includeBorder: false }),
+            root: appearanceSurface(vars, 'solid', { includeBorder: false }),
             icon: { color: 'inherit' },
             title: { color: 'inherit' },
           },
           outline: {
-            root: appearanceSurface(v, 'outline', { includeBorder: false }),
+            root: appearanceSurface(vars, 'outline', { includeBorder: false }),
           },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type BannerVariantProps = RecipeVariants<typeof banner>;

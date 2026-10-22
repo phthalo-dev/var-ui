@@ -2,7 +2,7 @@ import type { JSX, ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
 import { button, type ButtonVariantProps, type IconName } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type IconButtonProps = Omit<RACButtonProps, 'className' | 'children'> & {
   'aria-label': string;

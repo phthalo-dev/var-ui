@@ -10,81 +10,80 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * Headless combobox primitive recipe. Shares field chrome with the other
  * field controls and adds an `empty` slot for listbox empty states.
  */
-export const combobox = typestyles.recipe(
-  'combobox',
-  {
-    slots: [
-      'root',
-      'label',
-      'description',
-      'error',
-      'inputWrapper',
-      'input',
-      'clearButton',
-      'popover',
-      'listbox',
-      'item',
-      'empty',
-    ],
-    variants: { size: controlSize },
+export const combobox = typestyles.recipe({
+  name: 'combobox',
+  layer: 'components',
+  slots: [
+    'root',
+    'label',
+    'description',
+    'error',
+    'inputWrapper',
+    'input',
+    'clearButton',
+    'popover',
+    'listbox',
+    'item',
+    'empty',
+  ],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    popoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    popoverBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    itemSelectedColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    itemFocusedBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-      inputBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      inputBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      inputForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      placeholderColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      popoverBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      popoverBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      itemSelectedColor: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foreground.var,
-      },
-      itemFocusedBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-    });
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     const panel = dropdownPopoverChrome({
-      popoverBorder: v.popoverBorder,
-      popoverBackground: v.popoverBackground,
-      itemFocusedBackground: v.itemFocusedBackground,
-      itemSelectedColor: v.itemSelectedColor,
+      popoverBorder: vars.popoverBorder,
+      popoverBackground: vars.popoverBackground,
+      itemFocusedBackground: vars.itemFocusedBackground,
+      itemSelectedColor: vars.itemSelectedColor,
     });
     return {
       base: {
@@ -103,9 +102,9 @@ export const combobox = typestyles.recipe(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.inputBackground.var,
+          backgroundColor: vars.inputBackground.var,
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
@@ -119,9 +118,9 @@ export const combobox = typestyles.recipe(
           flex: 1,
           minWidth: 0,
           fontSize: 'inherit',
-          color: v.inputForeground.var,
+          color: vars.inputForeground.var,
           '&::placeholder': {
-            color: v.placeholderColor.var,
+            color: vars.placeholderColor.var,
           },
         },
         clearButton: {
@@ -151,8 +150,7 @@ export const combobox = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ComboboxVariantProps = RecipeVariants<typeof combobox>;

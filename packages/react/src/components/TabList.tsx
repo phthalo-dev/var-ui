@@ -18,7 +18,7 @@ import {
 } from '@var-ui/core';
 import { Icon } from '../icons';
 import { Menu } from './Menu';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** Registry name or a caller-supplied node — excludes bare `string` so it isn't redundant with `IconName`. */
 export type TabListIcon = IconName | Exclude<ReactNode, string>;

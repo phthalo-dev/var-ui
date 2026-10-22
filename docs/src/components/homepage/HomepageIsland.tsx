@@ -1,13 +1,8 @@
 import { defaultIcons } from '@var-ui/icons';
-import {
-  DesignSystemProvider,
-  IconProvider,
-  LayerProvider,
-  readStoredColorMode,
-  type ColorMode,
-} from '@var-ui/react';
+import { DesignSystemProvider, IconProvider, LayerProvider, type ColorMode } from '@var-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import type { DocsFramework } from '@var-ui/docs-components/framework';
+import { readStoredColorMode } from '@/lib/storedColorMode';
 import { useDocsFramework } from '@/lib/useDocsFramework';
 import { BentoShowcase } from './BentoShowcase';
 import { ThemeShowcaseSwitcher, type ShowcaseThemeId } from './ThemeShowcaseSwitcher';
@@ -27,7 +22,7 @@ export type HomepageIslandProps = {
  * (`@var-ui/react`, `@var-ui/astro` markup, or core HTML recipes).
  *
  * Color mode is controlled and synced with Astro header `ColorModeToggle`, which writes
- * `theme-mode` + `document.documentElement[data-mode]` in-tab (no `storage` event).
+ * `theme-mode` + `document.documentElement[data-color-mode]` in-tab (no `storage` event).
  */
 export default function HomepageIsland({ framework: initialFramework }: HomepageIslandProps) {
   const framework = useDocsFramework(initialFramework);
@@ -49,7 +44,7 @@ export default function HomepageIsland({ framework: initialFramework }: Homepage
     });
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-mode'],
+      attributeFilter: ['data-color-mode'],
     });
 
     const onStorage = (event: StorageEvent) => {

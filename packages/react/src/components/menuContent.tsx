@@ -7,7 +7,7 @@ import {
 } from 'react-aria-components';
 import { menu } from '@var-ui/core';
 import { Icon } from '../icons';
-import { combine, mergeProps } from './utils';
+import { combine, mergeProps } from 'typestyles';
 
 export type MenuItemDefinition = {
   id: string;

@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { fileTree } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type FileTreeProps = {
   children: ReactNode;

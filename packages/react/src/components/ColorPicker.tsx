@@ -9,7 +9,7 @@ import {
   saturationValueFromPointer,
   useColorValue,
 } from '../color';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** Mantine-compatible preset swatches shown below the sliders by default. */
 const DEFAULT_COLOR_SWATCHES = [

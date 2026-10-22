@@ -6,7 +6,7 @@ import {
   type CheckboxGroupProps as RACCheckboxGroupProps,
 } from 'react-aria-components';
 import { checkbox } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CheckboxGroupOption = {
   /** Value submitted with the form when this option is selected. */

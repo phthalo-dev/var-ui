@@ -1,6 +1,6 @@
 import type { AnchorHTMLAttributes, HTMLAttributes, JSX } from 'react';
 import { card } from '@var-ui/core';
-import { combine, mergeProps } from './utils';
+import { combine, mergeProps } from 'typestyles';
 
 export type CardProps = HTMLAttributes<HTMLDivElement> & {
   /** Optional heading rendered above the body. */

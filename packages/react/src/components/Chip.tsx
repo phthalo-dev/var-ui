@@ -9,7 +9,7 @@ import {
 } from 'react-aria-components';
 import { chip, chipGroup, type ChipVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as ChipAppearance } from '@var-ui/core';
 

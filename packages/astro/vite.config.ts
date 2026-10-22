@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@var-ui/core/components': `${coreSrc}/components`,
+      '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
       '@var-ui/icons/glyphs/': glyphData,
       '@var-ui/icons/glyphs': glyphs,
     },

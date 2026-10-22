@@ -1,8 +1,8 @@
 import type { JSX } from 'react';
 import { FieldError, Label, TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { textAreaField } from '@var-ui/core';
-import type { BaseTextFieldProps } from './utils';
-import { mergeProps } from './utils';
+import type { BaseTextFieldProps } from './TextField';
+import { mergeProps } from 'typestyles';
 
 export type TextAreaFieldProps = BaseTextFieldProps & {
   /** Placeholder text shown when the textarea is empty. */

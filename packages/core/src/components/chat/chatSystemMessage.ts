@@ -30,17 +30,16 @@ function tonePaint(
  * <div className={chatSystemMessage({ tone: 'info' }).root}>…</div>
  * ```
  */
-export const chatSystemMessage = typestyles.recipe(
-  'chat-system-message',
-  {
-    slots: ['root', 'icon', 'text'],
-    variants: { tone },
+export const chatSystemMessage = typestyles.recipe({
+  name: 'chat-system-message',
+  layer: 'components',
+  slots: ['root', 'icon', 'text'],
+  variants: { tone },
+  vars: {
+    color: { ...atProperty.color, value: t.color.text.secondary.var },
+    background: { ...atProperty.color, value: t.color.background.subtle.var },
   },
-  (c) => {
-    const v = c.vars({
-      color: { ...atProperty.color, value: t.color.text.secondary.var },
-      background: { ...atProperty.color, value: t.color.background.subtle.var },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -51,8 +50,8 @@ export const chatSystemMessage = typestyles.recipe(
           alignSelf: 'center',
           padding: `${t.space[1].var} ${t.space[3].var}`,
           borderRadius: t.radius.full.var,
-          backgroundColor: v.background.var,
-          color: v.color.var,
+          backgroundColor: vars.background.var,
+          color: vars.color.var,
           fontSize: t.fontSize.sm.var,
         },
         icon: {
@@ -64,12 +63,11 @@ export const chatSystemMessage = typestyles.recipe(
         },
       },
       variants: {
-        tone: mapTone((key) => (key === 'neutral' ? { root: {} } : tonePaint(v, key))),
+        tone: mapTone((key) => (key === 'neutral' ? { root: {} } : tonePaint(vars, key))),
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ChatSystemMessageVariantProps = RecipeVariants<typeof chatSystemMessage>;

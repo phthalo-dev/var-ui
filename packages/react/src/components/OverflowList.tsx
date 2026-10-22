@@ -1,7 +1,7 @@
 import type { CSSProperties, JSX, ReactElement, ReactNode, RefObject } from 'react';
 import { Children, createContext, useContext, useMemo } from 'react';
 import { overflowList as overflowListStyles, type OverflowListVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 import { useOverflow } from '../hooks/useOverflow';
 
 type OverflowGapToken = NonNullable<OverflowListVariantProps['gap']>;

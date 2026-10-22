@@ -2,49 +2,49 @@ import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
+import { layerZIndex } from './layerVars';
 import { controlSize } from '../shared/variantAxes';
 
 /**
  * General-purpose slide-in panel built on RAC Modal. Supports start/end/bottom
  * placement and sm/md/lg widths. Pair with the React `Drawer` compound component.
  */
-export const drawer = typestyles.recipe(
-  'drawer',
-  {
-    slots: ['overlay', 'panel', 'header', 'title', 'body', 'closeButton'],
-    variants: { size: controlSize },
+export const drawer = typestyles.recipe({
+  name: 'drawer',
+  layer: 'components',
+  slots: ['overlay', 'panel', 'header', 'title', 'body', 'closeButton'],
+  variants: { size: controlSize },
+  vars: {
+    overlayBackground: {
+      ...atProperty.color,
+      value: t.color.overlay.default.var,
+    },
+    panelBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    panelBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    panelWidth: {
+      ...atProperty.length,
+      value: '400px',
+    },
+    panelHeight: {
+      ...atProperty.length,
+      value: '50vh',
+    },
+    headerColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    closeButtonColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      overlayBackground: {
-        ...atProperty.color,
-        value: t.color.overlay.default.var,
-      },
-      panelBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      panelBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      panelWidth: {
-        ...atProperty.length,
-        value: '400px',
-      },
-      panelHeight: {
-        ...atProperty.length,
-        value: '50vh',
-      },
-      headerColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      closeButtonColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         overlay: {
@@ -52,14 +52,15 @@ export const drawer = typestyles.recipe(
           ...overlayIosAbsoluteBackdrop,
           position: 'fixed',
           inset: 0,
-          backgroundColor: v.overlayBackground.var,
+          ...layerZIndex(t.zIndex.modal.var),
+          backgroundColor: vars.overlayBackground.var,
         },
         panel: {
           ...overlayPresenceStyles({ scale: false }),
           position: 'fixed',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: v.panelBackground.var,
+          backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           outline: 'none',
           maxWidth: '100vw',
@@ -68,27 +69,27 @@ export const drawer = typestyles.recipe(
             top: 0,
             bottom: 0,
             insetInlineStart: 0,
-            width: `min(${v.panelWidth.var}, 92vw)`,
+            width: `min(${vars.panelWidth.var}, 92vw)`,
             borderInlineEndWidth: t.borderWidth.default.var,
             borderInlineEndStyle: 'solid',
-            borderInlineEndColor: v.panelBorder.var,
+            borderInlineEndColor: vars.panelBorder.var,
           },
           '&[data-placement="end"]': {
             top: 0,
             bottom: 0,
             insetInlineEnd: 0,
-            width: `min(${v.panelWidth.var}, 92vw)`,
+            width: `min(${vars.panelWidth.var}, 92vw)`,
             borderInlineStartWidth: t.borderWidth.default.var,
             borderInlineStartStyle: 'solid',
-            borderInlineStartColor: v.panelBorder.var,
+            borderInlineStartColor: vars.panelBorder.var,
           },
           '&[data-placement="bottom"]': {
             insetInline: 0,
             bottom: 0,
-            height: `min(${v.panelHeight.var}, 92vh)`,
+            height: `min(${vars.panelHeight.var}, 92vh)`,
             borderBlockStartWidth: t.borderWidth.default.var,
             borderBlockStartStyle: 'solid',
-            borderBlockStartColor: v.panelBorder.var,
+            borderBlockStartColor: vars.panelBorder.var,
             borderStartStartRadius: t.radius.lg.var,
             borderStartEndRadius: t.radius.lg.var,
           },
@@ -101,8 +102,8 @@ export const drawer = typestyles.recipe(
           padding: t.space[4].var,
           borderBottomWidth: t.borderWidth.default.var,
           borderBottomStyle: 'solid',
-          borderBottomColor: v.panelBorder.var,
-          color: v.headerColor.var,
+          borderBottomColor: vars.panelBorder.var,
+          color: vars.headerColor.var,
           flexShrink: 0,
         },
         title: {
@@ -121,7 +122,7 @@ export const drawer = typestyles.recipe(
           appearance: 'none',
           border: 'none',
           background: 'transparent',
-          color: v.closeButtonColor.var,
+          color: vars.closeButtonColor.var,
           cursor: 'pointer',
           display: 'inline-flex',
           alignItems: 'center',
@@ -132,7 +133,7 @@ export const drawer = typestyles.recipe(
           flexShrink: 0,
           '&:hover': {
             backgroundColor: t.color.background.subtle.var,
-            color: v.headerColor.var,
+            color: vars.headerColor.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
@@ -142,14 +143,13 @@ export const drawer = typestyles.recipe(
       },
       variants: {
         size: {
-          sm: { panel: { [v.panelWidth.name]: '320px', [v.panelHeight.name]: '40vh' } },
+          sm: { panel: { [vars.panelWidth.name]: '320px', [vars.panelHeight.name]: '40vh' } },
           md: {},
-          lg: { panel: { [v.panelWidth.name]: '560px', [v.panelHeight.name]: '70vh' } },
+          lg: { panel: { [vars.panelWidth.name]: '560px', [vars.panelHeight.name]: '70vh' } },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type DrawerVariantProps = RecipeVariants<typeof drawer>;

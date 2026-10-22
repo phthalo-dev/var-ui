@@ -2,7 +2,7 @@ import type { CreateTokenValues, Theme, ThemeOverrideInput } from 'typestyles';
 import { defaultTokens } from '../tokens/preset';
 import type { DesignThemeTokenValues } from '../tokens/types';
 import { createDesignTheme } from './create-theme';
-import type { DesignTheme, DesignThemeComponentOverrideContext } from './types';
+import type { DesignTheme, DesignThemeComponentPatch } from './types';
 import { DEFAULT_THEME_NAME } from './constants';
 
 type DefaultThemeTokenTree = {
@@ -11,11 +11,7 @@ type DefaultThemeTokenTree = {
 
 const defaultThemeTokens = defaultTokens as unknown as DefaultThemeTokenTree;
 
-type DefaultThemeComponents = Record<
-  string,
-  | Record<string, unknown>
-  | ((ctx: DesignThemeComponentOverrideContext<DefaultThemeTokenTree>) => Record<string, unknown>)
->;
+type DefaultThemeComponents = Record<string, DesignThemeComponentPatch<DefaultThemeTokenTree>>;
 
 /** Input for forking {@link defaultTheme} — Var UI token patches + TypeStyles override fields. */
 export type DefaultThemeOverrideInput = {

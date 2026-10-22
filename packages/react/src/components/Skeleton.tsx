@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX } from 'react';
 import { skeleton, type SkeletonVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SkeletonProps = {
   shape?: NonNullable<SkeletonVariantProps['shape']>;

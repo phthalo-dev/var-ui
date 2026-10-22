@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { center, type CenterVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CenterProps = HTMLAttributes<HTMLDivElement> & {
   /** Use inline-grid so the box shrink-wraps inside text flow. @default false */

@@ -13,7 +13,7 @@ describe('ThemePlayground', () => {
   beforeEach(() => {
     resetThemePlaygroundStore();
     localStorage.clear();
-    document.documentElement.removeAttribute('data-mode');
+    document.documentElement.removeAttribute('data-color-mode');
   });
 
   it('renders bento showcase with default theme class', () => {
@@ -33,7 +33,7 @@ describe('ThemePlayground', () => {
 
   it('inherits color-scheme from docs site', () => {
     localStorage.setItem('theme-mode', 'dark');
-    document.documentElement.setAttribute('data-mode', 'dark');
+    document.documentElement.setAttribute('data-color-mode', 'dark');
     render(<ThemePlayground />);
     const showcase = screen.getByTestId('bento-showcase');
     expect(showcase.style.colorScheme).toBe('inherit');
@@ -53,7 +53,7 @@ describe('PlaygroundEditorSidebar', () => {
   beforeEach(() => {
     resetThemePlaygroundStore();
     localStorage.clear();
-    document.documentElement.removeAttribute('data-mode');
+    document.documentElement.removeAttribute('data-color-mode');
   });
 
   it('shows editor tabs and preset controls', () => {

@@ -8,7 +8,7 @@ import {
   type DescriptionListVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DescriptionListItemData = {
   id: string;

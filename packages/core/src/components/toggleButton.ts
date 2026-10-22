@@ -7,46 +7,45 @@ import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { controlSize } from '../shared/variantAxes';
 
 /** Single toggle button and segmented-control item styling. */
-export const toggleButton = typestyles.recipe(
-  'toggle-button',
-  {
-    variants: {
-      size: controlSize,
-      segmented: variant.boolean({ default: false }),
+export const toggleButton = typestyles.recipe({
+  name: 'toggle-button',
+  layer: 'components',
+  variants: {
+    size: controlSize,
+    segmented: variant.boolean({ default: false }),
+  },
+  vars: {
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    foreground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    selectedBackground: {
+      ...atProperty.color,
+      value: t.color.tone.accent.background.var,
+    },
+    selectedForeground: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foregroundOnBackground.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      border: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      background: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      foreground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      selectedBackground: {
-        ...atProperty.color,
-        value: t.color.tone.accent.background.var,
-      },
-      selectedForeground: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foregroundOnBackground.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         appearance: 'none',
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.border.var,
+        borderColor: vars.border.var,
         borderRadius: t.radius.md.var,
-        backgroundColor: v.background.var,
-        color: v.foreground.var,
+        backgroundColor: vars.background.var,
+        color: vars.foreground.var,
         fontSize: t.fontSize.md.var,
         fontWeight: t.fontWeight.medium.var,
         boxSizing: 'border-box',
@@ -64,12 +63,12 @@ export const toggleButton = typestyles.recipe(
           outlineOffset: '2px',
         },
         '&[data-selected]': {
-          [v.background.name]: v.selectedBackground.var,
-          [v.border.name]: v.selectedBackground.var,
-          [v.foreground.name]: v.selectedForeground.var,
+          [vars.background.name]: vars.selectedBackground.var,
+          [vars.border.name]: vars.selectedBackground.var,
+          [vars.foreground.name]: vars.selectedForeground.var,
           '&:hover': {
-            [v.background.name]: t.color.link.hover.var,
-            [v.border.name]: t.color.link.hover.var,
+            [vars.background.name]: t.color.link.hover.var,
+            [vars.border.name]: t.color.link.hover.var,
           },
         },
       },
@@ -83,7 +82,7 @@ export const toggleButton = typestyles.recipe(
             border: 'none',
             borderRadius: t.radius.full.var,
             backgroundColor: 'transparent',
-            [v.foreground.name]: t.color.text.secondary.var,
+            [vars.foreground.name]: t.color.text.secondary.var,
             fontWeight: t.fontWeight.normal.var,
             boxShadow: 'none',
             transition: `color ${duration.fast} ${easing.standard}`,
@@ -92,14 +91,14 @@ export const toggleButton = typestyles.recipe(
               borderColor: 'transparent',
             },
             '&[data-selected], &[aria-pressed="true"]': {
-              [v.background.name]: 'transparent',
-              [v.border.name]: 'transparent',
-              [v.foreground.name]: t.color.text.primary.var,
+              [vars.background.name]: 'transparent',
+              [vars.border.name]: 'transparent',
+              [vars.foreground.name]: t.color.text.primary.var,
               fontWeight: t.fontWeight.semibold.var,
               boxShadow: 'none',
               '&:hover': {
-                [v.background.name]: 'transparent',
-                [v.border.name]: 'transparent',
+                [vars.background.name]: 'transparent',
+                [vars.border.name]: 'transparent',
               },
             },
           },
@@ -108,8 +107,7 @@ export const toggleButton = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ToggleButtonVariantProps = RecipeVariants<typeof toggleButton>;

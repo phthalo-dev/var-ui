@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@typestyles/vite": "catalog:",
+    "@typestyles/vite": "0.5.1",
     "typescript": "catalog:",
-    "typestyles": "catalog:"
+    "typestyles": "0.32.1"
   }
 }

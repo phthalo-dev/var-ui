@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { divider, type DividerVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DividerProps = HTMLAttributes<HTMLHRElement> & {
   /** Layout direction of the separator line. @default horizontal */

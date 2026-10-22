@@ -2,7 +2,7 @@ import type { InputHTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import { useId } from 'react';
 import { inputGroup, type InputGroupVariantProps } from '@var-ui/core';
 import { ControlSizeContext, useControlSize } from './controlSizeContext';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type InputGroupProps = {
   /** Visible label rendered above the group. */

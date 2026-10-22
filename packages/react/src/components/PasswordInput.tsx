@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
 import { passwordField, type PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import type { BaseTextFieldProps } from './utils';
-import { mergeProps } from './utils';
+import type { BaseTextFieldProps } from './TextField';
+import { mergeProps } from 'typestyles';
 
 export type PasswordInputProps = BaseTextFieldProps & {
   placeholder?: string;

@@ -18,24 +18,23 @@ function toneColor(key: SemanticToneKey) {
  * Semantic presence/status indicator. Pair with visible text or an
  * `aria-label` on the host element — the dot alone is decorative.
  */
-export const statusDot = typestyles.recipe(
-  'status-dot',
-  {
-    variants: {
-      tone,
-      appearance: statusDotAppearance,
-      pulse: variant.boolean({ default: false }),
-    },
+export const statusDot = typestyles.recipe({
+  name: 'status-dot',
+  layer: 'components',
+  variants: {
+    tone,
+    appearance: statusDotAppearance,
+    pulse: variant.boolean({ default: false }),
   },
-  (c) => {
-    const v = c.vars({
-      size: { ...atProperty.length, value: '8px' },
-    });
+  vars: {
+    size: { ...atProperty.length, value: '8px' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-block',
-        width: v.size.var,
-        height: v.size.var,
+        width: vars.size.var,
+        height: vars.size.var,
         borderRadius: '50%',
         backgroundColor: 'currentColor',
         color: t.color.text.secondary.var,
@@ -66,7 +65,6 @@ export const statusDot = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type StatusDotVariantProps = RecipeVariants<typeof statusDot>;

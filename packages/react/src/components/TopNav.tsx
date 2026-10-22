@@ -5,7 +5,7 @@ import { Icon } from '../icons';
 import { HoverCard } from './HoverCard';
 import { TopNavMegaMenu } from './TopNavMegaMenu';
 import { Text } from './Typography';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** Registry name or a caller-supplied node — excludes bare `string` so it isn't redundant with `IconName`. */
 export type TopNavIcon = IconName | Exclude<ReactNode, string>;

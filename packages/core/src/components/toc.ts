@@ -73,96 +73,96 @@ const tocVarDefinitions = {
  * The active-row indicator is the list `::after` pseudo, positioned via
  * `positionTocIndicator`.
  */
-export const toc = typestyles.recipe(
-  'toc',
-  (c) => {
-    const v = c.vars(tocVarDefinitions);
-
+export const toc = typestyles.recipe({
+  name: 'toc',
+  layer: 'components',
+  slots: ['root', 'title', 'list', 'item', 'link'],
+  vars: tocVarDefinitions,
+  styles: ({ vars }) => {
     return {
-      vars: v,
-      slots: ['root', 'title', 'list', 'item', 'link'],
-      root: {
-        position: 'sticky',
-        top: v.stickyTop.var,
-        padding: `${t.space[6].var} ${t.space[5].var} ${t.space[8].var} ${t.space[4].var}`,
-        maxHeight: `calc(100dvh - ${v.stickyTop.var} - ${v.stickyMaxHeightOffset.var})`,
-        overflow: 'auto',
-        [belowXl]: {
-          display: 'none',
+      base: {
+        root: {
+          position: 'sticky',
+          top: vars.stickyTop.var,
+          padding: `${t.space[6].var} ${t.space[5].var} ${t.space[8].var} ${t.space[4].var}`,
+          maxHeight: `calc(100dvh - ${vars.stickyTop.var} - ${vars.stickyMaxHeightOffset.var})`,
+          overflow: 'auto',
+          [belowXl]: {
+            display: 'none',
+          },
         },
-      },
-      title: {
-        margin: `0 0 ${t.space[4].var}`,
-        fontSize: t.fontSize.sm.var,
-        fontWeight: t.fontWeight.medium.var,
-        color: v.titleColor.var,
-      },
-      list: {
-        position: 'relative',
-        margin: 0,
-        padding: 0,
-        paddingInlineStart: listIndent,
-        listStyle: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        [v.indicatorY.name]: '0px',
-        [v.indicatorHeight.name]: '0px',
-        [v.indicatorOpacity.name]: '0',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          insetInlineStart: 0,
-          width: v.railWidth.var,
-          borderRadius: v.railRadius.var,
-          backgroundColor: v.railColor.var,
-          pointerEvents: 'none',
+        title: {
+          margin: `0 0 ${t.space[4].var}`,
+          fontSize: t.fontSize.sm.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: vars.titleColor.var,
         },
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          insetInlineStart: 0,
-          width: v.railWidth.var,
-          height: v.indicatorHeight.var,
-          borderRadius: v.railRadius.var,
-          backgroundColor: v.linkSelectedIndicator.var,
-          pointerEvents: 'none',
-          opacity: v.indicatorOpacity.var,
-          zIndex: 1,
-          transform: `translateY(${v.indicatorY.var})`,
-          transition: indicatorTransition,
-          ...atReducedMotion({ transition: 'none' }),
+        list: {
+          position: 'relative',
+          margin: 0,
+          padding: 0,
+          paddingInlineStart: listIndent,
+          listStyle: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          [vars.indicatorY.name]: '0px',
+          [vars.indicatorHeight.name]: '0px',
+          [vars.indicatorOpacity.name]: '0',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            insetInlineStart: 0,
+            width: vars.railWidth.var,
+            borderRadius: vars.railRadius.var,
+            backgroundColor: vars.railColor.var,
+            pointerEvents: 'none',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            insetInlineStart: 0,
+            width: vars.railWidth.var,
+            height: vars.indicatorHeight.var,
+            borderRadius: vars.railRadius.var,
+            backgroundColor: vars.linkSelectedIndicator.var,
+            pointerEvents: 'none',
+            opacity: vars.indicatorOpacity.var,
+            zIndex: 1,
+            transform: `translateY(${vars.indicatorY.var})`,
+            transition: indicatorTransition,
+            ...atReducedMotion({ transition: 'none' }),
+          },
         },
-      },
-      item: {
-        '&[data-nested]': {
-          paddingInlineStart: nestedIndent,
+        item: {
+          '&[data-nested]': {
+            paddingInlineStart: nestedIndent,
+          },
         },
-      },
-      link: {
-        display: 'block',
-        paddingBlock: t.space[1].var,
-        fontSize: t.fontSize.sm.var,
-        lineHeight: t.lineHeight.normal.var,
-        fontWeight: t.fontWeight.normal.var,
-        color: v.linkColor.var,
-        textDecoration: 'none',
-        transition: transition.colorShift,
-        '&:hover': {
-          color: v.linkHoverColor.var,
-        },
-        '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
-        },
-        '&[data-selected]': {
-          color: v.linkSelectedColor.var,
-          fontWeight: t.fontWeight.semibold.var,
+        link: {
+          display: 'block',
+          paddingBlock: t.space[1].var,
+          fontSize: t.fontSize.sm.var,
+          lineHeight: t.lineHeight.normal.var,
+          fontWeight: t.fontWeight.normal.var,
+          color: vars.linkColor.var,
+          textDecoration: 'none',
+          transition: transition.colorShift,
+          '&:hover': {
+            color: vars.linkHoverColor.var,
+          },
+          '&:focus-visible': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '2px',
+          },
+          '&[data-selected]': {
+            color: vars.linkSelectedColor.var,
+            fontWeight: t.fontWeight.semibold.var,
+          },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});

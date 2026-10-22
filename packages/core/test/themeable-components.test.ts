@@ -110,20 +110,24 @@ describe('themeable recipe registry', () => {
     createDesignTheme({
       name: 'typed',
       components: {
-        button: ({ tokens: t }) => ({
-          base: { boxShadow: t.shadow.md.var, borderRadius: t.radius.lg.var },
-          variants: {
-            tone: {
-              accent: { textTransform: 'uppercase' },
+        button: {
+          styles: ({ tokens: t }) => ({
+            base: { boxShadow: t.shadow.md.var, borderRadius: t.radius.lg.var },
+            variants: {
+              tone: {
+                accent: { textTransform: 'uppercase' },
+              },
+            },
+          }),
+        },
+        card: {
+          styles: {
+            base: {
+              root: { borderRadius: '16px' },
             },
           },
-        }),
-        card: {
-          base: {
-            root: { borderRadius: '16px' },
-          },
         },
-        badge: { base: { letterSpacing: '0.06em' } },
+        badge: { styles: { base: { letterSpacing: '0.06em' } } },
       },
     });
   });

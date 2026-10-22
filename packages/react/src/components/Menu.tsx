@@ -38,7 +38,7 @@ import {
 } from '../overlays';
 import { MenuContent } from './menuContent';
 import { MenuContextMenu, MenuFromSections, MenuOverflow } from './menuPresets';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type { MenuContentProps, MenuItemDefinition, MenuSectionDefinition } from './menuContent';
 export type { MenuContextMenuProps, MenuFromSectionsProps, MenuOverflowProps } from './menuPresets';

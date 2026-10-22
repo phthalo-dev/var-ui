@@ -2,18 +2,13 @@ import type { CreateTokenValues } from 'typestyles';
 import { registerFontFace } from '../fonts/register-font-face';
 import { typestyles } from '../runtime';
 import { designTokens } from '../tokens';
-import type {
-  DesignTheme,
-  DesignThemeComponentOverrideContext,
-  DesignThemeCreateConfig,
-} from './types';
+import type { DesignTheme, DesignThemeComponentPatch, DesignThemeCreateConfig } from './types';
 
 type ThemeTokenTree = Record<string, CreateTokenValues>;
 
 type DesignThemeComponents<T extends Record<string, unknown>> = Record<
   string,
-  | Record<string, unknown>
-  | ((ctx: DesignThemeComponentOverrideContext<T>) => Record<string, unknown>)
+  DesignThemeComponentPatch<T>
 >;
 
 /**

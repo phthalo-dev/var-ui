@@ -19,16 +19,19 @@ import {
   type Ref,
 } from 'react';
 import { field } from '@var-ui/core';
+import { cx, mergeProps } from 'typestyles';
 import { FormErrorsContext } from './Form';
-import { cx, mergeProps } from './utils';
 
-export type FieldProps = {
+export type FieldMeta = {
   /** Visible label rendered above the control. */
   label?: string;
   /** Helper text shown below the control when there is no error. */
   description?: string;
   /** Validation message; when set, the field is shown in an error state. */
   errorMessage?: string;
+};
+
+export type FieldProps = FieldMeta & {
   /** id of the wrapped control, wired to the label's `htmlFor`. */
   htmlFor?: string;
   /** Additional CSS class names merged onto the root element. */

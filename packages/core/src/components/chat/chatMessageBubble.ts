@@ -20,27 +20,26 @@ const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default:
  * <div className={chatMessageBubble({ sender: 'user' }).root}>Hi!</div>
  * ```
  */
-export const chatMessageBubble = typestyles.recipe(
-  'chat-message-bubble',
-  {
-    slots: ['root'],
-    variants: {
-      sender,
-      variant: bubbleVariant,
-      group: bubbleGroup,
+export const chatMessageBubble = typestyles.recipe({
+  name: 'chat-message-bubble',
+  layer: 'components',
+  slots: ['root'],
+  variants: {
+    sender,
+    variant: bubbleVariant,
+    group: bubbleGroup,
+  },
+  vars: {
+    senderBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    senderText: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      senderBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      senderText: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -49,8 +48,8 @@ export const chatMessageBubble = typestyles.recipe(
           maxWidth: 'min(80%, 480px)',
           padding: `${t.space[3].var} ${t.space[4].var}`,
           borderRadius: t.radius.lg.var,
-          backgroundColor: v.senderBackground.var,
-          color: v.senderText.var,
+          backgroundColor: vars.senderBackground.var,
+          color: vars.senderText.var,
           fontSize: t.fontSize.md.var,
           lineHeight: 1.55,
           overflowWrap: 'break-word',
@@ -61,14 +60,14 @@ export const chatMessageBubble = typestyles.recipe(
         sender: {
           user: {
             root: {
-              [v.senderBackground.name]: t.color.tone.accent.background.var,
-              [v.senderText.name]: t.color.tone.accent.foregroundOnBackground.var,
+              [vars.senderBackground.name]: t.color.tone.accent.background.var,
+              [vars.senderText.name]: t.color.tone.accent.foregroundOnBackground.var,
             },
           },
           assistant: {
             root: {
-              [v.senderBackground.name]: t.color.background.subtle.var,
-              [v.senderText.name]: t.color.text.primary.var,
+              [vars.senderBackground.name]: t.color.background.subtle.var,
+              [vars.senderText.name]: t.color.text.primary.var,
             },
           },
         },
@@ -108,8 +107,7 @@ export const chatMessageBubble = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ChatMessageBubbleVariantProps = RecipeVariants<typeof chatMessageBubble>;

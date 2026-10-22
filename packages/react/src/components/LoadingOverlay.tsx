@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { loadingOverlay } from '@var-ui/core';
 import { Spinner } from './Spinner';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type LoadingOverlayProps = {
   /** When true, the overlay blocks pointer events and shows a spinner. */

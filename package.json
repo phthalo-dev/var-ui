@@ -31,7 +31,7 @@
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.29.8",
     "@types/node": "^24.0.0",
-    "@typestyles/eslint-plugin": "^0.4.2",
+    "@typestyles/eslint-plugin": "^0.4.3",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

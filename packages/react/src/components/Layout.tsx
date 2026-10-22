@@ -18,7 +18,7 @@ import {
 import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';
 import { useLayer } from '../layers/LayerProvider';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
