@@ -41,5 +41,5 @@ jobs:
           # changesets pushes one git tag per package. pre-push runs `vp run ci`,
           # so those pushes race on a single checkout and the release job fails
           # after npm publish. CI already ran on the PR.
-          HUSKY: "0"
-          VITE_GIT_HOOKS: "0"
+          HUSKY: '0'
+          VITE_GIT_HOOKS: '0'
