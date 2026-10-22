@@ -2,7 +2,7 @@ import type { JSX, ReactNode } from 'react';
 import { copyButton } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useCopy } from '../hooks/useCopy';
-import { combine } from './utils';
+import { combine } from 'typestyles';
 
 export type CopyButtonRenderProps = {
   copied: boolean;

@@ -30,9 +30,14 @@ describe('package subpath exports', () => {
     expect(exports['./components/index']).toBeUndefined();
   });
 
-  it('react exposes button entry points', () => {
+  it('react exposes every component through one wildcard', () => {
     const { exports } = readPkg('react');
-    expect(exports['./button']?.import).toBe('./dist/components/Button.mjs');
-    expect(exports['./Button']?.import).toBe('./dist/components/Button.mjs');
+    expect(exports['./components/*']).toEqual({
+      types: './dist/components/*.d.mts',
+      import: './dist/components/*.mjs',
+    });
+    expect(exports['./components/Button']).toBeUndefined();
+    expect(exports['./button']).toBeUndefined();
+    expect(exports['./Button']).toBeUndefined();
   });
 });

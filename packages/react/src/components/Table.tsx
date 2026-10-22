@@ -2,7 +2,7 @@ import type { CSSProperties, JSX, ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles, designTokens as t, type TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 import type { SortDescriptor, SortDirection } from '../hooks/useTableSort';
 
 export type TableColumnAlign = 'start' | 'center' | 'end';

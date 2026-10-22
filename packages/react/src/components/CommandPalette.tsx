@@ -7,7 +7,7 @@ import { commandPalette, type CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useOverlayPresence } from '../overlays';
-import { cx, mergeProps } from './utils';
+import { cx, mergeProps } from 'typestyles';
 
 export type CommandPaletteItem = {
   /** Unique item identifier passed to `onAction`. */

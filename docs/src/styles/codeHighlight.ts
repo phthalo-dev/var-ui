@@ -1,4 +1,3 @@
-import type { SlotComponentFunction, SlotVariantDefinitions } from 'typestyles';
 import type { VariantOptionStyle } from 'typestyles';
 import {
   atDarkMode,
@@ -86,24 +85,23 @@ function hljsSyntaxStyles(colors: SyntaxFaceValues): VariantOptionStyle {
  * Maps `color.code` presets to highlight.js class names for this docs site.
  *
  * Uses explicit light/dark palette wiring via `atDarkMode` so syntax colors
- * follow the docs `data-mode` toggle (and system preference), not only
+ * follow the docs `data-color-mode` toggle (and system preference), not only
  * `color-scheme` / `light-dark()` on semantic tokens.
  *
  * Compose **`codeHljsScope.root`** on a page shell so selectors apply inside
  * `[data-codeblock]` wrappers.
  */
-export const codeHljsScope: SlotComponentFunction<
-  ['root'],
-  SlotVariantDefinitions<'root'>
-> = typestyles.recipe(
-  'docs-hljs',
-  {
-    slots: ['root'],
-    root: {
-      colorScheme: 'inherit',
-      ...hljsSyntaxStyles(lightSyntaxValues),
-      ...atDarkMode(hljsSyntaxStyles(darkSyntaxValues)),
+export const codeHljsScope = typestyles.recipe({
+  name: 'docs-hljs',
+  layer: 'utilities',
+  slots: ['root'],
+  styles: {
+    base: {
+      root: {
+        colorScheme: 'inherit',
+        ...hljsSyntaxStyles(lightSyntaxValues),
+        ...atDarkMode(hljsSyntaxStyles(darkSyntaxValues)),
+      },
     },
   },
-  { layer: 'utilities' },
-);
+});

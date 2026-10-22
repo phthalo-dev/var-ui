@@ -8,7 +8,7 @@ import {
   type TimelineVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type TimelineItemData = {
   id: string;

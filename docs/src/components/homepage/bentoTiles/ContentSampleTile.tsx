@@ -42,9 +42,8 @@ export function ContentSampleTile({ className, framework = 'react' }: ContentSam
           Published <Timestamp date="2026-06-30T12:00:00Z" format="date" />
         </Text>
         <Text>
-          Themes pin fixed-tone subtrees with modes and <code>data-surface</code> (
-          <code>SURFACE_ATTRIBUTE</code>). See <Link href="/theming">the theming guide</Link> for
-          details.
+          Pin a subtree with <code>data-color-mode</code> (<code>COLOR_MODE_ATTRIBUTE</code>
+          ). See <Link href="/theming">the theming guide</Link> for details.
         </Text>
         <HighlightedCodeBlock
           code={frameworkImportSnippet(framework)}

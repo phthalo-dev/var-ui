@@ -47,6 +47,16 @@ export type DesignThemeTokens<E extends Record<string, unknown> = Record<string,
   };
 
 /** Context passed to theme `components` factories — full design token refs + custom namespaces. */
+/** Partial CSS for one recipe inside a theme `components` entry. Slots nest under `base`. */
+export type DesignThemeComponentStylePatch = {
+  base?: Record<string, unknown>;
+  variants?: Record<string, Record<string, unknown>>;
+  compoundVariants?: ReadonlyArray<{
+    variants: Record<string, unknown>;
+    style: Record<string, unknown>;
+  }>;
+};
+
 export type DesignThemeComponentOverrideContext<
   E extends Record<string, unknown> = Record<string, never>,
 > = {
@@ -54,6 +64,16 @@ export type DesignThemeComponentOverrideContext<
   readonly theme: DesignTheme<
     E extends Record<string, CreateTokenValues> ? E : Record<string, never>
   >;
+  /** Refs for vars the recipe declared. */
+  readonly vars: { readonly [key: string]: { readonly name: string; readonly var: string } };
+};
+
+/** One theme `components` entry: reassign `vars`, restyle with `styles`. */
+export type DesignThemeComponentPatch<E extends Record<string, unknown> = Record<string, never>> = {
+  vars?: Record<string, unknown>;
+  styles?:
+    | DesignThemeComponentStylePatch
+    | ((ctx: DesignThemeComponentOverrideContext<E>) => DesignThemeComponentStylePatch);
 };
 
 /**

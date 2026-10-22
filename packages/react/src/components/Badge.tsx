@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { badge, type BadgeVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as BadgeAppearance } from '@var-ui/core';
 

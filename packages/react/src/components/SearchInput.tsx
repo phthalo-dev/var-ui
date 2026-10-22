@@ -1,7 +1,7 @@
 import type { ChangeEvent, JSX } from 'react';
 import { searchInput, type SearchInputVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SearchInputProps = {
   variant?: NonNullable<SearchInputVariantProps['variant']>;

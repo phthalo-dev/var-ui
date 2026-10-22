@@ -23,36 +23,45 @@ const listHasDividers = variant.boolean({ default: false });
  * </ul>
  * ```
  */
-export const list = typestyles.recipe(
-  'list',
-  {
-    slots: ['root', 'header', 'item', 'label', 'description', 'start', 'end', 'divider'],
-    variants: {
-      density,
-      listStyle,
-      hasDividers: listHasDividers,
-    },
+export const list = typestyles.recipe({
+  name: 'list',
+  layer: 'components',
+  slots: [
+    'root',
+    'header',
+    'item',
+    'label',
+    'description',
+    'start',
+    'end',
+    'divider',
+    'overlayLink',
+  ],
+  variants: {
+    density,
+    listStyle,
+    hasDividers: listHasDividers,
   },
-  (c) => {
-    const v = c.vars({
-      root: { ...atProperty.color, value: 'transparent' },
-      labelColor: { ...atProperty.color, value: t.color.text.primary.var },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      hoverBg: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      pressBg: {
-        ...atProperty.color,
-        value: t.color.background.elevated.var,
-      },
-      dividerColor: { ...atProperty.color, value: t.color.border.default.var },
-      itemPaddingY: { ...atProperty.length, value: t.space[2].var },
-      itemPaddingX: { ...atProperty.length, value: t.space[3].var },
-    });
+  vars: {
+    root: { ...atProperty.color, value: 'transparent' },
+    labelColor: { ...atProperty.color, value: t.color.text.primary.var },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    hoverBg: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    pressBg: {
+      ...atProperty.color,
+      value: t.color.background.elevated.var,
+    },
+    dividerColor: { ...atProperty.color, value: t.color.border.default.var },
+    itemPaddingY: { ...atProperty.length, value: t.space[2].var },
+    itemPaddingX: { ...atProperty.length, value: t.space[3].var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -61,37 +70,37 @@ export const list = typestyles.recipe(
           padding: 0,
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: v.root.var,
+          backgroundColor: vars.root.var,
           '&[data-list-style="disc"]': { listStyle: 'disc', paddingLeft: t.space[5].var },
           '&[data-list-style="decimal"]': { listStyle: 'decimal', paddingLeft: t.space[5].var },
         },
         header: {
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
-          color: v.labelColor.var,
-          padding: `${t.space[2].var} ${v.itemPaddingX.var}`,
+          color: vars.labelColor.var,
+          padding: `${t.space[2].var} ${vars.itemPaddingX.var}`,
         },
         item: {
           display: 'flex',
           alignItems: 'center',
           gap: t.space[3].var,
           position: 'relative',
-          padding: `${v.itemPaddingY.var} ${v.itemPaddingX.var}`,
-          color: v.labelColor.var,
+          padding: `${vars.itemPaddingY.var} ${vars.itemPaddingX.var}`,
+          color: vars.labelColor.var,
           '&[data-interactive]': { cursor: 'pointer' },
-          '&[data-interactive]:hover': { backgroundColor: v.hoverBg.var },
-          '&[data-interactive]:active': { backgroundColor: v.pressBg.var },
+          '&[data-interactive]:hover': { backgroundColor: vars.hoverBg.var },
+          '&[data-interactive]:active': { backgroundColor: vars.pressBg.var },
           '&[data-disabled]': { opacity: t.opacity.disabled.var, pointerEvents: 'none' },
           '[data-has-dividers] >&:not(:last-child)': {
             borderBottomWidth: t.borderWidth.default.var,
             borderBottomStyle: 'solid',
-            borderBottomColor: v.dividerColor.var,
+            borderBottomColor: vars.dividerColor.var,
           },
         },
         label: {
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
-          color: v.labelColor.var,
+          color: vars.labelColor.var,
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -99,7 +108,7 @@ export const list = typestyles.recipe(
         },
         description: {
           fontSize: t.fontSize.sm.var,
-          color: v.descriptionColor.var,
+          color: vars.descriptionColor.var,
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -108,20 +117,31 @@ export const list = typestyles.recipe(
         start: { display: 'flex', flexShrink: 0, alignItems: 'center' },
         end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginLeft: 'auto' },
         divider: { display: 'none' },
+        overlayLink: {
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          margin: 0,
+          padding: 0,
+          border: 'none',
+          background: 'transparent',
+          cursor: 'inherit',
+          textDecoration: 'none',
+        },
       },
       variants: {
         density: {
           compact: {
             item: {
-              [v.itemPaddingY.name]: t.space[1].var,
-              [v.itemPaddingX.name]: t.space[2].var,
+              [vars.itemPaddingY.name]: t.space[1].var,
+              [vars.itemPaddingX.name]: t.space[2].var,
             },
           },
           balanced: {},
           spacious: {
             item: {
-              [v.itemPaddingY.name]: t.space[3].var,
-              [v.itemPaddingX.name]: t.space[4].var,
+              [vars.itemPaddingY.name]: t.space[3].var,
+              [vars.itemPaddingX.name]: t.space[4].var,
             },
           },
         },
@@ -130,8 +150,7 @@ export const list = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ListVariantProps = RecipeVariants<typeof list>;

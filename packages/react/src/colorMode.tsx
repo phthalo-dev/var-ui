@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
+import { createContext, useContext, useState } from 'react';
+import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect';
 
 export type ColorMode = 'light' | 'dark' | 'system';
 export type ResolvedColorMode = 'light' | 'dark';
@@ -7,7 +9,6 @@ export type ColorModeContextValue = {
   colorMode: ColorMode;
   resolvedColorMode: ResolvedColorMode;
   setColorMode: (colorMode: ColorMode) => void;
-  toggleColorMode: () => void;
   /**
    * False until a `storageKey` preference has been read into React state (SSR starts with
    * `defaultColorMode`). When there is no `storageKey`, this is always true.
@@ -15,15 +16,6 @@ export type ColorModeContextValue = {
    */
   colorModeReady: boolean;
 };
-
-/**
- * `useLayoutEffect` on the client, `useEffect` on the server (where layout effects warn and are
- * no-ops). Used here so client-only corrections (localStorage, matchMedia) land before the
- * browser paints — avoiding both a visible flash and a hydration-mismatch warning, since the
- * correction lands after React's hydration diff already matched the server's deterministic output.
- */
-export const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 function hasMatchMedia(): boolean {
   return typeof window !== 'undefined' && typeof window.matchMedia === 'function';
@@ -72,9 +64,9 @@ export type GetColorModeInitScriptOptions = {
  * Built as a plain string template rather than via `Function.prototype.toString()` — a real
  * function's stringified source isn't guaranteed byte-identical between an app's SSR and client
  * bundles (different transform passes), which caused a hydration mismatch on this script's
- * `dangerouslySetInnerHTML` content. Keep this logic in sync with {@link useResolvedColorMode} and
- * the `applyToDocument` effect on DesignSystemProvider by hand — they intentionally
- * implement the same light/dark/system resolution.
+ * `dangerouslySetInnerHTML` content. `light` and `dark` set `data-color-mode`; `system` removes
+ * it so `color-scheme: light dark` on `:root` follows the OS. Keep that in sync with
+ * DesignSystemProvider's `applyToDocument` effect.
  */
 export function getColorModeInitScript({
   storageKey,
@@ -86,6 +78,7 @@ export function getColorModeInitScript({
   var themeClassStmt = themeClassName
     ? 'document.documentElement.classList.add(' + JSON.stringify(themeClassName) + ');'
     : '';
+  const attributeJson = JSON.stringify(COLOR_MODE_ATTRIBUTE);
   return (
     '(function(){' +
     'var VALID=["light","dark","system"];' +
@@ -96,15 +89,14 @@ export function getColorModeInitScript({
     'var colorMode=VALID.indexOf(stored)!==-1?stored:' +
     defaultColorModeJson +
     ';' +
-    'var resolved=colorMode;' +
-    'if(colorMode==="system"){' +
-    'var prefersDark=false;' +
-    'try{prefersDark=window.matchMedia("(prefers-color-scheme: dark)").matches}catch(e){}' +
-    'resolved=prefersDark?"dark":"light";' +
-    '}' +
     themeClassStmt +
-    'document.documentElement.setAttribute("data-mode",colorMode);' +
-    'document.documentElement.style.colorScheme=colorMode==="system"?"":resolved;' +
+    'var root=document.documentElement;' +
+    'root.style.colorScheme="";' +
+    'if(colorMode==="light"||colorMode==="dark"){root.setAttribute(' +
+    attributeJson +
+    ',colorMode)}else{root.removeAttribute(' +
+    attributeJson +
+    ')}' +
     '})();'
   );
 }

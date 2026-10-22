@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { inlineCode } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CodeProps = {
   children: ReactNode;

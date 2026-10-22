@@ -5,7 +5,7 @@ import { topNav } from '@var-ui/core';
 import { Icon } from '../icons';
 import { renderTopNavIcon, type TopNavIcon, type TopNavRichItem } from './TopNav';
 import { Text } from './Typography';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 const OPEN_DELAY_DEFAULT = 150;
 const CLOSE_DELAY_DEFAULT = 250;

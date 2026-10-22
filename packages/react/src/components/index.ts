@@ -39,7 +39,7 @@ export { PinInput, type PinInputProps, type PinInputType } from './PinInput';
 export { NumberInput, type NumberInputProps } from './NumberInput';
 export { LoadingOverlay, type LoadingOverlayProps } from './LoadingOverlay';
 export { Link, type LinkProps } from './Link';
-export { TextField, type TextFieldProps } from './TextField';
+export { TextField, type BaseTextFieldProps, type TextFieldProps } from './TextField';
 export { TextAreaField, type TextAreaFieldProps } from './TextAreaField';
 export { Checkbox, type CheckboxProps } from './Checkbox';
 export { Switch, type SwitchProps } from './Switch';
@@ -136,6 +136,7 @@ export {
   type FieldDescriptionProps,
   type FieldErrorProps,
   type FieldLabelProps,
+  type FieldMeta,
   type FieldProps,
   type FieldRootProps,
 } from './Field';
@@ -299,7 +300,7 @@ export {
   type DrawerTitleProps,
 } from './Drawer';
 export { Tokenizer, type TokenizerOption, type TokenizerProps } from './Tokenizer';
-export { cx, combine, mergeProps, type BaseTextFieldProps, type FieldMeta } from './utils';
+export { cx, combine, mergeProps } from 'typestyles';
 export { MultiSelector, type MultiSelectorOption, type MultiSelectorProps } from './MultiSelector';
 export { ResizeHandle, type ResizeHandleProps } from './ResizeHandle';
 export {

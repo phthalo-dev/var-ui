@@ -8,25 +8,24 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * size inside a flex row.
  *
  * ```tsx
- * <hr className={divider()} />
+ * <hr className={divider().className} />
  * ```
  */
-export const divider = typestyles.recipe(
-  'divider',
-  {
-    variants: {
-      orientation,
-    },
+export const divider = typestyles.recipe({
+  name: 'divider',
+  layer: 'components',
+  variants: {
+    orientation,
   },
-  (c) => {
-    const v = c.vars({
-      color: { ...atProperty.color, value: t.color.border.default.var },
-    });
+  vars: {
+    color: { ...atProperty.color, value: t.color.border.default.var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         border: 'none',
         margin: 0,
-        backgroundColor: v.color.var,
+        backgroundColor: vars.color.var,
         flexShrink: 0,
       },
       variants: {
@@ -37,8 +36,7 @@ export const divider = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type DividerVariantProps = RecipeVariants<typeof divider>;

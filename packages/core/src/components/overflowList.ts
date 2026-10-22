@@ -16,26 +16,25 @@ import { gap } from '../shared/variantAxes';
  * </div>
  * ```
  */
-export const overflowList = typestyles.recipe(
-  'overflow-list',
-  {
-    slots: ['root', 'item', 'overflow'],
-    variants: {
-      gap,
-      fillParent: variant.boolean({ default: false }),
-    },
+export const overflowList = typestyles.recipe({
+  name: 'overflow-list',
+  layer: 'components',
+  slots: ['root', 'item', 'overflow', 'measure'],
+  variants: {
+    gap,
+    fillParent: variant.boolean({ default: false }),
   },
-  (c) => {
-    const v = c.vars({
-      gap: { ...atProperty.length, value: t.space[3].var },
-    });
+  vars: {
+    gap: { ...atProperty.length, value: t.space[3].var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          gap: v.gap.var,
+          gap: vars.gap.var,
           minWidth: 0,
           overflow: 'hidden',
         },
@@ -50,15 +49,24 @@ export const overflowList = typestyles.recipe(
           alignItems: 'center',
           flexShrink: 0,
         },
+        measure: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: 0,
+          overflow: 'hidden',
+          visibility: 'hidden',
+          pointerEvents: 'none',
+        },
       },
       variants: {
         gap: {
-          none: { root: { [v.gap.name]: '0px' } },
-          xs: { root: { [v.gap.name]: t.space[1].var } },
-          sm: { root: { [v.gap.name]: t.space[2].var } },
-          md: { root: { [v.gap.name]: t.space[3].var } },
-          lg: { root: { [v.gap.name]: t.space[5].var } },
-          xl: { root: { [v.gap.name]: t.space[8].var } },
+          none: { root: { [vars.gap.name]: '0px' } },
+          xs: { root: { [vars.gap.name]: t.space[1].var } },
+          sm: { root: { [vars.gap.name]: t.space[2].var } },
+          md: { root: { [vars.gap.name]: t.space[3].var } },
+          lg: { root: { [vars.gap.name]: t.space[5].var } },
+          xl: { root: { [vars.gap.name]: t.space[8].var } },
         },
         fillParent: {
           true: { root: { width: '100%' } },
@@ -67,8 +75,7 @@ export const overflowList = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type OverflowListVariantProps = RecipeVariants<typeof overflowList>;

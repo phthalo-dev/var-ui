@@ -4,7 +4,7 @@ import { Button } from '../Button';
 import { Icon } from '../../icons';
 import { useChatStreamScroll } from '../../chat/useChatStreamScroll';
 import { useChatNewMessages } from '../../chat/useChatNewMessages';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatLayoutProps = {
   /** Message content — typically `ChatMessageList`. */

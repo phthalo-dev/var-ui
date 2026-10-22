@@ -7,7 +7,7 @@ import {
   type ColorMode,
   type ResolvedColorMode,
   useResolvedColorMode,
-} from '../color-mode';
+} from '../colorMode';
 import { Icon } from '../icons';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 

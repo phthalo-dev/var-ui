@@ -5,51 +5,50 @@ import { fieldChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
-export const numberInput = typestyles.recipe(
-  'number-input',
-  {
-    slots: ['root', 'label', 'group', 'input', 'stepper', 'description', 'error'],
-    variants: { size: controlSize },
+export const numberInput = typestyles.recipe({
+  name: 'number-input',
+  layer: 'components',
+  slots: ['root', 'label', 'group', 'input', 'stepper', 'description', 'error'],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    stepperBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    stepperForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      inputBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      inputBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      inputForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-      stepperBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      stepperForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-    });
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
       base: {
@@ -68,14 +67,14 @@ export const numberInput = typestyles.recipe(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           borderRadius: `${t.radius.md.var} 0 0 ${t.radius.md.var}`,
-          backgroundColor: v.inputBackground.var,
-          color: v.inputForeground.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
           '&:focus': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
-            [v.inputBorder.name]: t.color.border.focus.var,
+            [vars.inputBorder.name]: t.color.border.focus.var,
           },
         },
         stepper: {
@@ -83,15 +82,15 @@ export const numberInput = typestyles.recipe(
           flexDirection: 'column',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           borderInlineStart: 'none',
           borderRadius: `0 ${t.radius.md.var} ${t.radius.md.var} 0`,
           overflow: 'hidden',
           '& button': {
             appearance: 'none',
             border: 'none',
-            backgroundColor: v.stepperBackground.var,
-            color: v.stepperForeground.var,
+            backgroundColor: vars.stepperBackground.var,
+            color: vars.stepperForeground.var,
             padding: `${t.space[1].var} ${t.space[2].var}`,
             cursor: 'pointer',
             fontSize: t.fontSize.sm.var,
@@ -115,8 +114,7 @@ export const numberInput = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type NumberInputVariantProps = RecipeVariants<typeof numberInput>;

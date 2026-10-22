@@ -24,38 +24,35 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * </nav>
  * ```
  */
-export const tabList = typestyles.recipe(
-  'tab-list',
-  {
-    slots: ['root', 'tab', 'indicator', 'menu', 'menuTrigger'],
-    variants: { size: controlSize },
+export const tabList = typestyles.recipe({
+  name: 'tab-list',
+  layer: 'components',
+  slots: ['root', 'tab', 'indicator', 'menu', 'menuTrigger'],
+  variants: { size: controlSize },
+  vars: {
+    tabColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    tabSelectedColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    tabHoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    indicatorColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    dividerColor: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      tabColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      tabSelectedColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      tabHoverBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      indicatorColor: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foreground.var,
-      },
-      dividerColor: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-    });
-
+  styles: ({ vars }) => {
     return {
-      vars: v,
       base: {
         root: {
           position: 'relative',
@@ -75,12 +72,12 @@ export const tabList = typestyles.recipe(
           '&[data-has-divider][data-orientation="horizontal"]': {
             borderBottomWidth: t.borderWidth.default.var,
             borderBottomStyle: 'solid',
-            borderBottomColor: v.dividerColor.var,
+            borderBottomColor: vars.dividerColor.var,
           },
           '&[data-has-divider][data-orientation="vertical"]': {
             borderInlineEndWidth: t.borderWidth.default.var,
             borderInlineEndStyle: 'solid',
-            borderInlineEndColor: v.dividerColor.var,
+            borderInlineEndColor: vars.dividerColor.var,
           },
         },
         tab: {
@@ -91,7 +88,7 @@ export const tabList = typestyles.recipe(
           gap: t.space[2].var,
           border: 'none',
           backgroundColor: 'transparent',
-          color: v.tabColor.var,
+          color: vars.tabColor.var,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
           textDecoration: 'none',
@@ -101,18 +98,18 @@ export const tabList = typestyles.recipe(
           paddingBlock: 0,
           paddingInline: t.space[3].var,
           '&:hover': {
-            backgroundColor: v.tabHoverBackground.var,
+            backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '2px',
           },
           '&[data-selected]': {
-            color: v.tabSelectedColor.var,
+            color: vars.tabSelectedColor.var,
             fontWeight: t.fontWeight.semibold.var,
           },
           '&[data-disabled]': {
-            color: v.tabColor.var,
+            color: vars.tabColor.var,
             opacity: 0.5,
             cursor: 'not-allowed',
             pointerEvents: 'none',
@@ -125,7 +122,7 @@ export const tabList = typestyles.recipe(
           bottom: 0,
           height: '2px',
           borderRadius: t.radius.sm.var,
-          backgroundColor: v.indicatorColor.var,
+          backgroundColor: vars.indicatorColor.var,
           opacity: 0,
           transition: `opacity ${t.duration.fast.var} ${t.easing.standard.var}`,
           '[data-selected] &': {
@@ -149,7 +146,7 @@ export const tabList = typestyles.recipe(
           gap: t.space[1].var,
           border: 'none',
           backgroundColor: 'transparent',
-          color: v.tabColor.var,
+          color: vars.tabColor.var,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
           cursor: 'pointer',
@@ -158,14 +155,14 @@ export const tabList = typestyles.recipe(
           paddingBlock: 0,
           paddingInline: t.space[3].var,
           '&:hover': {
-            backgroundColor: v.tabHoverBackground.var,
+            backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '2px',
           },
           '&[data-selected]': {
-            color: v.tabSelectedColor.var,
+            color: vars.tabSelectedColor.var,
             fontWeight: t.fontWeight.semibold.var,
           },
         },
@@ -186,8 +183,7 @@ export const tabList = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type TabListVariantProps = RecipeVariants<typeof tabList>;

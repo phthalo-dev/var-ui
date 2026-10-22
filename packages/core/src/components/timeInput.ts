@@ -18,46 +18,48 @@ import { dateFieldChrome } from './fieldChrome';
  * </AriaTimeField>
  * ```
  */
-export const timeInput = typestyles.recipe(
-  'timeInput',
-  (c) => {
-    const v = c.vars({
-      labelColor: { ...atProperty.color, value: t.color.text.primary.var },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: { ...atProperty.color, value: t.color.tone.danger.foreground.var },
-      groupBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      groupBorder: { ...atProperty.color, value: t.color.border.default.var },
-      segmentColor: { ...atProperty.color, value: t.color.text.primary.var },
-      segmentPlaceholderColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-    });
+export const timeInput = typestyles.recipe({
+  name: 'timeInput',
+  layer: 'components',
+  slots: ['root', 'label', 'description', 'error', 'group', 'segment'],
+  vars: {
+    labelColor: { ...atProperty.color, value: t.color.text.primary.var },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: { ...atProperty.color, value: t.color.tone.danger.foreground.var },
+    groupBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    groupBorder: { ...atProperty.color, value: t.color.border.default.var },
+    segmentColor: { ...atProperty.color, value: t.color.text.primary.var },
+    segmentPlaceholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+  },
+  styles: ({ vars }) => {
     const chrome = dateFieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
-      groupBackground: v.groupBackground.var,
-      groupBorder: v.groupBorder.var,
-      groupFocusBorder: v.groupBorder.name,
-      segmentColor: v.segmentColor.var,
-      segmentPlaceholderColor: v.segmentPlaceholderColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
+      groupBackground: vars.groupBackground.var,
+      groupBorder: vars.groupBorder.var,
+      groupFocusBorder: vars.groupBorder.name,
+      segmentColor: vars.segmentColor.var,
+      segmentPlaceholderColor: vars.segmentPlaceholderColor.var,
     });
     return {
-      slots: ['root', 'label', 'description', 'error', 'group', 'segment'],
-      root: { ...chrome.root, minWidth: '160px' },
-      label: chrome.label,
-      description: chrome.description,
-      error: chrome.error,
-      group: chrome.group,
-      segment: chrome.segment,
+      base: {
+        root: { ...chrome.root, minWidth: '160px' },
+        label: chrome.label,
+        description: chrome.description,
+        error: chrome.error,
+        group: chrome.group,
+        segment: chrome.segment,
+      },
     };
   },
-  { layer: 'components' },
-);
+});

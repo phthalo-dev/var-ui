@@ -6,7 +6,7 @@ import {
   type RadioGroupProps as RACRadioGroupProps,
 } from 'react-aria-components';
 import { radio } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type RadioGroupOption = {
   /** Value submitted with the form when this option is selected. */

@@ -8,11 +8,11 @@ import {
   IconProvider,
   LayerProvider,
   SegmentedControl,
-  readStoredColorMode,
   type ColorMode,
 } from '@var-ui/react';
 import type { Selection } from 'react-aria-components';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { readStoredColorMode } from '@/lib/storedColorMode';
 import { useDocsFramework } from '@/lib/useDocsFramework';
 import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { HighlightedCodeBlock } from '../HighlightedCodeBlock';
@@ -52,7 +52,7 @@ export default function ThemePlayground({ framework: initialFramework }: ThemePl
     const observer = new MutationObserver(() => syncColorModeFromStorage());
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-mode'],
+      attributeFilter: ['data-color-mode'],
     });
     const onStorage = (event: StorageEvent) => {
       if (event.key === STORAGE_KEY) syncColorModeFromStorage();

@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { Children, useState } from 'react';
 import { avatar, avatarGroup, statusDot, type AvatarVariantProps, type Tone } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type AvatarProps = AvatarVariantProps & {
   /** Image URL. When missing or on load error, initials are shown instead. */

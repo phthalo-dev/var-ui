@@ -55,13 +55,13 @@ See [`examples/vite-app`](../../examples/vite-app/README.md) and [`examples/astr
 
 ### Key exports
 
-| Area              | Exports                                                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Themes**        | `createDesignTheme`, `defaultTheme`, `disposeDesignTheme`, `DEFAULT_THEME_NAME`, `defaultThemeClassName`, `SURFACE_ATTRIBUTE`, `mergeThemeOverrides` |
-| **Tokens**        | `designTokens`, `tokens`, `tokenValues`, `generateColors`, `lightSyntaxValues`, `darkSyntaxValues`                                                   |
-| **Customization** | `when`, `defineFonts`, `groteskMono`                                                                                                                 |
-| **TypeStyles**    | `typestyles`, `style`, `recipe`, `tokens`, `global`, `breakpoint`, `media`, `override`                                                               |
-| **Types**         | `DesignTheme`, `DesignThemeConfig`, `DesignThemeTokenValues`, `OverrideConfigFor`, …                                                                 |
+| Area              | Exports                                                                                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Themes**        | `createDesignTheme`, `defaultTheme`, `disposeDesignTheme`, `DEFAULT_THEME_NAME`, `defaultThemeClassName`, `COLOR_MODE_ATTRIBUTE`, `mergeThemeOverrides` |
+| **Tokens**        | `designTokens`, `tokens`, `tokenValues`, `generateColors`, `lightSyntaxValues`, `darkSyntaxValues`                                                      |
+| **Customization** | `when`, `defineFonts`, `groteskMono`                                                                                                                    |
+| **TypeStyles**    | `typestyles`, `style`, `recipe`, `tokens`, `global`, `breakpoint`, `media`, `override`                                                                  |
+| **Types**         | `DesignTheme`, `DesignThemeConfig`, `DesignThemeTokenValues`, `OverrideConfigFor`, …                                                                    |
 
 ## Recipe inventory
 
@@ -232,32 +232,28 @@ defaultTheme.override({ name: 'forest', tokens: { color: { … } } });
 Each return value is a **`DesignTheme`**: TypeStyles `Theme` (`className`, `name`, `source`,
 `override`, `tokens`). Recipe restyles belong in `components` (or ad-hoc `override`).
 
-### Ambient light / dark mode
+### Color mode (`COLOR_MODE_ATTRIBUTE`)
 
-Dark overrides follow OS preference unless `data-mode="light"` or `data-mode="dark"` is set on
-the **same element** that carries the theme class. Only the **color** tree (including
-`color.code`) flips; radius, fontSize, etc. stay on mode-invariant theme tokens.
-
-### Fixed-tone surfaces (`SURFACE_ATTRIBUTE`)
-
-Import `SURFACE_ATTRIBUTE` (`'data-surface'`) from `@var-ui/core`. Global `color-scheme`
-rules for `data-surface="light"` and `data-surface="dark"` ship with `@var-ui/core/styles`
-(and `styles.css`) — no theme option required.
-
-Mark a subtree to pin light or dark chrome regardless of ambient mode:
+Import `COLOR_MODE_ATTRIBUTE` (`'data-color-mode'`) from `@var-ui/core`. Omit the attribute
+to follow the OS (`color-scheme: light dark` on `:root`). Set `data-color-mode="light"` or
+`"dark"` on any element to pin that node and its descendants. The same attribute sets
+`color-scheme` (so `light-dark()` tokens flip) and matches component color-mode selectors.
+Only the **color** tree (including `color.code`) flips; radius, fontSize, etc. stay on
+mode-invariant theme tokens.
 
 ```html
-<div class="theme-var-ui-default" data-mode="light">
-  <article data-surface="dark" class="var-ui-card-root">…</article>
-</div>
+<html class="theme-var-ui-default">
+  <article data-color-mode="dark" class="var-ui-card-root">…</article>
+</html>
 ```
 
-Keep wrappers scoped tightly — nested subtrees cannot "reset" to ambient mode without an
-explicit opposite surface marker.
+A descendant can pin the opposite mode. It cannot drop back to “follow the OS” while an
+ancestor is pinned, because the ancestor attribute still matches.
 
 ### Astro (no React context)
 
-Use a tiny inline script to set **one** palette class on `document.documentElement` and **`data-mode`** for light/dark/system:
+Use a tiny inline script to set **one** palette class on `document.documentElement` and
+**`data-color-mode`** for an explicit light or dark choice. Leave the attribute off for system:
 
 ```astro
 ---
@@ -265,19 +261,13 @@ import { defaultThemeClassName } from '@var-ui/core';
 ---
 <script is:inline define:vars={{ themeClass: defaultThemeClassName }}>
   const key = 'theme-mode';
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const stored = localStorage.getItem(key);
-  const mode =
-    stored === 'light' || stored === 'dark' || stored === 'system'
-      ? stored
-      : prefersDark
-        ? 'dark'
-        : 'light';
   document.documentElement.classList.add(themeClass);
-  if (mode === 'system') {
-    document.documentElement.removeAttribute('data-mode');
+  document.documentElement.style.colorScheme = '';
+  if (stored === 'light' || stored === 'dark') {
+    document.documentElement.setAttribute('data-color-mode', stored);
   } else {
-    document.documentElement.setAttribute('data-mode', mode);
+    document.documentElement.removeAttribute('data-color-mode');
   }
 </script>
 ```

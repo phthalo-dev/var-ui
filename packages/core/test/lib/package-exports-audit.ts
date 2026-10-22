@@ -95,7 +95,7 @@ function categorizeRuntimeExport(name: string): ExportCategory {
     return 'tokens';
   }
   if (
-    /^(createDesignTheme|disposeDesignTheme|defaultTheme|registerDefaultTheme|mergeThemeOverrides|when|atReducedMotion|DEFAULT_THEME_NAME|SURFACE_ATTRIBUTE|defaultThemeClassName)/.test(
+    /^(createDesignTheme|disposeDesignTheme|defaultTheme|registerDefaultTheme|mergeThemeOverrides|when|atReducedMotion|DEFAULT_THEME_NAME|COLOR_MODE_ATTRIBUTE|defaultThemeClassName)/.test(
       name,
     ) ||
     name.startsWith('Theme')

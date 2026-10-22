@@ -379,7 +379,7 @@ export function renderContentSampleTileMarkup(framework: DocsFramework): string 
   const bodyText = serializeHtmlTag(
     'p',
     mergeProps(textBlock({})),
-    'Themes pin fixed-tone subtrees with modes and <code>data-surface</code> (<code>SURFACE_ATTRIBUTE</code>). See ',
+    'Pin a subtree with <code>data-color-mode</code> (<code>COLOR_MODE_ATTRIBUTE</code>). See ',
   );
   const themingLink = serializeHtmlTag(
     'a',

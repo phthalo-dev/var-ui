@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { simpleGrid, type SimpleGridVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SimpleGridProps = HTMLAttributes<HTMLDivElement> & {
   /** Number of equal columns. @default 2 */

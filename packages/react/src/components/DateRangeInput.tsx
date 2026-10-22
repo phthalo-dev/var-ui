@@ -22,7 +22,7 @@ import {
 } from 'react-aria-components';
 import { dateRangeInput } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DateRangeInputProps<T extends DateValue = DateValue> = Omit<
   RACDateRangePickerProps<T>,

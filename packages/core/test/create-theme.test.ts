@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vite-plus/test';
 import { flushSync, getRegisteredCss, reset } from 'typestyles';
 import { createDesignTheme, disposeDesignTheme } from '../src/theme/create-theme';
 import { defaultTheme, registerDefaultTheme } from '../src/theme/register-default';
-import { DEFAULT_THEME_NAME, SURFACE_ATTRIBUTE } from '../src/theme/constants';
+import { COLOR_MODE_ATTRIBUTE, DEFAULT_THEME_NAME } from '../src/theme/constants';
 import { resetRegisteredFontFaces } from '../src/fonts/register-font-face';
 import { registerTestGlobals } from './lib/register-test-globals';
 import { override } from '../src/runtime';
@@ -165,15 +165,15 @@ describe('createDesignTheme', () => {
     defaultTheme.override({ name: 'with-surface' });
     const css = getRegisteredCss();
     expect(css).toContain(`${themeClass('with-surface')} { color-scheme: light dark`);
-    expect(css).not.toContain(`${themeClass('with-surface')} [${SURFACE_ATTRIBUTE}="dark"]`);
+    expect(css).not.toContain(`${themeClass('with-surface')} [${COLOR_MODE_ATTRIBUTE}="dark"]`);
   });
 
   it('does not emit surface color mode rules (surfaces use global color-scheme)', () => {
     defaultTheme.override({ name: 'ambient-only' });
 
     const css = getRegisteredCss();
-    expect(css).not.toContain(`${themeClass('ambient-only')} [${SURFACE_ATTRIBUTE}="dark"]`);
-    expect(css).not.toContain(`${themeClass('ambient-only')}[data-mode="dark"]`);
+    expect(css).not.toContain(`${themeClass('ambient-only')} [${COLOR_MODE_ATTRIBUTE}="dark"]`);
+    expect(css).not.toContain(`${themeClass('ambient-only')}[${COLOR_MODE_ATTRIBUTE}="dark"]`);
     expect(css).toMatch(/--var-ui-color-tone-accent-foreground:\s*light-dark\(/);
   });
 
@@ -184,7 +184,7 @@ describe('createDesignTheme', () => {
     expect(css).not.toMatch(
       /@media \(prefers-color-scheme:\s*dark\)\s*{\s*\.theme-var-ui-system-fixture\s*{/,
     );
-    expect(css).not.toContain(`${themeClass('system-fixture')}[data-mode="dark"]`);
+    expect(css).not.toContain(`${themeClass('system-fixture')}[${COLOR_MODE_ATTRIBUTE}="dark"]`);
     expect(css).toMatch(/--var-ui-color-tone-accent-foreground:\s*light-dark\(/);
   });
 
@@ -269,7 +269,8 @@ describe('createDesignTheme', () => {
 
     const css = getRegisteredCss();
     expect(css).toContain('--var-ui-brandGlow-glow: 0 0 0 3px oklch(90% 0.1 280)');
-    expect(css).toContain(`${themeClass('acme-glow')}[data-mode="dark"]`);
+    expect(css).toContain(`${themeClass('acme-glow')}[${COLOR_MODE_ATTRIBUTE}="dark"]`);
+    expect(css).toContain(`${themeClass('acme-glow')} [${COLOR_MODE_ATTRIBUTE}="dark"]`);
     expect(css).toContain('--var-ui-brandGlow-glow: 0 0 16px oklch(70% 0.2 280)');
   });
 
@@ -279,19 +280,21 @@ describe('createDesignTheme', () => {
     defaultTheme.override({
       name: 'acme-components',
       components: {
-        button: ({ tokens: t }) => ({
-          base: {
-            borderRadius: t.radius.lg.var,
-          },
-          variants: {
-            tone: {
-              accent: { textTransform: 'uppercase' },
+        button: {
+          styles: ({ tokens: t }) => ({
+            base: {
+              borderRadius: t.radius.lg.var,
             },
-            appearance: {
-              filled: {},
+            variants: {
+              tone: {
+                accent: { textTransform: 'uppercase' },
+              },
+              appearance: {
+                filled: {},
+              },
             },
-          },
-        }),
+          }),
+        },
       },
     });
 
@@ -348,11 +351,13 @@ describe('createDesignTheme', () => {
         },
       },
       components: {
-        button: ({ tokens: t }) => ({
-          base: { color: t.brand.accent },
-        }),
+        button: {
+          styles: ({ tokens: t }) => ({
+            base: { color: t.brand.accent },
+          }),
+        },
         badge: {
-          base: { borderRadius: '999px' },
+          styles: { base: { borderRadius: '999px' } },
         },
       },
     });
@@ -366,13 +371,13 @@ describe('createDesignTheme', () => {
 
   it('override without selectorPrefix applies globally in overrides layer', () => {
     button({ size: 'sm' });
-    override(
-      button,
-      {
+    override({
+      recipe: button,
+      layer: 'overrides',
+      styles: {
         base: { borderRadius: '999px' },
       },
-      { layer: 'overrides' },
-    );
+    });
 
     const css = getRegisteredCss();
     expect(css).toMatch(/@layer overrides \{[\s\S]*\.var-ui-button \{/);

@@ -18,43 +18,42 @@ function pinCellSize(size: ControlSize) {
   };
 }
 
-export const pinInput = typestyles.recipe(
-  'pin-input',
-  {
-    slots: ['root', 'label', 'group', 'cell', 'description', 'error'],
-    variants: { size: controlSize },
+export const pinInput = typestyles.recipe({
+  name: 'pin-input',
+  layer: 'components',
+  slots: ['root', 'label', 'group', 'cell', 'description', 'error'],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    cellBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    cellBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    cellForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      cellBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      cellBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      cellForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-    });
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
       base: {
@@ -76,17 +75,17 @@ export const pinInput = typestyles.recipe(
         cell: {
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.cellBorder.var,
+          borderColor: vars.cellBorder.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.cellBackground.var,
-          color: v.cellForeground.var,
+          backgroundColor: vars.cellBackground.var,
+          color: vars.cellForeground.var,
           fontFamily: t.fontFamily.body.var,
           fontVariantNumeric: 'tabular-nums',
           outline: 'none',
           '&:focus': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
-            [v.cellBorder.name]: t.color.border.focus.var,
+            [vars.cellBorder.name]: t.color.border.focus.var,
           },
           '&:disabled': {
             cursor: 'not-allowed',
@@ -102,8 +101,7 @@ export const pinInput = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type PinInputVariantProps = RecipeVariants<typeof pinInput>;

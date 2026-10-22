@@ -7,7 +7,7 @@ import {
   scrollAreaFadeEdgesFor,
   scrollAreaOrientation,
 } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   children: ReactNode;

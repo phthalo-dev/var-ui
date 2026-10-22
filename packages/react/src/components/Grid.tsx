@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { grid, type GridVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type GridProps = HTMLAttributes<HTMLDivElement> & {
   /** `auto` packs minmax(240px, 1fr) tracks; numbers give fixed equal tracks. @default auto */

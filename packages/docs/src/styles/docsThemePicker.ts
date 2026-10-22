@@ -10,13 +10,15 @@ type DocsThemePickerSlots = readonly ['root'];
  * the slot-with-variants shape (`ComponentAttrsResult` per slot) — pin the real
  * runtime shape explicitly.
  */
-export const docsThemePicker = typestyles.recipe(
-  'docs-theme-picker',
-  () => ({
-    slots: ['root'],
-    root: {
-      display: 'inline-flex',
+export const docsThemePicker = typestyles.recipe({
+  name: 'docs-theme-picker',
+  layer: 'utilities',
+  slots: ['root'],
+  styles: () => ({
+    base: {
+      root: {
+        display: 'inline-flex',
+      },
     },
   }),
-  { layer: 'utilities' },
-) as unknown as MultiSlotReturn<DocsThemePickerSlots>;
+}) as unknown as MultiSlotReturn<DocsThemePickerSlots>;

@@ -7,25 +7,24 @@ const accordionPane = variant.enum(['flush', 'bordered'], { default: 'bordered' 
 /**
  * Outer chrome for stacked `Accordion` panels — border, radius, and overflow clip.
  */
-export const accordionGroup = typestyles.recipe(
-  'accordion-group',
-  {
-    slots: ['root'],
-    variants: {
-      variant: accordionPane,
+export const accordionGroup = typestyles.recipe({
+  name: 'accordion-group',
+  layer: 'components',
+  slots: ['root'],
+  variants: {
+    variant: accordionPane,
+  },
+  vars: {
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
     },
   },
-  (c) => {
-    const v = c.vars({
-      border: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      background: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
@@ -34,9 +33,9 @@ export const accordionGroup = typestyles.recipe(
           minWidth: 0,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
           overflow: 'hidden',
         },
       },
@@ -54,8 +53,7 @@ export const accordionGroup = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type AccordionGroupVariant = VariantOptions<typeof accordionPane>;
 export type AccordionGroupVariantProps = RecipeVariants<typeof accordionGroup>;

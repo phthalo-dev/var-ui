@@ -6,8 +6,8 @@ describe('base-styles', () => {
     await import('../src/theme/base-styles');
     const css = getRegisteredCss();
     expect(css).toMatch(/color-scheme:\s*light\s+dark/);
-    expect(css).toContain('[data-surface="dark"]');
-    expect(css).toContain('[data-surface="light"]');
+    expect(css).toContain('[data-color-mode="dark"]');
+    expect(css).toContain('[data-color-mode="light"]');
     expect(css).toContain('box-sizing: border-box');
     expect(css).toContain('scroll-behavior: smooth');
     expect(css).toContain('scroll-behavior: auto');

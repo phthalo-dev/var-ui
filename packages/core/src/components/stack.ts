@@ -16,26 +16,25 @@ const stackWrap = variant.enum(['wrap', 'nowrap'], { default: 'nowrap' });
  * <div className={stack({ gap: 'lg' })}>…</div>
  * ```
  */
-export const stack = typestyles.recipe(
-  'stack',
-  {
-    variants: {
-      direction: stackDirection,
-      gap,
-      align: stackAlign,
-      justify: stackJustify,
-      wrap: stackWrap,
-    },
+export const stack = typestyles.recipe({
+  name: 'stack',
+  layer: 'components',
+  variants: {
+    direction: stackDirection,
+    gap,
+    align: stackAlign,
+    justify: stackJustify,
+    wrap: stackWrap,
   },
-  (c) => {
-    const v = c.vars({
-      gap: { ...atProperty.length, value: t.space[3].var },
-    });
+  vars: {
+    gap: { ...atProperty.length, value: t.space[3].var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'flex',
         flexDirection: 'column',
-        gap: v.gap.var,
+        gap: vars.gap.var,
         minWidth: 0,
       },
       variants: {
@@ -44,12 +43,12 @@ export const stack = typestyles.recipe(
           row: { flexDirection: 'row' },
         },
         gap: {
-          none: { [v.gap.name]: '0px' },
-          xs: { [v.gap.name]: t.space[1].var },
-          sm: { [v.gap.name]: t.space[2].var },
-          md: { [v.gap.name]: t.space[3].var },
-          lg: { [v.gap.name]: t.space[5].var },
-          xl: { [v.gap.name]: t.space[8].var },
+          none: { [vars.gap.name]: '0px' },
+          xs: { [vars.gap.name]: t.space[1].var },
+          sm: { [vars.gap.name]: t.space[2].var },
+          md: { [vars.gap.name]: t.space[3].var },
+          lg: { [vars.gap.name]: t.space[5].var },
+          xl: { [vars.gap.name]: t.space[8].var },
         },
         align: {
           start: { alignItems: 'flex-start' },
@@ -70,8 +69,7 @@ export const stack = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type StackVariantProps = RecipeVariants<typeof stack>;

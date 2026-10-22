@@ -2,7 +2,7 @@ import { useState, type JSX, type KeyboardEvent, type ReactNode } from 'react';
 import { chatToolCalls } from '@var-ui/core';
 import { Icon } from '../../icons';
 import { Spinner } from '../Spinner';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatToolCallStatus = 'pending' | 'running' | 'complete' | 'error';
 

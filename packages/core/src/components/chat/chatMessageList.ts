@@ -12,13 +12,12 @@ import { type RecipeVariants } from 'typestyles';
  * <div className={chatMessageList({ density: 'balanced' }).root}>…</div>
  * ```
  */
-export const chatMessageList = typestyles.recipe(
-  'chat-message-list',
-  {
-    slots: ['root', 'inner', 'emptyState'],
-    variants: { density },
-  },
-  () => ({
+export const chatMessageList = typestyles.recipe({
+  name: 'chat-message-list',
+  layer: 'components',
+  slots: ['root', 'inner', 'emptyState'],
+  variants: { density },
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -48,8 +47,7 @@ export const chatMessageList = typestyles.recipe(
       },
     },
   }),
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ChatMessageListVariantProps = RecipeVariants<typeof chatMessageList>;

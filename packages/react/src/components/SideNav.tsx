@@ -19,7 +19,7 @@ import { ResizeHandle } from './ResizeHandle';
 import { Text } from './Typography';
 import { SimpleTooltip } from './SimpleTooltip';
 import { ScrollArea } from './ScrollArea';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SideNavCollapsibleConfig = {
   /** Initial collapsed state for uncontrolled usage. @default false */

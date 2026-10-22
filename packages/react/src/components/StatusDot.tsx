@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import { statusDot, type StatusDotVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type StatusDotProps = StatusDotVariantProps & {
   'aria-label'?: string;

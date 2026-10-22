@@ -18,43 +18,42 @@ const searchInputVariant = variant.enum(['default', 'command'], { default: 'defa
  * - `command` — read-only trigger chrome with a shortcut hint; pair with
  *   `CommandPalette` via `data-command-palette` on the Astro component.
  */
-export const searchInput = typestyles.recipe(
-  'search-input',
-  {
-    slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
-    variants: { variant: searchInputVariant, size: controlSize },
+export const searchInput = typestyles.recipe({
+  name: 'search-input',
+  layer: 'components',
+  slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
+  variants: { variant: searchInputVariant, size: controlSize },
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    foreground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholder: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    iconColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      background: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      border: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      foreground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      placeholder: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      iconColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
-          [v.background.name]: t.color.background.surface.var,
-          [v.border.name]: t.color.border.default.var,
-          [v.foreground.name]: t.color.text.primary.var,
-          [v.placeholder.name]: t.color.text.secondary.var,
-          [v.iconColor.name]: t.color.text.secondary.var,
+          [vars.background.name]: t.color.background.surface.var,
+          [vars.border.name]: t.color.border.default.var,
+          [vars.foreground.name]: t.color.text.primary.var,
+          [vars.placeholder.name]: t.color.text.secondary.var,
+          [vars.iconColor.name]: t.color.text.secondary.var,
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space[2].var,
@@ -63,10 +62,10 @@ export const searchInput = typestyles.recipe(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.background.var,
-          color: v.foreground.var,
+          backgroundColor: vars.background.var,
+          color: vars.foreground.var,
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
@@ -77,7 +76,7 @@ export const searchInput = typestyles.recipe(
           flexShrink: 0,
           display: 'inline-flex',
           alignItems: 'center',
-          color: v.iconColor.var,
+          color: vars.iconColor.var,
           lineHeight: 0,
         },
         input: {
@@ -89,10 +88,10 @@ export const searchInput = typestyles.recipe(
           backgroundColor: 'transparent',
           fontSize: 'inherit',
           fontFamily: t.fontFamily.body.var,
-          color: v.foreground.var,
+          color: vars.foreground.var,
           outline: 'none',
           '&::placeholder': {
-            color: v.placeholder.var,
+            color: vars.placeholder.var,
           },
           '&::-webkit-search-cancel-button': {
             display: 'none',
@@ -118,7 +117,7 @@ export const searchInput = typestyles.recipe(
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          color: v.placeholder.var,
+          color: vars.placeholder.var,
         },
         shortcut: {
           flexShrink: 0,
@@ -166,7 +165,6 @@ export const searchInput = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type SearchInputVariantProps = RecipeVariants<typeof searchInput>;

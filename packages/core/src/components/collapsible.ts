@@ -18,28 +18,27 @@ const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { de
  * </div>
  * ```
  */
-export const collapsible = typestyles.recipe(
-  'collapsible',
-  {
-    slots: ['root', 'trigger', 'triggerIcon', 'panel'],
-    variants: {
-      variant: collapsibleVariant,
-    },
+export const collapsible = typestyles.recipe({
+  name: 'collapsible',
+  layer: 'components',
+  slots: ['root', 'trigger', 'triggerIcon', 'panel'],
+  variants: {
+    variant: collapsibleVariant,
   },
-  (c) => {
-    const v = c.vars({
-      border: { ...atProperty.color, value: t.color.border.default.var },
-      background: { ...atProperty.color, value: t.color.background.surface.var },
-      triggerColor: { ...atProperty.color, value: t.color.text.primary.var },
-      hoverBg: { ...atProperty.color, value: t.color.background.subtle.var },
-    });
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    background: { ...atProperty.color, value: t.color.background.surface.var },
+    triggerColor: { ...atProperty.color, value: t.color.text.primary.var },
+    hoverBg: { ...atProperty.color, value: t.color.background.subtle.var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
-          [v.border.name]: t.color.border.default.var,
-          [v.background.name]: t.color.background.surface.var,
-          [v.triggerColor.name]: t.color.text.primary.var,
-          [v.hoverBg.name]: t.color.background.subtle.var,
+          [vars.border.name]: t.color.border.default.var,
+          [vars.background.name]: t.color.background.surface.var,
+          [vars.triggerColor.name]: t.color.text.primary.var,
+          [vars.hoverBg.name]: t.color.background.subtle.var,
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
@@ -62,7 +61,7 @@ export const collapsible = typestyles.recipe(
           padding: `${t.space[2].var} ${t.space[3].var}`,
           border: 'none',
           background: 'transparent',
-          color: v.triggerColor.var,
+          color: vars.triggerColor.var,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           fontFamily: 'inherit',
@@ -70,7 +69,7 @@ export const collapsible = typestyles.recipe(
           cursor: 'pointer',
           borderRadius: t.radius.sm.var,
           '&:hover': {
-            backgroundColor: v.hoverBg.var,
+            backgroundColor: vars.hoverBg.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
@@ -94,9 +93,9 @@ export const collapsible = typestyles.recipe(
             root: {
               borderWidth: t.borderWidth.default.var,
               borderStyle: 'solid',
-              borderColor: v.border.var,
+              borderColor: vars.border.var,
               borderRadius: t.radius.md.var,
-              backgroundColor: v.background.var,
+              backgroundColor: vars.background.var,
             },
           },
           accordion: {
@@ -105,7 +104,7 @@ export const collapsible = typestyles.recipe(
               borderWidth: 0,
               borderBottomWidth: t.borderWidth.default.var,
               borderBottomStyle: 'solid',
-              borderBottomColor: v.border.var,
+              borderBottomColor: vars.border.var,
               '&:last-child': {
                 borderBottomWidth: 0,
               },
@@ -123,8 +122,7 @@ export const collapsible = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type CollapsibleVariant = VariantOptions<typeof collapsibleVariant>;
 export type CollapsibleVariantProps = RecipeVariants<typeof collapsible>;

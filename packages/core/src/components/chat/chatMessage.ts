@@ -12,13 +12,12 @@ import { type RecipeVariants } from 'typestyles';
  * <div className={chatMessage({ sender: 'assistant' }).root}>…</div>
  * ```
  */
-export const chatMessage = typestyles.recipe(
-  'chat-message',
-  {
-    slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],
-    variants: { sender },
-  },
-  () => ({
+export const chatMessage = typestyles.recipe({
+  name: 'chat-message',
+  layer: 'components',
+  slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],
+  variants: { sender },
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -66,8 +65,7 @@ export const chatMessage = typestyles.recipe(
       },
     },
   }),
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ChatMessageVariantProps = RecipeVariants<typeof chatMessage>;

@@ -6,7 +6,7 @@ import {
   type HeadingVariantProps,
   type TextBlockVariantProps,
 } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   /** Semantic heading level (document outline). @default 2 */

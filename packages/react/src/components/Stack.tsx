@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { stack, type StackVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type StackProps = HTMLAttributes<HTMLDivElement> & {
   /** Flex direction. @default column */

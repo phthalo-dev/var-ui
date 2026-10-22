@@ -13,7 +13,7 @@ import {
   type ToggleButtonVariantProps,
 } from '@var-ui/core';
 import { observeSegmentedControlIndicator } from '@var-ui/core/components/indicators/segmented-control';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SegmentedControlOption = {
   id: string;

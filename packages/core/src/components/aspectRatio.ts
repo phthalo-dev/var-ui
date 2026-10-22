@@ -1,29 +1,34 @@
 import { typestyles } from '../runtime';
 
 /**
- * Constrains children to a fixed aspect ratio (16/9 default). Override the
- * ratio with an inline `aspect-ratio` style (the React wrapper does this).
+ * Constrains children to a fixed aspect ratio (16/9 default). Assign
+ * `aspectRatio.vars.ratio` (`16 / 9`, `1`, …) to override it.
  *
  * ```tsx
- * <div className={aspectRatio()}><img src={cover} alt="" /></div>
+ * <div className={aspectRatio().className}><img src={cover} alt="" /></div>
  * ```
  */
-export const aspectRatio = typestyles.recipe(
-  'aspect-ratio',
-  () => ({
-    base: {
-      position: 'relative',
-      width: '100%',
-      aspectRatio: '16 / 9',
-      overflow: 'hidden',
-      '& > *': {
-        position: 'absolute',
-        inset: 0,
+export const aspectRatio = typestyles.recipe({
+  name: 'aspect-ratio',
+  layer: 'components',
+  vars: {
+    ratio: { syntax: '*', value: '16 / 9' },
+  },
+  styles: ({ vars }) => {
+    return {
+      base: {
+        position: 'relative',
         width: '100%',
-        height: '100%',
-        objectFit: 'cover',
+        aspectRatio: vars.ratio.var,
+        overflow: 'hidden',
+        '& > *': {
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        },
       },
-    },
-  }),
-  { layer: 'components' },
-);
+    };
+  },
+});

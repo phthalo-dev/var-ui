@@ -2,7 +2,7 @@ import type { JSX, ReactNode } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { banner, type BannerVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 const toneIcon: Record<Tone, IconName> = {
   neutral: 'info',

@@ -1,4 +1,4 @@
-import type { ShowcaseThemeId } from '../homepage/showcaseThemes';
+import type { ShowcaseThemeId } from '@/themes/presets';
 
 export type ThemePlaygroundViewport = 'desktop' | 'mobile';
 

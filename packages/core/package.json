@@ -172,6 +172,10 @@
       "types": "./dist/components/commandPalette.d.mts",
       "import": "./dist/components/commandPalette.mjs"
     },
+    "./components/contents": {
+      "types": "./dist/components/contents.d.mts",
+      "import": "./dist/components/contents.mjs"
+    },
     "./components/copyButton": {
       "types": "./dist/components/copyButton.d.mts",
       "import": "./dist/components/copyButton.mjs"
@@ -260,6 +264,10 @@
       "types": "./dist/components/kbd.d.mts",
       "import": "./dist/components/kbd.mjs"
     },
+    "./components/layerVars": {
+      "types": "./dist/components/layerVars.d.mts",
+      "import": "./dist/components/layerVars.mjs"
+    },
     "./components/layout": {
       "types": "./dist/components/layout.d.mts",
       "import": "./dist/components/layout.mjs"
@@ -319,6 +327,10 @@
     "./components/popover": {
       "types": "./dist/components/popover.d.mts",
       "import": "./dist/components/popover.mjs"
+    },
+    "./components/positionerVars": {
+      "types": "./dist/components/positionerVars.d.mts",
+      "import": "./dist/components/positionerVars.mjs"
     },
     "./components/progressBar": {
       "types": "./dist/components/progressBar.d.mts",
@@ -387,6 +399,10 @@
     "./components/steps": {
       "types": "./dist/components/steps.d.mts",
       "import": "./dist/components/steps.mjs"
+    },
+    "./components/styleVars": {
+      "types": "./dist/components/styleVars.d.mts",
+      "import": "./dist/components/styleVars.mjs"
     },
     "./components/surface": {
       "types": "./dist/components/surface.d.mts",
@@ -482,12 +498,12 @@
     "dev": "vp pack --watch"
   },
   "dependencies": {
-    "typestyles": "catalog:"
+    "typestyles": "0.32.1"
   },
   "devDependencies": {
-    "@typestyles/build-runner": "catalog:",
-    "@typestyles/cli": "^0.3.2",
-    "@typestyles/eslint-plugin": "^0.4.2",
+    "@typestyles/build-runner": "0.6.1",
+    "@typestyles/cli": "^0.3.3",
+    "@typestyles/eslint-plugin": "^0.4.3",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

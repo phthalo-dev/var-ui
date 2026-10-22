@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { emptyState } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type EmptyStateProps = {
   /** Decorative glyph or illustration; consumers pass `<Icon>` or a custom node. */

@@ -1,3 +1,4 @@
+import { positioner } from '../components/positionerVars';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 
@@ -12,7 +13,7 @@ export function overlayPresenceStyles(options: { scale?: boolean } = {}) {
     transition: scale
       ? `${t.transition.panelEnter.var}, transform ${t.duration.slow.var} ${t.easing.emphasized.var}`
       : t.transition.backdrop.var,
-    transformOrigin: 'var(--var-ui-transform-origin, center)',
+    transformOrigin: positioner.vars.transformOrigin.var,
     '&[data-starting-style], &[data-ending-style]': {
       opacity: 0,
       ...(scale ? { transform: 'scale(0.98)' } : {}),

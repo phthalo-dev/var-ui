@@ -4,7 +4,7 @@ import { button, pagination, type PaginationVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { IconButton } from './IconButton';
 import { Select } from './Select';
-import { cx, mergeProps } from './utils';
+import { cx, mergeProps } from 'typestyles';
 
 export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'none';
 

@@ -10,57 +10,60 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * Hex color input with a swatch trigger for a native color picker. Intended
  * for theme builders and settings forms — not a full HSV color picker.
  */
-export const colorField = typestyles.recipe(
-  'color-field',
-  {
-    slots: [
-      'root',
-      'label',
-      'inputWrapper',
-      'swatchButton',
-      'swatchPreview',
-      'nativePicker',
-      'input',
-      'description',
-      'error',
-    ],
-    variants: { size: controlSize },
+export const colorField = typestyles.recipe({
+  name: 'color-field',
+  layer: 'components',
+  slots: [
+    'root',
+    'label',
+    'inputWrapper',
+    'swatchButton',
+    'swatchPreview',
+    'nativePicker',
+    'input',
+    'description',
+    'error',
+  ],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    swatchBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    swatchColor: {
+      ...atProperty.color,
+      value: 'transparent',
+    },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      inputBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      inputBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      inputForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-      swatchBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-    });
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
       base: {
@@ -78,10 +81,10 @@ export const colorField = typestyles.recipe(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.inputBackground.var,
-          color: v.inputForeground.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
@@ -119,7 +122,8 @@ export const colorField = typestyles.recipe(
           borderRadius: t.radius.sm.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.swatchBorder.var,
+          borderColor: vars.swatchBorder.var,
+          backgroundColor: vars.swatchColor.var,
           boxSizing: 'border-box',
         },
         nativePicker: {
@@ -141,7 +145,7 @@ export const colorField = typestyles.recipe(
           backgroundColor: 'transparent',
           fontSize: 'inherit',
           fontFamily: t.fontFamily.mono.var,
-          color: v.inputForeground.var,
+          color: vars.inputForeground.var,
           outline: 'none',
           textTransform: 'uppercase',
           '&:disabled': {
@@ -156,8 +160,7 @@ export const colorField = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ColorFieldVariantProps = RecipeVariants<typeof colorField>;

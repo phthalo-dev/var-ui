@@ -14,27 +14,30 @@ const slide = keyframes.create('var-ui-progress-slide', {
  * Linear progress. Fill width is set inline by the React wrapper
  * (percentage); the `indeterminate` variant animates a sliding segment.
  */
-export const progressBar = typestyles.recipe(
-  'progress-bar',
-  {
-    slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
-    variants: {
-      tone: toneWithDefault('accent'),
-      appearance: fillAppearance,
-      indeterminate: variant.boolean({ default: false }),
+export const progressBar = typestyles.recipe({
+  name: 'progress-bar',
+  layer: 'components',
+  slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
+  variants: {
+    tone: toneWithDefault('accent'),
+    appearance: fillAppearance,
+    indeterminate: variant.boolean({ default: false }),
+  },
+  vars: {
+    trackColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    fillColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    fillWidth: {
+      ...atProperty.percentage,
+      value: '0%',
     },
   },
-  (c) => {
-    const v = c.vars({
-      trackColor: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      fillColor: {
-        ...atProperty.color,
-        value: t.color.tone.accent.foreground.var,
-      },
-    });
+  styles: ({ vars }) => {
     return {
       base: {
         root: { display: 'grid', gap: t.space[1].var, minWidth: '160px' },
@@ -44,13 +47,14 @@ export const progressBar = typestyles.recipe(
         track: {
           height: '6px',
           borderRadius: t.radius.full.var,
-          backgroundColor: v.trackColor.var,
+          backgroundColor: vars.trackColor.var,
           overflow: 'hidden',
         },
         fill: {
           height: '100%',
+          width: vars.fillWidth.var,
           borderRadius: 'inherit',
-          backgroundColor: v.fillColor.var,
+          backgroundColor: vars.fillColor.var,
           transition: `width ${t.duration.medium.var} ${t.easing.standard.var}`,
         },
       },
@@ -60,17 +64,22 @@ export const progressBar = typestyles.recipe(
             key,
             {
               root: {
-                [v.fillColor.name]:
+                [vars.fillColor.name]:
                   key === 'neutral' ? t.color.text.secondary.var : semanticTone[key].background,
               },
             },
           ]),
-        ) as Record<Tone, { root: Record<string, string> }>,
+        ) as Record<
+          Tone,
+          {
+            root: Record<string, string>;
+          }
+        >,
         appearance: {
           solid: {},
           subtle: {
             fill: {
-              backgroundColor: `color-mix(in srgb, ${v.fillColor.var} 55%, ${t.color.background.subtle.var})`,
+              backgroundColor: `color-mix(in srgb, ${vars.fillColor.var} 55%, ${t.color.background.subtle.var})`,
             },
           },
         },
@@ -91,7 +100,6 @@ export const progressBar = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type ProgressBarVariantProps = RecipeVariants<typeof progressBar>;

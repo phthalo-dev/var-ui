@@ -9,43 +9,45 @@ import { fieldChrome } from './fieldChrome';
  *
  * ```tsx
  * const f = field();
- * <div className={f.root}>
- *   <label className={f.label}>Amount</label>
+ * <div className={f.root.className}>
+ *   <label className={f.label.className}>Amount</label>
  *   <MyCustomInput />
- *   <p className={f.description}>Help text</p>
+ *   <p className={f.description.className}>Help text</p>
  * </div>
  * ```
  */
-export const field = typestyles.recipe(
-  'field',
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-    });
+export const field = typestyles.recipe({
+  name: 'field',
+  layer: 'components',
+  slots: ['root', 'label', 'description', 'error'],
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+  },
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'description', 'error'],
-      ...chrome,
-      root: {
-        ...chrome.root,
-        minWidth: '240px',
+      base: {
+        ...chrome,
+        root: {
+          ...chrome.root,
+          minWidth: '240px',
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

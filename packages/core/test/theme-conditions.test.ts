@@ -19,11 +19,13 @@ describe('theme conditions and colorModes', () => {
     createDesignTheme({
       name: 'mode-values',
       components: {
-        button: () => ({
-          base: {
-            color: { light: '#111111', dark: '#eeeeee' },
+        button: {
+          styles: {
+            base: {
+              color: { light: '#111111', dark: '#eeeeee' },
+            },
           },
-        }),
+        },
       },
     });
 
@@ -37,16 +39,18 @@ describe('theme conditions and colorModes', () => {
     createDesignTheme({
       name: 'conditions',
       components: {
-        button: () => ({
-          base: {
-            conditions: [when.dark({ letterSpacing: '0.06em' })],
+        button: {
+          styles: {
+            base: {
+              conditions: [when.dark({ letterSpacing: '0.06em' })],
+            },
           },
-        }),
+        },
       },
     });
 
     const css = getRegisteredCss();
-    expect(css).toContain(`${themeClass('conditions')} [data-mode="dark"] .var-ui-button`);
+    expect(css).toContain(`${themeClass('conditions')} [data-color-mode="dark"] .var-ui-button`);
     expect(css).toContain('letter-spacing: 0.06em');
     expect(css).toMatch(/prefers-color-scheme:\s*dark/);
   });
@@ -55,22 +59,22 @@ describe('theme conditions and colorModes', () => {
     createDesignTheme({ name: 'scheme-fixture', tokens: {} });
     const css = getRegisteredCss();
     expect(css).toMatch(/color-scheme:\s*light\s+dark/);
-    expect(css).toContain('[data-surface="dark"]');
-    expect(css).toContain('[data-surface="light"]');
+    expect(css).toContain('[data-color-mode="dark"]');
+    expect(css).toContain('[data-color-mode="light"]');
   });
 
   it('override accepts conditions and color mode values directly', () => {
     button({ size: 'sm' });
-    override(
-      button,
-      {
+    override({
+      recipe: button,
+      layer: 'overrides',
+      styles: {
         base: {
           color: { light: '#111111', dark: '#eeeeee' },
           conditions: [when.reducedMotion({ transition: 'none' })],
         },
       },
-      { layer: 'overrides' },
-    );
+    });
 
     const css = getRegisteredCss();
     expect(css).toMatch(/color:\s*light-dark\(/);

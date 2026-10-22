@@ -7,11 +7,11 @@ import {
   LayerProvider,
   Select,
   Tabs,
-  readStoredColorMode,
   type ColorMode,
 } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { SHOWCASE_THEMES, type ShowcaseThemeId } from '../homepage/showcaseThemes';
+import { readStoredColorMode } from '@/lib/storedColorMode';
+import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
 import { playgroundSidebarStyles } from '@/styles/playgroundSidebar';
 import {
   ThemePlaygroundAdvancedTab,
@@ -41,7 +41,7 @@ export default function PlaygroundEditorSidebar() {
 
   const presetOptions = useMemo(
     () =>
-      SHOWCASE_THEMES.map((theme) => ({
+      docsThemePresets.map((theme) => ({
         id: theme.id,
         label: theme.label,
       })),
@@ -58,7 +58,7 @@ export default function PlaygroundEditorSidebar() {
     const observer = new MutationObserver(() => syncColorModeFromStorage());
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-mode'],
+      attributeFilter: ['data-color-mode'],
     });
     return () => observer.disconnect();
   }, [syncColorModeFromStorage]);

@@ -9,6 +9,7 @@ import {
   toneWithDefault,
 } from '../shared/semanticTone';
 import { placement } from '../shared/variantAxes';
+import { layerZIndex } from './layerVars';
 
 /**
  * Toast viewport + toast item chrome.
@@ -18,33 +19,32 @@ import { placement } from '../shared/variantAxes';
  * <div className={t.region}><div className={t.item}>…</div></div>
  * ```
  */
-export const toast = typestyles.recipe(
-  'toast',
-  {
-    slots: ['region', 'item', 'icon', 'body', 'title', 'description', 'close'],
-    variants: {
-      tone: toneWithDefault('info'),
-      appearance: surfaceAppearance,
-      placement,
-    },
+export const toast = typestyles.recipe({
+  name: 'toast',
+  layer: 'components',
+  slots: ['region', 'item', 'icon', 'body', 'title', 'description', 'close'],
+  variants: {
+    tone: toneWithDefault('info'),
+    appearance: surfaceAppearance,
+    placement,
   },
-  (c) => {
-    const v = c.vars({
-      semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
-      solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
-      solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
-      titleColor: { ...atProperty.color, value: t.color.text.primary.var },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
-    });
+  vars: {
+    semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+    solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+    solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+    titleColor: { ...atProperty.color, value: t.color.text.primary.var },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         region: {
           position: 'fixed',
-          zIndex: t.zIndex.toast.var,
+          ...layerZIndex(t.zIndex.toast.var),
           display: 'flex',
           flexDirection: 'column',
           gap: t.space[2].var,
@@ -70,7 +70,7 @@ export const toast = typestyles.recipe(
           flexShrink: 0,
           display: 'inline-flex',
           marginTop: '2px',
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         body: {
           flex: 1,
@@ -83,19 +83,19 @@ export const toast = typestyles.recipe(
           margin: 0,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.semibold.var,
-          color: v.titleColor.var,
+          color: vars.titleColor.var,
         },
         description: {
           margin: 0,
           fontSize: t.fontSize.sm.var,
-          color: v.descriptionColor.var,
+          color: vars.descriptionColor.var,
         },
         close: {
           flexShrink: 0,
           appearance: 'none',
           border: 'none',
           background: 'transparent',
-          color: v.closeColor.var,
+          color: vars.closeColor.var,
           cursor: 'pointer',
           display: 'inline-flex',
           padding: t.space[1].var,
@@ -111,15 +111,15 @@ export const toast = typestyles.recipe(
         },
       },
       variants: {
-        tone: mapTone((key) => ({ item: toneChannelAssignments(v, key) })),
+        tone: mapTone((key) => ({ item: toneChannelAssignments(vars, key) })),
         appearance: {
-          subtle: { item: appearanceSurface(v, 'subtle') },
+          subtle: { item: appearanceSurface(vars, 'subtle') },
           solid: {
-            item: appearanceSurface(v, 'solid'),
+            item: appearanceSurface(vars, 'solid'),
             icon: { color: 'inherit' },
             title: { color: 'inherit' },
           },
-          outline: { item: appearanceSurface(v, 'outline') },
+          outline: { item: appearanceSurface(vars, 'outline') },
         },
         placement: {
           'top-end': { region: { top: 0, right: 0 } },
@@ -130,7 +130,6 @@ export const toast = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 export type ToastVariantProps = RecipeVariants<typeof toast>;

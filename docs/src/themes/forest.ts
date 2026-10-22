@@ -247,47 +247,51 @@ export const forestTheme = defaultTheme.override({
   name: 'forest',
   tokens: forestThemeTokens,
   components: {
-    menu: ({ tokens }) => ({
+    menu: {
       vars: {
-        popoverBackground: tokens.color.background.app.var,
+        popoverBackground: p.color.background.app.var,
       },
-    }),
-    'segmented-control': ({ tokens }) => ({
+    },
+    'segmented-control': {
       vars: {
-        indicatorBackground: tokens.color.background.app.var,
+        indicatorBackground: p.color.background.app.var,
       },
-    }),
-    'top-nav': ({ tokens }) => ({
-      vars: {
-        border: 'transparent',
-      },
-      base: {
-        root: {
-          borderBottomWidth: 0,
-          margin: tokens.space[2].var,
-          borderRadius: tokens.radius.lg.var,
-        },
-      },
-    }),
-    'side-nav': ({ tokens }) => ({
-      vars: {
-        border: tokens.color.background.app.var,
-      },
-      base: {
-        root: {
-          margin: tokens.space[2].var,
-          borderRadius: tokens.radius.lg.var,
-          overflow: 'hidden',
-        },
-        footer: {
-          borderWidth: tokens.borderWidth.thick.var,
-        },
-      },
-    }),
-    'layout-panel': () => ({
+    },
+    'top-nav': {
       vars: {
         border: 'transparent',
       },
-    }),
+      styles: ({ tokens }) => ({
+        base: {
+          root: {
+            borderBottomWidth: 0,
+            margin: tokens.space[2].var,
+            borderRadius: tokens.radius.lg.var,
+          },
+        },
+      }),
+    },
+    'side-nav': {
+      vars: {
+        border: p.color.background.app.var,
+      },
+      styles: ({ tokens }) => ({
+        base: {
+          root: {
+            margin: tokens.space[2].var,
+            borderRadius: tokens.radius.lg.var,
+            overflow: 'hidden',
+          },
+          footer: {
+            borderWidth: tokens.borderWidth.thick.var,
+          },
+        },
+      }),
+    },
+    'layout-panel': {
+      vars: {
+        border: 'transparent',
+      },
+    },
   },
 });

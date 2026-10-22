@@ -11,22 +11,21 @@ const simpleGridCols = variant.enum(['one', 'two', 'three', 'four', 'five', 'six
  * Equal-column grid (Mantine `SimpleGrid` equivalent). Use `cols` for a fixed
  * number of tracks; unlike `grid`, there is no auto-fill minmax behavior.
  */
-export const simpleGrid = typestyles.recipe(
-  'simple-grid',
-  {
-    variants: {
-      cols: simpleGridCols,
-      spacing: gap,
-    },
+export const simpleGrid = typestyles.recipe({
+  name: 'simple-grid',
+  layer: 'components',
+  variants: {
+    cols: simpleGridCols,
+    spacing: gap,
   },
-  (c) => {
-    const v = c.vars({
-      gap: { ...atProperty.length, value: t.space[4].var },
-    });
+  vars: {
+    gap: { ...atProperty.length, value: t.space[4].var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'grid',
-        gap: v.gap.var,
+        gap: vars.gap.var,
       },
       variants: {
         cols: {
@@ -39,18 +38,17 @@ export const simpleGrid = typestyles.recipe(
           eight: { gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' },
         },
         spacing: {
-          none: { [v.gap.name]: '0px' },
-          xs: { [v.gap.name]: t.space[1].var },
-          sm: { [v.gap.name]: t.space[2].var },
-          md: { [v.gap.name]: t.space[4].var },
-          lg: { [v.gap.name]: t.space[5].var },
-          xl: { [v.gap.name]: t.space[8].var },
+          none: { [vars.gap.name]: '0px' },
+          xs: { [vars.gap.name]: t.space[1].var },
+          sm: { [vars.gap.name]: t.space[2].var },
+          md: { [vars.gap.name]: t.space[4].var },
+          lg: { [vars.gap.name]: t.space[5].var },
+          xl: { [vars.gap.name]: t.space[8].var },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type SimpleGridVariantProps = RecipeVariants<typeof simpleGrid>;

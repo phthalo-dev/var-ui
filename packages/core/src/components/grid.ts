@@ -14,24 +14,23 @@ const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four'], { defa
  * <div className={grid({ columns: 'auto', gap: 'lg' })}>{cards}</div>
  * ```
  */
-export const grid = typestyles.recipe(
-  'grid',
-  {
-    variants: {
-      columns: gridColumns,
-      gap,
-    },
+export const grid = typestyles.recipe({
+  name: 'grid',
+  layer: 'components',
+  variants: {
+    columns: gridColumns,
+    gap,
   },
-  (c) => {
-    const v = c.vars({
-      gap: { ...atProperty.length, value: t.space[4].var },
-      minColumnWidth: { ...atProperty.length, value: '240px' },
-    });
+  vars: {
+    gap: { ...atProperty.length, value: t.space[4].var },
+    minColumnWidth: { ...atProperty.length, value: '240px' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'grid',
-        gap: v.gap.var,
-        gridTemplateColumns: `repeat(auto-fill, minmax(${v.minColumnWidth.var}, 1fr))`,
+        gap: vars.gap.var,
+        gridTemplateColumns: `repeat(auto-fill, minmax(${vars.minColumnWidth.var}, 1fr))`,
       },
       variants: {
         columns: {
@@ -42,18 +41,17 @@ export const grid = typestyles.recipe(
           four: { gridTemplateColumns: 'repeat(4, 1fr)' },
         },
         gap: {
-          none: { [v.gap.name]: '0px' },
-          xs: { [v.gap.name]: t.space[1].var },
-          sm: { [v.gap.name]: t.space[2].var },
-          md: { [v.gap.name]: t.space[4].var },
-          lg: { [v.gap.name]: t.space[5].var },
-          xl: { [v.gap.name]: t.space[8].var },
+          none: { [vars.gap.name]: '0px' },
+          xs: { [vars.gap.name]: t.space[1].var },
+          sm: { [vars.gap.name]: t.space[2].var },
+          md: { [vars.gap.name]: t.space[4].var },
+          lg: { [vars.gap.name]: t.space[5].var },
+          xl: { [vars.gap.name]: t.space[8].var },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type GridVariantProps = RecipeVariants<typeof grid>;

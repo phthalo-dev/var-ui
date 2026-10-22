@@ -15,7 +15,7 @@ import { tree as treeStyles, type TreeVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { Icon } from '../icons';
 import { useTreeFocus, type TreeFocusItem } from '../hooks/useTreeFocus';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type TreeItemData = {
   id: string;

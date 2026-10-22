@@ -10,17 +10,16 @@ const toolbarLayout = variant.enum(['flex', 'grid'], { default: 'flex' });
  * start/center/end slots. Purely visual — no keyboard navigation logic lives
  * here, that's the React wrapper's concern.
  */
-export const toolbar = typestyles.recipe(
-  'toolbar',
-  {
-    slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],
-    variants: {
-      size: controlSize,
-      orientation,
-      layout: toolbarLayout,
-    },
+export const toolbar = typestyles.recipe({
+  name: 'toolbar',
+  layer: 'components',
+  slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],
+  variants: {
+    size: controlSize,
+    orientation,
+    layout: toolbarLayout,
   },
-  () => ({
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -62,8 +61,7 @@ export const toolbar = typestyles.recipe(
       },
     },
   }),
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type ToolbarVariantProps = RecipeVariants<typeof toolbar>;

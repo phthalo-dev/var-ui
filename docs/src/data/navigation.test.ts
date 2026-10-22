@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { componentRegistry } from './components';
 import {
-  componentSidebar,
   componentSidebarSections,
   docsSidebar,
   playgroundSidebar,
@@ -34,7 +33,6 @@ describe('navigation', () => {
     }));
     expect(flatItems).toEqual(expect.arrayContaining(expectedItems));
     expect(flatItems).toHaveLength(expectedItems.length);
-    expect(componentSidebar).toEqual(flatItems);
   });
 
   it('alphabetizes component sidebar items within each group', () => {

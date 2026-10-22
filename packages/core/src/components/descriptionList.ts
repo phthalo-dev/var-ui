@@ -8,7 +8,7 @@ const descriptionListLabelPosition = variant.enum(['start', 'top'], { default: '
 /**
  * Semantic key/value display chrome for `<dl>` / `<dt>` / `<dd>` pairs. Pair with
  * the React `DescriptionList` compound, which drives variant data attributes on
- * the root and item slots and sets `--var-ui-description-list-columns` for numeric
+ * the root and item slots and assigns the `columns` CSS variable for numeric
  * column counts.
  *
  * ```tsx
@@ -22,28 +22,27 @@ const descriptionListLabelPosition = variant.enum(['start', 'top'], { default: '
  * </dl>
  * ```
  */
-export const descriptionList = typestyles.recipe(
-  'description-list',
-  {
-    slots: ['root', 'title', 'item', 'term', 'details', 'toggle'],
-    variants: {
-      columns: descriptionListColumns,
-      labelPosition: descriptionListLabelPosition,
-    },
+export const descriptionList = typestyles.recipe({
+  name: 'description-list',
+  layer: 'components',
+  slots: ['root', 'title', 'item', 'term', 'details', 'toggle'],
+  variants: {
+    columns: descriptionListColumns,
+    labelPosition: descriptionListLabelPosition,
   },
-  (c) => {
-    const v = c.vars({
-      termColor: { ...atProperty.color, value: t.color.text.secondary.var },
-      detailsColor: { ...atProperty.color, value: t.color.text.primary.var },
-      gap: { ...atProperty.length, value: t.space[4].var },
-      termWidth: { ...atProperty.length, value: '8rem' },
-      columns: { ...atProperty.integer, value: '2' },
-    });
+  vars: {
+    termColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    detailsColor: { ...atProperty.color, value: t.color.text.primary.var },
+    gap: { ...atProperty.length, value: t.space[4].var },
+    termWidth: { ...atProperty.length, value: '8rem' },
+    columns: { ...atProperty.integer, value: '2' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         root: {
           display: 'grid',
-          gap: v.gap.var,
+          gap: vars.gap.var,
           margin: 0,
         },
         title: {
@@ -51,7 +50,7 @@ export const descriptionList = typestyles.recipe(
           margin: 0,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
-          color: v.termColor.var,
+          color: vars.termColor.var,
         },
         item: {
           display: 'grid',
@@ -62,12 +61,12 @@ export const descriptionList = typestyles.recipe(
           margin: 0,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
-          color: v.termColor.var,
+          color: vars.termColor.var,
         },
         details: {
           margin: 0,
           fontSize: t.fontSize.sm.var,
-          color: v.detailsColor.var,
+          color: vars.detailsColor.var,
           minWidth: 0,
         },
         toggle: {
@@ -82,14 +81,14 @@ export const descriptionList = typestyles.recipe(
           },
           multi: {
             root: {
-              gridTemplateColumns: `repeat(${v.columns.var}, minmax(0, 1fr))`,
+              gridTemplateColumns: `repeat(${vars.columns.var}, minmax(0, 1fr))`,
             },
           },
         },
         labelPosition: {
           start: {
             item: {
-              gridTemplateColumns: `${v.termWidth.var} 1fr`,
+              gridTemplateColumns: `${vars.termWidth.var} 1fr`,
               alignItems: 'baseline',
             },
           },
@@ -104,8 +103,7 @@ export const descriptionList = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type DescriptionListVariantProps = RecipeVariants<typeof descriptionList>;

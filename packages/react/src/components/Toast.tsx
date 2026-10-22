@@ -20,7 +20,7 @@ import { useLayer } from '../layers/LayerProvider';
 import { registerToastQueue, unregisterToastQueue } from '../toast/imperativeToast';
 import { ToastQueue } from '../toast/toastQueue';
 import type { ToastContentData } from '../toast/types';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ToastPlacement = VariantOptions<typeof toastPlacement>;
 export type { ToastContentData } from '../toast/types';

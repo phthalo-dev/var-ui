@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { toolbar, type ToolbarVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type ToolbarProps = {
   /** Content aligned to the start (leading) edge. */

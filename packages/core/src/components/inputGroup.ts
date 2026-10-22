@@ -16,55 +16,54 @@ import { atProperty, type RecipeVariants } from 'typestyles';
  * technique: interior borders overlap by 1px and only the first/last child
  * keep the container's outer corner radius.
  */
-export const inputGroup = typestyles.recipe(
-  'input-group',
-  {
-    slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
-    variants: { size: controlSize },
+export const inputGroup = typestyles.recipe({
+  name: 'input-group',
+  layer: 'components',
+  slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    textBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    textForeground: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
   },
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      descriptionColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      errorColor: {
-        ...atProperty.color,
-        value: t.color.tone.danger.foreground.var,
-      },
-      inputBackground: {
-        ...atProperty.color,
-        value: t.color.background.surface.var,
-      },
-      inputBorder: {
-        ...atProperty.color,
-        value: t.color.border.default.var,
-      },
-      inputForeground: {
-        ...atProperty.color,
-        value: t.color.text.primary.var,
-      },
-      placeholderColor: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-      textBackground: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      textForeground: {
-        ...atProperty.color,
-        value: t.color.text.secondary.var,
-      },
-    });
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
       base: {
@@ -107,17 +106,17 @@ export const inputGroup = typestyles.recipe(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           fontSize: 'inherit',
-          backgroundColor: v.inputBackground.var,
-          color: v.inputForeground.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
           '&:focus': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
-            [v.inputBorder.name]: t.color.border.focus.var,
+            [vars.inputBorder.name]: t.color.border.focus.var,
           },
           '&::placeholder': {
-            color: v.placeholderColor.var,
+            color: vars.placeholderColor.var,
           },
           '&:disabled': {
             cursor: 'not-allowed',
@@ -127,11 +126,11 @@ export const inputGroup = typestyles.recipe(
           display: 'flex',
           alignItems: 'center',
           paddingInline: t.space[2].var,
-          backgroundColor: v.textBackground.var,
-          color: v.textForeground.var,
+          backgroundColor: vars.textBackground.var,
+          color: vars.textForeground.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           whiteSpace: 'nowrap',
           flexShrink: 0,
         },
@@ -151,8 +150,7 @@ export const inputGroup = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type InputGroupVariantProps = RecipeVariants<typeof inputGroup>;

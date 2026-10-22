@@ -30,60 +30,61 @@ const tableStickyHeader = variant.boolean({ default: false });
  * </div>
  * ```
  */
-export const table = typestyles.recipe(
-  'table',
-  {
-    slots: [
-      'root',
-      'table',
-      'caption',
-      'header',
-      'headerCell',
-      'resizeHandle',
-      'body',
-      'row',
-      'cell',
-      'footer',
-      'empty',
-    ],
-    variants: {
-      density,
-      dividers: tableDividers,
-      isStriped: tableIsStriped,
-      hasHover: tableHasHover,
-      stickyHeader: tableStickyHeader,
-      textOverflow: tableTextOverflow,
-      layout: tableLayout,
-    },
+export const table = typestyles.recipe({
+  name: 'table',
+  layer: 'components',
+  slots: [
+    'root',
+    'table',
+    'caption',
+    'header',
+    'headerCell',
+    'resizeHandle',
+    'body',
+    'row',
+    'cell',
+    'footer',
+    'empty',
+    'sortButton',
+    'column',
+  ],
+  variants: {
+    density,
+    dividers: tableDividers,
+    isStriped: tableIsStriped,
+    hasHover: tableHasHover,
+    stickyHeader: tableStickyHeader,
+    textOverflow: tableTextOverflow,
+    layout: tableLayout,
   },
-  (c) => {
-    const v = c.vars({
-      headerBg: { ...atProperty.color, value: t.color.background.surface.var },
-      headerColor: { ...atProperty.color, value: t.color.text.secondary.var },
-      bodyColor: { ...atProperty.color, value: t.color.text.primary.var },
-      captionColor: { ...atProperty.color, value: t.color.text.secondary.var },
-      borderColor: { ...atProperty.color, value: t.color.border.default.var },
-      stripeBg: { ...atProperty.color, value: t.color.background.subtle.var },
-      hoverBg: { ...atProperty.color, value: t.color.background.elevated.var },
-      cellPaddingY: { ...atProperty.length, value: t.space[2].var },
-      cellPaddingX: { ...atProperty.length, value: t.space[3].var },
-    });
-
+  vars: {
+    headerBg: { ...atProperty.color, value: t.color.background.surface.var },
+    headerColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    bodyColor: { ...atProperty.color, value: t.color.text.primary.var },
+    captionColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    borderColor: { ...atProperty.color, value: t.color.border.default.var },
+    stripeBg: { ...atProperty.color, value: t.color.background.subtle.var },
+    hoverBg: { ...atProperty.color, value: t.color.background.elevated.var },
+    cellPaddingY: { ...atProperty.length, value: t.space[2].var },
+    cellPaddingX: { ...atProperty.length, value: t.space[3].var },
+    columnWidth: { syntax: '*', value: 'auto' },
+  },
+  styles: ({ vars }) => {
     const rowDivider = {
       header: {
         borderBottomWidth: t.borderWidth.default.var,
         borderBottomStyle: 'solid',
-        borderBottomColor: v.borderColor.var,
+        borderBottomColor: vars.borderColor.var,
       },
       row: {
         borderBottomWidth: t.borderWidth.default.var,
         borderBottomStyle: 'solid',
-        borderBottomColor: v.borderColor.var,
+        borderBottomColor: vars.borderColor.var,
       },
       footer: {
         borderTopWidth: t.borderWidth.default.var,
         borderTopStyle: 'solid',
-        borderTopColor: v.borderColor.var,
+        borderTopColor: vars.borderColor.var,
       },
     };
     const columnDivider = {
@@ -91,18 +92,17 @@ export const table = typestyles.recipe(
         '&:not(:last-child)': {
           borderRightWidth: t.borderWidth.default.var,
           borderRightStyle: 'solid',
-          borderRightColor: v.borderColor.var,
+          borderRightColor: vars.borderColor.var,
         },
       },
       cell: {
         '&:not(:last-child)': {
           borderRightWidth: t.borderWidth.default.var,
           borderRightStyle: 'solid',
-          borderRightColor: v.borderColor.var,
+          borderRightColor: vars.borderColor.var,
         },
       },
     };
-
     return {
       base: {
         root: {
@@ -114,25 +114,26 @@ export const table = typestyles.recipe(
           width: '100%',
           borderCollapse: 'collapse',
           fontSize: t.fontSize.sm.var,
-          color: v.bodyColor.var,
+          color: vars.bodyColor.var,
         },
         caption: {
           captionSide: 'top',
           textAlign: 'left',
-          padding: `${t.space[2].var} ${v.cellPaddingX.var}`,
+          padding: `${t.space[2].var} ${vars.cellPaddingX.var}`,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
-          color: v.captionColor.var,
+          color: vars.captionColor.var,
         },
         header: {},
         headerCell: {
+          width: vars.columnWidth.var,
           position: 'relative',
           textAlign: 'left',
           fontWeight: t.fontWeight.semibold.var,
           fontSize: t.fontSize.sm.var,
-          color: v.headerColor.var,
-          backgroundColor: v.headerBg.var,
-          padding: `${v.cellPaddingY.var} ${v.cellPaddingX.var}`,
+          color: vars.headerColor.var,
+          backgroundColor: vars.headerBg.var,
+          padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
           '&[data-align="center"]': { textAlign: 'center' },
           '&[data-align="end"]': { textAlign: 'right' },
         },
@@ -149,37 +150,58 @@ export const table = typestyles.recipe(
         body: {},
         row: {},
         cell: {
-          padding: `${v.cellPaddingY.var} ${v.cellPaddingX.var}`,
-          color: v.bodyColor.var,
+          padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
+          color: vars.bodyColor.var,
           '&[data-align="center"]': { textAlign: 'center' },
           '&[data-align="end"]': { textAlign: 'right' },
         },
         footer: {
           fontWeight: t.fontWeight.medium.var,
-          color: v.headerColor.var,
+          color: vars.headerColor.var,
         },
         empty: {
           padding: t.space[8].var,
           textAlign: 'center',
-          color: v.captionColor.var,
+          color: vars.captionColor.var,
+        },
+        sortButton: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: t.space[1].var,
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          margin: 0,
+          font: 'inherit',
+          color: 'inherit',
+          cursor: 'pointer',
+        },
+        column: {
+          width: vars.columnWidth.var,
         },
       },
       variants: {
         density: {
           compact: {
             headerCell: {
-              [v.cellPaddingY.name]: t.space[1].var,
-              [v.cellPaddingX.name]: t.space[2].var,
+              [vars.cellPaddingY.name]: t.space[1].var,
+              [vars.cellPaddingX.name]: t.space[2].var,
             },
-            cell: { [v.cellPaddingY.name]: t.space[1].var, [v.cellPaddingX.name]: t.space[2].var },
+            cell: {
+              [vars.cellPaddingY.name]: t.space[1].var,
+              [vars.cellPaddingX.name]: t.space[2].var,
+            },
           },
           balanced: {},
           spacious: {
             headerCell: {
-              [v.cellPaddingY.name]: t.space[3].var,
-              [v.cellPaddingX.name]: t.space[4].var,
+              [vars.cellPaddingY.name]: t.space[3].var,
+              [vars.cellPaddingX.name]: t.space[4].var,
             },
-            cell: { [v.cellPaddingY.name]: t.space[3].var, [v.cellPaddingX.name]: t.space[4].var },
+            cell: {
+              [vars.cellPaddingY.name]: t.space[3].var,
+              [vars.cellPaddingX.name]: t.space[4].var,
+            },
           },
         },
         dividers: {
@@ -189,16 +211,21 @@ export const table = typestyles.recipe(
           none: {},
         },
         isStriped: {
-          true: { row: { '&:nth-of-type(even)': { backgroundColor: v.stripeBg.var } } },
+          true: { row: { '&:nth-of-type(even)': { backgroundColor: vars.stripeBg.var } } },
           false: {},
         },
         hasHover: {
-          true: { row: { '&:hover': { backgroundColor: v.hoverBg.var } } },
+          true: { row: { '&:hover': { backgroundColor: vars.hoverBg.var } } },
           false: {},
         },
         stickyHeader: {
           true: {
-            headerCell: { position: 'sticky', top: 0, zIndex: 1, backgroundColor: v.headerBg.var },
+            headerCell: {
+              position: 'sticky',
+              top: 0,
+              zIndex: 1,
+              backgroundColor: vars.headerBg.var,
+            },
           },
           false: {},
         },
@@ -226,8 +253,7 @@ export const table = typestyles.recipe(
       },
     };
   },
-  { layer: 'components' },
-);
+});
 
 /** Visual props derived from the schema. */
 export type TableVariantProps = RecipeVariants<typeof table>;

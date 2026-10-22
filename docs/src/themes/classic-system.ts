@@ -242,55 +242,59 @@ export const classicSystemTheme = defaultTheme.override({
   name: 'classic-system',
   tokens: classicSystemThemeTokens,
   components: {
-    tabs: () => ({
+    tabs: {
       vars: {
         railRadius: '0px',
       },
-    }),
-    'segmented-control': ({ tokens }) => ({
-      base: {
-        root: {
-          borderWidth: tokens.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: tokens.color.border.default.var,
-          padding: 0,
-          '&::after': {
-            boxShadow: 'none',
-            top: 0,
-            bottom: 0,
-          },
-        },
-      },
-    }),
-    toc: () => ({
-      vars: {
-        railRadius: '0px',
-      },
-    }),
-    button: ({ tokens: v }) => {
-      const brutalistLift = '4px';
-
-      return {
+    },
+    'segmented-control': {
+      styles: ({ tokens }) => ({
         base: {
-          transition:
-            'background-color 80ms steps(2, end), border-color 80ms steps(2, end), box-shadow 80ms steps(2, end), transform 80ms steps(2, end)',
-          '&:hover:not([disabled])': {
-            transform: `translate(${brutalistLift}, calc(-1 * ${brutalistLift}))`,
-            boxShadow: v.shadow.xl.var,
-          },
-          '&:active:not([disabled])': {
-            transform: 'none',
-            boxShadow: 'none',
-          },
-        },
-        variants: {
-          appearance: {
-            filled: {
-              borderColor: v.color.border.default.var,
+          root: {
+            borderWidth: tokens.borderWidth.default.var,
+            borderStyle: 'solid',
+            borderColor: tokens.color.border.default.var,
+            padding: 0,
+            '&::after': {
+              boxShadow: 'none',
+              top: 0,
+              bottom: 0,
             },
           },
         },
-      };
+      }),
+    },
+    toc: {
+      vars: {
+        railRadius: '0px',
+      },
+    },
+    button: {
+      styles: ({ tokens: v }) => {
+        const brutalistLift = '4px';
+
+        return {
+          base: {
+            transition:
+              'background-color 80ms steps(2, end), border-color 80ms steps(2, end), box-shadow 80ms steps(2, end), transform 80ms steps(2, end)',
+            '&:hover:not([disabled])': {
+              transform: `translate(${brutalistLift}, calc(-1 * ${brutalistLift}))`,
+              boxShadow: v.shadow.xl.var,
+            },
+            '&:active:not([disabled])': {
+              transform: 'none',
+              boxShadow: 'none',
+            },
+          },
+          variants: {
+            appearance: {
+              filled: {
+                borderColor: v.color.border.default.var,
+              },
+            },
+          },
+        };
+      },
     },
   },
 });

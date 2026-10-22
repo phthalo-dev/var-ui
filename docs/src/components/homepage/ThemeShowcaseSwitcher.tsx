@@ -1,10 +1,9 @@
 'use client';
 
 import { homeBento } from '@/styles/homeBento';
-import { SHOWCASE_THEMES, type ShowcaseThemeId } from './showcaseThemes';
+import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
 
-export type { ShowcaseThemeId } from './showcaseThemes';
-export { SHOWCASE_THEMES } from './showcaseThemes';
+export type { ShowcaseThemeId };
 
 export type ThemeShowcaseSwitcherProps = {
   selected: ShowcaseThemeId;
@@ -16,7 +15,7 @@ export function ThemeShowcaseSwitcher({ selected, onSelect }: ThemeShowcaseSwitc
 
   return (
     <div className={b.switcher.className} role="radiogroup" aria-label="Preview theme">
-      {SHOWCASE_THEMES.map((theme) => {
+      {docsThemePresets.map((theme) => {
         const isActive = theme.id === selected;
         return (
           <button

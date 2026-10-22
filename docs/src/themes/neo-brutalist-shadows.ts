@@ -1,5 +1,6 @@
 import { color } from 'typestyles/color';
 import { typestyles } from '@var-ui/core';
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 
 /** Perceptual mix with page background — neo-brutalist palette themes in this folder. */
 const shadowOffsetLightAlpha = 0.5;
@@ -31,10 +32,10 @@ export function neoBrutalistShadowValues(shadowColor: string) {
 }
 
 export const resolvedDarkColorModeWhen = typestyles.tokens.when.or(
-  typestyles.tokens.when.attr('data-mode', 'dark', { scope: 'self' }),
+  typestyles.tokens.when.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'self' }),
   typestyles.tokens.when.and(
     typestyles.tokens.when.not(
-      typestyles.tokens.when.attr('data-mode', 'light', { scope: 'self' }),
+      typestyles.tokens.when.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'self' }),
     ),
     typestyles.tokens.when.prefersDark,
   ),

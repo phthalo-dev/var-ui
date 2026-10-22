@@ -6,22 +6,23 @@ import { designTokens as t } from '../tokens';
  * Inline code snippet styling.
  *
  * ```tsx
- * <code className={inlineCode()}>theme.className</code>
+ * <code className={inlineCode().className}>theme.className</code>
  * ```
  */
-export const inlineCode = typestyles.recipe(
-  'inline-code',
-  (c) => {
-    const v = c.vars({
-      background: {
-        ...atProperty.color,
-        value: t.color.background.subtle.var,
-      },
-      border: {
-        ...atProperty.color,
-        value: t.color.border.subtle.var,
-      },
-    });
+export const inlineCode = typestyles.recipe({
+  name: 'inline-code',
+  layer: 'components',
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.subtle.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline',
@@ -29,13 +30,12 @@ export const inlineCode = typestyles.recipe(
         fontFamily: t.fontFamily.mono.var,
         fontSize: t.fontSize.xs.var,
         color: t.color.text.secondary.var,
-        backgroundColor: v.background.var,
+        backgroundColor: vars.background.var,
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.border.var,
+        borderColor: vars.border.var,
         borderRadius: t.radius.sm.var,
       },
     };
   },
-  { layer: 'components' },
-);
+});

@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { alert, type AlertVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as AlertAppearance } from '@var-ui/core';
 

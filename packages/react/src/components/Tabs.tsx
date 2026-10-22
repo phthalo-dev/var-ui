@@ -9,7 +9,7 @@ import {
 } from 'react-aria-components';
 import { tabs as tabsStyles } from '@var-ui/core';
 import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 type TabDefinition = {
   id: string;

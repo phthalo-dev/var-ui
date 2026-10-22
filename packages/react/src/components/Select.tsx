@@ -17,8 +17,8 @@ import {
 import { select, type SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { ControlSizeContext, useControlSize } from './controlSizeContext';
-import type { FieldMeta } from './utils';
-import { mergeProps } from './utils';
+import type { FieldMeta } from './Field';
+import { mergeProps } from 'typestyles';
 
 /** Shared across every part so `size` set on `Select.Root` reaches the trigger. */
 function useSelectStyles(): ReturnType<typeof select> {

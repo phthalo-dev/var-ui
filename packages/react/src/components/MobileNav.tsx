@@ -10,7 +10,7 @@ import { mobileNav } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useScrollLock } from '../hooks';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 

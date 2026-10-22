@@ -6,7 +6,7 @@ description: Create and apply custom var-ui themes with createDesignTheme.
 # Themes
 
 A theme is a named TypeStyles surface: light/dark token values (via `tokens` +
-`colorMode`), optional fixed `data-surface` subtrees, optional custom token
+`colorMode`), optional `data-color-mode` pins, optional custom token
 namespaces (`tokens.brand`, …), and optional typed recipe restyles via
 `components` on `createDesignTheme` (see Customize).
 
@@ -61,12 +61,12 @@ export const forestTheme = createDesignTheme({
 
 For a full working forest theme, see `docs/src/themes/forest.ts` in the var-ui repo.
 
-### Fixed-tone surfaces
+### Color mode
 
-Mark subtrees with `data-surface="light"` or `data-surface="dark"` to pin chrome
-regardless of ambient mode. Import `SURFACE_ATTRIBUTE` from `@var-ui/core` if you
-need the attribute name in code. Global `color-scheme` rules for these markers ship
-with `@var-ui/core/styles` — no theme option required.
+Omit `data-color-mode` to follow the OS. Set `data-color-mode="light"` or
+`data-color-mode="dark"` on any element to pin that subtree. Import
+`COLOR_MODE_ATTRIBUTE` from `@var-ui/core` if you need the attribute name in code.
+Global `color-scheme` rules for the attribute ship with `@var-ui/core/styles`.
 
 ## Applying a theme
 
@@ -85,14 +85,14 @@ export function App() {
 }
 ```
 
-- `customTheme` — preferred; pass the `createDesignTheme` return directly.
-- `customThemeClassName` — string escape hatch if you only have the class name.
-- When `customTheme` / `customThemeClassName` is set, it **replaces** the built-in
-  default surface class on the provider wrapper (it does not stack both).
-- `defaultThemeClassName` / controlled `theme` — light / dark / system color mode via
-  `data-mode` (independent of which palette theme class is applied).
+- `customTheme` — a `createDesignTheme` result, or a theme class name string.
+- When `customTheme` is set, it **replaces** the built-in default surface class
+  on the provider wrapper (it does not stack both).
+- `defaultThemeClassName` / controlled `colorMode` — light / dark / system via
+  `data-color-mode` (independent of which palette theme class is applied). System
+  removes the attribute.
 
-For SPA / full-page apps, pass `applyToDocument` so the theme class and `data-mode`
+For SPA / full-page apps, pass `applyToDocument` so the theme class and `data-color-mode`
 live on `<html>` and `body` picks up tokenized background/text from core document globals.
 For SSR without a flash of wrong mode, also use `getColorModeInitScript`.
 

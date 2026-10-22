@@ -81,8 +81,9 @@ Props:
 - `storageKey` (optional) — `localStorage` key; defaults to `'theme-mode'`
 
 The inline boot script matches the Astro snippet in `@var-ui/core` README: it reads
-stored mode, falls back to `prefers-color-scheme`, adds the theme class, and sets or
-clears `data-mode` on `<html>`.
+the stored mode, adds the theme class, and sets or removes `data-color-mode` on `<html>`.
+`light` and `dark` set the attribute. `system` and a missing value remove it so the page
+follows the OS.
 
 ## ColorModeToggle
 

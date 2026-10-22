@@ -1,7 +1,7 @@
 import { reset } from 'typestyles/globals';
 import { designTokens as t } from '../tokens';
 import { atReducedMotion } from './conditions';
-import { SURFACE_ATTRIBUTE } from './constants';
+import { COLOR_MODE_ATTRIBUTE } from './constants';
 import { global } from '../runtime';
 
 const resetLayer = 'reset';
@@ -10,7 +10,7 @@ const tokenLayer = 'tokens';
 
 /**
  * Document globals shipped with `@var-ui/core/styles`: `color-scheme` for root and
- * {@link SURFACE_ATTRIBUTE} markers, Josh Comeau CSS reset, and token-driven defaults for
+ * {@link COLOR_MODE_ATTRIBUTE} pins, Josh Comeau CSS reset, and token-driven defaults for
  * bare HTML elements. Registered in the `tokens`, `reset`, and `base` cascade layers so
  * component recipes in higher layers can override.
  *
@@ -20,8 +20,8 @@ export function registerBaseStyles(): void {
   global.rules(
     {
       ':root': { colorScheme: 'light dark' },
-      [`[${SURFACE_ATTRIBUTE}="dark"]`]: { colorScheme: 'dark' },
-      [`[${SURFACE_ATTRIBUTE}="light"]`]: { colorScheme: 'light' },
+      [`[${COLOR_MODE_ATTRIBUTE}="dark"]`]: { colorScheme: 'dark' },
+      [`[${COLOR_MODE_ATTRIBUTE}="light"]`]: { colorScheme: 'light' },
     },
     { layer: tokenLayer },
   );
