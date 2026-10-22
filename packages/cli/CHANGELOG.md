@@ -36,13 +36,13 @@
 
   ```ts
   // Before
-  extendTokens("brand", { glow: { light: "…", dark: "…" } });
+  extendTokens('brand', { glow: { light: '…', dark: '…' } });
 
   // After — custom namespaces live on the theme
   createDesignTheme({
-    name: "acme",
+    name: 'acme',
     tokens: {
-      brand: { glow: { light: "…", dark: "…" } },
+      brand: { glow: { light: '…', dark: '…' } },
     },
     components: {
       button: ({ tokens: t }) => ({ base: { borderRadius: t.radius.lg.var } }),

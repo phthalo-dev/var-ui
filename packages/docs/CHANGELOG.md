@@ -42,13 +42,13 @@
 
   ```ts
   // Before
-  extendTokens("brand", { glow: { light: "…", dark: "…" } });
+  extendTokens('brand', { glow: { light: '…', dark: '…' } });
 
   // After — custom namespaces live on the theme
   createDesignTheme({
-    name: "acme",
+    name: 'acme',
     tokens: {
-      brand: { glow: { light: "…", dark: "…" } },
+      brand: { glow: { light: '…', dark: '…' } },
     },
     components: {
       button: ({ tokens: t }) => ({ base: { borderRadius: t.radius.lg.var } }),
@@ -94,7 +94,7 @@
   ### Tooling
   - `astro check` now covers every package that ships `.astro` files (`@var-ui/astro`, `@var-ui/docs`, `@var-ui/docs-components`, `@var-ui/docs-site`) and runs in `vp run ci`; `vp run astro:check` runs them all locally. Previously only the example app's own pages were checked, so library frontmatter was never type-checked.
 
-1.x and 2.x were unpublished; this package is on 0.x until a stable 1.0.
+    1.x and 2.x were unpublished; this package is on 0.x until a stable 1.0.
 
 ## 0.1.0
 

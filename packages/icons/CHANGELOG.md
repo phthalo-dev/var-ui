@@ -8,7 +8,7 @@
 
   `@var-ui/core` no longer exports `linkButton`, `themeWhen`, the layout shell var initializer, or the default glyph strings. Astro components read those strings from `@var-ui/icons/glyphs`, so `@var-ui/astro`, `@var-ui/docs`, and `@var-ui/docs-components` now peer `@var-ui/icons`.
 
-1.x and 2.x were unpublished; this package is on 0.x until a stable 1.0.
+  1.x and 2.x were unpublished; this package is on 0.x until a stable 1.0.
 
 ## 0.1.0
 
