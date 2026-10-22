@@ -62,7 +62,7 @@ describe('BentoShowcase', () => {
     renderShowcase('forest');
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
     expect(container.className).toContain(forestTheme.className);
-    expect(container.getAttribute('data-mode')).toBeNull();
+    expect(container.getAttribute('data-color-mode')).toBeNull();
     expect(container.style.colorScheme).toBe('inherit');
   });
 });

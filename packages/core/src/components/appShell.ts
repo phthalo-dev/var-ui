@@ -1,25 +1,19 @@
+import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-const APP_SHELL_SLOTS = [
-  'root',
-  'banner',
-  'frame',
-  'topNav',
-  'sideNav',
-  'main',
-  'aside',
-  'skipLink',
-] as const;
+const appShellHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
+const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
+  default: 'wash',
+});
+const appShellContentPaddingValues = ['0', '1', '2', '3', '4', '5', '6', '8'] as const;
+const appShellContentPadding = variant.enum(appShellContentPaddingValues, { default: '0' });
+
+/** Turns the numeric-string axis options into the public numeric space steps. */
+type NumericSteps<S extends string> = S extends `${infer Step extends number}` ? Step : never;
 
 /** `appShell` `contentPadding` variant — design-token space steps. */
-export type AppShellContentPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
-
-type AppShellVariantDefs = {
-  height: { fill: object; auto: object };
-  variant: { wash: object; surface: object; section: object; elevated: object };
-  contentPadding: Record<`${AppShellContentPadding}`, object>;
-};
+export type AppShellContentPadding = NumericSteps<VariantOptions<typeof appShellContentPadding>>;
 
 /**
  * Application chrome shell: optional banner, top nav, side nav, main, and
@@ -37,42 +31,47 @@ type AppShellVariantDefs = {
  * </div>
  * ```
  */
-export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppShellVariantDefs>(
-  'app-shell',
-  (c) => {
-    const v = c.vars({
-      background: {
-        value: t.color.background.app.var,
-        syntax: '<color>',
-      },
-      border: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      contentPadding: {
-        value: '0px',
-        syntax: '<length>',
-      },
-      asideWidth: {
-        value: '12.5rem',
-        syntax: '<length>',
-      },
-      sideNavWidth: {
-        value: 'auto',
-        syntax: '<length> | auto',
-      },
-    });
+export const appShell = typestyles.recipe({
+  name: 'app-shell',
+  layer: 'components',
+  slots: ['root', 'banner', 'frame', 'topNav', 'sideNav', 'main', 'aside', 'skipLink'],
+  variants: {
+    height: appShellHeight,
+    variant: appShellVariant,
+    contentPadding: appShellContentPadding,
+  },
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.app.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    contentPadding: {
+      ...atProperty.length,
+      value: '0px',
+    },
+    asideWidth: {
+      ...atProperty.length,
+      value: '12.5rem',
+    },
+    sideNavWidth: {
+      ...atProperty.union(atProperty.length, { syntax: 'auto' }),
+      value: 'auto',
+    },
+  },
+  styles: ({ vars }) => {
     const transition = `transform ${t.duration.fast.var} ${t.easing.standard.var}`;
-
     return {
-      slots: APP_SHELL_SLOTS,
       base: {
         root: {
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
         },
         skipLink: {
           position: 'absolute',
@@ -120,18 +119,18 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           gridTemplateColumns: 'auto 1fr',
           gridTemplateRows: 'auto 1fr',
           '[data-has-side-nav] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-aside] &': {
             gridTemplateAreas: '"top top top" "side main aside"',
-            gridTemplateColumns: `auto 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `auto 1fr ${vars.asideWidth.var}`,
           },
           '[data-has-side-nav][data-aside] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr ${vars.asideWidth.var}`,
           },
           '[data-aside]:not([data-has-side-nav]) &': {
             gridTemplateAreas: '"top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-side-nav-collapsed] &': {
             gridTemplateAreas: '"top top" "main main"',
@@ -139,7 +138,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           },
           '[data-side-nav-collapsed][data-aside] &': {
             gridTemplateAreas: '"top top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-side-nav-collapsed][data-aside-collapsed] &': {
             gridTemplateAreas: '"top top" "main main"',
@@ -150,16 +149,16 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
             gridTemplateColumns: 'auto 1fr',
           },
           '[data-aside-collapsed][data-has-side-nav] &': {
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-layout="alt"] &': {
             gridTemplateAreas: '"side top" "side main"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
             gridTemplateRows: 'auto 1fr',
           },
           '[data-layout="alt"][data-aside] &': {
             gridTemplateAreas: '"side top top" "side main aside"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr ${vars.asideWidth.var}`,
           },
           '[data-layout="alt"][data-side-nav-collapsed] &': {
             gridTemplateAreas: '"top" "main"',
@@ -167,7 +166,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           },
           '[data-layout="alt"][data-side-nav-collapsed][data-aside] &': {
             gridTemplateAreas: '"top top" "main aside"',
-            gridTemplateColumns: `1fr ${v.asideWidth.var}`,
+            gridTemplateColumns: `1fr ${vars.asideWidth.var}`,
           },
           '[data-layout="alt"][data-side-nav-collapsed][data-aside-collapsed] &': {
             gridTemplateAreas: '"top" "main"',
@@ -175,7 +174,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           },
           '[data-layout="alt"][data-aside-collapsed] &': {
             gridTemplateAreas: '"side top" "side main"',
-            gridTemplateColumns: `${v.sideNavWidth.var} 1fr`,
+            gridTemplateColumns: `${vars.sideNavWidth.var} 1fr`,
           },
           '[data-header-hidden]:not([data-header-offset]) &': {
             gridTemplateRows: '0fr 1fr',
@@ -212,7 +211,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           overflow: 'hidden',
           transition,
           '[data-has-side-nav] &': {
-            width: v.sideNavWidth.var,
+            width: vars.sideNavWidth.var,
           },
           '[data-side-nav-collapsed] &': {
             display: 'none',
@@ -226,7 +225,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           minHeight: 0,
           minWidth: 0,
           overflow: 'auto',
-          padding: v.contentPadding.var,
+          padding: vars.contentPadding.var,
         },
         aside: {
           gridArea: 'aside',
@@ -239,7 +238,7 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
           maxHeight: '100%',
           transition,
           '[data-aside] &': {
-            width: v.asideWidth.var,
+            width: vars.asideWidth.var,
           },
           '[data-aside-collapsed] &': {
             display: 'none',
@@ -268,45 +267,42 @@ export const appShell = typestyles.styles.component<typeof APP_SHELL_SLOTS, AppS
         },
         variant: {
           wash: {
-            root: { [v.background.name]: t.color.background.app.var },
+            root: { [vars.background.name]: t.color.background.app.var },
           },
           surface: {
-            root: { [v.background.name]: t.color.background.surface.var },
+            root: { [vars.background.name]: t.color.background.surface.var },
           },
           section: {
             root: {
-              [v.background.name]: t.color.background.surface.var,
+              [vars.background.name]: t.color.background.surface.var,
               borderWidth: t.borderWidth.default.var,
               borderStyle: 'solid',
-              borderColor: v.border.var,
+              borderColor: vars.border.var,
               borderRadius: t.radius.lg.var,
               boxShadow: t.shadow.xs.var,
             },
           },
           elevated: {
             root: {
-              [v.background.name]: t.color.background.elevated.var,
+              [vars.background.name]: t.color.background.elevated.var,
               boxShadow: t.shadow.sm.var,
             },
           },
         },
         contentPadding: {
-          '0': { root: { [v.contentPadding.name]: '0px' } },
-          '1': { root: { [v.contentPadding.name]: t.space[1].var } },
-          '2': { root: { [v.contentPadding.name]: t.space[2].var } },
-          '3': { root: { [v.contentPadding.name]: t.space[3].var } },
-          '4': { root: { [v.contentPadding.name]: t.space[4].var } },
-          '5': { root: { [v.contentPadding.name]: t.space[5].var } },
-          '6': { root: { [v.contentPadding.name]: t.space[6].var } },
-          '8': { root: { [v.contentPadding.name]: t.space[8].var } },
+          '0': { root: { [vars.contentPadding.name]: '0px' } },
+          '1': { root: { [vars.contentPadding.name]: t.space[1].var } },
+          '2': { root: { [vars.contentPadding.name]: t.space[2].var } },
+          '3': { root: { [vars.contentPadding.name]: t.space[3].var } },
+          '4': { root: { [vars.contentPadding.name]: t.space[4].var } },
+          '5': { root: { [vars.contentPadding.name]: t.space[5].var } },
+          '6': { root: { [vars.contentPadding.name]: t.space[6].var } },
+          '8': { root: { [vars.contentPadding.name]: t.space[8].var } },
         },
-      },
-      defaultVariants: {
-        height: 'fill',
-        variant: 'wash',
-        contentPadding: '0',
       },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type AppShellVariantProps = RecipeVariants<typeof appShell>;

@@ -1,5 +1,10 @@
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { sender } from '../../shared/variantAxes';
+
+const bubbleVariant = variant.enum(['filled', 'ghost'], { default: 'filled' });
+const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
 
 /**
  * The chat "bubble." Sender drives background/text color via `c.vars()` so
@@ -15,21 +20,27 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessageBubble({ sender: 'user' }).root}>Hi!</div>
  * ```
  */
-export const chatMessageBubble = typestyles.styles.component(
-  'chat-message-bubble',
-  (c) => {
-    const v = c.vars({
-      senderBackground: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      senderText: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-    });
+export const chatMessageBubble = typestyles.recipe({
+  name: 'chat-message-bubble',
+  layer: 'components',
+  slots: ['root'],
+  variants: {
+    sender,
+    variant: bubbleVariant,
+    group: bubbleGroup,
+  },
+  vars: {
+    senderBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    senderText: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root'],
       base: {
         root: {
           display: 'inline-flex',
@@ -37,8 +48,8 @@ export const chatMessageBubble = typestyles.styles.component(
           maxWidth: 'min(80%, 480px)',
           padding: `${t.space[3].var} ${t.space[4].var}`,
           borderRadius: t.radius.lg.var,
-          backgroundColor: v.senderBackground.var,
-          color: v.senderText.var,
+          backgroundColor: vars.senderBackground.var,
+          color: vars.senderText.var,
           fontSize: t.fontSize.md.var,
           lineHeight: 1.55,
           overflowWrap: 'break-word',
@@ -49,14 +60,14 @@ export const chatMessageBubble = typestyles.styles.component(
         sender: {
           user: {
             root: {
-              [v.senderBackground.name]: t.color.tone.accent.background.var,
-              [v.senderText.name]: t.color.tone.accent.foregroundOnBackground.var,
+              [vars.senderBackground.name]: t.color.tone.accent.background.var,
+              [vars.senderText.name]: t.color.tone.accent.foregroundOnBackground.var,
             },
           },
           assistant: {
             root: {
-              [v.senderBackground.name]: t.color.background.subtle.var,
-              [v.senderText.name]: t.color.text.primary.var,
+              [vars.senderBackground.name]: t.color.background.subtle.var,
+              [vars.senderText.name]: t.color.text.primary.var,
             },
           },
         },
@@ -94,8 +105,9 @@ export const chatMessageBubble = typestyles.styles.component(
           },
         },
       },
-      defaultVariants: { sender: 'assistant', variant: 'filled', group: 'none' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatMessageBubbleVariantProps = RecipeVariants<typeof chatMessageBubble>;

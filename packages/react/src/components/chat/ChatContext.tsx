@@ -1,7 +1,10 @@
 import { createContext, useContext } from 'react';
+import type { ChatMessageListVariantProps, ChatMessageVariantProps } from '@var-ui/core';
 
-export type ChatSender = 'user' | 'assistant';
-export type ChatDensity = 'compact' | 'balanced' | 'spacious';
+/** Message author — the `chatMessage.sender` axis. */
+export type ChatSender = NonNullable<ChatMessageVariantProps['sender']>;
+/** Message list density — the `chatMessageList.density` axis. */
+export type ChatDensity = NonNullable<ChatMessageListVariantProps['density']>;
 
 export type ChatListContextValue = { density: ChatDensity };
 

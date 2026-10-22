@@ -1,4 +1,4 @@
-import { keyframes } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -15,24 +15,28 @@ const shimmer = keyframes.create('var-ui-shimmer', {
  * <div className={skeleton({ shape: 'text' })} style={{ width: '12ch' }} />
  * ```
  */
-export const skeleton = typestyles.styles.component(
-  'skeleton',
-  (c) => {
-    const v = c.vars({
-      baseColor: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      highlightColor: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-    });
+export const skeleton = typestyles.recipe({
+  name: 'skeleton',
+  layer: 'components',
+  variants: {
+    shape: variant.enum(['text', 'rect', 'circle'], { default: 'text' }),
+  },
+  vars: {
+    baseColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    highlightColor: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'block',
-        backgroundColor: v.baseColor.var,
-        backgroundImage: `linear-gradient(90deg, ${v.baseColor.var} 25%, ${v.highlightColor.var} 50%, ${v.baseColor.var} 75%)`,
+        backgroundColor: vars.baseColor.var,
+        backgroundImage: `linear-gradient(90deg, ${vars.baseColor.var} 25%, ${vars.highlightColor.var} 50%, ${vars.baseColor.var} 75%)`,
         backgroundSize: '200% 100%',
         animation: `${shimmer} 1600ms ease-in-out infinite`,
         '@media (prefers-reduced-motion: reduce)': {
@@ -47,8 +51,9 @@ export const skeleton = typestyles.styles.component(
           circle: { borderRadius: '50%', aspectRatio: '1' },
         },
       },
-      defaultVariants: { shape: 'text' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type SkeletonVariantProps = RecipeVariants<typeof skeleton>;

@@ -1,3 +1,4 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 
@@ -6,18 +7,19 @@ import { designTokens as t } from '../../tokens';
  * above a sticky composer dock. No JS measurement — density/spacing only.
  *
  * ```tsx
- * <div className={chatLayout().root}>…</div>
+ * <div className={chatLayout().root.className}>…</div>
  * ```
  */
-export const chatLayout = typestyles.styles.component(
-  'chat-layout',
-  (c) => {
-    const v = c.vars({
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-    });
+export const chatLayout = typestyles.recipe({
+  name: 'chat-layout',
+  layer: 'components',
+  slots: ['root', 'messageArea', 'dock'],
+  vars: {
+    background: { ...atProperty.color, value: t.color.background.surface.var },
+    border: { ...atProperty.color, value: t.color.border.default.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'messageArea', 'dock'],
       base: {
         root: {
           position: 'relative',
@@ -38,19 +40,15 @@ export const chatLayout = typestyles.styles.component(
           flexDirection: 'column',
           gap: t.space[2].var,
           padding: t.space[3].var,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
           borderTopWidth: t.borderWidth.default.var,
           borderTopStyle: 'solid',
-          borderTopColor: v.border.var,
+          borderTopColor: vars.border.var,
         },
       },
-      variants: {
-        appearance: {
-          default: {},
-        },
-      },
-      defaultVariants: { appearance: 'default' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatLayoutVariantProps = RecipeVariants<typeof chatLayout>;

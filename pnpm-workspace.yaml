@@ -3,21 +3,14 @@ packages:
   - examples/*
   - examples/bundle-fixtures/*
   - docs
-
-linkWorkspacePackages: true
-preferWorkspacePackages: true
-catalogMode: prefer
-
-onlyBuiltDependencies:
-  - esbuild
-
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.2
   vite-plus: 0.2.2
   typescript: ^6.0.0
-  typestyles: ^0.25.0
-  '@typestyles/vite': ^0.4.5
-  '@typestyles/build-runner': ^0.5.3
+  typestyles: ^0.32.1
+  '@typestyles/vite': ^0.5.1
+  '@typestyles/rollup': ^0.5.5
+  '@typestyles/build-runner': ^0.6.1
   react: ^19.0.0
   react-dom: ^19.0.0
   react-aria-components: ^1.19.0
@@ -26,16 +19,18 @@ catalog:
   '@types/react-dom': ^18.2.0
   '@vitejs/plugin-react': ^5.0.0
   astro: ^5.14.0
-
+catalogMode: prefer
+linkWorkspacePackages: true
+onlyBuiltDependencies:
+  - esbuild
 overrides:
   vite: 'catalog:'
-  '@var-ui/docs-site>vite': 'npm:vite@^6.4.1'
-
+  '@var-ui/docs-site>vite': npm:vite@^6.4.1
 patchedDependencies:
   astro@5.18.2: patches/astro@5.18.2.patch
-
 peerDependencyRules:
   allowAny:
     - vite
   allowedVersions:
     vite: '*'
+preferWorkspacePackages: true

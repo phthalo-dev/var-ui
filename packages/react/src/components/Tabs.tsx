@@ -8,8 +8,8 @@ import {
   type TabsProps as RACTabsProps,
 } from 'react-aria-components';
 import { tabs as tabsStyles } from '@var-ui/core';
-import { positionTabsIndicator } from '@var-ui/core/internal';
-import { mergeProps } from './utils';
+import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
+import { mergeProps } from 'typestyles';
 
 type TabDefinition = {
   id: string;

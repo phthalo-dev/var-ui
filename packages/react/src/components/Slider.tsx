@@ -8,8 +8,8 @@ import {
   type SliderProps as RACSliderProps,
 } from 'react-aria-components';
 import { slider } from '@var-ui/core';
-import { mergeProps } from './utils';
-import type { FieldMeta } from './utils';
+import { mergeProps } from 'typestyles';
+import type { FieldMeta } from './Field';
 
 export type SliderProps = Omit<RACSliderProps, 'className'> &
   FieldMeta & {

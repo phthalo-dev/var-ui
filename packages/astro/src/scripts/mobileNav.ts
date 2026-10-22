@@ -1,4 +1,5 @@
-import { defaultIconSvgs } from '@var-ui/core';
+import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
+import { svg as menuSvg } from '@var-ui/icons/glyphs/menu';
 
 type MobileNavController = {
   isOpen: boolean;
@@ -9,8 +10,8 @@ type MobileNavController = {
 
 const providers = new WeakMap<HTMLElement, MobileNavController>();
 
-const MENU_ICON = defaultIconSvgs.menu;
-const CLOSE_ICON = defaultIconSvgs.close;
+const MENU_ICON = menuSvg;
+const CLOSE_ICON = closeSvg;
 
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
   return Array.from(

@@ -21,6 +21,202 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
+    },
+    "./glyphs": {
+      "types": "./dist/glyphs.d.mts",
+      "import": "./dist/glyphs.mjs"
+    },
+    "./glyphs/arrowDown": {
+      "types": "./dist/glyph-data/arrowDown.d.mts",
+      "import": "./dist/glyph-data/arrowDown.mjs"
+    },
+    "./arrowDown": {
+      "types": "./dist/icons/arrowDown.d.mts",
+      "import": "./dist/icons/arrowDown.mjs"
+    },
+    "./glyphs/arrowUp": {
+      "types": "./dist/glyph-data/arrowUp.d.mts",
+      "import": "./dist/glyph-data/arrowUp.mjs"
+    },
+    "./arrowUp": {
+      "types": "./dist/icons/arrowUp.d.mts",
+      "import": "./dist/icons/arrowUp.mjs"
+    },
+    "./glyphs/arrowsUpDown": {
+      "types": "./dist/glyph-data/arrowsUpDown.d.mts",
+      "import": "./dist/glyph-data/arrowsUpDown.mjs"
+    },
+    "./arrowsUpDown": {
+      "types": "./dist/icons/arrowsUpDown.d.mts",
+      "import": "./dist/icons/arrowsUpDown.mjs"
+    },
+    "./glyphs/check": {
+      "types": "./dist/glyph-data/check.d.mts",
+      "import": "./dist/glyph-data/check.mjs"
+    },
+    "./check": {
+      "types": "./dist/icons/check.d.mts",
+      "import": "./dist/icons/check.mjs"
+    },
+    "./glyphs/chevronDown": {
+      "types": "./dist/glyph-data/chevronDown.d.mts",
+      "import": "./dist/glyph-data/chevronDown.mjs"
+    },
+    "./chevronDown": {
+      "types": "./dist/icons/chevronDown.d.mts",
+      "import": "./dist/icons/chevronDown.mjs"
+    },
+    "./glyphs/chevronLeft": {
+      "types": "./dist/glyph-data/chevronLeft.d.mts",
+      "import": "./dist/glyph-data/chevronLeft.mjs"
+    },
+    "./chevronLeft": {
+      "types": "./dist/icons/chevronLeft.d.mts",
+      "import": "./dist/icons/chevronLeft.mjs"
+    },
+    "./glyphs/chevronRight": {
+      "types": "./dist/glyph-data/chevronRight.d.mts",
+      "import": "./dist/glyph-data/chevronRight.mjs"
+    },
+    "./chevronRight": {
+      "types": "./dist/icons/chevronRight.d.mts",
+      "import": "./dist/icons/chevronRight.mjs"
+    },
+    "./glyphs/clock": {
+      "types": "./dist/glyph-data/clock.d.mts",
+      "import": "./dist/glyph-data/clock.mjs"
+    },
+    "./clock": {
+      "types": "./dist/icons/clock.d.mts",
+      "import": "./dist/icons/clock.mjs"
+    },
+    "./glyphs/close": {
+      "types": "./dist/glyph-data/close.d.mts",
+      "import": "./dist/glyph-data/close.mjs"
+    },
+    "./close": {
+      "types": "./dist/icons/close.d.mts",
+      "import": "./dist/icons/close.mjs"
+    },
+    "./glyphs/colorModeDark": {
+      "types": "./dist/glyph-data/colorModeDark.d.mts",
+      "import": "./dist/glyph-data/colorModeDark.mjs"
+    },
+    "./colorModeDark": {
+      "types": "./dist/icons/colorModeDark.d.mts",
+      "import": "./dist/icons/colorModeDark.mjs"
+    },
+    "./glyphs/colorModeLight": {
+      "types": "./dist/glyph-data/colorModeLight.d.mts",
+      "import": "./dist/glyph-data/colorModeLight.mjs"
+    },
+    "./colorModeLight": {
+      "types": "./dist/icons/colorModeLight.d.mts",
+      "import": "./dist/icons/colorModeLight.mjs"
+    },
+    "./glyphs/colorModeSystem": {
+      "types": "./dist/glyph-data/colorModeSystem.d.mts",
+      "import": "./dist/glyph-data/colorModeSystem.mjs"
+    },
+    "./colorModeSystem": {
+      "types": "./dist/icons/colorModeSystem.d.mts",
+      "import": "./dist/icons/colorModeSystem.mjs"
+    },
+    "./glyphs/copy": {
+      "types": "./dist/glyph-data/copy.d.mts",
+      "import": "./dist/glyph-data/copy.mjs"
+    },
+    "./copy": {
+      "types": "./dist/icons/copy.d.mts",
+      "import": "./dist/icons/copy.mjs"
+    },
+    "./glyphs/error": {
+      "types": "./dist/glyph-data/error.d.mts",
+      "import": "./dist/glyph-data/error.mjs"
+    },
+    "./error": {
+      "types": "./dist/icons/error.d.mts",
+      "import": "./dist/icons/error.mjs"
+    },
+    "./glyphs/eye": {
+      "types": "./dist/glyph-data/eye.d.mts",
+      "import": "./dist/glyph-data/eye.mjs"
+    },
+    "./eye": {
+      "types": "./dist/icons/eye.d.mts",
+      "import": "./dist/icons/eye.mjs"
+    },
+    "./glyphs/eyeOff": {
+      "types": "./dist/glyph-data/eyeOff.d.mts",
+      "import": "./dist/glyph-data/eyeOff.mjs"
+    },
+    "./eyeOff": {
+      "types": "./dist/icons/eyeOff.d.mts",
+      "import": "./dist/icons/eyeOff.mjs"
+    },
+    "./glyphs/info": {
+      "types": "./dist/glyph-data/info.d.mts",
+      "import": "./dist/glyph-data/info.mjs"
+    },
+    "./info": {
+      "types": "./dist/icons/info.d.mts",
+      "import": "./dist/icons/info.mjs"
+    },
+    "./glyphs/menu": {
+      "types": "./dist/glyph-data/menu.d.mts",
+      "import": "./dist/glyph-data/menu.mjs"
+    },
+    "./menu": {
+      "types": "./dist/icons/menu.d.mts",
+      "import": "./dist/icons/menu.mjs"
+    },
+    "./glyphs/moreHorizontal": {
+      "types": "./dist/glyph-data/moreHorizontal.d.mts",
+      "import": "./dist/glyph-data/moreHorizontal.mjs"
+    },
+    "./moreHorizontal": {
+      "types": "./dist/icons/moreHorizontal.d.mts",
+      "import": "./dist/icons/moreHorizontal.mjs"
+    },
+    "./glyphs/search": {
+      "types": "./dist/glyph-data/search.d.mts",
+      "import": "./dist/glyph-data/search.mjs"
+    },
+    "./search": {
+      "types": "./dist/icons/search.d.mts",
+      "import": "./dist/icons/search.mjs"
+    },
+    "./glyphs/stop": {
+      "types": "./dist/glyph-data/stop.d.mts",
+      "import": "./dist/glyph-data/stop.mjs"
+    },
+    "./stop": {
+      "types": "./dist/icons/stop.d.mts",
+      "import": "./dist/icons/stop.mjs"
+    },
+    "./glyphs/success": {
+      "types": "./dist/glyph-data/success.d.mts",
+      "import": "./dist/glyph-data/success.mjs"
+    },
+    "./success": {
+      "types": "./dist/icons/success.d.mts",
+      "import": "./dist/icons/success.mjs"
+    },
+    "./glyphs/warning": {
+      "types": "./dist/glyph-data/warning.d.mts",
+      "import": "./dist/glyph-data/warning.mjs"
+    },
+    "./warning": {
+      "types": "./dist/icons/warning.d.mts",
+      "import": "./dist/icons/warning.mjs"
+    },
+    "./glyphs/wrench": {
+      "types": "./dist/glyph-data/wrench.d.mts",
+      "import": "./dist/glyph-data/wrench.mjs"
+    },
+    "./wrench": {
+      "types": "./dist/icons/wrench.d.mts",
+      "import": "./dist/icons/wrench.mjs"
     }
   },
   "publishConfig": {

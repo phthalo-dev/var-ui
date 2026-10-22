@@ -1,13 +1,21 @@
 import type { JSX } from 'react';
-import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
-import { textField, type ControlSize } from '@var-ui/core';
-import type { BaseTextFieldProps } from './utils';
-import { mergeProps } from './utils';
+import {
+  FieldError,
+  Input,
+  Label,
+  TextField as AriaTextField,
+  type TextFieldProps as AriaTextFieldProps,
+} from 'react-aria-components';
+import { textField, type TextFieldVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
+import type { FieldMeta } from './Field';
+
+export type BaseTextFieldProps = Omit<AriaTextFieldProps, 'children'> & FieldMeta;
 
 export type TextFieldProps = BaseTextFieldProps & {
   /** Placeholder text shown when the input is empty. */
   placeholder?: string;
-  size?: ControlSize;
+  size?: NonNullable<TextFieldVariantProps['size']>;
 };
 
 export function TextField({

@@ -10,7 +10,11 @@ export function BannerTile({ className }: BannerTileProps) {
   return (
     <div className={className}>
       <Banner
-        actions={<Button intent="primary">Upgrade plan</Button>}
+        actions={
+          <Button tone="accent" appearance="filled">
+            Upgrade plan
+          </Button>
+        }
         appearance="solid"
         title="You're on the Free plan"
         tone="info"

@@ -4,7 +4,11 @@ import { Button } from './Button';
 
 describe('Button', () => {
   it('renders children and applies the tone recipe attrs', () => {
-    render(<Button intent="primary">Save</Button>);
+    render(
+      <Button tone="accent" appearance="filled">
+        Save
+      </Button>,
+    );
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button.className).toContain('var-ui-button');
     expect(button.getAttribute('data-tone')).toBe('accent');

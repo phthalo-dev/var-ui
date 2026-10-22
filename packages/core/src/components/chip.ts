@@ -1,11 +1,14 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
-  semanticChannelAssignments,
+  mapTone,
   subtleBackgroundColor,
   subtleBorderColor,
-  type SurfaceAppearance,
-} from './semanticTone';
+  surfaceAppearance,
+  tone,
+  toneChannelAssignments,
+} from '../shared/semanticTone';
 
 /**
  * Compact pill-shaped label for filters, tags, and removable tokens.
@@ -15,41 +18,46 @@ import {
  * <span className={c.root}><span className={c.label}>React</span></span>
  * ```
  */
-export const chip = typestyles.styles.component(
-  'chip',
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      solidBg: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      solidFg: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      borderColor: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      backgroundColor: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      textColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      removeHoverBackground: {
-        value: t.color.background.elevated.var,
-        syntax: '<color>',
-      },
-    });
+export const chip = typestyles.recipe({
+  name: 'chip',
+  layer: 'components',
+  slots: ['root', 'label', 'removeButton'],
+  variants: {
+    tone,
+    appearance: surfaceAppearance,
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    borderColor: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    backgroundColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    textColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    removeHoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.elevated.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'label', 'removeButton'],
       base: {
         root: {
           display: 'inline-flex',
@@ -63,9 +71,9 @@ export const chip = typestyles.styles.component(
           borderRadius: t.radius.full.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.borderColor.var,
-          backgroundColor: v.backgroundColor.var,
-          color: v.textColor.var,
+          borderColor: vars.borderColor.var,
+          backgroundColor: vars.backgroundColor.var,
+          color: vars.textColor.var,
           '&[data-interactive]': {
             cursor: 'pointer',
             transition: 'background-color 140ms ease, border-color 140ms ease, color 140ms ease',
@@ -78,9 +86,9 @@ export const chip = typestyles.styles.component(
             },
           },
           '&[data-selected]': {
-            [v.borderColor.name]: v.solidBg.var,
-            [v.backgroundColor.name]: v.solidBg.var,
-            [v.textColor.name]: v.solidFg.var,
+            [vars.borderColor.name]: vars.solidBg.var,
+            [vars.backgroundColor.name]: vars.solidBg.var,
+            [vars.textColor.name]: vars.solidFg.var,
           },
           '&[data-disabled]': {
             opacity: 0.6,
@@ -107,7 +115,7 @@ export const chip = typestyles.styles.component(
           padding: '2px',
           marginInlineEnd: `calc(${t.space[1].var} * -0.5)`,
           '&:hover': {
-            backgroundColor: v.removeHoverBackground.var,
+            backgroundColor: vars.removeHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
@@ -116,62 +124,34 @@ export const chip = typestyles.styles.component(
         },
       },
       variants: {
-        tone: {
-          neutral: {
-            root: {
-              [v.semantic.name]: t.color.text.secondary.var,
-              [v.solidBg.name]: t.color.text.primary.var,
-              [v.solidFg.name]: t.color.background.surface.var,
-            },
-          },
-          accent: { root: semanticChannelAssignments(v, 'accent') },
-          success: { root: semanticChannelAssignments(v, 'success') },
-          warning: { root: semanticChannelAssignments(v, 'warning') },
-          danger: { root: semanticChannelAssignments(v, 'danger') },
-          tip: { root: semanticChannelAssignments(v, 'info') },
-        },
+        tone: mapTone((key) => ({ root: toneChannelAssignments(vars, key) })),
         appearance: {
           subtle: {
             root: {
-              [v.borderColor.name]: subtleBorderColor(v.semantic.var),
-              [v.backgroundColor.name]: subtleBackgroundColor(v.semantic.var),
-              [v.textColor.name]: v.semantic.var,
+              [vars.borderColor.name]: subtleBorderColor(vars.semantic.var),
+              [vars.backgroundColor.name]: subtleBackgroundColor(vars.semantic.var),
+              [vars.textColor.name]: vars.semantic.var,
             },
           },
           solid: {
             root: {
-              [v.borderColor.name]: v.solidBg.var,
-              [v.backgroundColor.name]: v.solidBg.var,
-              [v.textColor.name]: v.solidFg.var,
+              [vars.borderColor.name]: vars.solidBg.var,
+              [vars.backgroundColor.name]: vars.solidBg.var,
+              [vars.textColor.name]: vars.solidFg.var,
             },
           },
           outline: {
             root: {
-              [v.borderColor.name]: v.semantic.var,
-              [v.backgroundColor.name]: 'transparent',
-              [v.textColor.name]: v.semantic.var,
+              [vars.borderColor.name]: vars.semantic.var,
+              [vars.backgroundColor.name]: 'transparent',
+              [vars.textColor.name]: vars.semantic.var,
             },
           },
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'subtle' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type ChipRecipeProps = NonNullable<Parameters<typeof chip>[0]>;
-export type ChipTone = NonNullable<ChipRecipeProps['tone']>;
-export type ChipVariantProps = {
-  tone?: ChipTone;
-  appearance?: SurfaceAppearance;
-};
-
-export const chipVariantPropDocs = [
-  { name: 'tone', type: 'ChipTone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ChipVariantProps;
-  type: string;
-  required: false;
-}>;
+/** Visual props derived from the schema. */
+export type ChipVariantProps = RecipeVariants<typeof chip>;

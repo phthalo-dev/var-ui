@@ -57,7 +57,7 @@ Configuration lives in the root `vite.config.ts` — lint (Oxlint), formatting (
 
 ## Publishing
 
-Versioning uses [Changesets](https://github.com/changesets/changesets). Add a changeset with `vp exec changeset` before merging user-facing changes. Stay on **0.x** until we intentionally ship a stable 1.0: use patch or minor changesets only (breaking 0.x changes are minor, never major). Internal `@var-ui/*` peers use `>=0.1.0 <1.0.0` so a minor bump does not look out of range. The release workflow publishes `@var-ui/core`, `@var-ui/react`, `@var-ui/form`, `@var-ui/icons`, `@var-ui/astro`, `@var-ui/docs`, `@var-ui/docs-components`, and `@var-ui/cli` to npm when changesets are merged on `main`. `@var-ui/astro`, `@var-ui/docs`, and `@var-ui/docs-components` ship source `.astro`/`.ts` files (no `vp pack` build step). `@var-ui/cli` is packed with `vp pack`.
+Versioning uses [Changesets](https://github.com/changesets/changesets). Add a changeset with `vp exec changeset` before merging user-facing changes. Stay on **0.x** until we intentionally ship a stable 1.0: use patch or minor changesets only (breaking 0.x changes are minor, never major). Internal `@var-ui/*` peers use `>=0.1.0 <1.0.0` so a minor bump does not look out of range. The release workflow publishes `@var-ui/core`, `@var-ui/react`, `@var-ui/icons`, `@var-ui/astro`, `@var-ui/docs`, `@var-ui/docs-components`, and `@var-ui/cli` to npm when changesets are merged on `main`. `@var-ui/astro`, `@var-ui/docs`, and `@var-ui/docs-components` ship source `.astro`/`.ts` files (no `vp pack` build step). `@var-ui/cli` is packed with `vp pack`.
 
 ## Agent integration
 

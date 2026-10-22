@@ -1,10 +1,10 @@
 ---
-import { button, chatComposer, resolveButtonProps } from '@var-ui/core';
+import { button, chatComposer } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 
 // No @var-ui/astro ChatComposer — static core-recipe chrome (non-interactive).
 const c = chatComposer();
-const send = button(resolveButtonProps({ intent: 'primary' }));
+const send = button({ tone: 'accent', appearance: 'filled' });
 ---
 
 <div {...mergeProps(c.root)}>

@@ -1,4 +1,5 @@
-import { createTocSpy, positionTocIndicator, type TocHeading } from '@var-ui/core/internal';
+import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
+import { createTocSpy, type TocHeading } from '@var-ui/core/components/toc/spy';
 import { toc } from '@var-ui/core';
 import { mergeProps } from '../utils';
 

@@ -1,8 +1,11 @@
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
+const iconSize = variant.enum(['sm', 'md', 'lg', 'inherit'], { default: 'md' });
+
 /** Opt-in horizontal flip for directional icons in RTL. */
-export const iconMirrorStyle = {
+const iconMirrorStyle = {
   '&[data-mirror]': { transform: 'scaleX(-1)' },
 } as const;
 
@@ -15,22 +18,26 @@ export const iconMirrorStyle = {
  * <span className={icon({ size: 'md' })}>{svg}</span>
  * ```
  */
-export const icon = typestyles.styles.component(
-  'icon',
-  (c) => {
-    const v = c.vars({
-      size: { value: t.size.icon.md.var, syntax: '<length>' },
-      color: { value: 'currentColor', syntax: '*' },
-    });
+export const icon = typestyles.recipe({
+  name: 'icon',
+  layer: 'components',
+  variants: {
+    size: iconSize,
+  },
+  vars: {
+    size: { ...atProperty.length, value: t.size.icon.md.var },
+    color: { value: 'currentColor', syntax: '*' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
-        width: v.size.var,
-        height: v.size.var,
-        color: v.color.var,
+        width: vars.size.var,
+        height: vars.size.var,
+        color: vars.color.var,
         '& svg': {
           width: '100%',
           height: '100%',
@@ -39,14 +46,15 @@ export const icon = typestyles.styles.component(
       },
       variants: {
         size: {
-          sm: { [v.size.name]: t.size.icon.sm.var },
-          md: { [v.size.name]: t.size.icon.md.var },
-          lg: { [v.size.name]: t.size.icon.lg.var },
-          inherit: { [v.size.name]: '1em' },
+          sm: { [vars.size.name]: t.size.icon.sm.var },
+          md: { [vars.size.name]: t.size.icon.md.var },
+          lg: { [vars.size.name]: t.size.icon.lg.var },
+          inherit: { [vars.size.name]: '1em' },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type IconVariantProps = RecipeVariants<typeof icon>;

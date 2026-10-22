@@ -1,7 +1,7 @@
 import type { JSX, KeyboardEvent } from 'react';
 import { useRef } from 'react';
-import { colorPicker, hueToPureHex } from '@var-ui/core';
-import { hsvToHex, normalizeHex } from '@var-ui/core';
+import { colorPicker, type ColorPickerVariantProps } from '@var-ui/core';
+import { hsvToHex, hueToPureHex, normalizeHex } from '../color/convert';
 import {
   alphaFromPointer,
   bindPointerDrag,
@@ -9,7 +9,7 @@ import {
   saturationValueFromPointer,
   useColorValue,
 } from '../color';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** Mantine-compatible preset swatches shown below the sliders by default. */
 const DEFAULT_COLOR_SWATCHES = [
@@ -44,7 +44,9 @@ export type ColorPickerProps = {
   className?: string;
 };
 
-function swatchColumnsVariant(perRow: 7 | 10): 'seven' | 'ten' {
+function swatchColumnsVariant(
+  perRow: NonNullable<ColorPickerProps['swatchesPerRow']>,
+): NonNullable<ColorPickerVariantProps['swatchColumns']> {
   return perRow === 10 ? 'ten' : 'seven';
 }
 

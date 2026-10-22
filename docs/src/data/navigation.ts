@@ -71,9 +71,6 @@ export const componentSidebarSections: readonly SidebarSection[] = componentCate
   }))
   .filter((section) => section.items.length > 0);
 
-/** @deprecated Use `componentSidebarSections` for grouped navigation. */
-export const componentSidebar = componentSidebarSections.flatMap((section) => section.items);
-
 export const themingSidebar = themingSidebarSections[0]?.items ?? [];
 
 export const playgroundSidebar = playgroundSidebarSections.flatMap((section) => section.items);

@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
+      '@var-ui/core/components': `${coreSrc}/components`,
     },
   },
   pack: {

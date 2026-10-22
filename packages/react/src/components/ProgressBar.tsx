@@ -5,9 +5,7 @@ import {
   type ProgressBarProps as RACProgressBarProps,
 } from 'react-aria-components';
 import { progressBar, type ProgressBarVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
-
-export type { ProgressBarTone, ProgressBarAppearance } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className'> &
   ProgressBarVariantProps & {
@@ -39,7 +37,7 @@ export function ProgressBar({
   const p = progressBar({
     tone,
     appearance,
-    indeterminate: props.isIndeterminate ? 'true' : 'false',
+    indeterminate: Boolean(props.isIndeterminate),
   });
   const showValue = showValueText && !props.isIndeterminate;
   return (

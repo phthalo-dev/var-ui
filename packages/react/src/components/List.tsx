@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { createContext, useContext, useId } from 'react';
-import { list as listStyles } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { list as listStyles, type ListVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type ListItemData = {
   id: string;
@@ -14,9 +14,9 @@ export type ListItemData = {
 };
 
 export type ListProps = {
-  density?: 'compact' | 'balanced' | 'spacious';
-  listStyle?: 'none' | 'disc' | 'decimal';
-  hasDividers?: boolean;
+  density?: NonNullable<ListVariantProps['density']>;
+  listStyle?: NonNullable<ListVariantProps['listStyle']>;
+  hasDividers?: NonNullable<ListVariantProps['hasDividers']>;
   header?: ReactNode;
   items?: ListItemData[];
   renderStart?: (item: ListItemData) => ReactNode;

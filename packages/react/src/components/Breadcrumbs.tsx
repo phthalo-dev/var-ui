@@ -2,7 +2,7 @@ import type { CSSProperties, JSX, ReactNode } from 'react';
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs as AriaBreadcrumbs, Link } from 'react-aria-components';
 import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type BreadcrumbItemData = {
   /** Stable identifier, passed to `onAction` when the item is pressed. */

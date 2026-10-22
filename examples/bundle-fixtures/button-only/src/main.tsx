@@ -3,6 +3,8 @@ import { Button, DesignSystemProvider } from '@var-ui/react';
 
 createRoot(document.getElementById('root')!).render(
   <DesignSystemProvider>
-    <Button intent="primary">Save</Button>
+    <Button tone="accent" appearance="filled">
+      Save
+    </Button>
   </DesignSystemProvider>,
 );

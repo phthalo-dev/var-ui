@@ -1,68 +1,71 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { fieldChrome } from './field';
+import { fieldChrome } from './fieldChrome';
 
-export const textAreaField = typestyles.styles.component(
-  'text-area-field',
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      inputBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      inputBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      inputForeground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      placeholderColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      descriptionColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      errorColor: {
-        value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
-      },
-    });
+export const textAreaField = typestyles.recipe({
+  name: 'text-area-field',
+  layer: 'components',
+  slots: ['root', 'label', 'input', 'description', 'error'],
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'label', 'input', 'description', 'error'],
-      ...fieldChrome({
-        label: v.labelColor.var,
-        description: v.descriptionColor.var,
-        error: v.errorColor.var,
-      }),
-      input: {
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: v.inputBorder.var,
-        borderRadius: t.radius.md.var,
-        padding: `${t.space[2].var} ${t.space[3].var}`,
-        fontSize: t.fontSize.md.var,
-        backgroundColor: v.inputBackground.var,
-        color: v.inputForeground.var,
-        minHeight: '88px',
-        resize: 'vertical',
-        '&:focus': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '1px',
-          [v.inputBorder.name]: t.color.border.focus.var,
-        },
-        '&::placeholder': {
-          color: v.placeholderColor.var,
+      base: {
+        ...fieldChrome({
+          label: vars.labelColor.var,
+          description: vars.descriptionColor.var,
+          error: vars.errorColor.var,
+        }),
+        input: {
+          borderWidth: t.borderWidth.default.var,
+          borderStyle: 'solid',
+          borderColor: vars.inputBorder.var,
+          borderRadius: t.radius.md.var,
+          padding: `${t.space[2].var} ${t.space[3].var}`,
+          fontSize: t.fontSize.md.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
+          minHeight: '88px',
+          resize: 'vertical',
+          '&:focus': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '1px',
+            [vars.inputBorder.name]: t.color.border.focus.var,
+          },
+          '&::placeholder': {
+            color: vars.placeholderColor.var,
+          },
         },
       },
     };
   },
-  { layer: 'components' },
-);
+});

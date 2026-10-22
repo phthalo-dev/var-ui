@@ -5,7 +5,7 @@ import HomepageIsland from './HomepageIsland';
 describe('HomepageIsland', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.removeAttribute('data-mode');
+    document.documentElement.removeAttribute('data-color-mode');
     document.documentElement.removeAttribute('data-framework');
   });
 
@@ -19,42 +19,46 @@ describe('HomepageIsland', () => {
   });
 
   it('does not isolate color-scheme from the docs site before storage hydrates', () => {
-    document.documentElement.setAttribute('data-mode', 'light');
+    document.documentElement.setAttribute('data-color-mode', 'light');
     document.documentElement.style.colorScheme = 'light';
     render(<HomepageIsland />);
 
     const showcase = screen.getByTestId('bento-showcase') as HTMLElement;
-    const wrapper = showcase.closest('[data-mode]') as HTMLElement | null;
-    expect(wrapper?.getAttribute('data-mode')).toBe('system');
-    expect(wrapper?.style.colorScheme).toBe('inherit');
+    let wrapper: HTMLElement | null = showcase.parentElement;
+    while (wrapper && wrapper.style.display !== 'contents') {
+      wrapper = wrapper.parentElement;
+    }
+    expect(wrapper).toBeTruthy();
+    expect(wrapper!.hasAttribute('data-color-mode')).toBe(false);
+    expect(wrapper!.style.colorScheme).toBe('');
     expect(showcase.style.colorScheme).toBe('inherit');
   });
 
   it('inherits color-scheme from the docs site on load and after toggle updates', async () => {
     localStorage.setItem('theme-mode', 'light');
-    document.documentElement.setAttribute('data-mode', 'light');
+    document.documentElement.setAttribute('data-color-mode', 'light');
     document.documentElement.style.colorScheme = 'light';
     render(<HomepageIsland />);
 
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
     expect(container.style.colorScheme).toBe('inherit');
-    expect(container.getAttribute('data-mode')).toBeNull();
+    expect(container.getAttribute('data-color-mode')).toBeNull();
 
     await act(async () => {
       localStorage.setItem('theme-mode', 'dark');
-      document.documentElement.setAttribute('data-mode', 'dark');
+      document.documentElement.setAttribute('data-color-mode', 'dark');
       document.documentElement.style.colorScheme = 'dark';
     });
 
     await waitFor(() => {
       expect(container.style.colorScheme).toBe('inherit');
-      expect(container.getAttribute('data-mode')).toBeNull();
+      expect(container.getAttribute('data-color-mode')).toBeNull();
     });
   });
 
   it('keeps inheriting color-scheme when storage changes in other tabs', async () => {
     localStorage.setItem('theme-mode', 'light');
-    document.documentElement.setAttribute('data-mode', 'light');
+    document.documentElement.setAttribute('data-color-mode', 'light');
     render(<HomepageIsland />);
 
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
@@ -62,7 +66,7 @@ describe('HomepageIsland', () => {
 
     await act(async () => {
       localStorage.setItem('theme-mode', 'system');
-      document.documentElement.removeAttribute('data-mode');
+      document.documentElement.removeAttribute('data-color-mode');
       document.documentElement.style.colorScheme = '';
       window.dispatchEvent(
         new StorageEvent('storage', {

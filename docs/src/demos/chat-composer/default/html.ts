@@ -1,4 +1,4 @@
-import { button, chatComposer, resolveButtonProps } from '@var-ui/core';
+import { button, chatComposer } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
@@ -23,7 +23,7 @@ export function render(): string {
     'button',
     {
       type: 'button',
-      ...mergeProps(button(resolveButtonProps({ intent: 'primary' }))),
+      ...mergeProps(button({ tone: 'accent', appearance: 'filled' })),
       'aria-label': 'Send message',
       disabled: true,
     },

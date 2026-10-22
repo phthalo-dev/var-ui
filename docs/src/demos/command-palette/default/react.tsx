@@ -5,9 +5,7 @@ export default function Preview() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button intent="secondary" onPress={() => setOpen(true)}>
-        Open palette
-      </Button>
+      <Button onPress={() => setOpen(true)}>Open palette</Button>
       <CommandPalette
         isOpen={open}
         onOpenChange={setOpen}

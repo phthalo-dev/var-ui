@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Pagination chrome. Page-number and prev/next buttons reuse the existing
@@ -12,24 +14,26 @@ import { designTokens as t } from '../tokens';
  * <nav className={p.root}>…</nav>
  * ```
  */
-export const pagination = typestyles.styles.component(
-  'pagination',
-  (c) => {
-    const v = c.vars({
-      textColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      dotColor: { value: t.color.border.default.var, syntax: '<color>' },
-    });
+export const pagination = typestyles.recipe({
+  name: 'pagination',
+  layer: 'components',
+  slots: [
+    'root',
+    'controls',
+    'ellipsis',
+    'infoText',
+    'dotsContainer',
+    'dot',
+    'dotActive',
+    'pageSizeGroup',
+  ],
+  variants: { size: controlSize },
+  vars: {
+    textColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    dotColor: { ...atProperty.color, value: t.color.border.default.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: [
-        'root',
-        'controls',
-        'ellipsis',
-        'infoText',
-        'dotsContainer',
-        'dot',
-        'dotActive',
-        'pageSizeGroup',
-      ],
       base: {
         root: {
           display: 'flex',
@@ -49,7 +53,7 @@ export const pagination = typestyles.styles.component(
           justifyContent: 'center',
           minWidth: '2rem',
           height: '2rem',
-          color: v.textColor.var,
+          color: vars.textColor.var,
           fontSize: t.fontSize.sm.var,
           userSelect: 'none',
         },
@@ -58,7 +62,7 @@ export const pagination = typestyles.styles.component(
           alignItems: 'center',
           whiteSpace: 'nowrap',
           fontSize: t.fontSize.sm.var,
-          color: v.textColor.var,
+          color: vars.textColor.var,
         },
         dotsContainer: {
           display: 'flex',
@@ -71,7 +75,7 @@ export const pagination = typestyles.styles.component(
           borderWidth: 0,
           padding: 0,
           borderRadius: '50%',
-          backgroundColor: v.dotColor.var,
+          backgroundColor: vars.dotColor.var,
           cursor: 'pointer',
           transition: `background-color ${t.duration.fast.var} ${t.easing.standard.var}`,
           '&:focus-visible': {
@@ -91,7 +95,7 @@ export const pagination = typestyles.styles.component(
           alignItems: 'center',
           gap: t.space[2].var,
           fontSize: t.fontSize.sm.var,
-          color: v.textColor.var,
+          color: vars.textColor.var,
         },
       },
       variants: {
@@ -101,10 +105,15 @@ export const pagination = typestyles.styles.component(
             dot: { width: t.space[1].var, height: t.space[1].var },
           },
           md: {},
+          lg: {
+            ellipsis: { minWidth: '2.5rem', height: '2.5rem', fontSize: t.fontSize.md.var },
+            dot: { width: t.space[2].var, height: t.space[2].var },
+          },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type PaginationVariantProps = RecipeVariants<typeof pagination>;

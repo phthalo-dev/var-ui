@@ -26,11 +26,7 @@ export default function Preview() {
               title="Platform tour"
               description="See how teams build with Acme in under five minutes."
               href="/tour"
-              action={
-                <Button intent="secondary" size="sm">
-                  Watch demo
-                </Button>
-              }
+              action={<Button size="sm">Watch demo</Button>}
             />
           }
         />

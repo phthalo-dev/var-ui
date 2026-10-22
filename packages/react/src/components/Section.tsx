@@ -1,6 +1,6 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { section } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SectionProps = HTMLAttributes<HTMLElement> & {
   /** Optional heading rendered as an h2 inside the section. */

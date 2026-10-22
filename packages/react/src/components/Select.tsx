@@ -14,10 +14,16 @@ import {
   type SelectProps as RACSelectProps,
   type SelectValueProps as RACSelectValueProps,
 } from 'react-aria-components';
-import { select } from '@var-ui/core';
+import { select, type SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import type { FieldMeta } from './utils';
-import { mergeProps } from './utils';
+import { ControlSizeContext, useControlSize } from './controlSizeContext';
+import type { FieldMeta } from './Field';
+import { mergeProps } from 'typestyles';
+
+/** Shared across every part so `size` set on `Select.Root` reaches the trigger. */
+function useSelectStyles(): ReturnType<typeof select> {
+  return select({ size: useControlSize() });
+}
 
 export type SelectOption = {
   /** Unique option identifier passed to the select value. */
@@ -32,25 +38,30 @@ export type SelectRootProps<T extends object = SelectOption> = Omit<
 > & {
   children: ReactNode;
   className?: string;
+  /** Control density. @default md */
+  size?: NonNullable<SelectVariantProps['size']>;
 };
 
 function SelectRoot<T extends object>({
   children,
   className,
+  size,
   ...props
 }: SelectRootProps<T>): JSX.Element {
-  const s = select();
+  const s = select({ size });
   return (
-    <AriaSelect {...props} {...mergeProps(s.root, className)}>
-      {children}
-    </AriaSelect>
+    <ControlSizeContext.Provider value={size}>
+      <AriaSelect {...props} {...mergeProps(s.root, className)}>
+        {children}
+      </AriaSelect>
+    </ControlSizeContext.Provider>
   );
 }
 
 export type SelectLabelProps = { children: ReactNode; className?: string };
 
 function SelectLabel({ children, className }: SelectLabelProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return <Label {...mergeProps(s.label, className)}>{children}</Label>;
 }
 
@@ -67,7 +78,7 @@ function SelectValue<T extends object = SelectOption>({
   className,
   children,
 }: SelectValueProps<T>): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return (
     <AriaSelectValue {...mergeProps(s.selectValue, className)}>
       {children ??
@@ -89,7 +100,7 @@ function SelectTrigger({
   className,
   children,
 }: SelectTriggerProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return (
     <AriaButton {...mergeProps(s.trigger, className)}>
       {children ?? <SelectValue placeholder={placeholder} />}
@@ -103,7 +114,7 @@ function SelectTrigger({
 export type SelectDescriptionProps = { children: ReactNode; className?: string };
 
 function SelectDescription({ children, className }: SelectDescriptionProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return (
     <Text slot="description" {...mergeProps(s.description, className)}>
       {children}
@@ -114,7 +125,7 @@ function SelectDescription({ children, className }: SelectDescriptionProps): JSX
 export type SelectErrorProps = { children?: ReactNode; className?: string };
 
 function SelectError({ children, className }: SelectErrorProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return <FieldError {...mergeProps(s.error, className)}>{children ?? ''}</FieldError>;
 }
 
@@ -134,7 +145,7 @@ function SelectPopover({
   portalContainer,
   ...props
 }: SelectPopoverProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return (
     <Popover
       {...props}
@@ -159,7 +170,7 @@ export type SelectListBoxProps<T extends object = SelectOption> =
     };
 
 function SelectListBox<T extends object>(props: SelectListBoxProps<T>): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   if ('items' in props && props.items != null) {
     const { items, children, className } = props;
     return (
@@ -175,7 +186,7 @@ function SelectListBox<T extends object>(props: SelectListBoxProps<T>): JSX.Elem
 export type SelectItemProps = ListBoxItemProps & { className?: string };
 
 function SelectItem({ children, className, ...props }: SelectItemProps): JSX.Element {
-  const s = select();
+  const s = useSelectStyles();
   return (
     <ListBoxItem {...props} {...mergeProps(s.item, className)}>
       {children}
@@ -197,6 +208,8 @@ export type SelectProps = Omit<RACSelectProps<SelectOption>, 'children' | 'class
     portalContainer?: Element;
     /** Additional CSS class names merged onto the root. */
     className?: string;
+    /** Control density. @default md */
+    size?: NonNullable<SelectVariantProps['size']>;
   };
 
 /**
@@ -211,10 +224,16 @@ function Select({
   placeholder = 'Select…',
   portalContainer,
   className,
+  size,
   ...props
 }: SelectProps): JSX.Element {
   return (
-    <SelectRoot {...props} className={className} isInvalid={errorMessage ? true : undefined}>
+    <SelectRoot
+      {...props}
+      className={className}
+      size={size}
+      isInvalid={errorMessage ? true : undefined}
+    >
       {label ? <SelectLabel>{label}</SelectLabel> : null}
       <SelectTrigger placeholder={placeholder} />
       {description ? <SelectDescription>{description}</SelectDescription> : null}

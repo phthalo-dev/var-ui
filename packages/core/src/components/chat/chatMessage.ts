@@ -1,5 +1,7 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { sender } from '../../shared/variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * A message row: avatar + name/content/metadata. `sender` drives horizontal
@@ -10,10 +12,12 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessage({ sender: 'assistant' }).root}>…</div>
  * ```
  */
-export const chatMessage = typestyles.styles.component(
-  'chat-message',
-  () => ({
-    slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],
+export const chatMessage = typestyles.recipe({
+  name: 'chat-message',
+  layer: 'components',
+  slots: ['root', 'avatar', 'header', 'name', 'content', 'metadata'],
+  variants: { sender },
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -60,7 +64,8 @@ export const chatMessage = typestyles.styles.component(
         },
       },
     },
-    defaultVariants: { sender: 'assistant' },
   }),
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatMessageVariantProps = RecipeVariants<typeof chatMessage>;

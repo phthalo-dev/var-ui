@@ -1,4 +1,4 @@
-import type { ComponentConfigContext, ComponentVarRefTree } from 'typestyles';
+import { atProperty, type ComponentVarRefTree } from 'typestyles';
 import { designTokens as t } from '../tokens';
 
 export type LayoutPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
@@ -8,22 +8,22 @@ const shellPadding = t.space[4].var;
 /**
  * Nested shell var definitions for the `layout` recipe family. Paths flatten to
  * `padding-outer-x`, `padding-inner-y`, `content-width`, etc. — registered on
- * `layout` root via `defineLayoutShellVars`; zone recipes read them through
+ * `layout` root via `layout.vars`; zone recipes read them through
  * `getLayoutShellVars()`.
  */
 export const layoutShellVarDefinitions = {
   padding: {
     outer: {
-      x: { value: shellPadding, syntax: '<length>' as const },
-      y: { value: shellPadding, syntax: '<length>' as const },
+      x: { ...atProperty.length, value: shellPadding },
+      y: { ...atProperty.length, value: shellPadding },
     },
     inner: {
-      x: { value: shellPadding, syntax: '<length>' as const },
-      y: { value: shellPadding, syntax: '<length>' as const },
+      x: { ...atProperty.length, value: shellPadding },
+      y: { ...atProperty.length, value: shellPadding },
     },
   },
   content: {
-    width: { value: 'none', syntax: '<length> | none' as const },
+    width: { ...atProperty.union(atProperty.length, { syntax: 'none' }), value: 'none' },
   },
 } as const;
 
@@ -31,11 +31,9 @@ type LayoutShellVars = ComponentVarRefTree<typeof layoutShellVarDefinitions>;
 
 let shellVars: LayoutShellVars | undefined;
 
-/** Registers shell `@property` vars on `layout` root. Call once from the `layout()` recipe. */
-export function defineLayoutShellVars(c: ComponentConfigContext): LayoutShellVars {
-  const vars = c.vars(layoutShellVarDefinitions);
+/** Stores the refs from `layout.vars` for zone recipes defined later in the module. */
+export function setLayoutShellVars(vars: LayoutShellVars): void {
   shellVars = vars;
-  return vars;
 }
 
 /** Shell var refs for `layout*` zone recipes. Requires `layout()` to be defined first. */

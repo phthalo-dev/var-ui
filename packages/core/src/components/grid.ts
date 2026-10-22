@@ -1,5 +1,9 @@
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from '../shared/variantAxes';
+
+const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four'], { default: 'auto' });
 
 /**
  * Responsive grid. `columns: 'auto'` packs `minmax(minColumnWidth, 1fr)`
@@ -10,18 +14,23 @@ import { designTokens as t } from '../tokens';
  * <div className={grid({ columns: 'auto', gap: 'lg' })}>{cards}</div>
  * ```
  */
-export const grid = typestyles.styles.component(
-  'grid',
-  (c) => {
-    const v = c.vars({
-      gap: { value: t.space[4].var, syntax: '<length>' },
-      minColumnWidth: { value: '240px', syntax: '<length>' },
-    });
+export const grid = typestyles.recipe({
+  name: 'grid',
+  layer: 'components',
+  variants: {
+    columns: gridColumns,
+    gap,
+  },
+  vars: {
+    gap: { ...atProperty.length, value: t.space[4].var },
+    minColumnWidth: { ...atProperty.length, value: '240px' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'grid',
-        gap: v.gap.var,
-        gridTemplateColumns: `repeat(auto-fill, minmax(${v.minColumnWidth.var}, 1fr))`,
+        gap: vars.gap.var,
+        gridTemplateColumns: `repeat(auto-fill, minmax(${vars.minColumnWidth.var}, 1fr))`,
       },
       variants: {
         columns: {
@@ -32,16 +41,17 @@ export const grid = typestyles.styles.component(
           four: { gridTemplateColumns: 'repeat(4, 1fr)' },
         },
         gap: {
-          none: { [v.gap.name]: '0px' },
-          xs: { [v.gap.name]: t.space[1].var },
-          sm: { [v.gap.name]: t.space[2].var },
-          md: { [v.gap.name]: t.space[4].var },
-          lg: { [v.gap.name]: t.space[5].var },
-          xl: { [v.gap.name]: t.space[8].var },
+          none: { [vars.gap.name]: '0px' },
+          xs: { [vars.gap.name]: t.space[1].var },
+          sm: { [vars.gap.name]: t.space[2].var },
+          md: { [vars.gap.name]: t.space[4].var },
+          lg: { [vars.gap.name]: t.space[5].var },
+          xl: { [vars.gap.name]: t.space[8].var },
         },
       },
-      defaultVariants: { columns: 'auto', gap: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type GridVariantProps = RecipeVariants<typeof grid>;

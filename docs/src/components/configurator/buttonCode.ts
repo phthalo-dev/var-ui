@@ -1,9 +1,9 @@
-import { designTokens as t, type ButtonTone, type ToneAppearance } from '@var-ui/core';
-import type { DocsFramework } from '@/lib/framework';
+import { designTokens as t, type Tone, type ToneAppearance } from '@var-ui/core';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 
 export type ButtonConfiguratorState = {
   appearance: ToneAppearance;
-  tone: ButtonTone;
+  tone: Tone;
   size: 'sm' | 'md' | 'lg';
   isDisabled: boolean;
   elevated: boolean;
@@ -17,7 +17,7 @@ const APPEARANCE_OPTIONS: { id: ToneAppearance; label: string }[] = [
   { id: 'ghost', label: 'Ghost' },
 ];
 
-const TONE_OPTIONS: { id: ButtonTone; label: string; swatch: string }[] = [
+const TONE_OPTIONS: { id: Tone; label: string; swatch: string }[] = [
   { id: 'neutral', label: 'Neutral', swatch: t.color.text.secondary.var },
   { id: 'accent', label: 'Accent', swatch: t.color.tone.accent.foreground.var },
   { id: 'success', label: 'Success', swatch: t.color.tone.success.foreground.var },

@@ -7,15 +7,15 @@ describe('popover', () => {
   it('preserves the public root class name', () => {
     const classes = popover();
 
-    expect(classes.root).toBeTruthy();
-    expect(classes.root).toContain('var-ui-popover');
+    expect(classes.root.className).toBeTruthy();
+    expect(classes.root.className).toContain('var-ui-popover');
   });
 
   it('exposes the public arrow class name', () => {
     const classes = popover();
 
-    expect(classes.arrow).toBeTruthy();
-    expect(classes.arrow).toContain('var-ui-popover__arrow');
+    expect(classes.arrow.className).toBeTruthy();
+    expect(classes.arrow.className).toContain('var-ui-popover__arrow');
   });
 
   it('paints the arrow with the popover surface token, not inherit', () => {

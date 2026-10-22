@@ -1,6 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { inputGroup } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { useControlSize } from './controlSizeContext';
+import { mergeProps } from 'typestyles';
 
 export type InputGroupTextProps = {
   /** Text or a small icon rendered inside the addon. */
@@ -21,6 +22,6 @@ export type InputGroupTextProps = {
  * ```
  */
 export function InputGroupText({ children, className }: InputGroupTextProps): JSX.Element {
-  const g = inputGroup();
+  const g = inputGroup({ size: useControlSize() });
   return <div {...mergeProps(g.text, className)}>{children}</div>;
 }

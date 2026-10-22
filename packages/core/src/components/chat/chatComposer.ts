@@ -1,3 +1,4 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 
@@ -13,15 +14,16 @@ import { designTokens as t } from '../../tokens';
  * </div>
  * ```
  */
-export const chatComposer = typestyles.styles.component(
-  'chat-composer',
-  (c) => {
-    const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-    });
+export const chatComposer = typestyles.recipe({
+  name: 'chat-composer',
+  layer: 'components',
+  slots: ['root', 'inputRow', 'input', 'actions'],
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    background: { ...atProperty.color, value: t.color.background.surface.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'inputRow', 'input', 'actions'],
       base: {
         root: {
           display: 'flex',
@@ -30,9 +32,9 @@ export const chatComposer = typestyles.styles.component(
           padding: t.space[2].var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.lg.var,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
         },
         inputRow: {
           flex: 1,
@@ -60,13 +62,9 @@ export const chatComposer = typestyles.styles.component(
           flexShrink: 0,
         },
       },
-      variants: {
-        appearance: {
-          default: {},
-        },
-      },
-      defaultVariants: { appearance: 'default' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatComposerVariantProps = RecipeVariants<typeof chatComposer>;

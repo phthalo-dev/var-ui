@@ -19,7 +19,7 @@ import { ResizeHandle } from './ResizeHandle';
 import { Text } from './Typography';
 import { SimpleTooltip } from './SimpleTooltip';
 import { ScrollArea } from './ScrollArea';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type SideNavCollapsibleConfig = {
   /** Initial collapsed state for uncontrolled usage. @default false */
@@ -319,7 +319,8 @@ export function SideNavItem({
           <IconButton
             name={isExpanded ? 'chevronDown' : 'chevronRight'}
             aria-label={isExpanded ? `Collapse ${label}` : `Expand ${label}`}
-            intent="ghost"
+            tone="accent"
+            appearance="ghost"
             size="sm"
             onPress={() => setIsExpanded((expanded) => !expanded)}
             data-mirror={isRtl && !isExpanded ? true : undefined}

@@ -1,18 +1,19 @@
 ---
 import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
+import { cx } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
 import DocsThemePicker from '../components/DocsThemePicker.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
-import FrameworkSwitcher from '../components/FrameworkSwitcher.astro';
+import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
 import { topNav as topNavItems } from '../data/navigation';
 import { buildDocsSearchIndex } from '../lib/search-index';
 
 const { title = 'Var UI' } = Astro.props as { title?: string };
 
 const framework = Astro.locals.framework;
-const hljsScopeClass = (codeHljsScope().root).className;
+const hljsScopeClass = cx(codeHljsScope().root);
 const searchItems = buildDocsSearchIndex();
 ---
 

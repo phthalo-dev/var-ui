@@ -22,7 +22,7 @@ import {
   ModalOverlay,
   Pressable,
 } from 'react-aria-components';
-import { dialog } from '@var-ui/core';
+import { dialog, type DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import {
@@ -35,7 +35,7 @@ import {
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DialogRootProps = {
   children: ReactNode;
@@ -69,7 +69,7 @@ export type DialogBackdropProps = {
 export type DialogPopupProps = {
   children: ReactNode;
   className?: string;
-  role?: 'dialog' | 'alertdialog';
+  role?: NonNullable<DialogVariantProps['role']>;
 };
 
 export type DialogHeaderProps = {

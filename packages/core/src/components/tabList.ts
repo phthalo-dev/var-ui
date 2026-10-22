@@ -1,17 +1,8 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
-
-const TAB_LIST_SLOTS = ['root', 'tab', 'indicator', 'menu', 'menuTrigger'] as const;
-
-/**
- * Explicit variant-dimension shape (values left as `{}` — only the keys matter for the
- * `typestyles.styles.component` call signature); see `appShell.ts` for why this pins the
- * slot-with-variants overload.
- */
-type TabListVariantDefs = {
-  size: { sm: object; md: object; lg: object };
-};
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Nav landmark tabs for switching between views/routes — no panels. Pair with
@@ -33,34 +24,35 @@ type TabListVariantDefs = {
  * </nav>
  * ```
  */
-export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabListVariantDefs>(
-  'tab-list',
-  (c) => {
-    const v = c.vars({
-      tabColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      tabSelectedColor: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      tabHoverBackground: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      indicatorColor: {
-        value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
-      },
-      dividerColor: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-    });
-
+export const tabList = typestyles.recipe({
+  name: 'tab-list',
+  layer: 'components',
+  slots: ['root', 'tab', 'indicator', 'menu', 'menuTrigger'],
+  variants: { size: controlSize },
+  vars: {
+    tabColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    tabSelectedColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    tabHoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    indicatorColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    dividerColor: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: TAB_LIST_SLOTS,
       base: {
         root: {
           position: 'relative',
@@ -80,12 +72,12 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           '&[data-has-divider][data-orientation="horizontal"]': {
             borderBottomWidth: t.borderWidth.default.var,
             borderBottomStyle: 'solid',
-            borderBottomColor: v.dividerColor.var,
+            borderBottomColor: vars.dividerColor.var,
           },
           '&[data-has-divider][data-orientation="vertical"]': {
             borderInlineEndWidth: t.borderWidth.default.var,
             borderInlineEndStyle: 'solid',
-            borderInlineEndColor: v.dividerColor.var,
+            borderInlineEndColor: vars.dividerColor.var,
           },
         },
         tab: {
@@ -96,7 +88,7 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           gap: t.space[2].var,
           border: 'none',
           backgroundColor: 'transparent',
-          color: v.tabColor.var,
+          color: vars.tabColor.var,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
           textDecoration: 'none',
@@ -106,18 +98,18 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           paddingBlock: 0,
           paddingInline: t.space[3].var,
           '&:hover': {
-            backgroundColor: v.tabHoverBackground.var,
+            backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '2px',
           },
           '&[data-selected]': {
-            color: v.tabSelectedColor.var,
+            color: vars.tabSelectedColor.var,
             fontWeight: t.fontWeight.semibold.var,
           },
           '&[data-disabled]': {
-            color: v.tabColor.var,
+            color: vars.tabColor.var,
             opacity: 0.5,
             cursor: 'not-allowed',
             pointerEvents: 'none',
@@ -130,7 +122,7 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           bottom: 0,
           height: '2px',
           borderRadius: t.radius.sm.var,
-          backgroundColor: v.indicatorColor.var,
+          backgroundColor: vars.indicatorColor.var,
           opacity: 0,
           transition: `opacity ${t.duration.fast.var} ${t.easing.standard.var}`,
           '[data-selected] &': {
@@ -154,7 +146,7 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           gap: t.space[1].var,
           border: 'none',
           backgroundColor: 'transparent',
-          color: v.tabColor.var,
+          color: vars.tabColor.var,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.medium.var,
           cursor: 'pointer',
@@ -163,14 +155,14 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           paddingBlock: 0,
           paddingInline: t.space[3].var,
           '&:hover': {
-            backgroundColor: v.tabHoverBackground.var,
+            backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '2px',
           },
           '&[data-selected]': {
-            color: v.tabSelectedColor.var,
+            color: vars.tabSelectedColor.var,
             fontWeight: t.fontWeight.semibold.var,
           },
         },
@@ -189,8 +181,9 @@ export const tabList = typestyles.styles.component<typeof TAB_LIST_SLOTS, TabLis
           },
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type TabListVariantProps = RecipeVariants<typeof tabList>;

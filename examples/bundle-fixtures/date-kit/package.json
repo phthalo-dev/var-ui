@@ -15,9 +15,9 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@typestyles/vite": "catalog:",
+    "@typestyles/vite": "0.5.1",
     "@vitejs/plugin-react": "catalog:",
-    "typestyles": "catalog:",
+    "typestyles": "0.32.1",
     "vite-plus": "catalog:"
   }
 }

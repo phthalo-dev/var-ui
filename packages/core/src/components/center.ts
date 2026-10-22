@@ -1,15 +1,20 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 
 /**
  * Centers children on both axes. `inline` variant for inline-grid contexts.
  *
  * ```tsx
- * <div className={center()} style={{ minHeight: '200px' }}>{spinner}</div>
+ * <div className={center().className} style={{ minHeight: '200px' }}>{spinner}</div>
  * ```
  */
-export const center = typestyles.styles.component(
-  'center',
-  () => ({
+export const center = typestyles.recipe({
+  name: 'center',
+  layer: 'components',
+  variants: {
+    inline: variant.boolean({ default: false }),
+  },
+  styles: () => ({
     base: {
       display: 'grid',
       placeItems: 'center',
@@ -20,7 +25,8 @@ export const center = typestyles.styles.component(
         false: {},
       },
     },
-    defaultVariants: { inline: 'false' },
   }),
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type CenterVariantProps = RecipeVariants<typeof center>;

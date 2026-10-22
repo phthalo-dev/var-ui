@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { kbd } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type KbdProps = {
   children: ReactNode;

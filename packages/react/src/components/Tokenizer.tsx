@@ -15,7 +15,7 @@ import {
 } from 'react-aria-components';
 import { tokenizer } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type TokenizerOption = {
   /** Unique option identifier — also used as the token's key once selected. */

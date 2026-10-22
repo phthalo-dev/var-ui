@@ -14,7 +14,7 @@ import {
   type CollapsibleVariant,
 } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 export type AccordionVariant = AccordionGroupVariantProps['variant'];

@@ -1,6 +1,7 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
+import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 
 /**
  * Shared floating-layer chrome: a dimmed fixed backdrop plus a centered
@@ -14,29 +15,31 @@ import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPres
  * <div className={o.positioner}>{panel}</div>
  * ```
  */
-export const overlay = typestyles.styles.component(
-  'overlay',
-  (c) => {
-    const v = c.vars({
-      background: { value: t.color.overlay.backdrop.var, syntax: '<color>' },
-    });
+export const overlay = typestyles.recipe({
+  name: 'overlay',
+  layer: 'components',
+  slots: ['backdrop', 'positioner'],
+  vars: {
+    background: { ...atProperty.color, value: t.color.overlay.backdrop.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['backdrop', 'positioner'],
-      backdrop: {
-        ...overlayPresenceStyles(),
-        ...overlayIosAbsoluteBackdrop,
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: v.background.var,
-      },
-      positioner: {
-        position: 'fixed',
-        inset: 0,
-        display: 'grid',
-        placeItems: 'center',
-        padding: t.space[4].var,
+      base: {
+        backdrop: {
+          ...overlayPresenceStyles(),
+          ...overlayIosAbsoluteBackdrop,
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: vars.background.var,
+        },
+        positioner: {
+          position: 'fixed',
+          inset: 0,
+          display: 'grid',
+          placeItems: 'center',
+          padding: t.space[4].var,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

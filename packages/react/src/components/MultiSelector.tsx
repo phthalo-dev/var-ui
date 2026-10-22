@@ -9,8 +9,8 @@ import {
 } from 'react-aria-components';
 import { multiSelector } from '@var-ui/core';
 import { Icon } from '../icons';
-import type { FieldMeta } from './utils';
-import { mergeProps } from './utils';
+import type { FieldMeta } from './Field';
+import { mergeProps } from 'typestyles';
 
 export type MultiSelectorOption = {
   /** Unique option identifier passed to the selected value array. */

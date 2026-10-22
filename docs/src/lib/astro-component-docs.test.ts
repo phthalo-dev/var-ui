@@ -9,22 +9,23 @@ describe('astro-component-docs', () => {
     expect(hasAstroBinding('chat-message')).toBe(false);
   });
 
-  it('extracts Button Props and default slot', () => {
+  it('extracts Button Props and default slot from the recipe schema', () => {
     const doc = getAstroComponentDoc('button');
     expect(doc?.componentName).toBe('Button');
     expect(doc?.props.map((p) => p.name)).toEqual(
-      expect.arrayContaining([
-        'tone',
-        'appearance',
-        'intent',
-        'size',
-        'className',
-        'type',
-        'disabled',
-      ]),
+      expect.arrayContaining(['tone', 'appearance', 'size', 'className', 'type', 'disabled']),
     );
-    expect(doc?.props.find((p) => p.name === 'intent')?.default).toBeUndefined();
+    expect(doc?.props.find((p) => p.name === 'intent')).toBeUndefined();
+    expect(doc?.props.find((p) => p.name === 'size')?.type).toBe("'sm' | 'md' | 'lg'");
+    expect(doc?.props.find((p) => p.name === 'elevated')?.type).toBe('boolean');
     expect(doc?.slots.some((s) => s.name === 'default')).toBe(true);
+  });
+
+  it('reads avatar size options from the shared size axis', () => {
+    const doc = getAstroComponentDoc('avatar');
+    expect(doc?.props.find((p) => p.name === 'size')?.type).toBe(
+      "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+    );
   });
 
   it('extracts EmptyState named slots', () => {

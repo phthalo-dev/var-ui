@@ -1,12 +1,10 @@
 import type { JSX, ReactNode } from 'react';
-import { chatSystemMessage, type ButtonTone } from '@var-ui/core';
-import { mergeProps } from '../utils';
-
-export type ChatSystemMessageTone = ButtonTone;
+import { chatSystemMessage, type ChatSystemMessageVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type ChatSystemMessageProps = {
   /** Semantic tone. @default neutral */
-  tone?: ChatSystemMessageTone;
+  tone?: NonNullable<ChatSystemMessageVariantProps['tone']>;
   /** Optional leading icon — pass an `<Icon name="…" />`. */
   icon?: ReactNode;
   /** Message text. */

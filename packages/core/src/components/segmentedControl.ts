@@ -1,55 +1,71 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
-import { controlSizeVariants, segmentedControlSize } from './controlSize';
-import { themeableVars } from './themeableVars';
+import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
 
-const indicatorTransition = `transform ${duration.medium} ${easing.emphasized}, width ${duration.medium} ${easing.emphasized}, opacity ${duration.fast} ${easing.standard}`;
+const segmentedSegmentPaddingInline: Record<ControlSize, string> = {
+  sm: t.space[3].var,
+  md: t.space[4].var,
+  lg: t.space[4].var,
+};
 
-/** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
-export const segmentedControlVarDefinitions = {
-  trackBackground: {
-    value: t.color.border.subtle.var,
-    syntax: '<color>' as const,
-  },
-  indicatorBackground: {
-    value: t.color.background.surface.var,
-    syntax: '<color>' as const,
-  },
-  segmentColor: {
-    value: t.color.text.secondary.var,
-    syntax: '<color>' as const,
-  },
-  segmentSelectedColor: {
-    value: t.color.text.primary.var,
-    syntax: '<color>' as const,
-  },
-  indicatorX: {
-    value: '0px',
-    syntax: '<length>' as const,
-  },
-  indicatorWidth: {
-    value: '0px',
-    syntax: '<length>' as const,
-  },
-  indicatorOpacity: {
-    value: '0',
-    syntax: '<number>' as const,
-  },
-} as const;
+/** Track + segment metrics for segmented controls (icon-friendly square segments). */
+function segmentedControlSize(size: ControlSize) {
+  const height = controlSizeMetrics[size].height;
+  const trackPadding = t.space[1].var;
+  return {
+    root: {
+      boxSizing: 'border-box' as const,
+      height,
+      minHeight: height,
+    },
+    segment: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      minHeight: 0,
+      paddingInline: segmentedSegmentPaddingInline[size],
+      fontSize: controlSizeMetrics[size].fontSize,
+      lineHeight: 1,
+    },
+    indicatorInset: trackPadding,
+    segmentMinWidth: `calc(${height} - 2 * ${trackPadding})`,
+  };
+}
 
 /**
  * Segmented toggle group with a sliding surface indicator behind the active segment.
  */
-const segmentedControlRecipe = typestyles.styles.component(
-  'segmented-control',
-  (c) => {
-    const v = c.vars(segmentedControlVarDefinitions);
+export const segmentedControl = typestyles.recipe({
+  name: 'segmented-control',
+  layer: 'components',
+  slots: ['root'],
+  variants: { size: controlSize },
+  vars: {
+    trackBackground: {
+      ...atProperty.color,
+      value: t.color.border.subtle.var,
+    },
+    indicatorBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    segmentColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    segmentSelectedColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    indicatorX: { ...atProperty.length, value: '0px' },
+    indicatorWidth: { ...atProperty.length, value: '0px' },
+    indicatorOpacity: { ...atProperty.number, value: '0' },
+  },
+  styles: ({ vars }) => {
     return {
-      vars: segmentedControlVarDefinitions,
-      slots: ['root'],
       base: {
         root: {
           position: 'relative',
@@ -60,7 +76,7 @@ const segmentedControlRecipe = typestyles.styles.component(
           gap: 0,
           borderRadius: t.radius.lg.var,
           border: 'none',
-          backgroundColor: v.trackBackground.var,
+          backgroundColor: vars.trackBackground.var,
           isolation: 'isolate',
           ...atDarkMode({
             '&::after': {
@@ -73,15 +89,15 @@ const segmentedControlRecipe = typestyles.styles.component(
             top: t.space[1].var,
             bottom: t.space[1].var,
             insetInlineStart: 0,
-            width: v.indicatorWidth.var,
+            width: vars.indicatorWidth.var,
             borderRadius: t.radius.lg.var,
-            backgroundColor: v.indicatorBackground.var,
+            backgroundColor: vars.indicatorBackground.var,
             boxShadow: t.shadow.xs.var,
             pointerEvents: 'none',
-            opacity: v.indicatorOpacity.var,
+            opacity: vars.indicatorOpacity.var,
             zIndex: 0,
-            transform: `translateX(${v.indicatorX.var})`,
-            transition: indicatorTransition,
+            transform: `translateX(${vars.indicatorX.var})`,
+            transition: `transform ${duration.medium} ${easing.emphasized}, width ${duration.medium} ${easing.emphasized}, opacity ${duration.fast} ${easing.standard}`,
             ...atReducedMotion({ transition: 'none' }),
           },
           '& > *': {
@@ -91,7 +107,7 @@ const segmentedControlRecipe = typestyles.styles.component(
             border: 'none',
             borderRadius: t.radius.lg.var,
             backgroundColor: 'transparent',
-            color: v.segmentColor.var,
+            color: vars.segmentColor.var,
             fontWeight: t.fontWeight.normal.var,
             boxShadow: 'none',
             transition: `color ${duration.fast} ${easing.standard}, font-weight ${duration.fast} ${easing.standard}`,
@@ -104,7 +120,7 @@ const segmentedControlRecipe = typestyles.styles.component(
               outlineOffset: '1px',
             },
             '&[data-selected], &[aria-pressed="true"]': {
-              color: v.segmentSelectedColor.var,
+              color: vars.segmentSelectedColor.var,
               fontWeight: t.fontWeight.semibold.var,
               backgroundColor: 'transparent',
               borderColor: 'transparent',
@@ -131,13 +147,9 @@ const segmentedControlRecipe = typestyles.styles.component(
           };
         }),
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export const segmentedControl = themeableVars(
-  segmentedControlRecipe,
-  segmentedControlVarDefinitions,
-);
+/** Visual props derived from the schema. */
+export type SegmentedControlVariantProps = RecipeVariants<typeof segmentedControl>;

@@ -1,10 +1,10 @@
 import type { HTMLAttributes, JSX } from 'react';
-import { surface } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { surface, type SurfaceVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
   /** @default md */
-  padding?: 'sm' | 'md';
+  padding?: NonNullable<SurfaceVariantProps['padding']>;
 };
 
 /** Bordered content box without title/body slots. */

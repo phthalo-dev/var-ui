@@ -36,11 +36,11 @@ describe('html-api-docs', () => {
     expect(doc?.parts.some((p) => p.part === 'item')).toBe(true);
   });
 
-  it('documents text utility string parts', () => {
+  it('documents text block string parts', () => {
     const doc = getHtmlApiDoc('text');
-    expect(doc?.recipeName).toBe('text');
+    expect(doc?.recipeName).toBe('textBlock');
     expect(doc?.parts.length).toBeGreaterThan(0);
-    expect(doc?.parts.some((p) => p.className?.includes('var-ui-ds-text'))).toBe(true);
+    expect(doc?.parts.some((p) => p.className?.includes('var-ui-text-block'))).toBe(true);
   });
 
   it('covers most component slugs with HTML class tables', () => {

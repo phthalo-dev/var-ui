@@ -2,60 +2,64 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { fieldChrome } from './field';
+import { fieldChrome } from './fieldChrome';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Password text field with an inline visibility toggle. Shares field chrome
  * with `textField` but wraps the input in a bordered group for the toggle.
  */
-export const passwordField = typestyles.styles.component(
-  'password-field',
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      inputBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      inputBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      inputForeground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      placeholderColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      descriptionColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      errorColor: {
-        value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
-      },
-      toggleColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      toggleHoverBackground: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-    });
+export const passwordField = typestyles.recipe({
+  name: 'password-field',
+  layer: 'components',
+  slots: ['root', 'label', 'inputWrapper', 'input', 'visibilityToggle', 'description', 'error'],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    toggleColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    toggleHoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+  },
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'inputWrapper', 'input', 'visibilityToggle', 'description', 'error'],
       base: {
         root: {
           ...chrome.root,
@@ -71,10 +75,10 @@ export const passwordField = typestyles.styles.component(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.inputBackground.var,
-          color: v.inputForeground.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
@@ -94,10 +98,10 @@ export const passwordField = typestyles.styles.component(
           backgroundColor: 'transparent',
           fontSize: 'inherit',
           fontFamily: t.fontFamily.body.var,
-          color: v.inputForeground.var,
+          color: vars.inputForeground.var,
           outline: 'none',
           '&::placeholder': {
-            color: v.placeholderColor.var,
+            color: vars.placeholderColor.var,
           },
           '&:disabled': {
             cursor: 'not-allowed',
@@ -113,11 +117,11 @@ export const passwordField = typestyles.styles.component(
           padding: t.space[1].var,
           borderRadius: t.radius.sm.var,
           backgroundColor: 'transparent',
-          color: v.toggleColor.var,
+          color: vars.toggleColor.var,
           cursor: 'pointer',
           lineHeight: 0,
           '&:hover': {
-            backgroundColor: v.toggleHoverBackground.var,
+            backgroundColor: vars.toggleHoverBackground.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
@@ -134,8 +138,9 @@ export const passwordField = typestyles.styles.component(
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type PasswordFieldVariantProps = RecipeVariants<typeof passwordField>;

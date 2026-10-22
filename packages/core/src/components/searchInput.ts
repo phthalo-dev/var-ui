@@ -1,11 +1,15 @@
-import { styles, typestyles } from '../runtime';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
+import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlFocusStyles } from './controlFocus';
 import { controlSizeMetrics, controlSizeVariants, controlSurfaceSize } from './controlSize';
-import type { ControlSize } from './semanticTone';
+import { controlSize } from '../shared/variantAxes';
 
 /** Command-trigger chrome collapses to an icon button below this width. */
-const belowXl = styles.breakpoint('xl', 'max');
+const belowXl = breakpoint('xl', 'max');
+
+/** `default` — inline search input; `command` — read-only command-palette trigger. */
+const searchInputVariant = variant.enum(['default', 'command'], { default: 'default' });
 
 /**
  * Compact search field for toolbars and nav chrome.
@@ -14,40 +18,42 @@ const belowXl = styles.breakpoint('xl', 'max');
  * - `command` — read-only trigger chrome with a shortcut hint; pair with
  *   `CommandPalette` via `data-command-palette` on the Astro component.
  */
-export const searchInput = typestyles.styles.component(
-  'search-input',
-  (c) => {
-    const v = c.vars({
-      background: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      border: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      foreground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      placeholder: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      iconColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-    });
+export const searchInput = typestyles.recipe({
+  name: 'search-input',
+  layer: 'components',
+  slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
+  variants: { variant: searchInputVariant, size: controlSize },
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    foreground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholder: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    iconColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
       base: {
         root: {
-          [v.background.name]: t.color.background.surface.var,
-          [v.border.name]: t.color.border.default.var,
-          [v.foreground.name]: t.color.text.primary.var,
-          [v.placeholder.name]: t.color.text.secondary.var,
-          [v.iconColor.name]: t.color.text.secondary.var,
+          [vars.background.name]: t.color.background.surface.var,
+          [vars.border.name]: t.color.border.default.var,
+          [vars.foreground.name]: t.color.text.primary.var,
+          [vars.placeholder.name]: t.color.text.secondary.var,
+          [vars.iconColor.name]: t.color.text.secondary.var,
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space[2].var,
@@ -56,10 +62,10 @@ export const searchInput = typestyles.styles.component(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.background.var,
-          color: v.foreground.var,
+          backgroundColor: vars.background.var,
+          color: vars.foreground.var,
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
@@ -70,7 +76,7 @@ export const searchInput = typestyles.styles.component(
           flexShrink: 0,
           display: 'inline-flex',
           alignItems: 'center',
-          color: v.iconColor.var,
+          color: vars.iconColor.var,
           lineHeight: 0,
         },
         input: {
@@ -82,10 +88,10 @@ export const searchInput = typestyles.styles.component(
           backgroundColor: 'transparent',
           fontSize: 'inherit',
           fontFamily: t.fontFamily.body.var,
-          color: v.foreground.var,
+          color: vars.foreground.var,
           outline: 'none',
           '&::placeholder': {
-            color: v.placeholder.var,
+            color: vars.placeholder.var,
           },
           '&::-webkit-search-cancel-button': {
             display: 'none',
@@ -111,7 +117,7 @@ export const searchInput = typestyles.styles.component(
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          color: v.placeholder.var,
+          color: vars.placeholder.var,
         },
         shortcut: {
           flexShrink: 0,
@@ -157,13 +163,8 @@ export const searchInput = typestyles.styles.component(
           triggerLabel: { fontSize: controlSizeMetrics[size].fontSize },
         })),
       },
-      defaultVariants: { variant: 'default', size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type SearchInputVariantProps = {
-  variant?: 'default' | 'command';
-  size?: ControlSize;
-};
+export type SearchInputVariantProps = RecipeVariants<typeof searchInput>;

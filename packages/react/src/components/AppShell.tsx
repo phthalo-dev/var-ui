@@ -5,11 +5,12 @@ import {
   type AppShellContentPadding,
   type AppShellMobileBreakpoint,
   appShellMobileBreakpointQueries,
+  type AppShellVariantProps,
 } from '@var-ui/core';
 import { useHeadroom, type UseHeadroomOptions } from '../hooks/useHeadroom';
 import { useMediaQuery } from '../hooks';
 import { MobileNavProvider } from './MobileNav';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 /** `id` of the `<main>` landmark — target of the skip-to-content link. */
 export const APP_SHELL_MAIN_ID = 'var-ui-app-shell-main';
@@ -61,9 +62,9 @@ export type AppShellProps = {
    */
   headerOffset?: boolean;
   /** @default 'fill' */
-  height?: 'fill' | 'auto';
+  height?: NonNullable<AppShellVariantProps['height']>;
   /** @default 'elevated' */
-  variant?: 'wash' | 'surface' | 'section' | 'elevated';
+  variant?: NonNullable<AppShellVariantProps['variant']>;
   /** Main content padding — design-token space step. @default 0 */
   contentPadding?: AppShellContentPadding;
   /** Viewport width below which `sideNav` hides and `data-mobile` is set on the root. `'none'` never goes mobile. @default 'md' */

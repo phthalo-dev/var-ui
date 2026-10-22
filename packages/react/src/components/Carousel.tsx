@@ -3,7 +3,7 @@ import { Children, useRef } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { carousel } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CarouselProps = {
   /** Slides to render inside the scroll viewport. */

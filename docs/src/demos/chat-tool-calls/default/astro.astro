@@ -3,7 +3,7 @@ import { chatToolCalls } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 
 // No @var-ui/astro ChatToolCalls — static collapsed group chrome (expand is React-only).
-const t = chatToolCalls({ status: 'complete', expanded: 'false' });
+const t = chatToolCalls({ status: 'complete', expanded: false });
 ---
 
 <div {...mergeProps(t.root)}>

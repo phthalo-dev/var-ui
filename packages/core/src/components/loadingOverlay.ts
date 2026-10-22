@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -5,17 +6,18 @@ import { designTokens as t } from '../tokens';
  * Blocks interaction over a relatively-positioned parent while async work
  * runs. Compose with `LoadingOverlay` in React or apply slots manually.
  */
-export const loadingOverlay = typestyles.styles.component(
-  'loading-overlay',
-  (c) => {
-    const v = c.vars({
-      backdrop: {
-        value: t.color.overlay.backdrop.var,
-        syntax: '<color>',
-      },
-    });
+export const loadingOverlay = typestyles.recipe({
+  name: 'loading-overlay',
+  layer: 'components',
+  slots: ['root', 'overlay', 'loader'],
+  vars: {
+    backdrop: {
+      ...atProperty.color,
+      value: t.color.overlay.backdrop.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'overlay', 'loader'],
       base: {
         root: {
           position: 'relative',
@@ -26,7 +28,7 @@ export const loadingOverlay = typestyles.styles.component(
           zIndex: t.zIndex.overlay.var,
           display: 'grid',
           placeItems: 'center',
-          backgroundColor: v.backdrop.var,
+          backgroundColor: vars.backdrop.var,
           borderRadius: 'inherit',
         },
         loader: {
@@ -35,5 +37,4 @@ export const loadingOverlay = typestyles.styles.component(
       },
     };
   },
-  { layer: 'components' },
-);
+});

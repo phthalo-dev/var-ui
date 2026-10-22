@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { DocsFramework } from '../lib/framework';
+import type { DocsFramework } from '@var-ui/docs-components/framework';
 
 export type DemoId =
   | 'button.default'

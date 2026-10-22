@@ -1,7 +1,9 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { fieldChrome } from './field';
+import { fieldChrome } from './fieldChrome';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Connected-border group for bare `<input>`s and text addons (e.g. a
@@ -14,54 +16,56 @@ import { fieldChrome } from './field';
  * technique: interior borders overlap by 1px and only the first/last child
  * keep the container's outer corner radius.
  */
-export const inputGroup = typestyles.styles.component(
-  'input-group',
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      descriptionColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      errorColor: {
-        value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
-      },
-      inputBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      inputBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      inputForeground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      placeholderColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      textBackground: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      textForeground: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-    });
+export const inputGroup = typestyles.recipe({
+  name: 'input-group',
+  layer: 'components',
+  slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    inputBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    inputBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    inputForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    textBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    textForeground: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+  },
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     return {
-      slots: ['root', 'label', 'description', 'error', 'group', 'input', 'text'],
       base: {
         root: {
           ...chrome.root,
@@ -102,17 +106,17 @@ export const inputGroup = typestyles.styles.component(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           fontSize: 'inherit',
-          backgroundColor: v.inputBackground.var,
-          color: v.inputForeground.var,
+          backgroundColor: vars.inputBackground.var,
+          color: vars.inputForeground.var,
           '&:focus': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
-            [v.inputBorder.name]: t.color.border.focus.var,
+            [vars.inputBorder.name]: t.color.border.focus.var,
           },
           '&::placeholder': {
-            color: v.placeholderColor.var,
+            color: vars.placeholderColor.var,
           },
           '&:disabled': {
             cursor: 'not-allowed',
@@ -122,11 +126,11 @@ export const inputGroup = typestyles.styles.component(
           display: 'flex',
           alignItems: 'center',
           paddingInline: t.space[2].var,
-          backgroundColor: v.textBackground.var,
-          color: v.textForeground.var,
+          backgroundColor: vars.textBackground.var,
+          color: vars.textForeground.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.inputBorder.var,
+          borderColor: vars.inputBorder.var,
           whiteSpace: 'nowrap',
           flexShrink: 0,
         },
@@ -144,8 +148,9 @@ export const inputGroup = typestyles.styles.component(
           },
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type InputGroupVariantProps = RecipeVariants<typeof inputGroup>;

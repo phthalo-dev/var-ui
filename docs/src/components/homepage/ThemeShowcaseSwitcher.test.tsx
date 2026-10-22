@@ -2,7 +2,8 @@ import { designPaletteList, designStyleList } from '@/themes';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SHOWCASE_THEMES, ThemeShowcaseSwitcher } from './ThemeShowcaseSwitcher';
+import { docsThemePresets } from '@/themes/presets';
+import { ThemeShowcaseSwitcher } from './ThemeShowcaseSwitcher';
 
 describe('ThemeShowcaseSwitcher', () => {
   it('lists exactly the 8 showcase themes (see specs/theme-gallery.md)', () => {
@@ -11,7 +12,7 @@ describe('ThemeShowcaseSwitcher', () => {
       ...designStyleList.map((entry) => entry.id),
     ]);
     expect(knownIds.size).toBe(8);
-    expect(new Set(SHOWCASE_THEMES.map((theme) => theme.id))).toEqual(knownIds);
+    expect(new Set(docsThemePresets.map((theme) => theme.id))).toEqual(knownIds);
   });
 
   it('marks the selected theme pill as checked', () => {

@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Square media preview with an optional floating remove control.
@@ -9,28 +11,32 @@ import { designTokens as t } from '../tokens';
  * <span className={s.root}><img className={s.image} … /></span>
  * ```
  */
-export const thumbnail = typestyles.styles.component(
-  'thumbnail',
-  (c) => {
-    const v = c.vars({
-      size: { value: '64px', syntax: '<length>' },
-      border: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-    });
+export const thumbnail = typestyles.recipe({
+  name: 'thumbnail',
+  layer: 'components',
+  slots: ['root', 'image', 'dismiss'],
+  variants: {
+    size: controlSize,
+  },
+  vars: {
+    size: { ...atProperty.length, value: '64px' },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'image', 'dismiss'],
       base: {
         root: {
           position: 'relative',
           display: 'inline-block',
-          width: v.size.var,
-          height: v.size.var,
+          width: vars.size.var,
+          height: vars.size.var,
           borderRadius: t.radius.md.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
         },
         image: {
           width: '100%',
@@ -49,7 +55,7 @@ export const thumbnail = typestyles.styles.component(
           borderRadius: '50%',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           backgroundColor: t.color.background.surface.var,
           cursor: 'pointer',
           padding: 0,
@@ -62,13 +68,14 @@ export const thumbnail = typestyles.styles.component(
       },
       variants: {
         size: {
-          sm: { root: { [v.size.name]: '48px' } },
-          md: { root: { [v.size.name]: '64px' } },
-          lg: { root: { [v.size.name]: '96px' } },
+          sm: { root: { [vars.size.name]: '48px' } },
+          md: { root: { [vars.size.name]: '64px' } },
+          lg: { root: { [vars.size.name]: '96px' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ThumbnailVariantProps = RecipeVariants<typeof thumbnail>;

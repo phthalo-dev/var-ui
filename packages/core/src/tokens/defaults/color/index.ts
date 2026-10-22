@@ -1,22 +1,22 @@
-import type { DesignColorValues, SemanticColorTokens } from '../../types';
-import { background, darkBackground } from './background';
-import { border, darkBorder } from './border';
-import { code, darkCode } from './code';
-import { link, darkLink } from './link';
-import { navItem, darkNavItem } from './navItem';
-import { overlay, darkOverlay } from './overlay';
-import { ring, darkRing } from './ring';
-import { skeleton, darkSkeleton } from './skeleton';
-import { text, darkText } from './text';
+import type { ColorTokenPatch, SemanticColorTokens } from '../../types';
+import { background } from './background';
+import { border } from './border';
+import { code } from './code';
+import { link } from './link';
+import { navItem } from './navItem';
+import { overlay } from './overlay';
+import { ring } from './ring';
+import { skeleton } from './skeleton';
+import { text } from './text';
 import { tone } from './tone';
-import { track, darkTrack } from './track';
+import { track } from './track';
 
-export { lightCodeValues, darkCodeValues } from './code';
+export { lightSyntaxValues, darkSyntaxValues, type SyntaxFaceValues } from './code';
 
-export const color: Omit<SemanticColorTokens, 'tone'> & Pick<DesignColorValues, 'tone'> = {
+/** Default semantic colors with mode-aware `{ light, dark }` leaves. */
+export const color = {
   background,
   text,
-  tone,
   border,
   link,
   navItem,
@@ -25,20 +25,5 @@ export const color: Omit<SemanticColorTokens, 'tone'> & Pick<DesignColorValues, 
   skeleton,
   track,
   code,
-};
-
-export const dark: Partial<SemanticColorTokens> = {
-  background: darkBackground,
-  text: darkText,
-  border: darkBorder,
-  link: darkLink,
-  navItem: darkNavItem,
-  ring: darkRing,
-  overlay: darkOverlay,
-  skeleton: darkSkeleton,
-  track: darkTrack,
-  code: darkCode,
-};
-
-export const lightSyntaxValues: SemanticColorTokens['code'] = code;
-export const darkSyntaxValues: SemanticColorTokens['code'] = darkCode;
+  tone,
+} as Omit<SemanticColorTokens, 'tone'> & Pick<ColorTokenPatch, 'tone'>;

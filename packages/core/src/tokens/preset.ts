@@ -20,7 +20,7 @@ import { palette } from './defaults/color/palette';
 import type { DesignTokens } from './types';
 
 /** Registered default token values. Tone uses inline `{ light, dark }` leaves split at theme compile time. */
-export const tokenValues = {
+export const defaultTokens = {
   space,
   size,
   opacity,
@@ -43,3 +43,5 @@ export const tokenValues = {
     ...color,
   },
 } as DesignTokens;
+
+export { defaultTokens as tokenValues };

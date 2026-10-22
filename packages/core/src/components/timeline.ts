@@ -1,29 +1,36 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { semanticChannelAssignments } from './semanticTone';
+import { mapTone, toneChannelAssignments, toneWithDefault } from '../shared/semanticTone';
+import { controlSize } from '../shared/variantAxes';
 
 /**
  * Vertical activity timeline with bullets and connecting lines.
  */
-export const timeline = typestyles.styles.component(
-  'timeline',
-  (c) => {
-    const v = c.vars({
-      line: { value: t.color.border.default.var, syntax: '<color>' },
-      bulletBorder: { value: t.color.border.default.var, syntax: '<color>' },
-      bulletBackground: { value: t.color.background.surface.var, syntax: '<color>' },
-      bulletForeground: { value: t.color.text.secondary.var, syntax: '<color>' },
-      titleColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      descriptionColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      timestampColor: { value: t.color.text.secondary.var, syntax: '<color>' },
-      semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
-      solidBg: { value: t.color.tone.accent.background.var, syntax: '<color>' },
-      solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
-      bulletSize: { value: t.space[3].var, syntax: '<length>' },
-      lineWidth: { value: t.borderWidth.default.var, syntax: '<length>' },
-    });
+export const timeline = typestyles.recipe({
+  name: 'timeline',
+  layer: 'components',
+  slots: ['root', 'item', 'bullet', 'body', 'title', 'description', 'timestamp'],
+  variants: {
+    size: controlSize,
+    tone: toneWithDefault('accent'),
+  },
+  vars: {
+    line: { ...atProperty.color, value: t.color.border.default.var },
+    bulletBorder: { ...atProperty.color, value: t.color.border.default.var },
+    bulletBackground: { ...atProperty.color, value: t.color.background.surface.var },
+    bulletForeground: { ...atProperty.color, value: t.color.text.secondary.var },
+    titleColor: { ...atProperty.color, value: t.color.text.primary.var },
+    descriptionColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    timestampColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+    solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+    solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+    bulletSize: { ...atProperty.length, value: t.space[3].var },
+    lineWidth: { ...atProperty.length, value: t.borderWidth.default.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'item', 'bullet', 'body', 'title', 'description', 'timestamp'],
       base: {
         root: {
           listStyle: 'none',
@@ -33,7 +40,7 @@ export const timeline = typestyles.styles.component(
         item: {
           position: 'relative',
           display: 'grid',
-          gridTemplateColumns: `${v.bulletSize.var} minmax(0, 1fr)`,
+          gridTemplateColumns: `${vars.bulletSize.var} minmax(0, 1fr)`,
           columnGap: t.space[3].var,
           paddingBottom: t.space[4].var,
           '&:last-child': {
@@ -42,11 +49,11 @@ export const timeline = typestyles.styles.component(
           '&:not(:last-child)::before': {
             content: '""',
             position: 'absolute',
-            top: `calc(${v.bulletSize.var} + ${t.space[1].var})`,
+            top: `calc(${vars.bulletSize.var} + ${t.space[1].var})`,
             bottom: 0,
-            left: `calc((${v.bulletSize.var} - ${v.lineWidth.var}) / 2)`,
-            width: v.lineWidth.var,
-            backgroundColor: v.line.var,
+            left: `calc((${vars.bulletSize.var} - ${vars.lineWidth.var}) / 2)`,
+            width: vars.lineWidth.var,
+            backgroundColor: vars.line.var,
           },
         },
         bullet: {
@@ -55,24 +62,24 @@ export const timeline = typestyles.styles.component(
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: v.bulletSize.var,
-          height: v.bulletSize.var,
+          width: vars.bulletSize.var,
+          height: vars.bulletSize.var,
           borderRadius: t.radius.full.var,
-          borderWidth: v.lineWidth.var,
+          borderWidth: vars.lineWidth.var,
           borderStyle: 'solid',
-          borderColor: v.bulletBorder.var,
-          backgroundColor: v.bulletBackground.var,
-          color: v.bulletForeground.var,
+          borderColor: vars.bulletBorder.var,
+          backgroundColor: vars.bulletBackground.var,
+          color: vars.bulletForeground.var,
           flexShrink: 0,
           '&[data-active]': {
-            [v.bulletBorder.name]: v.solidBg.var,
-            [v.bulletBackground.name]: v.solidBg.var,
-            [v.bulletForeground.name]: v.solidFg.var,
+            [vars.bulletBorder.name]: vars.solidBg.var,
+            [vars.bulletBackground.name]: vars.solidBg.var,
+            [vars.bulletForeground.name]: vars.solidFg.var,
           },
           '&[data-pending]': {
-            [v.bulletBorder.name]: v.bulletBorder.var,
-            [v.bulletBackground.name]: v.bulletBackground.var,
-            [v.bulletForeground.name]: v.bulletForeground.var,
+            [vars.bulletBorder.name]: vars.bulletBorder.var,
+            [vars.bulletBackground.name]: vars.bulletBackground.var,
+            [vars.bulletForeground.name]: vars.bulletForeground.var,
           },
         },
         body: {
@@ -86,19 +93,19 @@ export const timeline = typestyles.styles.component(
           margin: 0,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
-          color: v.titleColor.var,
+          color: vars.titleColor.var,
           lineHeight: 1.4,
         },
         description: {
           margin: 0,
           fontSize: t.fontSize.sm.var,
-          color: v.descriptionColor.var,
+          color: vars.descriptionColor.var,
           lineHeight: 1.5,
         },
         timestamp: {
           margin: 0,
           fontSize: t.fontSize.xs.var,
-          color: v.timestampColor.var,
+          color: vars.timestampColor.var,
           lineHeight: 1.4,
         },
       },
@@ -106,45 +113,20 @@ export const timeline = typestyles.styles.component(
         size: {
           sm: {
             item: {
-              [v.bulletSize.name]: t.space[2].var,
+              [vars.bulletSize.name]: t.space[2].var,
             },
           },
           md: {},
-        },
-        tone: {
-          accent: { bullet: semanticChannelAssignments(v, 'accent') },
-          success: { bullet: semanticChannelAssignments(v, 'success') },
-          warning: { bullet: semanticChannelAssignments(v, 'warning') },
-          danger: { bullet: semanticChannelAssignments(v, 'danger') },
-          tip: { bullet: semanticChannelAssignments(v, 'info') },
-          neutral: {
-            bullet: {
-              [v.semantic.name]: t.color.text.secondary.var,
-              [v.solidBg.name]: t.color.text.primary.var,
-              [v.solidFg.name]: t.color.background.surface.var,
+          lg: {
+            item: {
+              [vars.bulletSize.name]: t.space[4].var,
             },
           },
         },
+        tone: mapTone((key) => ({ bullet: toneChannelAssignments(vars, key) })),
       },
-      defaultVariants: { size: 'md', tone: 'accent' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type TimelineRecipeProps = NonNullable<Parameters<typeof timeline>[0]>;
-export type TimelineSize = NonNullable<TimelineRecipeProps['size']>;
-export type TimelineTone = NonNullable<TimelineRecipeProps['tone']>;
-export type TimelineVariantProps = {
-  size?: TimelineSize;
-  tone?: TimelineTone;
-};
-
-export const timelineVariantPropDocs = [
-  { name: 'size', type: "'sm' | 'md'", required: false },
-  { name: 'tone', type: 'TimelineTone', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof TimelineVariantProps;
-  type: string;
-  required: false;
-}>;
+export type TimelineVariantProps = RecipeVariants<typeof timeline>;

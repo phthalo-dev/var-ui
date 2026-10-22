@@ -1,35 +1,26 @@
 import { describe, it, expect, expectTypeOf } from 'vite-plus/test';
 import { getComponentMeta } from 'typestyles';
-import type { OverrideConfigFor } from '../src/theme/registry';
+import type { OverrideConfigFor } from '../src/theme';
 import * as components from '../src/components';
-import { themeableComponents } from '../src/theme/registry';
-import { styles } from '../src/runtime';
+import { typestyles } from '../src/runtime';
 import { button } from '../src/components/button';
 import { card } from '../src/components/card';
 import { badge } from '../src/components/badge';
 import { menu } from '../src/components/menu';
+import { tabs } from '../src/components/tabs';
 import { createDesignTheme } from '../src/theme/create-theme';
 
-describe('themeableComponents', () => {
+describe('themeable recipe registry', () => {
   it('includes every exported recipe function from components/', () => {
-    const themeable = styles.getThemeableComponents();
+    const themeable = typestyles.getThemeableComponents();
 
     const recipeExports = Object.entries(components).filter(
       ([name, value]) =>
         typeof value === 'function' &&
         ![
-          'layoutUtility',
-          'text',
-          'namedContainerQuery',
-          'getLayoutShellVars',
           'layoutContentWidthAssignment',
           'layoutShellPaddingAssignments',
-          'resolveButtonProps',
           'resolveScrollAreaFade',
-          'controlSurfaceSize',
-          'controlSizeVariants',
-          'controlFocusStyles',
-          'overlayPresenceStyles',
         ].includes(name) &&
         !name.endsWith('Chrome') &&
         !name.startsWith('create'),
@@ -44,12 +35,6 @@ describe('themeableComponents', () => {
     }
 
     expect(missing, `Themeable registry missing namespaces: ${missing.join(', ')}`).toEqual([]);
-  });
-
-  it('matches getRegisteredComponentRefs keys to themeable namespaces', () => {
-    expect(Object.keys(themeableComponents).sort()).toEqual(
-      [...styles.getThemeableComponents().keys()].sort(),
-    );
   });
 
   it('infers dimensioned button override shape with CSS + variant keys', () => {
@@ -103,29 +88,47 @@ describe('themeableComponents', () => {
     void ok;
   });
 
-  it('infers menu vars on componentStyles overrides', () => {
-    type MenuOverride = OverrideConfigFor<typeof menu>;
-    const ok: MenuOverride = {
-      vars: { popoverBackground: 'red' },
+  it('infers tabs vars from the recipe ref tree', () => {
+    type TabsOverride = OverrideConfigFor<typeof tabs>;
+    const ok: TabsOverride = {
+      vars: { railColor: 'red' },
     };
     void ok;
   });
 
-  it('types componentStyles on createDesignTheme from the recipe handle', () => {
-    const theme = createDesignTheme({ name: 'typed' });
-    theme.componentStyles(button, (t) => ({
-      base: { boxShadow: t.shadow.md.var, borderRadius: t.radius.lg.var },
-      variants: {
-        tone: {
-          accent: { textTransform: 'uppercase' },
-        },
-      },
-    }));
-    theme.componentStyles(card, {
+  it('infers menu popover overrides', () => {
+    type MenuOverride = OverrideConfigFor<typeof menu>;
+    const ok: MenuOverride = {
       base: {
-        root: { borderRadius: '16px' },
+        popover: { minWidth: '16rem' },
+      },
+    };
+    void ok;
+  });
+
+  it('types components on createDesignTheme from recipe namespaces', () => {
+    createDesignTheme({
+      name: 'typed',
+      components: {
+        button: {
+          styles: ({ tokens: t }) => ({
+            base: { boxShadow: t.shadow.md.var, borderRadius: t.radius.lg.var },
+            variants: {
+              tone: {
+                accent: { textTransform: 'uppercase' },
+              },
+            },
+          }),
+        },
+        card: {
+          styles: {
+            base: {
+              root: { borderRadius: '16px' },
+            },
+          },
+        },
+        badge: { styles: { base: { letterSpacing: '0.06em' } } },
       },
     });
-    theme.componentStyles(badge, { base: { letterSpacing: '0.06em' } });
   });
 });

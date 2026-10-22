@@ -1,10 +1,10 @@
 import type { JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { button, pagination, resolveButtonProps } from '@var-ui/core';
+import { button, pagination, type PaginationVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { IconButton } from './IconButton';
 import { Select } from './Select';
-import { cx, mergeProps } from './utils';
+import { cx, mergeProps } from 'typestyles';
 
 export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'none';
 
@@ -28,7 +28,7 @@ export type PaginationProps = {
   /** Page buttons shown on each side of the current page (`pages` variant only). @default 1 */
   siblingCount?: number;
   /** @default 'md' */
-  size?: 'sm' | 'md';
+  size?: NonNullable<PaginationVariantProps['size']>;
   isDisabled?: boolean;
   /** Accessible name for the nav landmark. @default 'Pagination' */
   label?: string;
@@ -150,7 +150,11 @@ export function Pagination({
             <AriaButton
               key={item}
               {...mergeProps(
-                button(resolveButtonProps({ intent: item === page ? 'secondary' : 'ghost', size })),
+                button({
+                  tone: item === page ? 'neutral' : 'accent',
+                  appearance: item === page ? 'subtle' : 'ghost',
+                  size,
+                }),
               )}
               onPress={() => goTo(item)}
               isDisabled={isDisabled}
@@ -218,7 +222,8 @@ export function Pagination({
         <IconButton
           name="chevronLeft"
           aria-label="Go to previous page"
-          intent="ghost"
+          tone="accent"
+          appearance="ghost"
           size={size}
           onPress={() => goTo(page - 1)}
           isDisabled={isDisabled || !hasPrevious}
@@ -228,7 +233,8 @@ export function Pagination({
         <IconButton
           name="chevronRight"
           aria-label="Go to next page"
-          intent="ghost"
+          tone="accent"
+          appearance="ghost"
           size={size}
           onPress={() => goTo(page + 1)}
           isDisabled={isDisabled || !hasNext}

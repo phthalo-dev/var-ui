@@ -8,13 +8,13 @@ import './forest';
 import './rose';
 import './amber';
 
-export { forestTheme, forestPreset } from './forest';
-export { roseTheme, rosePreset } from './rose';
-export { amberTheme, amberPreset } from './amber';
-export { aiGlowTheme, aiGlowPreset } from './ai-glow';
-export { newWaveTheme, newWavePreset } from './new-wave';
-export { windows95Theme, windows95Preset } from './windows-95';
-export { classicSystemTheme, classicSystemPreset } from './classic-system';
+export { forestTheme, forestThemeTokens } from './forest';
+export { roseTheme, roseThemeTokens } from './rose';
+export { amberTheme, amberThemeTokens } from './amber';
+export { aiGlowTheme, aiGlowThemeTokens } from './ai-glow';
+export { newWaveTheme, newWaveThemeTokens } from './new-wave';
+export { windows95Theme, windows95ThemeTokens } from './windows-95';
+export { classicSystemTheme, classicSystemThemeTokens } from './classic-system';
 
 export type DesignPaletteId = 'default' | 'forest' | 'rose' | 'amber';
 

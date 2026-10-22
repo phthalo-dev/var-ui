@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import ts from 'typescript';
 import { componentRegistry } from '../data/components.ts';
+import { canonicalizePropType } from './prop-type-format.ts';
 
 export type PropDoc = {
   name: string;
@@ -200,7 +201,12 @@ function extractPropsForType(program: ts.Program, typeName: string): ComponentPr
 
     props.push({
       name: prop.name,
-      type: checker.typeToString(propType),
+      // `NoTruncation` keeps the full member list so canonicalisation can sort it; the
+      // checker otherwise renders long unions as `… | ... 8 more ... | …`, which would
+      // both hide members and sort unpredictably.
+      type: canonicalizePropType(
+        checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation),
+      ),
       required: isPropertyRequired(prop, propType, checker),
       default: getJsDocTag(prop, 'default'),
       description: getJsDocDescription(prop, checker),

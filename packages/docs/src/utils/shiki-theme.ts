@@ -96,6 +96,3 @@ export const designTokenShikiTheme = {
     token(['strong'], c.base.var, { fontWeight: 'bold' }),
   ],
 } as const;
-
-/** @deprecated Prefer `designTokenShikiTheme`. */
-export const varUiCodeTheme = designTokenShikiTheme;

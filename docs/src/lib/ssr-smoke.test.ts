@@ -4,7 +4,9 @@ import { htmlDemoMap } from '../demos/htmlDemoMap';
 
 describe('SSR smoke — alert html cookie row', () => {
   it('html framework renders alert markup with public classes', () => {
-    const html = htmlDemoMap['alert.default']();
+    const render = htmlDemoMap['alert.default'];
+    if (!render) throw new Error('missing HTML renderer for alert.default');
+    const html = render();
     expect(html).toContain('data-alert');
     expect(html).toContain('var-ui-alert');
   });

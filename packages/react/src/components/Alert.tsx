@@ -1,24 +1,25 @@
 import type { JSX, ReactNode } from 'react';
-import { alert, type AlertVariant, type IconName, type SurfaceAppearance } from '@var-ui/core';
+import { alert, type AlertVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
-export type { AlertTone, AlertVariant, SurfaceAppearance as AlertAppearance } from '@var-ui/core';
+export type { SurfaceAppearance as AlertAppearance } from '@var-ui/core';
 
-/** Tone → registry glyph (spec §0.4): danger shares the `error` glyph, tip shares `info`. */
-const variantIconName: Record<AlertVariant, IconName> = {
+/** Tone → registry glyph. Danger uses the `error` glyph; neutral and accent use `info`. */
+const variantIconName: Record<Tone, IconName> = {
+  neutral: 'info',
+  accent: 'info',
   info: 'info',
   success: 'success',
   warning: 'warning',
   danger: 'error',
-  tip: 'info',
 };
 
 export type AlertProps = {
   /** Semantic tone that drives color and the default icon. */
-  variant: AlertVariant;
+  variant: NonNullable<AlertVariantProps['tone']>;
   /** Surface treatment. @default subtle */
-  appearance?: SurfaceAppearance;
+  appearance?: NonNullable<AlertVariantProps['appearance']>;
   /** Optional bold headline above the body content. */
   title?: string;
   /** Optional text link rendered below the message body. */
@@ -33,7 +34,7 @@ export type AlertProps = {
 
 export function Alert({
   variant,
-  appearance = 'subtle',
+  appearance = alert.defaults.appearance,
   title,
   action,
   icon,

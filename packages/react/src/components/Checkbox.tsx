@@ -4,7 +4,7 @@ import {
   type CheckboxProps as RACCheckboxProps,
 } from 'react-aria-components';
 import { checkbox } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CheckboxProps = Omit<RACCheckboxProps, 'children'> & {
   /** Label rendered beside the checkbox control. */

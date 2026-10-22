@@ -4,13 +4,11 @@ import {
   iconNameList,
   timeline,
   type IconName,
-  type TimelineTone,
+  type Tone,
   type TimelineVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
-
-export type { TimelineSize, TimelineTone } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type TimelineItemData = {
   id: string;
@@ -18,7 +16,7 @@ export type TimelineItemData = {
   description?: ReactNode;
   timestamp?: ReactNode;
   icon?: IconName | Exclude<ReactNode, string>;
-  tone?: TimelineTone;
+  tone?: Tone;
 };
 
 type TimelineContextValue = TimelineVariantProps & {
@@ -62,7 +60,7 @@ export type TimelineItemProps = {
   timestamp?: ReactNode;
   icon?: IconName | Exclude<ReactNode, string>;
   bullet?: ReactNode;
-  tone?: TimelineTone;
+  tone?: Tone;
   children?: ReactNode;
   className?: string;
   index?: number;

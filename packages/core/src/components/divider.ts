@@ -1,25 +1,31 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { orientation } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
 /**
  * Hairline separator; vertical orientation stretches to the parent's cross
  * size inside a flex row.
  *
  * ```tsx
- * <hr className={divider()} />
+ * <hr className={divider().className} />
  * ```
  */
-export const divider = typestyles.styles.component(
-  'divider',
-  (c) => {
-    const v = c.vars({
-      color: { value: t.color.border.default.var, syntax: '<color>' },
-    });
+export const divider = typestyles.recipe({
+  name: 'divider',
+  layer: 'components',
+  variants: {
+    orientation,
+  },
+  vars: {
+    color: { ...atProperty.color, value: t.color.border.default.var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         border: 'none',
         margin: 0,
-        backgroundColor: v.color.var,
+        backgroundColor: vars.color.var,
         flexShrink: 0,
       },
       variants: {
@@ -28,8 +34,9 @@ export const divider = typestyles.styles.component(
           vertical: { width: '1px', height: 'auto', alignSelf: 'stretch' },
         },
       },
-      defaultVariants: { orientation: 'horizontal' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type DividerVariantProps = RecipeVariants<typeof divider>;

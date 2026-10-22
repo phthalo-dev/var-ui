@@ -1,5 +1,7 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { density } from '../../shared/variantAxes';
+import { type RecipeVariants } from 'typestyles';
 
 /**
  * Presentational scroll container for chat messages. `density` controls
@@ -10,10 +12,12 @@ import { designTokens as t } from '../../tokens';
  * <div className={chatMessageList({ density: 'balanced' }).root}>…</div>
  * ```
  */
-export const chatMessageList = typestyles.styles.component(
-  'chat-message-list',
-  () => ({
-    slots: ['root', 'inner', 'emptyState'],
+export const chatMessageList = typestyles.recipe({
+  name: 'chat-message-list',
+  layer: 'components',
+  slots: ['root', 'inner', 'emptyState'],
+  variants: { density },
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -42,7 +46,8 @@ export const chatMessageList = typestyles.styles.component(
         spacious: { inner: { gap: t.space[6].var, padding: t.space[6].var } },
       },
     },
-    defaultVariants: { density: 'balanced' },
   }),
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatMessageListVariantProps = RecipeVariants<typeof chatMessageList>;

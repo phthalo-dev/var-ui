@@ -1,16 +1,16 @@
 import type { HTMLAttributes, JSX } from 'react';
-import { stack } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { stack, type StackVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type StackProps = HTMLAttributes<HTMLDivElement> & {
   /** Flex direction. @default column */
-  direction?: 'column' | 'row';
+  direction?: NonNullable<StackVariantProps['direction']>;
   /** Spacing between children. @default md */
-  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  gap?: NonNullable<StackVariantProps['gap']>;
   /** Cross-axis alignment. @default stretch */
-  align?: 'start' | 'center' | 'end' | 'stretch';
+  align?: NonNullable<StackVariantProps['align']>;
   /** Main-axis distribution. @default start */
-  justify?: 'start' | 'center' | 'end' | 'between';
+  justify?: NonNullable<StackVariantProps['justify']>;
   /** Whether flex items wrap to new lines. @default false */
   wrap?: boolean;
 };

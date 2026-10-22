@@ -1,5 +1,5 @@
 import type { ComponentPropsDoc } from '@/lib/extract-component-props';
-import { proseContent } from '@var-ui/core/internal';
+import { proseContent } from '@var-ui/core';
 
 type PropsTableProps = {
   /** Component slug from the registry, e.g. `button`. */

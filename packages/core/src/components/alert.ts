@@ -1,45 +1,52 @@
+import { atProperty, type RecipeVariants, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
   appearanceSurface,
-  semanticChannelAssignments,
-  type SurfaceAppearance,
-} from './semanticTone';
+  mapTone,
+  surfaceAppearance,
+  toneChannelAssignments,
+  toneWithDefault,
+} from '../shared/semanticTone';
 
 /**
- * Slot component with cross-axis variants using `c.vars()`:
+ * Slot recipe. The schema definition is the source of the visual props:
  *
  * - **tone** assigns semantic colors on `root` (custom properties). `title` uses
  *   `color: var(semantic)` in base styles (the var inherits from `root`).
- * - **appearance** chooses how those tokens are *applied* (tinted surface vs solid fill).
+ * - **appearance** chooses how those tokens are applied (tinted surface vs solid fill).
+ * - **contentGap** spaces the body under a title. React and Astro derive it from `title`.
  *
- * This avoids a compound-variant grid (`appearance × tone`) while keeping each axis
- * easy to extend independently.
- *
- * **Prior step:** `badge.ts` is the same `c.vars()` idea on a single-slot (flat) component.
- *
- * **Shared:** `semanticTone.ts` — one table for tone channels; subtle mixes match badge.
+ * Tone channels and the shared appearance axis live in `shared/semanticTone.ts`.
  */
-export const alert = typestyles.styles.component(
-  'alert',
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
-      },
-      solidBg: {
-        value: t.color.tone.accent.background.var,
-        syntax: '<color>',
-      },
-      solidFg: {
-        value: t.color.tone.accent.foregroundOnBackground.var,
-        syntax: '<color>',
-      },
-    });
+const alertTone = toneWithDefault('info');
+const alertContentGap = variant.enum(['spaced', 'flush'], { default: 'spaced' });
 
+export const alert = typestyles.recipe({
+  name: 'alert',
+  layer: 'components',
+  slots: ['root', 'icon', 'body', 'title', 'content', 'action', 'actionLink'],
+  variants: {
+    tone: alertTone,
+    appearance: surfaceAppearance,
+    contentGap: alertContentGap,
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.tone.accent.background.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foregroundOnBackground.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'icon', 'body', 'title', 'content', 'action', 'actionLink'],
       base: {
         root: {
           display: 'flex',
@@ -64,7 +71,7 @@ export const alert = typestyles.styles.component(
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.semibold.var,
           margin: 0,
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         content: {
           fontSize: t.fontSize.md.var,
@@ -91,24 +98,18 @@ export const alert = typestyles.styles.component(
         },
       },
       variants: {
-        tone: {
-          info: { root: semanticChannelAssignments(v, 'accent') },
-          success: { root: semanticChannelAssignments(v, 'success') },
-          warning: { root: semanticChannelAssignments(v, 'warning') },
-          danger: { root: semanticChannelAssignments(v, 'danger') },
-          tip: { root: semanticChannelAssignments(v, 'info') },
-        },
+        tone: mapTone((key) => ({ root: toneChannelAssignments(vars, key) })),
         appearance: {
           subtle: {
-            root: appearanceSurface(v, 'subtle'),
+            root: appearanceSurface(vars, 'subtle'),
           },
           solid: {
-            root: appearanceSurface(v, 'solid'),
+            root: appearanceSurface(vars, 'solid'),
             title: { color: 'inherit' },
             icon: { color: 'inherit' },
           },
           outline: {
-            root: appearanceSurface(v, 'outline'),
+            root: appearanceSurface(vars, 'outline'),
           },
         },
         contentGap: {
@@ -116,32 +117,9 @@ export const alert = typestyles.styles.component(
           flush: { content: { marginTop: 0 } },
         },
       },
-      defaultVariants: {
-        tone: 'info',
-        appearance: 'subtle',
-        contentGap: 'spaced',
-      },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type AlertRecipeProps = NonNullable<Parameters<typeof alert>[0]>;
-export type AlertTone = NonNullable<AlertRecipeProps['tone']>;
-/** Public API alias — React/Astro `Alert` uses `variant` for this axis. */
-export type AlertVariant = AlertTone;
-export type AlertVariantProps = {
-  tone?: AlertTone;
-  appearance?: SurfaceAppearance;
-  contentGap?: NonNullable<AlertRecipeProps['contentGap']>;
-};
-
-export const alertVariantPropDocs = [
-  { name: 'tone', type: 'AlertTone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-  { name: 'contentGap', type: "'spaced' | 'flush'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof AlertVariantProps;
-  type: string;
-  required: boolean;
-}>;
+/** Visual props derived from the schema. */
+export type AlertVariantProps = RecipeVariants<typeof alert>;

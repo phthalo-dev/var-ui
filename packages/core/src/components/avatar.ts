@@ -1,6 +1,7 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import type { ButtonTone } from './semanticTone';
+import { size } from '../shared/variantAxes';
 
 /**
  * Identity avatar: image with initials fallback and an optional status well
@@ -11,31 +12,33 @@ import type { ButtonTone } from './semanticTone';
  * <span className={a.root}><img className={a.image} … /></span>
  * ```
  */
-export const avatar = typestyles.styles.component(
-  'avatar',
-  (c) => {
-    const v = c.vars({
-      size: { value: '32px', syntax: '<length>' },
-      background: {
-        value: t.color.tone.accent.subtleBackground.var,
-        syntax: '<color>',
-      },
-      foreground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-    });
+export const avatar = typestyles.recipe({
+  name: 'avatar',
+  layer: 'components',
+  slots: ['root', 'image', 'initials', 'status'],
+  variants: { size },
+  vars: {
+    size: { ...atProperty.length, value: '32px' },
+    background: {
+      ...atProperty.color,
+      value: t.color.tone.accent.subtleBackground.var,
+    },
+    foreground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'image', 'initials', 'status'],
       base: {
         root: {
           position: 'relative',
           display: 'inline-flex',
-          width: v.size.var,
-          height: v.size.var,
+          width: vars.size.var,
+          height: vars.size.var,
           borderRadius: '50%',
-          backgroundColor: v.background.var,
-          color: v.foreground.var,
+          backgroundColor: vars.background.var,
+          color: vars.foreground.var,
           flexShrink: 0,
           verticalAlign: 'middle',
         },
@@ -50,7 +53,7 @@ export const avatar = typestyles.styles.component(
           height: '100%',
           display: 'grid',
           placeItems: 'center',
-          fontSize: `calc(${v.size.var} * 0.4)`,
+          fontSize: `calc(${vars.size.var} * 0.4)`,
           fontWeight: t.fontWeight.semibold.var,
           textTransform: 'uppercase',
           userSelect: 'none',
@@ -68,35 +71,19 @@ export const avatar = typestyles.styles.component(
       },
       variants: {
         size: {
-          xs: { root: { [v.size.name]: '20px' } },
-          sm: { root: { [v.size.name]: '24px' } },
-          md: { root: { [v.size.name]: '32px' } },
-          lg: { root: { [v.size.name]: '40px' } },
-          xl: { root: { [v.size.name]: '56px' } },
+          xs: { root: { [vars.size.name]: '20px' } },
+          sm: { root: { [vars.size.name]: '24px' } },
+          md: { root: { [vars.size.name]: '32px' } },
+          lg: { root: { [vars.size.name]: '40px' } },
+          xl: { root: { [vars.size.name]: '56px' } },
         },
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type AvatarRecipeProps = NonNullable<Parameters<typeof avatar>[0]>;
-export type AvatarSize = NonNullable<AvatarRecipeProps['size']>;
-/** Presence indicator tones for the avatar status well. */
-export type AvatarStatusTone = Extract<ButtonTone, 'success' | 'warning' | 'danger' | 'neutral'>;
-
-export type AvatarVariantProps = {
-  size?: AvatarSize;
-};
-
-export const avatarVariantPropDocs = [
-  { name: 'size', type: 'AvatarSize', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof AvatarVariantProps;
-  type: string;
-  required: false;
-}>;
+/** Visual props derived from the schema. */
+export type AvatarVariantProps = RecipeVariants<typeof avatar>;
 
 /**
  * Overlapping avatar row with a "+N" overflow chip.
@@ -106,39 +93,41 @@ export const avatarVariantPropDocs = [
  * <span className={g.root}>{avatars.map(a => <span className={g.item}>{a}</span>)}</span>
  * ```
  */
-export const avatarGroup = typestyles.styles.component(
-  'avatar-group',
-  (c) => {
-    const v = c.vars({
-      ringColor: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-    });
+export const avatarGroup = typestyles.recipe({
+  name: 'avatar-group',
+  layer: 'components',
+  slots: ['root', 'item', 'overflow'],
+  vars: {
+    ringColor: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'item', 'overflow'],
-      root: { display: 'inline-flex', alignItems: 'center' },
-      item: {
-        marginLeft: `calc(${t.space[2].var} * -1)`,
-        borderRadius: '50%',
-        boxShadow: `0 0 0 2px ${v.ringColor.var}`,
-        '&:first-child': { marginLeft: 0 },
-      },
-      overflow: {
-        marginLeft: `calc(${t.space[2].var} * -1)`,
-        display: 'grid',
-        placeItems: 'center',
-        minWidth: '32px',
-        height: '32px',
-        padding: `0 ${t.space[1].var}`,
-        borderRadius: '50%',
-        backgroundColor: t.color.background.subtle.var,
-        boxShadow: `0 0 0 2px ${v.ringColor.var}`,
-        fontSize: t.fontSize.xs.var,
-        fontWeight: t.fontWeight.semibold.var,
-        color: t.color.text.secondary.var,
+      base: {
+        root: { display: 'inline-flex', alignItems: 'center' },
+        item: {
+          marginLeft: `calc(${t.space[2].var} * -1)`,
+          borderRadius: '50%',
+          boxShadow: `0 0 0 2px ${vars.ringColor.var}`,
+          '&:first-child': { marginLeft: 0 },
+        },
+        overflow: {
+          marginLeft: `calc(${t.space[2].var} * -1)`,
+          display: 'grid',
+          placeItems: 'center',
+          minWidth: '32px',
+          height: '32px',
+          padding: `0 ${t.space[1].var}`,
+          borderRadius: '50%',
+          backgroundColor: t.color.background.subtle.var,
+          boxShadow: `0 0 0 2px ${vars.ringColor.var}`,
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.semibold.var,
+          color: t.color.text.secondary.var,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

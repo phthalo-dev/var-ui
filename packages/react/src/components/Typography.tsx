@@ -1,13 +1,18 @@
 import type { HTMLAttributes, JSX } from 'react';
 import { createElement } from 'react';
-import { heading, textBlock } from '@var-ui/core';
-import { mergeProps } from './utils';
+import {
+  heading,
+  textBlock,
+  type HeadingVariantProps,
+  type TextBlockVariantProps,
+} from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   /** Semantic heading level (document outline). @default 2 */
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   /** Visual size, independent of level. @default md */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'display';
+  size?: NonNullable<HeadingVariantProps['size']>;
 };
 
 /**
@@ -33,14 +38,20 @@ export type TextProps = HTMLAttributes<HTMLElement> & {
   /** HTML element to render. @default p */
   as?: 'p' | 'span' | 'div';
   /** Typographic size. @default md */
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: NonNullable<TextBlockVariantProps['size']>;
   /** Foreground color emphasis. @default primary */
-  tone?: 'primary' | 'secondary';
+  tone?: NonNullable<TextBlockVariantProps['tone']>;
   /** Font weight. @default normal */
-  weight?: 'normal' | 'medium' | 'semibold';
+  weight?: NonNullable<TextBlockVariantProps['weight']>;
   /** Max lines before truncation. @default none */
   lineClamp?: 1 | 2 | 3;
 };
+
+/** Public numeric `lineClamp` stanzas resolved from the `textBlock.lineClamp` axis. */
+const lineClampVariant: Record<
+  NonNullable<TextProps['lineClamp']>,
+  NonNullable<TextBlockVariantProps['lineClamp']>
+> = { 1: '1', 2: '2', 3: '3' };
 
 /**
  * Body text with size/tone/weight axes. Renders a `<p>` by default.
@@ -65,7 +76,7 @@ export function Text({
         size,
         tone,
         weight,
-        lineClamp: (lineClamp ?? false) as '1' | '2' | '3' | false,
+        lineClamp: lineClamp === undefined ? undefined : lineClampVariant[lineClamp],
       }),
       className,
     ),

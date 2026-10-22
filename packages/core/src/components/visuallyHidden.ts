@@ -1,9 +1,10 @@
 import { typestyles } from '../runtime';
 
 /** Screen-reader-only text; visually hidden but still read by assistive tech. */
-export const visuallyHidden = typestyles.styles.component(
-  'visually-hidden',
-  () => ({
+export const visuallyHidden = typestyles.recipe({
+  name: 'visually-hidden',
+  layer: 'utilities',
+  styles: () => ({
     base: {
       position: 'absolute',
       width: '1px',
@@ -16,5 +17,4 @@ export const visuallyHidden = typestyles.styles.component(
       border: 0,
     },
   }),
-  { layer: 'utilities' },
-);
+});

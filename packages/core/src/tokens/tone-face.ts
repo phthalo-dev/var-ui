@@ -1,6 +1,6 @@
 import { alpha } from 'typestyles/color';
 import { contrastRatio } from 'typestyles/color-scale';
-import type { DesignColorValues, DesignTokens } from './types';
+import type { DesignTokens } from './types';
 
 const WHITE = 'oklch(100% 0 0)';
 
@@ -108,4 +108,4 @@ export function createToneFace(
   };
 }
 
-export type ModeAwareToneTokens = DesignColorValues['tone'];
+export type ModeAwareToneTokens = DesignTokens['color']['tone'];

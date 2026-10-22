@@ -1,12 +1,12 @@
 import type { HTMLAttributes, JSX } from 'react';
-import { grid } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { grid, type GridVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type GridProps = HTMLAttributes<HTMLDivElement> & {
   /** `auto` packs minmax(240px, 1fr) tracks; numbers give fixed equal tracks. @default auto */
   columns?: 'auto' | 1 | 2 | 3 | 4;
   /** Gap between grid items. @default md */
-  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  gap?: NonNullable<GridVariantProps['gap']>;
 };
 
 const columnVariant = {
@@ -15,7 +15,10 @@ const columnVariant = {
   2: 'two',
   3: 'three',
   4: 'four',
-} as const;
+} as const satisfies Record<
+  NonNullable<GridProps['columns']>,
+  NonNullable<GridVariantProps['columns']>
+>;
 
 /**
  * Responsive grid layout primitive.

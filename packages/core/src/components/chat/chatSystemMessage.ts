@@ -1,6 +1,13 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { semanticTone, subtleBackgroundColor, type SemanticToneKey } from '../semanticTone';
+import { atProperty, type RecipeVariants } from 'typestyles';
+import {
+  mapTone,
+  semanticTone,
+  subtleBackgroundColor,
+  tone,
+  type SemanticToneKey,
+} from '../../shared/semanticTone';
 
 function tonePaint(
   v: { color: { name: string }; background: { name: string } },
@@ -17,21 +24,23 @@ function tonePaint(
 
 /**
  * Centered inline system message ("Alex joined", "Model switched to GPT-5").
- * Same tone vocabulary as `Alert`/`Badge`, plus a `neutral` default.
+ * Same tone vocabulary as every other component. Default is `neutral`.
  *
  * ```tsx
  * <div className={chatSystemMessage({ tone: 'info' }).root}>…</div>
  * ```
  */
-export const chatSystemMessage = typestyles.styles.component(
-  'chat-system-message',
-  (c) => {
-    const v = c.vars({
-      color: { value: t.color.text.secondary.var, syntax: '<color>' },
-      background: { value: t.color.background.subtle.var, syntax: '<color>' },
-    });
+export const chatSystemMessage = typestyles.recipe({
+  name: 'chat-system-message',
+  layer: 'components',
+  slots: ['root', 'icon', 'text'],
+  variants: { tone },
+  vars: {
+    color: { ...atProperty.color, value: t.color.text.secondary.var },
+    background: { ...atProperty.color, value: t.color.background.subtle.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'icon', 'text'],
       base: {
         root: {
           display: 'inline-flex',
@@ -41,8 +50,8 @@ export const chatSystemMessage = typestyles.styles.component(
           alignSelf: 'center',
           padding: `${t.space[1].var} ${t.space[3].var}`,
           borderRadius: t.radius.full.var,
-          backgroundColor: v.background.var,
-          color: v.color.var,
+          backgroundColor: vars.background.var,
+          color: vars.color.var,
           fontSize: t.fontSize.sm.var,
         },
         icon: {
@@ -54,17 +63,11 @@ export const chatSystemMessage = typestyles.styles.component(
         },
       },
       variants: {
-        tone: {
-          neutral: { root: {} },
-          accent: tonePaint(v, 'accent'),
-          success: tonePaint(v, 'success'),
-          warning: tonePaint(v, 'warning'),
-          danger: tonePaint(v, 'danger'),
-          info: tonePaint(v, 'info'),
-        },
+        tone: mapTone((key) => (key === 'neutral' ? { root: {} } : tonePaint(vars, key))),
       },
-      defaultVariants: { tone: 'neutral' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ChatSystemMessageVariantProps = RecipeVariants<typeof chatSystemMessage>;

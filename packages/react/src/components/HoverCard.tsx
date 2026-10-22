@@ -33,7 +33,7 @@ import {
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type HoverCardProps = {
   /** Single focusable trigger element (e.g. a link or avatar). */

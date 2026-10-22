@@ -7,7 +7,7 @@ import {
 } from 'react-aria-components';
 import { menu } from '@var-ui/core';
 import { Icon } from '../icons';
-import { cx, mergeProps } from './utils';
+import { combine, mergeProps } from 'typestyles';
 
 export type MenuItemDefinition = {
   id: string;
@@ -48,7 +48,7 @@ export function MenuContent({ sections }: MenuContentProps): JSX.Element {
           textValue={item.label}
           isDisabled={item.disabled}
           onAction={item.onAction}
-          {...mergeProps(m.item, cx(item.danger && m.itemDanger))}
+          {...combine(m.item, item.danger && m.itemDanger)}
         >
           {({ isSelected }) => (
             <>

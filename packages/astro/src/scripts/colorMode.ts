@@ -1,10 +1,13 @@
 export type ColorMode = 'light' | 'dark' | 'system';
 export type ResolvedColorMode = 'light' | 'dark';
 
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 import {
   observeSegmentedControlIndicator,
   syncSegmentedControlIndicator,
-} from '@var-ui/core/internal';
+} from '@var-ui/core/components/indicators/segmented-control';
+
+const COLOR_MODE_VALUE_ATTRIBUTE = 'data-color-mode-value';
 
 const VALID: ReadonlySet<string> = new Set(['light', 'dark', 'system']);
 
@@ -24,12 +27,11 @@ export function resolveColorMode(mode: ColorMode): ResolvedColorMode {
 
 export function applyColorModeToDocument(mode: ColorMode): void {
   const root = document.documentElement;
-  if (mode === 'system') {
-    root.removeAttribute('data-mode');
-    root.style.colorScheme = '';
+  root.style.colorScheme = '';
+  if (mode === 'light' || mode === 'dark') {
+    root.setAttribute(COLOR_MODE_ATTRIBUTE, mode);
   } else {
-    root.setAttribute('data-mode', mode);
-    root.style.colorScheme = mode;
+    root.removeAttribute(COLOR_MODE_ATTRIBUTE);
   }
 }
 
@@ -43,36 +45,22 @@ export function setColorMode(mode: ColorMode, storageKey = 'theme-mode'): void {
   syncColorModeToggles(storageKey);
 }
 
-function prefersDarkColorScheme(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
-}
-
-/** Boot path used by ThemeScript (class + data-mode + color-scheme). */
+/** Boot path used by ThemeScript (theme class + `data-color-mode`). */
 export function applyThemeBoot(
   doc: Document,
   themeClass: string,
   storageKey = 'theme-mode',
 ): ColorMode {
   const root = doc.documentElement;
-  const prefersDark = prefersDarkColorScheme();
   const stored = readStoredColorMode(storageKey);
-  const mode: ColorMode = stored ?? (prefersDark ? 'dark' : 'light');
+  const mode: ColorMode = stored ?? 'system';
 
   root.classList.add(themeClass);
-  if (stored === 'system') {
-    root.removeAttribute('data-mode');
-    root.style.colorScheme = '';
-  } else if (stored === 'light' || stored === 'dark') {
-    root.setAttribute('data-mode', stored);
-    root.style.colorScheme = stored;
+  root.style.colorScheme = '';
+  if (stored === 'light' || stored === 'dark') {
+    root.setAttribute(COLOR_MODE_ATTRIBUTE, stored);
   } else {
-    const fallback = prefersDark ? 'dark' : 'light';
-    root.setAttribute('data-mode', fallback);
-    root.style.colorScheme = fallback;
+    root.removeAttribute(COLOR_MODE_ATTRIBUTE);
   }
   return mode;
 }
@@ -113,8 +101,8 @@ function syncToggleRoot(root: Element, storageKey: string): void {
   const selected: ColorMode | ResolvedColorMode =
     includeSystem || mode !== 'system' ? mode : resolveColorMode(mode);
 
-  root.querySelectorAll('[data-color-mode]').forEach((button) => {
-    const buttonMode = button.getAttribute('data-color-mode');
+  root.querySelectorAll(`[${COLOR_MODE_VALUE_ATTRIBUTE}]`).forEach((button) => {
+    const buttonMode = button.getAttribute(COLOR_MODE_VALUE_ATTRIBUTE);
     const pressed = buttonMode === selected;
     button.setAttribute('aria-pressed', String(pressed));
     if (pressed) {
@@ -147,9 +135,9 @@ export function initColorModeToggle(): void {
       observeSegmentedControlIndicator(root);
     }
 
-    root.querySelectorAll('[data-color-mode]').forEach((button) => {
+    root.querySelectorAll(`[${COLOR_MODE_VALUE_ATTRIBUTE}]`).forEach((button) => {
       button.addEventListener('click', () => {
-        const mode = button.getAttribute('data-color-mode');
+        const mode = button.getAttribute(COLOR_MODE_VALUE_ATTRIBUTE);
         if (mode === 'light' || mode === 'dark' || mode === 'system') {
           setColorMode(mode, storageKey);
         }

@@ -15,6 +15,8 @@ createRoot(document.getElementById('root')!).render(
       <Select options={options} placeholder="Choose one" />
     </Field>
     <Checkbox>Subscribe</Checkbox>
-    <Button intent="primary">Submit</Button>
+    <Button tone="accent" appearance="filled">
+      Submit
+    </Button>
   </DesignSystemProvider>,
 );

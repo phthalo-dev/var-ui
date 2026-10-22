@@ -1,15 +1,25 @@
+import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { controlSize, orientation } from '../shared/variantAxes';
+
+const toolbarLayout = variant.enum(['flex', 'grid'], { default: 'flex' });
 
 /**
  * Layout chrome for a toolbar: a flex (or grid, when `layout: 'grid'`) row of
  * start/center/end slots. Purely visual — no keyboard navigation logic lives
  * here, that's the React wrapper's concern.
  */
-export const toolbar = typestyles.styles.component(
-  'toolbar',
-  () => ({
-    slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],
+export const toolbar = typestyles.recipe({
+  name: 'toolbar',
+  layer: 'components',
+  slots: ['root', 'startSlot', 'centerSlot', 'endSlot'],
+  variants: {
+    size: controlSize,
+    orientation,
+    layout: toolbarLayout,
+  },
+  styles: () => ({
     base: {
       root: {
         display: 'flex',
@@ -50,7 +60,8 @@ export const toolbar = typestyles.styles.component(
         },
       },
     },
-    defaultVariants: { size: 'md', orientation: 'horizontal', layout: 'flex' },
   }),
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type ToolbarVariantProps = RecipeVariants<typeof toolbar>;

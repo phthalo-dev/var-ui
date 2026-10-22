@@ -1,14 +1,10 @@
 ---
-import {
-  appShell,
-  type AppShellContentPadding,
-  type AppShellMobileBreakpoint,
-} from '@var-ui/core';
+import { appShell, type AppShellContentPadding, type AppShellMobileBreakpoint, type AppShellVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  height?: 'fill' | 'auto';
-  variant?: 'wash' | 'surface' | 'section' | 'elevated';
+  height?: NonNullable<AppShellVariantProps['height']>;
+  variant?: NonNullable<AppShellVariantProps['variant']>;
   contentPadding?: AppShellContentPadding;
   mobileBreakpoint?: AppShellMobileBreakpoint;
   disabled?: boolean;

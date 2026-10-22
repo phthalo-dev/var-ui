@@ -2,7 +2,7 @@ import { useState, type JSX, type KeyboardEvent, type ReactNode } from 'react';
 import { chatToolCalls } from '@var-ui/core';
 import { Icon } from '../../icons';
 import { Spinner } from '../Spinner';
-import { mergeProps } from '../utils';
+import { mergeProps } from 'typestyles';
 
 export type ChatToolCallStatus = 'pending' | 'running' | 'complete' | 'error';
 
@@ -88,7 +88,7 @@ export function ChatToolCalls({ calls, className }: ChatToolCallsProps): JSX.Ele
     return null;
   }
 
-  const classes = chatToolCalls({ expanded: isExpanded ? 'true' : 'false' });
+  const classes = chatToolCalls({ expanded: isExpanded });
 
   if (calls.length === 1) {
     return (

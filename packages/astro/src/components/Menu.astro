@@ -1,0 +1,219 @@
+---
+import { svg as checkSvg } from '@var-ui/icons/glyphs/check';
+import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
+import {
+  button,
+  icon,
+  menu,
+  type ButtonVariantProps,
+} from "@var-ui/core";
+import { combine, mergeProps } from "../utils";
+import {
+  nextMenuId,
+  type MenuPlacement,
+  type MenuSectionDefinition,
+  type MenuSelectionMode,
+} from "../scripts/menu";
+
+interface Props extends ButtonVariantProps {
+  /** Sections of items, mirroring the React `Menu.FromSections` preset. */
+  sections: MenuSectionDefinition[];
+  /** Text label for the default trigger button (a chevron is added automatically). */
+  triggerLabel?: string;
+  /** Accessible name for the trigger. Required for icon-only (`layout="icon"`) triggers. */
+  "aria-label"?: string;
+  /** Accessible name for the menu list. Defaults to `triggerLabel` / `aria-label`. */
+  menuLabel?: string;
+  /** Where the popover opens relative to the trigger. @default 'bottom-start' */
+  placement?: MenuPlacement;
+  /**
+   * `single` renders items as `menuitemradio` with a check affordance and
+   * tracks one `aria-checked` item. @default 'none'
+   */
+  selectionMode?: MenuSelectionMode;
+  /** Initially checked item id (`selectionMode="single"`). */
+  selectedId?: string;
+  className?: string;
+}
+
+const {
+  sections,
+  triggerLabel,
+  "aria-label": ariaLabel,
+  menuLabel,
+  placement = "bottom-start",
+  selectionMode = "none",
+  selectedId,
+  tone,
+  appearance = "outline",
+  size = "md",
+  layout,
+  elevated,
+  className,
+} = Astro.props;
+
+const menuId = nextMenuId();
+const resolvedMenuLabel = menuLabel ?? triggerLabel ?? ariaLabel ?? "Menu";
+
+const m = menu();
+const rootRecipe = mergeProps(m.root, className);
+const triggerRecipe = mergeProps(
+  button({ tone, appearance, size, layout, elevated }),
+);
+const chevronRecipe = mergeProps(icon({ size: "sm" }));
+const popoverRecipe = mergeProps(m.popover);
+const menuRecipe = mergeProps(m.menu);
+const sectionHeaderRecipe = mergeProps(m.sectionHeader);
+const separatorRecipe = mergeProps(m.separator);
+const itemCheckRecipe = mergeProps(m.itemCheck);
+const checkIconRecipe = mergeProps(icon({ size: "sm" }));
+const itemSwatchRecipe = mergeProps(m.itemSwatch);
+const itemLabelRecipe = mergeProps(m.itemLabel);
+const itemShortcutRecipe = mergeProps(m.itemShortcut);
+
+const singleSelection = selectionMode === "single";
+
+const hasTriggerSlot = Astro.slots.has("trigger");
+
+// Rich item content via a named slot matching each item `id` (e.g. icons,
+// swatches); falls back to the structured label/shortcut layout.
+const itemContents = await Promise.all(
+  sections
+    .flatMap((section) => section.items)
+    .map(async (item) => ({
+      id: item.id,
+      content: Astro.slots.has(item.id)
+        ? await Astro.slots.render(item.id)
+        : null,
+    })),
+);
+---
+
+<div data-var-ui-menu-root data-selection-mode={selectionMode} {...rootRecipe}>
+  <button
+    type="button"
+    data-var-ui-menu-trigger
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls={menuId}
+    aria-label={ariaLabel}
+    {...triggerRecipe}
+  >
+    {hasTriggerSlot ? (
+      <slot name="trigger" />
+    ) : (
+      <>
+        {triggerLabel ?? "Menu"}
+        <span
+          {...chevronRecipe}
+          aria-hidden="true"
+          set:html={chevronDownSvg}
+        />
+      </>
+    )}
+  </button>
+  <div
+    data-var-ui-menu-popover
+    data-placement={placement}
+    hidden
+    {...popoverRecipe}
+  >
+    <div role="menu" id={menuId} aria-label={resolvedMenuLabel} {...menuRecipe}>
+      {sections.map((section, sectionIndex) => (
+        <>
+          {section.label ? (
+            <div role="presentation" {...sectionHeaderRecipe}>
+              {section.label}
+            </div>
+          ) : null}
+          {section.items.map((item) => {
+            const content = itemContents.find(
+              (entry) => entry.id === item.id,
+            )?.content;
+            const disabled = item.disabled === true;
+            const itemRecipe = combine(m.item, item.danger && m.itemDanger);
+            const inner = (
+              <>
+                {singleSelection ? (
+                  <span
+                    {...itemCheckRecipe}
+                    data-var-ui-menu-item-check
+                    aria-hidden="true"
+                  >
+                    <span
+                      {...checkIconRecipe}
+                      set:html={checkSvg}
+                    />
+                  </span>
+                ) : null}
+                {content ? (
+                  <Fragment set:html={content} />
+                ) : (
+                  <>
+                    {item.swatch ? (
+                      <span
+                        {...itemSwatchRecipe}
+                        style={{ backgroundColor: item.swatch }}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <span {...itemLabelRecipe}>{item.label}</span>
+                    {item.shortcut ? (
+                      <span {...itemShortcutRecipe}>{item.shortcut}</span>
+                    ) : null}
+                  </>
+                )}
+              </>
+            );
+            return item.href && !singleSelection ? (
+              <a
+                role="menuitem"
+                href={disabled ? undefined : item.href}
+                aria-disabled={disabled || undefined}
+                data-var-ui-menu-item
+                data-item-id={item.id}
+                tabindex="-1"
+                {...itemRecipe}
+              >
+                {inner}
+              </a>
+            ) : (
+              <button
+                type="button"
+                role={singleSelection ? "menuitemradio" : "menuitem"}
+                aria-checked={
+                  singleSelection
+                    ? item.id === selectedId
+                      ? "true"
+                      : "false"
+                    : undefined
+                }
+                aria-disabled={disabled || undefined}
+                data-var-ui-menu-item
+                data-item-id={item.id}
+                tabindex="-1"
+                {...itemRecipe}
+              >
+                {inner}
+              </button>
+            );
+          })}
+          {sectionIndex < sections.length - 1 ? (
+            <div role="separator" {...separatorRecipe} />
+          ) : null}
+        </>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initMenus } from "../scripts/menu";
+
+  function onPageLoad(): void {
+    initMenus();
+  }
+
+  onPageLoad();
+  document.addEventListener("astro:page-load", onPageLoad);
+</script>

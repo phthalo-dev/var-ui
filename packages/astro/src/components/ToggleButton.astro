@@ -1,11 +1,11 @@
 ---
-import { toggleButton, type ControlSize } from "@var-ui/core";
+import { toggleButton, type ToggleButtonVariantProps, } from "@var-ui/core";
 import { mergeProps } from "../utils";
 
 type Props = {
   /** Initial pressed state. */
   pressed?: boolean;
-  size?: ControlSize;
+  size?: NonNullable<ToggleButtonVariantProps['size']>;
   className?: string;
   "aria-label"?: string;
   disabled?: boolean;

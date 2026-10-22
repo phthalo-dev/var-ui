@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { layoutBreakpointQueries } from '@var-ui/core';
+import { defaultThemeClassName, layoutBreakpointQueries } from '@var-ui/core';
+import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { ChatDemo } from './ChatDemo';
 import { acmeTheme } from './acmeTheme';
-import { defaultThemeClassName, SURFACE_ATTRIBUTE } from '@var-ui/core';
 import { defaultIcons } from '@var-ui/icons';
 import {
   Alert,
@@ -104,14 +104,16 @@ function PaletteSwitcher({
   return (
     <HStack gap="xs">
       <Button
-        intent={selected === 'default' ? 'primary' : 'secondary'}
+        tone={selected === 'default' ? 'accent' : 'neutral'}
+        appearance={selected === 'default' ? 'filled' : 'subtle'}
         onPress={() => onSelect('default')}
         aria-pressed={selected === 'default'}
       >
         Default
       </Button>
       <Button
-        intent={selected === 'acme' ? 'primary' : 'secondary'}
+        tone={selected === 'acme' ? 'accent' : 'neutral'}
+        appearance={selected === 'acme' ? 'filled' : 'subtle'}
         onPress={() => onSelect('acme')}
         aria-pressed={selected === 'acme'}
       >
@@ -198,7 +200,8 @@ function LayoutSection() {
                 {items.map((item) => (
                   <Button
                     key={item.id}
-                    intent={item.id === selectedId ? 'primary' : 'secondary'}
+                    tone={item.id === selectedId ? 'accent' : 'neutral'}
+                    appearance={item.id === selectedId ? 'filled' : 'subtle'}
                     onPress={() => setSelectedId(item.id)}
                   >
                     {item.label}
@@ -273,7 +276,11 @@ function ContentSection() {
         icon={<Icon name="search" size="lg" />}
         title="No results"
         description="Try a different filter, or clear the search."
-        action={<Button intent="primary">Clear filters</Button>}
+        action={
+          <Button tone="accent" appearance="filled">
+            Clear filters
+          </Button>
+        }
       />
       <CollapsibleGroup>
         <Collapsible id="install" title="Install" variant="bordered">
@@ -364,13 +371,13 @@ function FormsSection() {
         startContent={
           <>
             <Button size="sm">New</Button>
-            <Button size="sm" intent="ghost">
+            <Button size="sm" tone="accent" appearance="ghost">
               Import
             </Button>
           </>
         }
         endContent={
-          <Button size="sm" intent="ghost">
+          <Button size="sm" tone="accent" appearance="ghost">
             Export
           </Button>
         }
@@ -480,7 +487,7 @@ function SideNavDemo() {
           </Button>
         }
         footerIcons={
-          <Button aria-label="More options" intent="ghost" size="sm">
+          <Button aria-label="More options" tone="accent" appearance="ghost" size="sm">
             <Icon name="moreHorizontal" />
           </Button>
         }
@@ -653,7 +660,7 @@ function TopNavDemo() {
             title="What's new"
             description="See the latest release notes and roadmap."
             action={
-              <Button size="sm" intent="ghost">
+              <Button size="sm" tone="accent" appearance="ghost">
                 Read more
               </Button>
             }
@@ -1222,7 +1229,7 @@ export function App() {
                   Component showcase. Switch to <strong>Acme</strong> to preview V7 typed theming
                   and V8 mode/condition overrides — custom brand tokens, pill buttons with glow, and
                   uppercase primary labels — via
-                  <code> createDesignTheme({'{ extend, components }'})</code>.
+                  <code> createDesignTheme({'{ tokens, components }'})</code>.
                 </Text>
                 <Stack gap="xs">
                   <Text as="span" size="sm" tone="secondary">
@@ -1252,12 +1259,10 @@ export function App() {
               <OverlaysSection />
               <ChatSection />
 
-              <Section {...{ [SURFACE_ATTRIBUTE]: 'dark' }} title="Fixed dark surface">
-                <Text>
-                  This section keeps the theme&apos;s dark token face while the page stays light.
-                </Text>
-                <Alert variant="info" appearance="subtle" title="Always-dark chrome">
-                  Mark subtrees with <code>{SURFACE_ATTRIBUTE}=&quot;dark&quot;</code>.
+              <Section {...{ [COLOR_MODE_ATTRIBUTE]: 'dark' }} title="Dark section">
+                <Text>This section pins dark color mode while the page stays light.</Text>
+                <Alert variant="info" appearance="subtle" title="Pinned dark chrome">
+                  Mark subtrees with <code>{COLOR_MODE_ATTRIBUTE}=&quot;dark&quot;</code>.
                 </Alert>
               </Section>
             </Stack>

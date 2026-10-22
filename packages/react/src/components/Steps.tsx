@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
 import { steps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type StepsProps = {
   children: ReactNode;

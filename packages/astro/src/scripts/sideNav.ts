@@ -1,5 +1,6 @@
+import { svg as chevronLeftSvg } from '@var-ui/icons/glyphs/chevronLeft';
+import { svg as chevronRightSvg } from '@var-ui/icons/glyphs/chevronRight';
 import { createResizeHandle } from './resizeHandle';
-import { defaultIconSvgs } from '@var-ui/core';
 
 /** Keep in sync with `SIDE_NAV_COLLAPSED_WIDTH` in `@var-ui/core`. */
 const SIDE_NAV_COLLAPSED_WIDTH = 56;
@@ -25,8 +26,8 @@ const DEFAULT_MIN_WIDTH = 180;
 const DEFAULT_MAX_WIDTH = 480;
 const DEFAULT_COLLAPSED_SIZE = 160;
 
-const CHEVRON_LEFT = defaultIconSvgs.chevronLeft;
-const CHEVRON_RIGHT = defaultIconSvgs.chevronRight;
+const CHEVRON_LEFT = chevronLeftSvg;
+const CHEVRON_RIGHT = chevronRightSvg;
 
 function markInitialized(element: Element): boolean {
   if (element.hasAttribute('data-var-ui-initialized')) return false;

@@ -1,12 +1,12 @@
 import type { JSX, ReactNode } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { banner, type BannerTone, type BannerVariantProps, type IconName } from '@var-ui/core';
+import { banner, type BannerVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
-export type { BannerTone } from '@var-ui/core';
-
-const toneIcon: Record<BannerTone, IconName> = {
+const toneIcon: Record<Tone, IconName> = {
+  neutral: 'info',
+  accent: 'info',
   info: 'info',
   success: 'success',
   warning: 'warning',

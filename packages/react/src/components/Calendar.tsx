@@ -13,7 +13,7 @@ import {
 } from 'react-aria-components';
 import { calendar } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type CalendarProps<T extends DateValue = DateValue> = Omit<
   RACCalendarProps<T>,

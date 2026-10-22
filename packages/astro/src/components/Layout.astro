@@ -1,9 +1,9 @@
 ---
-import { layout, layoutShellPaddingAssignments, layoutContentWidthAssignment, type LayoutPadding } from '@var-ui/core';
+import { layout, layoutShellPaddingAssignments, layoutContentWidthAssignment, type LayoutPadding, type LayoutVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  height?: 'fill' | 'auto';
+  height?: NonNullable<LayoutVariantProps['height']>;
   /** Sets shell CSS vars on the root. Omit for recipe default (`space[4]`). */
   padding?: LayoutPadding;
   /** Constrains header/footer inner wrappers via shell CSS vars. */

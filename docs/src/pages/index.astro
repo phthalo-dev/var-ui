@@ -12,7 +12,7 @@ import {
   cx,
   mergeProps,
 } from '@var-ui/astro';
-import { linkButton, resolveButtonProps } from '@var-ui/core';
+import { button } from '@var-ui/core';
 import { githubUrl } from '../data/navigation';
 import { homePage } from '../styles/homePage';
 
@@ -79,9 +79,9 @@ const exploreLinks = [
   },
 ] as const;
 
-const primaryCta = mergeProps(linkButton(resolveButtonProps({ intent: 'primary', size: 'md' })));
+const primaryCta = mergeProps(button({ tone: 'accent', appearance: 'filled', size: 'md' }));
 const secondaryCta = mergeProps(
-  linkButton(resolveButtonProps({ intent: 'secondary', size: 'md' })),
+  button({ size: 'md' }),
 );
 ---
 

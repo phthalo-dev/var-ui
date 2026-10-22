@@ -11,11 +11,7 @@ export {
 export { ChatMessage, type ChatMessageProps } from './ChatMessage';
 export { ChatMessageBubble, type ChatMessageBubbleProps } from './ChatMessageBubble';
 export { ChatMessageList, type ChatMessageListProps } from './ChatMessageList';
-export {
-  ChatSystemMessage,
-  type ChatSystemMessageProps,
-  type ChatSystemMessageTone,
-} from './ChatSystemMessage';
+export { ChatSystemMessage, type ChatSystemMessageProps } from './ChatSystemMessage';
 export {
   ChatToolCalls,
   type ChatToolCallItem,
@@ -27,3 +23,5 @@ export { ChatComposerInput, type ChatComposerInputProps } from './ChatComposerIn
 export { ChatSendButton, type ChatSendButtonProps } from './ChatSendButton';
 export { ChatLayout, type ChatLayoutProps } from './ChatLayout';
 export { ChatMessageMetadata, type ChatMessageMetadataProps } from './ChatMessageMetadata';
+export * from '../../chat/useChatStreamScroll';
+export * from '../../chat/useChatNewMessages';

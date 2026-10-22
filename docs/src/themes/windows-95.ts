@@ -1,33 +1,13 @@
 import { color } from 'typestyles/color';
 import {
-  createDesignTheme,
   createToneFace,
+  defaultTheme,
   designTokens as p,
   darkSyntaxValues,
   lightSyntaxValues,
-  typestyles,
-  type DesignThemePreset,
+  type ColorTokenPatch,
+  type DesignThemeTokenValues,
 } from '@var-ui/core';
-
-const win95LightSyntaxValues = {
-  ...lightSyntaxValues,
-  keyword: '#000080',
-  title: '#800080',
-  attr: '#5F4F00',
-  string: '#004F00',
-  builtIn: '#800000',
-  comment: '#303030',
-};
-
-const win95DarkSyntaxValues = {
-  ...darkSyntaxValues,
-  keyword: '#38A8F0',
-  title: '#F0F0F0',
-  attr: '#FFFF80',
-  string: '#80FF80',
-  builtIn: '#FF8080',
-  comment: '#B0B0B0',
-};
 
 const win95Tone = {
   accent: createToneFace({
@@ -92,59 +72,6 @@ const win95Tone = {
   }),
 };
 
-const win95LightColorValues = {
-  background: {
-    app: '#C0C0C0',
-    surface: '#C0C0C0',
-    subtle: '#E0E0E0',
-    elevated: '#F0F0F0',
-    popover: '#F0F0F0',
-    muted: '#E0E0E0',
-  },
-  text: {
-    primary: '#000000',
-    secondary: '#202020',
-  },
-  tone: win95Tone,
-  border: {
-    default: '#808080',
-    strong: '#000000',
-    focus: '#000080',
-  },
-  overlay: {
-    default: color.alpha('#000000', 0.5, 'srgb'),
-    panel: '#F0F0F0',
-  },
-  link: { default: '#000080', hover: '#1084D0' },
-  code: win95LightSyntaxValues,
-};
-
-const win95DarkColorValues = {
-  background: {
-    app: '#000040',
-    surface: '#303030',
-    subtle: '#454545',
-    elevated: '#555555',
-    popover: '#555555',
-    muted: '#454545',
-  },
-  text: {
-    primary: '#F2F2F2',
-    secondary: '#CFCFCF',
-  },
-  border: {
-    default: '#808080',
-    strong: '#FFFFFF',
-    focus: '#38A8F0',
-  },
-  overlay: {
-    default: color.alpha('#000000', 0.7, 'srgb'),
-    panel: '#555555',
-  },
-  link: { default: '#1084D0', hover: '#38A8F0' },
-  code: win95DarkSyntaxValues,
-};
-
 const win95PrimitiveValues = {
   fontFamily: {
     display: '"MS Sans Serif", "Microsoft Sans Serif", Arial, system-ui, sans-serif',
@@ -179,13 +106,6 @@ const win95PrimitiveValues = {
     default: '2px',
     thick: '2px',
   },
-  shadow: {
-    xs: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
-    sm: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
-    md: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-    lg: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-    xl: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-  },
   duration: {
     fast: '0ms',
     medium: '0ms',
@@ -201,40 +121,86 @@ const win95PrimitiveValues = {
   },
 };
 
-const win95DarkShadow = {
-  xs: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
-  sm: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
-  md: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
-  lg: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
-  xl: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
-};
-
-export const windows95Preset: DesignThemePreset = {
-  tokens: {
-    ...win95PrimitiveValues,
-    color: win95LightColorValues,
-  },
-  colorMode: {
-    dark: win95DarkColorValues,
-  },
-};
-
-export const windows95Theme = createDesignTheme({
-  name: 'windows-95',
-  ...windows95Preset,
-  modes: [
-    {
-      id: 'dark-elevation-shadow',
-      overrides: { shadow: win95DarkShadow },
-      when: typestyles.tokens.when.or(
-        typestyles.tokens.when.attr('data-mode', 'dark', { scope: 'self' }),
-        typestyles.tokens.when.and(
-          typestyles.tokens.when.not(
-            typestyles.tokens.when.attr('data-mode', 'light', { scope: 'self' }),
-          ),
-          typestyles.tokens.when.prefersDark,
-        ),
-      ),
+export const windows95ThemeTokens = {
+  ...win95PrimitiveValues,
+  color: {
+    background: {
+      app: { light: '#C0C0C0', dark: '#000040' },
+      surface: { light: '#C0C0C0', dark: '#303030' },
+      subtle: { light: '#E0E0E0', dark: '#454545' },
+      elevated: { light: '#F0F0F0', dark: '#555555' },
+      popover: { light: '#F0F0F0', dark: '#555555' },
+      muted: { light: '#E0E0E0', dark: '#454545' },
     },
-  ],
+    text: {
+      primary: { light: '#000000', dark: '#F2F2F2' },
+      secondary: { light: '#202020', dark: '#CFCFCF' },
+    },
+    tone: win95Tone,
+    border: {
+      default: { light: '#808080', dark: '#808080' },
+      strong: { light: '#000000', dark: '#FFFFFF' },
+      focus: { light: '#000080', dark: '#38A8F0' },
+    },
+    overlay: {
+      default: {
+        light: color.alpha('#000000', 0.5, 'srgb'),
+        dark: color.alpha('#000000', 0.7, 'srgb'),
+      },
+      panel: { light: '#F0F0F0', dark: '#555555' },
+    },
+    link: {
+      default: { light: '#000080', dark: '#1084D0' },
+      hover: { light: '#1084D0', dark: '#38A8F0' },
+    },
+    code: {
+      base: { light: lightSyntaxValues.base, dark: darkSyntaxValues.base },
+      keyword: { light: '#000080', dark: '#38A8F0' },
+      title: { light: '#800080', dark: '#F0F0F0' },
+      attr: { light: '#5F4F00', dark: '#FFFF80' },
+      string: { light: '#004F00', dark: '#80FF80' },
+      builtIn: { light: '#800000', dark: '#FF8080' },
+      comment: { light: '#303030', dark: '#B0B0B0' },
+      name: { light: lightSyntaxValues.name, dark: darkSyntaxValues.name },
+      section: { light: lightSyntaxValues.section, dark: darkSyntaxValues.section },
+      bullet: { light: lightSyntaxValues.bullet, dark: darkSyntaxValues.bullet },
+      addition: { light: lightSyntaxValues.addition, dark: darkSyntaxValues.addition },
+      additionBackground: {
+        light: lightSyntaxValues.additionBackground,
+        dark: darkSyntaxValues.additionBackground,
+      },
+      deletion: { light: lightSyntaxValues.deletion, dark: darkSyntaxValues.deletion },
+      deletionBackground: {
+        light: lightSyntaxValues.deletionBackground,
+        dark: darkSyntaxValues.deletionBackground,
+      },
+    } as ColorTokenPatch['code'],
+  },
+  shadow: {
+    xs: {
+      light: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
+      dark: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
+    },
+    sm: {
+      light: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
+      dark: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
+    },
+    md: {
+      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
+      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+    },
+    lg: {
+      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
+      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+    },
+    xl: {
+      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
+      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+    },
+  },
+} satisfies DesignThemeTokenValues;
+
+export const windows95Theme = defaultTheme.override({
+  name: 'windows-95',
+  tokens: windows95ThemeTokens,
 });

@@ -1,19 +1,25 @@
 ---
-import { toast as toastRecipe, defaultIconSvgs, type ToastTone } from '@var-ui/core';
+import { toast as toastRecipe, type Tone, type ToastVariantProps, } from '@var-ui/core';
+import { svg as errorSvg } from '@var-ui/icons/glyphs/error';
+import { svg as infoSvg } from '@var-ui/icons/glyphs/info';
+import { svg as successSvg } from '@var-ui/icons/glyphs/success';
+import { svg as warningSvg } from '@var-ui/icons/glyphs/warning';
 import { mergeProps } from '../utils';
 
 type Props = {
-  tone?: ToastTone;
+  tone?: NonNullable<ToastVariantProps['tone']>;
   title: string;
   description?: string;
   className?: string;
 };
 
-const toneIcon: Record<ToastTone, keyof typeof defaultIconSvgs> = {
-  info: 'info',
-  success: 'success',
-  warning: 'warning',
-  danger: 'error',
+const toneIcon: Record<Tone, string> = {
+  neutral: infoSvg,
+  accent: infoSvg,
+  info: infoSvg,
+  success: successSvg,
+  warning: warningSvg,
+  danger: errorSvg,
 };
 
 const { tone = 'info', title, description, className } = Astro.props;
@@ -21,7 +27,7 @@ const t = toastRecipe({ tone, appearance: 'subtle' });
 ---
 
 <div {...mergeProps(t.item, className)} role="status">
-  <span {...mergeProps(t.icon)} set:html={defaultIconSvgs[toneIcon[tone]]} />
+  <span {...mergeProps(t.icon)} set:html={toneIcon[tone]} />
   <div {...mergeProps(t.body)}>
     <div {...mergeProps(t.title)}>{title}</div>
     {description ? <div {...mergeProps(t.description)}>{description}</div> : null}

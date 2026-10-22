@@ -46,7 +46,10 @@ export default defineConfig({
         rules: {
           'typestyles/no-removed-public-classname': [
             'error',
-            { snapshotFile: 'packages/core/.typestyles-public-classnames.json' },
+            {
+              rootDir: 'packages/core',
+              snapshotFile: '.typestyles-public-classnames.json',
+            },
           ],
         },
       },
@@ -54,6 +57,7 @@ export default defineConfig({
   },
   staged: {
     '*.{js,jsx,ts,tsx,json,css,md}': 'vp check --fix',
+    'docs/content/**/*.{md,mdx}': 'vp run -F @var-ui/cli generate',
   },
   run: {
     cache: true,
@@ -64,6 +68,10 @@ export default defineConfig({
           'vp run --no-cache -F @var-ui/core -F @var-ui/react -F @var-ui/icons build',
           'vp check',
           'vp test run',
+          'vp run --no-cache @var-ui/astro#check',
+          'vp run --no-cache @var-ui/docs#check',
+          'vp run --no-cache @var-ui/docs-components#check',
+          'vp run --no-cache @var-ui/docs-site#check',
           'vp run --no-cache @var-ui/example-astro-app#check',
           'vp run --no-cache @var-ui/example-astro-app#build',
           'vp run --no-cache @var-ui/example-astro-docs#build',
@@ -76,7 +84,6 @@ export default defineConfig({
     projects: [
       'packages/core',
       'packages/react',
-      'packages/form',
       'packages/icons',
       'packages/astro',
       'packages/docs',

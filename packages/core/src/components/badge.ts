@@ -1,44 +1,52 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
-  semanticChannelAssignments,
+  mapTone,
   subtleBackgroundColor,
   subtleBorderColor,
-  type SurfaceAppearance,
-} from './semanticTone';
+  surfaceAppearance,
+  tone,
+  toneChannelAssignments,
+} from '../shared/semanticTone';
 
 /**
  * Flat component: `tone` sets semantic channels; `appearance` applies shared resolver paint.
  */
-export const badge = typestyles.styles.component(
-  'badge',
-  (c) => {
-    const v = c.vars({
-      semantic: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      solidBg: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      solidFg: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      borderColor: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      backgroundColor: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      textColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-    });
+export const badge = typestyles.recipe({
+  name: 'badge',
+  layer: 'components',
+  variants: {
+    tone,
+    appearance: surfaceAppearance,
+  },
+  vars: {
+    semantic: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    solidBg: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    solidFg: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    borderColor: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    backgroundColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    textColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-flex',
@@ -50,59 +58,33 @@ export const badge = typestyles.styles.component(
         borderRadius: t.radius.full.var,
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.borderColor.var,
-        backgroundColor: v.backgroundColor.var,
-        color: v.textColor.var,
+        borderColor: vars.borderColor.var,
+        backgroundColor: vars.backgroundColor.var,
+        color: vars.textColor.var,
       },
       variants: {
-        tone: {
-          neutral: {
-            [v.semantic.name]: t.color.text.secondary.var,
-            [v.solidBg.name]: t.color.text.primary.var,
-            [v.solidFg.name]: t.color.background.surface.var,
-          },
-          accent: semanticChannelAssignments(v, 'accent'),
-          success: semanticChannelAssignments(v, 'success'),
-          warning: semanticChannelAssignments(v, 'warning'),
-          danger: semanticChannelAssignments(v, 'danger'),
-          tip: semanticChannelAssignments(v, 'info'),
-        },
+        tone: mapTone((key) => toneChannelAssignments(vars, key)),
         appearance: {
           subtle: {
-            [v.borderColor.name]: subtleBorderColor(v.semantic.var),
-            [v.backgroundColor.name]: subtleBackgroundColor(v.semantic.var),
-            [v.textColor.name]: v.semantic.var,
+            [vars.borderColor.name]: subtleBorderColor(vars.semantic.var),
+            [vars.backgroundColor.name]: subtleBackgroundColor(vars.semantic.var),
+            [vars.textColor.name]: vars.semantic.var,
           },
           solid: {
-            [v.borderColor.name]: v.solidBg.var,
-            [v.backgroundColor.name]: v.solidBg.var,
-            [v.textColor.name]: v.solidFg.var,
+            [vars.borderColor.name]: vars.solidBg.var,
+            [vars.backgroundColor.name]: vars.solidBg.var,
+            [vars.textColor.name]: vars.solidFg.var,
           },
           outline: {
-            [v.borderColor.name]: v.semantic.var,
-            [v.backgroundColor.name]: 'transparent',
-            [v.textColor.name]: v.semantic.var,
+            [vars.borderColor.name]: vars.semantic.var,
+            [vars.backgroundColor.name]: 'transparent',
+            [vars.textColor.name]: vars.semantic.var,
           },
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'subtle' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type BadgeRecipeProps = NonNullable<Parameters<typeof badge>[0]>;
-export type BadgeTone = NonNullable<BadgeRecipeProps['tone']>;
-export type BadgeVariantProps = {
-  tone?: BadgeTone;
-  appearance?: SurfaceAppearance;
-};
-
-export const badgeVariantPropDocs = [
-  { name: 'tone', type: 'BadgeTone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof BadgeVariantProps;
-  type: string;
-  required: false;
-}>;
+/** Visual props derived from the schema. */
+export type BadgeVariantProps = RecipeVariants<typeof badge>;

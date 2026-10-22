@@ -5,7 +5,7 @@ import { menu } from '@var-ui/core';
 import { mergeOverlayChild } from '../overlays';
 import { IconButton } from './IconButton';
 import { MenuContent, type MenuContentProps } from './menuContent';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type MenuFromSectionsProps = Omit<MenuTriggerProps, 'children' | 'trigger'> &
   MenuContentProps & {
@@ -103,7 +103,15 @@ export function MenuOverflow({
   return (
     <MenuFromSections
       sections={sections}
-      trigger={<IconButton name="moreHorizontal" aria-label={ariaLabel} intent="ghost" size="sm" />}
+      trigger={
+        <IconButton
+          name="moreHorizontal"
+          aria-label={ariaLabel}
+          tone="accent"
+          appearance="ghost"
+          size="sm"
+        />
+      }
     />
   );
 }

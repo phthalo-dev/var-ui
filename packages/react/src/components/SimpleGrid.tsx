@@ -1,12 +1,12 @@
 import type { HTMLAttributes, JSX } from 'react';
-import { simpleGrid } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { simpleGrid, type SimpleGridVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type SimpleGridProps = HTMLAttributes<HTMLDivElement> & {
   /** Number of equal columns. @default 2 */
   cols?: 1 | 2 | 3 | 4 | 5 | 6 | 8;
   /** Gap between grid items. @default md */
-  spacing?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  spacing?: NonNullable<SimpleGridVariantProps['spacing']>;
 };
 
 const colsVariant = {
@@ -17,7 +17,10 @@ const colsVariant = {
   5: 'five',
   6: 'six',
   8: 'eight',
-} as const;
+} as const satisfies Record<
+  NonNullable<SimpleGridProps['cols']>,
+  NonNullable<SimpleGridVariantProps['cols']>
+>;
 
 /**
  * Equal-column grid layout. Mantine `SimpleGrid` equivalent.

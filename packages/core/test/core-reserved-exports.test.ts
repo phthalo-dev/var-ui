@@ -18,6 +18,7 @@ describe('coreReservedExports', () => {
       types: './dist/styles.d.mts',
       import: './dist/styles.mjs',
     });
+    expect(reserved['./base-styles']).toBeUndefined();
   });
 });
 
@@ -25,5 +26,6 @@ describe('@var-ui/core package.json', () => {
   it('exports and marks styles.css as a side effect', () => {
     expect(pkg.exports['./styles.css']).toBe('./dist/styles.css');
     expect(pkg.sideEffects).toContain('./dist/styles.css');
+    expect(pkg.exports['./base-styles']).toBeUndefined();
   });
 });

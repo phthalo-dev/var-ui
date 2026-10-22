@@ -1,10 +1,10 @@
 ---
-import { grid } from '@var-ui/core';
+import { grid, type GridVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
   columns?: 'auto' | 1 | 2 | 3 | 4;
-  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  gap?: NonNullable<GridVariantProps['gap']>;
   className?: string;
 };
 
@@ -14,7 +14,10 @@ const columnVariant = {
   2: 'two',
   3: 'three',
   4: 'four',
-} as const;
+} as const satisfies Record<
+  NonNullable<Props['columns']>,
+  NonNullable<GridVariantProps['columns']>
+>;
 
 const { columns = 'auto', gap = 'md', className } = Astro.props;
 const rp = mergeProps(grid({ columns: columnVariant[columns], gap }), className);

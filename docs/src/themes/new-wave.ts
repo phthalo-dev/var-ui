@@ -1,32 +1,15 @@
 import { color } from 'typestyles/color';
 import {
-  createDesignTheme,
   createToneFace,
+  defaultTheme,
   designTokens as p,
   darkSyntaxValues,
   groteskMono,
   lightSyntaxValues,
-  typestyles,
-  type DesignThemePreset,
+  registerFontFace,
+  type ColorTokenPatch,
+  type DesignThemeTokenValues,
 } from '@var-ui/core';
-
-const newWaveLightSyntaxValues = {
-  ...lightSyntaxValues,
-  keyword: '#D934B6',
-  title: '#243CFF',
-  string: '#00845F',
-  builtIn: '#F06C00',
-  section: '#5D5FEF',
-};
-
-const newWaveDarkSyntaxValues = {
-  ...darkSyntaxValues,
-  keyword: '#FF7FE6',
-  title: '#8BFF5C',
-  string: '#70F7D3',
-  builtIn: '#FFF45C',
-  section: '#00D7FF',
-};
 
 const newWaveTone = {
   accent: createToneFace({
@@ -91,59 +74,6 @@ const newWaveTone = {
   }),
 };
 
-const newWaveLightColorValues = {
-  background: {
-    app: '#FFF45C',
-    surface: '#FFFDF0',
-    subtle: '#FFE1F8',
-    elevated: '#FFFFFF',
-    popover: '#FFFFFF',
-    muted: '#FFE1F8',
-  },
-  text: {
-    primary: '#151329',
-    secondary: '#4F3D7A',
-  },
-  tone: newWaveTone,
-  border: {
-    default: '#151329',
-    strong: '#151329',
-    focus: '#00D7FF',
-  },
-  overlay: {
-    default: color.alpha('#151329', 0.55, 'oklch'),
-    panel: '#FFFFFF',
-  },
-  link: { default: '#FF4FD8', hover: '#D934B6' },
-  code: newWaveLightSyntaxValues,
-};
-
-const newWaveDarkColorValues = {
-  background: {
-    app: '#131129',
-    surface: '#1E1B3F',
-    subtle: '#2D2256',
-    elevated: '#25204E',
-    popover: '#25204E',
-    muted: '#2D2256',
-  },
-  text: {
-    primary: '#FFF8A8',
-    secondary: '#B9B0F7',
-  },
-  border: {
-    default: '#00D7FF',
-    strong: '#00D7FF',
-    focus: '#FF4FD8',
-  },
-  overlay: {
-    default: color.alpha('#05040F', 0.78, 'oklch'),
-    panel: '#25204E',
-  },
-  link: { default: '#8BFF5C', hover: '#B9FF66' },
-  code: newWaveDarkSyntaxValues,
-};
-
 const newWavePrimitiveValues = {
   fontFamily: {
     display: '"Arial Black", Impact, "Space Grotesk", system-ui, sans-serif',
@@ -183,13 +113,6 @@ const newWavePrimitiveValues = {
     medium: '120ms',
     slow: '180ms',
   },
-  shadow: {
-    xs: '2px 2px 0 0 #00D7FF',
-    sm: '3px 3px 0 0 #00D7FF',
-    md: '6px 6px 0 0 #00D7FF',
-    lg: '8px 8px 0 0 #00D7FF',
-    xl: '10px 10px 0 0 #00D7FF',
-  },
   transition: {
     overlayFade: 'opacity 180ms ease, visibility 180ms ease',
     panelEnter: 'opacity 180ms cubic-bezier(0.16, 1, 0.3, 1)',
@@ -200,41 +123,75 @@ const newWavePrimitiveValues = {
   },
 };
 
-const newWaveDarkShadow = {
-  xs: '2px 2px 0 0 #FF4FD8',
-  sm: '3px 3px 0 0 #FF4FD8',
-  md: '6px 6px 0 0 #FF4FD8',
-  lg: '8px 8px 0 0 #FF4FD8',
-  xl: '10px 10px 0 0 #FF4FD8',
-};
-
-export const newWavePreset: DesignThemePreset = {
-  fonts: groteskMono.fonts,
-  tokens: {
-    ...newWavePrimitiveValues,
-    color: newWaveLightColorValues,
-  },
-  colorMode: {
-    dark: newWaveDarkColorValues,
-  },
-};
-
-export const newWaveTheme = createDesignTheme({
-  name: 'new-wave',
-  ...newWavePreset,
-  modes: [
-    {
-      id: 'dark-elevation-shadow',
-      overrides: { shadow: newWaveDarkShadow },
-      when: typestyles.tokens.when.or(
-        typestyles.tokens.when.attr('data-mode', 'dark', { scope: 'self' }),
-        typestyles.tokens.when.and(
-          typestyles.tokens.when.not(
-            typestyles.tokens.when.attr('data-mode', 'light', { scope: 'self' }),
-          ),
-          typestyles.tokens.when.prefersDark,
-        ),
-      ),
+export const newWaveThemeTokens = {
+  ...newWavePrimitiveValues,
+  color: {
+    background: {
+      app: { light: '#FFF45C', dark: '#131129' },
+      surface: { light: '#FFFDF0', dark: '#1E1B3F' },
+      subtle: { light: '#FFE1F8', dark: '#2D2256' },
+      elevated: { light: '#FFFFFF', dark: '#25204E' },
+      popover: { light: '#FFFFFF', dark: '#25204E' },
+      muted: { light: '#FFE1F8', dark: '#2D2256' },
     },
-  ],
+    text: {
+      primary: { light: '#151329', dark: '#FFF8A8' },
+      secondary: { light: '#4F3D7A', dark: '#B9B0F7' },
+    },
+    tone: newWaveTone,
+    border: {
+      default: { light: '#151329', dark: '#00D7FF' },
+      strong: { light: '#151329', dark: '#00D7FF' },
+      focus: { light: '#00D7FF', dark: '#FF4FD8' },
+    },
+    overlay: {
+      default: {
+        light: color.alpha('#151329', 0.55, 'oklch'),
+        dark: color.alpha('#05040F', 0.78, 'oklch'),
+      },
+      panel: { light: '#FFFFFF', dark: '#25204E' },
+    },
+    link: {
+      default: { light: '#FF4FD8', dark: '#8BFF5C' },
+      hover: { light: '#D934B6', dark: '#B9FF66' },
+    },
+    code: {
+      base: { light: lightSyntaxValues.base, dark: darkSyntaxValues.base },
+      keyword: { light: '#D934B6', dark: '#FF7FE6' },
+      title: { light: '#243CFF', dark: '#8BFF5C' },
+      attr: { light: lightSyntaxValues.attr, dark: darkSyntaxValues.attr },
+      string: { light: '#00845F', dark: '#70F7D3' },
+      builtIn: { light: '#F06C00', dark: '#FFF45C' },
+      comment: { light: lightSyntaxValues.comment, dark: darkSyntaxValues.comment },
+      name: { light: lightSyntaxValues.name, dark: darkSyntaxValues.name },
+      section: { light: '#5D5FEF', dark: '#00D7FF' },
+      bullet: { light: lightSyntaxValues.bullet, dark: darkSyntaxValues.bullet },
+      addition: { light: lightSyntaxValues.addition, dark: darkSyntaxValues.addition },
+      additionBackground: {
+        light: lightSyntaxValues.additionBackground,
+        dark: darkSyntaxValues.additionBackground,
+      },
+      deletion: { light: lightSyntaxValues.deletion, dark: darkSyntaxValues.deletion },
+      deletionBackground: {
+        light: lightSyntaxValues.deletionBackground,
+        dark: darkSyntaxValues.deletionBackground,
+      },
+    } as ColorTokenPatch['code'],
+  },
+  shadow: {
+    xs: { light: '2px 2px 0 0 #00D7FF', dark: '2px 2px 0 0 #FF4FD8' },
+    sm: { light: '3px 3px 0 0 #00D7FF', dark: '3px 3px 0 0 #FF4FD8' },
+    md: { light: '6px 6px 0 0 #00D7FF', dark: '6px 6px 0 0 #FF4FD8' },
+    lg: { light: '8px 8px 0 0 #00D7FF', dark: '8px 8px 0 0 #FF4FD8' },
+    xl: { light: '10px 10px 0 0 #00D7FF', dark: '10px 10px 0 0 #FF4FD8' },
+  },
+} satisfies DesignThemeTokenValues;
+
+for (const face of groteskMono.fonts) {
+  registerFontFace(face);
+}
+
+export const newWaveTheme = defaultTheme.override({
+  name: 'new-wave',
+  tokens: newWaveThemeTokens,
 });

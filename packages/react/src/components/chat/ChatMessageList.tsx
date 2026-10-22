@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
-import { chatMessageList } from '@var-ui/core';
-import { ChatListContext, type ChatDensity } from './ChatContext';
-import { mergeProps } from '../utils';
+import { chatMessageList, type ChatMessageListVariantProps } from '@var-ui/core';
+import { ChatListContext } from './ChatContext';
+import { mergeProps } from 'typestyles';
 
 export type ChatMessageListProps = {
   /** Message elements — typically `ChatMessage`. */
@@ -16,7 +16,7 @@ export type ChatMessageListProps = {
    */
   isStreaming?: boolean;
   /** Visual density — flows to child messages via context. @default balanced */
-  density?: ChatDensity;
+  density?: NonNullable<ChatMessageListVariantProps['density']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
 };

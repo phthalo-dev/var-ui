@@ -1,11 +1,13 @@
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import {
   appearanceSurface,
-  semanticChannelAssignments,
-  type FeedbackTone,
-  type SurfaceAppearance,
-} from './semanticTone';
+  mapTone,
+  surfaceAppearance,
+  toneChannelAssignments,
+  toneWithDefault,
+} from '../shared/semanticTone';
 
 /**
  * Page-level announcement bar. Same tone system as `alert`, but full-width
@@ -16,16 +18,21 @@ import {
  * <div className={b.root} role="alert">…</div>
  * ```
  */
-export const banner = typestyles.styles.component(
-  'banner',
-  (c) => {
-    const v = c.vars({
-      semantic: { value: t.color.tone.accent.foreground.var, syntax: '<color>' },
-      solidBg: { value: t.color.tone.accent.background.var, syntax: '<color>' },
-      solidFg: { value: t.color.tone.accent.foregroundOnBackground.var, syntax: '<color>' },
-    });
+export const banner = typestyles.recipe({
+  name: 'banner',
+  layer: 'components',
+  slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
+  variants: {
+    tone: toneWithDefault('info'),
+    appearance: surfaceAppearance,
+  },
+  vars: {
+    semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
+    solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
+    solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'icon', 'content', 'title', 'actions', 'dismiss'],
       base: {
         root: {
           display: 'flex',
@@ -39,7 +46,7 @@ export const banner = typestyles.styles.component(
         icon: {
           flexShrink: 0,
           display: 'inline-flex',
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         content: {
           flex: 1,
@@ -50,7 +57,7 @@ export const banner = typestyles.styles.component(
         },
         title: {
           fontWeight: t.fontWeight.semibold.var,
-          color: v.semantic.var,
+          color: vars.semantic.var,
         },
         actions: {
           display: 'flex',
@@ -66,7 +73,7 @@ export const banner = typestyles.styles.component(
           display: 'inline-flex',
           padding: t.space[1].var,
           borderRadius: t.radius.sm.var,
-          '&:hover': { backgroundColor: appearanceSurface(v, 'subtle').backgroundColor },
+          '&:hover': { backgroundColor: appearanceSurface(vars, 'subtle').backgroundColor },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
             outlineOffset: '1px',
@@ -74,44 +81,23 @@ export const banner = typestyles.styles.component(
         },
       },
       variants: {
-        tone: {
-          info: { root: semanticChannelAssignments(v, 'accent') },
-          success: { root: semanticChannelAssignments(v, 'success') },
-          warning: { root: semanticChannelAssignments(v, 'warning') },
-          danger: { root: semanticChannelAssignments(v, 'danger') },
-        },
+        tone: mapTone((key) => ({ root: toneChannelAssignments(vars, key) })),
         appearance: {
           subtle: {
-            root: appearanceSurface(v, 'subtle', { includeBorder: false }),
+            root: appearanceSurface(vars, 'subtle', { includeBorder: false }),
           },
           solid: {
-            root: appearanceSurface(v, 'solid', { includeBorder: false }),
+            root: appearanceSurface(vars, 'solid', { includeBorder: false }),
             icon: { color: 'inherit' },
             title: { color: 'inherit' },
           },
           outline: {
-            root: appearanceSurface(v, 'outline', { includeBorder: false }),
+            root: appearanceSurface(vars, 'outline', { includeBorder: false }),
           },
         },
       },
-      defaultVariants: { tone: 'info', appearance: 'subtle' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type BannerRecipeProps = NonNullable<Parameters<typeof banner>[0]>;
-export type BannerTone = FeedbackTone;
-export type BannerVariantProps = {
-  tone?: BannerTone;
-  appearance?: SurfaceAppearance;
-};
-
-export const bannerVariantPropDocs = [
-  { name: 'tone', type: 'BannerTone', required: false },
-  { name: 'appearance', type: 'SurfaceAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof BannerVariantProps;
-  type: string;
-  required: false;
-}>;
+export type BannerVariantProps = RecipeVariants<typeof banner>;

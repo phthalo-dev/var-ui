@@ -11,8 +11,8 @@ export const snippets = {
       <IconButton name="search" aria-label="Search" />
     </>
   }
-  centerContent={<Button intent="secondary">Untitled</Button>}
-  endContent={<Button intent="primary">Share</Button>}
+  centerContent={<Button>Untitled</Button>}
+  endContent={<Button tone="accent" appearance="filled">Share</Button>}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

@@ -1,81 +1,85 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
-import { fieldChrome, dropdownPopoverChrome } from './field';
+import { fieldChrome, dropdownPopoverChrome } from './fieldChrome';
+import { controlSize } from '../shared/variantAxes';
+import { atProperty, type RecipeVariants } from 'typestyles';
 
-export const select = typestyles.styles.component(
-  'select',
-  (c) => {
-    const v = c.vars({
-      labelColor: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      triggerBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      triggerBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      triggerForeground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-      placeholderColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      descriptionColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-      errorColor: {
-        value: t.color.tone.danger.foreground.var,
-        syntax: '<color>',
-      },
-      popoverBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      popoverBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      itemSelectedColor: {
-        value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
-      },
-      itemFocusedBackground: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-    });
+export const select = typestyles.recipe({
+  name: 'select',
+  layer: 'components',
+  slots: [
+    'root',
+    'label',
+    'trigger',
+    'selectValue',
+    'triggerIcon',
+    'description',
+    'error',
+    'popover',
+    'listbox',
+    'item',
+  ],
+  variants: { size: controlSize },
+  vars: {
+    labelColor: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    triggerBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    triggerBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    triggerForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+    placeholderColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+    errorColor: {
+      ...atProperty.color,
+      value: t.color.tone.danger.foreground.var,
+    },
+    popoverBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    popoverBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    itemSelectedColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    itemFocusedBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+  },
+  styles: ({ vars }) => {
     const chrome = fieldChrome({
-      label: v.labelColor.var,
-      description: v.descriptionColor.var,
-      error: v.errorColor.var,
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
     });
     const panel = dropdownPopoverChrome({
-      popoverBorder: v.popoverBorder,
-      popoverBackground: v.popoverBackground,
-      itemFocusedBackground: v.itemFocusedBackground,
-      itemSelectedColor: v.itemSelectedColor,
+      popoverBorder: vars.popoverBorder,
+      popoverBackground: vars.popoverBackground,
+      itemFocusedBackground: vars.itemFocusedBackground,
+      itemSelectedColor: vars.itemSelectedColor,
     });
     return {
-      slots: [
-        'root',
-        'label',
-        'trigger',
-        'selectValue',
-        'triggerIcon',
-        'description',
-        'error',
-        'popover',
-        'listbox',
-        'item',
-      ],
       base: {
         root: {
           ...chrome.root,
@@ -95,10 +99,10 @@ export const select = typestyles.styles.component(
           boxSizing: 'border-box',
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.triggerBorder.var,
+          borderColor: vars.triggerBorder.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.triggerBackground.var,
-          color: v.triggerForeground.var,
+          backgroundColor: vars.triggerBackground.var,
+          color: vars.triggerForeground.var,
           cursor: 'pointer',
           outline: 'none',
           transition: 'border-color 140ms ease, box-shadow 140ms ease',
@@ -121,7 +125,7 @@ export const select = typestyles.styles.component(
           whiteSpace: 'nowrap',
           color: t.color.text.primary.var,
           '&[data-placeholder]': {
-            color: v.placeholderColor.var,
+            color: vars.placeholderColor.var,
           },
         },
         triggerIcon: {
@@ -138,8 +142,9 @@ export const select = typestyles.styles.component(
           trigger: controlSurfaceSize(size, { inset: 'compact' }),
         })),
       },
-      defaultVariants: { size: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type SelectVariantProps = RecipeVariants<typeof select>;

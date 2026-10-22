@@ -1,6 +1,5 @@
 import type { ComponentAttrsResult } from 'typestyles';
 import * as core from '@var-ui/core';
-import { text as textUtility } from '@var-ui/core/internal';
 
 export type HtmlAttrDoc = {
   name: string;
@@ -90,9 +89,7 @@ function resolveRecipe(slug: string): { recipeName: string; result: unknown } | 
 
   // Known aliases where export name ≠ slug camelCase
   if (slug === 'clickable-card') candidates.unshift('card');
-  if (slug === 'text') {
-    return { recipeName: 'text', result: textUtility() };
-  }
+  if (slug === 'text') candidates.unshift('textBlock');
   if (slug === 'link') {
     const link = (core as Record<string, unknown>).link;
     if (typeof link === 'string') {

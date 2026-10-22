@@ -1,4 +1,4 @@
-import { positionTabsIndicator } from '@var-ui/core/internal';
+import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
 
 export function createTabsController(root: HTMLElement): void {
   if (root.hasAttribute('data-var-ui-tabs-initialized')) return;

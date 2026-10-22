@@ -9,7 +9,7 @@ const chevronIcon =
 
 export function render(): string {
   // Collapsed 2+ group summary — expand/collapse is React-only.
-  const t = chatToolCalls({ status: 'complete', expanded: 'false' });
+  const t = chatToolCalls({ status: 'complete', expanded: false });
   const header = serializeHtmlTag(
     'button',
     {

@@ -12,13 +12,14 @@
     "@var-ui/astro": "workspace:*",
     "@var-ui/core": "workspace:*",
     "@var-ui/docs": "workspace:*",
+    "@var-ui/icons": "workspace:*",
     "astro": "catalog:"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@typestyles/build-runner": "^0.5.2",
-    "@typestyles/vite": "catalog:",
+    "@typestyles/build-runner": "0.6.1",
+    "@typestyles/vite": "0.5.1",
     "typescript": "catalog:",
-    "typestyles": "catalog:"
+    "typestyles": "0.32.1"
   }
 }

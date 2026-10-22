@@ -1,7 +1,8 @@
 import type { InputHTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import { useId } from 'react';
-import { inputGroup } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { inputGroup, type InputGroupVariantProps } from '@var-ui/core';
+import { ControlSizeContext, useControlSize } from './controlSizeContext';
+import { mergeProps } from 'typestyles';
 
 export type InputGroupProps = {
   /** Visible label rendered above the group. */
@@ -16,6 +17,8 @@ export type InputGroupProps = {
   className?: string;
   /** Plain `<input>`s (see `InputGroupInput`) and `InputGroupText` addons. */
   children: ReactNode;
+  /** Control density inherited by `InputGroupInput` and `InputGroupText`. @default md */
+  size?: NonNullable<InputGroupVariantProps['size']>;
 };
 
 /**
@@ -37,31 +40,34 @@ export function InputGroup({
   errorMessage,
   isDisabled,
   className,
+  size,
   children,
 }: InputGroupProps): JSX.Element {
-  const g = inputGroup();
+  const g = inputGroup({ size });
   const labelId = useId();
   return (
-    <div {...mergeProps(g.root, className)}>
-      <span id={labelId} {...mergeProps(g.label)}>
-        {label}
-      </span>
-      <div
-        role="group"
-        aria-labelledby={labelId}
-        aria-disabled={isDisabled || undefined}
-        data-disabled={isDisabled || undefined}
-        {...mergeProps(g.group)}
-      >
-        {children}
+    <ControlSizeContext.Provider value={size}>
+      <div {...mergeProps(g.root, className)}>
+        <span id={labelId} {...mergeProps(g.label)}>
+          {label}
+        </span>
+        <div
+          role="group"
+          aria-labelledby={labelId}
+          aria-disabled={isDisabled || undefined}
+          data-disabled={isDisabled || undefined}
+          {...mergeProps(g.group)}
+        >
+          {children}
+        </div>
+        {description ? <p {...mergeProps(g.description)}>{description}</p> : null}
+        {errorMessage ? (
+          <p {...mergeProps(g.error)} role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
       </div>
-      {description ? <p {...mergeProps(g.description)}>{description}</p> : null}
-      {errorMessage ? (
-        <p {...mergeProps(g.error)} role="alert">
-          {errorMessage}
-        </p>
-      ) : null}
-    </div>
+    </ControlSizeContext.Provider>
   );
 }
 
@@ -75,6 +81,6 @@ export type InputGroupInputProps = InputHTMLAttributes<HTMLInputElement> & {
  * `InputGroup` so their border radius joins with sibling addons.
  */
 export function InputGroupInput({ className, ref, ...props }: InputGroupInputProps): JSX.Element {
-  const g = inputGroup();
+  const g = inputGroup({ size: useControlSize() });
   return <input {...props} ref={ref} {...mergeProps(g.input, className)} />;
 }

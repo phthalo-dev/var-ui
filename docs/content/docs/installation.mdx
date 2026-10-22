@@ -15,10 +15,9 @@ Install published `@var-ui/*` packages from npm. For the copy-paste Vite + React
 | `@var-ui/react` | React components                                                                                      |
 | `@var-ui/icons` | Optional default glyphs for `IconProvider`                                                            |
 | `@var-ui/astro` | Astro components (no React)                                                                           |
-| `@var-ui/form`  | Form state and validation                                                                             |
 | `@var-ui/cli`   | Dev dependency: `npx @var-ui/cli` for component lookup, search, and `init`                            |
 
-`@var-ui/icons` is optional. Without it, pass `icons={{}}` to `IconProvider`.
+`@var-ui/icons` is optional for React. Without it, pass `icons={{}}` to `IconProvider`. Astro components load the same default glyphs from `@var-ui/icons/glyphs`, so install `@var-ui/icons` alongside `@var-ui/astro`.
 
 ## Peer dependencies
 

@@ -1,46 +1,53 @@
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from './overlayPresence';
+import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
+import { layerZIndex } from './layerVars';
 
-export const dialog = typestyles.styles.component(
-  'dialog',
-  (c) => {
-    const v = c.vars({
-      overlayBackground: {
-        value: t.color.overlay.default.var,
-        syntax: '<color>',
-      },
-      modalBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      modalBorder: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      descriptionColor: {
-        value: t.color.text.secondary.var,
-        syntax: '<color>',
-      },
-    });
+export const dialog = typestyles.recipe({
+  name: 'dialog',
+  layer: 'components',
+  slots: [
+    'overlay',
+    'modal',
+    'content',
+    'header',
+    'heading',
+    'description',
+    'closeButton',
+    'actions',
+  ],
+  variants: {
+    role: variant.enum(['dialog', 'alertdialog'], { default: 'dialog' }),
+  },
+  vars: {
+    overlayBackground: {
+      ...atProperty.color,
+      value: t.color.overlay.default.var,
+    },
+    modalBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    modalBorder: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    descriptionColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: [
-        'overlay',
-        'modal',
-        'content',
-        'header',
-        'heading',
-        'description',
-        'closeButton',
-        'actions',
-      ],
       base: {
         overlay: {
           ...overlayPresenceStyles(),
           ...overlayIosAbsoluteBackdrop,
           position: 'fixed',
           inset: 0,
-          backgroundColor: v.overlayBackground.var,
+          ...layerZIndex(t.zIndex.modal.var),
+          backgroundColor: vars.overlayBackground.var,
           display: 'grid',
           placeItems: 'center',
           padding: t.space[4].var,
@@ -48,11 +55,11 @@ export const dialog = typestyles.styles.component(
         modal: {
           ...overlayPresenceStyles({ scale: true }),
           width: 'min(480px, 100%)',
-          backgroundColor: v.modalBackground.var,
+          backgroundColor: vars.modalBackground.var,
           borderRadius: t.radius.lg.var,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.modalBorder.var,
+          borderColor: vars.modalBorder.var,
           boxShadow: t.shadow.md.var,
           padding: t.space[4].var,
         },
@@ -93,7 +100,7 @@ export const dialog = typestyles.styles.component(
         description: {
           margin: 0,
           fontSize: t.fontSize.sm.var,
-          color: v.descriptionColor.var,
+          color: vars.descriptionColor.var,
         },
         actions: {
           display: 'flex',
@@ -112,8 +119,9 @@ export const dialog = typestyles.styles.component(
           },
         },
       },
-      defaultVariants: { role: 'dialog' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type DialogVariantProps = RecipeVariants<typeof dialog>;

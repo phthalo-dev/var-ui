@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from 'react';
-import { toolbar, type ControlSize } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { toolbar, type ToolbarVariantProps } from '@var-ui/core';
+import { mergeProps } from 'typestyles';
 
 export type ToolbarProps = {
   /** Content aligned to the start (leading) edge. */
@@ -12,9 +12,9 @@ export type ToolbarProps = {
   /** Accessible label for the toolbar (required — applied as aria-label). */
   label: string;
   /** Control density. @default md */
-  size?: ControlSize;
+  size?: NonNullable<ToolbarVariantProps['size']>;
   /** Layout axis. @default horizontal */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: NonNullable<ToolbarVariantProps['orientation']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
 };

@@ -8,7 +8,6 @@ export default function Preview() {
   return (
     <HStack gap="md" wrap align="center">
       <Button
-        intent="secondary"
         onPress={() => {
           setPlacement('start');
           setOpen(true);
@@ -17,7 +16,6 @@ export default function Preview() {
         Start
       </Button>
       <Button
-        intent="secondary"
         onPress={() => {
           setPlacement('bottom');
           setOpen(true);

@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import { statusDot, type StatusDotVariantProps } from '@var-ui/core';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type StatusDotProps = StatusDotVariantProps & {
   'aria-label'?: string;
@@ -16,7 +16,7 @@ export function StatusDot({
 }: StatusDotProps): JSX.Element {
   return (
     <span
-      {...mergeProps(statusDot({ tone, appearance, pulse: pulse ? 'true' : 'false' }), className)}
+      {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
       aria-label={ariaLabel}
       role={ariaLabel ? 'img' : undefined}
       aria-hidden={ariaLabel ? undefined : true}

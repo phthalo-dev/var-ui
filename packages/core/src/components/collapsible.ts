@@ -1,5 +1,8 @@
+import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' });
 
 /**
  * Expand/collapse panel chrome for Disclosure-backed Collapsible.
@@ -15,23 +18,27 @@ import { designTokens as t } from '../tokens';
  * </div>
  * ```
  */
-export const collapsible = typestyles.styles.component(
-  'collapsible',
-  (c) => {
-    const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-      triggerColor: { value: t.color.text.primary.var, syntax: '<color>' },
-      hoverBg: { value: t.color.background.subtle.var, syntax: '<color>' },
-    });
+export const collapsible = typestyles.recipe({
+  name: 'collapsible',
+  layer: 'components',
+  slots: ['root', 'trigger', 'triggerIcon', 'panel'],
+  variants: {
+    variant: collapsibleVariant,
+  },
+  vars: {
+    border: { ...atProperty.color, value: t.color.border.default.var },
+    background: { ...atProperty.color, value: t.color.background.surface.var },
+    triggerColor: { ...atProperty.color, value: t.color.text.primary.var },
+    hoverBg: { ...atProperty.color, value: t.color.background.subtle.var },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'trigger', 'triggerIcon', 'panel'],
       base: {
         root: {
-          [v.border.name]: t.color.border.default.var,
-          [v.background.name]: t.color.background.surface.var,
-          [v.triggerColor.name]: t.color.text.primary.var,
-          [v.hoverBg.name]: t.color.background.subtle.var,
+          [vars.border.name]: t.color.border.default.var,
+          [vars.background.name]: t.color.background.surface.var,
+          [vars.triggerColor.name]: t.color.text.primary.var,
+          [vars.hoverBg.name]: t.color.background.subtle.var,
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
@@ -54,7 +61,7 @@ export const collapsible = typestyles.styles.component(
           padding: `${t.space[2].var} ${t.space[3].var}`,
           border: 'none',
           background: 'transparent',
-          color: v.triggerColor.var,
+          color: vars.triggerColor.var,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           fontFamily: 'inherit',
@@ -62,7 +69,7 @@ export const collapsible = typestyles.styles.component(
           cursor: 'pointer',
           borderRadius: t.radius.sm.var,
           '&:hover': {
-            backgroundColor: v.hoverBg.var,
+            backgroundColor: vars.hoverBg.var,
           },
           '&:focus-visible': {
             outline: `2px solid ${t.color.border.focus.var}`,
@@ -86,9 +93,9 @@ export const collapsible = typestyles.styles.component(
             root: {
               borderWidth: t.borderWidth.default.var,
               borderStyle: 'solid',
-              borderColor: v.border.var,
+              borderColor: vars.border.var,
               borderRadius: t.radius.md.var,
-              backgroundColor: v.background.var,
+              backgroundColor: vars.background.var,
             },
           },
           accordion: {
@@ -97,7 +104,7 @@ export const collapsible = typestyles.styles.component(
               borderWidth: 0,
               borderBottomWidth: t.borderWidth.default.var,
               borderBottomStyle: 'solid',
-              borderBottomColor: v.border.var,
+              borderBottomColor: vars.border.var,
               '&:last-child': {
                 borderBottomWidth: 0,
               },
@@ -113,23 +120,9 @@ export const collapsible = typestyles.styles.component(
           },
         },
       },
-      defaultVariants: { variant: 'flush' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type CollapsibleRecipeProps = NonNullable<Parameters<typeof collapsible>[0]>;
-export type CollapsibleVariant = NonNullable<CollapsibleRecipeProps['variant']>;
-
-export type CollapsibleVariantProps = {
-  variant?: CollapsibleVariant;
-};
-
-export const collapsibleVariantPropDocs = [
-  { name: 'variant', type: "'flush' | 'bordered' | 'accordion'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof CollapsibleVariantProps;
-  type: string;
-  required: false;
-}>;
+export type CollapsibleVariant = VariantOptions<typeof collapsibleVariant>;
+export type CollapsibleVariantProps = RecipeVariants<typeof collapsible>;

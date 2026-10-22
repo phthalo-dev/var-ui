@@ -1,7 +1,7 @@
 import { designTokens as t } from '../tokens';
-import type { ControlSize } from './semanticTone';
+import type { ControlSize } from '../shared/variantAxes';
 
-export type ControlSizeMetrics = {
+type ControlSizeMetrics = {
   height: string;
   fontSize: string;
   paddingInline: string;
@@ -45,12 +45,6 @@ const compactPaddingInline: Record<ControlSize, string> = {
   lg: t.space[4].var,
 };
 
-const segmentedSegmentPaddingInline: Record<ControlSize, string> = {
-  sm: t.space[3].var,
-  md: t.space[4].var,
-  lg: t.space[4].var,
-};
-
 /** Fixed-height surface styles for buttons, inputs, and select triggers. */
 export function controlSurfaceSize(size: ControlSize, options: ControlSurfaceOptions = {}) {
   const metrics = controlSizeMetrics[size];
@@ -62,31 +56,6 @@ export function controlSurfaceSize(size: ControlSize, options: ControlSurfaceOpt
     paddingInline: options.inset === 'compact' ? compactPaddingInline[size] : metrics.paddingInline,
     paddingBlock: 0,
     gap: metrics.gap,
-  };
-}
-
-/** Track + segment metrics for segmented controls (icon-friendly square segments). */
-export function segmentedControlSize(size: ControlSize) {
-  const height = controlSizeMetrics[size].height;
-  const trackPadding = t.space[1].var;
-  return {
-    root: {
-      boxSizing: 'border-box' as const,
-      height,
-      minHeight: height,
-    },
-    segment: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-      minHeight: 0,
-      paddingInline: segmentedSegmentPaddingInline[size],
-      fontSize: controlSizeMetrics[size].fontSize,
-      lineHeight: 1,
-    },
-    indicatorInset: trackPadding,
-    segmentMinWidth: `calc(${height} - 2 * ${trackPadding})`,
   };
 }
 

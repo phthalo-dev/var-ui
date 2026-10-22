@@ -68,7 +68,7 @@ the compiled value already encodes both faces.
 
 ## Custom theme tokens
 
-`createDesignTheme({ extend })` and `extendTokens()` mint additional namespaces
+`createDesignTheme({ tokens: { brand: … } })` mints additional namespaces
 (`--var-ui-brand-glow`, etc.) that behave like built-in tokens. They appear on the theme
 class alongside built-ins.
 
@@ -95,5 +95,5 @@ The tables below are generated from `@var-ui/core` at build time — design toke
 - [Overlay lifecycle](/docs/overlay-lifecycle) — `--var-ui-available-height` and related positioner vars
 - [Design tokens](/theming/tokens) — token roles and syntax highlighting
 - [Colors](/theming/colors) — palette ramps and semantic color swatches
-- [Customize](/theming/customize) — typed overrides and `extend` tokens
+- [Customize](/theming/customize) — typed overrides and custom token namespaces
 - [Themes](/theming/themes) — `createDesignTheme` and `DesignSystemProvider`

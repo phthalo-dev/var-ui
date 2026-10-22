@@ -1,55 +1,58 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
-export const switchStyles = typestyles.styles.component(
-  'switch',
-  (c) => {
-    const v = c.vars({
-      trackBackground: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      thumbBackground: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-    });
+export const switchStyles = typestyles.recipe({
+  name: 'switch',
+  layer: 'components',
+  slots: ['root', 'track', 'thumb', 'label'],
+  vars: {
+    trackBackground: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    thumbBackground: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'track', 'thumb', 'label'],
-      root: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: t.space[2].var,
-        cursor: 'pointer',
-      },
-      track: {
-        position: 'relative',
-        width: '40px',
-        height: '24px',
-        borderRadius: t.radius.full.var,
-        backgroundColor: v.trackBackground.var,
-        transition: 'background-color 140ms ease',
-        '&[data-selected]': {
-          [v.trackBackground.name]: t.color.tone.accent.background.var,
+      base: {
+        root: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: t.space[2].var,
+          cursor: 'pointer',
         },
-      },
-      thumb: {
-        position: 'absolute',
-        top: '3px',
-        left: '3px',
-        width: '18px',
-        height: '18px',
-        borderRadius: t.radius.full.var,
-        backgroundColor: v.thumbBackground.var,
-        transition: 'transform 140ms ease',
-        '&[data-selected]': {
-          transform: 'translateX(16px)',
+        track: {
+          position: 'relative',
+          width: '40px',
+          height: '24px',
+          borderRadius: t.radius.full.var,
+          backgroundColor: vars.trackBackground.var,
+          transition: 'background-color 140ms ease',
+          '&[data-selected]': {
+            [vars.trackBackground.name]: t.color.tone.accent.background.var,
+          },
         },
-      },
-      label: {
-        fontSize: t.fontSize.md.var,
+        thumb: {
+          position: 'absolute',
+          top: '3px',
+          left: '3px',
+          width: '18px',
+          height: '18px',
+          borderRadius: t.radius.full.var,
+          backgroundColor: vars.thumbBackground.var,
+          transition: 'transform 140ms ease',
+          '&[data-selected]': {
+            transform: 'translateX(16px)',
+          },
+        },
+        label: {
+          fontSize: t.fontSize.md.var,
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

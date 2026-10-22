@@ -1,13 +1,13 @@
 ---
-import { center } from '@var-ui/core';
+import { center, type CenterVariantProps, } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  inline?: boolean;
+  inline?: NonNullable<CenterVariantProps['inline']>;
   className?: string;
 };
 
 const { inline = false, className } = Astro.props;
-const rp = mergeProps(center({ inline: inline ? 'true' : 'false' }), className);
+const rp = mergeProps(center({ inline }), className);
 ---
 <div {...rp}><slot /></div>

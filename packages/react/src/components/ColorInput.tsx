@@ -1,14 +1,14 @@
 import type { ChangeEvent, JSX } from 'react';
 import { useEffect, useId, useState } from 'react';
 import { DialogTrigger, Label, Popover as AriaPopover } from 'react-aria-components';
-import { colorField, popover, type ControlSize } from '@var-ui/core';
-import { isValidHex, normalizeHex } from '@var-ui/core';
+import { colorField, popover, type ColorFieldVariantProps } from '@var-ui/core';
+import { isValidHex, normalizeHex } from '../color/convert';
 import { useLayer } from '../layers/LayerProvider';
 import { useColorValue } from '../color';
 import { ColorPicker } from './ColorPicker';
 import type { ColorPickerProps } from './ColorPicker';
-import type { FieldMeta } from './utils';
-import { mergeProps } from './utils';
+import type { FieldMeta } from './Field';
+import { mergeProps } from 'typestyles';
 
 export type ColorInputProps = FieldMeta &
   Pick<ColorPickerProps, 'swatches' | 'swatchesPerRow' | 'withAlpha'> & {
@@ -18,7 +18,7 @@ export type ColorInputProps = FieldMeta &
     defaultValue?: string;
     onChange?: (value: string) => void;
     placeholder?: string;
-    size?: ControlSize;
+    size?: NonNullable<ColorFieldVariantProps['size']>;
     isDisabled?: boolean;
     isRequired?: boolean;
     className?: string;

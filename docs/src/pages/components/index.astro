@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { componentSidebar } from '../../data/navigation';
+import { componentSidebarSections } from '../../data/navigation';
 import { findMdxModule } from '../../lib/loadMdx';
 
 const modules = import.meta.glob('../../../content/components/*.mdx');
@@ -19,7 +19,7 @@ const { Content, frontmatter } = await loader();
     <Content />
     <h2>All components</h2>
     <ul class="component-list">
-      {componentSidebar.map((item) => (
+      {componentSidebarSections.flatMap((section) => section.items).map((item) => (
         <li>
           <a href={item.link}>{item.text}</a>
         </li>

@@ -1,3 +1,4 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 
@@ -5,22 +6,23 @@ import { designTokens as t } from '../tokens';
  * Keyboard key cap for shortcut hints.
  *
  * ```tsx
- * <kbd className={kbd()}>⌘K</kbd>
+ * <kbd className={kbd().className}>⌘K</kbd>
  * ```
  */
-export const kbd = typestyles.styles.component(
-  'kbd',
-  (c) => {
-    const v = c.vars({
-      background: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      border: {
-        value: t.color.border.subtle.var,
-        syntax: '<color>',
-      },
-    });
+export const kbd = typestyles.recipe({
+  name: 'kbd',
+  layer: 'components',
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.subtle.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-block',
@@ -30,15 +32,14 @@ export const kbd = typestyles.styles.component(
         fontWeight: t.fontWeight.medium.var,
         lineHeight: t.lineHeight.normal.var,
         color: t.color.text.secondary.var,
-        backgroundColor: v.background.var,
+        backgroundColor: vars.background.var,
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
-        borderColor: v.border.var,
+        borderColor: vars.border.var,
         borderBottomWidth: '2px',
         borderRadius: t.radius.sm.var,
         whiteSpace: 'nowrap',
       },
     };
   },
-  { layer: 'components' },
-);
+});

@@ -6,7 +6,11 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"],
+      "@var-ui/icons/glyphs/*": ["../icons/src/glyph-data/*"]
+    }
   },
   "include": [
     "index.ts",

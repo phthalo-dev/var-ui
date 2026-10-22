@@ -36,11 +36,9 @@ import {
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
-
-export type { DrawerSize } from '@var-ui/core';
 
 export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
   DrawerVariantProps & {

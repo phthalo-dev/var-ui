@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/astro",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Astro components for the var-ui design system",
   "keywords": [
     "astro-component",
@@ -31,18 +31,23 @@
     "access": "public"
   },
   "scripts": {
+    "check": "astro check",
     "test": "vp test run"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@var-ui/core": "workspace:*",
+    "@var-ui/icons": "workspace:*",
     "astro": "catalog:",
     "jsdom": "^26.0.0",
-    "typestyles": "catalog:",
+    "typescript": "catalog:",
+    "typestyles": "0.32.1",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "peerDependencies": {
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",
+    "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "astro": "catalog:"
   }
 }

@@ -1,18 +1,31 @@
+import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+
+const accordionPane = variant.enum(['flush', 'bordered'], { default: 'bordered' });
 
 /**
  * Outer chrome for stacked `Accordion` panels — border, radius, and overflow clip.
  */
-export const accordionGroup = typestyles.styles.component(
-  'accordion-group',
-  (c) => {
-    const v = c.vars({
-      border: { value: t.color.border.default.var, syntax: '<color>' },
-      background: { value: t.color.background.surface.var, syntax: '<color>' },
-    });
+export const accordionGroup = typestyles.recipe({
+  name: 'accordion-group',
+  layer: 'components',
+  slots: ['root'],
+  variants: {
+    variant: accordionPane,
+  },
+  vars: {
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root'],
       base: {
         root: {
           display: 'flex',
@@ -20,9 +33,9 @@ export const accordionGroup = typestyles.styles.component(
           minWidth: 0,
           borderWidth: t.borderWidth.default.var,
           borderStyle: 'solid',
-          borderColor: v.border.var,
+          borderColor: vars.border.var,
           borderRadius: t.radius.md.var,
-          backgroundColor: v.background.var,
+          backgroundColor: vars.background.var,
           overflow: 'hidden',
         },
       },
@@ -38,23 +51,9 @@ export const accordionGroup = typestyles.styles.component(
           bordered: {},
         },
       },
-      defaultVariants: { variant: 'bordered' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type AccordionGroupRecipeProps = NonNullable<Parameters<typeof accordionGroup>[0]>;
-export type AccordionGroupVariant = NonNullable<AccordionGroupRecipeProps['variant']>;
-
-export type AccordionGroupVariantProps = {
-  variant?: AccordionGroupVariant;
-};
-
-export const accordionGroupVariantPropDocs = [
-  { name: 'variant', type: "'flush' | 'bordered'", required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof AccordionGroupVariantProps;
-  type: string;
-  required: false;
-}>;
+export type AccordionGroupVariant = VariantOptions<typeof accordionPane>;
+export type AccordionGroupVariantProps = RecipeVariants<typeof accordionGroup>;

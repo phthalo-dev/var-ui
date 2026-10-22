@@ -4,11 +4,11 @@ import {
   button,
   descriptionList as descriptionListStyles,
   iconNameList,
-  resolveButtonProps,
   type IconName,
+  type DescriptionListVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from './utils';
+import { mergeProps } from 'typestyles';
 
 export type DescriptionListItemData = {
   id: string;
@@ -18,8 +18,8 @@ export type DescriptionListItemData = {
 };
 
 export type DescriptionListProps = {
-  columns?: 'single' | 'multi' | number;
-  labelPosition?: 'start' | 'top';
+  columns?: NonNullable<DescriptionListVariantProps['columns']> | number;
+  labelPosition?: NonNullable<DescriptionListVariantProps['labelPosition']>;
   maxItems?: number;
   title?: ReactNode;
   items?: DescriptionListItemData[];
@@ -136,7 +136,7 @@ export function DescriptionList({
             type="button"
             {...mergeProps(
               s.toggle,
-              button(resolveButtonProps({ intent: 'ghost', size: 'sm' })).className,
+              button({ tone: 'accent', appearance: 'ghost', size: 'sm' }).className,
             )}
             onClick={() => setExpanded((value) => !value)}
           >

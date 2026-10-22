@@ -1,20 +1,31 @@
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { gap } from '../shared/variantAxes';
+
+const simpleGridCols = variant.enum(['one', 'two', 'three', 'four', 'five', 'six', 'eight'], {
+  default: 'two',
+});
 
 /**
  * Equal-column grid (Mantine `SimpleGrid` equivalent). Use `cols` for a fixed
  * number of tracks; unlike `grid`, there is no auto-fill minmax behavior.
  */
-export const simpleGrid = typestyles.styles.component(
-  'simple-grid',
-  (c) => {
-    const v = c.vars({
-      gap: { value: t.space[4].var, syntax: '<length>' },
-    });
+export const simpleGrid = typestyles.recipe({
+  name: 'simple-grid',
+  layer: 'components',
+  variants: {
+    cols: simpleGridCols,
+    spacing: gap,
+  },
+  vars: {
+    gap: { ...atProperty.length, value: t.space[4].var },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'grid',
-        gap: v.gap.var,
+        gap: vars.gap.var,
       },
       variants: {
         cols: {
@@ -27,16 +38,17 @@ export const simpleGrid = typestyles.styles.component(
           eight: { gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' },
         },
         spacing: {
-          none: { [v.gap.name]: '0px' },
-          xs: { [v.gap.name]: t.space[1].var },
-          sm: { [v.gap.name]: t.space[2].var },
-          md: { [v.gap.name]: t.space[4].var },
-          lg: { [v.gap.name]: t.space[5].var },
-          xl: { [v.gap.name]: t.space[8].var },
+          none: { [vars.gap.name]: '0px' },
+          xs: { [vars.gap.name]: t.space[1].var },
+          sm: { [vars.gap.name]: t.space[2].var },
+          md: { [vars.gap.name]: t.space[4].var },
+          lg: { [vars.gap.name]: t.space[5].var },
+          xl: { [vars.gap.name]: t.space[8].var },
         },
       },
-      defaultVariants: { cols: 'two', spacing: 'md' },
     };
   },
-  { layer: 'components' },
-);
+});
+
+/** Visual props derived from the schema. */
+export type SimpleGridVariantProps = RecipeVariants<typeof simpleGrid>;

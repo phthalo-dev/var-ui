@@ -1,6 +1,8 @@
+import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from './overlayPresence';
+import { overlayPresenceStyles } from '../shared/overlayMotion';
+import { layerZIndex } from './layerVars';
 
 /**
  * Non-modal rich preview card chrome — surface treatment like `popover`, with
@@ -12,49 +14,52 @@ import { overlayPresenceStyles } from './overlayPresence';
  * <div className={hc.root}>…</div>
  * ```
  */
-export const hoverCard = typestyles.styles.component(
-  'hover-card',
-  (c) => {
-    const v = c.vars({
-      background: {
-        value: t.color.background.surface.var,
-        syntax: '<color>',
-      },
-      border: {
-        value: t.color.border.default.var,
-        syntax: '<color>',
-      },
-      titleForeground: {
-        value: t.color.text.primary.var,
-        syntax: '<color>',
-      },
-    });
+export const hoverCard = typestyles.recipe({
+  name: 'hover-card',
+  layer: 'components',
+  slots: ['root', 'title', 'content'],
+  vars: {
+    background: {
+      ...atProperty.color,
+      value: t.color.background.surface.var,
+    },
+    border: {
+      ...atProperty.color,
+      value: t.color.border.default.var,
+    },
+    titleForeground: {
+      ...atProperty.color,
+      value: t.color.text.primary.var,
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'title', 'content'],
-      root: {
-        ...overlayPresenceStyles({ scale: true }),
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: v.border.var,
-        borderRadius: t.radius.md.var,
-        backgroundColor: v.background.var,
-        boxShadow: t.shadow.md.var,
-        minWidth: '14rem',
-        maxWidth: '22rem',
-        outline: 'none',
-      },
-      title: {
-        fontSize: t.fontSize.md.var,
-        fontWeight: t.fontWeight.semibold.var,
-        color: v.titleForeground.var,
-        margin: 0,
-        padding: `${t.space[4].var} ${t.space[4].var} ${t.space[3].var}`,
-      },
-      content: {
-        padding: `${t.space[3].var} ${t.space[4].var} ${t.space[4].var}`,
-        outline: 'none',
+      base: {
+        root: {
+          ...overlayPresenceStyles({ scale: true }),
+          borderWidth: t.borderWidth.default.var,
+          borderStyle: 'solid',
+          borderColor: vars.border.var,
+          borderRadius: t.radius.md.var,
+          backgroundColor: vars.background.var,
+          boxShadow: t.shadow.md.var,
+          ...layerZIndex(t.zIndex.dropdown.var),
+          minWidth: '14rem',
+          maxWidth: '22rem',
+          outline: 'none',
+        },
+        title: {
+          fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.semibold.var,
+          color: vars.titleForeground.var,
+          margin: 0,
+          padding: `${t.space[4].var} ${t.space[4].var} ${t.space[3].var}`,
+        },
+        content: {
+          padding: `${t.space[3].var} ${t.space[4].var} ${t.space[4].var}`,
+          outline: 'none',
+        },
       },
     };
   },
-  { layer: 'components' },
-);
+});

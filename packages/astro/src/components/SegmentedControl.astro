@@ -1,5 +1,5 @@
 ---
-import { segmentedControl, toggleButton, type ControlSize } from "@var-ui/core";
+import { segmentedControl, toggleButton, type SegmentedControlVariantProps, } from "@var-ui/core";
 import { mergeProps } from "../utils";
 
 type SegmentOption = {
@@ -14,7 +14,7 @@ type Props = {
   options: SegmentOption[];
   /** Initially selected segment id. Defaults to the first option. */
   selectedId?: string;
-  size?: ControlSize;
+  size?: NonNullable<SegmentedControlVariantProps['size']>;
   className?: string;
   /** Accessible name for the group. */
   "aria-label"?: string;

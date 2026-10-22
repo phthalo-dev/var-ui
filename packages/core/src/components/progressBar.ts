@@ -1,35 +1,44 @@
-import { keyframes } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atReducedMotion } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { semanticTone, type ProgressBarAppearance, type ProgressBarTone } from './semanticTone';
+import { semanticTone, toneValues, toneWithDefault, type Tone } from '../shared/semanticTone';
+import { fillAppearance } from '../shared/variantAxes';
 
 const slide = keyframes.create('var-ui-progress-slide', {
   from: { transform: 'translateX(-100%)' },
   to: { transform: 'translateX(400%)' },
 });
 
-const toneKeys: ProgressBarTone[] = ['accent', 'success', 'warning', 'danger'];
-
 /**
  * Linear progress. Fill width is set inline by the React wrapper
  * (percentage); the `indeterminate` variant animates a sliding segment.
  */
-export const progressBar = typestyles.styles.component(
-  'progress-bar',
-  (c) => {
-    const v = c.vars({
-      trackColor: {
-        value: t.color.background.subtle.var,
-        syntax: '<color>',
-      },
-      fillColor: {
-        value: t.color.tone.accent.foreground.var,
-        syntax: '<color>',
-      },
-    });
+export const progressBar = typestyles.recipe({
+  name: 'progress-bar',
+  layer: 'components',
+  slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
+  variants: {
+    tone: toneWithDefault('accent'),
+    appearance: fillAppearance,
+    indeterminate: variant.boolean({ default: false }),
+  },
+  vars: {
+    trackColor: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    fillColor: {
+      ...atProperty.color,
+      value: t.color.tone.accent.foreground.var,
+    },
+    fillWidth: {
+      ...atProperty.percentage,
+      value: '0%',
+    },
+  },
+  styles: ({ vars }) => {
     return {
-      slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
       base: {
         root: { display: 'grid', gap: t.space[1].var, minWidth: '160px' },
         header: { display: 'flex', justifyContent: 'space-between', gap: t.space[3].var },
@@ -38,28 +47,39 @@ export const progressBar = typestyles.styles.component(
         track: {
           height: '6px',
           borderRadius: t.radius.full.var,
-          backgroundColor: v.trackColor.var,
+          backgroundColor: vars.trackColor.var,
           overflow: 'hidden',
         },
         fill: {
           height: '100%',
+          width: vars.fillWidth.var,
           borderRadius: 'inherit',
-          backgroundColor: v.fillColor.var,
+          backgroundColor: vars.fillColor.var,
           transition: `width ${t.duration.medium.var} ${t.easing.standard.var}`,
         },
       },
       variants: {
         tone: Object.fromEntries(
-          toneKeys.map((key) => [
+          toneValues.map((key) => [
             key,
-            { root: { [v.fillColor.name]: semanticTone[key].background } },
+            {
+              root: {
+                [vars.fillColor.name]:
+                  key === 'neutral' ? t.color.text.secondary.var : semanticTone[key].background,
+              },
+            },
           ]),
-        ) as Record<ProgressBarTone, { root: Record<string, string> }>,
+        ) as Record<
+          Tone,
+          {
+            root: Record<string, string>;
+          }
+        >,
         appearance: {
           solid: {},
           subtle: {
             fill: {
-              backgroundColor: `color-mix(in srgb, ${v.fillColor.var} 55%, ${t.color.background.subtle.var})`,
+              backgroundColor: `color-mix(in srgb, ${vars.fillColor.var} 55%, ${t.color.background.subtle.var})`,
             },
           },
         },
@@ -78,24 +98,8 @@ export const progressBar = typestyles.styles.component(
           false: {},
         },
       },
-      defaultVariants: { tone: 'accent', appearance: 'solid', indeterminate: 'false' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type ProgressBarRecipeProps = NonNullable<Parameters<typeof progressBar>[0]>;
-
-export type ProgressBarVariantProps = {
-  tone?: ProgressBarTone;
-  appearance?: ProgressBarAppearance;
-};
-
-export const progressBarVariantPropDocs = [
-  { name: 'tone', type: 'ProgressBarTone', required: false },
-  { name: 'appearance', type: 'ProgressBarAppearance', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof ProgressBarVariantProps;
-  type: string;
-  required: false;
-}>;
+export type ProgressBarVariantProps = RecipeVariants<typeof progressBar>;

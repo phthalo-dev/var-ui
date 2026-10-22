@@ -1,17 +1,14 @@
-import { keyframes } from 'typestyles';
+import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import {
-  semanticTone,
-  type ButtonTone,
-  type SemanticToneKey,
-  type ToneAppearance,
-} from './semanticTone';
+import { mapTone, semanticTone, tone, type SemanticToneKey } from '../shared/semanticTone';
 
 const pulse = keyframes.create('var-ui-status-pulse', {
   from: { boxShadow: '0 0 0 0 color-mix(in srgb, currentColor 45%, transparent)' },
   to: { boxShadow: '0 0 0 6px color-mix(in srgb, currentColor 0%, transparent)' },
 });
+
+const statusDotAppearance = variant.enum(['filled', 'outline', 'subtle'], { default: 'filled' });
 
 function toneColor(key: SemanticToneKey) {
   return { color: semanticTone[key].foreground };
@@ -21,17 +18,23 @@ function toneColor(key: SemanticToneKey) {
  * Semantic presence/status indicator. Pair with visible text or an
  * `aria-label` on the host element — the dot alone is decorative.
  */
-export const statusDot = typestyles.styles.component(
-  'status-dot',
-  (c) => {
-    const v = c.vars({
-      size: { value: '8px', syntax: '<length>' },
-    });
+export const statusDot = typestyles.recipe({
+  name: 'status-dot',
+  layer: 'components',
+  variants: {
+    tone,
+    appearance: statusDotAppearance,
+    pulse: variant.boolean({ default: false }),
+  },
+  vars: {
+    size: { ...atProperty.length, value: '8px' },
+  },
+  styles: ({ vars }) => {
     return {
       base: {
         display: 'inline-block',
-        width: v.size.var,
-        height: v.size.var,
+        width: vars.size.var,
+        height: vars.size.var,
         borderRadius: '50%',
         backgroundColor: 'currentColor',
         color: t.color.text.secondary.var,
@@ -39,14 +42,7 @@ export const statusDot = typestyles.styles.component(
         boxSizing: 'border-box',
       },
       variants: {
-        tone: {
-          neutral: {},
-          accent: toneColor('accent'),
-          success: toneColor('success'),
-          warning: toneColor('warning'),
-          danger: toneColor('danger'),
-          info: toneColor('info'),
-        },
+        tone: mapTone((key) => (key === 'neutral' ? {} : toneColor(key))),
         appearance: {
           filled: {},
           outline: {
@@ -67,28 +63,8 @@ export const statusDot = typestyles.styles.component(
           false: {},
         },
       },
-      defaultVariants: { tone: 'neutral', appearance: 'filled', pulse: 'false' },
     };
   },
-  { layer: 'components' },
-);
+});
 
-export type StatusDotRecipeProps = NonNullable<Parameters<typeof statusDot>[0]>;
-
-export type StatusDotAppearance = Extract<ToneAppearance, 'filled' | 'outline' | 'subtle'>;
-
-export type StatusDotVariantProps = {
-  tone?: ButtonTone;
-  appearance?: StatusDotAppearance;
-  pulse?: boolean;
-};
-
-export const statusDotVariantPropDocs = [
-  { name: 'tone', type: 'ButtonTone', required: false },
-  { name: 'appearance', type: 'StatusDotAppearance', required: false },
-  { name: 'pulse', type: 'boolean', required: false },
-] as const satisfies ReadonlyArray<{
-  name: keyof StatusDotVariantProps;
-  type: string;
-  required: false;
-}>;
+export type StatusDotVariantProps = RecipeVariants<typeof statusDot>;

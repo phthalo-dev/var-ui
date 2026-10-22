@@ -1,13 +1,14 @@
 import { color } from 'typestyles/color';
 import {
-  createDesignTheme,
   createToneFace,
+  defaultTheme,
   designTokens as p,
   darkSyntaxValues,
   groteskMono,
   lightSyntaxValues,
-  typestyles,
-  type DesignThemePreset,
+  registerFontFace,
+  type ColorTokenPatch,
+  type DesignThemeTokenValues,
 } from '@var-ui/core';
 
 const frauncesFace = {
@@ -16,28 +17,6 @@ const frauncesFace = {
   fontWeight: '400 900',
   fontDisplay: 'swap',
 } as const;
-
-const aiGlowLightSyntaxValues = {
-  ...lightSyntaxValues,
-  keyword: '#7C3AED',
-  title: '#2563EB',
-  attr: '#B45309',
-  string: '#047857',
-  builtIn: '#DB2777',
-  comment: '#786D98',
-  section: '#0891B2',
-};
-
-const aiGlowDarkSyntaxValues = {
-  ...darkSyntaxValues,
-  keyword: '#C4B5FD',
-  title: '#93C5FD',
-  attr: '#FCD34D',
-  string: '#6EE7B7',
-  builtIn: '#F0ABFC',
-  comment: '#AFA5CF',
-  section: '#67E8F9',
-};
 
 const aiGlowTone = {
   accent: createToneFace({
@@ -102,59 +81,6 @@ const aiGlowTone = {
   }),
 };
 
-const aiGlowLightColorValues = {
-  background: {
-    app: '#F8F5FF',
-    surface: '#FFFCFF',
-    subtle: '#E8F7FF',
-    elevated: '#FFFFFF',
-    popover: '#FFFFFF',
-    muted: '#E8F7FF',
-  },
-  text: {
-    primary: '#201A3D',
-    secondary: '#5B527B',
-  },
-  tone: aiGlowTone,
-  border: {
-    default: 'color-mix(in oklch, #0EA5E9 28%, #FFFFFF)',
-    strong: 'color-mix(in oklch, #F59E0B 38%, #FFFFFF)',
-    focus: '#DB2777',
-  },
-  overlay: {
-    default: color.alpha('#201A3D', 0.42, 'oklch'),
-    panel: '#FFFFFF',
-  },
-  link: { default: '#0EA5E9', hover: '#7C3AED' },
-  code: aiGlowLightSyntaxValues,
-};
-
-const aiGlowDarkColorValues = {
-  background: {
-    app: '#111025',
-    surface: '#1A1733',
-    subtle: '#272143',
-    elevated: '#211B3B',
-    popover: '#211B3B',
-    muted: '#272143',
-  },
-  text: {
-    primary: '#FAF7FF',
-    secondary: '#C9C0EA',
-  },
-  border: {
-    default: 'color-mix(in oklch, #67E8F9 34%, #111025)',
-    strong: 'color-mix(in oklch, #FDE68A 42%, #111025)',
-    focus: '#F0ABFC',
-  },
-  overlay: {
-    default: color.alpha('#05040F', 0.76, 'oklch'),
-    panel: '#211B3B',
-  },
-  link: { default: '#67E8F9', hover: '#F0ABFC' },
-  code: aiGlowDarkSyntaxValues,
-};
-
 const aiGlowPrimitiveValues = {
   fontFamily: {
     ...groteskMono.tokens.fontFamily,
@@ -188,13 +114,6 @@ const aiGlowPrimitiveValues = {
     default: '1px',
     thick: '1px',
   },
-  shadow: {
-    xs: '0 4px 14px color-mix(in oklch, #0EA5E9 12%, transparent)',
-    sm: '0 8px 24px color-mix(in oklch, #DB2777 12%, transparent)',
-    md: '0 16px 48px color-mix(in oklch, #0EA5E9 16%, transparent), 0 4px 24px color-mix(in oklch, #F59E0B 10%, transparent)',
-    lg: '0 24px 72px color-mix(in oklch, #DB2777 18%, transparent), 0 8px 42px color-mix(in oklch, #10B981 12%, transparent)',
-    xl: '0 32px 96px color-mix(in oklch, #0EA5E9 18%, transparent), 0 12px 56px color-mix(in oklch, #F59E0B 14%, transparent)',
-  },
   duration: {
     fast: '120ms',
     medium: '220ms',
@@ -210,41 +129,101 @@ const aiGlowPrimitiveValues = {
   },
 };
 
-const aiGlowDarkShadow = {
-  xs: '0 4px 18px color-mix(in oklch, #67E8F9 18%, transparent)',
-  sm: '0 8px 30px color-mix(in oklch, #F0ABFC 18%, transparent)',
-  md: '0 18px 56px color-mix(in oklch, #67E8F9 22%, transparent), 0 6px 32px color-mix(in oklch, #FDE68A 12%, transparent)',
-  lg: '0 28px 84px color-mix(in oklch, #F0ABFC 22%, transparent), 0 10px 50px color-mix(in oklch, #6EE7B7 16%, transparent)',
-  xl: '0 36px 110px color-mix(in oklch, #67E8F9 22%, transparent), 0 16px 64px color-mix(in oklch, #FDE68A 18%, transparent)',
-};
-
-export const aiGlowPreset: DesignThemePreset = {
-  fonts: [...groteskMono.fonts, frauncesFace],
-  tokens: {
-    ...aiGlowPrimitiveValues,
-    color: aiGlowLightColorValues,
-  },
-  colorMode: {
-    dark: aiGlowDarkColorValues,
-  },
-};
-
-export const aiGlowTheme = createDesignTheme({
-  name: 'ai-glow',
-  ...aiGlowPreset,
-  modes: [
-    {
-      id: 'dark-elevation-shadow',
-      overrides: { shadow: aiGlowDarkShadow },
-      when: typestyles.tokens.when.or(
-        typestyles.tokens.when.attr('data-mode', 'dark', { scope: 'self' }),
-        typestyles.tokens.when.and(
-          typestyles.tokens.when.not(
-            typestyles.tokens.when.attr('data-mode', 'light', { scope: 'self' }),
-          ),
-          typestyles.tokens.when.prefersDark,
-        ),
-      ),
+export const aiGlowThemeTokens = {
+  ...aiGlowPrimitiveValues,
+  color: {
+    background: {
+      app: { light: '#F8F5FF', dark: '#111025' },
+      surface: { light: '#FFFCFF', dark: '#1A1733' },
+      subtle: { light: '#E8F7FF', dark: '#272143' },
+      elevated: { light: '#FFFFFF', dark: '#211B3B' },
+      popover: { light: '#FFFFFF', dark: '#211B3B' },
+      muted: { light: '#E8F7FF', dark: '#272143' },
     },
-  ],
+    text: {
+      primary: { light: '#201A3D', dark: '#FAF7FF' },
+      secondary: { light: '#5B527B', dark: '#C9C0EA' },
+    },
+    tone: aiGlowTone,
+    border: {
+      default: {
+        light: 'color-mix(in oklch, #0EA5E9 28%, #FFFFFF)',
+        dark: 'color-mix(in oklch, #67E8F9 34%, #111025)',
+      },
+      strong: {
+        light: 'color-mix(in oklch, #F59E0B 38%, #FFFFFF)',
+        dark: 'color-mix(in oklch, #FDE68A 42%, #111025)',
+      },
+      focus: { light: '#DB2777', dark: '#F0ABFC' },
+    },
+    overlay: {
+      default: {
+        light: color.alpha('#201A3D', 0.42, 'oklch'),
+        dark: color.alpha('#05040F', 0.76, 'oklch'),
+      },
+      panel: { light: '#FFFFFF', dark: '#211B3B' },
+    },
+    link: {
+      default: { light: '#0EA5E9', dark: '#67E8F9' },
+      hover: { light: '#7C3AED', dark: '#F0ABFC' },
+    },
+    code: {
+      base: { light: lightSyntaxValues.base, dark: darkSyntaxValues.base },
+      keyword: { light: '#7C3AED', dark: '#C4B5FD' },
+      title: { light: '#2563EB', dark: '#93C5FD' },
+      attr: { light: '#B45309', dark: '#FCD34D' },
+      string: { light: '#047857', dark: '#6EE7B7' },
+      builtIn: { light: '#DB2777', dark: '#F0ABFC' },
+      comment: { light: '#786D98', dark: '#AFA5CF' },
+      name: { light: lightSyntaxValues.name, dark: darkSyntaxValues.name },
+      section: { light: '#0891B2', dark: '#67E8F9' },
+      bullet: { light: lightSyntaxValues.bullet, dark: darkSyntaxValues.bullet },
+      addition: { light: lightSyntaxValues.addition, dark: darkSyntaxValues.addition },
+      additionBackground: {
+        light: lightSyntaxValues.additionBackground,
+        dark: darkSyntaxValues.additionBackground,
+      },
+      deletion: { light: lightSyntaxValues.deletion, dark: darkSyntaxValues.deletion },
+      deletionBackground: {
+        light: lightSyntaxValues.deletionBackground,
+        dark: darkSyntaxValues.deletionBackground,
+      },
+    } as ColorTokenPatch['code'],
+  },
+  shadow: {
+    xs: {
+      light: '0 4px 14px color-mix(in oklch, #0EA5E9 12%, transparent)',
+      dark: '0 4px 18px color-mix(in oklch, #67E8F9 18%, transparent)',
+    },
+    sm: {
+      light: '0 8px 24px color-mix(in oklch, #DB2777 12%, transparent)',
+      dark: '0 8px 30px color-mix(in oklch, #F0ABFC 18%, transparent)',
+    },
+    md: {
+      light:
+        '0 16px 48px color-mix(in oklch, #0EA5E9 16%, transparent), 0 4px 24px color-mix(in oklch, #F59E0B 10%, transparent)',
+      dark: '0 18px 56px color-mix(in oklch, #67E8F9 22%, transparent), 0 6px 32px color-mix(in oklch, #FDE68A 12%, transparent)',
+    },
+    lg: {
+      light:
+        '0 24px 72px color-mix(in oklch, #DB2777 18%, transparent), 0 8px 42px color-mix(in oklch, #10B981 12%, transparent)',
+      dark: '0 28px 84px color-mix(in oklch, #F0ABFC 22%, transparent), 0 10px 50px color-mix(in oklch, #6EE7B7 16%, transparent)',
+    },
+    xl: {
+      light:
+        '0 32px 96px color-mix(in oklch, #0EA5E9 18%, transparent), 0 12px 56px color-mix(in oklch, #F59E0B 14%, transparent)',
+      dark: '0 36px 110px color-mix(in oklch, #67E8F9 22%, transparent), 0 16px 64px color-mix(in oklch, #FDE68A 18%, transparent)',
+    },
+  },
+} satisfies DesignThemeTokenValues;
+
+const aiGlowFonts = [...groteskMono.fonts, frauncesFace];
+
+for (const face of aiGlowFonts) {
+  registerFontFace(face);
+}
+
+export const aiGlowTheme = defaultTheme.override({
+  name: 'ai-glow',
+  tokens: aiGlowThemeTokens,
 });

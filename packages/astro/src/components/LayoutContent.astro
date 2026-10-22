@@ -1,16 +1,24 @@
 ---
-import { layoutContent, type LayoutPadding } from '@var-ui/core';
+import type { HTMLAttributes } from 'astro/types';
+import {
+  layoutContent,
+  type LayoutContentVariantProps,
+  type LayoutPadding,
+} from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
   padding?: LayoutPadding;
   isScrollable?: boolean;
-  role?: string;
+  role?: NonNullable<HTMLAttributes<'div'>['role']>;
   label?: string;
   className?: string;
 };
 
-function toZonePaddingVariant(padding: LayoutPadding | undefined): 'inherit' | '0' {
+/** `layoutContent()` only supports seamless (`inherit`, the default) or `0`. */
+function toZonePaddingVariant(
+  padding: LayoutPadding | undefined,
+): NonNullable<LayoutContentVariantProps['padding']> {
   return padding === 0 ? '0' : 'inherit';
 }
 
