@@ -26,9 +26,7 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   integrations: [
-    varDocs({
-      /* … */
-    }),
+    varDocs({/* … */}),
     componentDocsPlugin({
       extractProps: {
         write: writeComponentProps,
