@@ -18,3 +18,4 @@ examples/astro-docs/public/docs/
 
 # Local Netlify folder
 .netlify
+.vitest/
