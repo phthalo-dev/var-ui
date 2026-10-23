@@ -1,6 +1,6 @@
 # @var-ui/icons
 
-Optional default glyphs for the [var-ui](https://github.com/var-ui/var-ui) design system.
+Optional default glyphs for the [var-ui](https://github.com/phthalo-dev/var-ui) design system.
 
 var-ui components never bundle SVGs — they resolve semantic icon names
 (`close`, `chevronDown`, `search`, …) through `IconProvider` from

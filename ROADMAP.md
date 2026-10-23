@@ -1,7 +1,7 @@
 # var-ui Roadmap
 
 Tracking doc for var-ui's own design-system work, in the style of
-[TypeStyles' `IMPROVEMENTS.md`](https://github.com/type-styles/typestyles/blob/main/IMPROVEMENTS.md)
+[TypeStyles' `IMPROVEMENTS.md`](https://github.com/phthalo-dev/typestyles/blob/main/IMPROVEMENTS.md)
 (the sibling project this is built on). Each task ships as its own PR; check
 items off and link the PR as they land. Full designs live in `specs/`.
 
@@ -18,7 +18,7 @@ for power users.
 
 var-ui exists to prove the same flexible, CSS-native theming story doesn't
 need a workaround in the first place, when the foundation is
-[TypeStyles](https://github.com/type-styles/typestyles) instead of StyleX:
+[TypeStyles](https://github.com/phthalo-dev/typestyles) instead of StyleX:
 real CSS custom properties, semantic/readable class names, cascade layers, and
 a general theme condition engine, all reachable directly — no compiler
 restriction to route around, no escape hatch needed for the common case.
@@ -198,7 +198,7 @@ TypeStyles' `IMPROVEMENTS.md`/`specs/` for current status first.
       `colorMode` patches compile via TypeStyles **0.16+** (`colorMode: { light, dark }`
       on `createTheme`, mode-aware `extend` leaves). Global `color-scheme` on `:root`,
       theme surfaces, and `data-surface`. Shadow `modes` retained for non-color values.
-      Spec: `specs/conditional-component-overrides.md` (TypeStyles: [#164](https://github.com/type-styles/typestyles/pull/164)).
+      Spec: `specs/conditional-component-overrides.md` (TypeStyles: [#164](https://github.com/phthalo-dev/typestyles/pull/164)).
 
 ## Chat components
 
