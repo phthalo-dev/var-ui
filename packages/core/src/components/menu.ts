@@ -67,6 +67,24 @@ export const menu = typestyles.recipe({
   },
   styles: ({ vars }) => {
     const anchorGap = `calc(100% + ${t.space[2].var})`;
+    /**
+     * Recipe `value`s land on `.var-ui-menu`. React portals the popover, so
+     * it must declare the same channels or registered colors stay transparent.
+     * Inside the root (Astro), inherit so theme overrides on the host slot win.
+     */
+    const portaledColorVars = {
+      [vars.popoverBackground.name]: t.color.background.surface.var,
+      [vars.popoverBorder.name]: t.color.border.default.var,
+      [vars.itemForeground.name]: t.color.text.primary.var,
+      [vars.itemFocusedBackground.name]: t.color.background.subtle.var,
+      [vars.itemDisabledForeground.name]: t.color.text.secondary.var,
+      [vars.sectionHeaderForeground.name]: t.color.text.secondary.var,
+      [vars.separatorColor.name]: t.color.border.default.var,
+      [vars.dangerForeground.name]: t.color.tone.danger.foreground.var,
+    };
+    const inheritedColorVars = Object.fromEntries(
+      Object.keys(portaledColorVars).map((name) => [name, 'inherit']),
+    );
     const anchoredPopover = (
       origin: 'top left' | 'top right' | 'bottom left' | 'bottom right',
       edge: {
@@ -102,6 +120,8 @@ export const menu = typestyles.recipe({
           opacity: 0,
         },
         popover: {
+          ...portaledColorVars,
+          '.var-ui-menu &': inheritedColorVars,
           ...overlayPresenceStyles({ scale: true }),
           ...layerZIndex(t.zIndex.dropdown.var),
           borderWidth: t.borderWidth.default.var,
