@@ -8,12 +8,12 @@
     "var-ui",
     "withastro"
   ],
-  "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/astro#readme",
-  "bugs": "https://github.com/var-ui/var-ui/issues",
+  "homepage": "https://github.com/phthalo-dev/var-ui/tree/main/packages/astro#readme",
+  "bugs": "https://github.com/phthalo-dev/var-ui/issues",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/var-ui/var-ui.git",
+    "url": "https://github.com/phthalo-dev/var-ui.git",
     "directory": "packages/astro"
   },
   "files": [

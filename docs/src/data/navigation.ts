@@ -3,7 +3,7 @@ import type { SidebarItem, SidebarSection } from '@var-ui/docs/utils';
 
 export type { SidebarItem, SidebarSection };
 
-export const githubUrl = 'https://github.com/var-ui/var-ui';
+export const githubUrl = 'https://github.com/phthalo-dev/var-ui';
 
 export const topNav = [
   { text: 'Docs', link: '/docs/getting-started', match: '/docs' },

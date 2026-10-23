@@ -2,12 +2,12 @@
   "name": "@var-ui/icons",
   "version": "0.2.0",
   "description": "Optional default icon glyphs for the var-ui design system",
-  "homepage": "https://github.com/var-ui/var-ui/tree/main/packages/icons#readme",
-  "bugs": "https://github.com/var-ui/var-ui/issues",
+  "homepage": "https://github.com/phthalo-dev/var-ui/tree/main/packages/icons#readme",
+  "bugs": "https://github.com/phthalo-dev/var-ui/issues",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/var-ui/var-ui.git",
+    "url": "https://github.com/phthalo-dev/var-ui.git",
     "directory": "packages/icons"
   },
   "files": [
