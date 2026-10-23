@@ -36,7 +36,7 @@ All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Eve
 
 ### Things that bite
 
-- Git hooks live in `.vite-hooks/` (`vp staged` on commit, `vp run ci` on push). They exit early when `CI` is set; the release job commits and pushes tags, and must not re-run them.
+- Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit, `vp run ci` on push). They exit early when `CI` is set; the release job commits and pushes tags, and must not re-run them.
 - Generated `CHANGELOG.md` files are excluded from formatting; changesets does not format them.
 - Do not set `registry-url` on `setup-vp`: it writes a placeholder auth token that blocks OIDC. The release job also installs `npm@^11.5.1` (trusted publishing needs it; npm 12 rejects flags pnpm forwards).
 - Secrets: `APP_CLIENT_ID` and `APP_PRIVATE_KEY` (GitHub App) are org secrets, with `NETLIFY_AUTH_TOKEN`; `NETLIFY_SITE_ID` is a repo secret.
