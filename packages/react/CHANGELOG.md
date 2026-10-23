@@ -1,5 +1,11 @@
 # @var-ui/react
 
+## 0.2.1
+
+### Patch Changes
+
+- [#31](https://github.com/phthalo-dev/var-ui/pull/31) [`2a43136`](https://github.com/phthalo-dev/var-ui/commit/2a4313660b8856e39921dfa258fd7bb20fff4d7e) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Point the repository metadata at the phthalo-dev GitHub organization.
+
 ## 0.2.0
 
 ### Minor Changes
