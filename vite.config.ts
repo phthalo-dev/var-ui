@@ -65,7 +65,7 @@ export default defineConfig({
       ci: {
         cache: false,
         command: [
-          'vp run --no-cache -F @var-ui/core -F @var-ui/react -F @var-ui/icons build',
+          'vp run --no-cache -F @var-ui/core -F @var-ui/react -F @var-ui/icons -F @var-ui/cli build',
           'vp check',
           'vp test run',
           'vp run --no-cache @var-ui/astro#check',
