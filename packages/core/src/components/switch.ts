@@ -35,6 +35,10 @@ export const switchStyles = typestyles.recipe({
           '&[data-selected]': {
             [vars.trackBackground.name]: t.color.tone.accent.background.var,
           },
+          ':focus-within > &': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '2px',
+          },
         },
         thumb: {
           position: 'absolute',

@@ -95,6 +95,11 @@ export const fileInput = typestyles.recipe({
             opacity: 0.5,
             cursor: 'not-allowed',
           },
+          '&:focus-visible': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '2px',
+            [vars.dropzoneBorder.name]: t.color.border.focus.var,
+          },
         },
         placeholderText: {
           fontSize: t.fontSize.sm.var,
@@ -126,6 +131,10 @@ export const fileInput = typestyles.recipe({
           cursor: 'pointer',
           '&:hover': {
             backgroundColor: t.color.background.subtle.var,
+          },
+          '&:focus-visible': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '2px',
           },
         },
         hiddenInput: {

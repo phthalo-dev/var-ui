@@ -35,6 +35,11 @@ export const chatComposer = typestyles.recipe({
           borderColor: vars.border.var,
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
+          '&:focus-within': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '1px',
+            [vars.border.name]: t.color.border.focus.var,
+          },
         },
         inputRow: {
           flex: 1,
