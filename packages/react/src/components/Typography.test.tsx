@@ -25,6 +25,11 @@ describe('Typography', () => {
     expect(el.getAttribute('data-tone')).toBe('secondary');
   });
 
+  it('Text supports the danger tone', () => {
+    render(<Text tone="danger">failed</Text>);
+    expect(screen.getByText('failed').getAttribute('data-tone')).toBe('danger');
+  });
+
   it('Text supports xs size and lineClamp', () => {
     render(
       <Text size="xs" lineClamp={2}>

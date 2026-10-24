@@ -25,6 +25,7 @@ import { render as renderSectionDefault } from './section/default/html';
 import { render as renderSpinnerDefault } from './spinner/default/html';
 import { render as renderStackDefault } from './stack/default/html';
 import { render as renderTextDefault } from './text/default/html';
+import { render as renderTextTones } from './text/tones/html';
 import { render as renderThumbnailDefault } from './thumbnail/default/html';
 import { render as renderTimestampDefault } from './timestamp/default/html';
 import { render as renderFieldDefault } from './field/default/html';
@@ -89,6 +90,7 @@ const htmlDemos = {
   'aspect-ratio.default': renderAspectRatioDefault,
   'heading.default': renderHeadingDefault,
   'text.default': renderTextDefault,
+  'text.tones': renderTextTones,
   'link.default': renderLinkDefault,
   'code-block.default': renderCodeBlockDefault,
   'alert.default': renderAlertDefault,

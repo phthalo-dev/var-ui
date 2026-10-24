@@ -26,6 +26,7 @@ import SectionDefault from './section/default/react';
 import SpinnerDefault from './spinner/default/react';
 import StackDefault from './stack/default/react';
 import TextDefault from './text/default/react';
+import TextTones from './text/tones/react';
 import ThumbnailDefault from './thumbnail/default/react';
 import TimestampDefault from './timestamp/default/react';
 import FieldDefault from './field/default/react';
@@ -193,6 +194,7 @@ export const reactDemoMap = {
   'aspect-ratio.default': AspectRatioDefault,
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
+  'text.tones': TextTones,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,

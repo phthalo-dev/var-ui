@@ -25,6 +25,7 @@ import { snippets as sectionDefaultSnippets } from './section/default/snippets';
 import { snippets as spinnerDefaultSnippets } from './spinner/default/snippets';
 import { snippets as stackDefaultSnippets } from './stack/default/snippets';
 import { snippets as textDefaultSnippets } from './text/default/snippets';
+import { snippets as textTonesSnippets } from './text/tones/snippets';
 import { snippets as thumbnailDefaultSnippets } from './thumbnail/default/snippets';
 import { snippets as timestampDefaultSnippets } from './timestamp/default/snippets';
 import { snippets as fieldDefaultSnippets } from './field/default/snippets';
@@ -193,6 +194,7 @@ export const DEMO_IDS = [
   'aspect-ratio.default',
   'heading.default',
   'text.default',
+  'text.tones',
   'link.default',
   'code-block.default',
   'alert.default',
@@ -372,6 +374,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'aspect-ratio.default': aspectRatioDefaultSnippets,
   'heading.default': headingDefaultSnippets,
   'text.default': textDefaultSnippets,
+  'text.tones': textTonesSnippets,
   'link.default': linkDefaultSnippets,
   'code-block.default': codeBlockDefaultSnippets,
   'alert.default': alertDefaultSnippets,
@@ -551,6 +554,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'aspect-ratio.default': () => import('./aspect-ratio/default/react'),
   'heading.default': () => import('./heading/default/react'),
   'text.default': () => import('./text/default/react'),
+  'text.tones': () => import('./text/tones/react'),
   'link.default': () => import('./link/default/react'),
   'code-block.default': () => import('./code-block/default/react'),
   'alert.default': () => import('./alert/default/react'),
@@ -785,6 +789,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'text.default',
     snippets: demoSnippets['text.default'],
     react: reactDemoLoaders['text.default'],
+  },
+  'text.tones': {
+    id: 'text.tones',
+    snippets: demoSnippets['text.tones'],
+    react: reactDemoLoaders['text.tones'],
   },
   'link.default': {
     id: 'link.default',

@@ -62,7 +62,7 @@ export const textBlock = typestyles.recipe({
   layer: 'components',
   variants: {
     size: variant.enum(['xs', 'sm', 'md', 'lg'], { default: 'md' }),
-    tone: variant.enum(['primary', 'secondary'], { default: 'primary' }),
+    tone: variant.enum(['primary', 'secondary', 'danger'], { default: 'primary' }),
     weight: variant.enum(['normal', 'medium', 'semibold'], { default: 'normal' }),
     lineClamp: variant.enum(['false', '1', '2', '3'], { default: 'false' }),
   },
@@ -90,6 +90,7 @@ export const textBlock = typestyles.recipe({
         tone: {
           primary: {},
           secondary: { color: vars.secondaryColor.var },
+          danger: { color: t.color.tone.danger.foreground.var },
         },
         weight: {
           normal: { fontWeight: t.fontWeight.normal.var },
