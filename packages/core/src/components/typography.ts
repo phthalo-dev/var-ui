@@ -1,6 +1,8 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { semanticTone } from '../shared/semanticTone';
+import { TONE_KEYS } from '../tokens/schema/color/tone';
 
 const headingSize = variant.enum(['xs', 'sm', 'md', 'lg', 'xl', 'display'], { default: 'md' });
 
@@ -62,7 +64,7 @@ export const textBlock = typestyles.recipe({
   layer: 'components',
   variants: {
     size: variant.enum(['xs', 'sm', 'md', 'lg'], { default: 'md' }),
-    tone: variant.enum(['primary', 'secondary', 'danger'], { default: 'primary' }),
+    tone: variant.enum(['primary', 'secondary', ...TONE_KEYS], { default: 'primary' }),
     weight: variant.enum(['normal', 'medium', 'semibold'], { default: 'normal' }),
     lineClamp: variant.enum(['false', '1', '2', '3'], { default: 'false' }),
   },
@@ -90,7 +92,13 @@ export const textBlock = typestyles.recipe({
         tone: {
           primary: {},
           secondary: { color: vars.secondaryColor.var },
-          danger: { color: t.color.tone.danger.foreground.var },
+          // Every semantic tone paints its foreground token. The axis is built from TONE_KEYS, so a
+          // new token tone is a type error here until it is styled.
+          accent: { color: semanticTone.accent.foreground },
+          success: { color: semanticTone.success.foreground },
+          warning: { color: semanticTone.warning.foreground },
+          danger: { color: semanticTone.danger.foreground },
+          info: { color: semanticTone.info.foreground },
         },
         weight: {
           normal: { fontWeight: t.fontWeight.normal.var },

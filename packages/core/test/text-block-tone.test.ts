@@ -1,26 +1,25 @@
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
 import { textBlock, type TextBlockVariantProps } from '../src/components/typography';
+import { TONE_KEYS } from '../src/tokens/schema/color/tone';
 
 describe('textBlock tone', () => {
-  it('exposes primary, secondary and danger', () => {
+  it('offers primary, secondary and every semantic tone', () => {
     expectTypeOf<NonNullable<TextBlockVariantProps['tone']>>().toEqualTypeOf<
-      'primary' | 'secondary' | 'danger'
+      'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'info'
     >();
-    textBlock({ tone: 'danger' });
+    for (const tone of TONE_KEYS) textBlock({ tone });
     // @ts-expect-error unknown tone
-    textBlock({ tone: 'warning' });
+    textBlock({ tone: 'neutral' });
   });
 
-  it('colors danger text with the danger foreground token', () => {
-    textBlock({ tone: 'danger' });
+  it.each(TONE_KEYS)("colors %s text with that tone's foreground token", (tone) => {
+    textBlock({ tone });
     const css = getRegisteredCss();
-    const rule = /\[data-tone="danger"\][^{]*\{[^}]*\}/.exec(
-      css
-        .split('}')
-        .filter((block) => block.includes('text-block'))
-        .join('}\n') + '}',
-    );
-    expect(rule?.[0]).toMatch(/color:\s*var\(--var-ui-color-tone-danger-foreground/);
+    const rule = css
+      .split('}')
+      .find((block) => block.includes('text-block') && block.includes(`data-tone="${tone}"`));
+    expect(rule, `no rule for tone ${tone}`).toBeDefined();
+    expect(rule).toMatch(new RegExp(`color:\\s*var\\(--var-ui-color-tone-${tone}-foreground`));
   });
 });
