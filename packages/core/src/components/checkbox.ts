@@ -51,6 +51,10 @@ export const checkbox = typestyles.recipe({
             [vars.boxBackground.name]: t.color.tone.accent.background.var,
             [vars.boxBorder.name]: t.color.tone.accent.background.var,
           },
+          ':focus-within > &': {
+            outline: `2px solid ${t.color.border.focus.var}`,
+            outlineOffset: '2px',
+          },
         },
         label: {
           fontSize: t.fontSize.md.var,
