@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/icons",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Optional default icon glyphs for the var-ui design system",
   "homepage": "https://github.com/phthalo-dev/var-ui/tree/main/packages/icons#readme",
   "bugs": "https://github.com/phthalo-dev/var-ui/issues",
