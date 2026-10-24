@@ -37,9 +37,15 @@ describe('mergeOverlayChild', () => {
       },
     );
 
-    merged.props.onClick();
-    merged.props.onKeyDown();
-    merged.props.onPointerDown();
+    // React 19 types `ReactElement['props']` as `unknown` unless the element is parameterized.
+    const mergedProps = merged.props as {
+      onClick: () => void;
+      onKeyDown: () => void;
+      onPointerDown: () => void;
+    };
+    mergedProps.onClick();
+    mergedProps.onKeyDown();
+    mergedProps.onPointerDown();
 
     expect(calls).toEqual([
       'child-click',
@@ -58,7 +64,7 @@ describe('mergeOverlayChild', () => {
       { onContextMenu: () => calls.push('parent-contextmenu') },
     );
 
-    merged.props.onContextMenu();
+    (merged.props as { onContextMenu: () => void }).onContextMenu();
 
     expect(calls).toEqual(['child-contextmenu', 'parent-contextmenu']);
   });
