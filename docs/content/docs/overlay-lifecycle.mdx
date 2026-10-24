@@ -79,7 +79,13 @@ onOpenChange?: (open: boolean, details: OverlayChangeEventDetails) => void;
 
 ```ts
 type OverlayOpenChangeReason =
-  'trigger-press' | 'escape-key' | 'outside-press' | 'imperative' | 'hover' | 'focus' | 'unknown';
+  | 'trigger-press'
+  | 'escape-key'
+  | 'outside-press'
+  | 'imperative'
+  | 'hover'
+  | 'focus'
+  | 'unknown';
 
 type OverlayChangeEventDetails = {
   reason: OverlayOpenChangeReason;
