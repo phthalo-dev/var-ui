@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 export const switchStyles = typestyles.recipe({
   name: 'switch',
@@ -36,8 +37,7 @@ export const switchStyles = typestyles.recipe({
             [vars.trackBackground.name]: t.color.tone.accent.background.var,
           },
           ':focus-within > &': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
         thumb: {

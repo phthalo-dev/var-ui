@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSize } from '../shared/variantAxes';
 
 /**
@@ -169,8 +170,7 @@ export const colorPicker = typestyles.recipe({
             outlineOffset: '1px',
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
       },

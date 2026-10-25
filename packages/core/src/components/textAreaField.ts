@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { fieldChrome } from './fieldChrome';
 
 export const textAreaField = typestyles.recipe({
@@ -57,8 +58,7 @@ export const textAreaField = typestyles.recipe({
           minHeight: '88px',
           resize: 'vertical',
           '&:focus': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.inputBorder.name]: t.color.border.focus.var,
           },
           '&::placeholder': {

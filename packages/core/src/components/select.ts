@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome, dropdownPopoverChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -110,8 +111,7 @@ export const select = typestyles.recipe({
             borderColor: t.color.border.strong.var,
           },
           '&[data-focus-visible]:not([data-pressed])': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-pressed]': {
             borderColor: t.color.border.focus.var,

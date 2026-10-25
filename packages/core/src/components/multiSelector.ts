@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { dropdownPopoverChrome, fieldChrome } from './fieldChrome';
 
 export const multiSelector = typestyles.recipe({
@@ -114,8 +115,7 @@ export const multiSelector = typestyles.recipe({
             borderColor: t.color.border.strong.var,
           },
           '&[data-focus-visible]:not([data-pressed])': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-pressed]': {
             borderColor: t.color.border.focus.var,

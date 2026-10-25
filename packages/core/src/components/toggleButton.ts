@@ -3,6 +3,7 @@ import { typestyles } from '../runtime';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { controlSize } from '../shared/variantAxes';
 
@@ -59,8 +60,7 @@ export const toggleButton = typestyles.recipe({
           backgroundColor: t.color.background.subtle.var,
         },
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
         '&[data-selected]': {
           [vars.background.name]: vars.selectedBackground.var,

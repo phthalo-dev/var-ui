@@ -1,4 +1,4 @@
-import { designTokens as t, typestyles } from '@var-ui/core';
+import { designTokens as t, focusRing, typestyles } from '@var-ui/core';
 
 /** Docs kit chrome for `@var-ui/docs/CodeBlock` (preview + source). */
 export const codeBlock = typestyles.recipe({
@@ -169,8 +169,7 @@ export const codeBlock = typestyles.recipe({
           textDecoration: 'underline',
         },
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
       },
     },

@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { media, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 export const card = typestyles.recipe({
   name: 'card',
@@ -73,8 +74,7 @@ export const card = typestyles.recipe({
             boxShadow: t.shadow.xs.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
         linkTitle: {

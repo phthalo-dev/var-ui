@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
@@ -101,8 +102,7 @@ export const tabList = typestyles.recipe({
             backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-selected]': {
             color: vars.tabSelectedColor.var,
@@ -158,8 +158,7 @@ export const tabList = typestyles.recipe({
             backgroundColor: vars.tabHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-selected]': {
             color: vars.tabSelectedColor.var,

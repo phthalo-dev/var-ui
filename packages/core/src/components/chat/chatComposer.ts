@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { focusRing } from '../focusRing';
 
 /**
  * Composer chrome: a bordered container around the message textarea and a
@@ -36,8 +37,7 @@ export const chatComposer = typestyles.recipe({
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
           '&:focus-within': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.border.name]: t.color.border.focus.var,
           },
         },

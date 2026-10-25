@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 /** Accent + focus ring follow semantic color tokens directly — single-class recipe, no slot callback. */
 export const link = typestyles.style(
@@ -13,8 +14,7 @@ export const link = typestyles.style(
       textDecoration: 'underline',
     },
     '&:focus-visible': {
-      outline: `2px solid ${t.color.border.focus.var}`,
-      outlineOffset: '2px',
+      ...focusRing,
       borderRadius: t.radius.sm.var,
     },
   },

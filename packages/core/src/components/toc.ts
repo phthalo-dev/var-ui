@@ -5,6 +5,7 @@ import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { transition } from '../tokens/defaults/transition';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space[3].var;
 const nestedIndent = t.space[2].var;
@@ -154,8 +155,7 @@ export const toc = typestyles.recipe({
             color: vars.linkHoverColor.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-selected]': {
             color: vars.linkSelectedColor.var,

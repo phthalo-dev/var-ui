@@ -3,4 +3,4 @@
 '@var-ui/react': patch
 ---
 
-Paint focus rings with the accent foreground so inputs and other controls follow the theme accent.
+Paint focus rings with the accent foreground, and share one 2px ring across controls.

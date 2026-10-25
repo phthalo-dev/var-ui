@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
   background: {
@@ -192,8 +193,7 @@ export const topNav = typestyles.recipe({
             backgroundColor: vars.itemHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedBackground.var,
@@ -224,8 +224,7 @@ export const topNav = typestyles.recipe({
             backgroundColor: vars.itemHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-disabled]': {
             opacity: 0.5,
@@ -281,8 +280,7 @@ export const topNav = typestyles.recipe({
             backgroundColor: vars.megaItemHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-disabled]': {
             opacity: 0.5,

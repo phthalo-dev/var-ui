@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const codeBlockVarDefinitions = {
@@ -174,8 +175,7 @@ export const codeBlock = typestyles.recipe({
             backgroundColor: vars.copyButtonHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `${t.borderWidth.thin.var} solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-copied]': {
             color: t.color.tone.success.foreground.var,
