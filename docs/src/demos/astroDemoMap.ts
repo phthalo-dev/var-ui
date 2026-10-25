@@ -25,6 +25,7 @@ import SectionDefault from './section/default/astro.astro';
 import SpinnerDefault from './spinner/default/astro.astro';
 import StackDefault from './stack/default/astro.astro';
 import TextDefault from './text/default/astro.astro';
+import TextTones from './text/tones/astro.astro';
 import ThumbnailDefault from './thumbnail/default/astro.astro';
 import TimestampDefault from './timestamp/default/astro.astro';
 import FieldDefault from './field/default/astro.astro';
@@ -89,6 +90,7 @@ const astroDemos = {
   'aspect-ratio.default': AspectRatioDefault,
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
+  'text.tones': TextTones,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,
