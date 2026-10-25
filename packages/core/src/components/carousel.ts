@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 /**
  * Scroll-snap carousel. CSS does the snapping; the React wrapper only adds
@@ -45,8 +46,7 @@ export const carousel = typestyles.recipe({
           scrollPaddingInline: t.space[1].var,
           paddingBlock: t.space[1].var,
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
         item: { scrollSnapAlign: 'start', minWidth: 0 },
@@ -66,8 +66,7 @@ export const carousel = typestyles.recipe({
           cursor: 'pointer',
           '&:hover': { backgroundColor: t.color.background.subtle.var },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
       },

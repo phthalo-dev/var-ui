@@ -4,6 +4,7 @@ import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 
@@ -116,8 +117,7 @@ export const segmentedControl = typestyles.recipe({
               borderColor: 'transparent',
             },
             '&:focus-visible': {
-              outline: `2px solid ${t.color.border.focus.var}`,
-              outlineOffset: '1px',
+              ...focusRing,
             },
             '&[data-selected], &[aria-pressed="true"]': {
               color: vars.segmentSelectedColor.var,

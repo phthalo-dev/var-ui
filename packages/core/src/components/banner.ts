@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import {
   appearanceSurface,
   mapTone,
@@ -75,8 +76,7 @@ export const banner = typestyles.recipe({
           borderRadius: t.radius.sm.var,
           '&:hover': { backgroundColor: appearanceSurface(vars, 'subtle').backgroundColor },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
       },

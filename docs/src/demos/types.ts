@@ -16,6 +16,7 @@ export type DemoId =
   | 'aspect-ratio.default'
   | 'heading.default'
   | 'text.default'
+  | 'text.tones'
   | 'link.default'
   | 'code-block.default'
   | 'alert.default'

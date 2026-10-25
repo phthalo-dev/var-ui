@@ -17,7 +17,7 @@
     "@types/react-dom": "catalog:",
     "@typestyles/vite": "0.5.1",
     "@vitejs/plugin-react": "catalog:",
-    "typestyles": "0.32.1",
+    "typestyles": "0.33.0",
     "vite-plus": "catalog:"
   }
 }

@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeMetrics, controlSizeVariants } from './controlSize';
 import { fieldChrome } from './fieldChrome';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
@@ -83,8 +84,7 @@ export const pinInput = typestyles.recipe({
           fontVariantNumeric: 'tabular-nums',
           outline: 'none',
           '&:focus': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.cellBorder.name]: t.color.border.focus.var,
           },
           '&:disabled': {

@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 /**
  * Standalone copy-to-clipboard button chrome. Extracted from `codeBlock` so
@@ -48,8 +49,7 @@ export const copyButton = typestyles.recipe({
             backgroundColor: vars.hoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
         buttonIdle: {},

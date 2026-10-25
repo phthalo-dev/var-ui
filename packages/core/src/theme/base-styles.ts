@@ -1,5 +1,6 @@
 import { reset } from 'typestyles/globals';
 import { designTokens as t } from '../tokens';
+import { focusRing } from '../components/focusRing';
 import { atReducedMotion } from './conditions';
 import { COLOR_MODE_ATTRIBUTE } from './constants';
 import { global } from '../runtime';
@@ -93,8 +94,7 @@ export function registerBaseStyles(): void {
         color: t.color.link.hover.var,
       },
       'a:focus-visible': {
-        outline: `2px solid ${t.color.border.focus.var}`,
-        outlineOffset: '2px',
+        ...focusRing,
         borderRadius: t.radius.sm.var,
       },
       code: {

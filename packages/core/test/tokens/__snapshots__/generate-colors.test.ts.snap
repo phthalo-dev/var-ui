@@ -42,8 +42,8 @@ exports[`generateColors > clamps chroma for a near-gray accent 1`] = `
       "light": "oklch(72.00% 0.013 0)",
     },
     "focus": {
-      "dark": "oklch(55.33% 0.08 0)",
-      "light": "oklch(63.67% 0.08 0)",
+      "dark": "oklch(72.00% 0.069 0)",
+      "light": "oklch(47.00% 0.072 0)",
     },
     "strong": {
       "dark": "oklch(55.33% 0.015 0)",
@@ -299,8 +299,8 @@ exports[`generateColors > returns mode-aware color leaves for the default accent
       "light": "oklch(72.00% 0.013 258.81008101651366)",
     },
     "focus": {
-      "dark": "oklch(55.33% 0.205 258.81008101651366)",
-      "light": "oklch(63.67% 0.205 258.81008101651366)",
+      "dark": "oklch(72.00% 0.176 258.81008101651366)",
+      "light": "oklch(47.00% 0.184 258.81008101651366)",
     },
     "strong": {
       "dark": "oklch(55.33% 0.015 258.81008101651366)",
@@ -556,8 +556,8 @@ exports[`generateColors > returns themes for a saturated pink accent 1`] = `
       "light": "oklch(72.00% 0.013 356.9447697294126)",
     },
     "focus": {
-      "dark": "oklch(55.33% 0.261 356.9447697294126)",
-      "light": "oklch(63.67% 0.261 356.9447697294126)",
+      "dark": "oklch(72.00% 0.225 356.9447697294126)",
+      "light": "oklch(47.00% 0.235 356.9447697294126)",
     },
     "strong": {
       "dark": "oklch(55.33% 0.015 356.9447697294126)",

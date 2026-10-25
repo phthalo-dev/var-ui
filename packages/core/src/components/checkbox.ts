@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 export const checkbox = typestyles.recipe({
   name: 'checkbox',
@@ -50,6 +51,9 @@ export const checkbox = typestyles.recipe({
           '&[data-selected]': {
             [vars.boxBackground.name]: t.color.tone.accent.background.var,
             [vars.boxBorder.name]: t.color.tone.accent.background.var,
+          },
+          ':focus-within > &': {
+            ...focusRing,
           },
         },
         label: {

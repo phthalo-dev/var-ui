@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 /** Icon-only rail width in px when the nav is collapsed. */
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
@@ -275,8 +276,7 @@ export const sideNav = typestyles.recipe({
             color: vars.itemColor.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedBackground.var,
@@ -350,8 +350,7 @@ export const sideNav = typestyles.recipe({
             backgroundColor: vars.itemHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
         },
       },

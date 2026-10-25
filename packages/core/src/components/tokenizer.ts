@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { fieldChrome } from './fieldChrome';
 
 export const tokenizer = typestyles.recipe({
@@ -97,8 +98,7 @@ export const tokenizer = typestyles.recipe({
           padding: t.space[2].var,
           backgroundColor: vars.groupBackground.var,
           '&[data-focus-within]': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.groupBorder.name]: t.color.border.focus.var,
           },
           '&[data-disabled]': {

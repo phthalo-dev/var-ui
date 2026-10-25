@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -72,8 +73,7 @@ export const numberInput = typestyles.recipe({
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
           '&:focus': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.inputBorder.name]: t.color.border.focus.var,
           },
         },
@@ -85,7 +85,6 @@ export const numberInput = typestyles.recipe({
           borderColor: vars.inputBorder.var,
           borderInlineStart: 'none',
           borderRadius: `0 ${t.radius.md.var} ${t.radius.md.var} 0`,
-          overflow: 'hidden',
           '& button': {
             appearance: 'none',
             border: 'none',
@@ -95,12 +94,17 @@ export const numberInput = typestyles.recipe({
             cursor: 'pointer',
             fontSize: t.fontSize.sm.var,
             lineHeight: 1,
+            '&:first-child': {
+              borderStartEndRadius: t.radius.md.var,
+            },
+            '&:last-child': {
+              borderEndEndRadius: t.radius.md.var,
+            },
             '&:hover': {
               backgroundColor: t.color.background.subtle.var,
             },
             '&:focus-visible': {
-              outline: `2px solid ${t.color.border.focus.var}`,
-              outlineOffset: '-2px',
+              ...focusRing,
             },
           },
         },

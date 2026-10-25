@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import {
   appearanceSurface,
   mapTone,
@@ -91,8 +92,7 @@ export const alert = typestyles.recipe({
             textDecoration: 'none',
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
             borderRadius: t.radius.sm.var,
           },
         },

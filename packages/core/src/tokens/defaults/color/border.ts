@@ -10,10 +10,7 @@ export const border = {
     light: tokens.color.palette['neutral-4'].var,
     dark: tokens.color.palette['slate-7'].var,
   },
-  focus: {
-    light: tokens.color.palette['blue-5'].var,
-    dark: tokens.color.palette['blue-6'].var,
-  },
+  focus: tokens.color.tone.accent.foreground.var,
   subtle: {
     light: tokens.color.palette['neutral-2'].var,
     dark: tokens.color.palette['slate-9'].var,

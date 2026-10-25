@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing as focusRingStyle } from './focusRing';
 
 /**
  * Draggable/keyboard-resizable separator. Pair with the React `ResizeHandle`
@@ -27,7 +28,7 @@ export const resizeHandle = typestyles.recipe({
     },
     focusRing: {
       ...atProperty.color,
-      value: t.color.tone.accent.foreground.var,
+      value: t.color.border.focus.var,
     },
   },
   styles: ({ vars }) => {
@@ -55,8 +56,8 @@ export const resizeHandle = typestyles.recipe({
             display: 'none',
           },
           '&:focus-visible': {
+            ...focusRingStyle,
             outline: `2px solid ${vars.focusRing.var}`,
-            outlineOffset: '2px',
           },
         },
         pill: {

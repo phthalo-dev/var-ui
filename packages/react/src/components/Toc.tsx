@@ -68,7 +68,7 @@ function TocList({
   headings?: TocHeading[];
   activeId?: string | null;
   children?: ReactNode;
-  listRef: React.RefObject<HTMLOListElement>;
+  listRef: React.RefObject<HTMLOListElement | null>;
 }): JSX.Element {
   const s = tocStyles();
 

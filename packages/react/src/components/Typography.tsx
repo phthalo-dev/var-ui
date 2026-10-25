@@ -39,7 +39,7 @@ export type TextProps = HTMLAttributes<HTMLElement> & {
   as?: 'p' | 'span' | 'div';
   /** Typographic size. @default md */
   size?: NonNullable<TextBlockVariantProps['size']>;
-  /** Foreground color emphasis. @default primary */
+  /** Text color: `primary`, `secondary`, or a semantic tone (`accent`, `success`, `warning`, `danger`, `info`). @default primary */
   tone?: NonNullable<TextBlockVariantProps['tone']>;
   /** Font weight. @default normal */
   weight?: NonNullable<TextBlockVariantProps['weight']>;

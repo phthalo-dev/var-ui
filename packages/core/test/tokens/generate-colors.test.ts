@@ -72,6 +72,11 @@ describe('generateColors', () => {
     vi.restoreAllMocks();
   });
 
+  it('paints focus rings with the accent foreground', () => {
+    const theme = generateColors({ accent: '#0064E0' });
+    expect(theme.border?.focus).toEqual(theme.tone?.accent?.foreground);
+  });
+
   it('returns mode-aware color leaves for the default accent', () => {
     const theme = generateColors({ accent: '#0064E0' });
     assertModeAwareColorShape(theme);

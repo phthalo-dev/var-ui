@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { fieldChrome } from './fieldChrome';
 
 /**
@@ -95,6 +96,10 @@ export const fileInput = typestyles.recipe({
             opacity: 0.5,
             cursor: 'not-allowed',
           },
+          '&:focus-visible': {
+            ...focusRing,
+            [vars.dropzoneBorder.name]: t.color.border.focus.var,
+          },
         },
         placeholderText: {
           fontSize: t.fontSize.sm.var,
@@ -126,6 +131,9 @@ export const fileInput = typestyles.recipe({
           cursor: 'pointer',
           '&:hover': {
             backgroundColor: t.color.background.subtle.var,
+          },
+          '&:focus-visible': {
+            ...focusRing,
           },
         },
         hiddenInput: {

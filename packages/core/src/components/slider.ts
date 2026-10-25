@@ -2,6 +2,7 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from './fieldChrome';
+import { focusRing } from './focusRing';
 
 const sliderVarDefinitions = {
   labelColor: {
@@ -51,14 +52,6 @@ const sliderVarDefinitions = {
   thumbBorderWidth: {
     ...atProperty.length,
     value: t.borderWidth.thick.var,
-  },
-  focusOutlineWidth: {
-    ...atProperty.length,
-    value: t.borderWidth.thick.var,
-  },
-  focusOutlineOffset: {
-    ...atProperty.length,
-    value: t.space[1].var,
   },
   fillWidth: {
     ...atProperty.percentage,
@@ -129,8 +122,7 @@ export const slider = typestyles.recipe({
           backgroundColor: vars.thumbBackground.var,
           boxShadow: t.shadow.sm.var,
           '&:focus-visible': {
-            outline: `${vars.focusOutlineWidth.var} solid ${t.color.border.focus.var}`,
-            outlineOffset: vars.focusOutlineOffset.var,
+            ...focusRing,
           },
         },
         output: {
