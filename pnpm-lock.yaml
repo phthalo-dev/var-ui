@@ -15,6 +15,12 @@ catalogs:
     '@types/react-dom':
       specifier: ^19.3.0
       version: 19.3.0
+    '@typestyles/build-runner':
+      specifier: ^0.6.1
+      version: 0.6.1
+    '@typestyles/vite':
+      specifier: ^0.5.1
+      version: 0.5.1
     '@vitejs/plugin-react':
       specifier: ^5.0.0
       version: 5.2.0
@@ -33,6 +39,9 @@ catalogs:
     typescript:
       specifier: ^6.0.0
       version: 6.0.3
+    typestyles:
+      specifier: ^0.33.0
+      version: 0.33.0
     vite:
       specifier: npm:@voidzero-dev/vite-plus-core@1.3.0
       version: 1.3.0
@@ -126,7 +135,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
     devDependencies:
       '@astrojs/check':
@@ -145,10 +154,10 @@ importers:
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@typestyles/build-runner':
-        specifier: 0.6.1
+        specifier: 'catalog:'
         version: 0.6.1
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
@@ -185,13 +194,13 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(prettier@3.9.4)(typescript@6.0.3)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
 
   examples/astro-docs:
@@ -216,16 +225,16 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(prettier@3.9.4)(typescript@6.0.3)
       '@typestyles/build-runner':
-        specifier: 0.6.1
+        specifier: 'catalog:'
         version: 0.6.1
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
 
   examples/bundle-fixtures/button-only:
@@ -250,13 +259,13 @@ importers:
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite-plus:
         specifier: 'catalog:'
@@ -287,13 +296,13 @@ importers:
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite-plus:
         specifier: 'catalog:'
@@ -321,13 +330,13 @@ importers:
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite-plus:
         specifier: 'catalog:'
@@ -361,13 +370,13 @@ importers:
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite-plus:
         specifier: 'catalog:'
@@ -394,7 +403,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite:
         specifier: 'catalog:'
@@ -418,11 +427,11 @@ importers:
   packages/core:
     dependencies:
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
     devDependencies:
       '@typestyles/build-runner':
-        specifier: 0.6.1
+        specifier: 'catalog:'
         version: 0.6.1
       '@typestyles/cli':
         specifier: ^0.3.3
@@ -443,7 +452,7 @@ importers:
         specifier: ^4.3.0
         version: 4.3.14(astro@5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9)(@types/node@24.13.2)(@volar/typescript@2.4.28)(jiti@2.7.0)(rollup@4.62.2)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
       '@typestyles/build-runner':
-        specifier: 0.6.1
+        specifier: 'catalog:'
         version: 0.6.1
       highlight.js:
         specifier: ^11.11.1
@@ -459,7 +468,7 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(prettier@3.9.4)(typescript@6.0.3)
       '@typestyles/vite':
-        specifier: 0.5.1
+        specifier: 'catalog:'
         version: 0.5.1(@voidzero-dev/vite-plus-core@1.3.0(@types/node@24.13.2)(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
       '@var-ui/astro':
         specifier: workspace:*
@@ -480,7 +489,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite:
         specifier: 'catalog:'
@@ -520,7 +529,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
       vite:
         specifier: 'catalog:'
@@ -553,7 +562,7 @@ importers:
         specifier: ^3.13.1
         version: 3.13.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typestyles:
-        specifier: 0.33.0
+        specifier: 'catalog:'
         version: 0.33.0
     devDependencies:
       '@internationalized/date':
