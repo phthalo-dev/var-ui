@@ -41,7 +41,7 @@
     "astro": "catalog:",
     "jsdom": "^26.0.0",
     "typescript": "catalog:",
-    "typestyles": "0.32.1",
+    "typestyles": "0.33.0",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
