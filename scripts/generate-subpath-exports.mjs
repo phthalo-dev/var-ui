@@ -55,9 +55,9 @@ function generateCoreExports() {
   // Recipe-authoring helpers. They stay importable inside the package; they are not entry points.
   const internalComponentModules = new Set([
     'breakpoints',
-    'controlFocus',
     'controlSize',
     'fieldChrome',
+    'focusRing',
     'layoutShellVars',
   ]);
 

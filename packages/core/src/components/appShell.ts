@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 const appShellHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
@@ -99,8 +100,7 @@ export const appShell = typestyles.recipe({
             backgroundColor: t.color.background.surface.var,
             color: t.color.text.primary.var,
             boxShadow: t.shadow.md.var,
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
             textDecoration: 'none',
             fontSize: t.fontSize.sm.var,
             fontWeight: t.fontWeight.medium.var,

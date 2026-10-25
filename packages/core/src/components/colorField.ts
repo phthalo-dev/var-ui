@@ -1,6 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { controlFocusStyles } from './controlFocus';
+import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -85,11 +85,11 @@ export const colorField = typestyles.recipe({
           borderRadius: t.radius.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
-          transition: 'border-color 140ms ease, box-shadow 140ms ease',
+          transition: 'border-color 140ms ease',
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },
-          '&:focus-within': controlFocusStyles(),
+          '&:focus-within': focusRing,
           '&[data-disabled]': {
             opacity: 0.6,
             cursor: 'not-allowed',
@@ -107,8 +107,7 @@ export const colorField = typestyles.recipe({
           borderRadius: t.radius.sm.var,
           lineHeight: 0,
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&:disabled': {
             cursor: 'not-allowed',

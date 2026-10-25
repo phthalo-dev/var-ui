@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
@@ -79,8 +80,7 @@ export const pagination = typestyles.recipe({
           cursor: 'pointer',
           transition: `background-color ${t.duration.fast.var} ${t.easing.standard.var}`,
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
           },
           '&:disabled': {
             cursor: 'not-allowed',

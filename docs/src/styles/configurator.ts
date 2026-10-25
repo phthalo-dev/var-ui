@@ -1,4 +1,4 @@
-import { designTokens as t, media, typestyles } from '@var-ui/core';
+import { designTokens as t, focusRing, media, typestyles } from '@var-ui/core';
 
 export const configuratorStyles = typestyles.recipe({
   name: 'component-configurator',
@@ -111,8 +111,7 @@ export const configuratorStyles = typestyles.recipe({
           borderColor: t.color.border.strong.var,
         },
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
       },
       toneSwatchActive: {
@@ -125,8 +124,7 @@ export const configuratorStyles = typestyles.recipe({
         cursor: 'pointer',
         padding: 0,
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
       },
       toneCheck: {
@@ -159,8 +157,7 @@ export const configuratorStyles = typestyles.recipe({
           backgroundColor: t.color.background.elevated.var,
         },
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
       },
       optionButtonActive: {
@@ -178,8 +175,7 @@ export const configuratorStyles = typestyles.recipe({
         paddingInline: t.space[2].var,
         paddingBlock: t.space[1].var,
         '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '2px',
+          ...focusRing,
         },
       },
       code: {

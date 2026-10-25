@@ -48,7 +48,7 @@ const LIGHT_SLOTS = {
     tertiary: 3,
   },
   text: { primary: 10, secondary: 7 },
-  border: { default: 4, strong: 5, focus: 5, subtle: 2 },
+  border: { default: 4, strong: 5, subtle: 2 },
   tone: {
     accent: { foreground: 7, background: 7, linkHover: 8 },
     danger: { foreground: 7, background: 8 },
@@ -189,7 +189,7 @@ function mapModeAwareColors(
         rampAt(neutral, m(slots.border.default)),
       ),
       strong: mode(rampAt(neutral, slots.border.strong), rampAt(neutral, m(slots.border.strong))),
-      focus: mode(rampAt(accent, slots.border.focus), rampAt(accent, m(slots.border.focus))),
+      focus: mode(lightTone.accent.foreground, darkTone.accent.foreground),
       subtle: mode(rampAt(neutral, slots.border.subtle), rampAt(neutral, m(slots.border.subtle))),
     },
     overlay: {

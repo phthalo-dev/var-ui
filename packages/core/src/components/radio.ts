@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 export const radio = typestyles.recipe({
   name: 'radio',
@@ -53,6 +54,9 @@ export const radio = typestyles.recipe({
           },
           '&[data-selected]::before': {
             [vars.indicatorBackground.name]: t.color.tone.accent.background.var,
+          },
+          ':focus-within > &': {
+            ...focusRing,
           },
         },
         label: {

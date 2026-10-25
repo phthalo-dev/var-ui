@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { layerZIndex } from './layerVars';
 
 const mobileNavVarDefinitions = {
@@ -154,8 +155,7 @@ export const mobileNav = typestyles.recipe({
             color: vars.headerColor.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
         toggle: {
@@ -179,8 +179,7 @@ export const mobileNav = typestyles.recipe({
             color: vars.headerColor.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
       },

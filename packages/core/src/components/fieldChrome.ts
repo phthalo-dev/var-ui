@@ -1,4 +1,5 @@
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 
 export type FieldChromeColors = {
   label: string;
@@ -127,8 +128,7 @@ export function dateFieldChrome(colors: DateFieldChromeColors) {
       backgroundColor: colors.groupBackground,
       width: 'fit-content',
       '&[data-focus-within]': {
-        outline: `2px solid ${t.color.border.focus.var}`,
-        outlineOffset: '1px',
+        ...focusRing,
         [colors.groupFocusBorder]: t.color.border.focus.var,
       },
       '&[data-disabled]': {

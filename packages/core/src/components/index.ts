@@ -36,6 +36,7 @@ export * from './emptyState';
 export * from './field';
 export * from './fileInput';
 export * from './fileTree';
+export * from './focusRing';
 export * from './grid';
 export * from './hidden';
 export * from './hoverCard';

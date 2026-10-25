@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -64,8 +65,7 @@ export const textField = typestyles.recipe({
           color: vars.inputForeground.var,
           boxSizing: 'border-box',
           '&:focus': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
             [vars.inputBorder.name]: t.color.border.focus.var,
           },
           '&::placeholder': {

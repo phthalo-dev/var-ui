@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
 
@@ -93,8 +94,7 @@ export const dialog = typestyles.recipe({
             color: t.color.text.primary.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
         description: {

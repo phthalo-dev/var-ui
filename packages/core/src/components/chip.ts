@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import {
   mapTone,
   subtleBackgroundColor,
@@ -81,8 +82,7 @@ export const chip = typestyles.recipe({
               backgroundColor: t.color.background.elevated.var,
             },
             '&:focus-visible': {
-              outline: `2px solid ${t.color.border.focus.var}`,
-              outlineOffset: '2px',
+              ...focusRing,
             },
           },
           '&[data-selected]': {
@@ -118,8 +118,7 @@ export const chip = typestyles.recipe({
             backgroundColor: vars.removeHoverBackground.var,
           },
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '1px',
+            ...focusRing,
           },
         },
       },

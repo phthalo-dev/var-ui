@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { focusRing } from './focusRing';
 import { density } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
@@ -81,8 +82,7 @@ export const tree = typestyles.recipe({
           padding: 0,
           outline: 'none',
           '&:focus-visible': {
-            outline: `2px solid ${t.color.border.focus.var}`,
-            outlineOffset: '2px',
+            ...focusRing,
             borderRadius: t.radius.md.var,
           },
         },
