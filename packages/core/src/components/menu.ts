@@ -30,36 +30,49 @@ export const menu = typestyles.recipe({
     'contextAnchor',
   ],
   vars: {
+    /**
+     * Copied onto `popover` as well as the host. React portals that slot
+     * outside `.var-ui-menu`, so a custom property set only on the host stays
+     * at its `@property` initial value (`transparent`).
+     */
     popoverBackground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.background.surface.var,
     },
     popoverBorder: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.border.default.var,
     },
     itemForeground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.text.primary.var,
     },
     itemFocusedBackground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.background.subtle.var,
     },
     itemDisabledForeground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.text.secondary.var,
     },
     sectionHeaderForeground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.text.secondary.var,
     },
     separatorColor: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.border.default.var,
     },
     dangerForeground: {
       ...atProperty.color,
+      slots: ['popover'],
       value: t.color.tone.danger.foreground.var,
     },
     anchorX: { ...atProperty.length, value: '0px' },
