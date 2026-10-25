@@ -1,5 +1,19 @@
 # @var-ui/core
 
+## 0.3.0
+
+### Minor Changes
+
+- [#50](https://github.com/phthalo-dev/var-ui/pull/50) [`0d76419`](https://github.com/phthalo-dev/var-ui/commit/0d764197303f96399a53f9a8cc28611be3feac68) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add the semantic tones to `Text`: `accent`, `success`, `warning`, `danger` and `info` (for example `<Text tone="danger">`), each colored with that tone's foreground token. Previously `tone` only accepted `primary` and `secondary`, so a downstream `tone="danger"` was a type error and was ignored at runtime. The axis is built from the token tone keys, so a new tone token has to be styled here. Closes [#48](https://github.com/phthalo-dev/var-ui/issues/48).
+
+### Patch Changes
+
+- [#45](https://github.com/phthalo-dev/var-ui/pull/45) [`ac9b442`](https://github.com/phthalo-dev/var-ui/commit/ac9b44273ec88d22fafab47e75897cfc70e1dcea) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Paint focus rings with the accent foreground, and share one 2px ring across controls.
+
+- [#51](https://github.com/phthalo-dev/var-ui/pull/51) [`ed40135`](https://github.com/phthalo-dev/var-ui/commit/ed4013573234c74db03efb22b2ae1b6dced431d2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Button` accepts a `ref` and forwards it to the underlying `<button>`, so callers can return focus to the trigger. Closes [#49](https://github.com/phthalo-dev/var-ui/issues/49).
+
+- [#54](https://github.com/phthalo-dev/var-ui/pull/54) [`1761cf9`](https://github.com/phthalo-dev/var-ui/commit/1761cf9bc4cdfc814992babc3388f1cebc32b249) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Paint portaled menu surfaces and item labels. Menu color variables now name the `popover` slot, so typestyles emits the default and theme overrides on the popover itself. React portals that slot outside `.var-ui-menu`, where a custom property set only on the host stays transparent.
+
 ## 0.2.1
 
 ### Patch Changes
