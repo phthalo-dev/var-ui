@@ -1,5 +1,11 @@
 # @var-ui/icons
 
+## 0.2.2
+
+### Patch Changes
+
+- [#46](https://github.com/phthalo-dev/var-ui/pull/46) [`4ae01ee`](https://github.com/phthalo-dev/var-ui/commit/4ae01ee3fc7847c3ec4c2976ccfed4369ffd1436) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Build against `@types/react` 19 (matching the React 19 peer dependency; it was 18). The CLI's component catalog is regenerated from the new types.
+
 ## 0.2.1
 
 ### Patch Changes
