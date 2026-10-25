@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
 import { button, type ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -6,6 +6,8 @@ import { mergeProps } from 'typestyles';
 export type ButtonProps = Omit<RACButtonProps, 'className'> &
   ButtonVariantProps & {
     className?: string;
+    /** Ref to the underlying `<button>` element. */
+    ref?: Ref<HTMLButtonElement>;
   };
 
 export function Button({
@@ -15,8 +17,9 @@ export function Button({
   layout,
   elevated,
   className,
+  ref,
   ...props
 }: ButtonProps): JSX.Element {
   const styles = button({ tone, appearance, size, layout, elevated });
-  return <AriaButton {...props} {...mergeProps(styles, className)} />;
+  return <AriaButton {...props} {...mergeProps(styles, className)} ref={ref} />;
 }
