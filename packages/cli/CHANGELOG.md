@@ -1,5 +1,17 @@
 # @var-ui/cli
 
+## 0.3.1
+
+### Patch Changes
+
+- [#65](https://github.com/phthalo-dev/var-ui/pull/65) [`aafa8c9`](https://github.com/phthalo-dev/var-ui/commit/aafa8c9e41921b5365187e4d5733900b7b57e3d7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - AppShell can fill a parent shorter than the viewport.
+
+- [#67](https://github.com/phthalo-dev/var-ui/pull/67) [`0dc2162`](https://github.com/phthalo-dev/var-ui/commit/0dc21629ed03b79e34d2819974730065429f9690) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add a swatch-only ColorInput appearance with a per-control accessible name.
+
+- [#66](https://github.com/phthalo-dev/var-ui/pull/66) [`5191648`](https://github.com/phthalo-dev/var-ui/commit/51916482ec63227e586910939e2120cc93ad79da) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add a FileTrigger so an existing button can open a file picker.
+
+- [#64](https://github.com/phthalo-dev/var-ui/pull/64) [`6e81488`](https://github.com/phthalo-dev/var-ui/commit/6e81488264ddfd1f92a9496ba8d6bfc0a888dc62) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Keep `className` on Switch and Checkbox by merging it with the recipe class.
+
 ## 0.3.0
 
 ### Minor Changes

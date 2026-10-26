@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/docs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Astro documentation kit built with Var UI — shell, TOC, search, and createDesignTheme() theming (including syntax highlighting)",
   "keywords": [
     "astro",
