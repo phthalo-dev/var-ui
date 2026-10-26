@@ -4,7 +4,7 @@ import { focusRing } from './focusRing';
 import { controlSizeVariants, controlSurfaceSize } from './controlSize';
 import { fieldChrome } from './fieldChrome';
 import { controlSize } from '../shared/variantAxes';
-import { atProperty, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 
 /**
  * Hex color input with a swatch trigger for a native color picker. Intended
@@ -24,7 +24,10 @@ export const colorField = typestyles.recipe({
     'description',
     'error',
   ],
-  variants: { size: controlSize },
+  variants: {
+    size: controlSize,
+    appearance: variant.enum(['field', 'swatch'], { default: 'field' }),
+  },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -156,6 +159,36 @@ export const colorField = typestyles.recipe({
         size: controlSizeVariants((size) => ({
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
+        appearance: {
+          field: {},
+          swatch: {
+            root: {
+              minWidth: 0,
+              width: 'fit-content',
+            },
+            inputWrapper: {
+              borderWidth: 0,
+              borderStyle: 'none',
+              backgroundColor: 'transparent',
+              padding: 0,
+              paddingInline: 0,
+              paddingBlock: 0,
+              gap: 0,
+              height: 'auto',
+              minHeight: 0,
+              '&:hover': {
+                borderColor: 'transparent',
+              },
+              '&:focus-within': {
+                outline: 'none',
+              },
+            },
+            swatchPreview: {
+              width: '1.5rem',
+              height: '1.5rem',
+            },
+          },
+        },
       },
     };
   },
