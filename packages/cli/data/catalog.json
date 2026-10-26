@@ -21569,7 +21569,7 @@
         "astro"
       ],
       "docsPath": "/components/command-palette",
-      "markdown": "\n\n# CommandPalette\n\n⌘K-style searchable command overlay. You own `isOpen` / `onOpenChange` and typically close inside `onAction`. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.\n\n## Examples\n\n### Default\n\nOpen from a button (demos disable the global hotkey so pages stay calm).\n\n```tsx\nimport { CommandPalette } from '@var-ui/react';\n\n<CommandPalette\n  isOpen={open}\n  onOpenChange={setOpen}\n  items={[{ id: 'docs', title: 'Docs', meta: 'Guides' }]}\n  onAction={() => setOpen(false)}\n/>\n```\n\n```astro\n---\nimport { CommandPalette } from '@var-ui/astro';\n---\n<CommandPalette\n  id=\"docs-command-palette\"\n  items={[{ id: 'docs', title: 'Docs', meta: 'Guides' }]}\n/>\n```\n\n```html\n<div data-var-ui-command-palette-root id=\"docs-command-palette\">…</div>\n```\n\n### Grouped results via meta\n\nUse `meta` (and `keywords`) so related commands are scannable and searchable even when titles are short.\n\n```tsx\nimport { Button, CommandPalette } from '@var-ui/react';\nimport { useState } from 'react';\n\nconst [open, setOpen] = useState(false);\n\n<Button onPress={() => setOpen(true)}>\n  Open palette\n</Button>\n<CommandPalette\n  isOpen={open}\n  onOpenChange={setOpen}\n  hotkey={false}\n  items={[\n    { id: 'new-file', title: 'New file', meta: 'File', keywords: ['create'] },\n    { id: 'theme', title: 'Toggle theme', meta: 'Appearance', keywords: ['dark'] },\n    { id: 'settings', title: 'Open settings', meta: 'Navigation' },\n  ]}\n  onAction={() => setOpen(false)}\n/>\n```\n\n```astro\n<!-- React-only secondary demo — see default for Astro -->\n```\n\n```html\n<!-- React-only secondary demo — see default for HTML -->\n```\n\n## Props\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| items | CommandPaletteItem[] | yes |  | Commands shown in the results list. |\n| onAction | (id: string) => void | yes |  | Called with the selected item's `id` on Enter/click; the palette does not close itself. |\n| emptyLabel | string \\| undefined | no | 'No results' | Message shown when no items match the query. |\n| filter | ((item: CommandPaletteItem, query: string) => boolean) \\| undefined | no |  | Overrides the default case-insensitive title/meta/keywords match. |\n| hotkey | boolean \\| undefined | no | true | Toggles open state on ⌘K / Ctrl+K. |\n| isOpen | boolean \\| undefined | no |  | Controls the open state. |\n| onOpenChange | ((open: boolean) => void) \\| undefined | no |  | Called when the open state changes (Escape, backdrop click, hotkey, or item selection). |\n| placeholder | string \\| undefined | no | 'Search…' | Input placeholder. |\n| portalContainer | Element \\| undefined | no |  | Element the dialog renders into instead of its React parent. Needed when a subtree renders under a different theme than the page ambient (the theme's CSS custom properties only cascade to descendants of the themed element). |\n\n## Accessibility\n\nWhen open, focus moves to the search field; arrow keys move through results, Enter activates, Escape closes. Provide clear `title` text — `meta` is secondary. The default hotkey is ⌘K / Ctrl+K (`hotkey`); disable it in embedded demos if it would fight the host page.\n",
+      "markdown": "\n\n# CommandPalette\n\n⌘K-style searchable command overlay. You own `isOpen` / `onOpenChange` and typically close inside `onAction`. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.\n\n## Examples\n\n### Default\n\nOpen from a button (demos disable the global hotkey so pages stay calm).\n\n```tsx\nimport { CommandPalette } from '@var-ui/react';\n\n<CommandPalette\n  isOpen={open}\n  onOpenChange={setOpen}\n  items={[{ id: 'docs', title: 'Docs', meta: 'Guides' }]}\n  onAction={() => setOpen(false)}\n/>\n```\n\n```astro\n---\nimport { CommandPalette } from '@var-ui/astro';\n---\n<CommandPalette\n  id=\"docs-command-palette\"\n  items={[{ id: 'docs', title: 'Docs', meta: 'Guides' }]}\n/>\n```\n\n```html\n<div data-var-ui-command-palette-root id=\"docs-command-palette\">…</div>\n```\n\n### Grouped results via meta\n\nUse `meta` (and `keywords`) so related commands are scannable and searchable even when titles are short.\n\n```tsx\nimport { Button, CommandPalette } from '@var-ui/react';\nimport { useState } from 'react';\n\nconst [open, setOpen] = useState(false);\n\n<Button onPress={() => setOpen(true)}>\n  Open palette\n</Button>\n<CommandPalette\n  isOpen={open}\n  onOpenChange={setOpen}\n  hotkey={false}\n  items={[\n    { id: 'new-file', title: 'New file', meta: 'File', keywords: ['create'] },\n    { id: 'theme', title: 'Toggle theme', meta: 'Appearance', keywords: ['dark'] },\n    { id: 'settings', title: 'Open settings', meta: 'Navigation' },\n  ]}\n  onAction={() => setOpen(false)}\n/>\n```\n\n```astro\n<!-- React-only secondary demo — see default for Astro -->\n```\n\n```html\n<!-- React-only secondary demo — see default for HTML -->\n```\n\n## Props\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| items | CommandPaletteItem[] | yes |  | Commands shown in the results list. |\n| onAction | (id: string) => void | yes |  | Called with the selected item's `id` on Enter/click; the palette does not close itself. |\n| emptyLabel | string \\| undefined | no | 'No results' | Message shown when no items match the query. |\n| filter | ((item: CommandPaletteItem, query: string) => boolean) \\| false \\| undefined | no |  | Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip client-side filtering, e.g. when `items` already are the (remote) results for the query. |\n| hotkey | boolean \\| undefined | no | true | Toggles open state on ⌘K / Ctrl+K. |\n| isLoading | boolean \\| undefined | no |  | Shows a busy state and `loadingLabel` in place of `emptyLabel` while `items` is empty. |\n| isOpen | boolean \\| undefined | no |  | Controls the open state. |\n| loadingLabel | string \\| undefined | no | 'Loading…' | Message shown while `isLoading` and no items are listed. |\n| onOpenChange | ((open: boolean) => void) \\| undefined | no |  | Called when the open state changes (Escape, backdrop click, hotkey, or item selection). |\n| onQueryChange | ((query: string) => void) \\| undefined | no |  | Called with the input value as it changes, and with `''` when the palette closes. |\n| placeholder | string \\| undefined | no | 'Search…' | Input placeholder. |\n| portalContainer | Element \\| undefined | no |  | Element the dialog renders into instead of its React parent. Needed when a subtree renders under a different theme than the page ambient (the theme's CSS custom properties only cascade to descendants of the themed element). |\n\n## Accessibility\n\nWhen open, focus moves to the search field; arrow keys move through results, Enter activates, Escape closes. Provide clear `title` text — `meta` is secondary. The default hotkey is ⌘K / Ctrl+K (`hotkey`); disable it in embedded demos if it would fight the host page.\n",
       "examples": [
         {
           "id": "command-palette.default",
@@ -21606,9 +21606,9 @@
         },
         {
           "name": "filter",
-          "type": "((item: CommandPaletteItem, query: string) => boolean) | undefined",
+          "type": "((item: CommandPaletteItem, query: string) => boolean) | false | undefined",
           "required": false,
-          "description": "Overrides the default case-insensitive title/meta/keywords match."
+          "description": "Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip\nclient-side filtering, e.g. when `items` already are the (remote) results for the query."
         },
         {
           "name": "hotkey",
@@ -21618,16 +21618,35 @@
           "description": "Toggles open state on ⌘K / Ctrl+K."
         },
         {
+          "name": "isLoading",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Shows a busy state and `loadingLabel` in place of `emptyLabel` while `items` is empty."
+        },
+        {
           "name": "isOpen",
           "type": "boolean | undefined",
           "required": false,
           "description": "Controls the open state."
         },
         {
+          "name": "loadingLabel",
+          "type": "string | undefined",
+          "required": false,
+          "default": "'Loading…'",
+          "description": "Message shown while `isLoading` and no items are listed."
+        },
+        {
           "name": "onOpenChange",
           "type": "((open: boolean) => void) | undefined",
           "required": false,
           "description": "Called when the open state changes (Escape, backdrop click, hotkey, or item selection)."
+        },
+        {
+          "name": "onQueryChange",
+          "type": "((query: string) => void) | undefined",
+          "required": false,
+          "description": "Called with the input value as it changes, and with `''` when the palette closes."
         },
         {
           "name": "placeholder",
