@@ -1,5 +1,11 @@
 # @var-ui/react
 
+## 0.4.0
+
+### Minor Changes
+
+- [#73](https://github.com/phthalo-dev/var-ui/pull/73) [`3febd35`](https://github.com/phthalo-dev/var-ui/commit/3febd3524eaae8aeeb346e3ceb8cc7e95358f739) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Let `CommandPalette` drive async results: add `onQueryChange`, `isLoading`/`loadingLabel`, and `filter={false}` to skip client-side filtering.
+
 ## 0.3.1
 
 ### Patch Changes
