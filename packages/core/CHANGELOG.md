@@ -1,5 +1,17 @@
 # @var-ui/core
 
+## 0.3.1
+
+### Patch Changes
+
+- [#65](https://github.com/phthalo-dev/var-ui/pull/65) [`aafa8c9`](https://github.com/phthalo-dev/var-ui/commit/aafa8c9e41921b5365187e4d5733900b7b57e3d7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - AppShell can fill a parent shorter than the viewport.
+
+- [#67](https://github.com/phthalo-dev/var-ui/pull/67) [`0dc2162`](https://github.com/phthalo-dev/var-ui/commit/0dc21629ed03b79e34d2819974730065429f9690) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add a swatch-only ColorInput appearance with a per-control accessible name.
+
+- [#63](https://github.com/phthalo-dev/var-ui/pull/63) [`9531b88`](https://github.com/phthalo-dev/var-ui/commit/9531b8878411fef5bc401c2f7638a5439f49d3b2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Keep the switch track at its 40px width when the label is wider than the row.
+
+- [#56](https://github.com/phthalo-dev/var-ui/pull/56) [`096a582`](https://github.com/phthalo-dev/var-ui/commit/096a582e144a94db57bc7bb4dcf7bbc4ff964650) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Accept compatible TypeStyles releases instead of an exact version. `@var-ui/core` and `@var-ui/react` depend on `typestyles@^0.33.0`, and `@var-ui/docs` depends on `@typestyles/build-runner@^0.6.4`.
+
 ## 0.3.0
 
 ### Minor Changes
