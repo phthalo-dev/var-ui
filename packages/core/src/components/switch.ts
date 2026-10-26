@@ -29,6 +29,7 @@ export const switchStyles = typestyles.recipe({
         track: {
           position: 'relative',
           width: '40px',
+          flexShrink: 0,
           height: '24px',
           borderRadius: t.radius.full.var,
           backgroundColor: vars.trackBackground.var,
