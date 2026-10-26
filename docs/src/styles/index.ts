@@ -6,6 +6,7 @@ import './homeBento';
 import './configurator';
 import './themePlayground';
 import './colorSwatches';
+import './cssVariableReference';
 import './shadowSwatches';
 import './playgroundShell';
 import './playgroundSidebar';
