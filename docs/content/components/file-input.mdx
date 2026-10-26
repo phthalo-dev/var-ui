@@ -28,3 +28,13 @@ Set `multiple` so `value` is a `File[]` (or `null` when cleared). Optionally cap
 ## Accessibility
 
 The dropzone is a focusable `role="button"` activated with Enter/Space, labelled by the visible field label and described by `description` / error text. The native file input is visually hidden (`aria-hidden`) and opened programmatically. The clear control has an explicit `aria-label` (“Clear …”).
+
+## FileTrigger
+
+`FileTrigger` opens the picker from an existing button. It does not render a dropzone, filename, or field label, and it does not take `value`. `onSelect` receives the chosen files. Choosing the same file again calls `onSelect` again.
+
+```tsx
+<FileTrigger accept="image/*" multiple onSelect={(files) => upload(files)}>
+  <Button>Choose images</Button>
+</FileTrigger>
+```
