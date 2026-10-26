@@ -1,6 +1,6 @@
 import type { ChangeEvent, JSX } from 'react';
 import { useEffect, useId, useState } from 'react';
-import { DialogTrigger, Label, Popover as AriaPopover } from 'react-aria-components';
+import { DialogTrigger, Label, Popover as AriaPopover, Pressable } from 'react-aria-components';
 import { colorField, popover, type ColorFieldVariantProps } from '@var-ui/core';
 import { isValidHex, normalizeHex } from '../color/convert';
 import { useLayer } from '../layers/LayerProvider';
@@ -19,6 +19,17 @@ export type ColorInputProps = FieldMeta &
     onChange?: (value: string) => void;
     placeholder?: string;
     size?: NonNullable<ColorFieldVariantProps['size']>;
+    /**
+     * `field` shows the hex input beside the swatch. `swatch` renders only the
+     * swatch button and picker.
+     * @default 'field'
+     */
+    appearance?: NonNullable<ColorFieldVariantProps['appearance']>;
+    /**
+     * Accessible name for the swatch button.
+     * @default 'Open color picker'
+     */
+    swatchLabel?: string;
     isDisabled?: boolean;
     isRequired?: boolean;
     className?: string;
@@ -46,13 +57,16 @@ export function ColorInput({
   swatchesPerRow,
   withAlpha,
   size = 'md',
+  appearance = 'field',
+  swatchLabel = 'Open color picker',
   isDisabled,
   isRequired,
   className,
   name,
   portalContainer,
 }: ColorInputProps): JSX.Element {
-  const cf = colorField({ size });
+  const cf = colorField({ size, appearance });
+  const isField = appearance === 'field';
   const p = popover();
   const { style: layerStyle } = useLayer();
   const inputId = useId();
@@ -87,25 +101,27 @@ export function ColorInput({
 
   return (
     <div {...mergeProps(cf.root, className)}>
-      {label ? (
+      {isField && label ? (
         <Label {...mergeProps(cf.label)} htmlFor={inputId}>
           {label}
         </Label>
       ) : null}
       <div {...mergeProps(cf.inputWrapper)} data-disabled={isDisabled || undefined}>
         <DialogTrigger>
-          <button
-            type="button"
-            {...mergeProps(cf.swatchButton)}
-            disabled={isDisabled}
-            aria-label="Open color picker"
-          >
-            <span
-              {...mergeProps(cf.swatchPreview)}
-              style={{ backgroundColor: swatchColor }}
-              aria-hidden
-            />
-          </button>
+          <Pressable>
+            <button
+              type="button"
+              {...mergeProps(cf.swatchButton)}
+              disabled={isDisabled}
+              aria-label={swatchLabel}
+            >
+              <span
+                {...mergeProps(cf.swatchPreview)}
+                style={{ backgroundColor: swatchColor }}
+                aria-hidden
+              />
+            </button>
+          </Pressable>
           <AriaPopover
             {...mergeProps(p.root)}
             style={layerStyle}
@@ -122,25 +138,29 @@ export function ColorInput({
             </div>
           </AriaPopover>
         </DialogTrigger>
-        <input
-          id={inputId}
-          {...mergeProps(cf.input)}
-          type="text"
-          name={name}
-          value={textValue}
-          placeholder={placeholder}
-          disabled={isDisabled}
-          required={isRequired}
-          aria-required={isRequired || undefined}
-          aria-invalid={errorMessage ? true : undefined}
-          spellCheck={false}
-          autoComplete="off"
-          onChange={handleTextChange}
-          onBlur={handleTextBlur}
-        />
+        {isField ? (
+          <input
+            id={inputId}
+            {...mergeProps(cf.input)}
+            type="text"
+            name={name}
+            value={textValue}
+            placeholder={placeholder}
+            disabled={isDisabled}
+            required={isRequired}
+            aria-required={isRequired || undefined}
+            aria-invalid={errorMessage ? true : undefined}
+            spellCheck={false}
+            autoComplete="off"
+            onChange={handleTextChange}
+            onBlur={handleTextBlur}
+          />
+        ) : name ? (
+          <input type="hidden" name={name} value={color} />
+        ) : null}
       </div>
-      {description ? <p {...mergeProps(cf.description)}>{description}</p> : null}
-      {errorMessage ? (
+      {isField && description ? <p {...mergeProps(cf.description)}>{description}</p> : null}
+      {isField && errorMessage ? (
         <p {...mergeProps(cf.error)} role="alert">
           {errorMessage}
         </p>
