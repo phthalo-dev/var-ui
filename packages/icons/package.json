@@ -178,6 +178,38 @@
       "types": "./dist/icons/moreHorizontal.d.mts",
       "import": "./dist/icons/moreHorizontal.mjs"
     },
+    "./glyphs/pause": {
+      "types": "./dist/glyph-data/pause.d.mts",
+      "import": "./dist/glyph-data/pause.mjs"
+    },
+    "./pause": {
+      "types": "./dist/icons/pause.d.mts",
+      "import": "./dist/icons/pause.mjs"
+    },
+    "./glyphs/play": {
+      "types": "./dist/glyph-data/play.d.mts",
+      "import": "./dist/glyph-data/play.mjs"
+    },
+    "./play": {
+      "types": "./dist/icons/play.d.mts",
+      "import": "./dist/icons/play.mjs"
+    },
+    "./glyphs/repeat": {
+      "types": "./dist/glyph-data/repeat.d.mts",
+      "import": "./dist/glyph-data/repeat.mjs"
+    },
+    "./repeat": {
+      "types": "./dist/icons/repeat.d.mts",
+      "import": "./dist/icons/repeat.mjs"
+    },
+    "./glyphs/repeatOne": {
+      "types": "./dist/glyph-data/repeatOne.d.mts",
+      "import": "./dist/glyph-data/repeatOne.mjs"
+    },
+    "./repeatOne": {
+      "types": "./dist/icons/repeatOne.d.mts",
+      "import": "./dist/icons/repeatOne.mjs"
+    },
     "./glyphs/search": {
       "types": "./dist/glyph-data/search.d.mts",
       "import": "./dist/glyph-data/search.mjs"
@@ -185,6 +217,14 @@
     "./search": {
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
+    },
+    "./glyphs/shuffle": {
+      "types": "./dist/glyph-data/shuffle.d.mts",
+      "import": "./dist/glyph-data/shuffle.mjs"
+    },
+    "./shuffle": {
+      "types": "./dist/icons/shuffle.d.mts",
+      "import": "./dist/icons/shuffle.mjs"
     },
     "./glyphs/stop": {
       "types": "./dist/glyph-data/stop.d.mts",

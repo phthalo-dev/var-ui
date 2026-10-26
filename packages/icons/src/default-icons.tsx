@@ -19,7 +19,12 @@ import { eyeOff } from './icons/eyeOff';
 import { info } from './icons/info';
 import { menu } from './icons/menu';
 import { moreHorizontal } from './icons/moreHorizontal';
+import { pause } from './icons/pause';
+import { play } from './icons/play';
+import { repeat } from './icons/repeat';
+import { repeatOne } from './icons/repeatOne';
 import { search } from './icons/search';
+import { shuffle } from './icons/shuffle';
 import { stop } from './icons/stop';
 import { success } from './icons/success';
 import { warning } from './icons/warning';
@@ -46,7 +51,12 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   info,
   menu,
   moreHorizontal,
+  pause,
+  play,
+  repeat,
+  repeatOne,
   search,
+  shuffle,
   stop,
   success,
   warning,

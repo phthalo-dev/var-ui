@@ -30,7 +30,12 @@ import {
   innerHtml as moreHorizontalInner,
   svg as moreHorizontalSvg,
 } from './glyph-data/moreHorizontal';
+import { innerHtml as pauseInner, svg as pauseSvg } from './glyph-data/pause';
+import { innerHtml as playInner, svg as playSvg } from './glyph-data/play';
+import { innerHtml as repeatInner, svg as repeatSvg } from './glyph-data/repeat';
+import { innerHtml as repeatOneInner, svg as repeatOneSvg } from './glyph-data/repeatOne';
 import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
+import { innerHtml as shuffleInner, svg as shuffleSvg } from './glyph-data/shuffle';
 import { innerHtml as stopInner, svg as stopSvg } from './glyph-data/stop';
 import { innerHtml as successInner, svg as successSvg } from './glyph-data/success';
 import { innerHtml as warningInner, svg as warningSvg } from './glyph-data/warning';
@@ -57,7 +62,12 @@ export const defaultGlyphInnerHtml = {
   info: infoInner,
   menu: menuInner,
   moreHorizontal: moreHorizontalInner,
+  pause: pauseInner,
+  play: playInner,
+  repeat: repeatInner,
+  repeatOne: repeatOneInner,
   search: searchInner,
+  shuffle: shuffleInner,
   stop: stopInner,
   success: successInner,
   warning: warningInner,
@@ -87,7 +97,12 @@ export const defaultIconSvgs = {
   info: infoSvg,
   menu: menuSvg,
   moreHorizontal: moreHorizontalSvg,
+  pause: pauseSvg,
+  play: playSvg,
+  repeat: repeatSvg,
+  repeatOne: repeatOneSvg,
   search: searchSvg,
+  shuffle: shuffleSvg,
   stop: stopSvg,
   success: successSvg,
   warning: warningSvg,
