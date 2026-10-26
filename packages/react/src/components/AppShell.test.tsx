@@ -167,4 +167,12 @@ describe('AppShell', () => {
     expect(root.getAttribute('data-layout')).toBe('alt');
     vi.unstubAllGlobals();
   });
+
+  it('sets data-height="stretch" on the root when height is stretch', () => {
+    stubMatchMedia(false);
+    const { container } = wrap(<AppShell height="stretch">Content</AppShell>);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.getAttribute('data-height')).toBe('stretch');
+    vi.unstubAllGlobals();
+  });
 });

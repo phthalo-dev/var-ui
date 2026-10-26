@@ -3,7 +3,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from './focusRing';
 
-const appShellHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
+const appShellHeight = variant.enum(['fill', 'auto', 'stretch'], { default: 'fill' });
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
   default: 'wash',
 });
@@ -209,7 +209,14 @@ export const appShell = typestyles.recipe({
           minHeight: 0,
           minWidth: 0,
           overflow: 'hidden',
+          height: '100%',
+          alignSelf: 'stretch',
           transition,
+          '& > *': {
+            flex: '1 1 auto',
+            minHeight: 0,
+            height: '100%',
+          },
           '[data-has-side-nav] &': {
             width: vars.sideNavWidth.var,
           },
@@ -262,6 +269,14 @@ export const appShell = typestyles.recipe({
             root: {
               minHeight: 'auto',
               height: 'auto',
+            },
+          },
+          stretch: {
+            root: {
+              height: '100%',
+              minHeight: 0,
+              maxHeight: '100%',
+              overflow: 'hidden',
             },
           },
         },
