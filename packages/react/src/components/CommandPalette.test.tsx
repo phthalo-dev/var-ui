@@ -298,4 +298,56 @@ describe('CommandPalette', () => {
     expect(screen.getByText('Sign out')).toBeTruthy();
     expect(screen.queryByText('Open settings')).toBeNull();
   });
+
+  it('reports query changes via onQueryChange and resets on close', async () => {
+    const onQueryChange = vi.fn();
+    const props = {
+      hotkey: false,
+      items: [{ id: 'a', title: 'Alpha' }],
+      onAction: () => {},
+      onOpenChange: () => {},
+      onQueryChange,
+    };
+    const { rerender } = wrap(<CommandPalette isOpen {...props} />);
+    await userEvent.type(screen.getByRole('textbox'), 'al');
+    expect(onQueryChange).toHaveBeenLastCalledWith('al');
+    rerender(
+      <LayerProvider>
+        <CommandPalette isOpen={false} {...props} />
+      </LayerProvider>,
+    );
+    await waitFor(() => expect(onQueryChange).toHaveBeenLastCalledWith(''));
+  });
+
+  it('skips client-side filtering when filter is false', async () => {
+    wrap(
+      <CommandPalette
+        isOpen
+        hotkey={false}
+        items={[{ id: 'a', title: 'Remote hit' }]}
+        onAction={() => {}}
+        onOpenChange={() => {}}
+        filter={false}
+      />,
+    );
+    await userEvent.type(screen.getByRole('textbox'), 'zzz');
+    expect(screen.getByText('Remote hit')).toBeTruthy();
+  });
+
+  it('shows a busy loading row instead of the empty label while loading', () => {
+    wrap(
+      <CommandPalette
+        isOpen
+        hotkey={false}
+        items={[]}
+        onAction={() => {}}
+        onOpenChange={() => {}}
+        isLoading
+        loadingLabel="Searching…"
+      />,
+    );
+    expect(screen.getByText('Searching…')).toBeTruthy();
+    expect(screen.queryByText('No results')).toBeNull();
+    expect(document.querySelector('[aria-busy="true"]')).toBeTruthy();
+  });
 });

@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Autocomplete, Input, ListBox, ListBoxItem, TextField } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
@@ -35,8 +35,17 @@ export type CommandPaletteProps = {
   emptyLabel?: string;
   /** Toggles open state on ⌘K / Ctrl+K. @default true */
   hotkey?: boolean;
-  /** Overrides the default case-insensitive title/meta/keywords match. */
-  filter?: (item: CommandPaletteItem, query: string) => boolean;
+  /**
+   * Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip
+   * client-side filtering, e.g. when `items` already are the (remote) results for the query.
+   */
+  filter?: ((item: CommandPaletteItem, query: string) => boolean) | false;
+  /** Called with the input value as it changes, and with `''` when the palette closes. */
+  onQueryChange?: (query: string) => void;
+  /** Shows a busy state and `loadingLabel` in place of `emptyLabel` while `items` is empty. */
+  isLoading?: boolean;
+  /** Message shown while `isLoading` and no items are listed. @default 'Loading…' */
+  loadingLabel?: string;
   /**
    * Element the dialog renders into instead of its React parent. Needed when a subtree renders
    * under a different theme than the page ambient (the theme's CSS custom properties only
@@ -87,9 +96,18 @@ export function CommandPalette({
   emptyLabel = 'No results',
   hotkey = true,
   filter = defaultFilter,
+  onQueryChange,
+  isLoading = false,
+  loadingLabel = 'Loading…',
   portalContainer,
 }: CommandPaletteProps): JSX.Element | null {
-  const [query, setQuery] = useState('');
+  const [query, setQueryState] = useState('');
+  const onQueryChangeRef = useRef(onQueryChange);
+  onQueryChangeRef.current = onQueryChange;
+  const setQuery = useCallback((next: string) => {
+    setQueryState(next);
+    onQueryChangeRef.current?.(next);
+  }, []);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const open = Boolean(isOpen);
@@ -114,7 +132,7 @@ export function CommandPalette({
 
   useEffect(() => {
     if (!open) setQuery('');
-  }, [open]);
+  }, [open, setQuery]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -135,7 +153,7 @@ export function CommandPalette({
   }, [onOpenChange]);
 
   const visibleItems = useMemo(
-    () => items.filter((item) => filter(item, query)),
+    () => (filter ? items.filter((item) => filter(item, query)) : items),
     [items, filter, query],
   );
 
@@ -159,7 +177,12 @@ export function CommandPalette({
       }}
     >
       {presence.mounted ? (
-        <div ref={panelRef} {...mergeProps(cp.dialog)} {...presence.attrs}>
+        <div
+          ref={panelRef}
+          {...mergeProps(cp.dialog)}
+          {...presence.attrs}
+          aria-busy={isLoading || undefined}
+        >
           <Autocomplete inputValue={query} onInputChange={setQuery}>
             <div {...mergeProps(cp.inputRow)}>
               <span {...mergeProps(cp.inputIcon)}>
@@ -173,7 +196,11 @@ export function CommandPalette({
               items={visibleItems}
               {...mergeProps(cp.results)}
               aria-label={placeholder}
-              renderEmptyState={() => <div {...mergeProps(cp.empty)}>{emptyLabel}</div>}
+              renderEmptyState={() => (
+                <div {...mergeProps(cp.empty)} role={isLoading ? 'status' : undefined}>
+                  {isLoading ? loadingLabel : emptyLabel}
+                </div>
+              )}
             >
               {(item) => (
                 <ListBoxItem
