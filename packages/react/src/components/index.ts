@@ -267,6 +267,7 @@ export {
 export { Toolbar, type ToolbarProps } from './Toolbar';
 export { SearchInput, type SearchInputProps } from './SearchInput';
 export { FileInput, type FileInputProps } from './FileInput';
+export { FileTrigger, type FileTriggerProps } from './FileTrigger';
 export {
   InputGroup,
   InputGroupInput,
