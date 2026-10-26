@@ -3,15 +3,16 @@ import { Switch as AriaSwitch, type SwitchProps as RACSwitchProps } from 'react-
 import { switchStyles } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type SwitchProps = Omit<RACSwitchProps, 'children'> & {
+export type SwitchProps = Omit<RACSwitchProps, 'children' | 'className'> & {
   /** Label rendered beside the switch control. */
   children?: ReactNode;
+  className?: string;
 };
 
-export function Switch({ children, ...props }: SwitchProps): JSX.Element {
+export function Switch({ children, className, ...props }: SwitchProps): JSX.Element {
   const sw = switchStyles();
   return (
-    <AriaSwitch {...props} {...mergeProps(sw.root)}>
+    <AriaSwitch {...props} {...mergeProps(sw.root, className)}>
       {({ isSelected }) => (
         <>
           <span {...mergeProps(sw.track)} data-selected={isSelected || undefined}>

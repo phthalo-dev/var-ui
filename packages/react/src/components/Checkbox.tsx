@@ -6,15 +6,16 @@ import {
 import { checkbox } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type CheckboxProps = Omit<RACCheckboxProps, 'children'> & {
+export type CheckboxProps = Omit<RACCheckboxProps, 'children' | 'className'> & {
   /** Label rendered beside the checkbox control. */
   children?: ReactNode;
+  className?: string;
 };
 
-export function Checkbox({ children, ...props }: CheckboxProps): JSX.Element {
+export function Checkbox({ children, className, ...props }: CheckboxProps): JSX.Element {
   const cb = checkbox();
   return (
-    <AriaCheckbox {...props} {...mergeProps(cb.root)}>
+    <AriaCheckbox {...props} {...mergeProps(cb.root, className)}>
       {({ isSelected }) => (
         <>
           <span {...mergeProps(cb.box)} data-selected={isSelected || undefined}>
