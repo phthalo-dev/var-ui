@@ -33,6 +33,7 @@ import {
 import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
 import { innerHtml as stopInner, svg as stopSvg } from './glyph-data/stop';
 import { innerHtml as successInner, svg as successSvg } from './glyph-data/success';
+import { innerHtml as videoInner, svg as videoSvg } from './glyph-data/video';
 import { innerHtml as warningInner, svg as warningSvg } from './glyph-data/warning';
 import { innerHtml as wrenchInner, svg as wrenchSvg } from './glyph-data/wrench';
 
@@ -60,6 +61,7 @@ export const defaultGlyphInnerHtml = {
   search: searchInner,
   stop: stopInner,
   success: successInner,
+  video: videoInner,
   warning: warningInner,
   wrench: wrenchInner,
 } as const satisfies Record<IconName, string>;
@@ -90,6 +92,7 @@ export const defaultIconSvgs = {
   search: searchSvg,
   stop: stopSvg,
   success: successSvg,
+  video: videoSvg,
   warning: warningSvg,
   wrench: wrenchSvg,
 } as const satisfies Record<DefaultGlyphName, string>;

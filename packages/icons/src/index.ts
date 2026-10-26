@@ -21,5 +21,6 @@ export { moreHorizontal } from './icons/moreHorizontal';
 export { search } from './icons/search';
 export { stop } from './icons/stop';
 export { success } from './icons/success';
+export { video } from './icons/video';
 export { warning } from './icons/warning';
 export { wrench } from './icons/wrench';

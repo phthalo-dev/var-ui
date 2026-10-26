@@ -22,6 +22,7 @@ import { moreHorizontal } from './icons/moreHorizontal';
 import { search } from './icons/search';
 import { stop } from './icons/stop';
 import { success } from './icons/success';
+import { video } from './icons/video';
 import { warning } from './icons/warning';
 import { wrench } from './icons/wrench';
 
@@ -49,6 +50,7 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   search,
   stop,
   success,
+  video,
   warning,
   wrench,
 };

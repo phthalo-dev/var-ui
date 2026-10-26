@@ -29,6 +29,7 @@ describe('icon system (core)', () => {
         'colorModeSystem',
         'eye',
         'eyeOff',
+        'video',
       ].sort(),
     );
   });

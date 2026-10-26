@@ -202,6 +202,14 @@
       "types": "./dist/icons/success.d.mts",
       "import": "./dist/icons/success.mjs"
     },
+    "./glyphs/video": {
+      "types": "./dist/glyph-data/video.d.mts",
+      "import": "./dist/glyph-data/video.mjs"
+    },
+    "./video": {
+      "types": "./dist/icons/video.d.mts",
+      "import": "./dist/icons/video.mjs"
+    },
     "./glyphs/warning": {
       "types": "./dist/glyph-data/warning.d.mts",
       "import": "./dist/glyph-data/warning.mjs"
