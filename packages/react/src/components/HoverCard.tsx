@@ -1,7 +1,6 @@
 import {
   Children,
   createContext,
-  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -68,6 +67,8 @@ export type HoverCardRootProps = {
 export type HoverCardTriggerProps = {
   children: ReactElement;
   className?: string;
+  /** Ref to the trigger element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type HoverCardPopupProps = {
@@ -261,10 +262,12 @@ function HoverCardRoot({
   );
 }
 
-const HoverCardTrigger = forwardRef(function HoverCardTrigger(
-  { children, className, ...props }: HoverCardTriggerProps,
-  ref: Ref<HTMLElement>,
-) {
+function HoverCardTrigger({
+  children,
+  className,
+  ref,
+  ...props
+}: HoverCardTriggerProps): JSX.Element {
   const ctx = useHoverCardContext();
   const child = Children.only(children);
   const childProps = child.props as Record<string, unknown>;
@@ -290,7 +293,7 @@ const HoverCardTrigger = forwardRef(function HoverCardTrigger(
     onBlur: composeHandler(childProps.onBlur, ctx.scheduleClose),
   });
   return merged;
-});
+}
 
 function HoverCardPopup({
   children,

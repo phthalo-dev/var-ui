@@ -1,7 +1,6 @@
 import {
   Children,
   createContext,
-  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -55,6 +54,8 @@ export type PopoverProps = PopoverRootProps;
 export type PopoverTriggerProps = {
   children: ReactElement;
   className?: string;
+  /** Ref to the trigger element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type PopoverPopupProps = {
@@ -212,10 +213,7 @@ function PopoverRoot({
   );
 }
 
-const PopoverTrigger = forwardRef(function PopoverTrigger(
-  { children, className, ...props }: PopoverTriggerProps,
-  ref: Ref<HTMLElement>,
-) {
+function PopoverTrigger({ children, className, ref, ...props }: PopoverTriggerProps): JSX.Element {
   const ctx = usePopoverContext();
   const child = Children.only(children);
   const stashTriggerPress = (...args: unknown[]) => {
@@ -257,7 +255,7 @@ const PopoverTrigger = forwardRef(function PopoverTrigger(
     return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
   }
   return merged;
-});
+}
 
 function PopoverPopup({
   children,

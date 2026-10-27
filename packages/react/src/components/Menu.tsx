@@ -1,7 +1,6 @@
 import {
   Children,
   createContext,
-  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -61,6 +60,8 @@ export type MenuProps = MenuRootProps;
 export type MenuTriggerProps = {
   children: ReactElement;
   className?: string;
+  /** Ref to the trigger element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type MenuPopupProps = {
@@ -213,10 +214,7 @@ function MenuRoot({
   );
 }
 
-const MenuTrigger = forwardRef(function MenuTrigger(
-  { children, className, ...props }: MenuTriggerProps,
-  ref: Ref<HTMLElement>,
-) {
+function MenuTrigger({ children, className, ref, ...props }: MenuTriggerProps): JSX.Element {
   const ctx = useMenuContext();
   const child = Children.only(children);
   const stashTriggerPress = (...args: unknown[]) => {
@@ -258,7 +256,7 @@ const MenuTrigger = forwardRef(function MenuTrigger(
     return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
   }
   return merged;
-});
+}
 
 function MenuPopup({ children, className, portalContainer, ref }: MenuPopupProps): JSX.Element {
   const ctx = useMenuContext();

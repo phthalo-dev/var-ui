@@ -1,7 +1,6 @@
 import {
   Children,
   createContext,
-  forwardRef,
   useCallback,
   useContext,
   useMemo,
@@ -58,6 +57,8 @@ export type DialogProps = DialogRootProps;
 export type DialogTriggerProps = {
   children: ReactElement;
   className?: string;
+  /** Ref to the trigger element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type DialogBackdropProps = {
@@ -196,10 +197,7 @@ function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
   };
 }
 
-const DialogTrigger = forwardRef(function DialogTrigger(
-  { children, className, ...props }: DialogTriggerProps,
-  ref: Ref<HTMLElement>,
-) {
+function DialogTrigger({ children, className, ref, ...props }: DialogTriggerProps): JSX.Element {
   const ctx = useDialogContext();
   const child = Children.only(children);
   const stashTriggerPress = (...args: unknown[]) => {
@@ -232,7 +230,7 @@ const DialogTrigger = forwardRef(function DialogTrigger(
     return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
   }
   return merged;
-});
+}
 
 function DialogBackdrop({ children, className, isDismissable }: DialogBackdropProps): JSX.Element {
   const ctx = useDialogContext();
