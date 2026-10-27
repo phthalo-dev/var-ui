@@ -126,6 +126,7 @@ import ButtonGroupDefault from './button-group/default/react';
 import ButtonGroupIcons from './button-group/icons/react';
 import CopyButtonDefault from './copy-button/default/react';
 import CopyButtonLabels from './copy-button/labels/react';
+import EditableTextDefault from './editable-text/default/react';
 import ToggleButtonDefault from './toggle-button/default/react';
 import ToggleButtonPressed from './toggle-button/pressed/react';
 import SegmentedControlDefault from './segmented-control/default/react';
@@ -306,6 +307,7 @@ export const reactDemoMap = {
   'button-group.icons': ButtonGroupIcons,
   'copy-button.default': CopyButtonDefault,
   'copy-button.labels': CopyButtonLabels,
+  'editable-text.default': EditableTextDefault,
   'toggle-button.default': ToggleButtonDefault,
   'toggle-button.pressed': ToggleButtonPressed,
   'segmented-control.default': SegmentedControlDefault,

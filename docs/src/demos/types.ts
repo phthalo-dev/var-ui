@@ -128,6 +128,7 @@ export type DemoId =
   | 'button-group.icons'
   | 'copy-button.default'
   | 'copy-button.labels'
+  | 'editable-text.default'
   | 'toggle-button.default'
   | 'toggle-button.pressed'
   | 'segmented-control.default'
