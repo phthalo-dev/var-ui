@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles, designTokens as t, type TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -56,12 +56,17 @@ export type TableColumnProps = {
 export type TableHeaderProps = { children?: ReactNode; className?: string };
 export type TableBodyProps = { children?: ReactNode; className?: string };
 export type TableFooterProps = { children?: ReactNode; className?: string };
-export type TableRowProps = {
+/** Remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) are forwarded to the `<tr>`. */
+export type TableRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'children' | 'className'> & {
   children?: ReactNode;
   isSelected?: boolean;
   className?: string;
 };
-export type TableCellProps = {
+/** Remaining props (`onClick`, `data-*`, `aria-*`, `headers`, …) are forwarded to the `<td>`/`<th>`. */
+export type TableCellProps = Omit<
+  ComponentPropsWithoutRef<'td'>,
+  'children' | 'className' | 'align' | 'colSpan'
+> & {
   children?: ReactNode;
   align?: TableColumnAlign;
   isRowHeader?: boolean;
@@ -167,11 +172,13 @@ export function TableCell({
   isRowHeader = false,
   colSpan,
   className,
+  ...rest
 }: TableCellProps): JSX.Element {
   const { styles: s } = useTableContext();
   const Tag = isRowHeader ? 'th' : 'td';
   return (
     <Tag
+      {...rest}
       {...(isRowHeader ? { scope: 'row' } : {})}
       colSpan={colSpan}
       {...mergeProps(s.cell, className)}
@@ -183,12 +190,13 @@ export function TableCell({
 }
 
 /** Row within a `Table` — pass `isSelected` when composing row selection. */
-export function TableRow({ children, isSelected, className }: TableRowProps): JSX.Element {
+export function TableRow({ children, isSelected, className, ...rest }: TableRowProps): JSX.Element {
   const { styles: s } = useTableContext();
   return (
     <tr
+      {...rest}
       {...mergeProps(s.row, className)}
-      aria-selected={isSelected}
+      aria-selected={isSelected ?? rest['aria-selected']}
       data-selected={isSelected ? '' : undefined}
     >
       {children}

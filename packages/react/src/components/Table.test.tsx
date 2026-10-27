@@ -78,4 +78,47 @@ describe('Table', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Name' }));
     expect(onSortChange).toHaveBeenCalledWith({ column: 'name', direction: 'descending' });
   });
+
+  it('forwards event handlers and data/aria attributes on Row and Cell', async () => {
+    const onDoubleClick = vi.fn();
+    const onClick = vi.fn();
+    render(
+      <Table>
+        <Table.Body>
+          <Table.Row
+            onDoubleClick={onDoubleClick}
+            data-song-id="s1"
+            aria-label="Song one"
+            className="custom-row"
+          >
+            <Table.Cell data-testid="cell" onClick={onClick} className="custom-cell">
+              Song
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>,
+    );
+    const row = screen.getByRole('row', { name: 'Song one' });
+    expect(row.getAttribute('data-song-id')).toBe('s1');
+    expect(row.className).toContain('custom-row');
+    await userEvent.dblClick(row);
+    expect(onDoubleClick).toHaveBeenCalledTimes(1);
+    const cell = screen.getByTestId('cell');
+    expect(cell.className).toContain('custom-cell');
+    await userEvent.click(cell);
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it('keeps a caller aria-selected on Row when isSelected is unset', () => {
+    render(
+      <Table>
+        <Table.Body>
+          <Table.Row aria-selected="true">
+            <Table.Cell>Song</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>,
+    );
+    expect(screen.getByRole('row').getAttribute('aria-selected')).toBe('true');
+  });
 });
