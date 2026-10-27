@@ -3,6 +3,20 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ResizeHandle } from './ResizeHandle';
 
+// jsdom has no PointerEvent; without it `fireEvent.pointer*` drops pointerId/clientX.
+if (typeof window.PointerEvent === 'undefined') {
+  class PointerEventShim extends MouseEvent {
+    pointerId: number;
+    pointerType: string;
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerId = init.pointerId ?? 0;
+      this.pointerType = init.pointerType ?? 'mouse';
+    }
+  }
+  window.PointerEvent = PointerEventShim as unknown as typeof PointerEvent;
+}
+
 describe('ResizeHandle', () => {
   it('renders as a labeled separator with value attrs', () => {
     render(
@@ -128,7 +142,7 @@ describe('ResizeHandle', () => {
     expect(onChange).toHaveBeenCalledWith(270);
   });
 
-  it('tracks mouse drag delta on the inline axis', () => {
+  it('tracks pointer drag delta on the inline axis', () => {
     const onChange = vi.fn();
     render(
       <ResizeHandle
@@ -140,10 +154,33 @@ describe('ResizeHandle', () => {
       />,
     );
     const handle = screen.getByRole('separator', { name: 'Resize' });
-    fireEvent.mouseDown(handle, { clientX: 100, clientY: 0 });
-    fireEvent.mouseMove(window, { clientX: 140, clientY: 0 });
+    fireEvent.pointerDown(handle, { pointerId: 1, pointerType: 'touch', clientX: 100, clientY: 0 });
+    fireEvent.pointerMove(handle, { pointerId: 1, pointerType: 'touch', clientX: 140, clientY: 0 });
     expect(onChange).toHaveBeenCalledWith(300);
-    fireEvent.mouseUp(window);
+    fireEvent.pointerUp(handle, { pointerId: 1, pointerType: 'touch' });
+    onChange.mockClear();
+    fireEvent.pointerMove(handle, { pointerId: 1, pointerType: 'touch', clientX: 200, clientY: 0 });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('ignores moves from a different pointer and non-primary mouse buttons', () => {
+    const onChange = vi.fn();
+    render(
+      <ResizeHandle
+        value={260}
+        minValue={180}
+        maxValue={480}
+        onChange={onChange}
+        aria-label="Resize"
+      />,
+    );
+    const handle = screen.getByRole('separator', { name: 'Resize' });
+    fireEvent.pointerDown(handle, { pointerId: 1, pointerType: 'mouse', button: 2, clientX: 100 });
+    fireEvent.pointerMove(handle, { pointerId: 1, pointerType: 'mouse', clientX: 140 });
+    expect(onChange).not.toHaveBeenCalled();
+    fireEvent.pointerDown(handle, { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 100 });
+    fireEvent.pointerMove(handle, { pointerId: 2, pointerType: 'touch', clientX: 140 });
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('does not start a drag while collapsed', () => {
@@ -159,8 +196,8 @@ describe('ResizeHandle', () => {
       />,
     );
     const handle = screen.getByRole('separator', { name: 'Resize' });
-    fireEvent.mouseDown(handle, { clientX: 100, clientY: 0 });
-    fireEvent.mouseMove(window, { clientX: 140, clientY: 0 });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 100, clientY: 0 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 140, clientY: 0 });
     expect(onChange).not.toHaveBeenCalled();
     expect(handle.getAttribute('data-collapsed')).toBe('');
   });

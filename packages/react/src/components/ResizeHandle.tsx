@@ -3,7 +3,7 @@ import {
   useRef,
   type JSX,
   type KeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
 } from 'react';
 import { resizeHandle } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -25,15 +25,16 @@ export type ResizeHandleProps = {
 const ARROW_STEP = 10;
 const ARROW_STEP_LARGE = 50;
 
-type DragState = { startPos: number; startValue: number };
+type DragState = { pointerId: number; startPos: number; startValue: number };
 
 /**
  * Accessible drag/keyboard separator for single-region resize. Bind to
  * `useResizable().handleProps`; pair with a `SideNav`/`Layout*` region.
  *
  * Arrow keys nudge by 10px (50px with Shift); Home/End jump to min/max;
- * mouse drag tracks delta from the drag start on the inline axis (window
- * listeners so the drag keeps tracking once the cursor leaves the handle).
+ * mouse, touch, and pen drags use pointer events with pointer capture, so the
+ * drag keeps tracking once the pointer leaves the handle. The visible line is
+ * 1px, but the grab target extends a few px past it on both sides.
  */
 export function ResizeHandle({
   direction = 'horizontal',
@@ -55,31 +56,36 @@ export function ResizeHandle({
     [minValue, maxValue],
   );
 
-  const handleDragMove = useCallback(
-    (event: globalThis.MouseEvent) => {
-      const drag = dragState.current;
-      if (!drag) return;
-      const pos = isHorizontal ? event.clientX : event.clientY;
-      onChange(clamp(drag.startValue + (pos - drag.startPos)));
-    },
-    [clamp, isHorizontal, onChange],
-  );
-
-  const handleDragEnd = useCallback(() => {
-    dragState.current = null;
-    window.removeEventListener('mousemove', handleDragMove);
-    window.removeEventListener('mouseup', handleDragEnd);
-  }, [handleDragMove]);
-
-  const handleMouseDown = (event: ReactMouseEvent<HTMLDivElement>): void => {
-    if (isCollapsed) return;
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    if (isCollapsed || (event.pointerType === 'mouse' && event.button !== 0)) return;
     event.preventDefault();
     dragState.current = {
+      pointerId: event.pointerId,
       startPos: isHorizontal ? event.clientX : event.clientY,
       startValue: value,
     };
-    window.addEventListener('mousemove', handleDragMove);
-    window.addEventListener('mouseup', handleDragEnd);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Capture unavailable (synthetic events); the drag still tracks while over the handle.
+    }
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    const drag = dragState.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const pos = isHorizontal ? event.clientX : event.clientY;
+    onChange(clamp(drag.startValue + (pos - drag.startPos)));
+  };
+
+  const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    if (dragState.current?.pointerId !== event.pointerId) return;
+    dragState.current = null;
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {
+      // Already released (e.g. `pointercancel`).
+    }
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
@@ -125,7 +131,10 @@ export function ResizeHandle({
       tabIndex={0}
       data-orientation={direction}
       data-collapsed={isCollapsed ? '' : undefined}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
       onKeyDown={handleKeyDown}
       onDoubleClick={onCollapse}
       {...mergeProps(s.root, className)}
