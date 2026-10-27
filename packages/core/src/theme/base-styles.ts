@@ -21,8 +21,13 @@ export function registerBaseStyles(): void {
   global.rules(
     {
       ':root': { colorScheme: 'light dark' },
-      [`[${COLOR_MODE_ATTRIBUTE}="dark"]`]: { colorScheme: 'dark' },
-      [`[${COLOR_MODE_ATTRIBUTE}="light"]`]: { colorScheme: 'light' },
+      // Doubled so the pin outranks the theme class's `color-scheme: light dark` in the same layer.
+      [`[${COLOR_MODE_ATTRIBUTE}="dark"][${COLOR_MODE_ATTRIBUTE}="dark"]`]: {
+        colorScheme: 'dark',
+      },
+      [`[${COLOR_MODE_ATTRIBUTE}="light"][${COLOR_MODE_ATTRIBUTE}="light"]`]: {
+        colorScheme: 'light',
+      },
     },
     { layer: tokenLayer },
   );
