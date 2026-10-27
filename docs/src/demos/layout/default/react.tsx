@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  Button,
-  Layout,
-  LayoutContent,
-  LayoutPanel,
-  ResizeHandle,
-  Text,
-  useResizable,
-} from '@var-ui/react';
+import { Button, Layout, LayoutContent, LayoutPanel, Text, useResizable } from '@var-ui/react';
 
 const ITEMS = [
   { id: 'alpha', label: 'Alpha' },
@@ -47,20 +39,18 @@ export default function Preview() {
         }
         end={
           selected ? (
-            <>
-              <LayoutPanel
-                resizable={end}
-                hasDivider
-                label="Details"
-                role="complementary"
-                padding={0}
-              >
-                <div style={{ padding: 12 }}>
-                  <Text size="sm">Selected: {selected.label}</Text>
-                </div>
-              </LayoutPanel>
-              <ResizeHandle {...end.handleProps} aria-label="Resize inspector" />
-            </>
+            <LayoutPanel
+              resizable={end}
+              hasResizeHandle
+              resizeHandleLabel="Resize inspector"
+              label="Details"
+              role="complementary"
+              padding={0}
+            >
+              <div style={{ padding: 12 }}>
+                <Text size="sm">Selected: {selected.label}</Text>
+              </div>
+            </LayoutPanel>
           ) : null
         }
       />

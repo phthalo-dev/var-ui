@@ -14,6 +14,28 @@ integration, and responsive `overlay` / `hidden` modes below a breakpoint.
 
 <Demo id="layout.default" />
 
+### Resizable
+
+Pass a `useResizable()` result as `resizable` and set `hasResizeHandle` to get a
+`ResizeHandle` on the edge facing the content: after a `start` panel, before an
+`end` panel (with the drag direction flipped). It replaces `hasDivider`, and is
+skipped below a `responsive` breakpoint. Without `hasResizeHandle`, compose your
+own `ResizeHandle` next to the panel.
+
+```tsx
+const list = useResizable({ autoSaveId: 'list', defaultWidth: 340 });
+
+<Layout
+  start={
+    <LayoutPanel resizable={list} hasResizeHandle resizeHandleLabel="Resize list">
+      {items}
+    </LayoutPanel>
+  }
+>
+  {detail}
+</Layout>;
+```
+
 ## Props
 
 <PropsTable slug="layout-panel" />

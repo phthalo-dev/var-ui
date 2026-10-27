@@ -19,6 +19,7 @@ import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';
 import { useLayer } from '../layers/LayerProvider';
 import { mergeProps } from 'typestyles';
+import { ResizeHandle } from './ResizeHandle';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
@@ -331,7 +332,10 @@ export type LayoutPanelResponsive = {
 export type LayoutPanelProps = {
   /** Ignored when `resizable` is provided — `resizable.width` wins. */
   width?: number | string;
-  /** @default false */
+  /**
+   * Draws a border on the edge facing the content. Replaced by the resize line
+   * when `hasResizeHandle` is set. @default false
+   */
   hasDivider?: boolean;
   /** @default true */
   isScrollable?: boolean;
@@ -342,6 +346,15 @@ export type LayoutPanelProps = {
    * When `isCollapsed` is true the panel unmounts (pair with `ResizeHandle` to expand).
    */
   resizable?: UseResizableResult;
+  /**
+   * With `resizable`, renders a `ResizeHandle` on the edge facing the content
+   * (after a start panel, before an end panel) in place of the divider, with
+   * the drag direction flipped for end panels. Skipped below a `responsive`
+   * breakpoint. @default false
+   */
+  hasResizeHandle?: boolean;
+  /** Accessible name for the handle rendered by `hasResizeHandle`. @default 'Resize panel' */
+  resizeHandleLabel?: string;
   /** Collapses the panel to `overlay` or `hidden` below a breakpoint. Inert above it. */
   responsive?: LayoutPanelResponsive;
   /** Controlled open state for `responsive` modes — omit to let the panel manage it internally. */
@@ -373,6 +386,8 @@ export function LayoutPanel({
   isScrollable = true,
   padding,
   resizable,
+  hasResizeHandle = false,
+  resizeHandleLabel = 'Resize panel',
   responsive,
   isOpen: isOpenProp,
   defaultOpen = false,
@@ -384,7 +399,12 @@ export function LayoutPanel({
 }: LayoutPanelProps): JSX.Element | null {
   const area = useContext(LayoutAreaContext);
   const dataSide = area === 'start' || area === 'end' ? area : undefined;
-  const s = layoutPanel({ isScrollable, hasDivider, padding: toZonePaddingVariant(padding) });
+  const showResizeHandle = hasResizeHandle && resizable != null;
+  const s = layoutPanel({
+    isScrollable,
+    hasDivider: showResizeHandle ? false : hasDivider,
+    padding: toZonePaddingVariant(padding),
+  });
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   const effectiveWidth = resizable?.width ?? width;
@@ -448,6 +468,27 @@ export function LayoutPanel({
           </AriaDialog>
         </Modal>
       </ModalOverlay>
+    );
+  }
+
+  if (showResizeHandle && !isResponsiveActive) {
+    const handle = (
+      <ResizeHandle
+        {...resizable.handleProps}
+        isReversed={dataSide === 'end'}
+        aria-label={resizeHandleLabel}
+      />
+    );
+    return dataSide === 'end' ? (
+      <>
+        {handle}
+        {panelBody}
+      </>
+    ) : (
+      <>
+        {panelBody}
+        {handle}
+      </>
     );
   }
 

@@ -301,4 +301,61 @@ describe('LayoutPanel', () => {
       vi.unstubAllGlobals();
     });
   });
+
+  describe('hasResizeHandle', () => {
+    it('renders no handle unless hasResizeHandle is set', () => {
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={<LayoutPanel resizable={fakeResizable(300)}>Panel</LayoutPanel>}
+        />,
+      );
+      expect(screen.queryByRole('separator')).toBeNull();
+    });
+
+    it('places the handle after a start panel and before an end panel', () => {
+      render(
+        <Layout
+          start={
+            <LayoutPanel
+              label="List"
+              resizable={fakeResizable(300)}
+              hasResizeHandle
+              resizeHandleLabel="Resize list"
+            />
+          }
+          end={
+            <LayoutPanel
+              label="Inspector"
+              resizable={fakeResizable(280)}
+              hasResizeHandle
+              resizeHandleLabel="Resize inspector"
+            />
+          }
+        >
+          <div>Main</div>
+        </Layout>,
+      );
+      const list = screen.getByRole('region', { name: 'List' });
+      const listHandle = screen.getByRole('separator', { name: 'Resize list' });
+      const inspector = screen.getByRole('region', { name: 'Inspector' });
+      const inspectorHandle = screen.getByRole('separator', { name: 'Resize inspector' });
+      expect(list.nextElementSibling).toBe(listHandle);
+      expect(inspector.previousElementSibling).toBe(inspectorHandle);
+    });
+
+    it('renders no handle when the panel is collapsed', () => {
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={
+            <LayoutPanel hasResizeHandle resizable={{ ...fakeResizable(300), isCollapsed: true }}>
+              Panel
+            </LayoutPanel>
+          }
+        />,
+      );
+      expect(screen.queryByRole('separator')).toBeNull();
+    });
+  });
 });
