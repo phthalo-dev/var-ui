@@ -15,6 +15,7 @@ const layoutHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
 const zoneScrollable = variant.boolean({ default: true });
 const zonePadding = variant.enum(['inherit', '0'], { default: 'inherit' });
 const panelDivider = variant.boolean({ default: false });
+const panelResizeHandle = variant.boolean({ default: false });
 
 /**
  * Multi-pane page shell: header/footer bands and a horizontal middle row for
@@ -254,6 +255,7 @@ export const layoutPanel = typestyles.recipe({
   variants: {
     isScrollable: zoneScrollable,
     hasDivider: panelDivider,
+    hasResizeHandle: panelResizeHandle,
     padding: zonePadding,
   },
   vars: {
@@ -364,6 +366,17 @@ export const layoutPanel = typestyles.recipe({
               },
             },
           },
+        },
+        // Declared after `hasDivider` so it wins: a sibling resize handle sits at the
+        // panel edge, so the seamless negative margin must not pull it inside.
+        hasResizeHandle: {
+          true: {
+            panel: {
+              '&[data-side="start"]': { marginInlineEnd: 0 },
+              '&[data-side="end"]': { marginInlineStart: 0 },
+            },
+          },
+          false: {},
         },
         padding: {
           inherit: {},

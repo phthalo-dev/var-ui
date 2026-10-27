@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { DirectionProvider } from '../DirectionProvider';
 import { layoutContentWidthAssignment, layoutShellPaddingAssignments } from '@var-ui/core';
 import {
   Layout,
@@ -342,6 +344,48 @@ describe('LayoutPanel', () => {
       const inspectorHandle = screen.getByRole('separator', { name: 'Resize inspector' });
       expect(list.nextElementSibling).toBe(listHandle);
       expect(inspector.previousElementSibling).toBe(inspectorHandle);
+    });
+
+    it('resizes with the pointer direction under RTL', async () => {
+      const onChange = vi.fn();
+      const resizable = fakeResizable(300);
+      resizable.handleProps.onChange = onChange;
+      render(
+        <DirectionProvider direction="rtl">
+          <Layout
+            start={<LayoutPanel resizable={resizable} hasResizeHandle resizeHandleLabel="Resize" />}
+          >
+            <div>Main</div>
+          </Layout>
+        </DirectionProvider>,
+      );
+      screen.getByRole('separator', { name: 'Resize' }).focus();
+      // A start panel sits on the right in RTL, so moving the handle right shrinks it.
+      await userEvent.keyboard('{ArrowRight}');
+      expect(onChange).toHaveBeenLastCalledWith(290);
+    });
+
+    it('renders no handle below a responsive breakpoint', () => {
+      mockMatchMedia(true);
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={
+            <LayoutPanel
+              hasDivider
+              hasResizeHandle
+              responsive={{ below: 'lg', mode: 'hidden' }}
+              isOpen
+              resizable={fakeResizable(300)}
+            >
+              Panel
+            </LayoutPanel>
+          }
+        />,
+      );
+      expect(screen.getByText('Panel')).toBeTruthy();
+      expect(screen.queryByRole('separator')).toBeNull();
+      vi.unstubAllGlobals();
     });
 
     it('renders no handle when the panel is collapsed', () => {

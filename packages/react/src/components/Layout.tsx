@@ -19,6 +19,7 @@ import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';
 import { useLayer } from '../layers/LayerProvider';
 import { mergeProps } from 'typestyles';
+import { useDirection } from '../DirectionProvider';
 import { ResizeHandle } from './ResizeHandle';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
@@ -399,12 +400,7 @@ export function LayoutPanel({
 }: LayoutPanelProps): JSX.Element | null {
   const area = useContext(LayoutAreaContext);
   const dataSide = area === 'start' || area === 'end' ? area : undefined;
-  const showResizeHandle = hasResizeHandle && resizable != null;
-  const s = layoutPanel({
-    isScrollable,
-    hasDivider: showResizeHandle ? false : hasDivider,
-    padding: toZonePaddingVariant(padding),
-  });
+  const { isRtl } = useDirection();
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   const effectiveWidth = resizable?.width ?? width;
@@ -415,6 +411,13 @@ export function LayoutPanel({
     responsive ? layoutBreakpointQueries[responsive.below] : 'not all',
   );
   const isResponsiveActive = responsive != null && isBelowBreakpoint;
+  const showResizeHandle = hasResizeHandle && resizable != null && !isResponsiveActive;
+  const s = layoutPanel({
+    isScrollable,
+    hasDivider: showResizeHandle ? false : hasDivider,
+    hasResizeHandle: showResizeHandle,
+    padding: toZonePaddingVariant(padding),
+  });
   const isOverlayMode = isResponsiveActive && responsive?.mode === 'overlay';
 
   const isControlled = isOpenProp !== undefined;
@@ -471,11 +474,11 @@ export function LayoutPanel({
     );
   }
 
-  if (showResizeHandle && !isResponsiveActive) {
+  if (showResizeHandle && resizable != null) {
     const handle = (
       <ResizeHandle
         {...resizable.handleProps}
-        isReversed={dataSide === 'end'}
+        isReversed={(dataSide === 'end') !== isRtl}
         aria-label={resizeHandleLabel}
       />
     );
