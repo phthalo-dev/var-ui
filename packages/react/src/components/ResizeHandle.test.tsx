@@ -163,6 +163,48 @@ describe('ResizeHandle', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('captures and releases the active pointer', () => {
+    const setPointerCapture = vi.fn();
+    const releasePointerCapture = vi.fn();
+    render(
+      <ResizeHandle
+        value={260}
+        minValue={180}
+        maxValue={480}
+        onChange={() => {}}
+        aria-label="Resize"
+      />,
+    );
+    const handle = screen.getByRole('separator', { name: 'Resize' });
+    handle.setPointerCapture = setPointerCapture;
+    handle.releasePointerCapture = releasePointerCapture;
+    fireEvent.pointerDown(handle, { pointerId: 7, pointerType: 'touch', clientX: 100 });
+    expect(setPointerCapture).toHaveBeenCalledWith(7);
+    fireEvent.pointerUp(handle, { pointerId: 7, pointerType: 'touch' });
+    expect(releasePointerCapture).toHaveBeenCalledWith(7);
+  });
+
+  it('ignores a second pointerdown while a drag is active', () => {
+    const onChange = vi.fn();
+    render(
+      <ResizeHandle
+        value={260}
+        minValue={180}
+        maxValue={480}
+        onChange={onChange}
+        aria-label="Resize"
+      />,
+    );
+    const handle = screen.getByRole('separator', { name: 'Resize' });
+    fireEvent.pointerDown(handle, { pointerId: 1, pointerType: 'touch', clientX: 100 });
+    fireEvent.pointerDown(handle, { pointerId: 2, pointerType: 'touch', clientX: 300 });
+    fireEvent.pointerMove(handle, { pointerId: 2, pointerType: 'touch', clientX: 340 });
+    expect(onChange).not.toHaveBeenCalled();
+    fireEvent.pointerMove(handle, { pointerId: 1, pointerType: 'touch', clientX: 140 });
+    expect(onChange).toHaveBeenLastCalledWith(300);
+    fireEvent.pointerUp(handle, { pointerId: 1, pointerType: 'touch' });
+  });
+
   it('ignores moves from a different pointer and non-primary mouse buttons', () => {
     const onChange = vi.fn();
     render(

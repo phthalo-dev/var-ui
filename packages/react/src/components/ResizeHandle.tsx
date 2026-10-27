@@ -57,6 +57,7 @@ export function ResizeHandle({
   );
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    if (dragState.current != null) return;
     if (isCollapsed || (event.pointerType === 'mouse' && event.button !== 0)) return;
     event.preventDefault();
     dragState.current = {
