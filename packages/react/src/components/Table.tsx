@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles, designTokens as t, type TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -39,6 +39,8 @@ export type TableProps<T extends Record<string, unknown> = Record<string, unknow
   children?: ReactNode;
   className?: string;
   caption?: ReactNode;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type TableColumnProps = {
@@ -51,16 +53,35 @@ export type TableColumnProps = {
   onSort?: () => void;
   resizeHandle?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<th>` element. */
+  ref?: Ref<HTMLTableCellElement>;
 };
 
-export type TableHeaderProps = { children?: ReactNode; className?: string };
-export type TableBodyProps = { children?: ReactNode; className?: string };
-export type TableFooterProps = { children?: ReactNode; className?: string };
+export type TableHeaderProps = {
+  children?: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<thead>` element. */
+  ref?: Ref<HTMLTableSectionElement>;
+};
+export type TableBodyProps = {
+  children?: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<tbody>` element. */
+  ref?: Ref<HTMLTableSectionElement>;
+};
+export type TableFooterProps = {
+  children?: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<tfoot>` element. */
+  ref?: Ref<HTMLTableSectionElement>;
+};
 /** Remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) are forwarded to the `<tr>`. */
 export type TableRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'children' | 'className'> & {
   children?: ReactNode;
   isSelected?: boolean;
   className?: string;
+  /** Ref to the underlying `<tr>` element. */
+  ref?: Ref<HTMLTableRowElement>;
 };
 /** Remaining props (`onClick`, `data-*`, `aria-*`, `headers`, …) are forwarded to the `<td>`/`<th>`. */
 export type TableCellProps = Omit<
@@ -72,8 +93,15 @@ export type TableCellProps = Omit<
   isRowHeader?: boolean;
   colSpan?: number;
   className?: string;
+  /** Ref to the underlying `<td>`/`<th>` element. */
+  ref?: Ref<HTMLTableCellElement>;
 };
-export type TableCaptionProps = { children?: ReactNode; className?: string };
+export type TableCaptionProps = {
+  children?: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<caption>` element. */
+  ref?: Ref<HTMLTableCaptionElement>;
+};
 
 type TableStyleSlots = ReturnType<typeof tableStyles>;
 
@@ -138,6 +166,7 @@ export function TableColumn({
   onSort,
   resizeHandle,
   className,
+  ref,
 }: TableColumnProps): JSX.Element {
   const { styles: s } = useTableContext();
   const style: CSSProperties | undefined = width != null ? { width } : undefined;
@@ -152,6 +181,7 @@ export function TableColumn({
 
   return (
     <th
+      ref={ref}
       scope="col"
       {...mergeProps(s.headerCell, className)}
       data-align={align !== 'start' ? align : undefined}
@@ -172,6 +202,7 @@ export function TableCell({
   isRowHeader = false,
   colSpan,
   className,
+  ref,
   ...rest
 }: TableCellProps): JSX.Element {
   const { styles: s } = useTableContext();
@@ -179,6 +210,7 @@ export function TableCell({
   return (
     <Tag
       {...rest}
+      ref={ref}
       {...(isRowHeader ? { scope: 'row' } : {})}
       colSpan={colSpan}
       {...mergeProps(s.cell, className)}
@@ -190,11 +222,18 @@ export function TableCell({
 }
 
 /** Row within a `Table` — pass `isSelected` when composing row selection. */
-export function TableRow({ children, isSelected, className, ...rest }: TableRowProps): JSX.Element {
+export function TableRow({
+  children,
+  isSelected,
+  className,
+  ref,
+  ...rest
+}: TableRowProps): JSX.Element {
   const { styles: s } = useTableContext();
   return (
     <tr
       {...rest}
+      ref={ref}
       {...mergeProps(s.row, className)}
       aria-selected={isSelected ?? rest['aria-selected']}
       data-selected={isSelected ? '' : undefined}
@@ -205,27 +244,43 @@ export function TableRow({ children, isSelected, className, ...rest }: TableRowP
 }
 
 /** `<thead>` within a `Table`. */
-export function TableHeader({ children, className }: TableHeaderProps): JSX.Element {
+export function TableHeader({ children, className, ref }: TableHeaderProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return <thead {...mergeProps(s.header, className)}>{children}</thead>;
+  return (
+    <thead {...mergeProps(s.header, className)} ref={ref}>
+      {children}
+    </thead>
+  );
 }
 
 /** `<tbody>` within a `Table`. */
-export function TableBody({ children, className }: TableBodyProps): JSX.Element {
+export function TableBody({ children, className, ref }: TableBodyProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return <tbody {...mergeProps(s.body, className)}>{children}</tbody>;
+  return (
+    <tbody {...mergeProps(s.body, className)} ref={ref}>
+      {children}
+    </tbody>
+  );
 }
 
 /** `<tfoot>` within a `Table`. */
-export function TableFooter({ children, className }: TableFooterProps): JSX.Element {
+export function TableFooter({ children, className, ref }: TableFooterProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return <tfoot {...mergeProps(s.footer, className)}>{children}</tfoot>;
+  return (
+    <tfoot {...mergeProps(s.footer, className)} ref={ref}>
+      {children}
+    </tfoot>
+  );
 }
 
 /** `<caption>` within a `Table`. */
-export function TableCaption({ children, className }: TableCaptionProps): JSX.Element {
+export function TableCaption({ children, className, ref }: TableCaptionProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return <caption {...mergeProps(s.caption, className)}>{children}</caption>;
+  return (
+    <caption {...mergeProps(s.caption, className)} ref={ref}>
+      {children}
+    </caption>
+  );
 }
 
 /**
@@ -264,6 +319,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   children,
   className,
   caption,
+  ref,
 }: TableProps<T>): JSX.Element {
   const s = tableStyles({
     density,
@@ -345,7 +401,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
 
   return (
     <TableContext.Provider value={{ styles: s }}>
-      <div {...mergeProps(s.root, className)}>
+      <div {...mergeProps(s.root, className)} ref={ref}>
         <table {...mergeProps(s.table)}>
           {caption != null ? <TableCaption>{caption}</TableCaption> : null}
           {colgroup}

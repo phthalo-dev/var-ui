@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   Header,
   Menu as AriaMenu,
@@ -25,10 +25,12 @@ export type MenuSectionDefinition = {
 
 export type MenuContentProps = {
   sections: MenuSectionDefinition[];
+  /** Ref to the underlying menu `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** Renders `sections` of items inside `Menu.Popup` or other menu containers. */
-export function MenuContent({ sections }: MenuContentProps): JSX.Element {
+export function MenuContent({ sections, ref }: MenuContentProps): JSX.Element {
   const m = menu();
   const nodes: JSX.Element[] = [];
 
@@ -68,7 +70,7 @@ export function MenuContent({ sections }: MenuContentProps): JSX.Element {
   });
 
   return (
-    <AriaMenu {...mergeProps(m.menu)} selectionMode="none">
+    <AriaMenu {...mergeProps(m.menu)} ref={ref} selectionMode="none">
       {nodes}
     </AriaMenu>
   );

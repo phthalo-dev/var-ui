@@ -16,6 +16,8 @@ export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> &
   /** Edge fade masks. @default false */
   fade?: boolean | VariantOptions<typeof scrollAreaFade>;
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
   viewportClassName?: string;
   /** Ref for the scrollable viewport element. */
   viewportRef?: Ref<HTMLDivElement>;
@@ -37,6 +39,7 @@ export function ScrollArea({
   className,
   viewportClassName,
   viewportRef,
+  ref,
   ...props
 }: ScrollAreaProps): JSX.Element {
   const fadeMode = resolveScrollAreaFade(fade, orientation);
@@ -44,7 +47,7 @@ export function ScrollArea({
   const edges = scrollAreaFadeEdgesFor(fadeMode);
 
   return (
-    <div {...props} {...mergeProps(s.root, className)}>
+    <div {...props} {...mergeProps(s.root, className)} ref={ref}>
       <div ref={viewportRef} {...mergeProps(s.viewport, viewportClassName)}>
         {edges.block ? (
           <div aria-hidden {...mergeProps(s.fadeTop)} data-edge="block-start" />

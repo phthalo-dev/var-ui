@@ -7,6 +7,7 @@ import {
   type JSX,
   type KeyboardEvent,
   type MouseEvent,
+  type Ref,
 } from 'react';
 import { fileInput } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -35,6 +36,8 @@ export type FileInputProps = {
   isDisabled?: boolean;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function matchesAccept(file: File, accept: string): boolean {
@@ -128,6 +131,7 @@ export function FileInput({
   maxFiles,
   isDisabled = false,
   className,
+  ref,
 }: FileInputProps): JSX.Element {
   const fi = fileInput();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -223,7 +227,7 @@ export function FileInput({
   }
 
   return (
-    <div {...mergeProps(fi.root, className)}>
+    <div {...mergeProps(fi.root, className)} ref={ref}>
       <label {...mergeProps(fi.label)} id={labelId} htmlFor={inputId}>
         {label}
       </label>

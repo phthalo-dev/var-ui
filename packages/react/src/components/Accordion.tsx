@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import {
   Button as AriaButton,
   Disclosure,
@@ -44,6 +44,8 @@ export type AccordionProps = AccordionGroupVariantProps & {
   isDisabled?: boolean;
   className?: string;
   children: ReactNode;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type AccordionItemProps = {
@@ -52,16 +54,22 @@ export type AccordionItemProps = {
   isDisabled?: boolean;
   className?: string;
   children: ReactNode;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type AccordionTriggerProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 export type AccordionPanelProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function toKeySet(keys?: Iterable<Key>): Set<Key> {
@@ -112,6 +120,7 @@ export function Accordion({
   isDisabled,
   className,
   children,
+  ref,
 }: AccordionProps): JSX.Element {
   const group = accordionGroup({ variant: variant ?? 'bordered' });
   const itemVariant: CollapsibleVariant = variant === 'flush' ? 'flush' : 'accordion';
@@ -144,23 +153,30 @@ export function Accordion({
       isDisabled={isDisabled}
       {...mergeProps(group.root, className)}
       data-var-ui-accordion
+      ref={ref}
     >
       <AccordionContext.Provider value={{ itemVariant }}>{children}</AccordionContext.Provider>
     </DisclosureGroup>
   );
 }
 
-function AccordionItem({ id, isDisabled, className, children }: AccordionItemProps): JSX.Element {
+function AccordionItem({
+  id,
+  isDisabled,
+  className,
+  children,
+  ref,
+}: AccordionItemProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
   return (
-    <Disclosure id={id} isDisabled={isDisabled} {...mergeProps(c.root, className)}>
+    <Disclosure id={id} isDisabled={isDisabled} {...mergeProps(c.root, className)} ref={ref}>
       {children}
     </Disclosure>
   );
 }
 
-function AccordionTrigger({ children, className }: AccordionTriggerProps): JSX.Element {
+function AccordionTrigger({ children, className, ref }: AccordionTriggerProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
 
@@ -170,6 +186,7 @@ function AccordionTrigger({ children, className }: AccordionTriggerProps): JSX.E
         slot="trigger"
         {...mergeProps(c.trigger, className)}
         data-var-ui-accordion-trigger
+        ref={ref}
         onKeyDown={(event) => {
           if (event.key === 'Home') {
             event.preventDefault();
@@ -195,10 +212,14 @@ function AccordionTrigger({ children, className }: AccordionTriggerProps): JSX.E
   );
 }
 
-function AccordionPanel({ children, className }: AccordionPanelProps): JSX.Element {
+function AccordionPanel({ children, className, ref }: AccordionPanelProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
-  return <DisclosurePanel {...mergeProps(c.panel, className)}>{children}</DisclosurePanel>;
+  return (
+    <DisclosurePanel {...mergeProps(c.panel, className)} ref={ref}>
+      {children}
+    </DisclosurePanel>
+  );
 }
 
 Accordion.Item = AccordionItem;

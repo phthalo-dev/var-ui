@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent } from 'react';
+import type { JSX, KeyboardEvent, Ref } from 'react';
 import { useRef } from 'react';
 import { colorPicker, type ColorPickerVariantProps } from '@var-ui/core';
 import { hsvToHex, hueToPureHex, normalizeHex } from '../color/convert';
@@ -42,6 +42,8 @@ export type ColorPickerProps = {
   /** Show an alpha slider and emit 8-digit hex. @default false */
   withAlpha?: boolean;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function swatchColumnsVariant(
@@ -62,6 +64,7 @@ export function ColorPicker({
   swatchesPerRow = 7,
   withAlpha = false,
   className,
+  ref,
 }: ColorPickerProps): JSX.Element {
   const cp = colorPicker({ swatchColumns: swatchColumnsVariant(swatchesPerRow) });
   const { hsv, setHsv, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
@@ -111,7 +114,7 @@ export function ColorPicker({
   };
 
   return (
-    <div {...mergeProps(cp.root, className)} data-var-ui-color-picker>
+    <div {...mergeProps(cp.root, className)} ref={ref} data-var-ui-color-picker>
       <div
         ref={saturationRef}
         {...mergeProps(cp.saturation)}

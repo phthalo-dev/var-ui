@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
   Button,
@@ -20,6 +20,8 @@ export type CalendarProps<T extends DateValue = DateValue> = Omit<
   'children'
 > & {
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -33,11 +35,12 @@ export type CalendarProps<T extends DateValue = DateValue> = Omit<
  */
 export function Calendar<T extends DateValue = DateValue>({
   className,
+  ref,
   ...props
 }: CalendarProps<T>): JSX.Element {
   const c = calendar();
   return (
-    <AriaCalendar {...props} {...mergeProps(c.root, className)}>
+    <AriaCalendar {...props} {...mergeProps(c.root, className)} ref={ref}>
       <header {...mergeProps(c.header)}>
         <Button slot="previous" {...mergeProps(c.navButton)}>
           <Icon name="chevronLeft" size="sm" />

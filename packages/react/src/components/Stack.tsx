@@ -1,4 +1,4 @@
-import type { HTMLAttributes, JSX } from 'react';
+import type { HTMLAttributes, JSX, Ref } from 'react';
 import { stack, type StackVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -13,6 +13,8 @@ export type StackProps = HTMLAttributes<HTMLDivElement> & {
   justify?: NonNullable<StackVariantProps['justify']>;
   /** Whether flex items wrap to new lines. @default false */
   wrap?: boolean;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -29,6 +31,7 @@ export function Stack({
   justify = 'start',
   wrap = false,
   className,
+  ref,
   ...props
 }: StackProps): JSX.Element {
   return (
@@ -38,6 +41,7 @@ export function Stack({
         stack({ direction, gap, align, justify, wrap: wrap ? 'wrap' : 'nowrap' }),
         className,
       )}
+      ref={ref}
     />
   );
 }

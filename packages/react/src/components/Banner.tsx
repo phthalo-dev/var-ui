@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { banner, type BannerVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -28,6 +28,8 @@ export type BannerProps = BannerVariantProps & {
   children: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -49,12 +51,14 @@ export function Banner({
   dismissLabel = 'Dismiss',
   children,
   className,
+  ref,
 }: BannerProps): JSX.Element {
   const b = banner({ tone, appearance });
   const glyph = icon === undefined ? <Icon name={toneIcon[tone]} /> : icon;
   return (
     <div
       {...mergeProps(b.root, className)}
+      ref={ref}
       role={tone === 'warning' || tone === 'danger' ? 'alert' : 'status'}
     >
       {glyph !== null ? <span {...mergeProps(b.icon)}>{glyph}</span> : null}

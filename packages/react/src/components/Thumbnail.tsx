@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { thumbnail, type ThumbnailVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -17,6 +17,8 @@ export type ThumbnailProps = {
   dismissLabel?: string;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
@@ -33,10 +35,11 @@ export function Thumbnail({
   onDismiss,
   dismissLabel = 'Remove',
   className,
+  ref,
 }: ThumbnailProps): JSX.Element {
   const s = thumbnail({ size });
   return (
-    <span {...mergeProps(s.root, className)}>
+    <span {...mergeProps(s.root, className)} ref={ref}>
       <img {...mergeProps(s.image)} src={src} alt={alt} />
       {onDismiss ? (
         <AriaButton {...mergeProps(s.dismiss)} aria-label={dismissLabel} onPress={onDismiss}>

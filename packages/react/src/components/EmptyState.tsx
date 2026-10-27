@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { emptyState } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -13,6 +13,8 @@ export type EmptyStateProps = {
   action?: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -34,10 +36,11 @@ export function EmptyState({
   description,
   action,
   className,
+  ref,
 }: EmptyStateProps): JSX.Element {
   const e = emptyState();
   return (
-    <div {...mergeProps(e.root, className)}>
+    <div {...mergeProps(e.root, className)} ref={ref}>
       {icon ? (
         <div {...mergeProps(e.icon)} data-empty-state-icon aria-hidden="true">
           {icon}

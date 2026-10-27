@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { chatMessageList, type ChatMessageListVariantProps } from '@var-ui/core';
 import { ChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
@@ -19,6 +19,8 @@ export type ChatMessageListProps = {
   density?: NonNullable<ChatMessageListVariantProps['density']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function hasVisibleContent(children: ReactNode): boolean {
@@ -44,11 +46,13 @@ export function ChatMessageList({
   isStreaming = false,
   density = 'balanced',
   className,
+  ref,
 }: ChatMessageListProps): JSX.Element {
   const l = chatMessageList({ density });
   return (
     <ChatListContext.Provider value={{ density }}>
       <div
+        ref={ref}
         role="log"
         aria-live="polite"
         aria-busy={isStreaming || undefined}

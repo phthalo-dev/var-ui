@@ -1,10 +1,12 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { spinner, visuallyHidden, type SpinnerVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type SpinnerProps = SpinnerVariantProps & {
   label?: string;
   className?: string;
+  /** Ref to the root `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 export function Spinner({
@@ -13,11 +15,12 @@ export function Spinner({
   appearance = 'solid',
   label = 'Loading',
   className,
+  ref,
 }: SpinnerProps): JSX.Element {
   const s = spinner({ size, tone, appearance });
 
   return (
-    <span role="status" {...mergeProps(s.root, className)}>
+    <span role="status" {...mergeProps(s.root, className)} ref={ref}>
       <span {...mergeProps(s.indicator)} aria-hidden="true" />
       <span {...mergeProps(visuallyHidden())}>{label}</span>
     </span>

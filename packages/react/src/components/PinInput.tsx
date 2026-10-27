@@ -1,4 +1,4 @@
-import type { ChangeEvent, ClipboardEvent, JSX, KeyboardEvent } from 'react';
+import type { ChangeEvent, ClipboardEvent, JSX, KeyboardEvent, Ref } from 'react';
 import { useCallback, useId, useRef, useState } from 'react';
 import { Label } from 'react-aria-components';
 import { pinInput, type PinInputVariantProps } from '@var-ui/core';
@@ -26,6 +26,8 @@ export type PinInputProps = FieldMeta & {
   autoFocus?: boolean;
   className?: string;
   'aria-label'?: string;
+  /** Ref to the root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function normalizeChar(char: string, type: PinInputType): string | null {
@@ -69,6 +71,7 @@ export function PinInput({
   autoFocus,
   className,
   'aria-label': ariaLabel,
+  ref,
 }: PinInputProps): JSX.Element {
   const p = pinInput({ size });
   const labelId = useId();
@@ -173,7 +176,7 @@ export function PinInput({
   const groupLabel = ariaLabel ?? label;
 
   return (
-    <div {...mergeProps(p.root, className)}>
+    <div {...mergeProps(p.root, className)} ref={ref}>
       {label ? (
         <Label {...mergeProps(p.label)} id={labelId}>
           {label}

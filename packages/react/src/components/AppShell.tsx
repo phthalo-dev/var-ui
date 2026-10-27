@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { useRef } from 'react';
 import {
   appShell,
@@ -70,6 +70,8 @@ export type AppShellProps = {
   /** Viewport width below which `sideNav` hides and `data-mobile` is set on the root. `'none'` never goes mobile. @default 'md' */
   mobileBreakpoint?: AppShellMobileBreakpoint;
   className?: string;
+  /** Ref to the root element: the `<div>` shell, or the `<main>` landmark when `disabled`. */
+  ref?: Ref<HTMLElement>;
 };
 
 function toContentPaddingVariant(
@@ -102,6 +104,7 @@ export function AppShell({
   contentPadding,
   mobileBreakpoint = 'md',
   className,
+  ref,
 }: AppShellProps): JSX.Element {
   const mainRef = useRef<HTMLElement>(null);
   const isMobile = useMediaQuery(appShellMobileBreakpointQueries[mobileBreakpoint]);
@@ -123,7 +126,15 @@ export function AppShell({
 
   if (disabled) {
     return (
-      <main id={APP_SHELL_MAIN_ID} {...mergeProps(s.main, className)} ref={mainRef}>
+      <main
+        id={APP_SHELL_MAIN_ID}
+        {...mergeProps(s.main, className)}
+        ref={(node) => {
+          mainRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
+      >
         {children}
       </main>
     );
@@ -142,6 +153,7 @@ export function AppShell({
         data-aside-collapsed={asideCollapsed ? '' : undefined}
         data-header-hidden={effectiveHeaderHidden ? '' : undefined}
         data-header-offset={headerOffset ? '' : undefined}
+        ref={ref as Ref<HTMLDivElement>}
       >
         <a href={`#${APP_SHELL_MAIN_ID}`} {...mergeProps(s.skipLink)}>
           Skip to content

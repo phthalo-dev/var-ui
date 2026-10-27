@@ -1,4 +1,4 @@
-import type { HTMLAttributes, JSX } from 'react';
+import type { HTMLAttributes, JSX, Ref } from 'react';
 import { grid, type GridVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -7,6 +7,8 @@ export type GridProps = HTMLAttributes<HTMLDivElement> & {
   columns?: 'auto' | 1 | 2 | 3 | 4;
   /** Gap between grid items. @default md */
   gap?: NonNullable<GridVariantProps['gap']>;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const columnVariant = {
@@ -31,9 +33,14 @@ export function Grid({
   columns = 'auto',
   gap = 'md',
   className,
+  ref,
   ...props
 }: GridProps): JSX.Element {
   return (
-    <div {...props} {...mergeProps(grid({ columns: columnVariant[columns], gap }), className)} />
+    <div
+      {...props}
+      {...mergeProps(grid({ columns: columnVariant[columns], gap }), className)}
+      ref={ref}
+    />
   );
 }

@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   Button as StepperButton,
   FieldError,
@@ -18,6 +18,8 @@ export type NumberInputProps = Omit<RACNumberFieldProps, 'className'> &
     placeholder?: string;
     /** Control density. @default md */
     size?: NonNullable<NumberInputVariantProps['size']>;
+    /** Ref to the underlying `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 export function NumberInput({
@@ -27,11 +29,12 @@ export function NumberInput({
   placeholder,
   size,
   className,
+  ref,
   ...props
 }: NumberInputProps): JSX.Element {
   const n = numberInput({ size });
   return (
-    <AriaNumberField {...props} {...mergeProps(n.root, className)}>
+    <AriaNumberField {...props} {...mergeProps(n.root, className)} ref={ref}>
       {label ? <Label {...mergeProps(n.label)}>{label}</Label> : null}
       <Group {...mergeProps(n.group)}>
         <Input {...mergeProps(n.input)} placeholder={placeholder} />

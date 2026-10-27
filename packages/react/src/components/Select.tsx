@@ -1,4 +1,4 @@
-import { type JSX, type ReactNode } from 'react';
+import { type JSX, type ReactNode, type Ref } from 'react';
 import {
   Button as AriaButton,
   FieldError,
@@ -40,29 +40,41 @@ export type SelectRootProps<T extends object = SelectOption> = Omit<
   className?: string;
   /** Control density. @default md */
   size?: NonNullable<SelectVariantProps['size']>;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function SelectRoot<T extends object>({
   children,
   className,
   size,
+  ref,
   ...props
 }: SelectRootProps<T>): JSX.Element {
   const s = select({ size });
   return (
     <ControlSizeContext.Provider value={size}>
-      <AriaSelect {...props} {...mergeProps(s.root, className)}>
+      <AriaSelect {...props} {...mergeProps(s.root, className)} ref={ref}>
         {children}
       </AriaSelect>
     </ControlSizeContext.Provider>
   );
 }
 
-export type SelectLabelProps = { children: ReactNode; className?: string };
+export type SelectLabelProps = {
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<label>` element. */
+  ref?: Ref<HTMLLabelElement>;
+};
 
-function SelectLabel({ children, className }: SelectLabelProps): JSX.Element {
+function SelectLabel({ children, className, ref }: SelectLabelProps): JSX.Element {
   const s = useSelectStyles();
-  return <Label {...mergeProps(s.label, className)}>{children}</Label>;
+  return (
+    <Label {...mergeProps(s.label, className)} ref={ref}>
+      {children}
+    </Label>
+  );
 }
 
 export type SelectValueProps<T extends object = SelectOption> = {
@@ -71,16 +83,19 @@ export type SelectValueProps<T extends object = SelectOption> = {
   className?: string;
   /** Custom closed-trigger content. Receives RAC `SelectValue` render props. */
   children?: RACSelectValueProps<T>['children'];
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 function SelectValue<T extends object = SelectOption>({
   placeholder = 'Select…',
   className,
   children,
+  ref,
 }: SelectValueProps<T>): JSX.Element {
   const s = useSelectStyles();
   return (
-    <AriaSelectValue {...mergeProps(s.selectValue, className)}>
+    <AriaSelectValue {...mergeProps(s.selectValue, className)} ref={ref}>
       {children ??
         (({ defaultChildren, isPlaceholder }) => (isPlaceholder ? placeholder : defaultChildren))}
     </AriaSelectValue>
@@ -93,16 +108,19 @@ export type SelectTriggerProps = {
   className?: string;
   /** Replace the default `Select.Value`. Compose `Select.Value` for a custom closed value. */
   children?: ReactNode;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 function SelectTrigger({
   placeholder = 'Select…',
   className,
   children,
+  ref,
 }: SelectTriggerProps): JSX.Element {
   const s = useSelectStyles();
   return (
-    <AriaButton {...mergeProps(s.trigger, className)}>
+    <AriaButton {...mergeProps(s.trigger, className)} ref={ref}>
       {children ?? <SelectValue placeholder={placeholder} />}
       <span {...mergeProps(s.triggerIcon)} aria-hidden>
         <Icon name="chevronDown" size="sm" />
@@ -111,22 +129,36 @@ function SelectTrigger({
   );
 }
 
-export type SelectDescriptionProps = { children: ReactNode; className?: string };
+export type SelectDescriptionProps = {
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLElement>;
+};
 
-function SelectDescription({ children, className }: SelectDescriptionProps): JSX.Element {
+function SelectDescription({ children, className, ref }: SelectDescriptionProps): JSX.Element {
   const s = useSelectStyles();
   return (
-    <Text slot="description" {...mergeProps(s.description, className)}>
+    <Text slot="description" {...mergeProps(s.description, className)} ref={ref}>
       {children}
     </Text>
   );
 }
 
-export type SelectErrorProps = { children?: ReactNode; className?: string };
+export type SelectErrorProps = {
+  children?: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLElement>;
+};
 
-function SelectError({ children, className }: SelectErrorProps): JSX.Element {
+function SelectError({ children, className, ref }: SelectErrorProps): JSX.Element {
   const s = useSelectStyles();
-  return <FieldError {...mergeProps(s.error, className)}>{children ?? ''}</FieldError>;
+  return (
+    <FieldError {...mergeProps(s.error, className)} ref={ref}>
+      {children ?? ''}
+    </FieldError>
+  );
 }
 
 export type SelectPopoverProps = PopoverProps & {
@@ -137,12 +169,15 @@ export type SelectPopoverProps = PopoverProps & {
    * properties only cascade to descendants of the themed element).
    */
   portalContainer?: Element;
+  /** Ref to the underlying popover `<div>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 function SelectPopover({
   children,
   className,
   portalContainer,
+  ref,
   ...props
 }: SelectPopoverProps): JSX.Element {
   const s = useSelectStyles();
@@ -150,6 +185,7 @@ function SelectPopover({
     <Popover
       {...props}
       {...mergeProps(s.popover, className)}
+      ref={ref}
       UNSTABLE_portalContainer={portalContainer}
     >
       {children}
@@ -162,33 +198,45 @@ export type SelectListBoxProps<T extends object = SelectOption> =
       items: Iterable<T>;
       children: (item: T) => ReactNode;
       className?: string;
+      /** Ref to the underlying `<div>` element. */
+      ref?: Ref<HTMLDivElement>;
     }
   | {
       items?: never;
       children: ReactNode;
       className?: string;
+      /** Ref to the underlying `<div>` element. */
+      ref?: Ref<HTMLDivElement>;
     };
 
 function SelectListBox<T extends object>(props: SelectListBoxProps<T>): JSX.Element {
   const s = useSelectStyles();
   if ('items' in props && props.items != null) {
-    const { items, children, className } = props;
+    const { items, children, className, ref } = props;
     return (
-      <ListBox {...mergeProps(s.listbox, className)} items={items}>
+      <ListBox {...mergeProps(s.listbox, className)} items={items} ref={ref}>
         {children}
       </ListBox>
     );
   }
-  const { children, className } = props;
-  return <ListBox {...mergeProps(s.listbox, className)}>{children}</ListBox>;
+  const { children, className, ref } = props;
+  return (
+    <ListBox {...mergeProps(s.listbox, className)} ref={ref}>
+      {children}
+    </ListBox>
+  );
 }
 
-export type SelectItemProps = ListBoxItemProps & { className?: string };
+export type SelectItemProps = ListBoxItemProps & {
+  className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
+};
 
-function SelectItem({ children, className, ...props }: SelectItemProps): JSX.Element {
+function SelectItem({ children, className, ref, ...props }: SelectItemProps): JSX.Element {
   const s = useSelectStyles();
   return (
-    <ListBoxItem {...props} {...mergeProps(s.item, className)}>
+    <ListBoxItem {...props} {...mergeProps(s.item, className)} ref={ref}>
       {children}
     </ListBoxItem>
   );
@@ -210,6 +258,8 @@ export type SelectProps = Omit<RACSelectProps<SelectOption>, 'children' | 'class
     className?: string;
     /** Control density. @default md */
     size?: NonNullable<SelectVariantProps['size']>;
+    /** Ref to the root `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 /**
@@ -225,6 +275,7 @@ function Select({
   portalContainer,
   className,
   size,
+  ref,
   ...props
 }: SelectProps): JSX.Element {
   return (
@@ -232,6 +283,7 @@ function Select({
       {...props}
       className={className}
       size={size}
+      ref={ref}
       isInvalid={errorMessage ? true : undefined}
     >
       {label ? <SelectLabel>{label}</SelectLabel> : null}

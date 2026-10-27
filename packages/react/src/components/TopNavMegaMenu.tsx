@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent, ReactNode } from 'react';
+import type { JSX, KeyboardEvent, ReactNode, Ref } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
 import { topNav } from '@var-ui/core';
@@ -38,6 +38,8 @@ export type TopNavMegaMenuProps = {
   /** Delay before the panel closes after the pointer/focus leaves, in milliseconds. @default 250 */
   closeDelay?: number;
   className?: string;
+  /** Ref to the underlying root `<div>` element (a `display: contents` wrapper around the trigger and panel). */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -56,6 +58,7 @@ export function TopNavMegaMenu({
   openDelay = OPEN_DELAY_DEFAULT,
   closeDelay = CLOSE_DELAY_DEFAULT,
   className,
+  ref,
 }: TopNavMegaMenuProps): JSX.Element {
   const s = topNav();
   const [internalOpen, setInternalOpen] = useState(false);
@@ -63,6 +66,14 @@ export function TopNavMegaMenu({
   const isOpen = isControlled ? controlledOpen : internalOpen;
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const setContainer = useCallback(
+    (node: HTMLDivElement | null) => {
+      containerRef.current = node;
+      if (typeof ref === 'function') return ref(node);
+      if (ref) ref.current = node;
+    },
+    [ref],
+  );
   const triggerRef = useRef<HTMLButtonElement>(null);
   const openTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -133,7 +144,7 @@ export function TopNavMegaMenu({
     // `display: contents` keeps the trigger a direct flex item of the bar zone it's
     // rendered in, while the panel (position: absolute, positioned off the `nav` root)
     // is unaffected either way.
-    <div ref={containerRef} onKeyDown={handleKeyDown} style={{ display: 'contents' }}>
+    <div ref={setContainer} onKeyDown={handleKeyDown} style={{ display: 'contents' }}>
       <AriaButton
         ref={triggerRef}
         {...mergeProps(s.menuTrigger, className)}
@@ -179,6 +190,8 @@ export type TopNavMegaMenuItemProps = {
   icon?: TopNavIcon;
   isDisabled?: boolean;
   className?: string;
+  /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /** Mega panel link/row: icon, title, optional description. */
@@ -190,6 +203,7 @@ export function TopNavMegaMenuItem({
   icon,
   isDisabled,
   className,
+  ref,
 }: TopNavMegaMenuItemProps): JSX.Element {
   const s = topNav();
   const iconNode = renderTopNavIcon(icon);
@@ -215,11 +229,11 @@ export function TopNavMegaMenuItem({
   };
 
   return href ? (
-    <AriaLink href={href} {...sharedProps}>
+    <AriaLink href={href} {...sharedProps} ref={ref as Ref<HTMLAnchorElement>}>
       {content}
     </AriaLink>
   ) : (
-    <AriaButton onPress={onPress} {...sharedProps}>
+    <AriaButton onPress={onPress} {...sharedProps} ref={ref as Ref<HTMLButtonElement>}>
       {content}
     </AriaButton>
   );
@@ -234,6 +248,8 @@ export type TopNavMegaMenuFeaturedCardProps = {
   /** Full manual composition — overrides `title`/`description`/`image`/`action`. */
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<a>` (with `href`) or `<div>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 const featuredCardLinkStyle = { textDecoration: 'none', color: 'inherit' } as const;
@@ -247,6 +263,7 @@ export function TopNavMegaMenuFeaturedCard({
   action,
   children,
   className,
+  ref,
 }: TopNavMegaMenuFeaturedCardProps): JSX.Element {
   const s = topNav();
   const body = children ?? (
@@ -263,11 +280,18 @@ export function TopNavMegaMenuFeaturedCard({
   );
 
   return href ? (
-    <AriaLink href={href} {...mergeProps(s.featuredCard, className)} style={featuredCardLinkStyle}>
+    <AriaLink
+      href={href}
+      {...mergeProps(s.featuredCard, className)}
+      style={featuredCardLinkStyle}
+      ref={ref as Ref<HTMLAnchorElement>}
+    >
       {body}
     </AriaLink>
   ) : (
-    <div {...mergeProps(s.featuredCard, className)}>{body}</div>
+    <div {...mergeProps(s.featuredCard, className)} ref={ref as Ref<HTMLDivElement>}>
+      {body}
+    </div>
   );
 }
 

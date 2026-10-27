@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import {
   Button as AriaButton,
   Disclosure,
@@ -26,6 +26,8 @@ export type CollapsibleProps = CollapsibleVariantProps & {
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type CollapsibleGroupProps = {
@@ -36,6 +38,8 @@ export type CollapsibleGroupProps = {
    */
   allowsMultipleExpanded?: boolean;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -57,6 +61,7 @@ export function Collapsible({
   onExpandedChange,
   variant = 'flush',
   className,
+  ref,
 }: CollapsibleProps): JSX.Element {
   const c = collapsible({ variant });
   return (
@@ -66,6 +71,7 @@ export function Collapsible({
       defaultExpanded={defaultExpanded}
       onExpandedChange={onExpandedChange}
       {...mergeProps(c.root, className)}
+      ref={ref}
     >
       <Heading level={3} style={{ margin: 0 }}>
         <AriaButton slot="trigger" {...mergeProps(c.trigger)}>
@@ -98,9 +104,14 @@ export function CollapsibleGroup({
   children,
   allowsMultipleExpanded = false,
   className,
+  ref,
 }: CollapsibleGroupProps): JSX.Element {
   return (
-    <DisclosureGroup allowsMultipleExpanded={allowsMultipleExpanded} className={className}>
+    <DisclosureGroup
+      allowsMultipleExpanded={allowsMultipleExpanded}
+      className={className}
+      ref={ref}
+    >
       {children}
     </DisclosureGroup>
   );

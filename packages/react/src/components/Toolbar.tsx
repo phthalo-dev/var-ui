@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { toolbar, type ToolbarVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -17,6 +17,8 @@ export type ToolbarProps = {
   orientation?: NonNullable<ToolbarVariantProps['orientation']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -42,12 +44,14 @@ export function Toolbar({
   size = 'md',
   orientation = 'horizontal',
   className,
+  ref,
 }: ToolbarProps): JSX.Element {
   const layout = centerContent != null ? 'grid' : 'flex';
   const s = toolbar({ size, orientation, layout });
 
   return (
     <div
+      ref={ref}
       role="toolbar"
       aria-label={label}
       aria-orientation={orientation}

@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   Label,
   Slider as AriaSlider,
@@ -16,6 +16,8 @@ export type SliderProps = Omit<RACSliderProps, 'className'> &
     className?: string;
     /** Show the current value beside the label. @default true */
     showOutput?: boolean;
+    /** Ref to the underlying `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 export function Slider({
@@ -24,11 +26,12 @@ export function Slider({
   errorMessage,
   className,
   showOutput = true,
+  ref,
   ...props
 }: SliderProps): JSX.Element {
   const s = slider();
   return (
-    <AriaSlider {...props} {...mergeProps(s.root, className)}>
+    <AriaSlider {...props} {...mergeProps(s.root, className)} ref={ref}>
       {label ? (
         <Label {...mergeProps(s.label)}>
           <span>{label}</span>

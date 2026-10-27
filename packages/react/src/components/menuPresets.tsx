@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, MouseEvent, ReactElement } from 'react';
+import type { CSSProperties, JSX, MouseEvent, ReactElement, Ref } from 'react';
 import { useCallback, useState } from 'react';
 import { MenuTrigger, Popover, Pressable, type MenuTriggerProps } from 'react-aria-components';
 import { menu } from '@var-ui/core';
@@ -93,12 +93,15 @@ export function MenuContextMenu({ children, sections }: MenuContextMenuProps): J
 export type MenuOverflowProps = MenuContentProps & {
   /** Accessible label for the overflow trigger. @default More options */
   'aria-label'?: string;
+  /** Ref to the trigger `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /** Icon-only overflow menu using the `moreHorizontal` registry glyph. */
 export function MenuOverflow({
   sections,
   'aria-label': ariaLabel = 'More options',
+  ref,
 }: MenuOverflowProps): JSX.Element {
   return (
     <MenuFromSections
@@ -110,6 +113,7 @@ export function MenuOverflow({
           tone="accent"
           appearance="ghost"
           size="sm"
+          ref={ref}
         />
       }
     />

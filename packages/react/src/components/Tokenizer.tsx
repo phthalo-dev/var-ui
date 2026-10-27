@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent } from 'react';
+import type { JSX, KeyboardEvent, Ref } from 'react';
 import { useState } from 'react';
 import {
   Button,
@@ -41,6 +41,8 @@ export type TokenizerProps = {
   placeholder?: string;
   isDisabled?: boolean;
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export function Tokenizer({
@@ -53,6 +55,7 @@ export function Tokenizer({
   placeholder = 'Add…',
   isDisabled,
   className,
+  ref,
 }: TokenizerProps): JSX.Element {
   const tk = tokenizer();
   const [inputValue, setInputValue] = useState('');
@@ -76,7 +79,7 @@ export function Tokenizer({
   }
 
   return (
-    <div {...mergeProps(tk.root, className)}>
+    <div {...mergeProps(tk.root, className)} ref={ref}>
       {label ? <Label {...mergeProps(tk.label)}>{label}</Label> : null}
       <Group {...mergeProps(tk.group)} isDisabled={isDisabled}>
         <TagGroup

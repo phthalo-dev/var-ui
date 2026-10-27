@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { alert, type AlertVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -30,6 +30,8 @@ export type AlertProps = {
   children: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export function Alert({
@@ -40,6 +42,7 @@ export function Alert({
   icon,
   children,
   className,
+  ref,
 }: AlertProps): JSX.Element {
   const a = alert({
     tone: variant,
@@ -55,6 +58,7 @@ export function Alert({
       data-alert
       data-alert-variant={variant}
       data-alert-appearance={appearance}
+      ref={ref}
     >
       {resolvedIcon !== null ? (
         <div {...mergeProps(a.icon)} data-alert-icon>

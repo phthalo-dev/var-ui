@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
 import {
   Button as AriaButton,
@@ -36,6 +36,8 @@ export type ChipGroupProps = Omit<ToggleButtonGroupProps, 'children' | 'classNam
     className?: string;
     /** Accessible name for the group. */
     'aria-label'?: string;
+    /** Ref to the underlying `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 export type ChipProps = ChipVariantProps & {
@@ -54,6 +56,8 @@ export type ChipProps = ChipVariantProps & {
   isDisabled?: boolean;
   /** Accessible name when children are not plain text. */
   'aria-label'?: string;
+  /** Ref to the root element: a `<button>` for toggle chips, otherwise a `<span>`. */
+  ref?: Ref<HTMLElement>;
 };
 
 function ChipLabel({ children }: { children: ReactNode }): JSX.Element {
@@ -93,6 +97,7 @@ function ChipToggle({
   isDisabled,
   id,
   'aria-label': ariaLabel,
+  ref,
 }: ChipProps & { id?: string }): JSX.Element {
   const c = chip({ tone, appearance });
   return (
@@ -103,6 +108,7 @@ function ChipToggle({
       isDisabled={isDisabled}
       aria-label={ariaLabel}
       {...mergeProps(c.root, className)}
+      ref={ref as Ref<HTMLButtonElement>}
       data-interactive
     >
       <ChipLabel>{children}</ChipLabel>
@@ -131,6 +137,7 @@ export function Chip({
   removeLabel,
   isDisabled: isDisabledProp,
   'aria-label': ariaLabel,
+  ref,
 }: ChipProps): JSX.Element {
   const group = useContext(ChipGroupContext);
   const tone = toneProp ?? group?.tone ?? 'neutral';
@@ -147,6 +154,7 @@ export function Chip({
         appearance={appearance}
         className={className}
         id={value}
+        ref={ref}
         isDisabled={isDisabled}
         aria-label={ariaLabel}
         onRemove={onRemove}
@@ -167,6 +175,7 @@ export function Chip({
         className={className}
         isSelected={isSelected}
         onChange={onChange}
+        ref={ref}
         isDisabled={isDisabled}
         aria-label={ariaLabel}
         onRemove={onRemove}
@@ -181,7 +190,7 @@ export function Chip({
 
   if (onRemove) {
     return (
-      <span {...mergeProps(c.root, className)}>
+      <span {...mergeProps(c.root, className)} ref={ref}>
         <ChipLabel>{children}</ChipLabel>
         <ChipRemoveButton onRemove={onRemove} removeLabel={removeLabel} />
       </span>
@@ -189,7 +198,7 @@ export function Chip({
   }
 
   return (
-    <span {...mergeProps(c.root, className)}>
+    <span {...mergeProps(c.root, className)} ref={ref}>
       <ChipLabel>{children}</ChipLabel>
     </span>
   );
@@ -213,6 +222,7 @@ export function ChipGroup({
   className,
   selectionMode = 'multiple',
   isDisabled,
+  ref,
   ...props
 }: ChipGroupProps): JSX.Element {
   const g = chipGroup();
@@ -224,6 +234,7 @@ export function ChipGroup({
       isDisabled={isDisabled}
       {...props}
       {...mergeProps(g.root, className)}
+      ref={ref}
     >
       <ChipGroupContext.Provider value={contextValue}>
         {children ??

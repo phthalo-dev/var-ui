@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { codeBlock, type CodeBlockVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -45,6 +45,8 @@ export type CodeBlockProps = CodeBlockVariantProps & {
   copiedLabel?: string;
   /** Feedback text when clipboard write fails. @default Copy failed */
   copyErrorLabel?: string;
+  /** Ref to the root element: a `<div>`, or a `<code>` for the `inline` variant. */
+  ref?: Ref<HTMLElement>;
 };
 
 export function CodeBlock({
@@ -63,6 +65,7 @@ export function CodeBlock({
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
+  ref,
 }: CodeBlockProps): JSX.Element {
   const cb = codeBlock({ variant });
 
@@ -112,14 +115,14 @@ export function CodeBlock({
 
   if (inline) {
     return (
-      <code {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
+      <code {...mergeProps(cb.root, cx(cb.code, className))} ref={ref} data-codeblock>
         {code}
       </code>
     );
   }
 
   return (
-    <div {...mergeProps(cb.root, className)} data-codeblock>
+    <div {...mergeProps(cb.root, className)} ref={ref as Ref<HTMLDivElement>} data-codeblock>
       <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}

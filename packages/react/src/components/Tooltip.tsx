@@ -1,7 +1,6 @@
 import {
   Children,
   createContext,
-  forwardRef,
   useCallback,
   useContext,
   useMemo,
@@ -53,6 +52,8 @@ export type TooltipProps = TooltipRootProps;
 export type TooltipTriggerProps = {
   children: ReactElement;
   className?: string;
+  /** Ref to the trigger element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type TooltipPopupProps = {
@@ -149,10 +150,12 @@ function TooltipRoot({
   );
 }
 
-const TooltipTriggerPart = forwardRef(function TooltipTriggerPart(
-  { children, className, ...props }: TooltipTriggerProps,
-  ref: Ref<HTMLElement>,
-) {
+function TooltipTriggerPart({
+  children,
+  className,
+  ref,
+  ...props
+}: TooltipTriggerProps): JSX.Element {
   const ctx = useTooltipContext();
   const child = Children.only(children);
   const assignTriggerEl = (node: HTMLElement | null) => {
@@ -178,7 +181,7 @@ const TooltipTriggerPart = forwardRef(function TooltipTriggerPart(
     return <Focusable>{merged as ReactElement<{ className?: string }, string>}</Focusable>;
   }
   return merged;
-});
+}
 
 function TooltipPopup({
   children,

@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs as AriaBreadcrumbs, Link } from 'react-aria-components';
 import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core';
@@ -27,6 +27,8 @@ export type BreadcrumbsProps = {
   /** Fires with the pressed item's `id` (not called for the current item). */
   onAction?: (id: string) => void;
   className?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 const ELLIPSIS_ID = '__ellipsis__';
@@ -75,6 +77,7 @@ export function Breadcrumbs({
   label = 'Breadcrumb',
   onAction,
   className,
+  ref,
 }: BreadcrumbsProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const b = breadcrumbsStyles();
@@ -90,7 +93,7 @@ export function Breadcrumbs({
     : undefined;
 
   return (
-    <nav aria-label={label} {...mergeProps(b.root, className)} style={style}>
+    <nav aria-label={label} {...mergeProps(b.root, className)} style={style} ref={ref}>
       <AriaBreadcrumbs
         items={visibleItems}
         onAction={onAction ? (key) => onAction(String(key)) : undefined}

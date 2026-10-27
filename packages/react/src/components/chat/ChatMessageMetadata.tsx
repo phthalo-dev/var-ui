@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Timestamp, type TimestampProps } from '../Timestamp';
 import { HStack } from '../Stack';
 
@@ -11,6 +11,8 @@ export type ChatMessageMetadataProps = {
   status?: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -26,9 +28,10 @@ export function ChatMessageMetadata({
   format = 'relative',
   status,
   className,
+  ref,
 }: ChatMessageMetadataProps): JSX.Element {
   return (
-    <HStack gap="xs" align="center" className={className}>
+    <HStack gap="xs" align="center" className={className} ref={ref}>
       <Timestamp date={date} format={format} />
       {status}
     </HStack>

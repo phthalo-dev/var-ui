@@ -1,4 +1,4 @@
-import type { ChangeEvent, JSX } from 'react';
+import type { ChangeEvent, JSX, Ref } from 'react';
 import { searchInput, type SearchInputVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -15,6 +15,8 @@ export type SearchInputProps = {
   name?: string;
   className?: string;
   'aria-label'?: string;
+  /** Ref to the root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -31,6 +33,7 @@ export function SearchInput({
   placeholder = 'Search…',
   name,
   className,
+  ref,
   'aria-label': ariaLabel = placeholder,
 }: SearchInputProps): JSX.Element {
   const s = searchInput({ variant, size });
@@ -40,7 +43,12 @@ export function SearchInput({
   };
 
   return (
-    <div {...mergeProps(s.root, className)} data-var-ui-search-input data-variant={variant}>
+    <div
+      {...mergeProps(s.root, className)}
+      ref={ref}
+      data-var-ui-search-input
+      data-variant={variant}
+    >
       <span {...mergeProps(s.icon)} aria-hidden="true">
         <Icon name="search" size={size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md'} />
       </span>

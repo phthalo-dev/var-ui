@@ -1,4 +1,4 @@
-import type { ChangeEvent, JSX } from 'react';
+import type { ChangeEvent, JSX, Ref } from 'react';
 import { useEffect, useId, useState } from 'react';
 import { DialogTrigger, Label, Popover as AriaPopover, Pressable } from 'react-aria-components';
 import { colorField, popover, type ColorFieldVariantProps } from '@var-ui/core';
@@ -39,6 +39,8 @@ export type ColorInputProps = FieldMeta &
      * Needed when a subtree renders under a different theme than the page ambient.
      */
     portalContainer?: Element;
+    /** Ref to the underlying `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 /**
@@ -64,6 +66,7 @@ export function ColorInput({
   className,
   name,
   portalContainer,
+  ref,
 }: ColorInputProps): JSX.Element {
   const cf = colorField({ size, appearance });
   const isField = appearance === 'field';
@@ -100,7 +103,7 @@ export function ColorInput({
   };
 
   return (
-    <div {...mergeProps(cf.root, className)}>
+    <div {...mergeProps(cf.root, className)} ref={ref}>
       {isField && label ? (
         <Label {...mergeProps(cf.label)} htmlFor={inputId}>
           {label}

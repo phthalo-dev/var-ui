@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import {
   Button as AriaButton,
@@ -93,6 +93,8 @@ export type MobileNavToggleProps = {
   /** Drives `aria-expanded` when there's no `MobileNavProvider` ancestor. */
   isOpen?: boolean;
   className?: string;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /** Hamburger trigger for `MobileNav`. Reads a `MobileNavProvider` when present. */
@@ -101,6 +103,7 @@ export function MobileNavToggle({
   onPress,
   isOpen: isOpenProp,
   className,
+  ref,
 }: MobileNavToggleProps): JSX.Element {
   const context = useMobileNav();
   const isOpen = isOpenProp ?? context?.isOpen ?? false;
@@ -109,6 +112,7 @@ export function MobileNavToggle({
   return (
     <AriaButton
       {...mergeProps(s.toggle, className)}
+      ref={ref}
       aria-label={label}
       aria-expanded={isOpen}
       onPress={() => {
@@ -145,6 +149,8 @@ export type MobileNavProps = {
    * cascade to descendants of the themed element).
    */
   portalContainer?: Element;
+  /** Ref to the underlying overlay `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -172,6 +178,7 @@ export function MobileNav({
   closeLabel = 'Close navigation',
   label = 'Navigation',
   portalContainer,
+  ref,
 }: MobileNavProps): JSX.Element {
   const context = useMobileNav();
   const isOpen = isOpenProp ?? context?.isOpen ?? false;
@@ -188,6 +195,7 @@ export function MobileNav({
 
   return (
     <ModalOverlay
+      ref={ref}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable

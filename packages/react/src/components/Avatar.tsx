@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Children, useState } from 'react';
 import { avatar, avatarGroup, statusDot, type AvatarVariantProps, type Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -14,6 +14,8 @@ export type AvatarProps = AvatarVariantProps & {
   status?: Tone;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 function initialsOf(name: string): string {
@@ -38,12 +40,13 @@ export function Avatar({
   size = 'md',
   status,
   className,
+  ref,
 }: AvatarProps): JSX.Element {
   const [errored, setErrored] = useState(false);
   const a = avatar({ size });
   const showImage = Boolean(src) && !errored;
   return (
-    <span {...mergeProps(a.root, className)}>
+    <span {...mergeProps(a.root, className)} ref={ref}>
       {showImage ? (
         <img
           {...mergeProps(a.image)}
@@ -77,6 +80,8 @@ export type AvatarGroupProps = {
   max?: number;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
@@ -86,13 +91,13 @@ export type AvatarGroupProps = {
  * <AvatarGroup max={3}>{users.map(u => <Avatar key={u.id} name={u.name} />)}</AvatarGroup>
  * ```
  */
-export function AvatarGroup({ children, max = 4, className }: AvatarGroupProps): JSX.Element {
+export function AvatarGroup({ children, max = 4, className, ref }: AvatarGroupProps): JSX.Element {
   const g = avatarGroup();
   const items = Children.toArray(children);
   const visible = items.slice(0, max);
   const hidden = items.length - visible.length;
   return (
-    <span {...mergeProps(g.root, className)}>
+    <span {...mergeProps(g.root, className)} ref={ref}>
       {visible.map((child, index) => (
         <span {...mergeProps(g.item)} key={index}>
           {child}

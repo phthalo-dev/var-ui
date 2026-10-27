@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { icon, type IconName, type IconVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { emptyFallback } from './emptyFallback';
@@ -13,6 +13,8 @@ export type IconProps = {
   className?: string;
   'aria-label'?: string;
   'data-mirror'?: boolean | '';
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
@@ -31,12 +33,14 @@ export function Icon({
   className,
   'aria-label': ariaLabel,
   'data-mirror': dataMirror,
+  ref,
 }: IconProps): JSX.Element {
   const icons = useIcons();
   const glyph = children ?? (name ? icons[name] : undefined) ?? emptyFallback;
   return (
     <span
       {...mergeProps(icon({ size }), className)}
+      ref={ref}
       data-mirror={dataMirror === false || dataMirror == null ? undefined : ''}
       aria-hidden={ariaLabel ? undefined : true}
       aria-label={ariaLabel}

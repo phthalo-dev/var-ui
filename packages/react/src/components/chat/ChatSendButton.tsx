@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { Button } from '../Button';
 import { Icon } from '../../icons';
 
@@ -13,6 +13,8 @@ export type ChatSendButtonProps = {
   onStop?: () => void;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -29,12 +31,14 @@ export function ChatSendButton({
   onPress,
   onStop,
   className,
+  ref,
 }: ChatSendButtonProps): JSX.Element {
   return (
     <Button
       tone="accent"
       appearance="filled"
       className={className}
+      ref={ref}
       isDisabled={isStreaming ? false : isDisabled}
       aria-label={isStreaming ? 'Stop generating' : 'Send message'}
       onPress={isStreaming ? onStop : onPress}

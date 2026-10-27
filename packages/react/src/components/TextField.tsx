@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   FieldError,
   Input,
@@ -10,7 +10,11 @@ import { textField, type TextFieldVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 
-export type BaseTextFieldProps = Omit<AriaTextFieldProps, 'children'> & FieldMeta;
+export type BaseTextFieldProps = Omit<AriaTextFieldProps, 'children'> &
+  FieldMeta & {
+    /** Ref to the underlying root `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
+  };
 
 export type TextFieldProps = BaseTextFieldProps & {
   /** Placeholder text shown when the input is empty. */
@@ -24,11 +28,12 @@ export function TextField({
   errorMessage,
   placeholder,
   size = 'md',
+  ref,
   ...props
 }: TextFieldProps): JSX.Element {
   const tf = textField({ size });
   return (
-    <AriaTextField {...props} {...mergeProps(tf.root)}>
+    <AriaTextField {...props} {...mergeProps(tf.root)} ref={ref}>
       {label ? <Label {...mergeProps(tf.label)}>{label}</Label> : null}
       <Input {...mergeProps(tf.input)} placeholder={placeholder} />
       {description ? <p {...mergeProps(tf.description)}>{description}</p> : null}

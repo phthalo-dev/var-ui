@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { chatMessageBubble, type ChatMessageBubbleVariantProps } from '@var-ui/core';
 import { useChatMessageContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
@@ -12,6 +12,8 @@ export type ChatMessageBubbleProps = {
   group?: NonNullable<ChatMessageBubbleVariantProps['group']>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -29,9 +31,14 @@ export function ChatMessageBubble({
   variant = 'filled',
   group,
   className,
+  ref,
 }: ChatMessageBubbleProps): JSX.Element {
   const context = useChatMessageContext();
   const sender = context?.sender ?? 'assistant';
   const b = chatMessageBubble({ sender, variant, group: group ?? 'none' });
-  return <div {...mergeProps(b.root, className)}>{children}</div>;
+  return (
+    <div {...mergeProps(b.root, className)} ref={ref}>
+      {children}
+    </div>
+  );
 }

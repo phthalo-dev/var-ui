@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
 import { button, type ButtonVariantProps, type IconName } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -10,6 +10,8 @@ export type IconButtonProps = Omit<RACButtonProps, 'className' | 'children'> & {
   className?: string;
   icon?: ReactNode;
   'data-mirror'?: boolean | '';
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 } & Omit<ButtonVariantProps, 'layout'>;
 
 export function IconButton({
@@ -21,11 +23,12 @@ export function IconButton({
   elevated,
   className,
   'data-mirror': dataMirror,
+  ref,
   ...props
 }: IconButtonProps): JSX.Element {
   const styles = button({ tone, appearance, size, layout: 'icon', elevated });
   return (
-    <AriaButton {...props} {...mergeProps(styles, className)}>
+    <AriaButton {...props} {...mergeProps(styles, className)} ref={ref}>
       {icon ?? (
         <Icon
           name={name}

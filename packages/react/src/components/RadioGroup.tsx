@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   Label,
   Radio as AriaRadio,
@@ -20,12 +20,14 @@ export type RadioGroupProps = Omit<RACRadioGroupProps, 'children'> & {
   label?: string;
   /** Options to render as radio buttons. */
   options: RadioGroupOption[];
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
-export function RadioGroup({ label, options, ...props }: RadioGroupProps): JSX.Element {
+export function RadioGroup({ label, options, ref, ...props }: RadioGroupProps): JSX.Element {
   const r = radio();
   return (
-    <AriaRadioGroup {...props} {...mergeProps(r.group)}>
+    <AriaRadioGroup {...props} {...mergeProps(r.group)} ref={ref}>
       {label ? <Label {...mergeProps(r.groupLabel)}>{label}</Label> : null}
       {options.map((option) => (
         <AriaRadio key={option.value} value={option.value} {...mergeProps(r.item)}>

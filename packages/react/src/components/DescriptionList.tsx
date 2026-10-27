@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { Children, createContext, useContext, useMemo, useState } from 'react';
 import {
   button,
@@ -25,6 +25,8 @@ export type DescriptionListProps = {
   items?: DescriptionListItemData[];
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<dl>` element. */
+  ref?: Ref<HTMLDListElement>;
 };
 
 export type DescriptionListItemProps = {
@@ -32,6 +34,8 @@ export type DescriptionListItemProps = {
   children?: ReactNode;
   icon?: IconName | Exclude<ReactNode, string>;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 type DescriptionListStyleSlots = ReturnType<typeof descriptionListStyles>;
@@ -66,12 +70,13 @@ function DescriptionListItemContent({
   children,
   icon,
   className,
+  ref,
 }: DescriptionListItemProps): JSX.Element {
   const { styles: s } = useDescriptionListContext();
   const iconNode = renderDescriptionListIcon(icon);
 
   return (
-    <div {...mergeProps(s.item, className)}>
+    <div {...mergeProps(s.item, className)} ref={ref}>
       <dt {...mergeProps(s.term)}>
         {iconNode}
         {iconNode != null ? ' ' : null}
@@ -100,6 +105,7 @@ export function DescriptionList({
   items,
   children,
   className,
+  ref,
 }: DescriptionListProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const resolvedLabelPosition = labelPosition ?? (columns === 'single' ? 'start' : 'top');
@@ -128,7 +134,7 @@ export function DescriptionList({
 
   return (
     <DescriptionListContext.Provider value={{ styles: s }}>
-      <dl {...mergeProps(s.root, className)} style={rootStyle}>
+      <dl {...mergeProps(s.root, className)} style={rootStyle} ref={ref}>
         {title != null ? <div {...mergeProps(s.title)}>{title}</div> : null}
         {visibleContent}
         {isCollapsible ? (
@@ -154,9 +160,10 @@ export function DescriptionListItem({
   children,
   icon,
   className,
+  ref,
 }: DescriptionListItemProps): JSX.Element {
   return (
-    <DescriptionListItemContent label={label} icon={icon} className={className}>
+    <DescriptionListItemContent label={label} icon={icon} className={className} ref={ref}>
       {children}
     </DescriptionListItemContent>
   );
