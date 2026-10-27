@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { inputGroup } from '@var-ui/core';
 import { useControlSize } from './controlSizeContext';
 import { mergeProps } from 'typestyles';
@@ -8,6 +8,8 @@ export type InputGroupTextProps = {
   children: ReactNode;
   /** Additional CSS class names merged onto the addon element. */
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -21,7 +23,11 @@ export type InputGroupTextProps = {
  * </InputGroup>
  * ```
  */
-export function InputGroupText({ children, className }: InputGroupTextProps): JSX.Element {
+export function InputGroupText({ children, className, ref }: InputGroupTextProps): JSX.Element {
   const g = inputGroup({ size: useControlSize() });
-  return <div {...mergeProps(g.text, className)}>{children}</div>;
+  return (
+    <div {...mergeProps(g.text, className)} ref={ref}>
+      {children}
+    </div>
+  );
 }

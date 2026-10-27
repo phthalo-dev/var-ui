@@ -1,4 +1,4 @@
-import { useCallback, useRef, type JSX, type ReactNode, type RefObject } from 'react';
+import { useCallback, useRef, type JSX, type ReactNode, type Ref, type RefObject } from 'react';
 import { chatLayout } from '@var-ui/core';
 import { Button } from '../Button';
 import { Icon } from '../../icons';
@@ -23,6 +23,8 @@ export type ChatLayoutProps = {
   scrollRef?: RefObject<HTMLElement | null>;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 function hasVisibleContent(children: ReactNode): boolean {
@@ -50,6 +52,7 @@ export function ChatLayout({
   scrollButton,
   scrollRef: externalScrollRef,
   className,
+  ref,
 }: ChatLayoutProps): JSX.Element {
   const messageAreaRef = useRef<HTMLElement | null>(null);
   const scrollContainerRef = externalScrollRef ?? messageAreaRef;
@@ -83,7 +86,7 @@ export function ChatLayout({
   ) : null;
 
   return (
-    <div {...mergeProps(l.root, className)}>
+    <div {...mergeProps(l.root, className)} ref={ref}>
       <div {...mergeProps(l.messageArea)} ref={setMessageAreaRef}>
         {hasVisibleContent(children) ? children : (emptyState ?? null)}
       </div>

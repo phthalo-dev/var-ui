@@ -1,4 +1,4 @@
-import { type JSX, useId, useRef, useState } from 'react';
+import { type JSX, type Ref, useId, useRef, useState } from 'react';
 import {
   Button as AriaButton,
   Label,
@@ -30,6 +30,8 @@ export type MultiSelectorProps = FieldMeta & {
   placeholder?: string;
   isDisabled?: boolean;
   className?: string;
+  /** Ref to the root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export function MultiSelector({
@@ -42,6 +44,7 @@ export function MultiSelector({
   placeholder = 'Select…',
   isDisabled,
   className,
+  ref,
 }: MultiSelectorProps): JSX.Element {
   const ms = multiSelector();
   const labelId = useId();
@@ -61,7 +64,7 @@ export function MultiSelector({
   }
 
   return (
-    <div {...mergeProps(ms.root, className)}>
+    <div {...mergeProps(ms.root, className)} ref={ref}>
       {label ? (
         <Label id={labelId} {...mergeProps(ms.label)}>
           {label}

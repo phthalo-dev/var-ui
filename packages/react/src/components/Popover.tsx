@@ -63,20 +63,28 @@ export type PopoverPopupProps = {
   /** Preferred placement relative to the trigger. @default bottom */
   placement?: Placement;
   portalContainer?: Element;
+  /** Ref to the underlying popover `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type PopoverTitleProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying heading element. */
+  ref?: Ref<HTMLHeadingElement>;
 };
 
 export type PopoverContentProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type PopoverArrowProps = {
   className?: string;
+  /** Ref to the underlying arrow `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 type PopoverSlot = 'root' | 'title' | 'content' | 'arrow';
@@ -256,6 +264,7 @@ function PopoverPopup({
   className,
   placement = 'bottom',
   portalContainer,
+  ref,
 }: PopoverPopupProps): JSX.Element {
   const ctx = usePopoverContext();
   const p = popoverSlots();
@@ -273,6 +282,11 @@ function PopoverPopup({
       ref={(node: HTMLDivElement | null) => {
         ctx.popupRef.current = node;
         ctx.setPopupEl(node);
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as MutableRefObject<HTMLDivElement | null>).current = node;
+        }
       }}
       placement={placement}
       style={{ ...layerStyle, ...positioner.style } as CSSProperties}
@@ -285,26 +299,34 @@ function PopoverPopup({
   );
 }
 
-function PopoverTitle({ children, className }: PopoverTitleProps): JSX.Element {
+function PopoverTitle({ children, className, ref }: PopoverTitleProps): JSX.Element {
   const p = popoverSlots();
   return (
-    <Heading slot="title" {...mergeProps(p.title, className)}>
+    <Heading slot="title" {...mergeProps(p.title, className)} ref={ref}>
       {children}
     </Heading>
   );
 }
 
-function PopoverContent({ children, className }: PopoverContentProps): JSX.Element {
+function PopoverContent({ children, className, ref }: PopoverContentProps): JSX.Element {
   const p = popoverSlots();
-  return <div {...mergeProps(p.content, className)}>{children}</div>;
+  return (
+    <div {...mergeProps(p.content, className)} ref={ref}>
+      {children}
+    </div>
+  );
 }
 
-function PopoverArrow({ className }: PopoverArrowProps): JSX.Element {
+function PopoverArrow({ className, ref }: PopoverArrowProps): JSX.Element {
   const p = popoverSlots();
   return (
     <OverlayArrow>
       {({ placement }) => (
-        <div {...mergeProps(p.arrow, className)} data-placement={placement ?? undefined} />
+        <div
+          {...mergeProps(p.arrow, className)}
+          ref={ref}
+          data-placement={placement ?? undefined}
+        />
       )}
     </OverlayArrow>
   );

@@ -67,6 +67,8 @@ export type MenuPopupProps = {
   children: ReactNode;
   className?: string;
   portalContainer?: Element;
+  /** Ref to the underlying popover `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type MenuItemProps = {
@@ -75,16 +77,22 @@ export type MenuItemProps = {
   onAction?: () => void;
   className?: string;
   isDisabled?: boolean;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type MenuSeparatorProps = {
   className?: string;
+  /** Ref to the underlying separator element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type MenuSectionProps = {
   children: ReactNode;
   title?: string;
   className?: string;
+  /** Ref to the underlying `<section>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 type MenuContextValue = {
@@ -252,7 +260,7 @@ const MenuTrigger = forwardRef(function MenuTrigger(
   return merged;
 });
 
-function MenuPopup({ children, className, portalContainer }: MenuPopupProps): JSX.Element {
+function MenuPopup({ children, className, portalContainer, ref }: MenuPopupProps): JSX.Element {
   const ctx = useMenuContext();
   const m = menu();
   const { style: layerStyle } = useLayer();
@@ -269,6 +277,11 @@ function MenuPopup({ children, className, portalContainer }: MenuPopupProps): JS
       ref={(node: HTMLDivElement | null) => {
         ctx.popupRef.current = node;
         ctx.setPopupEl(node);
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as MutableRefObject<HTMLDivElement | null>).current = node;
+        }
       }}
       style={{ ...layerStyle, ...positioner.style } as CSSProperties}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
@@ -280,7 +293,14 @@ function MenuPopup({ children, className, portalContainer }: MenuPopupProps): JS
   );
 }
 
-function MenuItem({ children, id, onAction, className, isDisabled }: MenuItemProps): JSX.Element {
+function MenuItem({
+  children,
+  id,
+  onAction,
+  className,
+  isDisabled,
+  ref,
+}: MenuItemProps): JSX.Element {
   const m = menu();
   return (
     <AriaMenuItem
@@ -288,21 +308,22 @@ function MenuItem({ children, id, onAction, className, isDisabled }: MenuItemPro
       onAction={onAction}
       isDisabled={isDisabled}
       {...mergeProps(m.item, className)}
+      ref={ref}
     >
       {children}
     </AriaMenuItem>
   );
 }
 
-function MenuSeparator({ className }: MenuSeparatorProps): JSX.Element {
+function MenuSeparator({ className, ref }: MenuSeparatorProps): JSX.Element {
   const m = menu();
-  return <Separator {...mergeProps(m.separator, className)} />;
+  return <Separator {...mergeProps(m.separator, className)} ref={ref} />;
 }
 
-function MenuSection({ children, title, className }: MenuSectionProps): JSX.Element {
+function MenuSection({ children, title, className, ref }: MenuSectionProps): JSX.Element {
   const m = menu();
   return (
-    <AriaMenuSection {...mergeProps(m.section, className)}>
+    <AriaMenuSection {...mergeProps(m.section, className)} ref={ref}>
       {title ? <Header {...mergeProps(m.sectionHeader)}>{title}</Header> : null}
       {children}
     </AriaMenuSection>

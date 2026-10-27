@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext, useId } from 'react';
 import { list as listStyles, type ListVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -23,6 +23,8 @@ export type ListProps = {
   renderEnd?: (item: ListItemData) => ReactNode;
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<ul>` (or `<ol>` when `listStyle` is `decimal`) element. */
+  ref?: Ref<HTMLUListElement & HTMLOListElement>;
   /** Fired for interactive items without href (items mode / Item onPress). */
   onAction?: (id: string) => void;
 };
@@ -46,6 +48,8 @@ export type ListItemProps = {
   onPress?: () => void;
   isDisabled?: boolean;
   className?: string;
+  /** Ref to the underlying `<li>` element. */
+  ref?: Ref<HTMLLIElement>;
 };
 
 type ListStyleSlots = ReturnType<typeof listStyles>;
@@ -93,6 +97,7 @@ type ListItemContentProps = {
   onPress?: () => void;
   isDisabled?: boolean;
   className?: string;
+  ref?: Ref<HTMLLIElement>;
 };
 
 function ListItemContent({
@@ -105,6 +110,7 @@ function ListItemContent({
   onPress,
   isDisabled = false,
   className,
+  ref,
 }: ListItemContentProps): JSX.Element {
   const { styles: s, listId } = useListContext();
   const fallbackId = useId();
@@ -115,6 +121,7 @@ function ListItemContent({
   return (
     <li
       {...mergeProps(s.item, className)}
+      ref={ref}
       data-interactive={isInteractive ? '' : undefined}
       data-disabled={isDisabled ? '' : undefined}
     >
@@ -169,6 +176,7 @@ export function List({
   renderEnd,
   children,
   className,
+  ref,
   onAction,
 }: ListProps): JSX.Element {
   const s = listStyles({ density, listStyle, hasDividers: hasDividers ? true : false });
@@ -196,7 +204,7 @@ export function List({
 
   return (
     <ListContext.Provider value={{ styles: s, listId }}>
-      <RootTag {...mergeProps(s.root, className)}>
+      <RootTag {...mergeProps(s.root, className)} ref={ref}>
         {header != null ? <li {...mergeProps(s.header)}>{header}</li> : null}
         {children ?? itemNodes}
       </RootTag>
@@ -215,6 +223,7 @@ export function ListItem({
   onPress,
   isDisabled,
   className,
+  ref,
 }: ListItemProps): JSX.Element {
   return (
     <ListItemContent
@@ -227,6 +236,7 @@ export function ListItem({
       onPress={onPress}
       isDisabled={isDisabled}
       className={className}
+      ref={ref}
     />
   );
 }

@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
   Button,
@@ -43,6 +43,8 @@ export type DateTimeInputProps<T extends DateValue = DateValue> = Omit<
    */
   granularity?: 'day' | 'hour' | 'minute' | 'second';
   className?: string;
+  /** Ref to the underlying picker `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -62,11 +64,17 @@ export function DateTimeInput<T extends DateValue = DateValue>({
   errorMessage,
   granularity = 'minute',
   className,
+  ref,
   ...props
 }: DateTimeInputProps<T>): JSX.Element {
   const dt = dateTimeInput();
   return (
-    <AriaDatePicker {...props} granularity={granularity} {...mergeProps(dt.root, className)}>
+    <AriaDatePicker
+      {...props}
+      ref={ref}
+      granularity={granularity}
+      {...mergeProps(dt.root, className)}
+    >
       {label ? <Label {...mergeProps(dt.label)}>{label}</Label> : null}
       <Group {...mergeProps(dt.group)}>
         <AriaDateInput>

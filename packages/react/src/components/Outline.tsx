@@ -1,4 +1,4 @@
-import type { JSX, ReactElement, ReactNode } from 'react';
+import type { JSX, ReactElement, ReactNode, Ref } from 'react';
 import {
   Children,
   createContext,
@@ -29,6 +29,8 @@ export type OutlineProps = {
   /** Observe heading elements and highlight the topmost visible one when `activeId` is omitted. @default true */
   scrollSpy?: boolean;
   className?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export type OutlineItemProps = {
@@ -37,6 +39,8 @@ export type OutlineItemProps = {
   level?: 2 | 3;
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<li>` element. */
+  ref?: Ref<HTMLLIElement>;
 };
 
 type OutlineStyleSlots = ReturnType<typeof outline>;
@@ -54,11 +58,11 @@ function useOutlineContext(): OutlineContextValue {
 }
 
 /** In-page navigation link; highlights via the nearest `Outline`'s active/scroll-spy state. */
-function OutlineItem({ id, level = 2, children, className }: OutlineItemProps): JSX.Element {
+function OutlineItem({ id, level = 2, children, className, ref }: OutlineItemProps): JSX.Element {
   const { styles: o, activeId } = useOutlineContext();
   const isActive = activeId === id;
   return (
-    <li>
+    <li ref={ref}>
       <a
         href={`#${id}`}
         data-active={isActive ? '' : undefined}
@@ -99,6 +103,7 @@ function OutlineRoot({
   activeId,
   scrollSpy = true,
   className,
+  ref,
 }: OutlineProps): JSX.Element {
   const o = outline();
   const itemIds = useMemo(
@@ -141,7 +146,7 @@ function OutlineRoot({
       : children;
 
   return (
-    <nav aria-label={title} {...mergeProps(o.root, className)}>
+    <nav aria-label={title} {...mergeProps(o.root, className)} ref={ref}>
       <p {...mergeProps(o.title)}>{title}</p>
       <OutlineContext.Provider value={{ styles: o, activeId: current }}>
         <ul {...mergeProps(o.list)}>{content}</ul>

@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   Checkbox as AriaCheckbox,
   CheckboxGroup as AriaCheckboxGroup,
@@ -20,12 +20,14 @@ export type CheckboxGroupProps = Omit<RACCheckboxGroupProps, 'children'> & {
   label?: string;
   /** Options to render as checkboxes. */
   options: CheckboxGroupOption[];
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
-export function CheckboxGroup({ label, options, ...props }: CheckboxGroupProps): JSX.Element {
+export function CheckboxGroup({ label, options, ref, ...props }: CheckboxGroupProps): JSX.Element {
   const r = checkbox();
   return (
-    <AriaCheckboxGroup {...props} {...mergeProps(r.group)}>
+    <AriaCheckboxGroup {...props} {...mergeProps(r.group)} ref={ref}>
       {label ? <Label {...mergeProps(r.groupLabel)}>{label}</Label> : null}
       {options.map((option) => (
         <AriaCheckbox key={option.value} value={option.value} {...mergeProps(r.root)}>

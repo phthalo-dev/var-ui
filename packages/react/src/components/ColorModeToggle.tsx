@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { useContext } from 'react';
 import type { Key, Selection } from 'react-aria-components';
 import type { ControlSize, IconName } from '@var-ui/core';
@@ -37,6 +37,8 @@ export type ColorModeToggleProps = {
   className?: string;
   /** Accessible name for the control group. @default 'Color mode' */
   'aria-label'?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const MODE_META: Record<ColorMode, { label: string; icon: IconName }> = {
@@ -122,6 +124,7 @@ export function ColorModeToggle({
   size = 'md',
   className,
   'aria-label': ariaLabel = 'Color mode',
+  ref,
 }: ColorModeToggleProps): JSX.Element {
   const { colorMode, resolvedColorMode, setColorMode, colorModeReady } = useColorModeToggleState({
     colorMode: colorModeProp,
@@ -145,6 +148,7 @@ export function ColorModeToggle({
     <SegmentedControl
       aria-label={ariaLabel}
       className={className}
+      ref={ref}
       options={buildOptions(modes, appearance)}
       // Avoid selecting `defaultColorMode` for one frame while `storageKey` hydrates —
       // SSR and the first client render both omit selection, then the real preference paints.

@@ -1,13 +1,15 @@
-import { createContext, type FormEvent, type FormHTMLAttributes, type JSX } from 'react';
+import { createContext, type FormEvent, type FormHTMLAttributes, type JSX, type Ref } from 'react';
 
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & {
   onSubmit?: (event: FormEvent<HTMLFormElement>, data: FormData) => void | Promise<void>;
   errors?: Record<string, string | undefined>;
+  /** Ref to the underlying `<form>` element. */
+  ref?: Ref<HTMLFormElement>;
 };
 
 export const FormErrorsContext = createContext<Record<string, string | undefined>>({});
 
-export function Form({ onSubmit, errors = {}, children, ...props }: FormProps): JSX.Element {
+export function Form({ onSubmit, errors = {}, children, ref, ...props }: FormProps): JSX.Element {
   function onSubmitInternal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -31,7 +33,7 @@ export function Form({ onSubmit, errors = {}, children, ...props }: FormProps): 
 
   return (
     <FormErrorsContext.Provider value={errors}>
-      <form {...props} noValidate onSubmit={onSubmitInternal}>
+      <form {...props} ref={ref} noValidate onSubmit={onSubmitInternal}>
         {children}
       </form>
     </FormErrorsContext.Provider>

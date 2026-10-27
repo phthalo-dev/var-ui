@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { chatMessage, type ChatMessageVariantProps } from '@var-ui/core';
 import { ChatMessageContext, useChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
@@ -16,6 +16,8 @@ export type ChatMessageProps = {
   children: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -36,13 +38,14 @@ export function ChatMessage({
   metadata,
   children,
   className,
+  ref,
 }: ChatMessageProps): JSX.Element {
   const listContext = useChatListContext();
   const density = listContext?.density ?? 'balanced';
   const m = chatMessage({ sender });
   return (
     <ChatMessageContext.Provider value={{ sender, density }}>
-      <div {...mergeProps(m.root, className)}>
+      <div {...mergeProps(m.root, className)} ref={ref}>
         {avatar ? <div {...mergeProps(m.avatar)}>{avatar}</div> : null}
         <div {...mergeProps(m.content)}>
           {name ? (

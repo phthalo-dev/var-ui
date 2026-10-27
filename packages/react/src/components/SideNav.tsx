@@ -57,6 +57,8 @@ export type SideNavProps = {
   className?: string;
   /** Accessible name for the `nav` landmark. @default 'Side navigation' */
   label?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 type SideNavContextValue = {
@@ -98,6 +100,8 @@ export type SideNavCollapseButtonProps = {
   className?: string;
   /** Overrides the accessible label for both expanded/collapsed states. */
   label?: string;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -109,6 +113,7 @@ export type SideNavCollapseButtonProps = {
 export function SideNavCollapseButton({
   className,
   label,
+  ref,
 }: SideNavCollapseButtonProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed, toggle } = useSideNavContext();
@@ -116,6 +121,7 @@ export function SideNavCollapseButton({
   const ariaLabel = label ?? (isCollapsed ? 'Expand navigation' : 'Collapse navigation');
   return (
     <button
+      ref={ref}
       type="button"
       onClick={toggle}
       aria-label={ariaLabel}
@@ -139,6 +145,8 @@ export type SideNavHeadingProps = {
   /** Popover or `Menu.FromSections` trigger rendered alongside the brand block (e.g. a team switcher). */
   menu?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** Brand block for the `header` zone: icon, heading text, optional super/sub lines, optional menu trigger. */
@@ -150,6 +158,7 @@ export function SideNavHeading({
   subheading,
   menu,
   className,
+  ref,
 }: SideNavHeadingProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
@@ -178,7 +187,7 @@ export function SideNavHeading({
   );
 
   return (
-    <div {...mergeProps(s.headingBar, className)}>
+    <div {...mergeProps(s.headingBar, className)} ref={ref}>
       {brand}
       {!isCollapsed && menu ? menu : null}
     </div>
@@ -191,6 +200,8 @@ export type SideNavSectionProps = {
   endContent?: ReactNode;
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** Groups `SideNav.Item`s under an optional title/subtitle/endContent header. */
@@ -200,13 +211,14 @@ export function SideNavSection({
   endContent,
   children,
   className,
+  ref,
 }: SideNavSectionProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
   const showHeader = !isCollapsed && (title != null || subtitle != null || endContent != null);
 
   return (
-    <div {...mergeProps(s.section, className)}>
+    <div {...mergeProps(s.section, className)} ref={ref}>
       {showHeader ? (
         <div {...mergeProps(s.sectionHeader)}>
           <div {...mergeProps(s.sectionTitles)}>
@@ -240,6 +252,8 @@ export type SideNavItemProps = {
   /** Renders an expand/collapse chevron that shows/hides `children`. @default false */
   collapsible?: boolean;
   className?: string;
+  /** Ref to the outer `<div>` element wrapping the row and any nested items. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const itemRowStyle = { display: 'flex', alignItems: 'stretch', gap: '0.125rem' } as const;
@@ -264,6 +278,7 @@ export function SideNavItem({
   children,
   collapsible = false,
   className,
+  ref,
 }: SideNavItemProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed: navCollapsed } = useSideNavContext();
@@ -312,7 +327,7 @@ export function SideNavItem({
   const showChildren = hasChildren && !navCollapsed && (!collapsible || isExpanded);
 
   return (
-    <div>
+    <div ref={ref}>
       <div style={itemRowStyle}>
         <div style={itemTriggerColumnStyle}>{wrappedTrigger}</div>
         {showToggle ? (
@@ -366,6 +381,7 @@ export function SideNav({
   handleRef,
   className,
   label = 'Side navigation',
+  ref,
 }: SideNavProps): JSX.Element {
   const s = sideNav();
 
@@ -428,6 +444,7 @@ export function SideNav({
   return (
     <SideNavContext.Provider value={contextValue}>
       <nav
+        ref={ref}
         aria-label={label}
         data-collapsed={isCollapsed ? '' : undefined}
         style={navWidth != null ? { width: navWidth } : undefined}

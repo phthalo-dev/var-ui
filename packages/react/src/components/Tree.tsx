@@ -1,4 +1,4 @@
-import type { FocusEvent, JSX, KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import type { FocusEvent, JSX, KeyboardEvent, MouseEvent, ReactNode, Ref } from 'react';
 import {
   Children,
   createContext,
@@ -43,6 +43,8 @@ export type TreeProps = {
   renderEnd?: (item: TreeItemData) => ReactNode;
   className?: string;
   'aria-label'?: string;
+  /** Ref to the underlying root `<ul>` element. */
+  ref?: Ref<HTMLUListElement>;
 };
 
 export type TreeItemProps = {
@@ -57,6 +59,8 @@ export type TreeItemProps = {
   startContent?: ReactNode;
   endContent?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<li>` element. */
+  ref?: Ref<HTMLLIElement>;
 };
 
 const DATA_ID_ATTR = 'data-tree-item-id';
@@ -162,6 +166,7 @@ type TreeRowContentProps = {
   className?: string;
   /** `role="group"` subtree (or `null`) — rendered as a DOM child of this `treeitem`, not a sibling. */
   groupContent?: ReactNode;
+  ref?: Ref<HTMLLIElement>;
 };
 
 function TreeRowContent({
@@ -177,6 +182,7 @@ function TreeRowContent({
   endContent,
   className,
   groupContent,
+  ref,
 }: TreeRowContentProps): JSX.Element {
   const ctx = useTreeContext();
   const { isRtl } = useDirection();
@@ -209,6 +215,7 @@ function TreeRowContent({
 
   return (
     <li
+      ref={ref}
       {...{ [DATA_ID_ATTR]: id }}
       role="treeitem"
       aria-level={level}
@@ -318,6 +325,7 @@ export function TreeItem({
   startContent,
   endContent,
   className,
+  ref,
 }: TreeItemProps): JSX.Element {
   const level = useContext(TreeLevelContext);
   const ctx = useTreeContext();
@@ -326,6 +334,7 @@ export function TreeItem({
 
   return (
     <TreeRowContent
+      ref={ref}
       id={id}
       label={label}
       description={description}
@@ -382,9 +391,18 @@ export function Tree({
   renderEnd,
   className,
   'aria-label': ariaLabel,
+  ref,
 }: TreeProps): JSX.Element {
   const s = treeStyles({ density });
   const rootRef = useRef<HTMLUListElement>(null);
+  const setRoot = useCallback(
+    (node: HTMLUListElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') return ref(node);
+      if (ref) ref.current = node;
+    },
+    [ref],
+  );
   const [focusedId, setFocusedId] = useState<string | null>(null);
 
   // Computed once, at mount, for uncontrolled default expand state only.
@@ -526,7 +544,7 @@ export function Tree({
     <TreeContext.Provider value={contextValue}>
       <TreeLevelContext.Provider value={1}>
         <ul
-          ref={rootRef}
+          ref={setRoot}
           role="tree"
           aria-label={ariaLabel}
           tabIndex={rootTabIndex}

@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Children, useRef } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { carousel } from '@var-ui/core';
@@ -14,6 +14,8 @@ export type CarouselProps = {
   itemWidth?: string;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying `<section>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -24,7 +26,13 @@ export type CarouselProps = {
  * <Carousel label="Featured">{cards}</Carousel>
  * ```
  */
-export function Carousel({ children, label, itemWidth, className }: CarouselProps): JSX.Element {
+export function Carousel({
+  children,
+  label,
+  itemWidth,
+  className,
+  ref,
+}: CarouselProps): JSX.Element {
   const s = carousel();
   const viewportRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +45,7 @@ export function Carousel({ children, label, itemWidth, className }: CarouselProp
   };
 
   return (
-    <section {...mergeProps(s.root, className)} role="region" aria-label={label}>
+    <section {...mergeProps(s.root, className)} role="region" aria-label={label} ref={ref}>
       <div
         ref={viewportRef}
         {...mergeProps(s.viewport)}

@@ -1,4 +1,4 @@
-import type { ElementType, HTMLAttributes, JSX, ReactNode } from 'react';
+import type { ElementType, HTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import { createElement } from 'react';
 import { hiddenClassName, type HiddenMap } from '@var-ui/core';
 import { cx } from 'typestyles';
@@ -8,6 +8,8 @@ export type HiddenProps = HTMLAttributes<HTMLElement> & {
   hide?: boolean | HiddenMap;
   /** @default 'div' */
   as?: ElementType;
+  /** Ref to the rendered root element. */
+  ref?: Ref<HTMLElement>;
 };
 
 export function Hidden({
@@ -15,11 +17,12 @@ export function Hidden({
   hide,
   className,
   children,
+  ref,
   ...props
 }: HiddenProps): JSX.Element {
   return createElement(
     as,
-    { ...props, className: cx(hiddenClassName({ hide }), className) },
+    { ...props, ref, className: cx(hiddenClassName({ hide }), className) },
     children,
   );
 }

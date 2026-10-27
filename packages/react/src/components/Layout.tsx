@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactElement, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
 import { createContext, isValidElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Dialog as AriaDialog, Modal, ModalOverlay } from 'react-aria-components';
 import {
@@ -100,6 +100,8 @@ export type LayoutProps = {
   /** Divider default inherited by `LayoutHeader`/`LayoutFooter` when they don't set `hasDivider`. @default false */
   defaultHasDividers?: boolean;
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -127,6 +129,7 @@ export function Layout({
   padding,
   defaultHasDividers = false,
   className,
+  ref,
 }: LayoutProps): JSX.Element {
   const l = layout({ height });
   const contentNode = content ?? children;
@@ -157,6 +160,7 @@ export function Layout({
       <LayoutDividerContext.Provider value={defaultHasDividers}>
         <div
           {...mergeProps(l.root, className)}
+          ref={ref}
           style={rootStyle}
           data-has-header={hasHeader ? '' : undefined}
           data-has-footer={hasFooter ? '' : undefined}
@@ -215,6 +219,8 @@ export type LayoutHeaderProps = {
   padding?: LayoutPadding;
   className?: string;
   children?: ReactNode;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -227,6 +233,7 @@ export function LayoutHeader({
   padding,
   className,
   children,
+  ref,
 }: LayoutHeaderProps): JSX.Element {
   const s = layoutHeader();
   const inheritedDivider = useContext(LayoutDividerContext);
@@ -237,6 +244,7 @@ export function LayoutHeader({
     <LayoutAreaContext.Provider value="header">
       <div
         {...mergeProps(s.header, className)}
+        ref={ref}
         style={style}
         data-divider={effectiveHasDivider ? '' : undefined}
       >
@@ -255,6 +263,8 @@ export type LayoutFooterProps = {
   padding?: LayoutPadding;
   className?: string;
   children?: ReactNode;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -267,6 +277,7 @@ export function LayoutFooter({
   padding,
   className,
   children,
+  ref,
 }: LayoutFooterProps): JSX.Element {
   const s = layoutFooter();
   const inheritedDivider = useContext(LayoutDividerContext);
@@ -277,6 +288,7 @@ export function LayoutFooter({
     <LayoutAreaContext.Provider value="footer">
       <div
         {...mergeProps(s.footer, className)}
+        ref={ref}
         style={style}
         data-divider={effectiveHasDivider ? '' : undefined}
       >
@@ -296,6 +308,8 @@ export type LayoutContentProps = {
   label?: string;
   className?: string;
   children?: ReactNode;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** Flex-1 main column for `Layout`. Edge-aware padding reads `data-has-*` from the `Layout` root. */
@@ -306,13 +320,14 @@ export function LayoutContent({
   label,
   className,
   children,
+  ref,
 }: LayoutContentProps): JSX.Element {
   const s = layoutContent({ isScrollable, padding: toZonePaddingVariant(padding) });
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   return (
     <LayoutAreaContext.Provider value="content">
-      <div {...mergeProps(s.content, className)} role={resolvedRole} aria-label={label}>
+      <div {...mergeProps(s.content, className)} ref={ref} role={resolvedRole} aria-label={label}>
         {children}
       </div>
     </LayoutAreaContext.Provider>
@@ -368,6 +383,8 @@ export type LayoutPanelProps = {
   label?: string;
   className?: string;
   children?: ReactNode;
+  /** Ref to the underlying panel `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -397,6 +414,7 @@ export function LayoutPanel({
   label,
   className,
   children,
+  ref,
 }: LayoutPanelProps): JSX.Element | null {
   const area = useContext(LayoutAreaContext);
   const dataSide = area === 'start' || area === 'end' ? area : undefined;
@@ -446,6 +464,7 @@ export function LayoutPanel({
   const panelBody = (
     <div
       {...mergeProps(s.panel, className)}
+      ref={ref}
       data-side={dataSide}
       style={style}
       role={isOverlayMode ? undefined : resolvedRole}

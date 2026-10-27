@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import {
   Button as AriaButton,
@@ -62,6 +62,8 @@ export type ToastProps = Pick<ToastVariantProps, 'tone' | 'appearance'> & {
   dismissLabel?: string;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -79,10 +81,11 @@ export function Toast({
   onDismiss,
   dismissLabel = 'Dismiss',
   className,
+  ref,
 }: ToastProps): JSX.Element {
   const t = toastSlots({ tone, appearance });
   return (
-    <div {...mergeProps(t.item, className)} role="status">
+    <div {...mergeProps(t.item, className)} ref={ref} role="status">
       <span {...mergeProps(t.icon)}>
         <Icon name={toneIcon[tone]} />
       </span>
@@ -106,6 +109,8 @@ export type ToastRegionProps = {
   placement?: ToastPlacement;
   /** Additional CSS class names merged onto the region element. */
   className?: string;
+  /** Ref to the underlying region `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -116,11 +121,17 @@ export function ToastRegion({
   queue,
   placement = 'bottom-end',
   className,
+  ref,
 }: ToastRegionProps): JSX.Element {
   const { style: layerStyle } = useLayer();
   const region = toastSlots({ placement });
   return (
-    <AriaToastRegion queue={queue} {...mergeProps(region.region, className)} style={layerStyle}>
+    <AriaToastRegion
+      queue={queue}
+      {...mergeProps(region.region, className)}
+      ref={ref}
+      style={layerStyle}
+    >
       {({ toast: queued }) => {
         const tone = queued.content.tone ?? 'info';
         const t = toastSlots({ tone });

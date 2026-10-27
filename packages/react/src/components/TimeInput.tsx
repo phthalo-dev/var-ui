@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import {
   DateInput as AriaDateInput,
   DateSegment,
@@ -24,6 +24,8 @@ export type TimeInputProps<T extends TimeValue = TimeValue> = Omit<
   /** Validation message; when set, the field is shown in an error state. */
   errorMessage?: string;
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -40,11 +42,12 @@ export function TimeInput<T extends TimeValue = TimeValue>({
   description,
   errorMessage,
   className,
+  ref,
   ...props
 }: TimeInputProps<T>): JSX.Element {
   const ti = timeInput();
   return (
-    <AriaTimeField {...props} {...mergeProps(ti.root, className)}>
+    <AriaTimeField {...props} {...mergeProps(ti.root, className)} ref={ref}>
       {label ? <Label {...mergeProps(ti.label)}>{label}</Label> : null}
       <Group {...mergeProps(ti.group)}>
         <AriaDateInput>

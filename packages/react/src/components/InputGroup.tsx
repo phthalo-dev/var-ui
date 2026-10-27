@@ -19,6 +19,8 @@ export type InputGroupProps = {
   children: ReactNode;
   /** Control density inherited by `InputGroupInput` and `InputGroupText`. @default md */
   size?: NonNullable<InputGroupVariantProps['size']>;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -42,12 +44,13 @@ export function InputGroup({
   className,
   size,
   children,
+  ref,
 }: InputGroupProps): JSX.Element {
   const g = inputGroup({ size });
   const labelId = useId();
   return (
     <ControlSizeContext.Provider value={size}>
-      <div {...mergeProps(g.root, className)}>
+      <div {...mergeProps(g.root, className)} ref={ref}>
         <span id={labelId} {...mergeProps(g.label)}>
           {label}
         </span>

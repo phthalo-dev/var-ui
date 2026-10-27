@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { useState } from 'react';
 import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
 import { passwordField, type PasswordFieldVariantProps } from '@var-ui/core';
@@ -9,6 +9,8 @@ import { mergeProps } from 'typestyles';
 export type PasswordInputProps = BaseTextFieldProps & {
   placeholder?: string;
   size?: NonNullable<PasswordFieldVariantProps['size']>;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -22,6 +24,7 @@ export function PasswordInput({
   placeholder,
   size = 'md',
   isDisabled,
+  ref,
   ...props
 }: PasswordInputProps): JSX.Element {
   const pf = passwordField({ size });
@@ -33,6 +36,7 @@ export function PasswordInput({
       isDisabled={isDisabled}
       isInvalid={errorMessage ? true : undefined}
       {...mergeProps(pf.root)}
+      ref={ref}
     >
       {label ? <Label {...mergeProps(pf.label)}>{label}</Label> : null}
       <div {...mergeProps(pf.inputWrapper)} data-disabled={isDisabled || undefined}>

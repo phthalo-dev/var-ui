@@ -1,5 +1,5 @@
-import type { JSX, ReactNode } from 'react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import {
   ToggleButton as AriaToggleButton,
   ToggleButtonGroup as AriaToggleButtonGroup,
@@ -27,6 +27,8 @@ export type SegmentedControlProps = Omit<RACToggleButtonGroupProps, 'children' |
   options: SegmentedControlOption[];
   className?: string;
   size?: NonNullable<SegmentedControlVariantProps['size']>;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -44,11 +46,23 @@ export function SegmentedControl({
   selectedKeys,
   defaultSelectedKeys,
   onSelectionChange,
+  ref,
   ...props
 }: SegmentedControlProps): JSX.Element {
   const s = segmentedControl({ size });
   const t = toggleButton({ segmented: true });
   const rootRef = useRef<HTMLDivElement>(null);
+  const setRoot = useCallback(
+    (node: HTMLDivElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
   const isControlled = selectedKeys !== undefined;
   const [uncontrolledKeys, setUncontrolledKeys] = useState(
     defaultSelectedKeys ?? (options[0] ? [options[0].id] : []),
@@ -64,7 +78,7 @@ export function SegmentedControl({
   return (
     <AriaToggleButtonGroup
       {...props}
-      ref={rootRef}
+      ref={setRoot}
       selectionMode={selectionMode}
       selectedKeys={selectedKeys}
       defaultSelectedKeys={defaultSelectedKeys}
@@ -93,6 +107,8 @@ export function SegmentedControl({
 export type ToggleButtonProps = Omit<RACToggleButtonProps, 'className'> & {
   className?: string;
   size?: NonNullable<ToggleButtonVariantProps['size']>;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /** Standalone toggle button for toolbars and filters. */
@@ -100,11 +116,12 @@ export function ToggleButton({
   className,
   size = 'md',
   children,
+  ref,
   ...props
 }: ToggleButtonProps): JSX.Element {
   const t = toggleButton({ size });
   return (
-    <AriaToggleButton {...props} {...mergeProps(t, className)}>
+    <AriaToggleButton {...props} {...mergeProps(t, className)} ref={ref}>
       {children}
     </AriaToggleButton>
   );

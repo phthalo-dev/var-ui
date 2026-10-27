@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Autocomplete, Input, ListBox, ListBoxItem, TextField } from 'react-aria-components';
@@ -52,6 +52,8 @@ export type CommandPaletteProps = {
    * cascade to descendants of the themed element).
    */
   portalContainer?: Element;
+  /** Ref to the underlying `<dialog>` element. */
+  ref?: Ref<HTMLDialogElement>;
 };
 
 type CommandPaletteSlot =
@@ -100,6 +102,7 @@ export function CommandPalette({
   isLoading = false,
   loadingLabel = 'Loading…',
   portalContainer,
+  ref,
 }: CommandPaletteProps): JSX.Element | null {
   const [query, setQueryState] = useState('');
   const onQueryChangeRef = useRef(onQueryChange);
@@ -159,7 +162,11 @@ export function CommandPalette({
 
   const palette = (
     <dialog
-      ref={dialogRef}
+      ref={(node) => {
+        dialogRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
       aria-label={placeholder}
       {...mergeProps(cp.root)}
       style={layerStyle}

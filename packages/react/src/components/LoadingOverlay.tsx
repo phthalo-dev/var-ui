@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { loadingOverlay } from '@var-ui/core';
 import { Spinner } from './Spinner';
 import { mergeProps } from 'typestyles';
@@ -10,6 +10,8 @@ export type LoadingOverlayProps = {
   label?: string;
   className?: string;
   children: ReactNode;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -22,11 +24,12 @@ export function LoadingOverlay({
   label = 'Loading',
   className,
   children,
+  ref,
 }: LoadingOverlayProps): JSX.Element {
   const lo = loadingOverlay();
 
   return (
-    <div {...mergeProps(lo.root, className)}>
+    <div {...mergeProps(lo.root, className)} ref={ref}>
       {children}
       {visible ? (
         <div {...mergeProps(lo.overlay)} aria-busy="true">

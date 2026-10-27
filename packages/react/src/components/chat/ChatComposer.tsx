@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { chatComposer } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -9,6 +9,8 @@ export type ChatComposerProps = {
   actions?: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -20,10 +22,15 @@ export type ChatComposerProps = {
  * </ChatComposer>
  * ```
  */
-export function ChatComposer({ children, actions, className }: ChatComposerProps): JSX.Element {
+export function ChatComposer({
+  children,
+  actions,
+  className,
+  ref,
+}: ChatComposerProps): JSX.Element {
   const c = chatComposer();
   return (
-    <div {...mergeProps(c.root, className)}>
+    <div {...mergeProps(c.root, className)} ref={ref}>
       {children}
       {actions ? <div {...mergeProps(c.actions)}>{actions}</div> : null}
     </div>

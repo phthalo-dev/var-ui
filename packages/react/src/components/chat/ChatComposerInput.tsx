@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type JSX, type KeyboardEvent } from 'react';
+import { useLayoutEffect, useRef, type JSX, type KeyboardEvent, type Ref } from 'react';
 import { TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { chatComposer } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -18,6 +18,8 @@ export type ChatComposerInputProps = {
   isDisabled?: boolean;
   /** Additional CSS class names merged onto the textarea. */
   className?: string;
+  /** Ref to the underlying root `<div>` element (the textarea's field wrapper). */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const LINE_HEIGHT_PX = 22;
@@ -38,6 +40,7 @@ export function ChatComposerInput({
   maxRows = 8,
   isDisabled = false,
   className,
+  ref,
 }: ChatComposerInputProps): JSX.Element {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const c = chatComposer();
@@ -69,6 +72,7 @@ export function ChatComposerInput({
       isDisabled={isDisabled}
       aria-label="Message"
       {...mergeProps(c.inputRow)}
+      ref={ref}
     >
       <TextArea
         ref={textAreaRef}

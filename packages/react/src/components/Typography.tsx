@@ -1,4 +1,4 @@
-import type { HTMLAttributes, JSX } from 'react';
+import type { HTMLAttributes, JSX, Ref } from 'react';
 import { createElement } from 'react';
 import {
   heading,
@@ -13,6 +13,8 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   /** Visual size, independent of level. @default md */
   size?: NonNullable<HeadingVariantProps['size']>;
+  /** Ref to the underlying heading element. */
+  ref?: Ref<HTMLHeadingElement>;
 };
 
 /**
@@ -26,10 +28,12 @@ export function Heading({
   level = 2,
   size = 'md',
   className,
+  ref,
   ...props
 }: HeadingProps): JSX.Element {
   return createElement(`h${level}`, {
     ...props,
+    ref,
     ...mergeProps(heading({ size }), className),
   });
 }
@@ -45,6 +49,8 @@ export type TextProps = HTMLAttributes<HTMLElement> & {
   weight?: NonNullable<TextBlockVariantProps['weight']>;
   /** Max lines before truncation. @default none */
   lineClamp?: 1 | 2 | 3;
+  /** Ref to the underlying text element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /** Public numeric `lineClamp` stanzas resolved from the `textBlock.lineClamp` axis. */
@@ -67,10 +73,12 @@ export function Text({
   weight = 'normal',
   lineClamp,
   className,
+  ref,
   ...props
 }: TextProps): JSX.Element {
   return createElement(as, {
     ...props,
+    ref,
     ...mergeProps(
       textBlock({
         size,

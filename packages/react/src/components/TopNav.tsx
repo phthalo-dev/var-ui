@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
 import { iconNameList, topNav, type IconName } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -46,6 +46,8 @@ export type TopNavProps = {
   className?: string;
   /** Accessible name for the `nav` landmark. @default 'Top navigation' */
   label?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -68,6 +70,7 @@ export function TopNav({
   endContent,
   className,
   label = 'Top navigation',
+  ref,
 }: TopNavProps): JSX.Element {
   const s = topNav();
   const start = startContent ?? children;
@@ -75,6 +78,7 @@ export function TopNav({
 
   return (
     <nav
+      ref={ref}
       aria-label={label}
       data-var-ui-top-nav
       data-layout={hasCenter ? 'grid' : undefined}
@@ -109,6 +113,8 @@ export type TopNavHeadingProps = {
   icon?: TopNavIcon;
   headingHref?: string;
   className?: string;
+  /** Ref to the underlying `<a>` (with `headingHref`) or `<span>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 const brandRowStyle = {
@@ -126,6 +132,7 @@ export function TopNavHeading({
   icon,
   headingHref,
   className,
+  ref,
 }: TopNavHeadingProps): JSX.Element {
   const iconNode = renderTopNavIcon(icon);
   const content = (
@@ -136,11 +143,16 @@ export function TopNavHeading({
   );
 
   return headingHref ? (
-    <AriaLink href={headingHref} className={className} style={brandRowStyle}>
+    <AriaLink
+      href={headingHref}
+      className={className}
+      style={brandRowStyle}
+      ref={ref as Ref<HTMLAnchorElement>}
+    >
       {content}
     </AriaLink>
   ) : (
-    <span className={className} style={brandRowStyle}>
+    <span className={className} style={brandRowStyle} ref={ref}>
       {content}
     </span>
   );
@@ -157,6 +169,8 @@ export type TopNavItemProps = {
   isIconOnly?: boolean;
   endContent?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /** Link (`href`) or button (`onPress`) bar item; `isSelected` sets `aria-current="page"`. */
@@ -170,6 +184,7 @@ export function TopNavItem({
   isIconOnly = false,
   endContent,
   className,
+  ref,
 }: TopNavItemProps): JSX.Element {
   const s = topNav();
   const iconNode = renderTopNavIcon(icon);
@@ -192,11 +207,11 @@ export function TopNavItem({
   };
 
   return href ? (
-    <AriaLink href={href} {...sharedProps}>
+    <AriaLink href={href} {...sharedProps} ref={ref as Ref<HTMLAnchorElement>}>
       {content}
     </AriaLink>
   ) : (
-    <AriaButton onPress={onPress} {...sharedProps}>
+    <AriaButton onPress={onPress} {...sharedProps} ref={ref as Ref<HTMLButtonElement>}>
       {content}
     </AriaButton>
   );
@@ -224,6 +239,8 @@ export type TopNavMenuProps = {
   /** Delay before the menu closes after the pointer/focus leaves, in milliseconds. @default 200 */
   closeDelay?: number;
   className?: string;
+  /** Ref to the underlying trigger `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -236,13 +253,14 @@ export function TopNavMenu({
   openDelay = 150,
   closeDelay = 200,
   className,
+  ref,
 }: TopNavMenuProps): JSX.Element {
   const s = topNav();
 
   return (
     <HoverCard
       trigger={
-        <AriaButton {...mergeProps(s.menuTrigger, className)}>
+        <AriaButton {...mergeProps(s.menuTrigger, className)} ref={ref}>
           <span>{label}</span>
           <Icon name="chevronDown" size="sm" />
         </AriaButton>

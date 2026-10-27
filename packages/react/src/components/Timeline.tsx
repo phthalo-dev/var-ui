@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Children, cloneElement, createContext, isValidElement, useContext } from 'react';
 import {
   iconNameList,
@@ -52,6 +52,8 @@ export type TimelineProps = TimelineVariantProps & {
   items?: TimelineItemData[];
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<ol>` element. */
+  ref?: Ref<HTMLOListElement>;
 };
 
 export type TimelineItemProps = {
@@ -66,6 +68,8 @@ export type TimelineItemProps = {
   index?: number;
   isActive?: boolean;
   isPending?: boolean;
+  /** Ref to the underlying `<li>` element. */
+  ref?: Ref<HTMLLIElement>;
 };
 
 function TimelineItemContent({
@@ -80,6 +84,7 @@ function TimelineItemContent({
   index = 0,
   isActive = true,
   isPending = false,
+  ref,
 }: TimelineItemProps): JSX.Element {
   const { size = 'md', tone: groupTone = 'accent' } = useTimelineContext();
   const tone = toneProp ?? groupTone;
@@ -89,6 +94,7 @@ function TimelineItemContent({
   return (
     <li
       {...mergeProps(styles.item, className)}
+      ref={ref}
       data-timeline-item={index}
       data-active={isActive ? '' : undefined}
       data-pending={isPending ? '' : undefined}
@@ -128,6 +134,7 @@ export function Timeline({
   items,
   children,
   className,
+  ref,
 }: TimelineProps): JSX.Element {
   const styles = timeline({ size, tone });
   const contextValue: TimelineContextValue = { size, tone, activeIndex };
@@ -163,7 +170,7 @@ export function Timeline({
 
   return (
     <TimelineContext.Provider value={contextValue}>
-      <ol {...mergeProps(styles.root, className)} data-timeline>
+      <ol {...mergeProps(styles.root, className)} ref={ref} data-timeline>
         {enhancedChildren ?? itemNodes}
       </ol>
     </TimelineContext.Provider>

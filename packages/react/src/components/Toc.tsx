@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link as AriaLink } from 'react-aria-components';
 import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
@@ -13,6 +13,8 @@ export type TocItemProps = {
   isSelected?: boolean;
   isNested?: boolean;
   className?: string;
+  /** Ref to the underlying `<li>` element. */
+  ref?: Ref<HTMLLIElement>;
 };
 
 /** Anchor row for one heading in a `Toc` list. */
@@ -22,11 +24,12 @@ export function TocItem({
   isSelected = false,
   isNested = false,
   className,
+  ref,
 }: TocItemProps): JSX.Element {
   const s = tocStyles();
 
   return (
-    <li {...mergeProps(s.item)} data-nested={isNested || undefined}>
+    <li {...mergeProps(s.item)} ref={ref} data-nested={isNested || undefined}>
       <AriaLink
         href={href}
         {...mergeProps(s.link, className)}
@@ -57,6 +60,8 @@ export type TocProps = {
   className?: string;
   /** Accessible name for the nav landmark. @default title or 'On this page' */
   label?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 function TocList({
@@ -103,6 +108,7 @@ export function Toc({
   stickyTop,
   className,
   label,
+  ref,
 }: TocProps): JSX.Element | null {
   const listRef = useRef<HTMLOListElement>(null);
   const [contentRoot, setContentRoot] = useState<ParentNode | null>(null);
@@ -140,7 +146,7 @@ export function Toc({
   }
 
   return (
-    <nav aria-label={resolvedLabel} style={rootStyle} {...mergeProps(s.root, className)}>
+    <nav aria-label={resolvedLabel} style={rootStyle} {...mergeProps(s.root, className)} ref={ref}>
       {title != null ? <p {...mergeProps(s.title)}>{title}</p> : null}
       <TocList listRef={listRef} headings={auto ? headings : undefined} activeId={activeId}>
         {children}

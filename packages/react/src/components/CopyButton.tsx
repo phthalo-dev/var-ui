@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { copyButton } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useCopy } from '../hooks/useCopy';
@@ -24,6 +24,8 @@ export type CopyButtonProps = {
   /** Label for the default button after a failed copy. @default Error */
   errorLabel?: string;
   className?: string;
+  /** Ref to the underlying `<button>` element (default chrome only; not used with a `children` render function). */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -38,6 +40,7 @@ export function CopyButton({
   copiedLabel = 'Copied',
   errorLabel = 'Error',
   className,
+  ref,
 }: CopyButtonProps): JSX.Element {
   const { copied, copy, error } = useCopy({ timeout });
   const cb = copyButton();
@@ -64,6 +67,7 @@ export function CopyButton({
       )}
       onClick={handleCopy}
       aria-label={label}
+      ref={ref}
     >
       <Icon name={copied ? 'check' : error ? 'error' : 'copy'} size="sm" />
       {label}

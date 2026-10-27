@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import {
   Checkbox as AriaCheckbox,
   type CheckboxProps as RACCheckboxProps,
@@ -10,12 +10,14 @@ export type CheckboxProps = Omit<RACCheckboxProps, 'children' | 'className'> & {
   /** Label rendered beside the checkbox control. */
   children?: ReactNode;
   className?: string;
+  /** Ref to the underlying `<label>` element. */
+  ref?: Ref<HTMLLabelElement>;
 };
 
-export function Checkbox({ children, className, ...props }: CheckboxProps): JSX.Element {
+export function Checkbox({ children, className, ref, ...props }: CheckboxProps): JSX.Element {
   const cb = checkbox();
   return (
-    <AriaCheckbox {...props} {...mergeProps(cb.root, className)}>
+    <AriaCheckbox {...props} {...mergeProps(cb.root, className)} ref={ref}>
       {({ isSelected }) => (
         <>
           <span {...mergeProps(cb.box)} data-selected={isSelected || undefined}>

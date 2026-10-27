@@ -4,6 +4,7 @@ import {
   type JSX,
   type KeyboardEvent,
   type PointerEvent as ReactPointerEvent,
+  type Ref,
 } from 'react';
 import { resizeHandle } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
@@ -25,6 +26,8 @@ export type ResizeHandleProps = {
   isReversed?: boolean;
   'aria-label'?: string;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const ARROW_STEP = 10;
@@ -52,6 +55,7 @@ export function ResizeHandle({
   isReversed = false,
   'aria-label': ariaLabel,
   className,
+  ref,
 }: ResizeHandleProps): JSX.Element {
   const s = resizeHandle();
   const dragState = useRef<DragState | null>(null);
@@ -131,6 +135,7 @@ export function ResizeHandle({
 
   return (
     <div
+      ref={ref}
       role="separator"
       aria-orientation={direction}
       aria-valuenow={value}

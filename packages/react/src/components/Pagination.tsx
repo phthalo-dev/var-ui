@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { button, pagination, type PaginationVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
@@ -33,6 +33,8 @@ export type PaginationProps = {
   /** Accessible name for the nav landmark. @default 'Pagination' */
   label?: string;
   className?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -102,6 +104,7 @@ export function Pagination({
   isDisabled = false,
   label = 'Pagination',
   className,
+  ref,
 }: PaginationProps): JSX.Element | null {
   const { isRtl } = useDirection();
   const p = pagination({ size });
@@ -205,7 +208,7 @@ export function Pagination({
   }
 
   return (
-    <nav aria-label={label} {...mergeProps(p.root, className)}>
+    <nav aria-label={label} {...mergeProps(p.root, className)} ref={ref}>
       {pageSizeOptions && pageSizeOptions.length > 0 ? (
         <div {...mergeProps(p.pageSizeGroup)}>
           <span>Rows per page</span>

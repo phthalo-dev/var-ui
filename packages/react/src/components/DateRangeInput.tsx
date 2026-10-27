@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { JSX, Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
   Button,
@@ -35,6 +35,8 @@ export type DateRangeInputProps<T extends DateValue = DateValue> = Omit<
   /** Validation message; when set, the field is shown in an error state. */
   errorMessage?: string;
   className?: string;
+  /** Ref to the underlying picker `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -55,11 +57,12 @@ export function DateRangeInput<T extends DateValue = DateValue>({
   description,
   errorMessage,
   className,
+  ref,
   ...props
 }: DateRangeInputProps<T>): JSX.Element {
   const dr = dateRangeInput();
   return (
-    <AriaDateRangePicker {...props} {...mergeProps(dr.root, className)}>
+    <AriaDateRangePicker {...props} ref={ref} {...mergeProps(dr.root, className)}>
       {label ? <Label {...mergeProps(dr.label)}>{label}</Label> : null}
       <Group {...mergeProps(dr.group)}>
         <AriaDateInput slot="start">

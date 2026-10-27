@@ -38,6 +38,8 @@ export type FieldProps = FieldMeta & {
   className?: string;
   /** The input or custom control to wrap with field chrome. */
   children: ReactNode;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type FieldRootProps = {
@@ -46,15 +48,29 @@ export type FieldRootProps = {
   className?: string;
   invalid?: boolean;
   onInvalidChange?: (invalid: boolean) => void;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
-export type FieldLabelProps = { children: ReactNode; className?: string };
+export type FieldLabelProps = {
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<label>` element. */
+  ref?: Ref<HTMLLabelElement>;
+};
 export type FieldControlProps = { children: ReactElement; className?: string };
-export type FieldDescriptionProps = { children: ReactNode; className?: string };
+export type FieldDescriptionProps = {
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<p>` element. */
+  ref?: Ref<HTMLParagraphElement>;
+};
 export type FieldErrorProps = {
   children?: ReactNode;
   className?: string;
   forceMount?: boolean;
+  /** Ref to the underlying `<p>` element. */
+  ref?: Ref<HTMLParagraphElement>;
 };
 
 type ControlReport = {
@@ -272,6 +288,7 @@ function FieldRoot({
   invalid,
   onInvalidChange,
   htmlFor,
+  ref,
 }: FieldRootProps & { htmlFor?: string }): JSX.Element {
   const generatedId = useId();
   const walkedControl = findControlChild(children);
@@ -355,6 +372,7 @@ function FieldRoot({
     <FieldContext.Provider value={value}>
       <div
         {...mergeProps(f.root, className)}
+        ref={ref}
         data-invalid={isInvalid ? '' : undefined}
         data-valid={isValid ? '' : undefined}
         data-dirty={dirty ? '' : undefined}
@@ -368,11 +386,11 @@ function FieldRoot({
   );
 }
 
-function FieldLabel({ children, className }: FieldLabelProps): JSX.Element {
+function FieldLabel({ children, className, ref }: FieldLabelProps): JSX.Element {
   const { controlId } = useFieldContext();
   const f = field();
   return (
-    <label {...mergeProps(f.label, className)} htmlFor={controlId}>
+    <label {...mergeProps(f.label, className)} htmlFor={controlId} ref={ref}>
       {children}
     </label>
   );
@@ -441,17 +459,17 @@ function FieldControl({ children, className }: FieldControlProps): ReactElement 
   } as Partial<ControlChildProps>);
 }
 
-function FieldDescription({ children, className }: FieldDescriptionProps): JSX.Element {
+function FieldDescription({ children, className, ref }: FieldDescriptionProps): JSX.Element {
   const { descriptionId } = useFieldContext();
   const f = field();
   return (
-    <p {...mergeProps(f.description, className)} id={descriptionId}>
+    <p {...mergeProps(f.description, className)} id={descriptionId} ref={ref}>
       {children}
     </p>
   );
 }
 
-function FieldError({ children, className, forceMount }: FieldErrorProps): JSX.Element | null {
+function FieldError({ children, className, forceMount, ref }: FieldErrorProps): JSX.Element | null {
   const { errorId, nativeMessage, formError } = useFieldContext();
   const hasExplicitChildren = !(children === undefined || children === null || children === false);
   const content = hasExplicitChildren ? children : formError || nativeMessage;
@@ -460,7 +478,7 @@ function FieldError({ children, className, forceMount }: FieldErrorProps): JSX.E
   }
   const f = field();
   return (
-    <p {...mergeProps(f.error, className)} id={errorId} role="alert">
+    <p {...mergeProps(f.error, className)} id={errorId} role="alert" ref={ref}>
       {content}
     </p>
   );
@@ -490,6 +508,7 @@ function Field({
   htmlFor,
   className,
   children,
+  ref,
 }: FieldProps): JSX.Element {
   const control = isSingleHostElement(children) ? (
     <FieldControl>
@@ -501,7 +520,12 @@ function Field({
     children
   );
   return (
-    <FieldRoot className={className} invalid={Boolean(errorMessage) || undefined} htmlFor={htmlFor}>
+    <FieldRoot
+      className={className}
+      invalid={Boolean(errorMessage) || undefined}
+      htmlFor={htmlFor}
+      ref={ref}
+    >
       {label ? <FieldLabel>{label}</FieldLabel> : null}
       {control}
       {description ? <FieldDescription>{description}</FieldDescription> : null}

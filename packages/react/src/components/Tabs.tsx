@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
   Tab,
@@ -20,6 +20,8 @@ type TabDefinition = {
 export type TabsProps = Omit<RACTabsProps, 'children'> & {
   /** Tab definitions with id, label, and panel content. */
   tabs: TabDefinition[];
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export function Tabs({
@@ -27,6 +29,7 @@ export function Tabs({
   selectedKey,
   defaultSelectedKey,
   onSelectionChange,
+  ref,
   ...props
 }: TabsProps): JSX.Element {
   const t = tabsStyles();
@@ -46,6 +49,7 @@ export function Tabs({
   return (
     <AriaTabs
       {...props}
+      ref={ref}
       selectedKey={selectedKey}
       defaultSelectedKey={defaultSelectedKey}
       onSelectionChange={(key) => {

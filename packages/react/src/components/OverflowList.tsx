@@ -1,5 +1,5 @@
-import type { CSSProperties, JSX, ReactElement, ReactNode, RefObject } from 'react';
-import { Children, createContext, useContext, useMemo } from 'react';
+import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
+import { Children, createContext, useCallback, useContext, useMemo } from 'react';
 import { overflowList as overflowListStyles, type OverflowListVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { useOverflow } from '../hooks/useOverflow';
@@ -27,11 +27,15 @@ export type OverflowListProps<T = unknown> = {
   fillParent?: NonNullable<OverflowListVariantProps['fillParent']>;
   gap?: NonNullable<OverflowListVariantProps['gap']> | number;
   className?: string;
+  /** Ref to the visible root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type OverflowListItemProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<span>` element. */
+  ref?: Ref<HTMLSpanElement>;
 };
 
 type OverflowListStyleSlots = ReturnType<typeof overflowListStyles>;
@@ -63,9 +67,13 @@ const measureRowStyle: CSSProperties = {
 };
 
 /** Row within an `OverflowList` — applies the recipe's `item` slot styling. */
-export function OverflowListItem({ children, className }: OverflowListItemProps): JSX.Element {
+export function OverflowListItem({ children, className, ref }: OverflowListItemProps): JSX.Element {
   const { styles: s } = useOverflowListContext();
-  return <span {...mergeProps(s.item, className)}>{children}</span>;
+  return (
+    <span {...mergeProps(s.item, className)} ref={ref}>
+      {children}
+    </span>
+  );
 }
 
 /**
@@ -89,6 +97,7 @@ export function OverflowList<T = unknown>({
   fillParent = false,
   gap = 'md',
   className,
+  ref,
 }: OverflowListProps<T>): JSX.Element {
   const isItemsMode = items != null;
   const childArray = useMemo(
@@ -105,6 +114,19 @@ export function OverflowList<T = unknown>({
     maxVisible,
     gapPx,
   });
+
+  // The hook measures `containerRef`; mirror the node out to the caller's ref too.
+  const setContainer = useCallback(
+    (node: HTMLDivElement | null) => {
+      containerRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [containerRef, ref],
+  );
 
   const s = overflowListStyles({
     gap: typeof gap === 'number' ? 'none' : gap,
@@ -132,17 +154,13 @@ export function OverflowList<T = unknown>({
 
   return (
     <OverflowListContext.Provider value={{ styles: s }}>
-      <div
-        {...mergeProps(s.root, className)}
-        style={rootStyle}
-        ref={containerRef as RefObject<HTMLDivElement>}
-      >
+      <div {...mergeProps(s.root, className)} style={rootStyle} ref={setContainer}>
         {visibleItems.map((entry, index) => renderEntry(entry, index))}
         {hiddenItems.length > 0 ? (
           <span {...mergeProps(s.overflow)}>{renderOverflow(hiddenForCallback)}</span>
         ) : null}
       </div>
-      <div aria-hidden="true" style={measureRowStyle} ref={measureRef as RefObject<HTMLDivElement>}>
+      <div aria-hidden="true" style={measureRowStyle} ref={measureRef as Ref<HTMLDivElement>}>
         {sourceItems.map((entry, index) => renderEntry(entry, index))}
         <span {...mergeProps(s.overflow)}>{renderOverflow(worstCaseHidden)}</span>
       </div>

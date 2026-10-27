@@ -40,6 +40,13 @@ import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
+/** Assigns `node` to an internal ref and to the consumer's forwarded ref. */
+function assignRefs<T>(node: T | null, internal: MutableRefObject<T | null>, external?: Ref<T>) {
+  internal.current = node;
+  if (typeof external === 'function') external(node);
+  else if (external) (external as MutableRefObject<T | null>).current = node;
+}
+
 export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
   DrawerVariantProps & {
     /** Panel title rendered in the header when `title` is set. */
@@ -63,6 +70,8 @@ export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
      */
     portalContainer?: Element;
     onOpenChange?: OverlayOpenChangeHandler;
+    /** Ref to the underlying overlay `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
   };
 
 export type DrawerRootProps = DrawerVariantProps & {
@@ -73,6 +82,8 @@ export type DrawerRootProps = DrawerVariantProps & {
   isDismissable?: boolean;
   portalContainer?: Element;
   'aria-label'?: string;
+  /** Ref to the underlying wrapper `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type DrawerBackdropProps = Omit<
@@ -81,6 +92,8 @@ export type DrawerBackdropProps = Omit<
 > & {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying overlay `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type DrawerPanelProps = {
@@ -89,27 +102,37 @@ export type DrawerPanelProps = {
   width?: number;
   height?: number;
   className?: string;
+  /** Ref to the underlying modal `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type DrawerHeaderProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 export type DrawerTitleProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying heading element. */
+  ref?: Ref<HTMLHeadingElement>;
 };
 
 export type DrawerCloseProps = {
   children?: ReactElement;
   'aria-label'?: string;
   className?: string;
+  /** Ref to the underlying `<button>` element (default close button only). */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 export type DrawerBodyProps = {
   children: ReactNode;
   className?: string;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 type DrawerContextValue = {
@@ -143,6 +166,7 @@ function DrawerRoot({
   portalContainer,
   size = 'md',
   'aria-label': ariaLabel,
+  ref,
 }: DrawerRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
   const requestedOpen = isOpen ?? uncontrolledOpen;
@@ -188,6 +212,7 @@ function DrawerRoot({
   return (
     <DrawerContext.Provider value={context}>
       <div
+        ref={ref}
         style={{ display: 'contents' }}
         onKeyDownCapture={(event) => {
           lastEventRef.current = event.nativeEvent;
@@ -204,9 +229,15 @@ function DrawerBackdrop({
   className,
   isDismissable,
   onPointerDown,
+  ref,
   ...props
 }: DrawerBackdropProps): JSX.Element {
   const ctx = useDrawerContext();
+  const { backdropRef } = ctx;
+  const setRef = useCallback(
+    (node: HTMLDivElement | null) => assignRefs(node, backdropRef, ref),
+    [backdropRef, ref],
+  );
   const styles = drawer({ size: ctx.size });
   const { style: layerStyle } = useLayer();
 
@@ -215,7 +246,7 @@ function DrawerBackdrop({
       {...props}
       {...mergeProps(styles.overlay, className)}
       {...ctx.presence.attrs}
-      ref={ctx.backdropRef as Ref<HTMLDivElement>}
+      ref={setRef}
       style={layerStyle}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
@@ -239,8 +270,14 @@ function DrawerPanel({
   width,
   height,
   className,
+  ref,
 }: DrawerPanelProps): JSX.Element {
   const ctx = useDrawerContext();
+  const { panelRef } = ctx;
+  const setRef = useCallback(
+    (node: HTMLDivElement | null) => assignRefs(node, panelRef, ref),
+    [panelRef, ref],
+  );
   const styles = drawer({ size: ctx.size });
   const panelStyle = {
     ...(width != null ? ({ '--var-ui-drawer-panelwidth': `${width}px` } as CSSProperties) : {}),
@@ -251,7 +288,7 @@ function DrawerPanel({
     <Modal
       {...mergeProps(styles.panel, className)}
       {...ctx.presence.attrs}
-      ref={ctx.panelRef as Ref<HTMLDivElement>}
+      ref={setRef}
       data-placement={placement}
       style={panelStyle}
     >
@@ -264,17 +301,21 @@ function DrawerPanel({
   );
 }
 
-function DrawerHeader({ children, className }: DrawerHeaderProps): JSX.Element {
-  const { size } = useDrawerContext();
-  const styles = drawer({ size });
-  return <div {...mergeProps(styles.header, className)}>{children}</div>;
-}
-
-function DrawerTitle({ children, className }: DrawerTitleProps): JSX.Element {
+function DrawerHeader({ children, className, ref }: DrawerHeaderProps): JSX.Element {
   const { size } = useDrawerContext();
   const styles = drawer({ size });
   return (
-    <Heading slot="title" {...mergeProps(styles.title, className)}>
+    <div {...mergeProps(styles.header, className)} ref={ref}>
+      {children}
+    </div>
+  );
+}
+
+function DrawerTitle({ children, className, ref }: DrawerTitleProps): JSX.Element {
+  const { size } = useDrawerContext();
+  const styles = drawer({ size });
+  return (
+    <Heading slot="title" {...mergeProps(styles.title, className)} ref={ref}>
       {children}
     </Heading>
   );
@@ -283,6 +324,7 @@ function DrawerTitle({ children, className }: DrawerTitleProps): JSX.Element {
 function DrawerClose({
   children,
   className,
+  ref,
   'aria-label': ariaLabel = 'Close',
 }: DrawerCloseProps): JSX.Element {
   const close = useOverlayClose();
@@ -303,16 +345,21 @@ function DrawerClose({
       {...mergeProps(styles.closeButton, className)}
       aria-label={ariaLabel}
       onPress={close}
+      ref={ref}
     >
       <Icon name="close" size="sm" />
     </AriaButton>
   );
 }
 
-function DrawerBody({ children, className }: DrawerBodyProps): JSX.Element {
+function DrawerBody({ children, className, ref }: DrawerBodyProps): JSX.Element {
   const { size } = useDrawerContext();
   const styles = drawer({ size });
-  return <div {...mergeProps(styles.body, className)}>{children}</div>;
+  return (
+    <div {...mergeProps(styles.body, className)} ref={ref}>
+      {children}
+    </div>
+  );
 }
 
 /**

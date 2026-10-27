@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent, ReactNode } from 'react';
+import type { JSX, KeyboardEvent, ReactNode, Ref } from 'react';
 import {
   Children,
   createContext,
@@ -60,6 +60,8 @@ export type TabListTabProps = {
   isLabelHidden?: boolean;
   isDisabled?: boolean;
   className?: string;
+  /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /** `data-*` marker consumed by the roving-tabindex arrow-key handler on the `TabList` root. */
@@ -75,6 +77,7 @@ export function TabListTab({
   isLabelHidden = false,
   isDisabled = false,
   className,
+  ref,
 }: TabListTabProps): JSX.Element {
   const ctx = useTabListContext();
   const s = tabList({ size: ctx.size });
@@ -108,11 +111,14 @@ export function TabListTab({
       href={href}
       aria-current={isSelected ? ('page' as const) : undefined}
       {...sharedProps}
+      ref={ref as Ref<HTMLAnchorElement>}
     >
       {content}
     </AriaLink>
   ) : (
-    <AriaButton {...sharedProps}>{content}</AriaButton>
+    <AriaButton {...sharedProps} ref={ref as Ref<HTMLButtonElement>}>
+      {content}
+    </AriaButton>
   );
 }
 
@@ -127,10 +133,12 @@ export type TabListMenuProps = {
   label: string;
   options: TabListMenuOption[];
   className?: string;
+  /** Ref to the underlying root `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** Overflow "More" trigger — reuses `Menu.FromSections`; selecting an option calls `onChange`. */
-export function TabListMenu({ label, options, className }: TabListMenuProps): JSX.Element {
+export function TabListMenu({ label, options, className, ref }: TabListMenuProps): JSX.Element {
   const ctx = useTabListContext();
   const s = tabList({ size: ctx.size });
   const isSelected = options.some((option) => option.value === ctx.value);
@@ -145,7 +153,7 @@ export function TabListMenu({ label, options, className }: TabListMenuProps): JS
   };
 
   return (
-    <div {...mergeProps(s.menu, className)}>
+    <div {...mergeProps(s.menu, className)} ref={ref}>
       <Menu.FromSections
         trigger={
           <AriaButton {...triggerProps}>
@@ -201,6 +209,8 @@ export type TabListProps = {
   className?: string;
   /** Accessible name for the `nav` landmark. @default 'Tabs' */
   label?: string;
+  /** Ref to the underlying `<nav>` element. */
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -234,9 +244,18 @@ export function TabList({
   children,
   className,
   label = 'Tabs',
+  ref,
 }: TabListProps): JSX.Element {
   const s = tabList({ size });
   const rootRef = useRef<HTMLElement>(null);
+  const setRoot = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') return ref(node);
+      if (ref) ref.current = node;
+    },
+    [ref],
+  );
 
   const knownValues = useMemo(() => collectTabListValues(children), [children]);
   const focusValue = value != null && knownValues.includes(value) ? value : knownValues[0];
@@ -283,7 +302,7 @@ export function TabList({
   return (
     <TabListContext.Provider value={contextValue}>
       <nav
-        ref={rootRef}
+        ref={setRoot}
         aria-label={label}
         data-orientation={orientation}
         data-layout={layout}

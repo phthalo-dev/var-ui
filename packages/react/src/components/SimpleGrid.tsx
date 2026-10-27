@@ -1,4 +1,4 @@
-import type { HTMLAttributes, JSX } from 'react';
+import type { HTMLAttributes, JSX, Ref } from 'react';
 import { simpleGrid, type SimpleGridVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -7,6 +7,8 @@ export type SimpleGridProps = HTMLAttributes<HTMLDivElement> & {
   cols?: 1 | 2 | 3 | 4 | 5 | 6 | 8;
   /** Gap between grid items. @default md */
   spacing?: NonNullable<SimpleGridVariantProps['spacing']>;
+  /** Ref to the underlying `<div>` element. */
+  ref?: Ref<HTMLDivElement>;
 };
 
 const colsVariant = {
@@ -33,9 +35,14 @@ export function SimpleGrid({
   cols = 2,
   spacing = 'md',
   className,
+  ref,
   ...props
 }: SimpleGridProps): JSX.Element {
   return (
-    <div {...props} {...mergeProps(simpleGrid({ cols: colsVariant[cols], spacing }), className)} />
+    <div
+      {...props}
+      {...mergeProps(simpleGrid({ cols: colsVariant[cols], spacing }), className)}
+      ref={ref}
+    />
   );
 }

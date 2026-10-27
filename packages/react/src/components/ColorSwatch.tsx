@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, JSX } from 'react';
+import type { ButtonHTMLAttributes, JSX, Ref } from 'react';
 import { colorSwatch, type ColorSwatchVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
@@ -8,6 +8,8 @@ export type ColorSwatchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'ch
   size?: NonNullable<ColorSwatchVariantProps['size']>;
   /** Highlights the swatch as the active selection. */
   selected?: boolean;
+  /** Ref to the underlying `<button>` element. */
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -20,6 +22,7 @@ export function ColorSwatch({
   selected,
   className,
   style,
+  ref,
   ...props
 }: ColorSwatchProps): JSX.Element {
   const cs = colorSwatch({ size });
@@ -28,6 +31,7 @@ export function ColorSwatch({
       type="button"
       {...props}
       {...mergeProps(cs.root, className)}
+      ref={ref}
       data-selected={selected || undefined}
       style={{ ...style, backgroundColor: color }}
       aria-pressed={selected}
