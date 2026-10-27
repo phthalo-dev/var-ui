@@ -7,7 +7,6 @@ import {
   Layout,
   LayoutContent,
   LayoutPanel,
-  ResizeHandle,
   useResizable,
 } from '@var-ui/react';
 
@@ -20,12 +19,9 @@ const { end } = useResizable({
   padding={0}
   content={<LayoutContent padding={0}>{/* list */}</LayoutContent>}
   end={
-    <>
-      <LayoutPanel resizable={end} hasDivider label="Details" role="complementary">
-        Inspector
-      </LayoutPanel>
-      <ResizeHandle {...end.handleProps} />
-    </>
+    <LayoutPanel resizable={end} hasResizeHandle label="Details" role="complementary">
+      Inspector
+    </LayoutPanel>
   }
 />`,
   astro: `---

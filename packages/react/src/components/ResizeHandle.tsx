@@ -18,6 +18,11 @@ export type ResizeHandleProps = {
   /** Fired on double-click/Enter — bind to `useResizable().collapse`/`toggle`. */
   onCollapse?: () => void;
   isCollapsed?: boolean;
+  /**
+   * Flips drag and arrow-key direction, for a handle on the leading edge of an
+   * end-side region (dragging toward the start edge grows it). @default false
+   */
+  isReversed?: boolean;
   'aria-label'?: string;
   className?: string;
 };
@@ -44,6 +49,7 @@ export function ResizeHandle({
   onChange,
   onCollapse,
   isCollapsed = false,
+  isReversed = false,
   'aria-label': ariaLabel,
   className,
 }: ResizeHandleProps): JSX.Element {
@@ -76,7 +82,7 @@ export function ResizeHandle({
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const pos = isHorizontal ? event.clientX : event.clientY;
-    onChange(clamp(drag.startValue + (pos - drag.startPos)));
+    onChange(clamp(drag.startValue + (isReversed ? -1 : 1) * (pos - drag.startPos)));
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>): void => {
@@ -90,8 +96,10 @@ export function ResizeHandle({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    const increaseKey = isHorizontal ? 'ArrowRight' : 'ArrowDown';
-    const decreaseKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
+    const forwardKey = isHorizontal ? 'ArrowRight' : 'ArrowDown';
+    const backwardKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
+    const increaseKey = isReversed ? backwardKey : forwardKey;
+    const decreaseKey = isReversed ? forwardKey : backwardKey;
     const step = event.shiftKey ? ARROW_STEP_LARGE : ARROW_STEP;
     switch (event.key) {
       case increaseKey:

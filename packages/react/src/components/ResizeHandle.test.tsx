@@ -260,4 +260,26 @@ describe('ResizeHandle', () => {
     await userEvent.dblClick(handle);
     expect(onCollapse).toHaveBeenCalledTimes(1);
   });
+
+  it('flips drag and arrow-key direction when isReversed', async () => {
+    const onChange = vi.fn();
+    render(
+      <ResizeHandle
+        value={260}
+        minValue={180}
+        maxValue={480}
+        onChange={onChange}
+        isReversed
+        aria-label="Resize"
+      />,
+    );
+    const handle = screen.getByRole('separator', { name: 'Resize' });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 100 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientX: 140 });
+    expect(onChange).toHaveBeenLastCalledWith(220);
+    fireEvent.pointerUp(handle, { pointerId: 1 });
+    handle.focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(onChange).toHaveBeenLastCalledWith(270);
+  });
 });

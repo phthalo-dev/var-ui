@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { DirectionProvider } from '../DirectionProvider';
 import { layoutContentWidthAssignment, layoutShellPaddingAssignments } from '@var-ui/core';
 import {
   Layout,
@@ -299,6 +301,105 @@ describe('LayoutPanel', () => {
       expect(screen.getByText('Overlay panel')).toBeTruthy();
       unmount();
       vi.unstubAllGlobals();
+    });
+  });
+
+  describe('hasResizeHandle', () => {
+    it('renders no handle unless hasResizeHandle is set', () => {
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={<LayoutPanel resizable={fakeResizable(300)}>Panel</LayoutPanel>}
+        />,
+      );
+      expect(screen.queryByRole('separator')).toBeNull();
+    });
+
+    it('places the handle after a start panel and before an end panel', () => {
+      render(
+        <Layout
+          start={
+            <LayoutPanel
+              label="List"
+              resizable={fakeResizable(300)}
+              hasResizeHandle
+              resizeHandleLabel="Resize list"
+            />
+          }
+          end={
+            <LayoutPanel
+              label="Inspector"
+              resizable={fakeResizable(280)}
+              hasResizeHandle
+              resizeHandleLabel="Resize inspector"
+            />
+          }
+        >
+          <div>Main</div>
+        </Layout>,
+      );
+      const list = screen.getByRole('region', { name: 'List' });
+      const listHandle = screen.getByRole('separator', { name: 'Resize list' });
+      const inspector = screen.getByRole('region', { name: 'Inspector' });
+      const inspectorHandle = screen.getByRole('separator', { name: 'Resize inspector' });
+      expect(list.nextElementSibling).toBe(listHandle);
+      expect(inspector.previousElementSibling).toBe(inspectorHandle);
+    });
+
+    it('resizes with the pointer direction under RTL', async () => {
+      const onChange = vi.fn();
+      const resizable = fakeResizable(300);
+      resizable.handleProps.onChange = onChange;
+      render(
+        <DirectionProvider direction="rtl">
+          <Layout
+            start={<LayoutPanel resizable={resizable} hasResizeHandle resizeHandleLabel="Resize" />}
+          >
+            <div>Main</div>
+          </Layout>
+        </DirectionProvider>,
+      );
+      screen.getByRole('separator', { name: 'Resize' }).focus();
+      // A start panel sits on the right in RTL, so moving the handle right shrinks it.
+      await userEvent.keyboard('{ArrowRight}');
+      expect(onChange).toHaveBeenLastCalledWith(290);
+    });
+
+    it('renders no handle below a responsive breakpoint', () => {
+      mockMatchMedia(true);
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={
+            <LayoutPanel
+              hasDivider
+              hasResizeHandle
+              responsive={{ below: 'lg', mode: 'hidden' }}
+              isOpen
+              resizable={fakeResizable(300)}
+            >
+              Panel
+            </LayoutPanel>
+          }
+        />,
+      );
+      expect(screen.getByText('Panel')).toBeTruthy();
+      expect(screen.queryByRole('separator')).toBeNull();
+      vi.unstubAllGlobals();
+    });
+
+    it('renders no handle when the panel is collapsed', () => {
+      render(
+        <Layout
+          content={<div>Main</div>}
+          end={
+            <LayoutPanel hasResizeHandle resizable={{ ...fakeResizable(300), isCollapsed: true }}>
+              Panel
+            </LayoutPanel>
+          }
+        />,
+      );
+      expect(screen.queryByRole('separator')).toBeNull();
     });
   });
 });
