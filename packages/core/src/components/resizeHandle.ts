@@ -42,6 +42,20 @@ export const resizeHandle = typestyles.recipe({
           justifyContent: 'center',
           backgroundColor: vars.lineColor.var,
           outline: 'none',
+          touchAction: 'none',
+          // Invisible hit area: the visible line stays 1px, the grab target is wider.
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+          },
+          '&[data-orientation="horizontal"]::before': {
+            insetBlock: 0,
+            insetInline: '-4px',
+          },
+          '&[data-orientation="vertical"]::before': {
+            insetInline: 0,
+            insetBlock: '-4px',
+          },
           '&[data-orientation="horizontal"]': {
             width: '1px',
             alignSelf: 'stretch',
