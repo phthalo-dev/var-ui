@@ -46,6 +46,8 @@ export const REACT_ONLY_DEMO_IDS = new Set<DemoId>([
   'hover-card.default',
   'hover-card.rich',
   'command-palette.grouped',
+  'command-palette.rich',
+  'command-palette.async',
   'icon-button.default',
   'icon-button.sizes',
   'button-group.default',

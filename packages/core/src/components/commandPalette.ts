@@ -29,6 +29,9 @@ export const commandPalette = typestyles.recipe({
     'result',
     'resultLink',
     'resultLinkActive',
+    'resultIcon',
+    'resultBody',
+    'resultShortcut',
     'resultTitle',
     'resultMeta',
     'mark',
@@ -241,7 +244,9 @@ export const commandPalette = typestyles.recipe({
           margin: 0,
         },
         resultLink: {
-          display: 'block',
+          display: 'flex',
+          alignItems: 'center',
+          gap: t.space[3].var,
           padding: `${t.space[2].var} ${t.space[4].var}`,
           textDecoration: 'none',
           color: vars.resultForeground.var,
@@ -254,6 +259,24 @@ export const commandPalette = typestyles.recipe({
         resultLinkActive: {
           backgroundColor: vars.resultSelectedBackground.var,
           color: vars.resultSelectedForeground.var,
+        },
+        resultIcon: {
+          flexShrink: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+          color: vars.resultMetaColor.var,
+          lineHeight: 0,
+        },
+        resultBody: {
+          flex: '1 1 auto',
+          minWidth: 0,
+        },
+        resultShortcut: {
+          flexShrink: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: t.space[1].var,
+          marginInlineStart: 'auto',
         },
         resultTitle: {
           display: 'block',

@@ -1,5 +1,5 @@
-import type { JSX, Ref } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Autocomplete,
@@ -16,6 +16,9 @@ import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useOverlayPresence } from '../overlays';
 import { cx, mergeProps } from 'typestyles';
+import { Kbd } from './Kbd';
+import type { CommandPaletteController } from './commandPaletteController';
+import { DEFAULT_COMMAND_PALETTE_HOTKEY, matchesHotkey } from './commandPaletteHotkey';
 
 export type CommandPaletteItem = {
   /** Unique item identifier passed to `onAction`. */
@@ -32,6 +35,15 @@ export type CommandPaletteItem = {
    * without a heading.
    */
   group?: string;
+  /** Leading icon, rendered in a recipe-sized `Icon` shell. */
+  icon?: ReactNode;
+  /**
+   * Shortcut hint shown on the trailing edge. A string renders one key cap; an array renders one
+   * per entry (`['⌘', 'K']`). Display only; it does not bind the shortcut.
+   */
+  shortcut?: string | string[];
+  /** Called when the item is chosen, before `onAction`. */
+  onSelect?: () => void;
 };
 
 export type CommandPaletteProps = {
@@ -39,16 +51,30 @@ export type CommandPaletteProps = {
   isOpen?: NonNullable<CommandPaletteVariantProps['open']>;
   /** Called when the open state changes (Escape, backdrop click, hotkey, or item selection). */
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Drives the open state from a store made by `createCommandPalette()` or `useCommandPalette()`,
+   * so the palette can be opened from outside the component tree. Takes precedence over `isOpen`;
+   * `onOpenChange` is still called.
+   */
+  controller?: CommandPaletteController;
   /** Commands shown in the results list. */
   items: CommandPaletteItem[];
-  /** Called with the selected item's `id` on Enter/click; the palette does not close itself. */
-  onAction: (id: string) => void;
+  /** Called with the selected item's `id` on Enter/click, after the item's own `onSelect`. */
+  onAction?: (id: string) => void;
+  /** Closes the palette after an item is chosen. @default true */
+  closeOnAction?: boolean;
   /** Input placeholder. @default 'Search…' */
   placeholder?: string;
   /** Message shown when no items match the query. @default 'No results' */
   emptyLabel?: string;
-  /** Toggles open state on ⌘K / Ctrl+K. @default true */
-  hotkey?: boolean;
+  /**
+   * Key combo that toggles the palette, e.g. `'mod+k'`, `'ctrl+shift+p'`, or an array of combos.
+   * `mod` is ⌘ on Apple platforms and Ctrl elsewhere (either is accepted). `true` uses the default
+   * and `false` disables the listener. @default 'mod+k'
+   */
+  hotkey?: boolean | string | string[];
+  /** Wraps the part of each title and meta that matches the query in a `<mark>`. */
+  highlightMatches?: boolean;
   /**
    * Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip
    * client-side filtering, e.g. when `items` already are the (remote) results for the query.
@@ -82,6 +108,9 @@ type CommandPaletteSlot =
   | 'result'
   | 'resultLink'
   | 'resultLinkActive'
+  | 'resultIcon'
+  | 'resultBody'
+  | 'resultShortcut'
   | 'resultTitle'
   | 'resultMeta'
   | 'mark'
@@ -100,6 +129,45 @@ function defaultFilter(item: CommandPaletteItem, query: string): boolean {
   return false;
 }
 
+const subscribeNever = () => () => {};
+const getFalse = () => false;
+
+/**
+ * Lowercases `text` and records, for every UTF-16 unit of the result, the index of the original
+ * character it came from. Lowercasing can change length (`İ` → `i̇`), so offsets found in the
+ * lowercase string must be mapped back before slicing the original.
+ */
+function lowerWithOffsets(text: string): { lower: string; origin: number[] } {
+  let lower = '';
+  const origin: number[] = [];
+  for (let i = 0; i < text.length;) {
+    const char = String.fromCodePoint(text.codePointAt(i)!);
+    const lowered = char.toLowerCase();
+    lower += lowered;
+    for (let j = 0; j < lowered.length; j++) origin.push(i);
+    i += char.length;
+  }
+  return { lower, origin };
+}
+
+function renderHighlighted(text: string, query: string, cp: { mark: ComponentAttrsResult }) {
+  const q = query.trim().toLowerCase();
+  if (!q) return text;
+  const { lower, origin } = lowerWithOffsets(text);
+  const matchStart = lower.indexOf(q);
+  if (matchStart < 0) return text;
+  const start = origin[matchStart]!;
+  const lastOrigin = origin[matchStart + q.length - 1]!;
+  const end = lastOrigin + String.fromCodePoint(text.codePointAt(lastOrigin)!).length;
+  return (
+    <>
+      {text.slice(0, start)}
+      <mark {...mergeProps(cp.mark)}>{text.slice(start, end)}</mark>
+      {text.slice(end)}
+    </>
+  );
+}
+
 type ItemBlock = { group?: string; items: CommandPaletteItem[] };
 
 /** Splits `items` into runs of consecutive items sharing a `group`, preserving order. */
@@ -115,17 +183,20 @@ function toBlocks(items: CommandPaletteItem[]): ItemBlock[] {
 
 /**
  * ⌘K-style search overlay: filters a list of commands and reports the chosen `id` via
- * `onAction`. Callers own the open state and typically close the palette themselves inside
- * `onAction`.
+ * `onSelect` / `onAction`. Callers own the open state (via `isOpen`, or a `controller`);
+ * the palette closes itself after an item is chosen unless `closeOnAction` is `false`.
  */
 export function CommandPalette({
   isOpen,
   onOpenChange,
+  controller,
   items,
   onAction,
+  closeOnAction = true,
   placeholder = 'Search…',
   emptyLabel = 'No results',
   hotkey = true,
+  highlightMatches = false,
   filter = defaultFilter,
   onQueryChange,
   isLoading = false,
@@ -142,7 +213,19 @@ export function CommandPalette({
   }, []);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const open = Boolean(isOpen);
+  const controllerOpen = useSyncExternalStore(
+    controller?.subscribe ?? subscribeNever,
+    controller?.getSnapshot ?? getFalse,
+    getFalse,
+  );
+  const open = controller ? controllerOpen : Boolean(isOpen);
+  const requestOpen = useCallback(
+    (next: boolean) => {
+      controller?.setOpen(next);
+      onOpenChange?.(next);
+    },
+    [controller, onOpenChange],
+  );
   const presence = useOverlayPresence({
     isOpen: open,
     getAnimatedElements: () => [panelRef.current],
@@ -150,17 +233,20 @@ export function CommandPalette({
   const cp = commandPaletteSlots({ open });
   const { style: layerStyle } = useLayer();
 
+  const hotkeyId =
+    hotkey === true ? DEFAULT_COMMAND_PALETTE_HOTKEY : hotkey ? [hotkey].flat().join('\0') : '';
   useEffect(() => {
-    if (!hotkey) return undefined;
+    if (!hotkeyId) return undefined;
+    const combos = hotkeyId.split('\0');
     function handleKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      if (combos.some((combo) => matchesHotkey(event, combo))) {
         event.preventDefault();
-        onOpenChange?.(!open);
+        requestOpen(!open);
       }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hotkey, open, onOpenChange]);
+  }, [hotkeyId, open, requestOpen]);
 
   useEffect(() => {
     if (!open) setQuery('');
@@ -179,10 +265,10 @@ export function CommandPalette({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    const handleClose = () => onOpenChange?.(false);
+    const handleClose = () => requestOpen(false);
     dialog.addEventListener('close', handleClose);
     return () => dialog.removeEventListener('close', handleClose);
-  }, [onOpenChange]);
+  }, [requestOpen]);
 
   const visibleItems = useMemo(
     () => (filter ? items.filter((item) => filter(item, query)) : items),
@@ -197,12 +283,36 @@ export function CommandPalette({
       id={item.id}
       textValue={item.title}
       {...mergeProps(cp.result)}
-      onAction={() => onAction(item.id)}
+      onAction={() => {
+        item.onSelect?.();
+        onAction?.(item.id);
+        if (closeOnAction) requestOpen(false);
+      }}
     >
       {({ isFocused }) => (
         <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
-          <span {...mergeProps(cp.resultTitle)}>{item.title}</span>
-          {item.meta ? <span {...mergeProps(cp.resultMeta)}>{item.meta}</span> : null}
+          {item.icon ? (
+            <span {...mergeProps(cp.resultIcon)}>
+              <Icon>{item.icon}</Icon>
+            </span>
+          ) : null}
+          <span {...mergeProps(cp.resultBody)}>
+            <span {...mergeProps(cp.resultTitle)}>
+              {highlightMatches ? renderHighlighted(item.title, query, cp) : item.title}
+            </span>
+            {item.meta ? (
+              <span {...mergeProps(cp.resultMeta)}>
+                {highlightMatches ? renderHighlighted(item.meta, query, cp) : item.meta}
+              </span>
+            ) : null}
+          </span>
+          {item.shortcut ? (
+            <span {...mergeProps(cp.resultShortcut)}>
+              {([] as string[]).concat(item.shortcut).map((key, index) => (
+                <Kbd key={`${index}:${key}`}>{key}</Kbd>
+              ))}
+            </span>
+          ) : null}
         </span>
       )}
     </ListBoxItem>
@@ -219,16 +329,16 @@ export function CommandPalette({
       {...mergeProps(cp.root)}
       style={layerStyle}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onOpenChange?.(false);
+        if (event.target === event.currentTarget) requestOpen(false);
       }}
       onCancel={(event) => {
         event.preventDefault();
-        onOpenChange?.(false);
+        requestOpen(false);
       }}
       onKeyDownCapture={(event) => {
         if (event.key !== 'Escape') return;
         event.preventDefault();
-        onOpenChange?.(false);
+        requestOpen(false);
       }}
     >
       {presence.mounted ? (

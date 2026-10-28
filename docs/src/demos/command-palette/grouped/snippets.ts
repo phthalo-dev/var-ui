@@ -18,7 +18,6 @@ const [open, setOpen] = useState(false);
     { id: 'theme', title: 'Toggle theme', meta: 'Appearance', keywords: ['dark'] },
     { id: 'settings', title: 'Open settings', meta: 'Navigation' },
   ]}
-  onAction={() => setOpen(false)}
 />`,
   astro: `<!-- React-only secondary demo — see default for Astro -->`,
   html: `<!-- React-only secondary demo — see default for HTML -->`,

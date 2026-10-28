@@ -13,6 +13,7 @@ type CommandPaletteSlot =
   | 'results'
   | 'resultLink'
   | 'resultLinkActive'
+  | 'resultBody'
   | 'resultTitle'
   | 'resultMeta'
   | 'empty';
@@ -47,6 +48,7 @@ const inputRecipe = mergeProps(cp.input);
 const resultsRecipe = mergeProps(cp.results);
 const resultLinkClass = (cp.resultLink).className;
 const resultLinkActiveClass = (cp.resultLinkActive).className;
+const resultBodyClass = (cp.resultBody).className;
 const resultTitleClass = (cp.resultTitle).className;
 const resultMetaClass = (cp.resultMeta).className;
 const emptyClass = (cp.empty).className;
@@ -60,6 +62,7 @@ const emptyClass = (cp.empty).className;
   data-hotkey={hotkey ? 'true' : 'false'}
   data-class-result-link={resultLinkClass}
   data-class-result-link-active={resultLinkActiveClass}
+  data-class-result-body={resultBodyClass}
   data-class-result-title={resultTitleClass}
   data-class-result-meta={resultMetaClass}
   data-class-empty={emptyClass}

@@ -22,7 +22,6 @@ export default function Preview() {
           },
           { id: 'settings', title: 'Open settings', meta: 'Navigation', keywords: ['prefs'] },
         ]}
-        onAction={() => setOpen(false)}
       />
     </>
   );

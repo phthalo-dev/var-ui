@@ -16,6 +16,7 @@
       "@var-ui/docs": ["../packages/docs/index.ts"],
       "@var-ui/docs/schema": ["../packages/docs/schema.ts"],
       "@var-ui/docs/utils": ["../packages/docs/src/utils/index.ts"],
+      "@var-ui/docs/highlight": ["../packages/docs/src/utils/highlightCodeBlock.ts"],
       "@var-ui/docs/styles": ["../packages/docs/src/styles/index.ts"],
       "@var-ui/docs/shiki": ["../packages/docs/src/utils/shiki-theme.ts"],
       "@var-ui/docs/*": ["../packages/docs/src/components/*"]

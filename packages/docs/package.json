@@ -28,6 +28,7 @@
     ".": "./index.ts",
     "./schema": "./schema.ts",
     "./utils": "./src/utils/index.ts",
+    "./highlight": "./src/utils/highlightCodeBlock.ts",
     "./styles": "./src/styles/index.ts",
     "./shiki": "./src/utils/shiki-theme.ts",
     "./middleware": "./src/middleware.ts",

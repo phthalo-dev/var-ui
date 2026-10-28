@@ -5,7 +5,7 @@ description: Searchable command palette for quick actions and navigation.
 
 # CommandPalette
 
-⌘K-style searchable command overlay. You own `isOpen` / `onOpenChange` and typically close inside `onAction`. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.
+⌘K-style searchable command overlay. Give each item an `onSelect`, or handle everything in a single `onAction(id)`; the palette closes itself afterwards unless `closeOnAction={false}`. You own `isOpen` / `onOpenChange`, or hand the palette a `controller` from `createCommandPalette()` / `useCommandPalette()` to open it from outside React. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.
 
 ## Examples
 
@@ -17,9 +17,21 @@ Open from a button (demos disable the global hotkey so pages stay calm).
 
 ### Grouped results via meta
 
-Use `meta` (and `keywords`) so related commands are scannable and searchable even when titles are short. Set `group` on items to render section headings; consecutive items sharing a `group` render together, and arrow-key navigation continues through all items in order.
+Use `meta` (and `keywords`) so related commands are scannable and searchable even when titles are short. Set `group` on items to render section headings. Only _consecutive_ items sharing a `group` are merged, so items for one group scattered through `items` produce repeated headings; sort or group `items` yourself first. Arrow-key navigation continues through all items in order.
 
 <Demo id="command-palette.grouped" />
+
+### Icons, shortcut hints and highlighting
+
+`icon` and `shortcut` decorate each row (the shortcut is display-only), `highlightMatches` marks the matching text, and a `controller` lets any code open the palette. `hotkey` accepts a combo (`'mod+k'`, `'ctrl+shift+p'`) or an array of combos.
+
+<Demo id="command-palette.rich" />
+
+### Async results
+
+Pass `filter={false}` when `items` are already the results for the query, listen with `onQueryChange`, and show `isLoading` while fetching.
+
+<Demo id="command-palette.async" />
 
 ## Props
 

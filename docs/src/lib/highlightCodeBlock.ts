@@ -1,1 +1,4 @@
-export { highlightCodeBlockContent, type HighlightedCodeBlockContent } from '@var-ui/docs/utils';
+export {
+  highlightCodeBlockContent,
+  type HighlightedCodeBlockContent,
+} from '@var-ui/docs/highlight';
