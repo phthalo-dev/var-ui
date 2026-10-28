@@ -118,6 +118,47 @@ describe('CommandPalette', () => {
     expect(onAction).toHaveBeenCalledWith('a');
   });
 
+  it('renders group headings and keeps keyboard navigation in order', async () => {
+    const onAction = vi.fn();
+    wrap(
+      <CommandPalette
+        isOpen
+        onOpenChange={() => {}}
+        hotkey={false}
+        items={[
+          { id: 'a', title: 'Alpha', group: 'Library' },
+          { id: 'b', title: 'Beta', group: 'Library' },
+          { id: 'c', title: 'Gamma', group: 'YouTube' },
+        ]}
+        onAction={onAction}
+      />,
+    );
+    expect(screen.getByText('Library')).toBeTruthy();
+    expect(screen.getByText('YouTube')).toBeTruthy();
+    expect(screen.getAllByRole('group')).toHaveLength(2);
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'a');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{Enter}');
+    expect(onAction).toHaveBeenCalledWith('c');
+  });
+
+  it('hides the heading of a group with no matching items', async () => {
+    wrap(
+      <CommandPalette
+        isOpen
+        onOpenChange={() => {}}
+        hotkey={false}
+        items={[
+          { id: 'a', title: 'Alpha', group: 'Library' },
+          { id: 'c', title: 'Gamma', group: 'YouTube' },
+        ]}
+        onAction={() => {}}
+      />,
+    );
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'gam');
+    expect(screen.queryByText('Library')).toBeNull();
+    expect(screen.getByText('YouTube')).toBeTruthy();
+  });
+
   it('matches via keywords', async () => {
     const onAction = vi.fn();
     wrap(
