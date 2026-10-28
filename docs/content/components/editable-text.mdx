@@ -1,0 +1,30 @@
+---
+title: EditableText
+description: Text that turns into an input on demand, keeping the typography of its display element.
+---
+
+# EditableText
+
+Text that turns into an input on demand. Wrap the display element (a `Heading`, `Text`, or any element that accepts children) and the input takes its place, inheriting the same font, size and color so nothing shifts.
+
+## Examples
+
+### Default
+
+Double-click the heading, or focus it and press Enter or F2. Enter or clicking away commits; Escape cancels.
+
+<Demo id="editable-text.default" />
+
+### Activation
+
+`activation` controls what starts editing with the pointer: `doubleClick` (default), `click`, or `focus`. Enter and F2 start editing from the keyboard in every mode.
+
+## Props
+
+<PropsTable slug="editable-text" />
+
+## Accessibility
+
+While not editing, the root is a focusable `role="group"` so keyboard users can reach it and press Enter or F2 to edit. While editing, the input is labelled by `aria-label` (falling back to the current value). Focus returns to the root after Enter or Escape; blur commits without moving focus. Disabled and read-only instances render the display element as-is and are not focusable.
+
+`onCommit` is not called when the text is unchanged. Empty text is passed through, so reject or restore it in `onCommit` if blank values are not allowed.

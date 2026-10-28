@@ -208,6 +208,10 @@
       "types": "./dist/components/drawer.d.mts",
       "import": "./dist/components/drawer.mjs"
     },
+    "./components/editableText": {
+      "types": "./dist/components/editableText.d.mts",
+      "import": "./dist/components/editableText.mjs"
+    },
     "./components/emptyState": {
       "types": "./dist/components/emptyState.d.mts",
       "import": "./dist/components/emptyState.mjs"

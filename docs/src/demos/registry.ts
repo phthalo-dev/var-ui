@@ -125,6 +125,7 @@ import { snippets as buttonGroupDefaultSnippets } from './button-group/default/s
 import { snippets as buttonGroupIconsSnippets } from './button-group/icons/snippets';
 import { snippets as copyButtonDefaultSnippets } from './copy-button/default/snippets';
 import { snippets as copyButtonLabelsSnippets } from './copy-button/labels/snippets';
+import { snippets as editableTextDefaultSnippets } from './editable-text/default/snippets';
 import { snippets as toggleButtonDefaultSnippets } from './toggle-button/default/snippets';
 import { snippets as toggleButtonPressedSnippets } from './toggle-button/pressed/snippets';
 import { snippets as segmentedControlDefaultSnippets } from './segmented-control/default/snippets';
@@ -306,6 +307,7 @@ export const DEMO_IDS = [
   'button-group.icons',
   'copy-button.default',
   'copy-button.labels',
+  'editable-text.default',
   'toggle-button.default',
   'toggle-button.pressed',
   'segmented-control.default',
@@ -486,6 +488,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'button-group.icons': buttonGroupIconsSnippets,
   'copy-button.default': copyButtonDefaultSnippets,
   'copy-button.labels': copyButtonLabelsSnippets,
+  'editable-text.default': editableTextDefaultSnippets,
   'toggle-button.default': toggleButtonDefaultSnippets,
   'toggle-button.pressed': toggleButtonPressedSnippets,
   'segmented-control.default': segmentedControlDefaultSnippets,
@@ -666,6 +669,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'button-group.icons': () => import('./button-group/icons/react'),
   'copy-button.default': () => import('./copy-button/default/react'),
   'copy-button.labels': () => import('./copy-button/labels/react'),
+  'editable-text.default': () => import('./editable-text/default/react'),
   'toggle-button.default': () => import('./toggle-button/default/react'),
   'toggle-button.pressed': () => import('./toggle-button/pressed/react'),
   'segmented-control.default': () => import('./segmented-control/default/react'),
@@ -1349,6 +1353,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'copy-button.labels',
     snippets: demoSnippets['copy-button.labels'],
     react: reactDemoLoaders['copy-button.labels'],
+  },
+  'editable-text.default': {
+    id: 'editable-text.default',
+    snippets: demoSnippets['editable-text.default'],
+    react: reactDemoLoaders['editable-text.default'],
   },
   'toggle-button.default': {
     id: 'toggle-button.default',

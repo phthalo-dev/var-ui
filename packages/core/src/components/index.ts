@@ -32,6 +32,7 @@ export * from './descriptionList';
 export * from './dialog';
 export * from './divider';
 export * from './drawer';
+export * from './editableText';
 export * from './emptyState';
 export * from './field';
 export * from './fileInput';

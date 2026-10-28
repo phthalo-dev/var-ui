@@ -232,6 +232,7 @@ export {
   type TimelineProps,
 } from './Timeline';
 export { Timestamp, type TimestampProps } from './Timestamp';
+export { EditableText, type EditableTextActivation, type EditableTextProps } from './EditableText';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export {
   FileTree,

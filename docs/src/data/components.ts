@@ -56,6 +56,14 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { CopyButton } from '@var-ui/react';",
   },
   {
+    slug: 'editable-text',
+    name: 'EditableText',
+    category: 'data-input',
+    description:
+      'Text that turns into an input on demand, keeping the typography of its display element.',
+    importLine: "import { EditableText } from '@var-ui/react';",
+  },
+  {
     slug: 'toggle-button',
     name: 'ToggleButton',
     category: 'action',

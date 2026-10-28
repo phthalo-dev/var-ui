@@ -3469,6 +3469,95 @@
       ]
     },
     {
+      "slug": "editable-text",
+      "name": "EditableText",
+      "category": "data-input",
+      "description": "Text that turns into an input on demand, keeping the typography of its display element.",
+      "importLine": "import { EditableText } from '@var-ui/react';",
+      "packages": [
+        "react",
+        "core"
+      ],
+      "docsPath": "/components/editable-text",
+      "markdown": "\n\n# EditableText\n\nText that turns into an input on demand. Wrap the display element (a `Heading`, `Text`, or any element that accepts children) and the input takes its place, inheriting the same font, size and color so nothing shifts.\n\n## Examples\n\n### Default\n\nDouble-click the heading, or focus it and press Enter or F2. Enter or clicking away commits; Escape cancels.\n\n```tsx\nimport { useState } from 'react';\nimport { EditableText, Heading } from '@var-ui/react';\n\nfunction PlaylistName() {\n  const [name, setName] = useState('Road trip');\n  return (\n    <EditableText value={name} onCommit={setName} aria-label=\"Playlist name\">\n      <Heading level={2}>{name}</Heading>\n    </EditableText>\n  );\n}\n```\n\n```astro\n<!-- No Astro binding yet — use @var-ui/react -->\n```\n\n```html\n<!-- No HTML demo yet — use @var-ui/react -->\n```\n\n### Activation\n\n`activation` controls what starts editing with the pointer: `doubleClick` (default), `click`, or `focus`. Enter and F2 start editing from the keyboard in every mode.\n\n## Props\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| onCommit | (value: string) => void | yes |  | Called with the new text on Enter or blur, when it differs from `value`. |\n| value | string | yes |  | Current committed text. |\n| activation | EditableTextActivation \\| undefined | no | doubleClick | What starts editing with the pointer. Enter and F2 always start editing from the keyboard. |\n| aria-label | string \\| undefined | no |  | Accessible name for the input. Defaults to the current value, or \"Edit text\" when that is empty. |\n| children | ReactNode | no |  | Display element (for example a `Heading`). Its typography is inherited by the input. |\n| className | string \\| undefined | no |  |  |\n| isDisabled | boolean \\| undefined | no |  | Prevents editing. |\n| isReadOnly | boolean \\| undefined | no |  | Shows the text without allowing it to be edited. |\n| onCancel | (() => void) \\| undefined | no |  | Called when editing is abandoned with Escape. |\n| onChange | ((value: string) => void) \\| undefined | no |  | Called with the draft text on every keystroke while editing. |\n| ref | Ref<HTMLDivElement> \\| undefined | no |  | Ref to the root `<div>` element. |\n\n## Accessibility\n\nWhile not editing, the root is a focusable `role=\"group\"` so keyboard users can reach it and press Enter or F2 to edit. While editing, the input is labelled by `aria-label` (falling back to the current value). Focus returns to the root after Enter or Escape; blur commits without moving focus. Disabled and read-only instances render the display element as-is and are not focusable.\n\n`onCommit` is not called when the text is unchanged. Empty text is passed through, so reject or restore it in `onCommit` if blank values are not allowed.\n",
+      "examples": [
+        {
+          "id": "editable-text.default",
+          "react": "import { useState } from 'react';\nimport { EditableText, Heading } from '@var-ui/react';\n\nfunction PlaylistName() {\n  const [name, setName] = useState('Road trip');\n  return (\n    <EditableText value={name} onCommit={setName} aria-label=\"Playlist name\">\n      <Heading level={2}>{name}</Heading>\n    </EditableText>\n  );\n}",
+          "astro": "<!-- No Astro binding yet — use @var-ui/react -->",
+          "html": "<!-- No HTML demo yet — use @var-ui/react -->"
+        }
+      ],
+      "props": [
+        {
+          "name": "onCommit",
+          "type": "(value: string) => void",
+          "required": true,
+          "description": "Called with the new text on Enter or blur, when it differs from `value`."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Current committed text."
+        },
+        {
+          "name": "activation",
+          "type": "EditableTextActivation | undefined",
+          "required": false,
+          "default": "doubleClick",
+          "description": "What starts editing with the pointer. Enter and F2 always start editing from the keyboard."
+        },
+        {
+          "name": "aria-label",
+          "type": "string | undefined",
+          "required": false,
+          "description": "Accessible name for the input. Defaults to the current value, or \"Edit text\" when that is empty."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Display element (for example a `Heading`). Its typography is inherited by the input."
+        },
+        {
+          "name": "className",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "isDisabled",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Prevents editing."
+        },
+        {
+          "name": "isReadOnly",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Shows the text without allowing it to be edited."
+        },
+        {
+          "name": "onCancel",
+          "type": "(() => void) | undefined",
+          "required": false,
+          "description": "Called when editing is abandoned with Escape."
+        },
+        {
+          "name": "onChange",
+          "type": "((value: string) => void) | undefined",
+          "required": false,
+          "description": "Called with the draft text on every keystroke while editing."
+        },
+        {
+          "name": "ref",
+          "type": "Ref<HTMLDivElement> | undefined",
+          "required": false,
+          "description": "Ref to the root `<div>` element."
+        }
+      ]
+    },
+    {
       "slug": "toggle-button",
       "name": "ToggleButton",
       "category": "action",

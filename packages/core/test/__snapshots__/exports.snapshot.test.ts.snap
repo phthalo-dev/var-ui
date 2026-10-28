@@ -33,6 +33,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "commandPalette",
       "copyButton",
       "descriptionList",
+      "editableText",
       "emptyState",
       "fileInput",
       "hiddenClassName",
@@ -197,7 +198,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByCategory": {
       "constant": 1,
       "fonts": 4,
-      "helper": 54,
+      "helper": 55,
       "icons": 1,
       "layout": 5,
       "object": 4,
@@ -208,12 +209,12 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tokens": 17,
     },
     "runtimeByKind": {
-      "function": 137,
+      "function": 138,
       "number": 4,
       "object": 22,
       "string": 4,
     },
-    "runtimeExports": 167,
+    "runtimeExports": 168,
     "typeOnlyExports": 116,
   },
   "typeOnlyExports": [
