@@ -1,7 +1,15 @@
 import type { JSX, Ref } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Autocomplete, Input, ListBox, ListBoxItem, TextField } from 'react-aria-components';
+import {
+  Autocomplete,
+  Header,
+  Input,
+  ListBox,
+  ListBoxItem,
+  ListBoxSection,
+  TextField,
+} from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette, type CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -18,6 +26,12 @@ export type CommandPaletteItem = {
   meta?: string;
   /** Extra search terms matched by the default filter but never rendered. */
   keywords?: string[];
+  /**
+   * Section heading. Consecutive items with the same `group` render together under that heading;
+   * keyboard navigation still moves through all items in order. Items without a `group` render
+   * without a heading.
+   */
+  group?: string;
 };
 
 export type CommandPaletteProps = {
@@ -63,6 +77,8 @@ type CommandPaletteSlot =
   | 'inputIcon'
   | 'input'
   | 'results'
+  | 'group'
+  | 'groupHeading'
   | 'result'
   | 'resultLink'
   | 'resultLinkActive'
@@ -84,8 +100,21 @@ function defaultFilter(item: CommandPaletteItem, query: string): boolean {
   return false;
 }
 
+type ItemBlock = { group?: string; items: CommandPaletteItem[] };
+
+/** Splits `items` into runs of consecutive items sharing a `group`, preserving order. */
+function toBlocks(items: CommandPaletteItem[]): ItemBlock[] {
+  const blocks: ItemBlock[] = [];
+  for (const item of items) {
+    const last = blocks[blocks.length - 1];
+    if (last && last.group === item.group) last.items.push(item);
+    else blocks.push({ group: item.group, items: [item] });
+  }
+  return blocks;
+}
+
 /**
- * ⌘K-style search overlay: filters a flat list of commands and reports the chosen `id` via
+ * ⌘K-style search overlay: filters a list of commands and reports the chosen `id` via
  * `onAction`. Callers own the open state and typically close the palette themselves inside
  * `onAction`.
  */
@@ -160,6 +189,25 @@ export function CommandPalette({
     [items, filter, query],
   );
 
+  const blocks = useMemo(() => toBlocks(visibleItems), [visibleItems]);
+
+  const renderItem = (item: CommandPaletteItem) => (
+    <ListBoxItem
+      key={item.id}
+      id={item.id}
+      textValue={item.title}
+      {...mergeProps(cp.result)}
+      onAction={() => onAction(item.id)}
+    >
+      {({ isFocused }) => (
+        <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
+          <span {...mergeProps(cp.resultTitle)}>{item.title}</span>
+          {item.meta ? <span {...mergeProps(cp.resultMeta)}>{item.meta}</span> : null}
+        </span>
+      )}
+    </ListBoxItem>
+  );
+
   const palette = (
     <dialog
       ref={(node) => {
@@ -200,7 +248,6 @@ export function CommandPalette({
               </TextField>
             </div>
             <ListBox
-              items={visibleItems}
               {...mergeProps(cp.results)}
               aria-label={placeholder}
               renderEmptyState={() => (
@@ -209,20 +256,15 @@ export function CommandPalette({
                 </div>
               )}
             >
-              {(item) => (
-                <ListBoxItem
-                  id={item.id}
-                  textValue={item.title}
-                  {...mergeProps(cp.result)}
-                  onAction={() => onAction(item.id)}
-                >
-                  {({ isFocused }) => (
-                    <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
-                      <span {...mergeProps(cp.resultTitle)}>{item.title}</span>
-                      {item.meta ? <span {...mergeProps(cp.resultMeta)}>{item.meta}</span> : null}
-                    </span>
-                  )}
-                </ListBoxItem>
+              {blocks.map((block, index) =>
+                block.group ? (
+                  <ListBoxSection key={`${index}:${block.group}`} {...mergeProps(cp.group)}>
+                    <Header {...mergeProps(cp.groupHeading)}>{block.group}</Header>
+                    {block.items.map(renderItem)}
+                  </ListBoxSection>
+                ) : (
+                  block.items.map(renderItem)
+                ),
               )}
             </ListBox>
           </Autocomplete>

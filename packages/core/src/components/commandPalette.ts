@@ -24,6 +24,8 @@ export const commandPalette = typestyles.recipe({
     'inputIcon',
     'input',
     'results',
+    'group',
+    'groupHeading',
     'result',
     'resultLink',
     'resultLinkActive',
@@ -92,6 +94,10 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.primary.var,
     },
+    groupHeadingColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
+    },
     emptyColor: {
       ...atProperty.color,
       value: t.color.text.secondary.var,
@@ -115,6 +121,7 @@ export const commandPalette = typestyles.recipe({
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
           [vars.markBackground.name]: t.color.tone.accent.subtleBackground.var,
           [vars.markForeground.name]: t.color.text.primary.var,
+          [vars.groupHeadingColor.name]: t.color.text.secondary.var,
           [vars.emptyColor.name]: t.color.text.secondary.var,
           // Closed <dialog> is display:none in the UA stylesheet; root layout must not
           // override that or the element stays in the hit-test tree and blocks clicks.
@@ -217,6 +224,18 @@ export const commandPalette = typestyles.recipe({
           margin: 0,
           padding: t.space[2].var,
           listStyle: 'none',
+        },
+        group: {
+          margin: 0,
+          padding: 0,
+        },
+        groupHeading: {
+          padding: `${t.space[2].var} ${t.space[4].var} ${t.space[1].var}`,
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.semibold.var,
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em',
+          color: vars.groupHeadingColor.var,
         },
         result: {
           margin: 0,
