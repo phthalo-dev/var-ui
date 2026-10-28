@@ -1,5 +1,19 @@
 # @var-ui/react
 
+## 0.5.0
+
+### Minor Changes
+
+- [#91](https://github.com/phthalo-dev/var-ui/pull/91) [`e723033`](https://github.com/phthalo-dev/var-ui/commit/e7230339263e85b6447111ca9456ec9622357be5) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add `EditableText`, which swaps a display element (such as a `Heading`) for an input on double-click, click, focus, or Enter/F2. Enter and blur commit, Escape cancels, and the input inherits the display element's typography.
+
+- [#85](https://github.com/phthalo-dev/var-ui/pull/85) [`c961552`](https://github.com/phthalo-dev/var-ui/commit/c961552ea48d5670cddaf046652d63e9ce57f625) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Components now accept a `ref` prop and forward it to their root DOM element.
+
+- [#82](https://github.com/phthalo-dev/var-ui/pull/82) [`6d369b2`](https://github.com/phthalo-dev/var-ui/commit/6d369b2fae2442ec7e4ff0a5e5a4b938ea44bec8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `LayoutPanel` gains `hasResizeHandle` (and `resizeHandleLabel`): with `resizable`, it renders a `ResizeHandle` on the edge facing the content, in place of the divider. `ResizeHandle` gains `isReversed` to flip drag and arrow-key direction for end-side regions.
+
+- [#81](https://github.com/phthalo-dev/var-ui/pull/81) [`7ac9a21`](https://github.com/phthalo-dev/var-ui/commit/7ac9a21009d1d41c9fc2d447f65b3c1b67a2619e) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `ResizeHandle` now drags with pointer events and pointer capture, so touch and pen input work and the drag keeps tracking outside the handle. The grab target extends 4px past the 1px visible line on each side (`touch-action: none` is set so touch drags don't scroll).
+
+- [#80](https://github.com/phthalo-dev/var-ui/pull/80) [`2a2fee4`](https://github.com/phthalo-dev/var-ui/commit/2a2fee4a88f46295b2488e578c44e9da12ac6fa4) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Table.Row` and `Table.Cell` now forward remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) to the underlying `<tr>`/`<td>`/`<th>` instead of silently dropping them.
+
 ## 0.4.0
 
 ### Minor Changes

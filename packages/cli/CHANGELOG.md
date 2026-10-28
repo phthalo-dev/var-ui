@@ -1,5 +1,11 @@
 # @var-ui/cli
 
+## 0.3.2
+
+### Patch Changes
+
+- [#91](https://github.com/phthalo-dev/var-ui/pull/91) [`e723033`](https://github.com/phthalo-dev/var-ui/commit/e7230339263e85b6447111ca9456ec9622357be5) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Include `EditableText` in the bundled component catalog.
+
 ## 0.3.1
 
 ### Patch Changes

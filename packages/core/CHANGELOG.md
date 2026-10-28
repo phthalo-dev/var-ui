@@ -1,5 +1,17 @@
 # @var-ui/core
 
+## 0.5.0
+
+### Minor Changes
+
+- [#91](https://github.com/phthalo-dev/var-ui/pull/91) [`e723033`](https://github.com/phthalo-dev/var-ui/commit/e7230339263e85b6447111ca9456ec9622357be5) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add `EditableText`, which swaps a display element (such as a `Heading`) for an input on double-click, click, focus, or Enter/F2. Enter and blur commit, Escape cancels, and the input inherits the display element's typography.
+
+### Patch Changes
+
+- [#89](https://github.com/phthalo-dev/var-ui/pull/89) [`02a1acb`](https://github.com/phthalo-dev/var-ui/commit/02a1acba0c8e7ae74e6b8af2361a30dd855aa880) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Pin `color-scheme` from `data-color-mode` with higher specificity so it beats the theme class.
+
+- [#81](https://github.com/phthalo-dev/var-ui/pull/81) [`7ac9a21`](https://github.com/phthalo-dev/var-ui/commit/7ac9a21009d1d41c9fc2d447f65b3c1b67a2619e) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `ResizeHandle` now drags with pointer events and pointer capture, so touch and pen input work and the drag keeps tracking outside the handle. The grab target extends 4px past the 1px visible line on each side (`touch-action: none` is set so touch drags don't scroll).
+
 ## 0.3.1
 
 ### Patch Changes
