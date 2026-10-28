@@ -10,8 +10,10 @@
  * - Adding or removing an unrelated source file reorders unrelated unions such as
  *   `enterKeyHint` (`@types/react` shares the `'search'` literal with first-party code).
  *
- * `packages/cli/data/catalog.json` is committed and compared byte-for-byte against a fresh
- * generation, so that churn showed up as spurious diffs and a failing `completeness` test.
+ * `packages/cli/data/catalog.json` used to be committed and compared byte-for-byte against a
+ * fresh generation, so that churn showed up as spurious diffs and a failing `completeness`
+ * test. The catalog is now generated at build time, but stable output still keeps the
+ * generated props and CLI docs deterministic.
  * This module removes the dependency on compiler internals by canonicalising the rendered
  * text:
  *
