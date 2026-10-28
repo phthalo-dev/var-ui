@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vite-plus/test';
 import { formatComponent } from '../commands/component';
-import type { Catalog } from '../types';
 import { buildCatalog, defaultRepoPaths, findRepoRoot } from './build-catalog';
 
 describe('catalog completeness', () => {
@@ -38,13 +37,5 @@ describe('catalog completeness', () => {
     expect(formatted).toContain(
       "```tsx\nimport { Button } from '@var-ui/react';\n\n<Button>Click me</Button>\n```",
     );
-
-    const catalogPath = join(repoRoot, 'packages/cli/data/catalog.json');
-    const committed = JSON.parse(readFileSync(catalogPath, 'utf8')) as Catalog;
-    expect(
-      committed,
-      'Committed packages/cli/data/catalog.json does not match generate output. Run `vp run -F @var-ui/cli generate`.',
-    ).toEqual(catalog);
-    expect(committed.components.length).toBeGreaterThan(50);
   }, 120_000);
 });

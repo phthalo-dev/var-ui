@@ -47,8 +47,9 @@ jobs:
 
       - run: vp run ci
 
-      # `vp run ci` builds every package that ships a dist. Hand it to the release
-      # job so publishing does not compile again.
+      # `vp run ci` builds every package that ships a dist, and generates the CLI's
+      # (gitignored) data/catalog.json. Hand both to the release job so publishing does
+      # not compile again.
       - name: Pack package dist artifacts
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -58,7 +59,11 @@ jobs:
               exit 1
             fi
           done
-          tar -czf package-dist.tar.gz packages/core/dist packages/react/dist packages/icons/dist packages/cli/dist
+          if [ ! -f packages/cli/data/catalog.json ]; then
+            echo "Missing packages/cli/data/catalog.json"
+            exit 1
+          fi
+          tar -czf package-dist.tar.gz packages/core/dist packages/react/dist packages/icons/dist packages/cli/dist packages/cli/data/catalog.json
 
       - name: Upload package dist artifacts
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -123,6 +128,10 @@ jobs:
               exit 1
             fi
           done
+          if [ ! -f packages/cli/data/catalog.json ]; then
+            echo "Missing restored packages/cli/data/catalog.json"
+            exit 1
+          fi
 
       - uses: changesets/action@v1
         with:
