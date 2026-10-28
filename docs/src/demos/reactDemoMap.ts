@@ -120,6 +120,8 @@ import HoverCardDefault from './hover-card/default/react';
 import HoverCardRich from './hover-card/rich/react';
 import CommandPaletteDefault from './command-palette/default/react';
 import CommandPaletteGrouped from './command-palette/grouped/react';
+import CommandPaletteRich from './command-palette/rich/react';
+import CommandPaletteAsync from './command-palette/async/react';
 import IconButtonDefault from './icon-button/default/react';
 import IconButtonSizes from './icon-button/sizes/react';
 import ButtonGroupDefault from './button-group/default/react';
@@ -301,6 +303,8 @@ export const reactDemoMap = {
   'hover-card.rich': HoverCardRich,
   'command-palette.default': CommandPaletteDefault,
   'command-palette.grouped': CommandPaletteGrouped,
+  'command-palette.rich': CommandPaletteRich,
+  'command-palette.async': CommandPaletteAsync,
   'icon-button.default': IconButtonDefault,
   'icon-button.sizes': IconButtonSizes,
   'button-group.default': ButtonGroupDefault,

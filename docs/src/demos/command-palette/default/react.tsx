@@ -11,10 +11,9 @@ export default function Preview() {
         onOpenChange={setOpen}
         hotkey={false}
         items={[
-          { id: 'docs', title: 'Docs', meta: 'Guides' },
-          { id: 'components', title: 'Components', meta: 'Library' },
+          { id: 'docs', title: 'Docs', meta: 'Guides', onSelect: () => {} },
+          { id: 'components', title: 'Components', meta: 'Library', onSelect: () => {} },
         ]}
-        onAction={() => setOpen(false)}
       />
     </>
   );

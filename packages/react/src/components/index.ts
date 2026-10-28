@@ -100,6 +100,11 @@ export {
   type CommandPaletteProps,
 } from './CommandPalette';
 export {
+  createCommandPalette,
+  useCommandPalette,
+  type CommandPaletteController,
+} from './commandPaletteController';
+export {
   Tooltip,
   type TooltipPopupProps,
   type TooltipProps,

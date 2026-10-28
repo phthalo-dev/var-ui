@@ -122,6 +122,8 @@ export type DemoId =
   | 'hover-card.rich'
   | 'command-palette.default'
   | 'command-palette.grouped'
+  | 'command-palette.rich'
+  | 'command-palette.async'
   | 'icon-button.default'
   | 'icon-button.sizes'
   | 'button-group.default'

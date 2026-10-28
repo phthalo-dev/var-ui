@@ -1,9 +1,10 @@
 import { describe, expect, it, vi, beforeEach } from 'vite-plus/test';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactElement } from 'react';
 import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
+import { createCommandPalette, useCommandPalette } from './commandPaletteController';
 
 function wrap(children: ReactElement) {
   return render(<LayerProvider>{children}</LayerProvider>);
@@ -390,5 +391,123 @@ describe('CommandPalette', () => {
     expect(screen.getByText('Searching…')).toBeTruthy();
     expect(screen.queryByText('No results')).toBeNull();
     expect(document.querySelector('[aria-busy="true"]')).toBeTruthy();
+  });
+});
+
+describe('CommandPalette item actions and chrome', () => {
+  const base = { hotkey: false, onOpenChange: () => {} } as const;
+
+  it('calls the item onSelect, then onAction, and closes by default', async () => {
+    const calls: string[] = [];
+    const onOpenChange = vi.fn();
+    wrap(
+      <CommandPalette
+        isOpen
+        hotkey={false}
+        onOpenChange={onOpenChange}
+        items={[{ id: 'a', title: 'Alpha', onSelect: () => calls.push('select') }]}
+        onAction={(id) => calls.push(`action:${id}`)}
+      />,
+    );
+    await userEvent.click(screen.getByText('Alpha'));
+    expect(calls).toEqual(['select', 'action:a']);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('works with onSelect alone (onAction is optional)', async () => {
+    const onSelect = vi.fn();
+    wrap(<CommandPalette isOpen {...base} items={[{ id: 'a', title: 'Alpha', onSelect }]} />);
+    await userEvent.type(screen.getByRole('textbox'), 'al');
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect(onSelect).toHaveBeenCalledOnce();
+  });
+
+  it('stays open after an action when closeOnAction is false', async () => {
+    const onOpenChange = vi.fn();
+    wrap(
+      <CommandPalette
+        isOpen
+        hotkey={false}
+        closeOnAction={false}
+        onOpenChange={onOpenChange}
+        items={[{ id: 'a', title: 'Alpha' }]}
+      />,
+    );
+    await userEvent.click(screen.getByText('Alpha'));
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it('renders an icon and shortcut key caps', () => {
+    wrap(
+      <CommandPalette
+        isOpen
+        {...base}
+        items={[
+          {
+            id: 'a',
+            title: 'Alpha',
+            icon: <svg data-testid="item-icon" />,
+            shortcut: ['⌘', 'K'],
+          },
+          { id: 'b', title: 'Beta', shortcut: 'G P' },
+        ]}
+      />,
+    );
+    expect(screen.getByTestId('item-icon')).toBeTruthy();
+    const keys = Array.from(document.querySelectorAll('kbd')).map((k) => k.textContent);
+    expect(keys).toEqual(['⌘', 'K', 'G P']);
+  });
+
+  it('highlights matches only when highlightMatches is set', async () => {
+    const items = [{ id: 'a', title: 'Open settings', meta: 'Preferences' }];
+    const { rerender } = wrap(<CommandPalette isOpen {...base} items={items} />);
+    await userEvent.type(screen.getByRole('textbox'), 'sett');
+    expect(document.querySelector('mark')).toBeNull();
+
+    rerender(
+      <LayerProvider>
+        <CommandPalette isOpen {...base} items={items} highlightMatches />
+      </LayerProvider>,
+    );
+    expect(document.querySelector('mark')?.textContent).toBe('sett');
+  });
+
+  it('supports a custom hotkey string or array', async () => {
+    const onOpenChange = vi.fn();
+    wrap(
+      <CommandPalette
+        isOpen={false}
+        onOpenChange={onOpenChange}
+        hotkey={['ctrl+shift+p', 'alt+/']}
+        items={[]}
+      />,
+    );
+    await userEvent.keyboard('{Meta>}k{/Meta}');
+    expect(onOpenChange).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Control>}{Shift>}p{/Shift}{/Control}');
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    await userEvent.keyboard('{Alt>}/{/Alt}');
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('opens and closes from a controller, including outside React', async () => {
+    const controller = createCommandPalette();
+    wrap(
+      <CommandPalette controller={controller} {...base} items={[{ id: 'a', title: 'Alpha' }]} />,
+    );
+    expect(screen.queryByPlaceholderText('Search…')).toBeNull();
+
+    act(() => controller.open());
+    await waitFor(() => expect(screen.getByPlaceholderText('Search…')).toBeTruthy());
+
+    await userEvent.click(screen.getByText('Alpha'));
+    expect(controller.getSnapshot()).toBe(false);
+  });
+
+  it('useCommandPalette exposes reactive isOpen', () => {
+    const { result } = renderHook(() => useCommandPalette());
+    expect(result.current.isOpen).toBe(false);
+    act(() => result.current.toggle());
+    expect(result.current.isOpen).toBe(true);
   });
 });

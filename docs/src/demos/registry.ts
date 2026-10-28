@@ -119,6 +119,8 @@ import { snippets as hoverCardDefaultSnippets } from './hover-card/default/snipp
 import { snippets as hoverCardRichSnippets } from './hover-card/rich/snippets';
 import { snippets as commandPaletteDefaultSnippets } from './command-palette/default/snippets';
 import { snippets as commandPaletteGroupedSnippets } from './command-palette/grouped/snippets';
+import { snippets as commandPaletteRichSnippets } from './command-palette/rich/snippets';
+import { snippets as commandPaletteAsyncSnippets } from './command-palette/async/snippets';
 import { snippets as iconButtonDefaultSnippets } from './icon-button/default/snippets';
 import { snippets as iconButtonSizesSnippets } from './icon-button/sizes/snippets';
 import { snippets as buttonGroupDefaultSnippets } from './button-group/default/snippets';
@@ -301,6 +303,8 @@ export const DEMO_IDS = [
   'hover-card.rich',
   'command-palette.default',
   'command-palette.grouped',
+  'command-palette.rich',
+  'command-palette.async',
   'icon-button.default',
   'icon-button.sizes',
   'button-group.default',
@@ -482,6 +486,8 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'hover-card.rich': hoverCardRichSnippets,
   'command-palette.default': commandPaletteDefaultSnippets,
   'command-palette.grouped': commandPaletteGroupedSnippets,
+  'command-palette.rich': commandPaletteRichSnippets,
+  'command-palette.async': commandPaletteAsyncSnippets,
   'icon-button.default': iconButtonDefaultSnippets,
   'icon-button.sizes': iconButtonSizesSnippets,
   'button-group.default': buttonGroupDefaultSnippets,
@@ -663,6 +669,8 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'hover-card.rich': () => import('./hover-card/rich/react'),
   'command-palette.default': () => import('./command-palette/default/react'),
   'command-palette.grouped': () => import('./command-palette/grouped/react'),
+  'command-palette.rich': () => import('./command-palette/rich/react'),
+  'command-palette.async': () => import('./command-palette/async/react'),
   'icon-button.default': () => import('./icon-button/default/react'),
   'icon-button.sizes': () => import('./icon-button/sizes/react'),
   'button-group.default': () => import('./button-group/default/react'),
@@ -1323,6 +1331,16 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'command-palette.grouped',
     snippets: demoSnippets['command-palette.grouped'],
     react: reactDemoLoaders['command-palette.grouped'],
+  },
+  'command-palette.rich': {
+    id: 'command-palette.rich',
+    snippets: demoSnippets['command-palette.rich'],
+    react: reactDemoLoaders['command-palette.rich'],
+  },
+  'command-palette.async': {
+    id: 'command-palette.async',
+    snippets: demoSnippets['command-palette.async'],
+    react: reactDemoLoaders['command-palette.async'],
   },
   'icon-button.default': {
     id: 'icon-button.default',

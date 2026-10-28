@@ -6,8 +6,7 @@ export const snippets = {
 <CommandPalette
   isOpen={open}
   onOpenChange={setOpen}
-  items={[{ id: 'docs', title: 'Docs', meta: 'Guides' }]}
-  onAction={() => setOpen(false)}
+  items={[{ id: 'docs', title: 'Docs', meta: 'Guides', onSelect: () => navigate('/docs') }]}
 />`,
   astro: `---
 import { CommandPalette } from '@var-ui/astro';
