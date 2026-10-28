@@ -132,11 +132,33 @@ function defaultFilter(item: CommandPaletteItem, query: string): boolean {
 const subscribeNever = () => () => {};
 const getFalse = () => false;
 
+/**
+ * Lowercases `text` and records, for every UTF-16 unit of the result, the index of the original
+ * character it came from. Lowercasing can change length (`İ` → `i̇`), so offsets found in the
+ * lowercase string must be mapped back before slicing the original.
+ */
+function lowerWithOffsets(text: string): { lower: string; origin: number[] } {
+  let lower = '';
+  const origin: number[] = [];
+  for (let i = 0; i < text.length;) {
+    const char = String.fromCodePoint(text.codePointAt(i)!);
+    const lowered = char.toLowerCase();
+    lower += lowered;
+    for (let j = 0; j < lowered.length; j++) origin.push(i);
+    i += char.length;
+  }
+  return { lower, origin };
+}
+
 function renderHighlighted(text: string, query: string, cp: { mark: ComponentAttrsResult }) {
   const q = query.trim().toLowerCase();
-  const start = q ? text.toLowerCase().indexOf(q) : -1;
-  if (start < 0) return text;
-  const end = start + q.length;
+  if (!q) return text;
+  const { lower, origin } = lowerWithOffsets(text);
+  const matchStart = lower.indexOf(q);
+  if (matchStart < 0) return text;
+  const start = origin[matchStart]!;
+  const lastOrigin = origin[matchStart + q.length - 1]!;
+  const end = lastOrigin + String.fromCodePoint(text.codePointAt(lastOrigin)!).length;
   return (
     <>
       {text.slice(0, start)}

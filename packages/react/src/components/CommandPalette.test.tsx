@@ -472,6 +472,14 @@ describe('CommandPalette item actions and chrome', () => {
     expect(document.querySelector('mark')?.textContent).toBe('sett');
   });
 
+  it('highlights the right characters when lowercasing changes string length', async () => {
+    wrap(
+      <CommandPalette isOpen {...base} highlightMatches items={[{ id: 'a', title: 'İstanbul' }]} />,
+    );
+    await userEvent.type(screen.getByRole('textbox'), 'stan');
+    expect(document.querySelector('mark')?.textContent).toBe('stan');
+  });
+
   it('supports a custom hotkey string or array', async () => {
     const onOpenChange = vi.fn();
     wrap(

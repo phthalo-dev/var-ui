@@ -79,6 +79,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
   const resultLinkClass = root.dataset.classResultLink ?? 'var-ui-command-palette__resultLink';
   const resultLinkActiveClass =
     root.dataset.classResultLinkActive ?? 'var-ui-command-palette__resultLinkActive';
+  const resultBodyClass = root.dataset.classResultBody ?? 'var-ui-command-palette__resultBody';
   const resultTitleClass = root.dataset.classResultTitle ?? 'var-ui-command-palette__resultTitle';
   const resultMetaClass = root.dataset.classResultMeta ?? 'var-ui-command-palette__resultMeta';
   const emptyClass = root.dataset.classEmpty ?? 'var-ui-command-palette__empty';
@@ -137,7 +138,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
                 data-var-ui-command-palette-item
                 data-index="${optionIndex}"
                 id="var-ui-command-palette-option-${paletteId || 'default'}-${optionIndex}"
-              ><span class="${resultTitleClass}">${escapeHtml(item.title)}</span>${meta}</a>`;
+              ><span class="${resultBodyClass}"><span class="${resultTitleClass}">${escapeHtml(item.title)}</span>${meta}</span></a>`;
           })
           .join('');
 

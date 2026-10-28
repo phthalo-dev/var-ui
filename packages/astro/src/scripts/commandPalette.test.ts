@@ -21,6 +21,7 @@ describe('initCommandPalette', () => {
         data-command-palette-id="palette"
         data-class-result-link="result-link"
         data-class-result-link-active="result-link-active"
+        data-class-result-body="result-body"
         data-class-result-title="result-title"
         data-class-result-meta="result-meta"
         data-class-empty="empty"
@@ -55,6 +56,9 @@ describe('initCommandPalette', () => {
     expect(dialog?.open).toBe(true);
     expect(root.querySelectorAll('[data-var-ui-command-palette-item]')).toHaveLength(2);
     expect(root.querySelector('.group-label')?.textContent).toBe('Docs');
+
+    const body = root.querySelector('[data-var-ui-command-palette-item] > .result-body');
+    expect(body?.querySelector('.result-title')?.textContent).toBe('Docs');
   });
 
   it('does not double-bind handlers', () => {
