@@ -1,5 +1,21 @@
 # @var-ui/core
 
+## 0.6.0
+
+### Minor Changes
+
+- [#96](https://github.com/phthalo-dev/var-ui/pull/96) [`0623a95`](https://github.com/phthalo-dev/var-ui/commit/0623a957e09968859d18882d49677464c59f157b) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CommandPalette` DX pass:
+  
+  - Items accept `onSelect`; `onAction` is now optional.
+  - The palette closes itself after an item is chosen (`closeOnAction`, default `true`). Callers that closed it in `onAction` can drop that.
+  - Items accept `icon` and `shortcut` (key-cap hints).
+  - `hotkey` takes a combo string or array (`'mod+k'`, `'ctrl+shift+p'`) as well as a boolean.
+  - New `controller` prop plus `createCommandPalette()` / `useCommandPalette()` to open the palette from outside the component tree.
+  - New `highlightMatches` prop wraps matching text in a `<mark>`.
+  - Core recipe gains `resultIcon`, `resultBody` and `resultShortcut` slots; `resultLink` is now a flex row.
+
+- [#94](https://github.com/phthalo-dev/var-ui/pull/94) [`b0a8a10`](https://github.com/phthalo-dev/var-ui/commit/b0a8a1099bd246dcf59323bee581341311787055) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CommandPalette` items accept an optional `group`. Consecutive items sharing a `group` render under a section heading, and keyboard navigation still moves through all items in order.
+
 ## 0.5.0
 
 ### Minor Changes
