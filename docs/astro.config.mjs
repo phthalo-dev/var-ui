@@ -83,6 +83,7 @@ export default defineConfig({
         '@var-ui/astro': `${root}/packages/astro/index.ts`,
         '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
         '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
+        '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
         '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,
         '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
         '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
