@@ -37,7 +37,7 @@ export type EditableTextProps = {
   isDisabled?: boolean;
   /** Shows the text without allowing it to be edited. */
   isReadOnly?: boolean;
-  /** Accessible name for the input. Defaults to the current value. */
+  /** Accessible name for the input. Defaults to the current value, or "Edit text" when that is empty. */
   'aria-label'?: string;
   className?: string;
   /** Ref to the root `<div>` element. */
@@ -75,19 +75,28 @@ export function EditableText({
   const isSettledRef = useRef(false);
   const restoreFocusRef = useRef(false);
   const canEdit = !isDisabled && !isReadOnly;
+  const isActive = isEditing && canEdit;
+
+  // Losing the ability to edit mid-edit discards the draft, so it can't commit later.
+  useEffect(() => {
+    if (!canEdit) {
+      isSettledRef.current = true;
+      setIsEditing(false);
+    }
+  }, [canEdit]);
 
   useEffect(() => {
-    if (isEditing) {
+    if (isActive) {
       inputRef.current?.focus();
       inputRef.current?.select();
     } else if (restoreFocusRef.current) {
       restoreFocusRef.current = false;
       rootRef.current?.focus();
     }
-  }, [isEditing]);
+  }, [isActive]);
 
   const startEditing = () => {
-    if (!canEdit || isEditing) return;
+    if (!canEdit || isActive) return;
     isSettledRef.current = false;
     setDraft(value);
     setIsEditing(true);
@@ -113,12 +122,14 @@ export function EditableText({
       finish(true, true);
     } else if (event.key === 'Escape') {
       event.preventDefault();
+      // Keep ancestors (menus, popovers) from also dismissing on this Escape.
+      event.stopPropagation();
       finish(false, true);
     }
   };
 
   const handleRootKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (isEditing || event.target !== event.currentTarget) return;
+    if (isActive || event.target !== event.currentTarget) return;
     if (event.key === 'Enter' || event.key === 'F2') {
       event.preventDefault();
       startEditing();
@@ -140,7 +151,7 @@ export function EditableText({
       ref={inputRef}
       type="text"
       value={draft}
-      aria-label={ariaLabel ?? value}
+      aria-label={ariaLabel || value || 'Edit text'}
       onChange={handleChange}
       onKeyDown={handleInputKeyDown}
       onBlur={() => finish(true, false)}
@@ -148,7 +159,7 @@ export function EditableText({
   );
 
   let content: ReactNode = children;
-  if (isEditing) {
+  if (isActive) {
     content = isValidElement(children)
       ? cloneElement(children as ReactElement<{ children?: ReactNode }>, { children: input })
       : input;
@@ -163,9 +174,9 @@ export function EditableText({
         if (ref) ref.current = node;
       }}
       role={canEdit ? 'group' : undefined}
-      aria-label={canEdit && !isEditing ? ariaLabel : undefined}
+      aria-label={canEdit && !isActive ? ariaLabel : undefined}
       aria-disabled={isDisabled || undefined}
-      tabIndex={canEdit && !isEditing ? 0 : undefined}
+      tabIndex={canEdit && !isActive ? 0 : undefined}
       onClick={canEdit && activation === 'click' ? startEditing : undefined}
       onDoubleClick={canEdit && activation === 'doubleClick' ? startEditing : undefined}
       onKeyDown={canEdit ? handleRootKeyDown : undefined}

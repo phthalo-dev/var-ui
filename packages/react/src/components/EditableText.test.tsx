@@ -112,6 +112,55 @@ describe('EditableText', () => {
     expect(screen.queryByRole('textbox')).toBeNull();
   });
 
+  it('does not let Escape reach ancestors while cancelling an edit', async () => {
+    const onKeyDown = vi.fn();
+    render(
+      <div onKeyDown={onKeyDown}>
+        <EditableText value="Road trip" onCommit={() => {}}>
+          <Heading level={1}>Road trip</Heading>
+        </EditableText>
+      </div>,
+    );
+    await userEvent.dblClick(screen.getByRole('heading'));
+    onKeyDown.mockClear();
+    await userEvent.keyboard('{Escape}');
+    expect(onKeyDown).not.toHaveBeenCalled();
+  });
+
+  it('gives the input a non-empty accessible name when the value is empty', async () => {
+    render(
+      <EditableText value="" onCommit={() => {}} activation="click">
+        <Heading level={1}>Untitled</Heading>
+      </EditableText>,
+    );
+    await userEvent.click(screen.getByRole('heading'));
+    expect(screen.getByRole('textbox', { name: 'Edit text' })).toBeTruthy();
+  });
+
+  it('ends the edit without committing when it becomes disabled', async () => {
+    const onCommit = vi.fn();
+    const { rerender } = render(
+      <EditableText value="Road trip" onCommit={onCommit}>
+        <Heading level={1}>Road trip</Heading>
+      </EditableText>,
+    );
+    await userEvent.dblClick(screen.getByRole('heading'));
+    await userEvent.keyboard('Summer');
+    rerender(
+      <EditableText value="Road trip" onCommit={onCommit} isDisabled>
+        <Heading level={1}>Road trip</Heading>
+      </EditableText>,
+    );
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(onCommit).not.toHaveBeenCalled();
+    rerender(
+      <EditableText value="Road trip" onCommit={onCommit}>
+        <Heading level={1}>Road trip</Heading>
+      </EditableText>,
+    );
+    expect(screen.queryByRole('textbox')).toBeNull();
+  });
+
   it('forwards ref to the root element', () => {
     const ref = createRef<HTMLDivElement>();
     render(
