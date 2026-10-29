@@ -1,6 +1,6 @@
 import { reset } from 'typestyles/globals';
 import { designTokens as t } from '../tokens';
-import { focusRing } from '../components/focusRing';
+import { focusRing } from '../internal/focusRing';
 import { atReducedMotion } from './conditions';
 import { COLOR_MODE_ATTRIBUTE } from './constants';
 import { global } from '../runtime';

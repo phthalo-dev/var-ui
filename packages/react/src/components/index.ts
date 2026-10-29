@@ -103,7 +103,7 @@ export {
   createCommandPalette,
   useCommandPalette,
   type CommandPaletteController,
-} from './commandPaletteController';
+} from '../internal/commandPaletteController';
 export {
   Tooltip,
   type TooltipPopupProps,

@@ -1,8 +1,12 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeMetrics, controlSizeVariants, controlSurfaceSize } from './controlSize';
+import { focusRing } from '../internal/focusRing';
+import {
+  controlSizeMetrics,
+  controlSizeVariants,
+  controlSurfaceSize,
+} from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 
 /** Command-trigger chrome collapses to an icon button below this width. */

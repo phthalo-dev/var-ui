@@ -3,7 +3,7 @@ import { FieldError, Label, TextArea, TextField as AriaTextField } from 'react-a
 import { textAreaField } from '@var-ui/core/components/textAreaField';
 import type { BaseTextFieldProps } from './TextField';
 import { mergeProps } from 'typestyles';
-import { mergeRacClassName } from './racClassName';
+import { mergeRacClassName } from '../internal/racClassName';
 
 export type TextAreaFieldProps = BaseTextFieldProps & {
   /** Placeholder text shown when the textarea is empty. */

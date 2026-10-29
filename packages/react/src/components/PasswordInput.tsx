@@ -6,7 +6,7 @@ import type { PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import type { BaseTextFieldProps } from './TextField';
 import { mergeProps } from 'typestyles';
-import { mergeRacClassName } from './racClassName';
+import { mergeRacClassName } from '../internal/racClassName';
 
 export type PasswordInputProps = BaseTextFieldProps & {
   placeholder?: string;

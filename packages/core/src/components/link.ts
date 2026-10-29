@@ -1,6 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 /** Accent + focus ring follow semantic color tokens directly — single-class recipe, no slot callback. */
 export const link = typestyles.style(

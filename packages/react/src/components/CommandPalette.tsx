@@ -18,8 +18,8 @@ import { useLayer } from '../layers/LayerProvider';
 import { useOverlayPresence } from '../overlays';
 import { cx, mergeProps } from 'typestyles';
 import { Kbd } from './Kbd';
-import type { CommandPaletteController } from './commandPaletteController';
-import { DEFAULT_COMMAND_PALETTE_HOTKEY, matchesHotkey } from './commandPaletteHotkey';
+import type { CommandPaletteController } from '../internal/commandPaletteController';
+import { DEFAULT_COMMAND_PALETTE_HOTKEY, matchesHotkey } from '../internal/commandPaletteHotkey';
 
 export type CommandPaletteItem = {
   /** Unique item identifier passed to `onAction`. */

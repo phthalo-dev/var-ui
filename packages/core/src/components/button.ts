@@ -1,8 +1,8 @@
 import { atProperty, type RecipeVariants, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeVariants, controlSurfaceSize } from './controlSize';
+import { focusRing } from '../internal/focusRing';
+import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,

@@ -1,8 +1,8 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeMetrics, controlSizeVariants } from './controlSize';
-import { fieldChrome } from './fieldChrome';
+import { focusRing } from '../internal/focusRing';
+import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
+import { fieldChrome } from '../internal/fieldChrome';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 

@@ -17,7 +17,7 @@ import {
 import { select } from '@var-ui/core/components/select';
 import type { SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { ControlSizeContext, useControlSize } from './controlSizeContext';
+import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import type { FieldMeta } from './Field';
 import { mergeProps } from 'typestyles';
 

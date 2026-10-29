@@ -4,8 +4,8 @@ import { atDarkMode, atReducedMotion } from '../theme/conditions';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { focusRing } from '../internal/focusRing';
+import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 
 const segmentedSegmentPaddingInline: Record<ControlSize, string> = {

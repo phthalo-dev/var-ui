@@ -3,8 +3,8 @@ import { typestyles } from '../runtime';
 import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeVariants, controlSurfaceSize } from './controlSize';
+import { focusRing } from '../internal/focusRing';
+import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 
 /** Single toggle button and segmented-control item styling. */

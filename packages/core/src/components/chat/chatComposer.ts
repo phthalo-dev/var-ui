@@ -1,7 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
-import { focusRing } from '../focusRing';
+import { focusRing } from '../../internal/focusRing';
 
 /**
  * Composer chrome: a bordered container around the message textarea and a

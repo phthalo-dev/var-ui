@@ -1,7 +1,7 @@
 import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const codeBlockVarDefinitions = {

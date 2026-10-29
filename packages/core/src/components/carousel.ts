@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 /**
  * Scroll-snap carousel. CSS does the snapping; the React wrapper only adds

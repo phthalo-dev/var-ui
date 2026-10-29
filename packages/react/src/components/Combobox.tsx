@@ -18,7 +18,7 @@ import {
 import { combobox } from '@var-ui/core/components/combobox';
 import type { ComboboxVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { ControlSizeContext, useControlSize } from './controlSizeContext';
+import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import { mergeProps } from 'typestyles';
 
 /** Shared across every part so `size` set on `Combobox.Root` reaches the input shell. */

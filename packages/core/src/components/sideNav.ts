@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 /** Icon-only rail width in px when the nav is collapsed. */
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 

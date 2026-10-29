@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { calendarGridChrome } from './fieldChrome';
+import { calendarGridChrome } from '../internal/fieldChrome';
 
 export const calendar = typestyles.recipe({
   name: 'calendar',

@@ -31,4 +31,4 @@ the component modules that fixture renders (`@var-ui/react/components/<X>`) plus
 `@var-ui/core/components/<x>` subpaths (enforced by lint), so unused components add no CSS. Add the
 modules a fixture renders to its entry when you change its app code.
 
-Library packages use `vp pack` with `unbundle: true` so consumer bundlers can tree-shake per module. `@var-ui/core` regenerates its export map after each pack via `scripts/generate-subpath-exports.mjs`. `@var-ui/react` publishes `./components/*`.
+Library packages use `vp pack` with `unbundle: true` so consumer bundlers can tree-shake per module. Both `@var-ui/core` and `@var-ui/react` publish static `./components/*` (and core `./shared/*`) wildcards; implementation helpers live under `src/internal/` and are not exported.

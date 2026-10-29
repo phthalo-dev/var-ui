@@ -7,7 +7,7 @@ import {
 } from 'react-aria-components';
 import { radio } from '@var-ui/core/components/radio';
 import { mergeProps } from 'typestyles';
-import { mergeRacClassName } from './racClassName';
+import { mergeRacClassName } from '../internal/racClassName';
 
 export type RadioGroupOption = {
   /** Value submitted with the form when this option is selected. */
