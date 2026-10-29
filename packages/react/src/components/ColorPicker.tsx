@@ -113,6 +113,53 @@ export function ColorPicker({
     }
   };
 
+  /** Shared slider keyboard handling; returns the next value or null if the key is unhandled. */
+  const nextSliderValue = (
+    event: KeyboardEvent<HTMLDivElement>,
+    current: number,
+    min: number,
+    max: number,
+  ): number | null => {
+    const step = event.shiftKey ? 10 : 1;
+    let next: number;
+    switch (event.key) {
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        next = current - step;
+        break;
+      case 'ArrowRight':
+      case 'ArrowUp':
+        next = current + step;
+        break;
+      case 'PageDown':
+        next = current - 10;
+        break;
+      case 'PageUp':
+        next = current + 10;
+        break;
+      case 'Home':
+        next = min;
+        break;
+      case 'End':
+        next = max;
+        break;
+      default:
+        return null;
+    }
+    event.preventDefault();
+    return Math.min(max, Math.max(min, next));
+  };
+
+  const onHueKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const next = nextSliderValue(event, Math.round(hsv.h), 0, 359);
+    if (next !== null) setHsv({ ...hsv, h: next });
+  };
+
+  const onAlphaKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const next = nextSliderValue(event, Math.round((hsv.a ?? 1) * 100), 0, 100);
+    if (next !== null) setHsv({ ...hsv, a: next / 100 });
+  };
+
   return (
     <div {...mergeProps(cp.root, className)} ref={ref} data-var-ui-color-picker>
       <div
@@ -147,8 +194,11 @@ export function ColorPicker({
         aria-valuemin={0}
         aria-valuemax={360}
         aria-valuenow={Math.round(hsv.h)}
+        aria-valuetext={`${Math.round(hsv.h)} degrees`}
+        aria-orientation="horizontal"
         tabIndex={0}
         onPointerDown={bindPointerDrag(hueRef, updateHue)}
+        onKeyDown={onHueKeyDown}
       >
         <div {...mergeProps(cp.hueThumb)} style={{ left: `${(hsv.h / 360) * 100}%` }} />
       </div>
@@ -162,8 +212,11 @@ export function ColorPicker({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round((hsv.a ?? 1) * 100)}
+          aria-valuetext={`${Math.round((hsv.a ?? 1) * 100)}%`}
+          aria-orientation="horizontal"
           tabIndex={0}
           onPointerDown={bindPointerDrag(alphaRef, updateAlpha)}
+          onKeyDown={onAlphaKeyDown}
         >
           <div
             {...mergeProps(cp.alphaGradient)}

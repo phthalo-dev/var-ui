@@ -83,7 +83,11 @@ export function DesignSystemProvider({
     if (controlledColorMode === undefined) {
       setUncontrolledColorMode(nextColorMode);
       if (storageKey && typeof window !== 'undefined') {
-        window.localStorage.setItem(storageKey, nextColorMode);
+        try {
+          window.localStorage.setItem(storageKey, nextColorMode);
+        } catch {
+          // Storage blocked/full — the preference still applies for this session.
+        }
       }
     }
     onColorModeChange?.(nextColorMode);

@@ -94,3 +94,43 @@ describe('Tokenizer', () => {
     expect(screen.queryByText('Apple')).toBeNull();
   });
 });
+
+describe('Tokenizer form wiring', () => {
+  it('describes the input by description and error', () => {
+    render(
+      <IconProvider icons={{}}>
+        <Tokenizer
+          label="Fruit"
+          description="Pick some"
+          errorMessage="Required"
+          options={OPTIONS}
+          value={[]}
+          onChange={() => {}}
+        />
+      </IconProvider>,
+    );
+    const input = screen.getByRole('combobox');
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.getAttribute('aria-describedby')).toContain(screen.getByText('Pick some').id);
+    expect(input.getAttribute('aria-describedby')).toContain(screen.getByText('Required').id);
+  });
+
+  it('emits one hidden input per token under name', () => {
+    const { container } = render(
+      <IconProvider icons={{}}>
+        <form>
+          <Tokenizer
+            name="fruit"
+            options={OPTIONS}
+            value={OPTIONS.slice(0, 2)}
+            onChange={() => {}}
+          />
+        </form>
+      </IconProvider>,
+    );
+    expect(new FormData(container.querySelector('form')!).getAll('fruit')).toEqual([
+      'apple',
+      'apricot',
+    ]);
+  });
+});

@@ -72,3 +72,22 @@ describe('ColorInput', () => {
     expect(screen.getByRole('slider', { name: 'Hue' })).toBeTruthy();
   });
 });
+
+describe('ColorInput accessibility wiring', () => {
+  it('describes the hex input by description and error', () => {
+    render(
+      <ColorInput
+        label="Brand"
+        description="Pick one"
+        errorMessage="Bad color"
+        value="#ff00aa"
+        onChange={() => {}}
+      />,
+    );
+    const input = screen.getByRole('textbox');
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.getAttribute('aria-describedby')).toBe(
+      `${screen.getByText('Pick one').id} ${screen.getByText('Bad color').id}`,
+    );
+  });
+});

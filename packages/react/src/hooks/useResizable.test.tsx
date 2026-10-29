@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it, vi } from 'vite-plus/test';
 import { act, renderHook } from '@testing-library/react';
 import { useResizable } from './useResizable';
 
@@ -109,5 +109,27 @@ describe('useResizable', () => {
     );
     expect(result2.current.end.width).toBe(420);
     localStorage.removeItem('var-ui-resizable:panels:end');
+  });
+
+  it('renders defaultWidth on the server and applies the persisted width after mount', () => {
+    localStorage.setItem('var-ui-resizable:ssr', '320');
+    const seen: number[] = [];
+    const { result } = renderHook(() => {
+      const r = useResizable({ autoSaveId: 'ssr', defaultWidth: 260 });
+      seen.push(r.width);
+      return r;
+    });
+    expect(seen[0]).toBe(260);
+    expect(result.current.width).toBe(320);
+    localStorage.removeItem('var-ui-resizable:ssr');
+  });
+
+  it('does not throw when localStorage access throws', () => {
+    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    const { result } = renderHook(() => useResizable({ autoSaveId: 'blocked', defaultWidth: 260 }));
+    expect(result.current.width).toBe(260);
+    spy.mockRestore();
   });
 });

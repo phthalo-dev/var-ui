@@ -18,10 +18,14 @@ export function Checkbox({ children, className, ref, ...props }: CheckboxProps):
   const cb = checkbox();
   return (
     <AriaCheckbox {...props} {...mergeProps(cb.root, className)} ref={ref}>
-      {({ isSelected }) => (
+      {({ isSelected, isIndeterminate }) => (
         <>
-          <span {...mergeProps(cb.box)} data-selected={isSelected || undefined}>
-            {isSelected ? '✓' : ''}
+          <span
+            {...mergeProps(cb.box)}
+            data-selected={isSelected || undefined}
+            data-indeterminate={isIndeterminate || undefined}
+          >
+            {isIndeterminate ? '−' : isSelected ? '✓' : ''}
           </span>
           <span {...mergeProps(cb.label)}>{children}</span>
         </>

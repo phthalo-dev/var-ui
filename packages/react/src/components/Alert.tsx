@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { AriaRole, JSX, ReactNode, Ref } from 'react';
 import { alert, type AlertVariantProps, type IconName, type Tone } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -28,6 +28,11 @@ export type AlertProps = {
   icon?: ReactNode | null;
   /** Message body. */
   children: ReactNode;
+  /**
+   * Optional ARIA role for the root (e.g. `status` or `alert` for alerts that appear dynamically).
+   * Omitted by default so static alerts are not announced.
+   */
+  role?: AriaRole;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Ref to the underlying `<div>` element. */
@@ -41,6 +46,7 @@ export function Alert({
   action,
   icon,
   children,
+  role,
   className,
   ref,
 }: AlertProps): JSX.Element {
@@ -55,6 +61,7 @@ export function Alert({
   return (
     <div
       {...mergeProps(a.root, className)}
+      role={role}
       data-alert
       data-alert-variant={variant}
       data-alert-appearance={appearance}

@@ -45,7 +45,10 @@ export type AlertDialogPopupProps = Omit<DialogPopupProps, 'role'>;
 export type AlertDialogTitleProps = DialogTitleProps;
 export type AlertDialogActionsProps = DialogActionsProps;
 
-const AlertDialogRoot = Dialog.Root;
+/** Dialog root that requires an explicit choice: backdrop clicks do not dismiss unless `isDismissable` is set. */
+function AlertDialogRoot({ isDismissable = false, ...props }: AlertDialogRootProps): JSX.Element {
+  return <Dialog.Root {...props} isDismissable={isDismissable} />;
+}
 const AlertDialogTrigger = Dialog.Trigger;
 const AlertDialogBackdrop = Dialog.Backdrop;
 

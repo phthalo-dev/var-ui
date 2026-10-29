@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactElement } from 'react';
 import { LayerProvider } from '../layers/LayerProvider';
@@ -133,5 +133,29 @@ describe('AlertDialog', () => {
       false,
       expect.objectContaining({ reason: expect.any(String) }),
     );
+  });
+
+  it('is not dismissed by a backdrop click by default but still closes on Escape', async () => {
+    const onOpenChange = vi.fn();
+    wrap(
+      <AlertDialog
+        triggerLabel="Open"
+        title="Delete?"
+        description="Sure?"
+        onConfirm={() => {}}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    const dialog = screen.getByRole('alertdialog');
+    const describedBy = dialog.getAttribute('aria-describedby');
+    expect(document.getElementById(describedBy as string)?.textContent).toBe('Sure?');
+    onOpenChange.mockClear();
+    await userEvent.click(document.querySelector('.var-ui-dialog__overlay') as Element);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('alertdialog')).toBeTruthy();
+    act(() => screen.getByRole('alertdialog').focus());
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything()));
   });
 });

@@ -10,4 +10,12 @@ describe('Checkbox', () => {
     expect(root?.className).toContain('var-ui-checkbox');
     expect(root?.className).toContain('custom');
   });
+
+  it('renders an indeterminate state distinct from checked', () => {
+    render(<Checkbox isIndeterminate>Some</Checkbox>);
+    const box = document.querySelector('span[data-indeterminate]');
+    expect(box).not.toBeNull();
+    expect(box?.textContent).toBe('−');
+    expect(box?.hasAttribute('data-selected')).toBe(false);
+  });
 });

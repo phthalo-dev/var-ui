@@ -45,7 +45,13 @@ const VALID_COLOR_MODES: ColorMode[] = ['light', 'dark', 'system'];
 
 export function readStoredColorMode(storageKey: string | undefined): ColorMode | undefined {
   if (!storageKey || typeof window === 'undefined') return undefined;
-  const stored = window.localStorage.getItem(storageKey);
+  let stored: string | null = null;
+  try {
+    stored = window.localStorage.getItem(storageKey);
+  } catch {
+    // Blocked storage (privacy mode, disabled cookies) — fall back to the default.
+    return undefined;
+  }
   return VALID_COLOR_MODES.includes(stored as ColorMode) ? (stored as ColorMode) : undefined;
 }
 

@@ -1,7 +1,14 @@
 import { createContext, type FormEvent, type FormHTMLAttributes, type JSX, type Ref } from 'react';
 
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & {
+  /**
+   * Called with the event and `FormData` once the form is valid. If it returns
+   * a promise that rejects, the rejection goes to `onError`, or is reported
+   * globally (`reportError`) when `onError` is not provided.
+   */
   onSubmit?: (event: FormEvent<HTMLFormElement>, data: FormData) => void | Promise<void>;
+  /** Receives the rejection of an async `onSubmit`. Defaults to `reportError`. */
+  onError?: (error: unknown) => void;
   errors?: Record<string, string | undefined>;
   /** Ref to the underlying `<form>` element. */
   ref?: Ref<HTMLFormElement>;
@@ -9,7 +16,24 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & 
 
 export const FormErrorsContext = createContext<Record<string, string | undefined>>({});
 
-export function Form({ onSubmit, errors = {}, children, ref, ...props }: FormProps): JSX.Element {
+const NO_ERRORS: Record<string, string | undefined> = {};
+
+function reportRejection(error: unknown) {
+  if (typeof reportError === 'function') reportError(error);
+  else
+    setTimeout(() => {
+      throw error;
+    });
+}
+
+export function Form({
+  onSubmit,
+  onError,
+  errors = NO_ERRORS,
+  children,
+  ref,
+  ...props
+}: FormProps): JSX.Element {
   function onSubmitInternal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -28,7 +52,7 @@ export function Form({ onSubmit, errors = {}, children, ref, ...props }: FormPro
       if (control instanceof HTMLElement) control.focus();
       return;
     }
-    void onSubmit?.(event, new FormData(form));
+    Promise.resolve(onSubmit?.(event, new FormData(form))).catch(onError ?? reportRejection);
   }
 
   return (

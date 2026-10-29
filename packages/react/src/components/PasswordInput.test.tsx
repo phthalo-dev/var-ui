@@ -21,4 +21,15 @@ describe('PasswordInput', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Hide password' }));
     expect(input.type).toBe('password');
   });
+
+  it('applies a custom className to the root element', () => {
+    render(
+      <IconProvider icons={{}}>
+        <PasswordInput label="Password" className="custom" />
+      </IconProvider>,
+    );
+    const root = screen.getByLabelText('Password').closest('.custom');
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain('var-ui-');
+  });
 });

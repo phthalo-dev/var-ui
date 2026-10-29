@@ -1,4 +1,5 @@
-import type { JSX, ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode } from 'react';
+import { layerStack, styleVars } from '@var-ui/core';
 import { createContext, useContext, useMemo, useRef, useState } from 'react';
 
 type LayerContextValue = {
@@ -41,9 +42,19 @@ export function LayerProvider({
   return <LayerContext.Provider value={value}>{children}</LayerContext.Provider>;
 }
 
-/** Allocate a stable z-index for one floating layer (stable across re-renders). */
-export function useLayer(): { zIndex: number; style: { zIndex: number } } {
+/**
+ * Allocate a stable z-index for one floating layer (stable across re-renders).
+ *
+ * Without a {@link LayerProvider} nothing is allocated and `style` is empty, so the
+ * core token tiers (dropdown < modal < toast) apply. With one, the allocation is
+ * written to the layer CSS variable the recipes read (`layerStack.vars.zIndex`).
+ */
+export function useLayer(): { zIndex: number | undefined; style: CSSProperties } {
   const context = useContext(LayerContext);
-  const [zIndex] = useState(() => (context ? context.allocate() : DEFAULT_BASE));
-  return { zIndex, style: { zIndex } };
+  const [zIndex] = useState<number | undefined>(() => (context ? context.allocate() : undefined));
+  const style = useMemo<CSSProperties>(
+    () => styleVars([[layerStack.vars.zIndex, zIndex]]) ?? {},
+    [zIndex],
+  );
+  return { zIndex, style };
 }

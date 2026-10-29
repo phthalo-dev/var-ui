@@ -272,4 +272,32 @@ describe('SimpleDialog', () => {
 
     document.body.removeChild(container);
   });
+
+  it('describes the dialog with Dialog.Description only when rendered', async () => {
+    render(
+      <IconProvider icons={{}}>
+        <Dialog.Root defaultOpen>
+          <Dialog.Backdrop>
+            <Dialog.Popup>
+              <Dialog.Title>Title</Dialog.Title>
+              <Dialog.Description>Helpful text</Dialog.Description>
+            </Dialog.Popup>
+          </Dialog.Backdrop>
+        </Dialog.Root>
+        <Dialog.Root defaultOpen>
+          <Dialog.Backdrop>
+            <Dialog.Popup>
+              <Dialog.Title>Bare</Dialog.Title>
+            </Dialog.Popup>
+          </Dialog.Backdrop>
+        </Dialog.Root>
+      </IconProvider>,
+    );
+    const dialogs = await screen.findAllByRole('dialog', { hidden: true });
+    expect(dialogs).toHaveLength(2);
+    const describedBy = dialogs[0].getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(document.getElementById(describedBy as string)?.textContent).toBe('Helpful text');
+    expect(dialogs[1].hasAttribute('aria-describedby')).toBe(false);
+  });
 });

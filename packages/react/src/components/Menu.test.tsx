@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
@@ -198,5 +198,35 @@ describe('Menu', () => {
     }
     wrap(<Controlled />);
     expect(screen.getByRole('menuitem', { name: 'Pinned' })).toBeTruthy();
+  });
+
+  it('anchors a keyboard-invoked context menu to the target instead of 0,0', async () => {
+    render(
+      <Menu.ContextMenu sections={[{ items: [{ id: 'copy', label: 'Copy' }] }]}>
+        <div tabIndex={0} data-testid="surface">
+          Surface
+        </div>
+      </Menu.ContextMenu>,
+    );
+    const surface = screen.getByTestId('surface');
+    surface.getBoundingClientRect = () =>
+      ({
+        left: 40,
+        bottom: 90,
+        top: 50,
+        right: 140,
+        width: 100,
+        height: 40,
+        x: 40,
+        y: 50,
+      }) as DOMRect;
+    fireEvent.contextMenu(surface, { clientX: 0, clientY: 0 });
+    const anchor = await waitFor(() => {
+      const el = document.querySelector('[data-context-menu-anchor]') as HTMLElement;
+      expect(el).toBeTruthy();
+      return el;
+    });
+    expect(anchor.style.left).toBe('40px');
+    expect(anchor.style.top).toBe('90px');
   });
 });

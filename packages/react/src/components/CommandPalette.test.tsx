@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vite-plus/test';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
 import { createCommandPalette, useCommandPalette } from './commandPaletteController';
@@ -288,7 +288,7 @@ describe('CommandPalette', () => {
         onAction={() => {}}
       />,
     );
-    await userEvent.keyboard('{Meta>}k{/Meta}');
+    await userEvent.keyboard('{Control>}k{/Control}');
     expect(onOpenChange).toHaveBeenCalledWith(true);
   });
 
@@ -517,5 +517,28 @@ describe('CommandPalette item actions and chrome', () => {
     expect(result.current.isOpen).toBe(false);
     act(() => result.current.toggle());
     expect(result.current.isOpen).toBe(true);
+  });
+
+  it('reports onOpenChange(false) once when closing with Escape', async () => {
+    const onOpenChange = vi.fn();
+    function Harness() {
+      const [open, setOpen] = useState(true);
+      return (
+        <CommandPalette
+          isOpen={open}
+          hotkey={false}
+          items={[{ id: 'a', title: 'Open settings' }]}
+          onAction={() => {}}
+          onOpenChange={(next) => {
+            onOpenChange(next);
+            setOpen(next);
+          }}
+        />
+      );
+    }
+    wrap(<Harness />);
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(false));
+    expect(onOpenChange.mock.calls.filter(([n]) => n === false)).toHaveLength(1);
   });
 });

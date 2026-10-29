@@ -47,4 +47,19 @@ describe('CheckboxGroup', () => {
     rerender(<ControlledCheckboxGroup />);
     expect(screen.queryByText('Favorite colors')).toBeNull();
   });
+
+  it('applies string and function classNames to the root element', () => {
+    const { rerender } = render(
+      <CheckboxGroup label="Colors" options={options} className="custom" />,
+    );
+    expect(screen.getByRole('group', { name: 'Colors' }).className).toContain('custom');
+    rerender(
+      <CheckboxGroup
+        label="Colors"
+        options={options}
+        className={({ isDisabled }) => (isDisabled ? 'off' : 'fn-custom')}
+      />,
+    );
+    expect(screen.getByRole('group', { name: 'Colors' }).className).toContain('fn-custom');
+  });
 });

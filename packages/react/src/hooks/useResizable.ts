@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 /** Shared shape SideNav (and later Phase 6 `Layout*`) consume for single-region resize. */
 export type ResizableConfig = {
@@ -92,11 +93,18 @@ function useResizableRegion(
   } = config;
   const autoSaveId = autoSaveIdOverride ?? configAutoSaveId;
 
-  const [width, setWidth] = useState<number>(() => {
+  // Always starts at `defaultWidth` so the first client render matches the server render; the
+  // persisted width is applied in a layout effect (client-only, before paint) to avoid a
+  // hydration mismatch.
+  const [width, setWidth] = useState<number>(defaultWidth);
+
+  useIsomorphicLayoutEffect(() => {
     const stored = readStoredWidth(autoSaveId);
-    if (stored === undefined) return defaultWidth;
-    return Math.min(Math.max(stored, minWidth), maxWidth);
-  });
+    if (stored !== undefined) setWidth(Math.min(Math.max(stored, minWidth), maxWidth));
+    // Runs on mount and when the storage key changes; bounds are intentionally excluded so a
+    // config change doesn't clobber a width the user has since dragged to.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSaveId]);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const resize = useCallback(
@@ -136,9 +144,13 @@ function useResizableRegion(
  * Single- or multi-region resize state: clamped width, drag-to-collapse,
  * keyboard/pointer handle bindings, and optional `localStorage` persistence.
  *
+ * SSR-safe: the first render always uses `defaultWidth`; a persisted width (`autoSaveId`) is
+ * applied in a layout effect after mount, so storage access never affects hydration.
+ *
  * Multi-region callers must pass a stable `regions` key set across renders
- * (same contract as Astryx split layouts). Changing the set of region keys
- * between renders violates the Rules of Hooks and will break React state.
+ * (same contract as Astryx split layouts). Internally one hook is called per region key, so
+ * adding or removing keys between renders violates the Rules of Hooks and will break React
+ * state. Reordering is fine only if the key order itself stays the same.
  */
 export function useResizable(config?: boolean | ResizableConfig): UseResizableResult;
 export function useResizable(config: MultiResizableConfig): Record<string, UseResizableResult>;

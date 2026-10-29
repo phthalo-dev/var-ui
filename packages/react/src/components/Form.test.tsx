@@ -1,8 +1,9 @@
+import { useContext } from 'react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Field } from './Field';
-import { Form } from './Form';
+import { Form, FormErrorsContext } from './Form';
 
 describe('Form', () => {
   it('does not call onSubmit when required input is empty and focuses the control', async () => {
@@ -76,5 +77,56 @@ describe('Form', () => {
       </Form>,
     );
     expect(screen.getByRole('alert').textContent).toBe('Taken');
+  });
+});
+
+describe('Form async errors', () => {
+  function Fixture(props: { onSubmit: () => Promise<void>; onError?: (e: unknown) => void }) {
+    return (
+      <Form onSubmit={props.onSubmit} onError={props.onError}>
+        <button type="submit">Save</button>
+      </Form>
+    );
+  }
+
+  it('passes a rejected async onSubmit to onError', async () => {
+    const error = new Error('boom');
+    const onError = vi.fn();
+    render(<Fixture onSubmit={() => Promise.reject(error)} onError={onError} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await vi.waitFor(() => expect(onError).toHaveBeenCalledWith(error));
+  });
+
+  it('reports a rejected async onSubmit when onError is absent', async () => {
+    const error = new Error('boom');
+    const spy = vi.fn();
+    vi.stubGlobal('reportError', spy);
+    try {
+      render(<Fixture onSubmit={() => Promise.reject(error)} />);
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await vi.waitFor(() => expect(spy).toHaveBeenCalledWith(error));
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('keeps a stable errors context value across renders when errors is omitted', async () => {
+    const seen: unknown[] = [];
+    function Probe() {
+      seen.push(useContext(FormErrorsContext));
+      return null;
+    }
+    const { rerender } = render(
+      <Form>
+        <Probe />
+      </Form>,
+    );
+    rerender(
+      <Form>
+        <Probe />
+      </Form>,
+    );
+    expect(seen.length).toBeGreaterThan(1);
+    expect(new Set(seen).size).toBe(1);
   });
 });

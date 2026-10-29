@@ -52,7 +52,23 @@ export function MenuContextMenu({ children, sections }: MenuContextMenuProps): J
   const handleContextMenu = useCallback((...args: unknown[]) => {
     const event = args[0] as MouseEvent;
     event.preventDefault();
-    setAnchor({ x: event.clientX, y: event.clientY });
+    let { clientX: x, clientY: y } = event;
+    // Keyboard invocation (Shift+F10 / ContextMenu key) reports 0,0 in some browsers:
+    // anchor to the focused target's bottom-start corner instead.
+    if (x === 0 && y === 0) {
+      const el =
+        event.target instanceof Element
+          ? event.target
+          : event.currentTarget instanceof Element
+            ? event.currentTarget
+            : null;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        x = rect.left;
+        y = rect.bottom;
+      }
+    }
+    setAnchor({ x, y });
     setOpen(true);
   }, []);
 
