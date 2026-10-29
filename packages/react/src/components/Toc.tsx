@@ -1,9 +1,11 @@
-import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link as AriaLink } from 'react-aria-components';
 import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
 import type { TocHeading } from '@var-ui/core/components/toc/spy';
-import { toc as tocStyles } from '@var-ui/core';
+import { toc as tocStyles, recipeVars, styleVars } from '@var-ui/core';
+
+const tocVars = recipeVars(tocStyles);
 import { useTocSpy } from '../hooks/useTocSpy';
 import { mergeProps } from 'typestyles';
 
@@ -55,7 +57,7 @@ export type TocProps = {
   headerOffset?: number;
   /** Hide the nav below the `xl` breakpoint. @default false */
   hideBelowXl?: boolean;
-  /** Sets `--var-ui-toc-sticky-top` on the root. */
+  /** Sets `--var-ui-toc-stickytop` on the root. */
   stickyTop?: string;
   className?: string;
   /** Accessible name for the nav landmark. @default title or 'On this page' */
@@ -137,9 +139,7 @@ export function Toc({
 
   const s = tocStyles();
   const resolvedLabel = label ?? (typeof title === 'string' ? title : 'On this page');
-  const rootStyle = stickyTop
-    ? ({ '--var-ui-toc-sticky-top': stickyTop } as CSSProperties)
-    : undefined;
+  const rootStyle = stickyTop ? styleVars([[tocVars.stickyTop, stickyTop]]) : undefined;
 
   if (auto && headings.length < minHeadings) {
     return null;

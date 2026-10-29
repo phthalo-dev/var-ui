@@ -6,7 +6,9 @@ import {
   Modal,
   ModalOverlay,
 } from 'react-aria-components';
-import { mobileNav } from '@var-ui/core';
+import { mobileNav, recipeVars, styleVars } from '@var-ui/core';
+
+const mobileNavVars = recipeVars(mobileNav);
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useScrollLock } from '../hooks';
@@ -188,10 +190,7 @@ export function MobileNav({
   const { style: layerStyle } = useLayer();
   useScrollLock(isOpen);
 
-  const panelStyle = useMemo(
-    () => ({ '--var-ui-mobile-nav-panelwidth': `${width}px` }) as CSSProperties,
-    [width],
-  );
+  const panelStyle = useMemo(() => styleVars([[mobileNavVars.panelWidth, `${width}px`]]), [width]);
 
   return (
     <ModalOverlay

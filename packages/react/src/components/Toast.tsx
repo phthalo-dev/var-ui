@@ -7,7 +7,7 @@ import {
   UNSTABLE_ToastContent as AriaToastContent,
   UNSTABLE_ToastRegion as AriaToastRegion,
 } from 'react-aria-components';
-import { type ComponentAttrsResult, type VariantOptions } from 'typestyles';
+import { type VariantOptions } from 'typestyles';
 import {
   placement as toastPlacement,
   toast as toastRecipe,
@@ -38,11 +38,6 @@ const toneIcon: Record<Tone, IconName> = {
 
 const DEFAULT_DURATION = 4000;
 const DEFAULT_MAX = 3;
-
-type ToastSlot = 'region' | 'item' | 'icon' | 'body' | 'title' | 'description' | 'close';
-type ToastRecipeFn = (args?: ToastVariantProps) => Record<ToastSlot, ComponentAttrsResult>;
-// Slot recipe resolves to flat ComponentAttrsResult at the type level — see packages/core/src/components/toast.ts.
-const toastSlots = toastRecipe as unknown as ToastRecipeFn;
 
 type ToastContextValue = {
   queue: ToastQueue;
@@ -83,7 +78,7 @@ export function Toast({
   className,
   ref,
 }: ToastProps): JSX.Element {
-  const t = toastSlots({ tone, appearance });
+  const t = toastRecipe({ tone, appearance });
   return (
     <div {...mergeProps(t.item, className)} ref={ref} role="status">
       <span {...mergeProps(t.icon)}>
@@ -124,7 +119,7 @@ export function ToastRegion({
   ref,
 }: ToastRegionProps): JSX.Element {
   const { style: layerStyle } = useLayer();
-  const region = toastSlots({ placement });
+  const region = toastRecipe({ placement });
   return (
     <AriaToastRegion
       queue={queue}
@@ -134,7 +129,7 @@ export function ToastRegion({
     >
       {({ toast: queued }) => {
         const tone = queued.content.tone ?? 'info';
-        const t = toastSlots({ tone });
+        const t = toastRecipe({ tone });
         return (
           <AriaToast toast={queued} {...mergeProps(t.item)}>
             <span {...mergeProps(t.icon)}>

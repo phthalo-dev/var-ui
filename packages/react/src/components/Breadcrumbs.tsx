@@ -1,7 +1,9 @@
-import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs as AriaBreadcrumbs, Link } from 'react-aria-components';
-import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core';
+import { breadcrumbs as breadcrumbsStyles, recipeVars, styleVars } from '@var-ui/core';
+
+const breadcrumbsVars = recipeVars(breadcrumbsStyles);
 import { mergeProps } from 'typestyles';
 
 export type BreadcrumbItemData = {
@@ -88,9 +90,7 @@ export function Breadcrumbs({
     itemsAfterCollapse,
     expanded,
   );
-  const style = separator
-    ? ({ '--var-ui-breadcrumbs-separator': `"${separator}"` } as CSSProperties)
-    : undefined;
+  const style = separator ? styleVars([[breadcrumbsVars.separator, `"${separator}"`]]) : undefined;
 
   return (
     <nav aria-label={label} {...mergeProps(b.root, className)} style={style} ref={ref}>

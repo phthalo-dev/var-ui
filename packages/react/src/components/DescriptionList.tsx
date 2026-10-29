@@ -1,14 +1,18 @@
-import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { JSX, ReactNode, Ref } from 'react';
 import { Children, createContext, useContext, useMemo, useState } from 'react';
 import {
   button,
   descriptionList as descriptionListStyles,
+  recipeVars,
+  styleVars,
   iconNameList,
   type IconName,
   type DescriptionListVariantProps,
 } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
+
+const descriptionListVars = recipeVars(descriptionListStyles);
 
 export type DescriptionListItemData = {
   id: string;
@@ -114,10 +118,8 @@ export function DescriptionList({
     columns: recipeColumns,
     labelPosition: resolvedLabelPosition,
   });
-  const rootStyle: CSSProperties | undefined =
-    typeof columns === 'number'
-      ? ({ '--var-ui-description-list-columns': String(columns) } as CSSProperties)
-      : undefined;
+  const rootStyle =
+    typeof columns === 'number' ? styleVars([[descriptionListVars.columns, columns]]) : undefined;
 
   const itemNodes =
     items?.map((item) => (

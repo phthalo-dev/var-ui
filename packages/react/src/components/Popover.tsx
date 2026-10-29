@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type JSX,
   type MutableRefObject,
   type ReactElement,
@@ -87,13 +86,6 @@ export type PopoverArrowProps = {
   /** Ref to the underlying arrow `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };
-
-type PopoverSlot = 'root' | 'title' | 'content' | 'arrow';
-type PopoverRecipeFn = () => Record<PopoverSlot, string>;
-// `popover` resolves to `styles`'s dimensioned-variant overload at the type level (returns `string`)
-// instead of its slot overload, even though it returns a per-slot class map at runtime — see
-// packages/core/src/components/popover.ts. Recast until that recipe's overload resolution is fixed upstream.
-const popoverSlots = popover as unknown as PopoverRecipeFn;
 
 type PopoverContextValue = {
   presence: UseOverlayPresenceResult;
@@ -265,7 +257,7 @@ function PopoverPopup({
   ref,
 }: PopoverPopupProps): JSX.Element {
   const ctx = usePopoverContext();
-  const p = popoverSlots();
+  const p = popover();
   const { style: layerStyle } = useLayer();
   const positioner = usePositionerVars({
     placement,
@@ -287,7 +279,7 @@ function PopoverPopup({
         }
       }}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style } as CSSProperties}
+      style={{ ...layerStyle, ...positioner.style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
@@ -298,7 +290,7 @@ function PopoverPopup({
 }
 
 function PopoverTitle({ children, className, ref }: PopoverTitleProps): JSX.Element {
-  const p = popoverSlots();
+  const p = popover();
   return (
     <Heading slot="title" {...mergeProps(p.title, className)} ref={ref}>
       {children}
@@ -307,7 +299,7 @@ function PopoverTitle({ children, className, ref }: PopoverTitleProps): JSX.Elem
 }
 
 function PopoverContent({ children, className, ref }: PopoverContentProps): JSX.Element {
-  const p = popoverSlots();
+  const p = popover();
   return (
     <div {...mergeProps(p.content, className)} ref={ref}>
       {children}
@@ -316,7 +308,7 @@ function PopoverContent({ children, className, ref }: PopoverContentProps): JSX.
 }
 
 function PopoverArrow({ className, ref }: PopoverArrowProps): JSX.Element {
-  const p = popoverSlots();
+  const p = popover();
   return (
     <OverlayArrow>
       {({ placement }) => (

@@ -6,7 +6,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type JSX,
   type MutableRefObject,
   type ReactElement,
@@ -63,13 +62,6 @@ export type TooltipPopupProps = {
   placement?: Placement;
   portalContainer?: Element;
 };
-
-type TooltipSlot = 'root';
-type TooltipRecipeFn = () => Record<TooltipSlot, string>;
-// `tooltip` resolves to `styles`'s dimensioned-variant overload at the type level (returns `string`)
-// instead of its slot overload, even though it returns a per-slot class map at runtime — see
-// packages/core/src/components/tooltip.ts. Recast until that recipe's overload resolution is fixed upstream.
-const tooltipSlots = tooltip as unknown as TooltipRecipeFn;
 
 type TooltipContextValue = {
   presence: UseOverlayPresenceResult;
@@ -190,7 +182,7 @@ function TooltipPopup({
   portalContainer,
 }: TooltipPopupProps): JSX.Element {
   const ctx = useTooltipContext();
-  const tip = tooltipSlots();
+  const tip = tooltip();
   const { style: layerStyle } = useLayer();
   const positioner = usePositionerVars({
     placement,
@@ -207,7 +199,7 @@ function TooltipPopup({
         ctx.setPopupEl(node);
       }}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style } as CSSProperties}
+      style={{ ...layerStyle, ...positioner.style }}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
     >
       {children}

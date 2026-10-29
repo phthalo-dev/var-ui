@@ -22,7 +22,9 @@ import {
   Pressable,
   type ModalOverlayProps,
 } from 'react-aria-components';
-import { drawer, type DrawerVariantProps } from '@var-ui/core';
+import { drawer, recipeVars, styleVars, type DrawerVariantProps } from '@var-ui/core';
+
+const drawerVars = recipeVars(drawer);
 import { Icon } from '../icons';
 import { useScrollLock } from '../hooks';
 import { useLayer } from '../layers/LayerProvider';
@@ -279,10 +281,10 @@ function DrawerPanel({
     [panelRef, ref],
   );
   const styles = drawer({ size: ctx.size });
-  const panelStyle = {
-    ...(width != null ? ({ '--var-ui-drawer-panelwidth': `${width}px` } as CSSProperties) : {}),
-    ...(height != null ? ({ '--var-ui-drawer-panelheight': `${height}px` } as CSSProperties) : {}),
-  };
+  const panelStyle = styleVars([
+    [drawerVars.panelWidth, width != null ? `${width}px` : null],
+    [drawerVars.panelHeight, height != null ? `${height}px` : null],
+  ]);
 
   return (
     <Modal
