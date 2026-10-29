@@ -75,4 +75,30 @@ describe('initSideNav', () => {
     button.click();
     expect(root.style.width).toBe('300px');
   });
+
+  it('preserves a custom resize handle aria-label from markup', () => {
+    const root = mountSideNav({
+      resizable: '',
+      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+    });
+    const handle = root.querySelector('[data-var-ui-side-nav-resize]') as HTMLElement;
+    handle.setAttribute('aria-label', 'Drag nav edge');
+
+    initSideNav(root);
+
+    expect(handle.getAttribute('aria-label')).toBe('Drag nav edge');
+    expect(handle.getAttribute('role')).toBe('separator');
+    expect(handle.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('defaults the resize handle aria-label when markup omits one', () => {
+    const root = mountSideNav({
+      resizable: '',
+      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+    });
+    initSideNav(root);
+    const handle = root.querySelector('[data-var-ui-side-nav-resize]') as HTMLElement;
+
+    expect(handle.getAttribute('aria-label')).toBe('Resize side navigation');
+  });
 });

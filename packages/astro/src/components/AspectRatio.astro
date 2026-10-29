@@ -9,8 +9,12 @@ type Props = HTMLAttributes<'div'> & {
 };
 
 const { ratio, className, style, ...rest } = Astro.props;
-const baseStyle = typeof style === 'string' ? style : undefined;
-const ratioStyle = [ratio ? `aspect-ratio: ${ratio}` : undefined, baseStyle].filter(Boolean).join('; ') || undefined;
+const ratioStyle =
+  ratio != null
+    ? typeof style === 'string'
+      ? [`aspect-ratio: ${ratio}`, style].filter(Boolean).join('; ')
+      : { ...(style && typeof style === 'object' ? style : {}), aspectRatio: String(ratio) }
+    : style;
 const rp = mergeProps(aspectRatio(), className);
 ---
 <div {...rest} {...rp} style={ratioStyle}><slot /></div>

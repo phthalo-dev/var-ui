@@ -282,6 +282,21 @@ describe('LayoutPanel', () => {
       vi.unstubAllGlobals();
     });
 
+    it('overlay mode: uses passthrough aria-label for the dialog name', () => {
+      mockMatchMedia(true);
+      render(
+        <LayoutPanel
+          responsive={{ below: 'lg', mode: 'overlay' }}
+          isOpen
+          aria-label="Inspector drawer"
+        >
+          Inspector
+        </LayoutPanel>,
+      );
+      expect(screen.getByRole('dialog', { name: 'Inspector drawer' })).toBeTruthy();
+      vi.unstubAllGlobals();
+    });
+
     it('above breakpoint: responsive is inert and the panel always renders inline', () => {
       mockMatchMedia(false);
       render(

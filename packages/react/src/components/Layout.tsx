@@ -409,6 +409,8 @@ export function LayoutPanel({
   onOpenChange,
   role,
   label,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   className,
   style: styleProp,
   children,
@@ -419,6 +421,7 @@ export function LayoutPanel({
   const dataSide = area === 'start' || area === 'end' ? area : undefined;
   const { isRtl } = useDirection();
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
+  const accessibleName = label ?? ariaLabel;
 
   const effectiveWidth = resizable?.width ?? width;
   const widthStyle: CSSProperties | undefined =
@@ -463,7 +466,8 @@ export function LayoutPanel({
 
   const panelBody = (
     <div
-      aria-label={isOverlayMode ? undefined : label}
+      aria-label={isOverlayMode ? undefined : accessibleName}
+      aria-labelledby={isOverlayMode ? undefined : ariaLabelledBy}
       {...rest}
       {...mergeProps(s.panel, className)}
       ref={ref}
@@ -486,7 +490,11 @@ export function LayoutPanel({
         style={layerStyle}
       >
         <Modal {...mergeProps(s.overlay)} data-side={dataSide} data-open={isOpen ? '' : undefined}>
-          <AriaDialog aria-label={label ?? 'Panel'} {...mergeProps(s.overlayDialog)}>
+          <AriaDialog
+            aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
+            aria-labelledby={ariaLabelledBy}
+            {...mergeProps(s.overlayDialog)}
+          >
             {panelBody}
           </AriaDialog>
         </Modal>
