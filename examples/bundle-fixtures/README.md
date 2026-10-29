@@ -25,4 +25,10 @@ pnpm test:bundle-budgets:update
 
 Baselines live in `baselines.json` (5% regression tolerance).
 
+Each fixture's `typestyles-entry.ts` (run in Node by `@typestyles/vite`, so never tree-shaken) imports only
+the component modules that fixture renders (`@var-ui/react/components/<X>`) plus
+`@var-ui/core/register-default-theme`. React components import recipes from narrow
+`@var-ui/core/components/<x>` subpaths (enforced by lint), so unused components add no CSS. Add the
+modules a fixture renders to its entry when you change its app code.
+
 Library packages use `vp pack` with `unbundle: true` so consumer bundlers can tree-shake per module. `@var-ui/core` regenerates its export map after each pack via `scripts/generate-subpath-exports.mjs`. `@var-ui/react` publishes `./components/*`.

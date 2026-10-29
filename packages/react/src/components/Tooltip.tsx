@@ -18,7 +18,7 @@ import {
   TooltipTrigger as AriaTooltipTrigger,
   type Placement,
 } from 'react-aria-components';
-import { tooltip } from '@var-ui/core';
+import { tooltip } from '@var-ui/core/components/tooltip';
 import { useLayer } from '../layers/LayerProvider';
 import {
   createOverlayChangeDetails,

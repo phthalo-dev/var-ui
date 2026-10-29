@@ -39,6 +39,30 @@ export default defineConfig({
         plugins: ['typescript', 'react'],
       },
       {
+        // Value imports from the `@var-ui/core` barrel register every recipe (and its CSS) in any
+        // consumer's extraction run. Import from `@var-ui/core/components/<x>` etc. instead.
+        files: ['packages/react/src/**', 'packages/astro/src/**'],
+        rules: {
+          'no-restricted-imports': [
+            'error',
+            {
+              paths: [
+                {
+                  name: '@var-ui/core',
+                  allowTypeImports: true,
+                  message:
+                    'Import runtime recipes/helpers from a narrow subpath (e.g. @var-ui/core/components/button) so unused components cost no CSS. Type-only imports from the barrel are fine.',
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', '**/test/**'],
+        rules: { 'no-restricted-imports': 'off' },
+      },
+      {
         files: ['**/*.test.ts', '**/*.spec.ts'],
         plugins: ['typescript', 'vitest'],
       },

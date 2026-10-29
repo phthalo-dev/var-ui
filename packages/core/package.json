@@ -84,6 +84,10 @@
       "types": "./dist/components/breadcrumbs.d.mts",
       "import": "./dist/components/breadcrumbs.mjs"
     },
+    "./components/breakpoints": {
+      "types": "./dist/components/breakpoints.d.mts",
+      "import": "./dist/components/breakpoints.mjs"
+    },
     "./components/button": {
       "types": "./dist/components/button.d.mts",
       "import": "./dist/components/button.mjs"
@@ -275,6 +279,10 @@
     "./components/layout": {
       "types": "./dist/components/layout.d.mts",
       "import": "./dist/components/layout.mjs"
+    },
+    "./components/layoutShellVars": {
+      "types": "./dist/components/layoutShellVars.d.mts",
+      "import": "./dist/components/layoutShellVars.mjs"
     },
     "./components/link": {
       "types": "./dist/components/link.d.mts",
@@ -491,6 +499,14 @@
     "./components/visuallyHidden": {
       "types": "./dist/components/visuallyHidden.d.mts",
       "import": "./dist/components/visuallyHidden.mjs"
+    },
+    "./tokens/declare": {
+      "types": "./dist/tokens/declare.d.mts",
+      "import": "./dist/tokens/declare.mjs"
+    },
+    "./icons/iconNames": {
+      "types": "./dist/icons/iconNames.d.mts",
+      "import": "./dist/icons/iconNames.mjs"
     }
   },
   "publishConfig": {

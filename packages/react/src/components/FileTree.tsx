@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { fileTree } from '@var-ui/core';
+import { fileTree } from '@var-ui/core/components/fileTree';
 import { mergeProps } from 'typestyles';
 
 export type FileTreeProps = {

@@ -1,5 +1,6 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { toolbar, type ToolbarVariantProps } from '@var-ui/core';
+import { toolbar } from '@var-ui/core/components/toolbar';
+import type { ToolbarVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ToolbarProps = {

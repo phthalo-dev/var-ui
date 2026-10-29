@@ -8,13 +8,9 @@ import {
   UNSTABLE_ToastRegion as AriaToastRegion,
 } from 'react-aria-components';
 import { type VariantOptions } from 'typestyles';
-import {
-  placement as toastPlacement,
-  toast as toastRecipe,
-  type IconName,
-  type ToastVariantProps,
-  type Tone,
-} from '@var-ui/core';
+import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import type { IconName, ToastVariantProps, Tone } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { registerToastQueue, unregisterToastQueue } from '../toast/imperativeToast';

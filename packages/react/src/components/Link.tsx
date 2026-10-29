@@ -1,6 +1,6 @@
 import type { JSX, Ref } from 'react';
 import { Link as AriaLink, type LinkProps as RACLinkProps } from 'react-aria-components';
-import { link } from '@var-ui/core';
+import { link } from '@var-ui/core/components/link';
 import { cx } from 'typestyles';
 
 export type LinkProps = Omit<RACLinkProps, 'className'> & {

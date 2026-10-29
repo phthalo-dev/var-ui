@@ -1,4 +1,5 @@
-import { type AppShellMobileBreakpoint, appShellMobileBreakpointQueries } from '@var-ui/core';
+import { appShellMobileBreakpointQueries } from '@var-ui/core/components/breakpoints';
+import type { AppShellMobileBreakpoint } from '@var-ui/core';
 
 /** `id` of the `<main>` landmark — target of the skip-to-content link. */
 export const APP_SHELL_MAIN_ID = 'var-ui-app-shell-main';

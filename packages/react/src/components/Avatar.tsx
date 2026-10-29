@@ -1,6 +1,8 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { Children, useState } from 'react';
-import { avatar, avatarGroup, statusDot, type AvatarVariantProps, type Tone } from '@var-ui/core';
+import { avatar, avatarGroup } from '@var-ui/core/components/avatar';
+import { statusDot } from '@var-ui/core/components/statusDot';
+import type { AvatarVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type AvatarProps = AvatarVariantProps & {

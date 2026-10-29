@@ -22,7 +22,9 @@ import {
   Pressable,
   type ModalOverlayProps,
 } from 'react-aria-components';
-import { drawer, recipeVars, styleVars, type DrawerVariantProps } from '@var-ui/core';
+import { drawer } from '@var-ui/core/components/drawer';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import type { DrawerVariantProps } from '@var-ui/core';
 
 const drawerVars = recipeVars(drawer);
 import { Icon } from '../icons';

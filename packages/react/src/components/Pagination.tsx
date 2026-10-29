@@ -1,6 +1,8 @@
 import type { JSX, Ref } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { button, pagination, type PaginationVariantProps } from '@var-ui/core';
+import { button } from '@var-ui/core/components/button';
+import { pagination } from '@var-ui/core/components/pagination';
+import type { PaginationVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { IconButton } from './IconButton';
 import { Select } from './Select';

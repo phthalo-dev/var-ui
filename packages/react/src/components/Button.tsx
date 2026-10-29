@@ -1,6 +1,7 @@
 import type { JSX, Ref } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
-import { button, type ButtonVariantProps } from '@var-ui/core';
+import { button } from '@var-ui/core/components/button';
+import type { ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ButtonProps = Omit<RACButtonProps, 'className'> &

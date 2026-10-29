@@ -7,7 +7,7 @@ import {
   SliderTrack,
   type SliderProps as RACSliderProps,
 } from 'react-aria-components';
-import { slider } from '@var-ui/core';
+import { slider } from '@var-ui/core/components/slider';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 

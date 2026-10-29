@@ -1,11 +1,7 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
 import { createElement } from 'react';
-import {
-  heading,
-  textBlock,
-  type HeadingVariantProps,
-  type TextBlockVariantProps,
-} from '@var-ui/core';
+import { heading, textBlock } from '@var-ui/core/components/typography';
+import type { HeadingVariantProps, TextBlockVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {

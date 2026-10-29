@@ -1,5 +1,6 @@
 import type { CSSProperties, JSX, ReactNode } from 'react';
-import { layerStack, styleVars } from '@var-ui/core';
+import { layerStack } from '@var-ui/core/components/layerVars';
+import { styleVars } from '@var-ui/core/components/styleVars';
 import { createContext, useContext, useMemo, useRef, useState } from 'react';
 
 type LayerContextValue = {

@@ -1,7 +1,8 @@
 import type { JSX, Ref } from 'react';
 import { useState } from 'react';
 import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
-import { passwordField, type PasswordFieldVariantProps } from '@var-ui/core';
+import { passwordField } from '@var-ui/core/components/passwordField';
+import type { PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import type { BaseTextFieldProps } from './TextField';
 import { mergeProps } from 'typestyles';

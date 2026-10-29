@@ -6,7 +6,7 @@ import {
   scrollAreaFade,
   scrollAreaFadeEdgesFor,
   scrollAreaOrientation,
-} from '@var-ui/core';
+} from '@var-ui/core/components/scrollArea';
 import { mergeProps } from 'typestyles';
 
 export type ScrollAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {

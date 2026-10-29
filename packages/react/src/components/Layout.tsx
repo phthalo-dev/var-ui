@@ -3,17 +3,21 @@ import { createContext, isValidElement, useCallback, useContext, useMemo, useSta
 import { Dialog as AriaDialog, Modal, ModalOverlay } from 'react-aria-components';
 import {
   layout,
-  layoutBreakpointQueries,
   layoutContent,
-  layoutContentWidthAssignment,
   layoutFooter,
   layoutHeader,
   layoutPanel,
+} from '@var-ui/core/components/layout';
+import { layoutBreakpointQueries } from '@var-ui/core/components/breakpoints';
+import {
+  layoutContentWidthAssignment,
   layoutShellPaddingAssignments,
-  type LayoutBreakpoint,
-  type LayoutContentVariantProps,
-  type LayoutPadding,
-  type LayoutVariantProps,
+} from '@var-ui/core/components/layoutShellVars';
+import type {
+  LayoutBreakpoint,
+  LayoutContentVariantProps,
+  LayoutPadding,
+  LayoutVariantProps,
 } from '@var-ui/core';
 import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';

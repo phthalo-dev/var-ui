@@ -1,6 +1,7 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
-import { button, type ButtonVariantProps, type IconName } from '@var-ui/core';
+import { button } from '@var-ui/core/components/button';
+import type { ButtonVariantProps, IconName } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

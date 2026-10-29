@@ -6,7 +6,8 @@ import {
   Modal,
   ModalOverlay,
 } from 'react-aria-components';
-import { mobileNav, recipeVars, styleVars } from '@var-ui/core';
+import { mobileNav } from '@var-ui/core/components/mobileNav';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 
 const mobileNavVars = recipeVars(mobileNav);
 import { Icon } from '../icons';

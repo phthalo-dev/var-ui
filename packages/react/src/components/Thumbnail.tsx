@@ -1,6 +1,7 @@
 import type { JSX, Ref } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { thumbnail, type ThumbnailVariantProps } from '@var-ui/core';
+import { thumbnail } from '@var-ui/core/components/thumbnail';
+import type { ThumbnailVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

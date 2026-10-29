@@ -1,5 +1,6 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { chatMessageList, type ChatMessageListVariantProps } from '@var-ui/core';
+import { chatMessageList } from '@var-ui/core/components/chat/chatMessageList';
+import type { ChatMessageListVariantProps } from '@var-ui/core';
 import { ChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 

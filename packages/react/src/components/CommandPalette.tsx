@@ -11,7 +11,8 @@ import {
   TextField,
 } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
-import { commandPalette, type CommandPaletteVariantProps } from '@var-ui/core';
+import { commandPalette } from '@var-ui/core/components/commandPalette';
+import type { CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useOverlayPresence } from '../overlays';

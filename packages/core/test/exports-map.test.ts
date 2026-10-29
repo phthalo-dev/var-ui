@@ -30,13 +30,23 @@ describe('package subpath exports', () => {
     expect(exports['./components/index']).toBeUndefined();
   });
 
-  it('react exposes every component through one wildcard', () => {
+  it('react exposes component modules explicitly, not implementation helpers', () => {
     const { exports } = readPkg('react');
-    expect(exports['./components/*']).toEqual({
-      types: './dist/components/*.d.mts',
-      import: './dist/components/*.mjs',
+    expect(exports['./components/*']).toBeUndefined();
+    expect(exports['./components/Button']).toEqual({
+      types: './dist/components/Button.d.mts',
+      import: './dist/components/Button.mjs',
     });
-    expect(exports['./components/Button']).toBeUndefined();
+    for (const internal of [
+      'menuContent',
+      'menuPresets',
+      'controlSizeContext',
+      'commandPaletteHotkey',
+      'commandPaletteController',
+      'racClassName',
+    ]) {
+      expect(exports[`./components/${internal}`]).toBeUndefined();
+    }
     expect(exports['./button']).toBeUndefined();
     expect(exports['./Button']).toBeUndefined();
   });

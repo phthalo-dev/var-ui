@@ -1,5 +1,6 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { divider, type DividerVariantProps } from '@var-ui/core';
+import { divider } from '@var-ui/core/components/divider';
+import type { DividerVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type DividerProps = HTMLAttributes<HTMLHRElement> & {

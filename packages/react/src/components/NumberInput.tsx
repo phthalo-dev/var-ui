@@ -8,7 +8,8 @@ import {
   NumberField as AriaNumberField,
   type NumberFieldProps as RACNumberFieldProps,
 } from 'react-aria-components';
-import { numberInput, type NumberInputVariantProps } from '@var-ui/core';
+import { numberInput } from '@var-ui/core/components/numberInput';
+import type { NumberInputVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 

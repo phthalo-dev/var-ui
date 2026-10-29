@@ -1,8 +1,8 @@
-import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
+import { designTokens as t, typestyles } from '@var-ui/core';
 
-const belowXl = breakpoint('xl', 'max');
-const belowMd = breakpoint('md', 'max');
-const belowSm = breakpoint('sm', 'max');
+const belowXl = typestyles.breakpoint('xl', 'max');
+const belowMd = typestyles.breakpoint('md', 'max');
+const belowSm = typestyles.breakpoint('sm', 'max');
 
 const toolsCluster = {
   display: 'flex',

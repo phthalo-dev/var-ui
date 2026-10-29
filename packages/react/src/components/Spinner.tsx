@@ -1,5 +1,7 @@
 import type { JSX, Ref } from 'react';
-import { spinner, visuallyHidden, type SpinnerVariantProps } from '@var-ui/core';
+import { spinner } from '@var-ui/core/components/spinner';
+import { visuallyHidden } from '@var-ui/core/components/visuallyHidden';
+import type { SpinnerVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type SpinnerProps = SpinnerVariantProps & {

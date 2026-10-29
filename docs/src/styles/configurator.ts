@@ -1,4 +1,4 @@
-import { designTokens as t, focusRing, media, typestyles } from '@var-ui/core';
+import { designTokens as t, focusRing, typestyles } from '@var-ui/core';
 
 export const configuratorStyles = typestyles.recipe({
   name: 'component-configurator',
@@ -39,7 +39,7 @@ export const configuratorStyles = typestyles.recipe({
         borderColor: t.color.border.default.var,
         backgroundColor: t.color.background.surface.var,
         overflow: 'hidden',
-        ...media('md', 'max', {
+        ...typestyles.media('md', 'max', {
           gridTemplateColumns: '1fr',
         }),
       },
@@ -53,7 +53,7 @@ export const configuratorStyles = typestyles.recipe({
         borderRightStyle: 'solid',
         borderRightColor: t.color.border.default.var,
         backgroundColor: t.color.background.app.var,
-        ...media('md', 'max', {
+        ...typestyles.media('md', 'max', {
           borderRight: 'none',
           borderBottomWidth: t.borderWidth.default.var,
           borderBottomStyle: 'solid',

@@ -1,5 +1,6 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { chatSystemMessage, type ChatSystemMessageVariantProps } from '@var-ui/core';
+import { chatSystemMessage } from '@var-ui/core/components/chat/chatSystemMessage';
+import type { ChatSystemMessageVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ChatSystemMessageProps = {

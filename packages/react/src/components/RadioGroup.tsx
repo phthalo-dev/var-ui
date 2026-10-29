@@ -5,7 +5,7 @@ import {
   RadioGroup as AriaRadioGroup,
   type RadioGroupProps as RACRadioGroupProps,
 } from 'react-aria-components';
-import { radio } from '@var-ui/core';
+import { radio } from '@var-ui/core/components/radio';
 import { mergeProps } from 'typestyles';
 import { mergeRacClassName } from './racClassName';
 

@@ -7,6 +7,9 @@ const root = fileURLToPath(new URL('../..', import.meta.url));
 const devAliases = {
   '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
   '@var-ui/core/components': `${root}/packages/core/src/components`,
+  '@var-ui/core/shared': `${root}/packages/core/src/shared`,
+  '@var-ui/core/tokens': `${root}/packages/core/src/tokens`,
+  '@var-ui/core/icons': `${root}/packages/core/src/icons`,
   '@var-ui/core': `${root}/packages/core/src/index.ts`,
   '@var-ui/icons/glyphs/': `${root}/packages/icons/src/glyph-data/`,
   '@var-ui/icons/glyphs': `${root}/packages/icons/src/glyphs.ts`,

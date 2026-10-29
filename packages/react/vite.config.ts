@@ -8,6 +8,9 @@ export default defineConfig({
     alias: {
       '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
       '@var-ui/core/components': `${coreSrc}/components`,
+      '@var-ui/core/shared': `${coreSrc}/shared`,
+      '@var-ui/core/tokens': `${coreSrc}/tokens`,
+      '@var-ui/core/icons': `${coreSrc}/icons`,
     },
   },
   pack: {

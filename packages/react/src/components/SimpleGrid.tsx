@@ -1,5 +1,6 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { simpleGrid, type SimpleGridVariantProps } from '@var-ui/core';
+import { simpleGrid } from '@var-ui/core/components/simpleGrid';
+import type { SimpleGridVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type SimpleGridProps = HTMLAttributes<HTMLDivElement> & {

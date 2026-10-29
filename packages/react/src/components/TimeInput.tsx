@@ -10,7 +10,7 @@ import {
   type TimeFieldProps as RACTimeFieldProps,
   type TimeValue,
 } from 'react-aria-components';
-import { timeInput } from '@var-ui/core';
+import { timeInput } from '@var-ui/core/components/timeInput';
 import { mergeProps } from 'typestyles';
 
 export type TimeInputProps<T extends TimeValue = TimeValue> = Omit<

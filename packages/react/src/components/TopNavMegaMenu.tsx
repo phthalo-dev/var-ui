@@ -1,7 +1,7 @@
 import type { JSX, KeyboardEvent, ReactNode, Ref } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
-import { topNav } from '@var-ui/core';
+import { topNav } from '@var-ui/core/components/topNav';
 import { Icon } from '../icons';
 import { renderTopNavIcon, type TopNavIcon, type TopNavRichItem } from './TopNav';
 import { Text } from './Typography';

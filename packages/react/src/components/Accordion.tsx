@@ -7,12 +7,9 @@ import {
   Heading,
 } from 'react-aria-components';
 import type { Key } from 'react-aria-components';
-import {
-  accordionGroup,
-  collapsible,
-  type AccordionGroupVariantProps,
-  type CollapsibleVariant,
-} from '@var-ui/core';
+import { accordionGroup } from '@var-ui/core/components/accordionGroup';
+import { collapsible } from '@var-ui/core/components/collapsible';
+import type { AccordionGroupVariantProps, CollapsibleVariant } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';

@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { steps } from '@var-ui/core';
+import { steps } from '@var-ui/core/components/steps';
 import { mergeProps } from 'typestyles';
 
 export type StepsProps = {

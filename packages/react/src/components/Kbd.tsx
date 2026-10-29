@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { kbd } from '@var-ui/core';
+import { kbd } from '@var-ui/core/components/kbd';
 import { mergeProps } from 'typestyles';
 
 export type KbdProps = {

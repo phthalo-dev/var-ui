@@ -6,7 +6,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type Ref,
 } from 'react';
-import { resizeHandle } from '@var-ui/core';
+import { resizeHandle } from '@var-ui/core/components/resizeHandle';
 import { mergeProps } from 'typestyles';
 
 export type ResizeHandleProps = {

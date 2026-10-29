@@ -1,5 +1,6 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { center, type CenterVariantProps } from '@var-ui/core';
+import { center } from '@var-ui/core/components/center';
+import type { CenterVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type CenterProps = HTMLAttributes<HTMLDivElement> & {

@@ -1,4 +1,4 @@
-import { designTokens as t, media, typestyles } from '@var-ui/core';
+import { designTokens as t, typestyles } from '@var-ui/core';
 
 export const colorSwatchesStyles = typestyles.recipe({
   name: 'color-swatches',
@@ -52,7 +52,7 @@ export const colorSwatchesStyles = typestyles.recipe({
         gridTemplateColumns: '5.5rem 1fr',
         alignItems: 'center',
         gap: t.space[3].var,
-        ...media('sm', 'max', {
+        ...typestyles.media('sm', 'max', {
           gridTemplateColumns: '1fr',
           gap: t.space[2].var,
         }),
@@ -67,10 +67,10 @@ export const colorSwatchesStyles = typestyles.recipe({
         display: 'grid',
         gridTemplateColumns: 'repeat(10, minmax(0, 1fr))',
         gap: t.space[1].var,
-        ...media('md', 'max', {
+        ...typestyles.media('md', 'max', {
           gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
         }),
-        ...media('sm', 'max', {
+        ...typestyles.media('sm', 'max', {
           gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
         }),
       },

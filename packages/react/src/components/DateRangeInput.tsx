@@ -20,7 +20,7 @@ import {
   Text,
   type DateRangePickerProps as RACDateRangePickerProps,
 } from 'react-aria-components';
-import { dateRangeInput } from '@var-ui/core';
+import { dateRangeInput } from '@var-ui/core/components/dateRangeInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

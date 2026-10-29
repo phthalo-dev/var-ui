@@ -11,7 +11,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { tree as treeStyles, type TreeVariantProps } from '@var-ui/core';
+import { tree as treeStyles } from '@var-ui/core/components/tree';
+import type { TreeVariantProps } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { Icon } from '../icons';
 import { useTreeFocus, type TreeFocusItem } from '../hooks/useTreeFocus';

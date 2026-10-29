@@ -1,5 +1,5 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { section } from '@var-ui/core';
+import { section } from '@var-ui/core/components/section';
 import { mergeProps } from 'typestyles';
 
 export type SectionProps = HTMLAttributes<HTMLElement> & {

@@ -5,7 +5,7 @@ import {
   Label,
   type CheckboxGroupProps as RACCheckboxGroupProps,
 } from 'react-aria-components';
-import { checkbox } from '@var-ui/core';
+import { checkbox } from '@var-ui/core/components/checkbox';
 import { mergeProps } from 'typestyles';
 import { mergeRacClassName } from './racClassName';
 

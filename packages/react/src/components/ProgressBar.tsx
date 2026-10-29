@@ -4,7 +4,8 @@ import {
   ProgressBar as AriaProgressBar,
   type ProgressBarProps as RACProgressBarProps,
 } from 'react-aria-components';
-import { progressBar, type ProgressBarVariantProps } from '@var-ui/core';
+import { progressBar } from '@var-ui/core/components/progressBar';
+import type { ProgressBarVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className'> &

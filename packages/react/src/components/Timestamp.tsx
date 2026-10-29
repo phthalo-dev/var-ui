@@ -1,5 +1,5 @@
 import type { JSX, Ref } from 'react';
-import { textBlock } from '@var-ui/core';
+import { textBlock } from '@var-ui/core/components/typography';
 import { mergeProps } from 'typestyles';
 
 export type TimestampProps = {

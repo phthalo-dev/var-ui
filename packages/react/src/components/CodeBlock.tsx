@@ -1,6 +1,7 @@
 import type { JSX, Ref } from 'react';
 import { useMemo, useState } from 'react';
-import { codeBlock, type CodeBlockVariantProps } from '@var-ui/core';
+import { codeBlock } from '@var-ui/core/components/codeBlock';
+import type { CodeBlockVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { combine, cx, mergeProps } from 'typestyles';
 

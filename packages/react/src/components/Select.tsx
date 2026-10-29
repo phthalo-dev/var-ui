@@ -14,7 +14,8 @@ import {
   type SelectProps as RACSelectProps,
   type SelectValueProps as RACSelectValueProps,
 } from 'react-aria-components';
-import { select, type SelectVariantProps } from '@var-ui/core';
+import { select } from '@var-ui/core/components/select';
+import type { SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { ControlSizeContext, useControlSize } from './controlSizeContext';
 import type { FieldMeta } from './Field';

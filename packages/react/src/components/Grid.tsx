@@ -1,5 +1,6 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { grid, type GridVariantProps } from '@var-ui/core';
+import { grid } from '@var-ui/core/components/grid';
+import type { GridVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type GridProps = HTMLAttributes<HTMLDivElement> & {

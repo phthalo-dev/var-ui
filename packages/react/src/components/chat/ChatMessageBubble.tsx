@@ -1,5 +1,6 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { chatMessageBubble, type ChatMessageBubbleVariantProps } from '@var-ui/core';
+import { chatMessageBubble } from '@var-ui/core/components/chat/chatMessageBubble';
+import type { ChatMessageBubbleVariantProps } from '@var-ui/core';
 import { useChatMessageContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 

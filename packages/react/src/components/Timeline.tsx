@@ -1,12 +1,8 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { Children, cloneElement, createContext, isValidElement, useContext } from 'react';
-import {
-  iconNameList,
-  timeline,
-  type IconName,
-  type Tone,
-  type TimelineVariantProps,
-} from '@var-ui/core';
+import { iconNameList } from '@var-ui/core/icons/iconNames';
+import { timeline } from '@var-ui/core/components/timeline';
+import type { IconName, Tone, TimelineVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

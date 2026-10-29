@@ -6,7 +6,8 @@ import {
   TextField as AriaTextField,
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
-import { textField, type TextFieldVariantProps } from '@var-ui/core';
+import { textField } from '@var-ui/core/components/textField';
+import type { TextFieldVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 import { mergeRacClassName } from './racClassName';
