@@ -21,3 +21,6 @@ packages/cli/data/catalog.json
 # Local Netlify folder
 .netlify
 .vitest/
+
+# Local `npm pack` output
+*.tgz
