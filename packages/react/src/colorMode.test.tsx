@@ -328,3 +328,25 @@ describe('getColorModeInitScript', () => {
     cleanup();
   });
 });
+
+describe('color mode storage guards', () => {
+  it('does not throw when localStorage read/write throws', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    const { result } = renderHook(() => useColorMode(), {
+      wrapper: ({ children }) => (
+        <DesignSystemProvider storageKey="k" defaultColorMode="light">
+          {children}
+        </DesignSystemProvider>
+      ),
+    });
+    expect(result.current.colorMode).toBe('light');
+    act(() => result.current.setColorMode('dark'));
+    expect(result.current.colorMode).toBe('dark');
+    vi.restoreAllMocks();
+  });
+});

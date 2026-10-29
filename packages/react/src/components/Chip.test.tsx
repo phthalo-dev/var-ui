@@ -105,3 +105,31 @@ describe('ChipGroup', () => {
     expect(() => wrap(<Chip value="solo">Solo</Chip>)).toThrow(/ChipGroup/);
   });
 });
+
+describe('Chip nesting', () => {
+  it('renders the remove control as a sibling of a toggle chip button', async () => {
+    const onRemove = vi.fn();
+    const { container } = wrap(
+      <Chip isSelected={false} onChange={() => {}} onRemove={onRemove}>
+        React
+      </Chip>,
+    );
+    for (const button of container.querySelectorAll('button')) {
+      expect(button.querySelector('button')).toBeNull();
+    }
+    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    expect(onRemove).toHaveBeenCalledTimes(1);
+  });
+
+  it('removes a toggle chip with Delete', async () => {
+    const onRemove = vi.fn();
+    wrap(
+      <Chip isSelected={false} onChange={() => {}} onRemove={onRemove}>
+        React
+      </Chip>,
+    );
+    screen.getByRole('button', { name: 'React' }).focus();
+    await userEvent.keyboard('{Delete}');
+    expect(onRemove).toHaveBeenCalledTimes(1);
+  });
+});

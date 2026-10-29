@@ -48,7 +48,7 @@ export const checkbox = typestyles.recipe({
           fontSize: '12px',
           fontWeight: t.fontWeight.semibold.var,
           color: vars.boxForeground.var,
-          '&[data-selected]': {
+          '&[data-selected], &[data-indeterminate]': {
             [vars.boxBackground.name]: t.color.tone.accent.background.var,
             [vars.boxBorder.name]: t.color.tone.accent.background.var,
           },

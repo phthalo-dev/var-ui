@@ -90,3 +90,43 @@ describe('MultiSelector', () => {
     expect(screen.getByTestId('value').textContent).toBe('pear');
   });
 });
+
+describe('MultiSelector form wiring', () => {
+  it('links the trigger to description and error and marks it invalid', () => {
+    render(
+      <IconProvider icons={{}}>
+        <MultiSelector
+          label="Fruit"
+          description="Pick some"
+          errorMessage="Required"
+          options={OPTIONS}
+          value={[]}
+          onChange={() => {}}
+        />
+      </IconProvider>,
+    );
+    const trigger = screen.getByRole('button');
+    expect(trigger.getAttribute('aria-describedby')).toBe(
+      `${screen.getByText('Pick some').id} ${screen.getByText('Required').id}`,
+    );
+  });
+
+  it('emits one hidden input per selected value under name', () => {
+    const { container } = render(
+      <IconProvider icons={{}}>
+        <form>
+          <MultiSelector
+            name="fruit"
+            options={OPTIONS}
+            value={['apple', 'pear']}
+            onChange={() => {}}
+          />
+        </form>
+      </IconProvider>,
+    );
+    expect(new FormData(container.querySelector('form')!).getAll('fruit')).toEqual([
+      'apple',
+      'pear',
+    ]);
+  });
+});

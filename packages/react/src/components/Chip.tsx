@@ -68,9 +68,14 @@ function ChipLabel({ children }: { children: ReactNode }): JSX.Element {
 function ChipRemoveButton({
   onRemove,
   removeLabel = 'Remove',
+  isDisabled,
+  overlay,
 }: {
   onRemove: () => void;
   removeLabel?: string;
+  isDisabled?: boolean;
+  /** Positioned over the trailing edge of a sibling toggle button. */
+  overlay?: boolean;
 }): JSX.Element {
   const c = chip();
   return (
@@ -78,6 +83,8 @@ function ChipRemoveButton({
       {...mergeProps(c.removeButton)}
       aria-label={removeLabel}
       onPress={onRemove}
+      isDisabled={isDisabled}
+      data-overlay={overlay || undefined}
       excludeFromTabOrder
     >
       <Icon name="close" size="sm" />
@@ -100,7 +107,7 @@ function ChipToggle({
   ref,
 }: ChipProps & { id?: string }): JSX.Element {
   const c = chip({ tone, appearance });
-  return (
+  const button = (
     <AriaToggleButton
       id={id}
       isSelected={isSelected}
@@ -110,10 +117,34 @@ function ChipToggle({
       {...mergeProps(c.root, className)}
       ref={ref as Ref<HTMLButtonElement>}
       data-interactive
+      data-removable={onRemove ? true : undefined}
+      onKeyDown={
+        onRemove
+          ? (event) => {
+              if (event.key === 'Backspace' || event.key === 'Delete') {
+                event.preventDefault();
+                onRemove();
+              }
+            }
+          : undefined
+      }
     >
       <ChipLabel>{children}</ChipLabel>
-      {onRemove ? <ChipRemoveButton onRemove={onRemove} removeLabel={removeLabel} /> : null}
     </AriaToggleButton>
+  );
+  if (!onRemove) return button;
+  // The remove control is a sibling of the toggle button (a button inside a
+  // button is invalid HTML), overlaid on the pill's trailing edge.
+  return (
+    <span {...mergeProps(c.wrapper)}>
+      {button}
+      <ChipRemoveButton
+        onRemove={onRemove}
+        removeLabel={removeLabel}
+        isDisabled={isDisabled}
+        overlay
+      />
+    </span>
   );
 }
 

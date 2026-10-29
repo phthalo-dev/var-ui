@@ -221,6 +221,8 @@ export function CommandPalette({
     getFalse,
   );
   const open = controller ? controllerOpen : Boolean(isOpen);
+  const openRef = useRef(open);
+  openRef.current = open;
   const requestOpen = useCallback(
     (next: boolean) => {
       controller?.setOpen(next);
@@ -267,7 +269,10 @@ export function CommandPalette({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    const handleClose = () => requestOpen(false);
+    // Programmatic close (open flipped to false) also emits `close`; only report real closes.
+    const handleClose = () => {
+      if (openRef.current) requestOpen(false);
+    };
     dialog.addEventListener('close', handleClose);
     return () => dialog.removeEventListener('close', handleClose);
   }, [requestOpen]);

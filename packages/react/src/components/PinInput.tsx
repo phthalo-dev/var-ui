@@ -24,6 +24,8 @@ export type PinInputProps = FieldMeta & {
   isDisabled?: boolean;
   isRequired?: boolean;
   autoFocus?: boolean;
+  /** Name of a hidden input carrying the joined value, so the PIN is included in form submission. */
+  name?: string;
   className?: string;
   'aria-label'?: string;
   /** Ref to the root `<div>` element. */
@@ -69,12 +71,18 @@ export function PinInput({
   isDisabled,
   isRequired,
   autoFocus,
+  name,
   className,
   'aria-label': ariaLabel,
   ref,
 }: PinInputProps): JSX.Element {
   const p = pinInput({ size });
   const labelId = useId();
+  const descriptionId = useId();
+  const errorId = useId();
+  const describedBy =
+    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
+    undefined;
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const isControlled = controlledValue !== undefined;
   const [uncontrolledChars, setUncontrolledChars] = useState(() =>
@@ -208,6 +216,7 @@ export function PinInput({
             }
             aria-required={isRequired || undefined}
             aria-invalid={errorMessage ? true : undefined}
+            aria-describedby={describedBy}
             value={char}
             disabled={isDisabled}
             autoFocus={autoFocus && index === 0 ? true : undefined}
@@ -218,8 +227,19 @@ export function PinInput({
           />
         ))}
       </div>
-      {description ? <p {...mergeProps(p.description)}>{description}</p> : null}
-      {errorMessage ? <p {...mergeProps(p.error)}>{errorMessage}</p> : null}
+      {name ? (
+        <input type="hidden" name={name} value={valueFromChars(chars)} disabled={isDisabled} />
+      ) : null}
+      {description ? (
+        <p {...mergeProps(p.description)} id={descriptionId}>
+          {description}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p {...mergeProps(p.error)} id={errorId}>
+          {errorMessage}
+        </p>
+      ) : null}
     </div>
   );
 }

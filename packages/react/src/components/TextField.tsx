@@ -9,6 +9,7 @@ import {
 import { textField, type TextFieldVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
+import { mergeRacClassName } from './racClassName';
 
 export type BaseTextFieldProps = Omit<AriaTextFieldProps, 'children'> &
   FieldMeta & {
@@ -28,12 +29,13 @@ export function TextField({
   errorMessage,
   placeholder,
   size = 'md',
+  className,
   ref,
   ...props
 }: TextFieldProps): JSX.Element {
   const tf = textField({ size });
   return (
-    <AriaTextField {...props} {...mergeProps(tf.root)} ref={ref}>
+    <AriaTextField {...props} className={mergeRacClassName(tf.root, className)} ref={ref}>
       {label ? <Label {...mergeProps(tf.label)}>{label}</Label> : null}
       <Input {...mergeProps(tf.input)} placeholder={placeholder} />
       {description ? <p {...mergeProps(tf.description)}>{description}</p> : null}

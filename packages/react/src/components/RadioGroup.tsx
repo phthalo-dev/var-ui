@@ -7,6 +7,7 @@ import {
 } from 'react-aria-components';
 import { radio } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
+import { mergeRacClassName } from './racClassName';
 
 export type RadioGroupOption = {
   /** Value submitted with the form when this option is selected. */
@@ -24,10 +25,16 @@ export type RadioGroupProps = Omit<RACRadioGroupProps, 'children'> & {
   ref?: Ref<HTMLDivElement>;
 };
 
-export function RadioGroup({ label, options, ref, ...props }: RadioGroupProps): JSX.Element {
+export function RadioGroup({
+  label,
+  options,
+  className,
+  ref,
+  ...props
+}: RadioGroupProps): JSX.Element {
   const r = radio();
   return (
-    <AriaRadioGroup {...props} {...mergeProps(r.group)} ref={ref}>
+    <AriaRadioGroup {...props} className={mergeRacClassName(r.group, className)} ref={ref}>
       {label ? <Label {...mergeProps(r.groupLabel)}>{label}</Label> : null}
       {options.map((option) => (
         <AriaRadio key={option.value} value={option.value} {...mergeProps(r.item)}>

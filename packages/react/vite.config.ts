@@ -16,6 +16,9 @@ export default defineConfig({
     format: ['esm'],
     sourcemap: true,
     unbundle: true,
+    // Every emitted module may use hooks/context; mark all as client modules so
+    // the package is importable from Next.js app-router server components.
+    banner: { js: "'use client';" },
     deps: {
       neverBundle: ['react', 'react-dom', 'react-aria-components', '@var-ui/core', 'typestyles'],
     },

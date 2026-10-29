@@ -18,6 +18,7 @@ export const fileInput = typestyles.recipe({
     'label',
     'description',
     'error',
+    'frame',
     'dropzone',
     'placeholderText',
     'fileNameText',
@@ -72,6 +73,11 @@ export const fileInput = typestyles.recipe({
           ...chrome.root,
           minWidth: '240px',
         },
+        frame: {
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+        },
         dropzone: {
           position: 'relative',
           display: 'flex',
@@ -119,6 +125,9 @@ export const fileInput = typestyles.recipe({
           color: vars.iconColor.var,
         },
         clearButton: {
+          position: 'absolute',
+          insetBlockStart: t.space[2].var,
+          insetInlineEnd: t.space[2].var,
           appearance: 'none',
           border: 'none',
           borderRadius: t.radius.sm.var,

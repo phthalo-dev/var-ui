@@ -10,6 +10,10 @@ export type CarouselProps = {
   children: ReactNode;
   /** Accessible name for the carousel region. */
   label: string;
+  /** Accessible name for the scrollable viewport. @default `label` */
+  viewportLabel?: string;
+  /** Accessible name for each slide group. @default (index, count) => `${index} of ${count}` */
+  getSlideLabel?: (index: number, count: number) => string;
   /** CSS length for each snap item. @default 280px */
   itemWidth?: string;
   /** Additional CSS class names merged onto the root element. */
@@ -17,6 +21,10 @@ export type CarouselProps = {
   /** Ref to the underlying `<section>` element. */
   ref?: Ref<HTMLElement>;
 };
+
+function defaultSlideLabel(index: number, count: number): string {
+  return `${index} of ${count}`;
+}
 
 /**
  * Scroll-snap carousel with prev/next nudge buttons. CSS-first: no index
@@ -29,12 +37,17 @@ export type CarouselProps = {
 export function Carousel({
   children,
   label,
+  viewportLabel,
+  getSlideLabel = defaultSlideLabel,
   itemWidth,
   className,
   ref,
 }: CarouselProps): JSX.Element {
   const s = carousel();
   const viewportRef = useRef<HTMLDivElement>(null);
+
+  const slides = Children.toArray(children);
+  const slideCount = slides.length;
 
   const nudge = (direction: 1 | -1) => {
     const viewport = viewportRef.current;
@@ -45,16 +58,31 @@ export function Carousel({
   };
 
   return (
-    <section {...mergeProps(s.root, className)} role="region" aria-label={label} ref={ref}>
+    <section
+      {...mergeProps(s.root, className)}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={label}
+      ref={ref}
+    >
       <div
         ref={viewportRef}
         {...mergeProps(s.viewport)}
         data-carousel-viewport
         tabIndex={0}
+        role="group"
+        aria-label={viewportLabel ?? label}
         style={itemWidth ? { gridAutoColumns: itemWidth } : undefined}
       >
-        {Children.map(children, (child) => (
-          <div {...mergeProps(s.item)} data-carousel-item>
+        {slides.map((child, index) => (
+          <div
+            key={index}
+            {...mergeProps(s.item)}
+            data-carousel-item
+            role="group"
+            aria-roledescription="slide"
+            aria-label={getSlideLabel(index + 1, slideCount)}
+          >
             {child}
           </div>
         ))}

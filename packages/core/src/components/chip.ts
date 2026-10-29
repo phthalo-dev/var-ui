@@ -22,7 +22,7 @@ import {
 export const chip = typestyles.recipe({
   name: 'chip',
   layer: 'components',
-  slots: ['root', 'label', 'removeButton'],
+  slots: ['root', 'label', 'removeButton', 'wrapper'],
   variants: {
     tone,
     appearance: surfaceAppearance,
@@ -85,6 +85,10 @@ export const chip = typestyles.recipe({
               ...focusRing,
             },
           },
+          '&[data-removable]': {
+            // Room for the sibling remove button overlaid on the trailing edge.
+            paddingInlineEnd: `calc(${t.space[2].var} + ${t.space[1].var} + 1.25rem)`,
+          },
           '&[data-selected]': {
             [vars.borderColor.name]: vars.solidBg.var,
             [vars.backgroundColor.name]: vars.solidBg.var,
@@ -94,6 +98,12 @@ export const chip = typestyles.recipe({
             opacity: 0.6,
             cursor: 'not-allowed',
           },
+        },
+        wrapper: {
+          position: 'relative',
+          display: 'inline-flex',
+          alignItems: 'center',
+          maxWidth: '100%',
         },
         label: {
           minWidth: 0,
@@ -114,6 +124,16 @@ export const chip = typestyles.recipe({
           borderRadius: t.radius.full.var,
           padding: '2px',
           marginInlineEnd: `calc(${t.space[1].var} * -0.5)`,
+          '&[data-overlay]': {
+            position: 'absolute',
+            insetInlineEnd: t.space[2].var,
+            insetBlockStart: '50%',
+            transform: 'translateY(-50%)',
+            marginInlineEnd: 0,
+          },
+          '&[data-disabled]': {
+            cursor: 'not-allowed',
+          },
           '&:hover': {
             backgroundColor: vars.removeHoverBackground.var,
           },

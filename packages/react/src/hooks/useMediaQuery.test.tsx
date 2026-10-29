@@ -16,4 +16,22 @@ describe('useMediaQuery', () => {
     expect(narrow.current).toBe(false);
     vi.unstubAllGlobals();
   });
+
+  it('subscribes once across rerenders', () => {
+    const add = vi.fn();
+    const remove = vi.fn();
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: add,
+      removeEventListener: remove,
+    }));
+    const { rerender, unmount } = renderHook(() => useMediaQuery('(min-width: 600px)'));
+    rerender();
+    rerender();
+    expect(add).toHaveBeenCalledTimes(1);
+    unmount();
+    expect(remove).toHaveBeenCalledTimes(1);
+    vi.unstubAllGlobals();
+  });
 });

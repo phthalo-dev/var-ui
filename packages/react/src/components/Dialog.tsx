@@ -5,6 +5,8 @@ import {
   useContext,
   useMemo,
   useRef,
+  useEffect,
+  useId,
   useState,
   type JSX,
   type MutableRefObject,
@@ -106,6 +108,9 @@ type DialogContextValue = {
   portalContainer?: Element;
   isDismissable: boolean;
   lastEventRef: MutableRefObject<Event | null>;
+  descriptionId: string;
+  hasDescription: boolean;
+  setHasDescription: (value: boolean) => void;
   handleOpenChange: (next: boolean) => void;
 };
 
@@ -132,6 +137,8 @@ function DialogRoot({
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const lastEventRef = useRef<Event | null>(null);
+  const descriptionId = useId();
+  const [hasDescription, setHasDescription] = useState(false);
 
   const presence = useOverlayPresence({
     isOpen: requestedOpen,
@@ -160,9 +167,12 @@ function DialogRoot({
       portalContainer,
       isDismissable,
       lastEventRef,
+      descriptionId,
+      hasDescription,
+      setHasDescription,
       handleOpenChange,
     }),
-    [handleOpenChange, isDismissable, portalContainer, presence],
+    [handleOpenChange, isDismissable, portalContainer, presence, descriptionId, hasDescription],
   );
 
   return (
@@ -266,7 +276,7 @@ function DialogPopup({ children, className, role = 'dialog' }: DialogPopupProps)
       {...ctx.presence.attrs}
       ref={ctx.popupRef as Ref<HTMLDivElement>}
     >
-      <AriaDialog role={role}>
+      <AriaDialog role={role} aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}>
         {({ close }) => (
           <OverlayCloseContext.Provider value={close}>
             <div {...mergeProps(d.content)}>{children}</div>
@@ -292,8 +302,18 @@ function DialogTitle({ children, className }: DialogTitleProps): JSX.Element {
 }
 
 function DialogDescription({ children, className }: DialogDescriptionProps): JSX.Element {
+  const ctx = useDialogContext();
+  const { setHasDescription } = ctx;
   const d = dialog();
-  return <p {...mergeProps(d.description, className)}>{children}</p>;
+  useEffect(() => {
+    setHasDescription(true);
+    return () => setHasDescription(false);
+  }, [setHasDescription]);
+  return (
+    <p id={ctx.descriptionId} {...mergeProps(d.description, className)}>
+      {children}
+    </p>
+  );
 }
 
 function DialogActions({ children, className }: DialogActionsProps): JSX.Element {

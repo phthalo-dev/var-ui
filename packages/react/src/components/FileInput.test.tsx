@@ -79,3 +79,16 @@ describe('FileInput', () => {
     clickSpy.mockRestore();
   });
 });
+
+describe('FileInput form wiring and structure', () => {
+  it('puts name on the native file input', () => {
+    const { input } = renderFileInput({ name: 'resume' });
+    expect(input.name).toBe('resume');
+  });
+
+  it('does not nest the clear button inside the role=button dropzone', () => {
+    renderFileInput({ value: createFile('cv.pdf', 10) });
+    const clear = screen.getByRole('button', { name: 'Clear Resume' });
+    expect(clear.closest('[role="button"]:not(button)')).toBeNull();
+  });
+});

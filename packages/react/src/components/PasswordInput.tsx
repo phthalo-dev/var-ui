@@ -5,6 +5,7 @@ import { passwordField, type PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import type { BaseTextFieldProps } from './TextField';
 import { mergeProps } from 'typestyles';
+import { mergeRacClassName } from './racClassName';
 
 export type PasswordInputProps = BaseTextFieldProps & {
   placeholder?: string;
@@ -24,6 +25,7 @@ export function PasswordInput({
   placeholder,
   size = 'md',
   isDisabled,
+  className,
   ref,
   ...props
 }: PasswordInputProps): JSX.Element {
@@ -35,7 +37,7 @@ export function PasswordInput({
       {...props}
       isDisabled={isDisabled}
       isInvalid={errorMessage ? true : undefined}
-      {...mergeProps(pf.root)}
+      className={mergeRacClassName(pf.root, className)}
       ref={ref}
     >
       {label ? <Label {...mergeProps(pf.label)}>{label}</Label> : null}

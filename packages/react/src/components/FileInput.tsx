@@ -34,6 +34,8 @@ export type FileInputProps = {
   maxFiles?: number;
   /** Disables the dropzone: blocks click, keyboard activation, and drop. */
   isDisabled?: boolean;
+  /** Name applied to the underlying `<input type="file">` for native form submission. */
+  name?: string;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Ref to the underlying root `<div>` element. */
@@ -130,6 +132,7 @@ export function FileInput({
   maxSize,
   maxFiles,
   isDisabled = false,
+  name,
   className,
   ref,
 }: FileInputProps): JSX.Element {
@@ -231,52 +234,56 @@ export function FileInput({
       <label {...mergeProps(fi.label)} id={labelId} htmlFor={inputId}>
         {label}
       </label>
-      <div
-        role="button"
-        tabIndex={isDisabled ? -1 : 0}
-        {...mergeProps(fi.dropzone)}
-        data-drag-over={isDragOver || undefined}
-        data-disabled={isDisabled || undefined}
-        aria-disabled={isDisabled || undefined}
-        aria-labelledby={labelId}
-        aria-describedby={describedBy}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <span {...mergeProps(fi.icon)}>
-          <Icon name="arrowUp" />
-        </span>
-        {hasValue ? (
-          <span {...mergeProps(fi.fileNameText)}>{fileNameDisplay}</span>
-        ) : (
-          <span {...mergeProps(fi.placeholderText)}>{placeholderLabel}</span>
-        )}
+      <div {...mergeProps(fi.frame)}>
+        <div
+          role="button"
+          tabIndex={isDisabled ? -1 : 0}
+          {...mergeProps(fi.dropzone)}
+          data-drag-over={isDragOver || undefined}
+          data-disabled={isDisabled || undefined}
+          aria-disabled={isDisabled || undefined}
+          aria-labelledby={labelId}
+          aria-describedby={describedBy}
+          onClick={handleClick}
+          onKeyDown={handleKeyDown}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <span {...mergeProps(fi.icon)}>
+            <Icon name="arrowUp" />
+          </span>
+          {hasValue ? (
+            <span {...mergeProps(fi.fileNameText)}>{fileNameDisplay}</span>
+          ) : (
+            <span {...mergeProps(fi.placeholderText)}>{placeholderLabel}</span>
+          )}
+          <input
+            ref={inputRef}
+            id={inputId}
+            type="file"
+            name={name}
+            tabIndex={-1}
+            aria-hidden="true"
+            {...mergeProps(fi.hiddenInput)}
+            accept={accept}
+            multiple={multiple}
+            disabled={isDisabled}
+            onChange={handleInputChange}
+          />
+        </div>
         {hasValue ? (
           <button
             type="button"
             {...mergeProps(fi.clearButton)}
             aria-label={`Clear ${label}`}
+            disabled={isDisabled}
             onClick={handleClear}
           >
             <Icon name="close" size="sm" />
           </button>
         ) : null}
-        <input
-          ref={inputRef}
-          id={inputId}
-          type="file"
-          tabIndex={-1}
-          aria-hidden="true"
-          {...mergeProps(fi.hiddenInput)}
-          accept={accept}
-          multiple={multiple}
-          disabled={isDisabled}
-          onChange={handleInputChange}
-        />
       </div>
       {description ? (
         <p {...mergeProps(fi.description)} id={descriptionId}>

@@ -29,6 +29,8 @@ export type MultiSelectorProps = FieldMeta & {
   /** Placeholder text when no value is selected. @default Select… */
   placeholder?: string;
   isDisabled?: boolean;
+  /** Name for form submission: one hidden input per selected id, like `<select multiple>`. */
+  name?: string;
   className?: string;
   /** Ref to the root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
@@ -43,12 +45,18 @@ export function MultiSelector({
   onChange,
   placeholder = 'Select…',
   isDisabled,
+  name,
   className,
   ref,
 }: MultiSelectorProps): JSX.Element {
   const ms = multiSelector();
   const labelId = useId();
   const triggerTextId = useId();
+  const descriptionId = useId();
+  const errorId = useId();
+  const describedBy =
+    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
+    undefined;
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const selectedLabels = options.filter((o) => value.includes(o.id)).map((o) => o.label);
@@ -75,6 +83,7 @@ export function MultiSelector({
         {...mergeProps(ms.trigger)}
         isDisabled={isDisabled}
         aria-labelledby={label ? `${labelId} ${triggerTextId}` : undefined}
+        aria-describedby={describedBy}
         onPress={() => setIsOpen((open) => !open)}
       >
         <span
@@ -116,9 +125,18 @@ export function MultiSelector({
           )}
         </ListBox>
       </Popover>
-      {description ? <p {...mergeProps(ms.description)}>{description}</p> : null}
+      {name
+        ? value.map((id) => (
+            <input key={id} type="hidden" name={name} value={id} disabled={isDisabled} />
+          ))
+        : null}
+      {description ? (
+        <p {...mergeProps(ms.description)} id={descriptionId}>
+          {description}
+        </p>
+      ) : null}
       {errorMessage ? (
-        <p {...mergeProps(ms.error)} role="alert">
+        <p {...mergeProps(ms.error)} id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

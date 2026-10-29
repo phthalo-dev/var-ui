@@ -73,6 +73,11 @@ export function ColorInput({
   const p = popover();
   const { style: layerStyle } = useLayer();
   const inputId = useId();
+  const descriptionId = useId();
+  const errorId = useId();
+  const describedBy =
+    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
+    undefined;
   const { color, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
   const [textValue, setTextValue] = useState(color);
   const swatchColor = isValidHex(color) ? normalizeHex(color) : normalizeHex(defaultValue);
@@ -153,6 +158,7 @@ export function ColorInput({
             required={isRequired}
             aria-required={isRequired || undefined}
             aria-invalid={errorMessage ? true : undefined}
+            aria-describedby={describedBy}
             spellCheck={false}
             autoComplete="off"
             onChange={handleTextChange}
@@ -162,9 +168,13 @@ export function ColorInput({
           <input type="hidden" name={name} value={color} />
         ) : null}
       </div>
-      {isField && description ? <p {...mergeProps(cf.description)}>{description}</p> : null}
+      {isField && description ? (
+        <p {...mergeProps(cf.description)} id={descriptionId}>
+          {description}
+        </p>
+      ) : null}
       {isField && errorMessage ? (
-        <p {...mergeProps(cf.error)} role="alert">
+        <p {...mergeProps(cf.error)} id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

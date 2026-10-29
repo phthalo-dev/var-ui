@@ -1,5 +1,5 @@
 import type { JSX, KeyboardEvent, Ref } from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   Button,
   ComboBox as AriaComboBox,
@@ -40,6 +40,8 @@ export type TokenizerProps = {
   /** Placeholder text shown in the search input when no tokens are selected. @default Add… */
   placeholder?: string;
   isDisabled?: boolean;
+  /** Name for form submission: one hidden input per token id, like `<select multiple>`. */
+  name?: string;
   className?: string;
   /** Ref to the underlying root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
@@ -54,11 +56,17 @@ export function Tokenizer({
   onChange,
   placeholder = 'Add…',
   isDisabled,
+  name,
   className,
   ref,
 }: TokenizerProps): JSX.Element {
   const tk = tokenizer();
   const [inputValue, setInputValue] = useState('');
+  const descriptionId = useId();
+  const errorId = useId();
+  const describedBy =
+    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
+    undefined;
   const selectedIds = new Set(value.map((option) => option.id));
   const available = options.filter((option) => !selectedIds.has(option.id));
 
@@ -109,6 +117,8 @@ export function Tokenizer({
           inputValue={inputValue}
           onInputChange={setInputValue}
           isDisabled={isDisabled}
+          isInvalid={errorMessage ? true : undefined}
+          aria-describedby={describedBy}
           onSelectionChange={(key) => {
             if (key != null) addToken(String(key));
           }}
@@ -129,8 +139,27 @@ export function Tokenizer({
           </Popover>
         </AriaComboBox>
       </Group>
-      {description ? <p {...mergeProps(tk.description)}>{description}</p> : null}
-      {errorMessage ? <p {...mergeProps(tk.error)}>{errorMessage}</p> : null}
+      {name
+        ? value.map((option) => (
+            <input
+              key={option.id}
+              type="hidden"
+              name={name}
+              value={option.id}
+              disabled={isDisabled}
+            />
+          ))
+        : null}
+      {description ? (
+        <p {...mergeProps(tk.description)} id={descriptionId}>
+          {description}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p {...mergeProps(tk.error)} id={errorId}>
+          {errorMessage}
+        </p>
+      ) : null}
     </div>
   );
 }
