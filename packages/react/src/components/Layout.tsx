@@ -149,7 +149,7 @@ export function Layout({
       ...(padding != null ? layoutShellPaddingAssignments(padding) : {}),
       ...(contentWidth != null ? layoutContentWidthAssignment(contentWidth) : {}),
     };
-    return Object.keys(style).length > 0 ? (style as CSSProperties) : undefined;
+    return Object.keys(style).length > 0 ? style : undefined;
   }, [padding, contentWidth]);
 
   const headerHasDivider = elementHasDivider(header, defaultHasDividers);
@@ -207,7 +207,7 @@ function zoneOverrideStyle(
   return {
     ...(heightValue != null ? { height: heightValue } : {}),
     ...paddingVars,
-  } as CSSProperties;
+  };
 }
 
 export type LayoutHeaderProps = {

@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type JSX,
   type MutableRefObject,
   type ReactElement,
@@ -88,14 +87,6 @@ export type HoverCardContentProps = {
   children: ReactNode;
   className?: string;
 };
-
-type HoverCardSlot = 'root' | 'title' | 'content';
-type HoverCardRecipeFn = () => Record<HoverCardSlot, string>;
-// `hoverCard` resolves to `styles`'s dimensioned-variant overload at the type level (returns
-// `string`) instead of its slot overload, even though it returns a per-slot class map at runtime —
-// see packages/core/src/components/hoverCard.ts. Recast until that recipe's overload resolution is
-// fixed upstream.
-const hoverCardSlots = hoverCard as unknown as HoverCardRecipeFn;
 
 function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
   if (typeof existing !== 'function') {
@@ -302,7 +293,7 @@ function HoverCardPopup({
   portalContainer,
 }: HoverCardPopupProps): JSX.Element {
   const ctx = useHoverCardContext();
-  const hc = hoverCardSlots();
+  const hc = hoverCard();
   const { style: layerStyle } = useLayer();
   const positioner = usePositionerVars({
     placement,
@@ -319,7 +310,7 @@ function HoverCardPopup({
         ctx.setPopupEl(node);
       }}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style } as CSSProperties}
+      style={{ ...layerStyle, ...positioner.style }}
       isOpen={ctx.presence.mounted}
       isNonModal
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
@@ -347,7 +338,7 @@ function HoverCardPopup({
 }
 
 function HoverCardTitle({ children, className }: HoverCardTitleProps): JSX.Element {
-  const hc = hoverCardSlots();
+  const hc = hoverCard();
   return (
     <Heading slot="title" {...mergeProps(hc.title, className)}>
       {children}
@@ -356,7 +347,7 @@ function HoverCardTitle({ children, className }: HoverCardTitleProps): JSX.Eleme
 }
 
 function HoverCardContent({ children, className }: HoverCardContentProps): JSX.Element {
-  const hc = hoverCardSlots();
+  const hc = hoverCard();
   return <div {...mergeProps(hc.content, className)}>{children}</div>;
 }
 

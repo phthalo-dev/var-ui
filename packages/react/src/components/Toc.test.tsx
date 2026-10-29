@@ -18,4 +18,15 @@ describe('Toc', () => {
     );
     expect(screen.getByRole('link', { name: 'Default' })).toBeTruthy();
   });
+
+  it('applies stickyTop through the recipe CSS variable', () => {
+    render(
+      <Toc title="On this page" stickyTop="5rem">
+        <Toc.Item label="Examples" href="#examples" />
+      </Toc>,
+    );
+
+    const nav = screen.getByRole('navigation', { name: 'On this page' });
+    expect(nav.style.getPropertyValue('--var-ui-toc-stickytop')).toBe('5rem');
+  });
 });

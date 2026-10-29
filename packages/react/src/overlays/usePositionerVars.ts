@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, type RefObject } from 'react';
+import { useLayoutEffect, useState, type CSSProperties, type RefObject } from 'react';
 
 // oxlint-disable-next-line typescript/no-redundant-type-constituents -- named sides document the supported placement contract
 export type OverlayPlacement = 'top' | 'bottom' | 'left' | 'right' | string;
@@ -12,7 +12,8 @@ export type UsePositionerVarsOptions = {
 };
 
 export type UsePositionerVarsResult = {
-  style: {
+  /** Assignable to a React `style` prop as-is (custom properties are intersected onto `CSSProperties`). */
+  style: CSSProperties & {
     '--var-ui-available-height': string;
     '--var-ui-available-width': string;
     '--var-ui-transform-origin': string;

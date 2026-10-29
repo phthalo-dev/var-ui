@@ -1,6 +1,13 @@
 import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
 import { Children, createContext, useCallback, useContext, useMemo } from 'react';
-import { overflowList as overflowListStyles, type OverflowListVariantProps } from '@var-ui/core';
+import {
+  overflowList as overflowListStyles,
+  recipeVars,
+  styleVars,
+  type OverflowListVariantProps,
+} from '@var-ui/core';
+
+const overflowListVars = recipeVars(overflowListStyles);
 import { mergeProps } from 'typestyles';
 import { useOverflow } from '../hooks/useOverflow';
 
@@ -132,10 +139,8 @@ export function OverflowList<T = unknown>({
     gap: typeof gap === 'number' ? 'none' : gap,
     fillParent: fillParent ? true : false,
   });
-  const rootStyle: CSSProperties | undefined =
-    typeof gap === 'number'
-      ? ({ '--var-ui-overflow-list-gap': `${gap}px` } as CSSProperties)
-      : undefined;
+  const rootStyle =
+    typeof gap === 'number' ? styleVars([[overflowListVars.gap, `${gap}px`]]) : undefined;
 
   const renderEntry = (entry: T | ReactElement, index: number): ReactNode => {
     if (isItemsMode) {

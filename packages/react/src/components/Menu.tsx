@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type JSX,
   type MutableRefObject,
   type ReactElement,
@@ -281,7 +280,7 @@ function MenuPopup({ children, className, portalContainer, ref }: MenuPopupProps
           (ref as MutableRefObject<HTMLDivElement | null>).current = node;
         }
       }}
-      style={{ ...layerStyle, ...positioner.style } as CSSProperties}
+      style={{ ...layerStyle, ...positioner.style }}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
     >
       <AriaMenu {...mergeProps(m.menu)} selectionMode="none">

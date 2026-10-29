@@ -118,6 +118,8 @@ type CommandPaletteSlot =
 type CommandPaletteRecipeFn = (args?: {
   open?: boolean;
 }) => Record<CommandPaletteSlot, ComponentAttrsResult>;
+// Slot recipe call results are typed `Record<string, ComponentAttrsResult>`, so slot names are lost;
+// drop this cast once https://github.com/phthalo-dev/typestyles/issues/303 ships.
 const commandPaletteSlots = commandPalette as unknown as CommandPaletteRecipeFn;
 
 function defaultFilter(item: CommandPaletteItem, query: string): boolean {
