@@ -1,4 +1,4 @@
-import type { AriaRole, JSX, ReactNode, Ref } from 'react';
+import type { AriaRole, ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { alert } from '@var-ui/core/components/alert';
 import type { AlertVariantProps, IconName, Tone } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -16,7 +16,7 @@ const variantIconName: Record<Tone, IconName> = {
   danger: 'error',
 };
 
-export type AlertProps = {
+export type AlertProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children' | 'role'> & {
   /** Semantic tone that drives color and the default icon. */
   variant: NonNullable<AlertVariantProps['tone']>;
   /** Surface treatment. @default subtle */
@@ -34,10 +34,6 @@ export type AlertProps = {
    * Omitted by default so static alerts are not announced.
    */
   role?: AriaRole;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 export function Alert({
@@ -50,6 +46,7 @@ export function Alert({
   role,
   className,
   ref,
+  ...rest
 }: AlertProps): JSX.Element {
   const a = alert({
     tone: variant,
@@ -61,6 +58,7 @@ export function Alert({
 
   return (
     <div
+      {...rest}
       {...mergeProps(a.root, className)}
       role={role}
       data-alert

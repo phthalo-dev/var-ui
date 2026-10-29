@@ -8,14 +8,15 @@ import {
   useEffect,
   useId,
   useState,
+  type ComponentPropsWithRef,
   type JSX,
   type MutableRefObject,
   type ReactElement,
   type ReactNode,
-  type Ref,
 } from 'react';
 import {
   Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
   Dialog as AriaDialog,
   DialogTrigger as AriaDialogTrigger,
   Heading,
@@ -33,8 +34,11 @@ import {
   mergeOverlayChild,
   OverlayCloseContext,
   useOverlayClose,
+  useMergedRef,
   useOverlayPresence,
+  type OverlayCloseProps,
   type OverlayOpenChangeHandler,
+  type OverlayTriggerProps,
   type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
@@ -57,50 +61,31 @@ export type DialogRootProps = {
 /** Alias for docs and consumers referring to the root dialog props. */
 export type DialogProps = DialogRootProps;
 
-export type DialogTriggerProps = {
-  children: ReactElement;
-  className?: string;
-  /** Ref to the trigger element. */
-  ref?: Ref<HTMLElement>;
-};
+export type DialogTriggerProps = OverlayTriggerProps;
 
-export type DialogBackdropProps = {
+export type DialogBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
   isDismissable?: boolean;
 };
 
-export type DialogPopupProps = {
+/**
+ * Native props go to the modal `<div>`; `aria-label`, `aria-labelledby` and `aria-describedby`
+ * go to the inner dialog element, which carries the role and the accessible name.
+ */
+export type DialogPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role'> & {
   children: ReactNode;
-  className?: string;
   role?: NonNullable<DialogVariantProps['role']>;
 };
 
-export type DialogHeaderProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type DialogHeaderProps = ComponentPropsWithRef<'div'>;
 
-export type DialogTitleProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type DialogTitleProps = ComponentPropsWithRef<'h2'>;
 
-export type DialogDescriptionProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type DialogDescriptionProps = ComponentPropsWithRef<'p'>;
 
-export type DialogActionsProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type DialogActionsProps = ComponentPropsWithRef<'div'>;
 
-export type DialogCloseProps = {
-  children?: ReactElement;
-  'aria-label'?: string;
-  className?: string;
-};
+export type DialogCloseProps = OverlayCloseProps;
 
 type DialogContextValue = {
   presence: UseOverlayPresenceResult;
@@ -109,9 +94,9 @@ type DialogContextValue = {
   portalContainer?: Element;
   isDismissable: boolean;
   lastEventRef: MutableRefObject<Event | null>;
-  descriptionId: string;
-  hasDescription: boolean;
-  setHasDescription: (value: boolean) => void;
+  /** Id of the mounted `Dialog.Description`, wired to the dialog's `aria-describedby`. */
+  descriptionId: string | undefined;
+  setDescriptionId: (id: string | undefined) => void;
   handleOpenChange: (next: boolean) => void;
 };
 
@@ -138,8 +123,7 @@ function DialogRoot({
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const lastEventRef = useRef<Event | null>(null);
-  const descriptionId = useId();
-  const [hasDescription, setHasDescription] = useState(false);
+  const [descriptionId, setDescriptionId] = useState<string | undefined>(undefined);
 
   const presence = useOverlayPresence({
     isOpen: requestedOpen,
@@ -169,11 +153,10 @@ function DialogRoot({
       isDismissable,
       lastEventRef,
       descriptionId,
-      hasDescription,
-      setHasDescription,
+      setDescriptionId,
       handleOpenChange,
     }),
-    [handleOpenChange, isDismissable, portalContainer, presence, descriptionId, hasDescription],
+    [handleOpenChange, isDismissable, portalContainer, presence, descriptionId],
   );
 
   return (
@@ -243,21 +226,32 @@ function DialogTrigger({ children, className, ref, ...props }: DialogTriggerProp
   return merged;
 }
 
-function DialogBackdrop({ children, className, isDismissable }: DialogBackdropProps): JSX.Element {
+function DialogBackdrop({
+  children,
+  className,
+  style,
+  isDismissable,
+  onPointerDown,
+  ref,
+  ...rest
+}: DialogBackdropProps): JSX.Element {
   const ctx = useDialogContext();
   const { style: layerStyle } = useLayer();
   const d = dialog();
+  const setRef = useMergedRef(ctx.backdropRef, ref);
   return (
     <ModalOverlay
+      {...rest}
       {...mergeProps(d.overlay, className)}
       {...ctx.presence.attrs}
-      ref={ctx.backdropRef as Ref<HTMLDivElement>}
-      style={layerStyle}
+      ref={setRef}
+      style={{ ...layerStyle, ...style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
       isDismissable={isDismissable ?? ctx.isDismissable}
       UNSTABLE_portalContainer={ctx.portalContainer}
       onPointerDown={(event) => {
+        onPointerDown?.(event);
         if (event.target === event.currentTarget) {
           ctx.lastEventRef.current = event.nativeEvent;
         }
@@ -268,16 +262,27 @@ function DialogBackdrop({ children, className, isDismissable }: DialogBackdropPr
   );
 }
 
-function DialogPopup({ children, className, role = 'dialog' }: DialogPopupProps): JSX.Element {
+function DialogPopup({
+  children,
+  className,
+  role = 'dialog',
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  'aria-describedby': ariaDescribedBy,
+  ref,
+  ...rest
+}: DialogPopupProps): JSX.Element {
   const ctx = useDialogContext();
   const d = dialog();
+  const setRef = useMergedRef(ctx.popupRef, ref);
   return (
-    <Modal
-      {...mergeProps(d.modal, className)}
-      {...ctx.presence.attrs}
-      ref={ctx.popupRef as Ref<HTMLDivElement>}
-    >
-      <AriaDialog role={role} aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}>
+    <Modal {...rest} {...mergeProps(d.modal, className)} {...ctx.presence.attrs} ref={setRef}>
+      <AriaDialog
+        role={role}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        aria-describedby={ariaDescribedBy ?? ctx.descriptionId}
+      >
         {({ close }) => (
           <OverlayCloseContext.Provider value={close}>
             <div {...mergeProps(d.content)}>{children}</div>
@@ -288,51 +293,62 @@ function DialogPopup({ children, className, role = 'dialog' }: DialogPopupProps)
   );
 }
 
-function DialogHeader({ children, className }: DialogHeaderProps): JSX.Element {
+function DialogHeader({ className, ...rest }: DialogHeaderProps): JSX.Element {
   const d = dialog();
-  return <div {...mergeProps(d.header, className)}>{children}</div>;
+  return <div {...rest} {...mergeProps(d.header, className)} />;
 }
 
-function DialogTitle({ children, className }: DialogTitleProps): JSX.Element {
+function DialogTitle({ className, children, ...rest }: DialogTitleProps): JSX.Element {
   const d = dialog();
   return (
-    <Heading slot="title" {...mergeProps(d.heading, className)}>
+    <Heading {...rest} slot="title" {...mergeProps(d.heading, className)}>
       {children}
     </Heading>
   );
 }
 
-function DialogDescription({ children, className }: DialogDescriptionProps): JSX.Element {
+function DialogDescription({
+  className,
+  id: idProp,
+  ...rest
+}: DialogDescriptionProps): JSX.Element {
   const ctx = useDialogContext();
-  const { setHasDescription } = ctx;
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
+  const { setDescriptionId } = ctx;
   const d = dialog();
   useEffect(() => {
-    setHasDescription(true);
-    return () => setHasDescription(false);
-  }, [setHasDescription]);
-  return (
-    <p id={ctx.descriptionId} {...mergeProps(d.description, className)}>
-      {children}
-    </p>
-  );
+    setDescriptionId(id);
+    return () => setDescriptionId(undefined);
+  }, [id, setDescriptionId]);
+  return <p {...rest} id={id} {...mergeProps(d.description, className)} />;
 }
 
-function DialogActions({ children, className }: DialogActionsProps): JSX.Element {
+function DialogActions({ className, ...rest }: DialogActionsProps): JSX.Element {
   const d = dialog();
-  return <div {...mergeProps(d.actions, className)}>{children}</div>;
+  return <div {...rest} {...mergeProps(d.actions, className)} />;
 }
 
 function DialogClose({
   children,
   className,
-  'aria-label': ariaLabel = 'Close',
+  'aria-label': ariaLabel,
+  ref,
+  ...rest
 }: DialogCloseProps): JSX.Element {
   const close = useOverlayClose();
   const d = dialog();
 
   if (children) {
     const child = Children.only(children);
-    const merged = mergeOverlayChild(child, { onPress: close, onClick: close, className });
+    const merged = mergeOverlayChild(child, {
+      ...rest,
+      ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+      ref,
+      onPress: close,
+      onClick: composeHandler(rest.onClick, close),
+      className,
+    });
     if (typeof child.type === 'string') {
       return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
     }
@@ -340,7 +356,13 @@ function DialogClose({
   }
 
   return (
-    <AriaButton {...mergeProps(d.closeButton, className)} aria-label={ariaLabel} onPress={close}>
+    <AriaButton
+      {...(rest as AriaButtonProps)}
+      {...mergeProps(d.closeButton, className)}
+      ref={ref}
+      aria-label={ariaLabel ?? 'Close'}
+      onPress={close}
+    >
       <Icon name="close" size="sm" />
     </AriaButton>
   );

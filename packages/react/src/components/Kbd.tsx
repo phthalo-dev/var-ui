@@ -1,19 +1,10 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { kbd } from '@var-ui/core/components/kbd';
 import { mergeProps } from 'typestyles';
 
-export type KbdProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<kbd>` element. */
-  ref?: Ref<HTMLElement>;
-};
+export type KbdProps = ComponentPropsWithRef<'kbd'>;
 
 /** Keyboard key cap for shortcut hints. */
-export function Kbd({ children, className, ref }: KbdProps): JSX.Element {
-  return (
-    <kbd {...mergeProps(kbd(), className)} ref={ref}>
-      {children}
-    </kbd>
-  );
+export function Kbd({ className, ref, ...rest }: KbdProps): JSX.Element {
+  return <kbd {...rest} {...mergeProps(kbd(), className)} ref={ref} />;
 }

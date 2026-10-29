@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import type { VariantOptions } from 'typestyles';
 import { resolveScrollAreaFade, scrollArea, scrollAreaFade, scrollAreaFadeEdgesFor, scrollAreaOrientation } from '@var-ui/core/components/scrollArea';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'div'> & {
   /** @default 'vertical' */
   orientation?: VariantOptions<typeof scrollAreaOrientation>;
   /** Edge fade masks. @default false */
@@ -17,13 +18,14 @@ const {
   fade = false,
   className,
   viewportClassName,
+  ...rest
 } = Astro.props;
 const fadeMode = resolveScrollAreaFade(fade, orientation);
 const s = scrollArea({ fade: fadeMode, orientation });
 const edges = scrollAreaFadeEdgesFor(fadeMode);
 ---
 
-<div {...mergeProps(s.root, className)}>
+<div {...rest} {...mergeProps(s.root, className)}>
   <div {...mergeProps(s.viewport, viewportClassName)}>
     {
       edges.block ? (

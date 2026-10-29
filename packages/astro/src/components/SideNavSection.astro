@@ -2,21 +2,22 @@
 import SideNavSectionHeader from './SideNavSectionHeader.astro';
 import { sideNav } from '@var-ui/core/components/sideNav';
 import Text from './Text.astro';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'title'> & {
   title?: string;
   subtitle?: string;
   className?: string;
 };
 
-const { title, subtitle, className } = Astro.props;
+const { title, subtitle, className, ...rest } = Astro.props;
 const s = sideNav();
 const hasTitleSlot = Astro.slots.has('title');
 const showHeader = hasTitleSlot || title != null || subtitle != null || Astro.slots.has('end');
 ---
 
-<div {...mergeProps(s.section, className)}>
+<div {...rest} {...mergeProps(s.section, className)}>
   {
     showHeader && (
       <div {...mergeProps(s.sectionHeader)}>

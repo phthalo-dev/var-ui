@@ -1,9 +1,10 @@
 ---
 import { appShell } from '@var-ui/core/components/appShell';
 import type { AppShellContentPadding, AppShellMobileBreakpoint, AppShellVariantProps } from '@var-ui/core';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   height?: NonNullable<AppShellVariantProps['height']>;
   variant?: NonNullable<AppShellVariantProps['variant']>;
   contentPadding?: AppShellContentPadding;
@@ -14,6 +15,8 @@ type Props = {
   asideCollapsed?: boolean;
   headerHidden?: boolean;
   headerOffset?: boolean;
+  /** Text of the skip-to-content link. @default 'Skip to content' */
+  skipLinkLabel?: string;
   className?: string;
 };
 
@@ -28,7 +31,9 @@ const {
   asideCollapsed = false,
   headerHidden = false,
   headerOffset = true,
+  skipLinkLabel = 'Skip to content',
   className,
+  ...rest
 } = Astro.props;
 
 const s = appShell({
@@ -45,11 +50,12 @@ const hasMobileNav = Astro.slots.has('mobileNav');
 
 {
   disabled ? (
-    <main id="var-ui-app-shell-main" {...mergeProps(s.main, className)}>
+    <main id="var-ui-app-shell-main" {...rest} {...mergeProps(s.main, className)}>
       <slot />
     </main>
   ) : (
     <div
+      {...rest}
       {...mergeProps(s.root, className)}
       data-var-ui-app-shell
       data-var-ui-mobile-nav-provider
@@ -63,7 +69,7 @@ const hasMobileNav = Astro.slots.has('mobileNav');
       data-header-hidden={headerHidden ? '' : undefined}
       data-header-offset={headerOffset ? '' : undefined}
     >
-      <a href="#var-ui-app-shell-main" {...mergeProps(s.skipLink)}>Skip to content</a>
+      <a href="#var-ui-app-shell-main" {...mergeProps(s.skipLink)}>{skipLinkLabel}</a>
       {hasBanner && <div {...mergeProps(s.banner)}><slot name="banner" /></div>}
       <div {...mergeProps(s.frame)}>
         {hasTopNav && <header {...mergeProps(s.topNav)}><slot name="topNav" /></header>}

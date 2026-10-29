@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import {
   Button as AriaButton,
@@ -42,20 +42,17 @@ type ToastContextValue = {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
-export type ToastProps = Pick<ToastVariantProps, 'tone' | 'appearance'> & {
-  /** Bold headline shown in the toast body. */
-  title: string;
-  /** Supporting copy shown below the title. */
-  description?: string;
-  /** When provided, renders a dismiss button that calls this handler on press. */
-  onDismiss?: () => void;
-  /** Accessible label for the dismiss button. @default Dismiss */
-  dismissLabel?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type ToastProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children'> &
+  Pick<ToastVariantProps, 'tone' | 'appearance'> & {
+    /** Bold headline shown in the toast body. */
+    title: string;
+    /** Supporting copy shown below the title. */
+    description?: string;
+    /** When provided, renders a dismiss button that calls this handler on press. */
+    onDismiss?: () => void;
+    /** Accessible label for the dismiss button. @default Dismiss */
+    dismissLabel?: string;
+  };
 
 /**
  * Presentational toast chrome, usable standalone or inside a `ToastRegion` render prop.
@@ -72,11 +69,12 @@ export function Toast({
   onDismiss,
   dismissLabel = 'Dismiss',
   className,
-  ref,
+  role = 'status',
+  ...rest
 }: ToastProps): JSX.Element {
   const t = toastRecipe({ tone, appearance });
   return (
-    <div {...mergeProps(t.item, className)} ref={ref} role="status">
+    <div {...rest} {...mergeProps(t.item, className)} role={role}>
       <span {...mergeProps(t.icon)}>
         <Icon name={toneIcon[tone]} />
       </span>
@@ -93,15 +91,13 @@ export function Toast({
   );
 }
 
-export type ToastRegionProps = {
+export type ToastRegionProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** The toast queue to display. Construct one with `new ToastQueue()` for a declarative, provider-free setup. */
   queue: ToastQueue;
   /** Screen corner the region anchors to. @default bottom-end */
   placement?: ToastPlacement;
-  /** Additional CSS class names merged onto the region element. */
-  className?: string;
-  /** Ref to the underlying region `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  /** Accessible label for each toast's dismiss button. @default Dismiss */
+  dismissLabel?: string;
 };
 
 /**
@@ -111,17 +107,21 @@ export type ToastRegionProps = {
 export function ToastRegion({
   queue,
   placement = 'bottom-end',
+  dismissLabel = 'Dismiss',
   className,
+  style,
   ref,
+  ...rest
 }: ToastRegionProps): JSX.Element {
   const { style: layerStyle } = useLayer();
   const region = toastRecipe({ placement });
   return (
     <AriaToastRegion
+      {...rest}
       queue={queue}
       {...mergeProps(region.region, className)}
       ref={ref}
-      style={layerStyle}
+      style={{ ...layerStyle, ...style }}
     >
       {({ toast: queued }) => {
         const tone = queued.content.tone ?? 'info';
@@ -143,7 +143,7 @@ export function ToastRegion({
             </AriaToastContent>
             <AriaButton
               {...mergeProps(t.close)}
-              aria-label="Dismiss"
+              aria-label={dismissLabel}
               onPress={() => queue.close(queued.key)}
             >
               <Icon name="close" size="sm" />
@@ -161,6 +161,8 @@ export type ToastProviderProps = {
   placement?: ToastPlacement;
   /** Maximum number of toasts visible at once; older toasts queue behind this limit. @default 3 */
   maxVisibleToasts?: number;
+  /** Accessible label for each toast's dismiss button. @default Dismiss */
+  dismissLabel?: string;
 };
 
 /**
@@ -177,6 +179,7 @@ export function ToastProvider({
   children,
   placement = 'bottom-end',
   maxVisibleToasts = DEFAULT_MAX,
+  dismissLabel,
 }: ToastProviderProps): JSX.Element {
   const queue = useMemo(() => new ToastQueue({ maxVisibleToasts }), [maxVisibleToasts]);
   const value = useMemo(() => ({ queue, placement }), [queue, placement]);
@@ -189,7 +192,7 @@ export function ToastProvider({
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <ToastRegion queue={queue} placement={placement} />
+      <ToastRegion queue={queue} placement={placement} dismissLabel={dismissLabel} />
     </ToastContext.Provider>
   );
 }

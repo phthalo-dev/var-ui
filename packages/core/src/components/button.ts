@@ -85,6 +85,11 @@ export const button = typestyles.recipe({
           opacity: 0.5,
           cursor: 'not-allowed',
         },
+        // Link-rendered buttons (`href`) have no `disabled` attribute.
+        '&[aria-disabled="true"]': {
+          opacity: 0.5,
+          cursor: 'not-allowed',
+        },
       },
       variants: {
         tone: mapTone((key) => toneChannelAssignments(vars, key)),

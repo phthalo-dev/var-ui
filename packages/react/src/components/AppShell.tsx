@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { useRef } from 'react';
 import { appShell } from '@var-ui/core/components/appShell';
 import { appShellMobileBreakpointQueries } from '@var-ui/core/components/breakpoints';
@@ -17,7 +17,7 @@ export const APP_SHELL_MAIN_ID = 'var-ui-app-shell-main';
 
 export type AppShellLayout = 'default' | 'alt';
 
-export type AppShellProps = {
+export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children'> & {
   /** Rendered inside the `<main>` landmark. */
   children?: ReactNode;
   /** Rendered in the top bar zone, e.g. a `TopNav`. */
@@ -69,7 +69,8 @@ export type AppShellProps = {
   contentPadding?: AppShellContentPadding;
   /** Viewport width below which `sideNav` hides and `data-mobile` is set on the root. `'none'` never goes mobile. @default 'md' */
   mobileBreakpoint?: AppShellMobileBreakpoint;
-  className?: string;
+  /** Text of the skip-to-content link. @default 'Skip to content' */
+  skipLinkLabel?: string;
   /** Ref to the root element: the `<div>` shell, or the `<main>` landmark when `disabled`. */
   ref?: Ref<HTMLElement>;
 };
@@ -103,8 +104,10 @@ export function AppShell({
   variant = 'elevated',
   contentPadding,
   mobileBreakpoint = 'md',
+  skipLinkLabel = 'Skip to content',
   className,
   ref,
+  ...rest
 }: AppShellProps): JSX.Element {
   const mainRef = useRef<HTMLElement>(null);
   const isMobile = useMediaQuery(appShellMobileBreakpointQueries[mobileBreakpoint]);
@@ -128,6 +131,7 @@ export function AppShell({
     return (
       <main
         id={APP_SHELL_MAIN_ID}
+        {...(rest as ComponentPropsWithRef<'main'>)}
         {...mergeProps(s.main, className)}
         ref={(node) => {
           mainRef.current = node;
@@ -143,6 +147,7 @@ export function AppShell({
   return (
     <MobileNavProvider>
       <div
+        {...rest}
         {...mergeProps(s.root, className)}
         data-mobile={isMobile ? '' : undefined}
         data-aside={aside ? '' : undefined}
@@ -156,7 +161,7 @@ export function AppShell({
         ref={ref as Ref<HTMLDivElement>}
       >
         <a href={`#${APP_SHELL_MAIN_ID}`} {...mergeProps(s.skipLink)}>
-          Skip to content
+          {skipLinkLabel}
         </a>
         {banner ? <div {...mergeProps(s.banner)}>{banner}</div> : null}
         <div {...mergeProps(s.frame)}>

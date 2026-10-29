@@ -1,12 +1,12 @@
-import type { AnchorHTMLAttributes, HTMLAttributes, JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { card } from '@var-ui/core/components/card';
 import { combine, mergeProps } from 'typestyles';
 
-export type CardProps = HTMLAttributes<HTMLDivElement> & {
+export type CardProps = ComponentPropsWithRef<'div'> & {
   /** Optional heading rendered above the body. */
   title?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  /** Semantic level of the title heading. @default 3 */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 /**
@@ -16,25 +16,31 @@ export type CardProps = HTMLAttributes<HTMLDivElement> & {
  * <Card title="Usage">1.2M requests this month.</Card>
  * ```
  */
-export function Card({ title, className, children, ref, ...props }: CardProps): JSX.Element {
+export function Card({
+  title,
+  headingLevel = 3,
+  className,
+  children,
+  ref,
+  ...props
+}: CardProps): JSX.Element {
   const c = card();
+  const Heading = `h${headingLevel}` as const;
   return (
     <div {...props} {...mergeProps(c.root, className)} ref={ref}>
-      {title ? <h3 {...mergeProps(c.title)}>{title}</h3> : null}
+      {title ? <Heading {...mergeProps(c.title)}>{title}</Heading> : null}
       <div {...mergeProps(c.body)}>{children}</div>
     </div>
   );
 }
 
-export type ClickableCardProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+export type ClickableCardProps = ComponentPropsWithRef<'a'> & {
   /** Card headline. */
   title: string;
   /** Supporting copy below the title. */
   description?: string;
   /** Trailing hint line (e.g. reading time, "Learn more →"). */
   hint?: string;
-  /** Ref to the underlying `<a>` element. */
-  ref?: Ref<HTMLAnchorElement>;
 };
 
 /**

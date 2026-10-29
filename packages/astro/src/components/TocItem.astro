@@ -1,8 +1,9 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { toc } from '@var-ui/core/components/toc';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'li'>, 'children'> & {
   label: string;
   href: string;
   isSelected?: boolean;
@@ -10,13 +11,16 @@ type Props = {
   className?: string;
 };
 
-const { label, href, isSelected = false, isNested = false, className } = Astro.props;
+const { label, href, isSelected = false, isNested = false,
+  className,
+  ...rest
+} = Astro.props;
 const s = toc();
 const itemClass = mergeProps(s.item).className;
 const linkClass = mergeProps(s.link, className).className;
 ---
 
-<li class={itemClass} data-nested={isNested || undefined}>
+<li {...rest} class={itemClass} data-nested={isNested || undefined}>
   <a
     href={href}
     class={linkClass}

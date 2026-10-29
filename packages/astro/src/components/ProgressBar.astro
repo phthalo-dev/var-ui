@@ -1,9 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { progressBar } from '@var-ui/core/components/progressBar';
 import type { ProgressBarVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = ProgressBarVariantProps & {
+type Props = Omit<HTMLAttributes<'div'>, 'children'> &
+  ProgressBarVariantProps & {
   value?: number;
   minValue?: number;
   maxValue?: number;
@@ -23,6 +25,7 @@ const {
   appearance = 'solid',
   showValueText = true,
   className,
+  ...rest
 } = Astro.props;
 
 const p = progressBar({
@@ -37,6 +40,7 @@ const valueText = `${Math.round(percentage)}%`;
 const showHeader = Boolean(label) || showValue;
 ---
 <div
+  {...rest}
   {...mergeProps(p.root, className)}
   role="progressbar"
   aria-label={label}

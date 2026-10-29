@@ -1,35 +1,29 @@
 ---
-type Props = {
+import type { HTMLAttributes } from 'astro/types';
+import { topNav } from '@var-ui/core/components/topNav';
+import { mergeProps } from '../utils';
+
+type Props = Omit<HTMLAttributes<'a'>, 'class:list' | 'href'> & {
   heading: string;
   headingHref?: string;
   className?: string;
 };
 
-const { heading, headingHref, className } = Astro.props;
+const { heading, headingHref, className, ...rest } = Astro.props;
+const s = topNav();
 const hasCustomContent = Astro.slots.has('default');
 ---
 
 {
   headingHref ? (
-    <a href={headingHref} class:list={['top-nav-heading', className]}>
+    <a {...rest} href={headingHref} {...mergeProps(s.brand, className)}>
       <slot name="icon" />
       {hasCustomContent ? <slot /> : <span>{heading}</span>}
     </a>
   ) : (
-    <span class:list={['top-nav-heading', className]}>
+    <span {...(rest as object)} {...mergeProps(s.brand, className)}>
       <slot name="icon" />
       {hasCustomContent ? <slot /> : <span>{heading}</span>}
     </span>
   )
 }
-
-<style>
-  .top-nav-heading {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-width: 0;
-    color: inherit;
-    text-decoration: none;
-  }
-</style>

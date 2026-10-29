@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type CSSProperties,
   type JSX,
   type MutableRefObject,
@@ -15,6 +16,7 @@ import {
 } from 'react';
 import {
   Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
   Dialog as AriaDialog,
   Heading,
   Modal,
@@ -35,8 +37,10 @@ import {
   inferOverlayCloseReason,
   mergeOverlayChild,
   OverlayCloseContext,
+  useMergedRef,
   useOverlayClose,
   useOverlayPresence,
+  type OverlayCloseProps,
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
@@ -44,14 +48,7 @@ import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
-/** Assigns `node` to an internal ref and to the consumer's forwarded ref. */
-function assignRefs<T>(node: T | null, internal: MutableRefObject<T | null>, external?: Ref<T>) {
-  internal.current = node;
-  if (typeof external === 'function') external(node);
-  else if (external) (external as MutableRefObject<T | null>).current = node;
-}
-
-export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
+export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange' | 'style'> &
   DrawerVariantProps & {
     /** Panel title rendered in the header when `title` is set. */
     title?: ReactNode;
@@ -68,6 +65,7 @@ export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange'> &
     /** Accessible name when `title` is omitted. @default 'Drawer' */
     label?: string;
     className?: string;
+    style?: CSSProperties;
     /**
      * Element the drawer portals into instead of `document.body`. Needed when a subtree renders
      * under a different theme than the page ambient.
@@ -90,54 +88,30 @@ export type DrawerRootProps = DrawerVariantProps & {
   ref?: Ref<HTMLDivElement>;
 };
 
-export type DrawerBackdropProps = Omit<
-  ModalOverlayProps,
-  'children' | 'isOpen' | 'onOpenChange' | 'UNSTABLE_portalContainer'
-> & {
+export type DrawerBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
-  /** Ref to the underlying overlay `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  isDismissable?: boolean;
 };
 
-export type DrawerPanelProps = {
+/**
+ * Native props go to the modal `<div>`; `aria-label` and `aria-labelledby` go to the inner
+ * dialog element and take precedence over the `aria-label` set on `Drawer.Root`. When
+ * `Drawer.Title` is rendered and no label is given, the title names the dialog.
+ */
+export type DrawerPanelProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
   placement?: 'start' | 'end' | 'bottom';
   width?: number;
   height?: number;
-  className?: string;
-  /** Ref to the underlying modal `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-export type DrawerHeaderProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type DrawerHeaderProps = ComponentPropsWithRef<'div'>;
 
-export type DrawerTitleProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying heading element. */
-  ref?: Ref<HTMLHeadingElement>;
-};
+export type DrawerTitleProps = ComponentPropsWithRef<'h2'>;
 
-export type DrawerCloseProps = {
-  children?: ReactElement;
-  'aria-label'?: string;
-  className?: string;
-  /** Ref to the underlying `<button>` element (default close button only). */
-  ref?: Ref<HTMLButtonElement>;
-};
+export type DrawerCloseProps = OverlayCloseProps;
 
-export type DrawerBodyProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type DrawerBodyProps = ComponentPropsWithRef<'div'>;
 
 type DrawerContextValue = {
   presence: UseOverlayPresenceResult;
@@ -231,27 +205,24 @@ function DrawerRoot({
 function DrawerBackdrop({
   children,
   className,
+  style,
   isDismissable,
   onPointerDown,
   ref,
-  ...props
+  ...rest
 }: DrawerBackdropProps): JSX.Element {
   const ctx = useDrawerContext();
-  const { backdropRef } = ctx;
-  const setRef = useCallback(
-    (node: HTMLDivElement | null) => assignRefs(node, backdropRef, ref),
-    [backdropRef, ref],
-  );
+  const setRef = useMergedRef(ctx.backdropRef, ref);
   const styles = drawer({ size: ctx.size });
   const { style: layerStyle } = useLayer();
 
   return (
     <ModalOverlay
-      {...props}
+      {...rest}
       {...mergeProps(styles.overlay, className)}
       {...ctx.presence.attrs}
       ref={setRef}
-      style={layerStyle}
+      style={{ ...layerStyle, ...style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
       isDismissable={isDismissable ?? ctx.isDismissable}
@@ -274,14 +245,14 @@ function DrawerPanel({
   width,
   height,
   className,
+  style,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ref,
+  ...rest
 }: DrawerPanelProps): JSX.Element {
   const ctx = useDrawerContext();
-  const { panelRef } = ctx;
-  const setRef = useCallback(
-    (node: HTMLDivElement | null) => assignRefs(node, panelRef, ref),
-    [panelRef, ref],
-  );
+  const setRef = useMergedRef(ctx.panelRef, ref);
   const styles = drawer({ size: ctx.size });
   const panelStyle = styleVars([
     [drawerVars.panelWidth, width != null ? `${width}px` : null],
@@ -290,13 +261,18 @@ function DrawerPanel({
 
   return (
     <Modal
+      {...rest}
       {...mergeProps(styles.panel, className)}
       {...ctx.presence.attrs}
       ref={setRef}
       data-placement={placement}
-      style={panelStyle}
+      style={{ ...panelStyle, ...style }}
     >
-      <AriaDialog aria-label={ctx.ariaLabel} style={dialogContentStyle}>
+      <AriaDialog
+        aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : ctx.ariaLabel)}
+        aria-labelledby={ariaLabelledBy}
+        style={dialogContentStyle}
+      >
         {({ close }) => (
           <OverlayCloseContext.Provider value={close}>{children}</OverlayCloseContext.Provider>
         )}
@@ -305,21 +281,17 @@ function DrawerPanel({
   );
 }
 
-function DrawerHeader({ children, className, ref }: DrawerHeaderProps): JSX.Element {
+function DrawerHeader({ className, ...rest }: DrawerHeaderProps): JSX.Element {
   const { size } = useDrawerContext();
   const styles = drawer({ size });
-  return (
-    <div {...mergeProps(styles.header, className)} ref={ref}>
-      {children}
-    </div>
-  );
+  return <div {...rest} {...mergeProps(styles.header, className)} />;
 }
 
-function DrawerTitle({ children, className, ref }: DrawerTitleProps): JSX.Element {
+function DrawerTitle({ className, children, ...rest }: DrawerTitleProps): JSX.Element {
   const { size } = useDrawerContext();
   const styles = drawer({ size });
   return (
-    <Heading slot="title" {...mergeProps(styles.title, className)} ref={ref}>
+    <Heading {...rest} slot="title" {...mergeProps(styles.title, className)}>
       {children}
     </Heading>
   );
@@ -329,7 +301,8 @@ function DrawerClose({
   children,
   className,
   ref,
-  'aria-label': ariaLabel = 'Close',
+  'aria-label': ariaLabel,
+  ...rest
 }: DrawerCloseProps): JSX.Element {
   const close = useOverlayClose();
   const { size } = useDrawerContext();
@@ -337,7 +310,18 @@ function DrawerClose({
 
   if (children) {
     const child = Children.only(children);
-    const merged = mergeOverlayChild(child, { onPress: close, onClick: close, className });
+    const merged = mergeOverlayChild(child, {
+      ...rest,
+      ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+      ref,
+      onPress: close,
+      onClick: (...args: unknown[]) => {
+        if (typeof rest.onClick === 'function')
+          (rest.onClick as (...a: unknown[]) => void)(...args);
+        close();
+      },
+      className,
+    });
     if (typeof child.type === 'string') {
       return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
     }
@@ -346,8 +330,9 @@ function DrawerClose({
 
   return (
     <AriaButton
+      {...(rest as AriaButtonProps)}
       {...mergeProps(styles.closeButton, className)}
-      aria-label={ariaLabel}
+      aria-label={ariaLabel ?? 'Close'}
       onPress={close}
       ref={ref}
     >
@@ -356,14 +341,10 @@ function DrawerClose({
   );
 }
 
-function DrawerBody({ children, className, ref }: DrawerBodyProps): JSX.Element {
+function DrawerBody({ className, ...rest }: DrawerBodyProps): JSX.Element {
   const { size } = useDrawerContext();
   const styles = drawer({ size });
-  return (
-    <div {...mergeProps(styles.body, className)} ref={ref}>
-      {children}
-    </div>
-  );
+  return <div {...rest} {...mergeProps(styles.body, className)} />;
 }
 
 /**
@@ -399,7 +380,10 @@ export function Drawer({
       size={size}
       aria-label={title ? undefined : label}
     >
-      <DrawerBackdrop {...props} isDismissable>
+      <DrawerBackdrop
+        {...(props as Omit<DrawerBackdropProps, 'children'>)}
+        isDismissable={props.isDismissable ?? true}
+      >
         <DrawerPanel placement={placement} width={width} height={height} className={className}>
           {title ? (
             <DrawerHeader>

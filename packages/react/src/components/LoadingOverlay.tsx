@@ -1,17 +1,14 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { loadingOverlay } from '@var-ui/core/components/loadingOverlay';
 import { Spinner } from './Spinner';
 import { mergeProps } from 'typestyles';
 
-export type LoadingOverlayProps = {
+export type LoadingOverlayProps = ComponentPropsWithRef<'div'> & {
   /** When true, the overlay blocks pointer events and shows a spinner. */
   visible?: boolean;
   /** Accessible label for the loading spinner. @default Loading */
   label?: string;
-  className?: string;
   children: ReactNode;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -24,12 +21,12 @@ export function LoadingOverlay({
   label = 'Loading',
   className,
   children,
-  ref,
+  ...rest
 }: LoadingOverlayProps): JSX.Element {
   const lo = loadingOverlay();
 
   return (
-    <div {...mergeProps(lo.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(lo.root, className)}>
       {children}
       {visible ? (
         <div {...mergeProps(lo.overlay)} aria-busy="true">

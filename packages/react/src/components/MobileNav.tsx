@@ -1,7 +1,8 @@
-import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode } from 'react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import {
   Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
   Dialog as AriaDialog,
   Modal,
   ModalOverlay,
@@ -85,7 +86,7 @@ export function useMobileNav(): MobileNavContextValue | null {
   return useContext(MobileNavContext);
 }
 
-export type MobileNavToggleProps = {
+export type MobileNavToggleProps = Omit<ComponentPropsWithRef<'button'>, 'value' | 'children'> & {
   /** Accessible label for the hamburger button. @default 'Open navigation' */
   label?: string;
   /**
@@ -95,9 +96,6 @@ export type MobileNavToggleProps = {
   onPress?: () => void;
   /** Drives `aria-expanded` when there's no `MobileNavProvider` ancestor. */
   isOpen?: boolean;
-  className?: string;
-  /** Ref to the underlying `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
 };
 
 /** Hamburger trigger for `MobileNav`. Reads a `MobileNavProvider` when present. */
@@ -106,7 +104,7 @@ export function MobileNavToggle({
   onPress,
   isOpen: isOpenProp,
   className,
-  ref,
+  ...rest
 }: MobileNavToggleProps): JSX.Element {
   const context = useMobileNav();
   const isOpen = isOpenProp ?? context?.isOpen ?? false;
@@ -114,8 +112,8 @@ export function MobileNavToggle({
 
   return (
     <AriaButton
+      {...(rest as AriaButtonProps)}
       {...mergeProps(s.toggle, className)}
-      ref={ref}
       aria-label={label}
       aria-expanded={isOpen}
       onPress={() => {
@@ -128,7 +126,12 @@ export function MobileNavToggle({
   );
 }
 
-export type MobileNavProps = {
+/**
+ * Native props and `ref` go to the overlay `<div>`; `className` is merged onto the sliding panel
+ * (the visible surface). `aria-label` / `aria-labelledby` name the inner dialog and take
+ * precedence over `label`.
+ */
+export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** Controlled open state — falls back to a `MobileNavProvider` ancestor when omitted. */
   isOpen?: boolean;
   /** Falls back to a `MobileNavProvider` ancestor when omitted. */
@@ -141,7 +144,6 @@ export type MobileNavProps = {
   side?: 'start' | 'end' | 'auto';
   /** Drawer content — typically a `SideNav.Section`/`SideNav.Item` tree. */
   children: ReactNode;
-  className?: string;
   /** Label for the close button. @default 'Close navigation' */
   closeLabel?: string;
   /** Accessible name for the dialog. @default 'Navigation' */
@@ -152,8 +154,6 @@ export type MobileNavProps = {
    * cascade to descendants of the themed element).
    */
   portalContainer?: Element;
-  /** Ref to the underlying overlay `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -181,7 +181,11 @@ export function MobileNav({
   closeLabel = 'Close navigation',
   label = 'Navigation',
   portalContainer,
+  style,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ref,
+  ...rest
 }: MobileNavProps): JSX.Element {
   const context = useMobileNav();
   const isOpen = isOpenProp ?? context?.isOpen ?? false;
@@ -195,13 +199,14 @@ export function MobileNav({
 
   return (
     <ModalOverlay
+      {...rest}
       ref={ref}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable
       {...mergeProps(s.overlay)}
       data-open={isOpen ? '' : undefined}
-      style={layerStyle}
+      style={{ ...layerStyle, ...style }}
       UNSTABLE_portalContainer={portalContainer}
     >
       <Modal
@@ -210,7 +215,11 @@ export function MobileNav({
         data-open={isOpen ? '' : undefined}
         style={panelStyle}
       >
-        <AriaDialog aria-label={label} style={dialogContentStyle}>
+        <AriaDialog
+          aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : label)}
+          aria-labelledby={ariaLabelledBy}
+          style={dialogContentStyle}
+        >
           {({ close }) => (
             <>
               <div {...mergeProps(s.header)}>

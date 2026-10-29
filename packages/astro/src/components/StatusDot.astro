@@ -1,10 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { statusDot } from '@var-ui/core/components/statusDot';
 import type { StatusDotVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends StatusDotVariantProps {
-  'aria-label'?: string;
+interface Props extends Omit<HTMLAttributes<'span'>, 'children'>, StatusDotVariantProps {
   className?: string;
 }
 
@@ -14,9 +14,11 @@ const {
   pulse = false,
   'aria-label': ariaLabel,
   className,
+  ...rest
 } = Astro.props;
 ---
 <span
+  {...rest}
   {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
   aria-label={ariaLabel}
   role={ariaLabel ? 'img' : undefined}

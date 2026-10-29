@@ -1,4 +1,11 @@
-import { useContext, type JSX, type ReactNode, type Ref } from 'react';
+import {
+  useContext,
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type JSX,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import {
   Button,
   ComboBox as AriaComboBox,
@@ -19,6 +26,7 @@ import { combobox } from '@var-ui/core/components/combobox';
 import type { ComboboxVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
+import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { mergeProps } from 'typestyles';
 
 /** Shared across every part so `size` set on `Combobox.Root` reaches the input shell. */
@@ -53,9 +61,11 @@ function ComboboxRoot<T extends ComboboxOption>({
   ref,
   ...props
 }: ComboboxRootProps<T>): JSX.Element {
-  const styles = combobox({ size });
+  const contextSize = useControlSize();
+  const resolvedSize = size ?? contextSize;
+  const styles = combobox({ size: resolvedSize });
   return (
-    <ControlSizeContext.Provider value={size}>
+    <ControlSizeContext.Provider value={resolvedSize}>
       <AriaComboBox {...props} {...mergeProps(styles.root, className)} ref={ref}>
         {children}
       </AriaComboBox>
@@ -63,61 +73,74 @@ function ComboboxRoot<T extends ComboboxOption>({
   );
 }
 
-export type ComboboxLabelProps = {
+export type ComboboxLabelProps = Omit<ComponentPropsWithRef<'label'>, 'children' | 'className'> & {
   children: ReactNode;
   className?: string;
-  /** Ref to the underlying `<label>` element. */
-  ref?: Ref<HTMLLabelElement>;
 };
 
-function ComboboxLabel({ children, className, ref }: ComboboxLabelProps): JSX.Element {
+function ComboboxLabel({ children, className, ref, ...rest }: ComboboxLabelProps): JSX.Element {
   const styles = useComboboxStyles();
   return (
-    <Label {...mergeProps(styles.label, className)} ref={ref}>
+    <Label {...rest} {...mergeProps(styles.label, className)} ref={ref}>
       {children}
     </Label>
   );
 }
 
-export type ComboboxInputProps = {
-  placeholder?: string;
+export type ComboboxInputProps = Omit<
+  ComponentPropsWithRef<'input'>,
+  'className' | 'style' | 'children' | 'size' | 'value' | 'defaultValue' | 'onChange'
+> & {
+  /** Merged onto the wrapper that holds the input and the clear button. */
   className?: string;
+  /** Applied to the wrapper that holds the input and the clear button. */
+  style?: CSSProperties;
   clearable?: boolean;
-  /** Ref to the underlying `<div>` element wrapping the input. */
-  ref?: Ref<HTMLDivElement>;
+  /** Accessible name for the clear button. @default Clear */
+  clearLabel?: string;
 };
 
+/**
+ * Text input with an optional clear button. `className`/`style` style the wrapper;
+ * `ref` and every other attribute reach the `<input>`.
+ */
 function ComboboxInput({
-  placeholder,
   className,
+  style,
   clearable = false,
+  clearLabel = 'Clear',
   ref,
+  ...rest
 }: ComboboxInputProps): JSX.Element {
   const styles = useComboboxStyles();
   return (
-    <Group {...mergeProps(styles.inputWrapper, className)} ref={ref}>
-      <Input {...mergeProps(styles.input)} placeholder={placeholder} />
-      {clearable ? <ComboboxClearButton /> : null}
+    <Group {...mergeProps(styles.inputWrapper, className)} style={style}>
+      <Input {...rest} {...mergeProps(styles.input)} ref={ref} />
+      {clearable ? <ComboboxClearButton aria-label={clearLabel} /> : null}
     </Group>
   );
 }
 
-export type ComboboxClearButtonProps = {
-  /** Ref to the underlying `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
+export type ComboboxClearButtonProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'className' | 'children'
+> & {
+  className?: string;
 };
 
-function ComboboxClearButton({ ref }: ComboboxClearButtonProps): JSX.Element {
+function ComboboxClearButton({ className, ref, ...rest }: ComboboxClearButtonProps): JSX.Element {
   const state = useContext(ComboBoxStateContext);
   const styles = useComboboxStyles();
   const isEmpty = !state?.selectedKey && !state?.inputValue;
   return (
     <Button
-      className={styles.clearButton.className}
+      aria-label="Clear"
+      {...(rest as object)}
+      {...mergeProps(styles.clearButton, className)}
+      render={racRenderWithExtras('button', pickRacDroppedDomProps(rest)) as never}
       slot={null}
       ref={ref}
       excludeFromTabOrder
-      aria-label="Clear"
       isDisabled={isEmpty}
       onPress={() => {
         state?.setSelectedKey(null);
@@ -129,33 +152,42 @@ function ComboboxClearButton({ ref }: ComboboxClearButtonProps): JSX.Element {
   );
 }
 
-export type ComboboxDescriptionProps = {
+export type ComboboxDescriptionProps = Omit<
+  ComponentPropsWithRef<'span'>,
+  'children' | 'className'
+> & {
   children: ReactNode;
   className?: string;
-  /** Ref to the underlying `<span>` element. */
-  ref?: Ref<HTMLElement>;
 };
 
-function ComboboxDescription({ children, className, ref }: ComboboxDescriptionProps): JSX.Element {
+function ComboboxDescription({
+  children,
+  className,
+  ref,
+  ...rest
+}: ComboboxDescriptionProps): JSX.Element {
   const styles = useComboboxStyles();
   return (
-    <Text slot="description" {...mergeProps(styles.description, className)} ref={ref}>
+    <Text
+      {...(rest as object)}
+      slot="description"
+      {...mergeProps(styles.description, className)}
+      ref={ref}
+    >
       {children}
     </Text>
   );
 }
 
-export type ComboboxErrorProps = {
+export type ComboboxErrorProps = Omit<ComponentPropsWithRef<'span'>, 'children' | 'className'> & {
   children?: ReactNode;
   className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLElement>;
 };
 
-function ComboboxError({ children, className, ref }: ComboboxErrorProps): JSX.Element {
+function ComboboxError({ children, className, ref, ...rest }: ComboboxErrorProps): JSX.Element {
   const styles = useComboboxStyles();
   return (
-    <FieldError {...mergeProps(styles.error, className)} ref={ref}>
+    <FieldError {...(rest as object)} {...mergeProps(styles.error, className)} ref={ref}>
       {children ?? ''}
     </FieldError>
   );
@@ -181,24 +213,30 @@ function ComboboxPopover({
   );
 }
 
-export type ComboboxListBoxProps<T extends ComboboxOption = ComboboxOption> = {
+export type ComboboxListBoxProps<T extends ComboboxOption = ComboboxOption> = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'onSelect'
+> & {
+  className?: string;
   items: Iterable<T>;
   children: (item: T) => ReactNode;
+  /** Shown when no option matches. @default No results */
   emptyContent?: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 function ComboboxListBox<T extends ComboboxOption>({
   items,
   children,
+  className,
   emptyContent = 'No results',
   ref,
+  ...rest
 }: ComboboxListBoxProps<T>): JSX.Element {
   const styles = useComboboxStyles();
   return (
     <ListBox
-      {...mergeProps(styles.listbox)}
+      {...(rest as object)}
+      {...mergeProps(styles.listbox, className)}
       ref={ref}
       items={items}
       renderEmptyState={() => <div {...mergeProps(styles.empty)}>{emptyContent}</div>}

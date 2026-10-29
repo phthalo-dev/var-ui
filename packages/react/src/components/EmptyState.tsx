@@ -1,8 +1,8 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { emptyState } from '@var-ui/core/components/emptyState';
 import { mergeProps } from 'typestyles';
 
-export type EmptyStateProps = {
+export type EmptyStateProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children'> & {
   /** Decorative glyph or illustration; consumers pass `<Icon>` or a custom node. */
   icon?: ReactNode;
   /** Primary headline. */
@@ -11,10 +11,8 @@ export type EmptyStateProps = {
   description?: ReactNode;
   /** Call-to-action slot (typically a button or link). */
   action?: ReactNode;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  /** Semantic level of the title heading. @default 3 */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 /**
@@ -35,18 +33,21 @@ export function EmptyState({
   title,
   description,
   action,
+  headingLevel = 3,
   className,
   ref,
+  ...rest
 }: EmptyStateProps): JSX.Element {
   const e = emptyState();
+  const Heading = `h${headingLevel}` as const;
   return (
-    <div {...mergeProps(e.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(e.root, className)} ref={ref}>
       {icon ? (
         <div {...mergeProps(e.icon)} data-empty-state-icon aria-hidden="true">
           {icon}
         </div>
       ) : null}
-      <h3 {...mergeProps(e.title)}>{title}</h3>
+      <Heading {...mergeProps(e.title)}>{title}</Heading>
       {description ? <p {...mergeProps(e.description)}>{description}</p> : null}
       {action ? <div {...mergeProps(e.action)}>{action}</div> : null}
     </div>

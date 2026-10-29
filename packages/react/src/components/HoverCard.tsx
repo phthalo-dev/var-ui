@@ -7,11 +7,11 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type JSX,
   type MutableRefObject,
   type ReactElement,
   type ReactNode,
-  type Ref,
 } from 'react';
 import {
   Dialog as AriaDialog,
@@ -26,9 +26,11 @@ import {
   createOverlayChangeDetails,
   inferOverlayCloseReason,
   mergeOverlayChild,
+  useMergedRef,
   useOverlayPresence,
   usePositionerVars,
   type OverlayOpenChangeHandler,
+  type OverlayTriggerProps,
   type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
@@ -51,6 +53,10 @@ export type HoverCardProps = {
    * under a different theme than the page ambient.
    */
   portalContainer?: Element;
+  /** Accessible name for the card when no `title` is given. */
+  'aria-label'?: string;
+  /** Id of an element that names the card; takes precedence over `title`. */
+  'aria-labelledby'?: string;
 };
 
 export type HoverCardRootProps = {
@@ -63,30 +69,23 @@ export type HoverCardRootProps = {
   portalContainer?: Element;
 };
 
-export type HoverCardTriggerProps = {
-  children: ReactElement;
-  className?: string;
-  /** Ref to the trigger element. */
-  ref?: Ref<HTMLElement>;
-};
+export type HoverCardTriggerProps = OverlayTriggerProps;
 
-export type HoverCardPopupProps = {
+/**
+ * Native props go to the popover `<div>`; `aria-label` and `aria-labelledby` go to the inner
+ * dialog element. When `HoverCard.Title` is rendered it names the dialog, otherwise pass
+ * `aria-label` / `aria-labelledby`.
+ */
+export type HoverCardPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
   /** Preferred placement relative to the trigger. @default top */
   placement?: Placement;
   portalContainer?: Element;
 };
 
-export type HoverCardTitleProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type HoverCardTitleProps = ComponentPropsWithRef<'h2'>;
 
-export type HoverCardContentProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type HoverCardContentProps = ComponentPropsWithRef<'div'>;
 
 function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
   if (typeof existing !== 'function') {
@@ -96,6 +95,10 @@ function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
     existing(...args);
     ours(...args);
   };
+}
+
+function callIfFn(fn: unknown, args: unknown[]) {
+  if (typeof fn === 'function') fn(...args);
 }
 
 type HoverCardContextValue = {
@@ -278,10 +281,26 @@ function HoverCardTrigger({
         (ref as MutableRefObject<HTMLElement | null>).current = node;
       }
     },
-    onMouseEnter: composeHandler(childProps.onMouseEnter, ctx.scheduleOpen),
-    onMouseLeave: composeHandler(childProps.onMouseLeave, ctx.scheduleClose),
-    onFocus: composeHandler(childProps.onFocus, ctx.scheduleOpen),
-    onBlur: composeHandler(childProps.onBlur, ctx.scheduleClose),
+    onMouseEnter: composeHandler(
+      composeHandler(childProps.onMouseEnter, (...args) =>
+        callIfFn(triggerProps.onMouseEnter, args),
+      ),
+      ctx.scheduleOpen,
+    ),
+    onMouseLeave: composeHandler(
+      composeHandler(childProps.onMouseLeave, (...args) =>
+        callIfFn(triggerProps.onMouseLeave, args),
+      ),
+      ctx.scheduleClose,
+    ),
+    onFocus: composeHandler(
+      composeHandler(childProps.onFocus, (...args) => callIfFn(triggerProps.onFocus, args)),
+      ctx.scheduleOpen,
+    ),
+    onBlur: composeHandler(
+      composeHandler(childProps.onBlur, (...args) => callIfFn(triggerProps.onBlur, args)),
+      ctx.scheduleClose,
+    ),
   });
   return merged;
 }
@@ -289,8 +308,15 @@ function HoverCardTrigger({
 function HoverCardPopup({
   children,
   className,
+  style,
   placement = 'top',
   portalContainer,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  onMouseEnter,
+  onMouseLeave,
+  ref,
+  ...rest
 }: HoverCardPopupProps): JSX.Element {
   const ctx = useHoverCardContext();
   const hc = hoverCard();
@@ -300,24 +326,23 @@ function HoverCardPopup({
     popupRef: ctx.popupRef,
     triggerRef: ctx.triggerRef,
   });
+  const setRef = useMergedRef(ctx.popupRef, ref, ctx.setPopupEl);
 
   return (
     <AriaPopover
+      {...rest}
       {...mergeProps(hc.root, className)}
       {...ctx.presence.attrs}
-      ref={(node: HTMLDivElement | null) => {
-        ctx.popupRef.current = node;
-        ctx.setPopupEl(node);
-      }}
+      ref={setRef}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style }}
+      style={{ ...layerStyle, ...positioner.style, ...style }}
       isOpen={ctx.presence.mounted}
       isNonModal
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
-      onMouseEnter={ctx.cancelCloseTimer}
-      onMouseLeave={ctx.scheduleClose}
+      onMouseEnter={composeHandler(onMouseEnter, ctx.cancelCloseTimer)}
+      onMouseLeave={composeHandler(onMouseLeave, ctx.scheduleClose)}
     >
-      <AriaDialog>
+      <AriaDialog aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
         {/*
          * `onFocus`/`onBlur` aren't part of RAC's `Dialog`/`Popover` DOM prop allowlist (they're
          * only exposed on focusable elements), so a plain wrapper div carries the panel's
@@ -337,18 +362,18 @@ function HoverCardPopup({
   );
 }
 
-function HoverCardTitle({ children, className }: HoverCardTitleProps): JSX.Element {
+function HoverCardTitle({ className, children, ...rest }: HoverCardTitleProps): JSX.Element {
   const hc = hoverCard();
   return (
-    <Heading slot="title" {...mergeProps(hc.title, className)}>
+    <Heading {...rest} slot="title" {...mergeProps(hc.title, className)}>
       {children}
     </Heading>
   );
 }
 
-function HoverCardContent({ children, className }: HoverCardContentProps): JSX.Element {
+function HoverCardContent({ className, ...rest }: HoverCardContentProps): JSX.Element {
   const hc = hoverCard();
-  return <div {...mergeProps(hc.content, className)}>{children}</div>;
+  return <div {...rest} {...mergeProps(hc.content, className)} />;
 }
 
 function HoverCardPreset({
@@ -359,11 +384,18 @@ function HoverCardPreset({
   closeDelay = 300,
   placement = 'top',
   portalContainer,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }: HoverCardProps): JSX.Element {
   return (
     <HoverCardRoot openDelay={openDelay} closeDelay={closeDelay} portalContainer={portalContainer}>
       <HoverCardTrigger>{trigger}</HoverCardTrigger>
-      <HoverCardPopup placement={placement} portalContainer={portalContainer}>
+      <HoverCardPopup
+        placement={placement}
+        portalContainer={portalContainer}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+      >
         {title ? <HoverCardTitle>{title}</HoverCardTitle> : null}
         <HoverCardContent>{children}</HoverCardContent>
       </HoverCardPopup>

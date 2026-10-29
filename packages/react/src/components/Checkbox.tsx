@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import { useImperativeHandle, useRef, type JSX, type ReactNode, type Ref } from 'react';
 import {
   Checkbox as AriaCheckbox,
   type CheckboxProps as RACCheckboxProps,
@@ -6,18 +6,24 @@ import {
 import { checkbox } from '@var-ui/core/components/checkbox';
 import { mergeProps } from 'typestyles';
 
-export type CheckboxProps = Omit<RACCheckboxProps, 'children' | 'className'> & {
+export type CheckboxProps = Omit<RACCheckboxProps, 'children' | 'className' | 'inputRef'> & {
   /** Label rendered beside the checkbox control. */
   children?: ReactNode;
   className?: string;
-  /** Ref to the underlying `<label>` element. */
-  ref?: Ref<HTMLLabelElement>;
+  /**
+   * Ref to the native `<input type="checkbox">`. react-aria-components sends the field attributes
+   * it knows (`id`, `name`, `value`, `aria-*`, handlers) to the input and the rest to the `<label>`.
+   */
+  ref?: Ref<HTMLInputElement>;
 };
 
 export function Checkbox({ children, className, ref, ...props }: CheckboxProps): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
+  // RAC's `inputRef` only takes an object ref; this also serves callback refs.
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
   const cb = checkbox();
   return (
-    <AriaCheckbox {...props} {...mergeProps(cb.root, className)} ref={ref}>
+    <AriaCheckbox {...props} {...mergeProps(cb.root, className)} inputRef={inputRef}>
       {({ isSelected, isIndeterminate }) => (
         <>
           <span

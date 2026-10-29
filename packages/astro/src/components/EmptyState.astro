@@ -1,19 +1,23 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { emptyState } from '@var-ui/core/components/emptyState';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'title'> & {
   title: string;
   description?: string;
+  /** Semantic level of the title heading. @default 3 */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
 };
 
-const { title, description, className } = Astro.props;
+const { title, description, headingLevel = 3, className, ...rest } = Astro.props;
+const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 const e = emptyState();
 const hasIcon = Astro.slots.has('icon');
 const hasAction = Astro.slots.has('action');
 ---
-<div {...mergeProps(e.root, className)}>
+<div {...rest} {...mergeProps(e.root, className)}>
   {
     hasIcon ? (
       <div {...mergeProps(e.icon)} data-empty-state-icon aria-hidden="true">
@@ -21,7 +25,7 @@ const hasAction = Astro.slots.has('action');
       </div>
     ) : null
   }
-  <h3 {...mergeProps(e.title)}>{title}</h3>
+  <Heading {...mergeProps(e.title)}>{title}</Heading>
   {description ? <p {...mergeProps(e.description)}>{description}</p> : null}
   {
     hasAction ? (

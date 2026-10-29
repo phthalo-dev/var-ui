@@ -1,13 +1,11 @@
-import type { HTMLAttributes, JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { surface } from '@var-ui/core/components/surface';
 import type { SurfaceVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
+export type SurfaceProps = ComponentPropsWithRef<'div'> & {
   /** @default md */
   padding?: NonNullable<SurfaceVariantProps['padding']>;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /** Bordered content box without title/body slots. */

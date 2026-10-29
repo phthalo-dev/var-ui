@@ -1,8 +1,9 @@
 ---
 import { sideNav } from '@var-ui/core/components/sideNav';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'a'>, 'class:list' | 'href'> & {
   label: string;
   href?: string;
   isSelected?: boolean;
@@ -16,6 +17,7 @@ const {
   isSelected = false,
   isDisabled = false,
   className,
+  ...rest
 } = Astro.props;
 const s = sideNav();
 const sharedProps = {
@@ -28,13 +30,13 @@ const sharedProps = {
 
 {
   href ? (
-    <a href={href} {...sharedProps}>
+    <a {...rest} href={href} {...sharedProps}>
       <slot name="icon" />
       <span {...mergeProps(s.itemLabel)}>{label}</span>
       {Astro.slots.has('end') ? <slot name="end" /> : null}
     </a>
   ) : (
-    <button type="button" disabled={isDisabled} {...sharedProps}>
+    <button type="button" {...(rest as object)} disabled={isDisabled} {...sharedProps}>
       <slot name="icon" />
       <span {...mergeProps(s.itemLabel)}>{label}</span>
       {Astro.slots.has('end') ? <slot name="end" /> : null}

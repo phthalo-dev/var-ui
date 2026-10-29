@@ -1,13 +1,18 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { button } from '@var-ui/core/components/button';
 import type { ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends ButtonVariantProps {
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-}
+type Props = Omit<HTMLAttributes<'button'> & HTMLAttributes<'a'>, 'class:list'> &
+  ButtonVariantProps & {
+    className?: string;
+    disabled?: boolean;
+    /** Renders an `<a>` instead of a `<button>`. */
+    href?: string;
+    /** Button type; ignored when `href` is set. */
+    type?: 'button' | 'submit' | 'reset';
+  };
 
 const {
   tone,
@@ -16,10 +21,28 @@ const {
   layout,
   elevated,
   className,
-  type = 'button',
+  href,
   disabled,
-} = Astro.props;
+  type = 'button',
+  ...rest
+} = Astro.props as Record<string, any>;
 const rp = mergeProps(button({ tone, appearance, size, layout, elevated }), className);
+const isLink = href !== undefined;
 ---
 
-<button type={type} disabled={disabled} {...rp}><slot /></button>
+{
+  isLink ? (
+    <a
+      {...rest}
+      href={disabled ? undefined : href}
+      aria-disabled={disabled ? 'true' : undefined}
+      {...rp}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button {...rest} type={type} disabled={disabled} {...rp}>
+      <slot />
+    </button>
+  )
+}

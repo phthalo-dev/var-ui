@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs as AriaBreadcrumbs, Link } from 'react-aria-components';
 import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core/components/breadcrumbs';
@@ -15,7 +15,7 @@ export type BreadcrumbItemData = {
   href?: string;
 };
 
-export type BreadcrumbsProps = {
+export type BreadcrumbsProps = Omit<ComponentPropsWithRef<'nav'>, 'children'> & {
   items: BreadcrumbItemData[];
   /** Collapse to an ellipsis once `items.length` exceeds this. */
   maxItems?: number;
@@ -29,9 +29,8 @@ export type BreadcrumbsProps = {
   label?: string;
   /** Fires with the pressed item's `id` (not called for the current item). */
   onAction?: (id: string) => void;
-  className?: string;
-  /** Ref to the underlying `<nav>` element. */
-  ref?: Ref<HTMLElement>;
+  /** Accessible label for the collapsed-items button. @default 'Show all breadcrumbs' */
+  expandLabel?: string;
 };
 
 const ELLIPSIS_ID = '__ellipsis__';
@@ -79,8 +78,11 @@ export function Breadcrumbs({
   separator,
   label = 'Breadcrumb',
   onAction,
+  expandLabel = 'Show all breadcrumbs',
   className,
+  style: styleProp,
   ref,
+  ...rest
 }: BreadcrumbsProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const b = breadcrumbsStyles();
@@ -94,7 +96,13 @@ export function Breadcrumbs({
   const style = separator ? styleVars([[breadcrumbsVars.separator, `"${separator}"`]]) : undefined;
 
   return (
-    <nav aria-label={label} {...mergeProps(b.root, className)} style={style} ref={ref}>
+    <nav
+      aria-label={label}
+      {...rest}
+      {...mergeProps(b.root, className)}
+      style={style ? { ...styleProp, ...style } : styleProp}
+      ref={ref}
+    >
       <AriaBreadcrumbs
         items={visibleItems}
         onAction={onAction ? (key) => onAction(String(key)) : undefined}
@@ -108,7 +116,7 @@ export function Breadcrumbs({
                 type="button"
                 {...mergeProps(b.link)}
                 onClick={() => setExpanded(true)}
-                aria-label="Show all breadcrumbs"
+                aria-label={expandLabel}
               >
                 {item.label}
               </button>

@@ -46,6 +46,7 @@ export { default as AccordionPanel } from './src/components/AccordionPanel.astro
 export { default as Tabs } from './src/components/Tabs.astro';
 export { default as SegmentedControl } from './src/components/SegmentedControl.astro';
 export { default as ToggleButton } from './src/components/ToggleButton.astro';
+export { default as Toolbar } from './src/components/Toolbar.astro';
 export { default as Layout } from './src/components/Layout.astro';
 export { default as LayoutHeader } from './src/components/LayoutHeader.astro';
 export { default as LayoutFooter } from './src/components/LayoutFooter.astro';

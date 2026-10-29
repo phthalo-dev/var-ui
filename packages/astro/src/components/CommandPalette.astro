@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
 import { mergeProps } from '../utils';
@@ -20,7 +21,8 @@ type CommandPaletteSlot =
 type CommandPaletteSlots = Record<CommandPaletteSlot, ComponentAttrsResult>;
 type CommandPaletteRecipeFn = () => CommandPaletteSlots;
 
-type Props = {
+/** Native attributes are forwarded to the `<dialog>` element (the React peer does the same). */
+type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   id: string;
   items: CommandPaletteItem[];
   placeholder?: string;
@@ -36,6 +38,7 @@ const {
   'aria-label': ariaLabel = placeholder,
   hotkey = true,
   className,
+  ...rest
 } = Astro.props;
 
 const indexJson = JSON.stringify(items);
@@ -70,6 +73,7 @@ const emptyClass = (cp.empty).className;
   data-class-group-label="var-ui-command-palette__groupLabel"
 >
   <dialog
+    {...rest}
     {...dialogRecipe}
     id={`${id}-dialog`}
     data-var-ui-command-palette-dialog

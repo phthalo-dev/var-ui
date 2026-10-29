@@ -1,16 +1,17 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { tabs as tabsRecipe } from '@var-ui/core/components/tabs';
 import { mergeProps } from "../utils";
 
 type TabDef = { id: string; label: string };
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'children'> & {
   tabs: TabDef[];
   defaultSelectedId?: string;
   className?: string;
 };
 
-const { tabs, defaultSelectedId, className } = Astro.props;
+const { tabs, defaultSelectedId, className, ...rest } = Astro.props;
 const selected = defaultSelectedId ?? tabs[0]?.id;
 const t = tabsRecipe();
 
@@ -22,7 +23,7 @@ const panelSlots = await Promise.all(
 );
 ---
 
-<div data-var-ui-tabs {...mergeProps(t.root, className)}>
+<div {...rest} data-var-ui-tabs {...mergeProps(t.root, className)}>
   <div role="tablist" {...mergeProps(t.list)}>
     {tabs.map((tab) => (
       <button

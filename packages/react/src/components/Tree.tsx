@@ -1,4 +1,12 @@
-import type { FocusEvent, JSX, KeyboardEvent, MouseEvent, ReactNode, Ref } from 'react';
+import type {
+  ComponentPropsWithRef,
+  FocusEvent,
+  JSX,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+  Ref,
+} from 'react';
 import {
   Children,
   createContext,
@@ -29,7 +37,7 @@ export type TreeItemData = {
 
 export type TreeSelectionMode = 'none' | 'single' | 'multiple';
 
-export type TreeProps = {
+export type TreeProps = Omit<ComponentPropsWithRef<'ul'>, 'children' | 'ref' | 'role'> & {
   items?: TreeItemData[];
   children?: ReactNode;
   density?: NonNullable<TreeVariantProps['density']>;
@@ -42,13 +50,11 @@ export type TreeProps = {
   selectionMode?: TreeSelectionMode;
   renderStart?: (item: TreeItemData) => ReactNode;
   renderEnd?: (item: TreeItemData) => ReactNode;
-  className?: string;
-  'aria-label'?: string;
   /** Ref to the underlying root `<ul>` element. */
   ref?: Ref<HTMLUListElement>;
 };
 
-export type TreeItemProps = {
+export type TreeItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' | 'role'> & {
   id: string;
   label: ReactNode;
   description?: ReactNode;
@@ -59,41 +65,9 @@ export type TreeItemProps = {
   children?: ReactNode;
   startContent?: ReactNode;
   endContent?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
 const DATA_ID_ATTR = 'data-tree-item-id';
-
-const overlayLinkBaseStyle = {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 1,
-  margin: 0,
-  padding: 0,
-  border: 'none',
-  background: 'transparent',
-  textDecoration: 'none',
-} as const;
-
-/** Chevron icon (sm) + row gap (`space.2`) — keeps the overlay off the expand toggle column. */
-const overlayLinkStyleAfterToggle = {
-  ...overlayLinkBaseStyle,
-  left: 'calc(14px + 8px)',
-} as const;
-
-const overlayLinkStyleFullRow = {
-  ...overlayLinkBaseStyle,
-  left: 0,
-} as const;
-
-const toggleButtonStyle = {
-  position: 'relative',
-  zIndex: 2,
-} as const;
 
 type TreeStyleSlots = ReturnType<typeof treeStyles>;
 
@@ -153,7 +127,7 @@ function collectDefaultExpandedIds(node: ReactNode, acc: Set<string>): void {
   });
 }
 
-type TreeRowContentProps = {
+type TreeRowContentProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' | 'role'> & {
   id: string;
   label: ReactNode;
   description?: ReactNode;
@@ -167,7 +141,6 @@ type TreeRowContentProps = {
   className?: string;
   /** `role="group"` subtree (or `null`) — rendered as a DOM child of this `treeitem`, not a sibling. */
   groupContent?: ReactNode;
-  ref?: Ref<HTMLLIElement>;
 };
 
 function TreeRowContent({
@@ -184,6 +157,8 @@ function TreeRowContent({
   className,
   groupContent,
   ref,
+  onClick,
+  ...rest
 }: TreeRowContentProps): JSX.Element {
   const ctx = useTreeContext();
   const { isRtl } = useDirection();
@@ -203,6 +178,8 @@ function TreeRowContent({
     // this a click on a nested row would bubble up and also fire every
     // ancestor row's click handler.
     event.stopPropagation();
+    onClick?.(event);
+    if (event.defaultPrevented) return;
     // `href` wins: the overlay `<a>` already handles navigation, and calling
     // toggleSelect/toggleExpand here too would double up on every click
     // (expand still works via the chevron button, which stops propagation).
@@ -216,6 +193,7 @@ function TreeRowContent({
 
   return (
     <li
+      {...rest}
       ref={ref}
       {...{ [DATA_ID_ATTR]: id }}
       role="treeitem"
@@ -235,7 +213,6 @@ function TreeRowContent({
       onClick={handleRowClick}
     >
       <div
-        style={{ position: 'relative' }}
         data-disabled={isDisabled ? '' : undefined}
         data-selected={isSelected ? '' : undefined}
         {...mergeProps(s.row, className)}
@@ -247,7 +224,6 @@ function TreeRowContent({
             data-expanded={isExpanded ? '' : undefined}
             tabIndex={-1}
             aria-hidden="true"
-            style={toggleButtonStyle}
             onClick={(event) => {
               event.stopPropagation();
               handleToggleClick();
@@ -256,7 +232,7 @@ function TreeRowContent({
             <Icon name="chevronRight" size="sm" data-mirror={isRtl || undefined} />
           </button>
         ) : (
-          <span {...mergeProps(s.toggle)} aria-hidden="true" style={{ visibility: 'hidden' }}>
+          <span {...mergeProps(s.toggle)} data-placeholder="" aria-hidden="true">
             <Icon name="chevronRight" size="sm" data-mirror={isRtl || undefined} />
           </span>
         )}
@@ -272,7 +248,8 @@ function TreeRowContent({
             tabIndex={-1}
             aria-label={isLinkLabelString ? (label as string) : undefined}
             aria-labelledby={isLinkLabelString ? undefined : labelId}
-            style={hasChildren ? overlayLinkStyleAfterToggle : overlayLinkStyleFullRow}
+            {...mergeProps(s.overlayLink)}
+            data-inset={hasChildren ? 'after-toggle' : undefined}
           />
         ) : null}
       </div>
@@ -327,6 +304,7 @@ export function TreeItem({
   endContent,
   className,
   ref,
+  ...rest
 }: TreeItemProps): JSX.Element {
   const level = useContext(TreeLevelContext);
   const ctx = useTreeContext();
@@ -335,6 +313,7 @@ export function TreeItem({
 
   return (
     <TreeRowContent
+      {...rest}
       ref={ref}
       id={id}
       label={label}
@@ -391,8 +370,10 @@ export function Tree({
   renderStart,
   renderEnd,
   className,
-  'aria-label': ariaLabel,
+  onKeyDown: onKeyDownProp,
+  onFocus: onFocusProp,
   ref,
+  ...rest
 }: TreeProps): JSX.Element {
   const s = treeStyles({ density });
   const rootRef = useRef<HTMLUListElement>(null);
@@ -504,14 +485,22 @@ export function Tree({
     if (nextId != null && nextId !== focusedId) setFocusedId(nextId);
   });
 
-  const handleFocus = useCallback((event: FocusEvent<HTMLUListElement>) => {
-    const id = (event.target as HTMLElement).getAttribute(DATA_ID_ATTR);
-    if (id != null) setFocusedId(id);
-  }, []);
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLUListElement>) => {
+      onFocusProp?.(event);
+      const id = (event.target as HTMLElement).getAttribute(DATA_ID_ATTR);
+      if (id != null) setFocusedId(id);
+    },
+    [onFocusProp],
+  );
 
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLUListElement>) => onKeyDown(event.nativeEvent),
-    [onKeyDown],
+    (event: KeyboardEvent<HTMLUListElement>) => {
+      onKeyDownProp?.(event);
+      if (event.defaultPrevented) return;
+      onKeyDown(event.nativeEvent);
+    },
+    [onKeyDown, onKeyDownProp],
   );
 
   const contextValue = useMemo<TreeContextValue>(
@@ -545,9 +534,9 @@ export function Tree({
     <TreeContext.Provider value={contextValue}>
       <TreeLevelContext.Provider value={1}>
         <ul
+          {...rest}
           ref={setRoot}
           role="tree"
-          aria-label={ariaLabel}
           tabIndex={rootTabIndex}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}

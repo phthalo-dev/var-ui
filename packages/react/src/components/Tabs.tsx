@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
   Tab,
@@ -17,7 +17,10 @@ type TabDefinition = {
   content: ReactNode;
 };
 
-export type TabsProps = Omit<RACTabsProps, 'children'> & {
+export type TabsProps = Omit<RACTabsProps, 'children' | 'className' | 'style'> & {
+  /** Additional CSS class names merged onto the root element. */
+  className?: string;
+  style?: CSSProperties;
   /** Tab definitions with id, label, and panel content. */
   tabs: TabDefinition[];
   /** Ref to the underlying root `<div>` element. */
@@ -29,6 +32,7 @@ export function Tabs({
   selectedKey,
   defaultSelectedKey,
   onSelectionChange,
+  className,
   ref,
   ...props
 }: TabsProps): JSX.Element {
@@ -58,7 +62,7 @@ export function Tabs({
         }
         onSelectionChange?.(key);
       }}
-      {...mergeProps(t.root)}
+      {...mergeProps(t.root, className)}
     >
       <TabList ref={listRef} {...mergeProps(t.list)}>
         {tabs.map((tab) => (

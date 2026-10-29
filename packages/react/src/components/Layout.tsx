@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactElement, ReactNode } from 'react';
 import { createContext, isValidElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Dialog as AriaDialog, Modal, ModalOverlay } from 'react-aria-components';
 import {
@@ -25,8 +25,6 @@ import { useLayer } from '../layers/LayerProvider';
 import { mergeProps } from 'typestyles';
 import { useDirection } from '../DirectionProvider';
 import { ResizeHandle } from './ResizeHandle';
-
-const dialogContentStyle: CSSProperties = { display: 'contents' };
 
 /** `layoutContent()`/`layoutPanel()` only support seamless (`inherit`, the default) or `0`. */
 function toZonePaddingVariant(
@@ -82,7 +80,7 @@ export function useLayoutArea(): LayoutArea | null {
 /** Inherited divider default consumed by `LayoutHeader`/`LayoutFooter` when `hasDivider` is unset. */
 const LayoutDividerContext = createContext<boolean>(false);
 
-export type LayoutProps = {
+export type LayoutProps = Omit<ComponentPropsWithRef<'div'>, 'content'> & {
   /** Top chrome band, usually a `LayoutHeader`. */
   header?: ReactNode;
   /** Left/start rail, usually a `LayoutPanel`. */
@@ -103,9 +101,6 @@ export type LayoutProps = {
   padding?: LayoutPadding;
   /** Divider default inherited by `LayoutHeader`/`LayoutFooter` when they don't set `hasDivider`. @default false */
   defaultHasDividers?: boolean;
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -133,7 +128,9 @@ export function Layout({
   padding,
   defaultHasDividers = false,
   className,
+  style,
   ref,
+  ...rest
 }: LayoutProps): JSX.Element {
   const l = layout({ height });
   const contentNode = content ?? children;
@@ -149,11 +146,11 @@ export function Layout({
   );
 
   const rootStyle = useMemo((): CSSProperties | undefined => {
-    const style = {
+    const vars = {
       ...(padding != null ? layoutShellPaddingAssignments(padding) : {}),
       ...(contentWidth != null ? layoutContentWidthAssignment(contentWidth) : {}),
     };
-    return Object.keys(style).length > 0 ? style : undefined;
+    return Object.keys(vars).length > 0 ? vars : undefined;
   }, [padding, contentWidth]);
 
   const headerHasDivider = elementHasDivider(header, defaultHasDividers);
@@ -163,9 +160,10 @@ export function Layout({
     <LayoutSlotsContext.Provider value={slots}>
       <LayoutDividerContext.Provider value={defaultHasDividers}>
         <div
+          {...rest}
           {...mergeProps(l.root, className)}
           ref={ref}
-          style={rootStyle}
+          style={rootStyle || style ? { ...rootStyle, ...style } : undefined}
           data-has-header={hasHeader ? '' : undefined}
           data-has-footer={hasFooter ? '' : undefined}
           data-has-start={hasStart ? '' : undefined}
@@ -214,17 +212,13 @@ function zoneOverrideStyle(
   };
 }
 
-export type LayoutHeaderProps = {
+export type LayoutHeaderProps = ComponentPropsWithRef<'div'> & {
   /** Overrides the inherited `LayoutDividerContext` default. */
   hasDivider?: boolean;
   /** Raw CSS height override (number treated as px). */
   height?: number | string;
   /** Overrides the inherited outer/inner padding CSS vars for this zone only. */
   padding?: LayoutPadding;
-  className?: string;
-  children?: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -236,20 +230,23 @@ export function LayoutHeader({
   height,
   padding,
   className,
+  style: styleProp,
   children,
   ref,
+  ...rest
 }: LayoutHeaderProps): JSX.Element {
   const s = layoutHeader();
   const inheritedDivider = useContext(LayoutDividerContext);
   const effectiveHasDivider = hasDivider ?? inheritedDivider;
-  const style = zoneOverrideStyle(height, padding);
+  const zoneStyle = zoneOverrideStyle(height, padding);
 
   return (
     <LayoutAreaContext.Provider value="header">
       <div
+        {...rest}
         {...mergeProps(s.header, className)}
         ref={ref}
-        style={style}
+        style={zoneStyle || styleProp ? { ...zoneStyle, ...styleProp } : undefined}
         data-divider={effectiveHasDivider ? '' : undefined}
       >
         <div {...mergeProps(s.headerInner)}>{children}</div>
@@ -258,17 +255,13 @@ export function LayoutHeader({
   );
 }
 
-export type LayoutFooterProps = {
+export type LayoutFooterProps = ComponentPropsWithRef<'div'> & {
   /** Overrides the inherited `LayoutDividerContext` default. */
   hasDivider?: boolean;
   /** Raw CSS height override (number treated as px). */
   height?: number | string;
   /** Overrides the inherited outer/inner padding CSS vars for this zone only. */
   padding?: LayoutPadding;
-  className?: string;
-  children?: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -280,20 +273,23 @@ export function LayoutFooter({
   height,
   padding,
   className,
+  style: styleProp,
   children,
   ref,
+  ...rest
 }: LayoutFooterProps): JSX.Element {
   const s = layoutFooter();
   const inheritedDivider = useContext(LayoutDividerContext);
   const effectiveHasDivider = hasDivider ?? inheritedDivider;
-  const style = zoneOverrideStyle(height, padding);
+  const zoneStyle = zoneOverrideStyle(height, padding);
 
   return (
     <LayoutAreaContext.Provider value="footer">
       <div
+        {...rest}
         {...mergeProps(s.footer, className)}
         ref={ref}
-        style={style}
+        style={zoneStyle || styleProp ? { ...zoneStyle, ...styleProp } : undefined}
         data-divider={effectiveHasDivider ? '' : undefined}
       >
         <div {...mergeProps(s.footerInner)}>{children}</div>
@@ -302,18 +298,13 @@ export function LayoutFooter({
   );
 }
 
-export type LayoutContentProps = {
+export type LayoutContentProps = ComponentPropsWithRef<'div'> & {
   /** Only `0` (seamless) is distinct from the inherited default. */
   padding?: LayoutPadding;
   /** @default true */
   isScrollable?: boolean;
-  role?: string;
   /** Accessible name; paired with `role="region"` by default when set. */
   label?: string;
-  className?: string;
-  children?: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /** Flex-1 main column for `Layout`. Edge-aware padding reads `data-has-*` from the `Layout` root. */
@@ -325,13 +316,20 @@ export function LayoutContent({
   className,
   children,
   ref,
+  ...rest
 }: LayoutContentProps): JSX.Element {
   const s = layoutContent({ isScrollable, padding: toZonePaddingVariant(padding) });
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   return (
     <LayoutAreaContext.Provider value="content">
-      <div {...mergeProps(s.content, className)} ref={ref} role={resolvedRole} aria-label={label}>
+      <div
+        aria-label={label}
+        {...rest}
+        {...mergeProps(s.content, className)}
+        ref={ref}
+        role={resolvedRole}
+      >
         {children}
       </div>
     </LayoutAreaContext.Provider>
@@ -349,7 +347,7 @@ export type LayoutPanelResponsive = {
   mode: 'overlay' | 'hidden';
 };
 
-export type LayoutPanelProps = {
+export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
   /** Ignored when `resizable` is provided — `resizable.width` wins. */
   width?: number | string;
   /**
@@ -382,13 +380,8 @@ export type LayoutPanelProps = {
   /** Initial open state for uncontrolled `responsive` usage. @default false */
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  role?: string;
   /** Accessible name; paired with `role="region"` by default when set. */
   label?: string;
-  className?: string;
-  children?: ReactNode;
-  /** Ref to the underlying panel `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -417,8 +410,10 @@ export function LayoutPanel({
   role,
   label,
   className,
+  style: styleProp,
   children,
   ref,
+  ...rest
 }: LayoutPanelProps): JSX.Element | null {
   const area = useContext(LayoutAreaContext);
   const dataSide = area === 'start' || area === 'end' ? area : undefined;
@@ -426,8 +421,9 @@ export function LayoutPanel({
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   const effectiveWidth = resizable?.width ?? width;
-  const style: CSSProperties | undefined =
+  const widthStyle: CSSProperties | undefined =
     effectiveWidth != null ? { width: toCssSize(effectiveWidth) } : undefined;
+  const style = widthStyle || styleProp ? { ...widthStyle, ...styleProp } : undefined;
 
   const isBelowBreakpoint = useMediaQuery(
     responsive ? layoutBreakpointQueries[responsive.below] : 'not all',
@@ -467,12 +463,13 @@ export function LayoutPanel({
 
   const panelBody = (
     <div
+      aria-label={isOverlayMode ? undefined : label}
+      {...rest}
       {...mergeProps(s.panel, className)}
       ref={ref}
       data-side={dataSide}
       style={style}
       role={isOverlayMode ? undefined : resolvedRole}
-      aria-label={isOverlayMode ? undefined : label}
     >
       {children}
     </div>
@@ -489,7 +486,7 @@ export function LayoutPanel({
         style={layerStyle}
       >
         <Modal {...mergeProps(s.overlay)} data-side={dataSide} data-open={isOpen ? '' : undefined}>
-          <AriaDialog aria-label={label ?? 'Panel'} style={dialogContentStyle}>
+          <AriaDialog aria-label={label ?? 'Panel'} {...mergeProps(s.overlayDialog)}>
             {panelBody}
           </AriaDialog>
         </Modal>

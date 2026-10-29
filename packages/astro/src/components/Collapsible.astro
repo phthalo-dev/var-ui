@@ -1,10 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { collapsible } from '@var-ui/core/components/collapsible';
 import type { CollapsibleVariantProps } from '@var-ui/core';
 import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { mergeProps } from '../utils';
 
-interface Props extends CollapsibleVariantProps {
+interface Props extends Omit<HTMLAttributes<'details'>, 'id' | 'title'>, CollapsibleVariantProps {
   id?: string;
   title?: string;
   defaultExpanded?: boolean;
@@ -17,13 +18,14 @@ const {
   defaultExpanded = false,
   variant = 'flush',
   className,
+  ...rest
 } = Astro.props;
 
 const c = collapsible({ variant });
 const hasTriggerSlot = Astro.slots.has('trigger');
 ---
 
-<details id={id} open={defaultExpanded || undefined} {...mergeProps(c.root, className)}>
+<details {...rest} id={id} open={defaultExpanded || undefined} {...mergeProps(c.root, className)}>
   <summary {...mergeProps(c.trigger)}>
     {
       hasTriggerSlot ? (

@@ -1,4 +1,12 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  ComponentPropsWithRef,
+  HTMLAttributes,
+  JSX,
+  MouseEvent,
+  ReactNode,
+  Ref,
+} from 'react';
 import {
   createContext,
   useCallback,
@@ -9,7 +17,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
+import { Link as AriaLink } from 'react-aria-components';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { sideNav, SIDE_NAV_COLLAPSED_WIDTH } from '@var-ui/core/components/sideNav';
 import type { IconName } from '@var-ui/core';
@@ -22,6 +30,7 @@ import { Text } from './Typography';
 import { SimpleTooltip } from './SimpleTooltip';
 import { ScrollArea } from './ScrollArea';
 import { mergeProps } from 'typestyles';
+import { RacLinkOrButton } from '../internal/racDomProps';
 
 export type SideNavCollapsibleConfig = {
   /** Initial collapsed state for uncontrolled usage. @default false */
@@ -41,7 +50,7 @@ export type SideNavCollapseHandle = {
   toggle: () => void;
 };
 
-export type SideNavProps = {
+export type SideNavProps = Omit<ComponentPropsWithRef<'nav'>, 'ref'> & {
   /** Brand block, usually a `SideNav.Heading` — wrapped in the sticky header zone. */
   header?: ReactNode;
   /** Content pinned under `header` (e.g. a "New" button or search field). */
@@ -56,9 +65,10 @@ export type SideNavProps = {
   resizable?: boolean | ResizableConfig;
   /** Imperative collapse/expand/toggle — pair with a `SideNav.CollapseButton` rendered elsewhere. */
   handleRef?: Ref<SideNavCollapseHandle>;
-  className?: string;
   /** Accessible name for the `nav` landmark. @default 'Side navigation' */
   label?: string;
+  /** Accessible name of the drag handle rendered by `resizable`. @default 'Resize side navigation' */
+  resizeHandleLabel?: string;
   /** Ref to the underlying `<nav>` element. */
   ref?: Ref<HTMLElement>;
 };
@@ -98,12 +108,13 @@ function normalizeCollapsible(
   return collapsible && typeof collapsible === 'object' ? collapsible : {};
 }
 
-export type SideNavCollapseButtonProps = {
-  className?: string;
+export type SideNavCollapseButtonProps = Omit<ComponentPropsWithRef<'button'>, 'children'> & {
   /** Overrides the accessible label for both expanded/collapsed states. */
   label?: string;
-  /** Ref to the underlying `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
+  /** Accessible label while the nav is collapsed. @default 'Expand navigation' */
+  expandLabel?: string;
+  /** Accessible label while the nav is expanded. @default 'Collapse navigation' */
+  collapseLabel?: string;
 };
 
 /**
@@ -115,18 +126,26 @@ export type SideNavCollapseButtonProps = {
 export function SideNavCollapseButton({
   className,
   label,
+  expandLabel = 'Expand navigation',
+  collapseLabel = 'Collapse navigation',
+  onClick,
   ref,
+  ...rest
 }: SideNavCollapseButtonProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed, toggle } = useSideNavContext();
   const { isRtl } = useDirection();
-  const ariaLabel = label ?? (isCollapsed ? 'Expand navigation' : 'Collapse navigation');
+  const ariaLabel = label ?? (isCollapsed ? expandLabel : collapseLabel);
   return (
     <button
-      ref={ref}
       type="button"
-      onClick={toggle}
       aria-label={ariaLabel}
+      {...rest}
+      ref={ref}
+      onClick={(event: MouseEvent<HTMLButtonElement>) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) toggle();
+      }}
       {...mergeProps(s.collapseButton, className)}
     >
       <Icon
@@ -138,7 +157,7 @@ export function SideNavCollapseButton({
   );
 }
 
-export type SideNavHeadingProps = {
+export type SideNavHeadingProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   heading: ReactNode;
   icon?: SideNavIcon;
   headingHref?: string;
@@ -146,9 +165,6 @@ export type SideNavHeadingProps = {
   subheading?: ReactNode;
   /** Popover or `Menu.FromSections` trigger rendered alongside the brand block (e.g. a team switcher). */
   menu?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /** Brand block for the `header` zone: icon, heading text, optional super/sub lines, optional menu trigger. */
@@ -161,6 +177,7 @@ export function SideNavHeading({
   menu,
   className,
   ref,
+  ...rest
 }: SideNavHeadingProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
@@ -189,21 +206,17 @@ export function SideNavHeading({
   );
 
   return (
-    <div {...mergeProps(s.headingBar, className)} ref={ref}>
+    <div {...rest} {...mergeProps(s.headingBar, className)} ref={ref}>
       {brand}
       {!isCollapsed && menu ? menu : null}
     </div>
   );
 }
 
-export type SideNavSectionProps = {
+export type SideNavSectionProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & {
   title?: ReactNode;
   subtitle?: ReactNode;
   endContent?: ReactNode;
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /** Groups `SideNav.Item`s under an optional title/subtitle/endContent header. */
@@ -214,13 +227,14 @@ export function SideNavSection({
   children,
   className,
   ref,
+  ...rest
 }: SideNavSectionProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
   const showHeader = !isCollapsed && (title != null || subtitle != null || endContent != null);
 
   return (
-    <div {...mergeProps(s.section, className)} ref={ref}>
+    <div {...rest} {...mergeProps(s.section, className)} ref={ref}>
       {showHeader ? (
         <div {...mergeProps(s.sectionHeader)}>
           <div {...mergeProps(s.sectionTitles)}>
@@ -239,35 +253,40 @@ export function SideNavSection({
   );
 }
 
-export type SideNavItemProps = {
-  label: string;
-  href?: string;
-  onPress?: () => void;
-  icon?: SideNavIcon;
-  /** Swapped in for `icon` while `isSelected`. */
-  selectedIcon?: SideNavIcon;
-  isSelected?: boolean;
-  isDisabled?: boolean;
-  endContent?: ReactNode;
-  /** Nested `SideNav.Item`s, indented under this item. */
-  children?: ReactNode;
-  /** Renders an expand/collapse chevron that shows/hides `children`. @default false */
-  collapsible?: boolean;
-  className?: string;
-  /** Ref to the outer `<div>` element wrapping the row and any nested items. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type SideNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'onClick'> &
+  Pick<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    'target' | 'rel' | 'download' | 'hrefLang' | 'referrerPolicy' | 'ping'
+  > & {
+    label: string;
+    href?: string;
+    onPress?: () => void;
+    onClick?: (event: MouseEvent<HTMLElement>) => void;
+    icon?: SideNavIcon;
+    /** Swapped in for `icon` while `isSelected`. */
+    selectedIcon?: SideNavIcon;
+    isSelected?: boolean;
+    isDisabled?: boolean;
+    endContent?: ReactNode;
+    /** Nested `SideNav.Item`s, indented under this item. */
+    children?: ReactNode;
+    /** Renders an expand/collapse chevron that shows/hides `children`. @default false */
+    collapsible?: boolean;
+    /** Accessible label of the chevron toggle while the children are collapsed. @default `Expand ${label}` */
+    expandLabel?: string;
+    /** Accessible label of the chevron toggle while the children are shown. @default `Collapse ${label}` */
+    collapseLabel?: string;
+    /** Accessible name of the nested group. @default `${label} submenu` */
+    submenuLabel?: string;
+    /** Ref to the `<a>` (with `href`) or `<button>` row element. */
+    ref?: Ref<HTMLElement>;
+  };
 
-const itemRowStyle = { display: 'flex', alignItems: 'stretch', gap: '0.125rem' } as const;
-const itemTriggerColumnStyle = { flex: '1 1 auto', minWidth: 0 } as const;
-const nestedGroupStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.125rem',
-  paddingInlineStart: '1.5rem',
-} as const;
-
-/** Link (`href`) or button (`onPress`) row; nests further `SideNav.Item`s via `collapsible`. */
+/**
+ * Link (`href`) or button (`onPress`) row; nests further `SideNav.Item`s via
+ * `collapsible`. A leaf item renders just the row element (same DOM as the Astro
+ * peer); an item with children wraps the row, chevron toggle and nested group.
+ */
 export function SideNavItem({
   label,
   href,
@@ -279,8 +298,12 @@ export function SideNavItem({
   endContent,
   children,
   collapsible = false,
+  expandLabel,
+  collapseLabel,
+  submenuLabel,
   className,
   ref,
+  ...rest
 }: SideNavItemProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed: navCollapsed } = useSideNavContext();
@@ -299,22 +322,20 @@ export function SideNavItem({
     </>
   );
 
-  const triggerProps = {
-    ...mergeProps(s.item, className),
-    'data-selected': isSelected ? '' : undefined,
-    'data-disabled': isDisabled ? '' : undefined,
-    'aria-current': isSelected ? ('page' as const) : undefined,
-    isDisabled,
-  };
-
-  const trigger = href ? (
-    <AriaLink href={href} {...triggerProps}>
+  const trigger = (
+    <RacLinkOrButton
+      href={href}
+      onPress={onPress}
+      aria-current={isSelected ? 'page' : undefined}
+      {...rest}
+      {...mergeProps(s.item, className)}
+      data-selected={isSelected ? '' : undefined}
+      data-disabled={isDisabled ? '' : undefined}
+      isDisabled={isDisabled}
+      ref={ref}
+    >
       {triggerContent}
-    </AriaLink>
-  ) : (
-    <AriaButton onPress={onPress} {...triggerProps}>
-      {triggerContent}
-    </AriaButton>
+    </RacLinkOrButton>
   );
 
   const wrappedTrigger = navCollapsed ? (
@@ -325,17 +346,23 @@ export function SideNavItem({
     trigger
   );
 
-  const showToggle = collapsible && hasChildren && !navCollapsed;
-  const showChildren = hasChildren && !navCollapsed && (!collapsible || isExpanded);
+  if (!hasChildren || navCollapsed) return wrappedTrigger;
+
+  const showToggle = collapsible;
+  const showChildren = !collapsible || isExpanded;
 
   return (
-    <div ref={ref}>
-      <div style={itemRowStyle}>
-        <div style={itemTriggerColumnStyle}>{wrappedTrigger}</div>
+    <div>
+      <div {...mergeProps(s.itemRow)}>
+        <div {...mergeProps(s.itemMain)}>{wrappedTrigger}</div>
         {showToggle ? (
           <IconButton
             name={isExpanded ? 'chevronDown' : 'chevronRight'}
-            aria-label={isExpanded ? `Collapse ${label}` : `Expand ${label}`}
+            aria-label={
+              isExpanded
+                ? (collapseLabel ?? `Collapse ${label}`)
+                : (expandLabel ?? `Expand ${label}`)
+            }
             tone="accent"
             appearance="ghost"
             size="sm"
@@ -345,7 +372,11 @@ export function SideNavItem({
         ) : null}
       </div>
       {showChildren ? (
-        <div role="group" aria-label={`${label} submenu`} style={nestedGroupStyle}>
+        <div
+          role="group"
+          aria-label={submenuLabel ?? `${label} submenu`}
+          {...mergeProps(s.nestedGroup)}
+        >
           {children}
         </div>
       ) : null}
@@ -382,8 +413,11 @@ export function SideNav({
   resizable,
   handleRef,
   className,
+  style,
   label = 'Side navigation',
+  resizeHandleLabel = 'Resize side navigation',
   ref,
+  ...rest
 }: SideNavProps): JSX.Element {
   const s = sideNav();
 
@@ -446,10 +480,13 @@ export function SideNav({
   return (
     <SideNavContext.Provider value={contextValue}>
       <nav
-        ref={ref}
         aria-label={label}
+        {...rest}
+        ref={ref}
         data-collapsed={isCollapsed ? '' : undefined}
-        style={navWidth != null ? { width: navWidth } : undefined}
+        data-collapsible={collapsibleEnabled ? '' : undefined}
+        data-resizable={resizableEnabled ? '' : undefined}
+        style={navWidth != null ? { ...style, width: navWidth } : style}
         {...mergeProps(s.root, className)}
       >
         {header != null || topContent != null ? (
@@ -478,7 +515,7 @@ export function SideNav({
           <ResizeHandle
             {...handleProps}
             onCollapse={collapsibleEnabled ? toggle : undefined}
-            aria-label="Resize side navigation"
+            aria-label={resizeHandleLabel}
           />
         ) : null}
       </nav>

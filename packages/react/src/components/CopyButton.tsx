@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, MouseEvent, ReactNode } from 'react';
 import { copyButton } from '@var-ui/core/components/copyButton';
 import { Icon } from '../icons';
 import { useCopy } from '../hooks/useCopy';
@@ -10,7 +10,7 @@ export type CopyButtonRenderProps = {
   error: Error | null;
 };
 
-export type CopyButtonProps = {
+export type CopyButtonProps = Omit<ComponentPropsWithRef<'button'>, 'children' | 'value'> & {
   /** Text written to the clipboard when copy is triggered. */
   value: string;
   /** Milliseconds before the copied state resets. @default 2000 */
@@ -23,9 +23,6 @@ export type CopyButtonProps = {
   copiedLabel?: string;
   /** Label for the default button after a failed copy. @default Error */
   errorLabel?: string;
-  className?: string;
-  /** Ref to the underlying `<button>` element (default chrome only; not used with a `children` render function). */
-  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -40,7 +37,9 @@ export function CopyButton({
   copiedLabel = 'Copied',
   errorLabel = 'Error',
   className,
+  onClick,
   ref,
+  ...rest
 }: CopyButtonProps): JSX.Element {
   const { copied, copy, error } = useCopy({ timeout });
   const cb = copyButton();
@@ -58,6 +57,8 @@ export function CopyButton({
   return (
     <button
       type="button"
+      aria-label={label}
+      {...rest}
       {...combine(
         cb.button,
         !copied && !error && cb.buttonIdle,
@@ -65,8 +66,10 @@ export function CopyButton({
         error && cb.buttonError,
         className,
       )}
-      onClick={handleCopy}
-      aria-label={label}
+      onClick={(event: MouseEvent<HTMLButtonElement>) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) handleCopy();
+      }}
       ref={ref}
     >
       <Icon name={copied ? 'check' : error ? 'error' : 'copy'} size="sm" />

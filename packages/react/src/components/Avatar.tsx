@@ -1,24 +1,21 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Children, useState } from 'react';
 import { avatar, avatarGroup } from '@var-ui/core/components/avatar';
 import { statusDot } from '@var-ui/core/components/statusDot';
 import type { AvatarVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type AvatarProps = AvatarVariantProps & {
-  /** Image URL. When missing or on load error, initials are shown instead. */
-  src?: string;
-  /** Accessible description of the image. */
-  alt?: string;
-  /** Display name — initials fallback uses the first letter of the first two words. */
-  name?: string;
-  /** Optional presence indicator shown on the avatar rim. */
-  status?: Tone;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<span>` element. */
-  ref?: Ref<HTMLSpanElement>;
-};
+export type AvatarProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
+  AvatarVariantProps & {
+    /** Image URL. When missing or on load error, initials are shown instead. */
+    src?: string;
+    /** Accessible description of the image. */
+    alt?: string;
+    /** Display name — initials fallback uses the first letter of the first two words. */
+    name?: string;
+    /** Optional presence indicator shown on the avatar rim. */
+    status?: Tone;
+  };
 
 function initialsOf(name: string): string {
   return name
@@ -43,12 +40,13 @@ export function Avatar({
   status,
   className,
   ref,
+  ...rest
 }: AvatarProps): JSX.Element {
   const [errored, setErrored] = useState(false);
   const a = avatar({ size });
   const showImage = Boolean(src) && !errored;
   return (
-    <span {...mergeProps(a.root, className)} ref={ref}>
+    <span {...rest} {...mergeProps(a.root, className)} ref={ref}>
       {showImage ? (
         <img
           {...mergeProps(a.image)}
@@ -75,15 +73,11 @@ export function Avatar({
   );
 }
 
-export type AvatarGroupProps = {
+export type AvatarGroupProps = Omit<ComponentPropsWithRef<'span'>, 'children'> & {
   /** Avatar elements to stack with overlap. */
   children: ReactNode;
   /** Maximum avatars before collapsing into a "+N" chip. @default 4 */
   max?: number;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<span>` element. */
-  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
@@ -93,13 +87,19 @@ export type AvatarGroupProps = {
  * <AvatarGroup max={3}>{users.map(u => <Avatar key={u.id} name={u.name} />)}</AvatarGroup>
  * ```
  */
-export function AvatarGroup({ children, max = 4, className, ref }: AvatarGroupProps): JSX.Element {
+export function AvatarGroup({
+  children,
+  max = 4,
+  className,
+  ref,
+  ...rest
+}: AvatarGroupProps): JSX.Element {
   const g = avatarGroup();
   const items = Children.toArray(children);
   const visible = items.slice(0, max);
   const hidden = items.length - visible.length;
   return (
-    <span {...mergeProps(g.root, className)} ref={ref}>
+    <span {...rest} {...mergeProps(g.root, className)} ref={ref}>
       {visible.map((child, index) => (
         <span {...mergeProps(g.item)} key={index}>
           {child}

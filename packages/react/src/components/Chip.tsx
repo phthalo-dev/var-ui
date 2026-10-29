@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, KeyboardEvent, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
 import {
   Button as AriaButton,
@@ -11,6 +11,7 @@ import { chip } from '@var-ui/core/components/chip';
 import { chipGroup } from '@var-ui/core/components/chipGroup';
 import type { ChipVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
+import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as ChipAppearance } from '@var-ui/core';
@@ -31,6 +32,10 @@ export type ChipGroupOption = {
 };
 
 export type ChipGroupProps = Omit<ToggleButtonGroupProps, 'children' | 'className'> &
+  Omit<
+    ComponentPropsWithRef<'div'>,
+    keyof ToggleButtonGroupProps | 'className' | 'children' | 'style'
+  > &
   ChipVariantProps & {
     children?: ReactNode;
     /** Renders chips from data instead of compound children. */
@@ -38,29 +43,37 @@ export type ChipGroupProps = Omit<ToggleButtonGroupProps, 'children' | 'classNam
     className?: string;
     /** Accessible name for the group. */
     'aria-label'?: string;
-    /** Ref to the underlying `<div>` element. */
+    /** Ref to the `role="group"` `<div>` element (a group has no single native control). */
     ref?: Ref<HTMLDivElement>;
   };
 
-export type ChipProps = ChipVariantProps & {
-  children: ReactNode;
-  className?: string;
-  /** Selection key when rendered inside `ChipGroup`. */
-  value?: string;
-  /** Selected state for standalone filter/toggle chips. */
-  isSelected?: boolean;
-  /** Called when a standalone toggle chip is pressed. */
-  onChange?: (selected: boolean) => void;
-  /** Shows a dismiss control and calls this handler on press. */
-  onRemove?: () => void;
-  /** Accessible label for the remove button. @default Remove */
-  removeLabel?: string;
-  isDisabled?: boolean;
-  /** Accessible name when children are not plain text. */
-  'aria-label'?: string;
-  /** Ref to the root element: a `<button>` for toggle chips, otherwise a `<span>`. */
-  ref?: Ref<HTMLElement>;
-};
+export type ChipProps = Omit<
+  ComponentPropsWithRef<'span'>,
+  'children' | 'className' | 'onChange' | 'ref'
+> &
+  ChipVariantProps & {
+    children: ReactNode;
+    className?: string;
+    /** Selection key when rendered inside `ChipGroup`. */
+    value?: string;
+    /** Selected state for standalone filter/toggle chips. */
+    isSelected?: boolean;
+    /** Called when a standalone toggle chip is pressed. */
+    onChange?: (selected: boolean) => void;
+    /** Shows a dismiss control and calls this handler on press. */
+    onRemove?: () => void;
+    /** Accessible label for the remove button. @default Remove */
+    removeLabel?: string;
+    isDisabled?: boolean;
+    /** Accessible name when children are not plain text. */
+    'aria-label'?: string;
+    /**
+     * Ref to the root element: a `<button>` for toggle chips, otherwise a `<span>`. Native
+     * attributes (`data-*`, `title`, handlers, ...) land on that same element. Inside a
+     * `ChipGroup`, `id` is the selection key, so it is set from `value`.
+     */
+    ref?: Ref<HTMLElement>;
+  };
 
 function ChipLabel({ children }: { children: ReactNode }): JSX.Element {
   const c = chip();
@@ -94,6 +107,8 @@ function ChipRemoveButton({
   );
 }
 
+type ChipToggleProps = Omit<ChipProps, 'value'> & { id?: string };
+
 function ChipToggle({
   tone,
   appearance,
@@ -104,32 +119,30 @@ function ChipToggle({
   onRemove,
   removeLabel,
   isDisabled,
-  id,
-  'aria-label': ariaLabel,
+  onKeyDown,
   ref,
-}: ChipProps & { id?: string }): JSX.Element {
+  ...rest
+}: ChipToggleProps): JSX.Element {
   const c = chip({ tone, appearance });
   const button = (
     <AriaToggleButton
-      id={id}
+      {...(rest as object)}
       isSelected={isSelected}
       onChange={onChange}
       isDisabled={isDisabled}
-      aria-label={ariaLabel}
       {...mergeProps(c.root, className)}
+      render={racRenderWithExtras('button', pickRacDroppedDomProps(rest)) as never}
+      // The root is a <button> for toggles; the public ref type covers the static <span> too.
       ref={ref as Ref<HTMLButtonElement>}
       data-interactive
       data-removable={onRemove ? true : undefined}
-      onKeyDown={
-        onRemove
-          ? (event) => {
-              if (event.key === 'Backspace' || event.key === 'Delete') {
-                event.preventDefault();
-                onRemove();
-              }
-            }
-          : undefined
-      }
+      onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
+        onKeyDown?.(event as unknown as KeyboardEvent<HTMLSpanElement>);
+        if (onRemove && (event.key === 'Backspace' || event.key === 'Delete')) {
+          event.preventDefault();
+          onRemove();
+        }
+      }}
     >
       <ChipLabel>{children}</ChipLabel>
     </AriaToggleButton>
@@ -151,7 +164,8 @@ function ChipToggle({
 }
 
 /**
- * Pill-shaped label for filters, tags, and selections.
+ * Pill-shaped label for filters, tags, and selections. Renders a `<button>` when it is a
+ * toggle (`isSelected`/`onChange` or inside a `ChipGroup` via `value`), otherwise a `<span>`.
  *
  * ```tsx
  * <Chip isSelected={active} onChange={setActive}>React</Chip>
@@ -169,48 +183,32 @@ export function Chip({
   onRemove,
   removeLabel,
   isDisabled: isDisabledProp,
-  'aria-label': ariaLabel,
   ref,
+  ...rest
 }: ChipProps): JSX.Element {
   const group = useContext(ChipGroupContext);
   const tone = toneProp ?? group?.tone ?? 'neutral';
   const appearance = appearanceProp ?? group?.appearance ?? 'subtle';
   const isDisabled = isDisabledProp ?? group?.isDisabled;
 
-  if (value !== undefined) {
-    if (!group) {
-      throw new Error('Chip with `value` must be rendered inside a ChipGroup.');
-    }
-    return (
-      <ChipToggle
-        tone={tone}
-        appearance={appearance}
-        className={className}
-        id={value}
-        ref={ref}
-        isDisabled={isDisabled}
-        aria-label={ariaLabel}
-        onRemove={onRemove}
-        removeLabel={removeLabel}
-      >
-        {children}
-      </ChipToggle>
-    );
+  if (value !== undefined && !group) {
+    throw new Error('Chip with `value` must be rendered inside a ChipGroup.');
   }
 
-  const isToggle = isSelected !== undefined || onChange !== undefined;
-
-  if (isToggle) {
+  if (value !== undefined || isSelected !== undefined || onChange !== undefined) {
+    // In a group the selection state lives on the group, keyed by `id`.
+    const standalone = value === undefined;
     return (
       <ChipToggle
+        {...rest}
         tone={tone}
         appearance={appearance}
         className={className}
-        isSelected={isSelected}
-        onChange={onChange}
+        id={standalone ? rest.id : value}
+        isSelected={standalone ? isSelected : undefined}
+        onChange={standalone ? onChange : undefined}
         ref={ref}
         isDisabled={isDisabled}
-        aria-label={ariaLabel}
         onRemove={onRemove}
         removeLabel={removeLabel}
       >
@@ -220,19 +218,10 @@ export function Chip({
   }
 
   const c = chip({ tone, appearance });
-
-  if (onRemove) {
-    return (
-      <span {...mergeProps(c.root, className)} ref={ref}>
-        <ChipLabel>{children}</ChipLabel>
-        <ChipRemoveButton onRemove={onRemove} removeLabel={removeLabel} />
-      </span>
-    );
-  }
-
   return (
-    <span {...mergeProps(c.root, className)} ref={ref}>
+    <span {...rest} {...mergeProps(c.root, className)} ref={ref}>
       <ChipLabel>{children}</ChipLabel>
+      {onRemove ? <ChipRemoveButton onRemove={onRemove} removeLabel={removeLabel} /> : null}
     </span>
   );
 }

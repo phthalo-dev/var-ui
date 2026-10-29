@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { timeline } from '@var-ui/core/components/timeline';
 import type { TimelineVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends TimelineVariantProps {
+interface Props extends Omit<HTMLAttributes<'li'>, 'title'>, TimelineVariantProps {
   title?: string;
   description?: string;
   timestamp?: string;
@@ -11,11 +12,11 @@ interface Props extends TimelineVariantProps {
   className?: string;
 }
 
-const { title, description, timestamp, tone, size = 'md', className } = Astro.props;
+const { title, description, timestamp, tone, size = 'md', className, ...rest } = Astro.props;
 const styles = timeline({ size, tone: tone ?? 'accent' });
 ---
 
-<li {...mergeProps(styles.item, className)} data-active>
+<li {...rest} {...mergeProps(styles.item, className)} data-active>
   <div {...mergeProps(styles.bullet)} data-active data-tone={tone ?? 'accent'} aria-hidden="true"></div>
   <div {...mergeProps(styles.body)}>
     {title ? <div {...mergeProps(styles.title)}>{title}</div> : null}

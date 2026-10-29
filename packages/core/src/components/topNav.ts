@@ -100,6 +100,7 @@ export const topNav = typestyles.recipe({
     'menuTrigger',
     'menuList',
     'richBody',
+    'megaRoot',
     'megaPanel',
     'megaItems',
     'megaItem',
@@ -243,6 +244,10 @@ export const topNav = typestyles.recipe({
           flexDirection: 'column',
           gap: `calc(${t.space[1].var} / 2)`,
           minWidth: 0,
+        },
+        // `display: contents` keeps the trigger a direct flex item of the bar zone.
+        megaRoot: {
+          display: 'contents',
         },
         megaPanel: {
           position: 'absolute',

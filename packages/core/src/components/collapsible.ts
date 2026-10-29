@@ -8,7 +8,7 @@ const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { de
 /**
  * Expand/collapse panel chrome for Disclosure-backed Collapsible.
  *
- * Slots: `root`, `trigger`, `triggerIcon`, `panel`.
+ * Slots: `root`, `heading`, `trigger`, `triggerIcon`, `panel`.
  * Chevron rotation targets RAC `data-expanded` on the root (and `aria-expanded` on the trigger).
  *
  * ```ts
@@ -22,7 +22,7 @@ const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { de
 export const collapsible = typestyles.recipe({
   name: 'collapsible',
   layer: 'components',
-  slots: ['root', 'trigger', 'triggerIcon', 'panel'],
+  slots: ['root', 'heading', 'trigger', 'triggerIcon', 'panel'],
   variants: {
     variant: collapsibleVariant,
   },
@@ -51,6 +51,9 @@ export const collapsible = typestyles.recipe({
           [`&:has([aria-expanded="true"]) .var-ui-collapsible__triggerIcon`]: {
             transform: 'rotate(180deg)',
           },
+        },
+        heading: {
+          margin: 0,
         },
         trigger: {
           appearance: 'none',

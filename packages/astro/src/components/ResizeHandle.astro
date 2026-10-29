@@ -1,19 +1,24 @@
 ---
 import { resizeHandle } from '@var-ui/core/components/resizeHandle';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   className?: string;
-  label?: string;
 };
 
-const { className, label = 'Resize side navigation' } = Astro.props;
+const { className, 'aria-label': ariaLabel = 'Resize', ...rest } = Astro.props;
 const s = resizeHandle();
 ---
 
 <div
+  role="separator"
+  aria-orientation="horizontal"
+  tabindex="0"
+  data-orientation="horizontal"
+  aria-label={ariaLabel}
+  {...rest}
   data-var-ui-side-nav-resize
-  aria-label={label}
   {...mergeProps(s.root, className)}
 >
   <div {...mergeProps(s.pill)}></div>

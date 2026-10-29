@@ -2,11 +2,16 @@
 import { svg as searchSvg } from '@var-ui/icons/glyphs/search';
 import { icon } from '@var-ui/core/components/icon';
 import { searchInput } from '@var-ui/core/components/searchInput';
+import type { HTMLAttributes } from 'astro/types';
 import type { SearchInputVariantProps } from '@var-ui/core';
 import Kbd from './Kbd.astro';
 import { mergeProps } from '../utils';
 
-type Props = SearchInputVariantProps & {
+type Props = Omit<
+  HTMLAttributes<'input'>,
+  'size' | 'type' | 'class:list' | 'style' | 'placeholder' | 'value' | 'name'
+> &
+  SearchInputVariantProps & {
   /** Links this trigger to a `CommandPalette` root `id` when `variant="command"`. */
   commandPalette?: string;
   placeholder?: string;
@@ -14,7 +19,10 @@ type Props = SearchInputVariantProps & {
   shortcut?: string;
   name?: string;
   value?: string;
+  /** Classes merged onto the root wrapper. */
   className?: string;
+  /** Inline style for the root wrapper. */
+  style?: string;
   'aria-label'?: string;
 };
 
@@ -27,7 +35,9 @@ const {
   name,
   value,
   className,
+  style,
   'aria-label': ariaLabel = placeholder,
+  ...rest
 } = Astro.props;
 
 const s = searchInput({ variant, size });
@@ -36,6 +46,7 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
 
 <div
   {...mergeProps(s.root, className)}
+  style={style}
   data-var-ui-search-input
   data-variant={variant}
   data-command-palette={commandPaletteId}
@@ -46,6 +57,7 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
   {
     variant === 'command' ? (
       <button
+        {...rest}
         type="button"
         {...mergeProps(s.trigger)}
         data-var-ui-search-input-trigger
@@ -58,14 +70,15 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
       </button>
     ) : (
       <input
+        autocomplete="off"
+        spellcheck="false"
+        {...rest}
         {...mergeProps(s.input)}
         type="search"
         name={name}
         value={value}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        autocomplete="off"
-        spellcheck="false"
       />
     )
   }

@@ -6,17 +6,20 @@ import type { SegmentedControlVariantProps } from '@var-ui/core';
 import { svg as colorModeDark } from '@var-ui/icons/glyphs/colorModeDark';
 import { svg as colorModeLight } from '@var-ui/icons/glyphs/colorModeLight';
 import { svg as colorModeSystem } from '@var-ui/icons/glyphs/colorModeSystem';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from "../utils";
 
 type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   includeSystem?: boolean;
   appearance?: ColorModeToggleAppearance;
   size?: NonNullable<SegmentedControlVariantProps['size']>;
   className?: string;
   "aria-label"?: string;
   storageKey?: string;
+  /** Text of each segment. @default { light: 'Light', dark: 'Dark', system: 'System' } */
+  labels?: Partial<Record<'light' | 'dark' | 'system', string>>;
 };
 
 const {
@@ -26,6 +29,8 @@ const {
   className,
   "aria-label": ariaLabel = "Color mode",
   storageKey = "theme-mode",
+  labels,
+  ...rest
 } = Astro.props;
 
 const modes = includeSystem
@@ -38,14 +43,15 @@ const buttonRecipe = mergeProps(t);
 const iconRecipe = mergeProps(i);
 
 const MODE_META = {
-  light: { label: "Light", icon: colorModeLight },
-  dark: { label: "Dark", icon: colorModeDark },
-  system: { label: "System", icon: colorModeSystem },
-} as const;
+  light: { label: labels?.light ?? "Light", icon: colorModeLight },
+  dark: { label: labels?.dark ?? "Dark", icon: colorModeDark },
+  system: { label: labels?.system ?? "System", icon: colorModeSystem },
+};
 ---
 
 <div
   role="group"
+  {...rest}
   aria-label={ariaLabel}
   {...mergeProps(s.root, className)}
   data-var-ui-color-mode-toggle

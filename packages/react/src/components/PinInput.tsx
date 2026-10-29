@@ -1,37 +1,79 @@
-import type { ChangeEvent, ClipboardEvent, JSX, KeyboardEvent, Ref } from 'react';
-import { useCallback, useId, useRef, useState } from 'react';
-import { Label } from 'react-aria-components';
+import type {
+  ChangeEvent,
+  ClipboardEvent,
+  ComponentPropsWithRef,
+  CSSProperties,
+  JSX,
+  KeyboardEvent,
+  Ref,
+} from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { pinInput } from '@var-ui/core/components/pinInput';
 import type { PinInputVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
+import { FieldFrame, useFieldFrame } from './FieldFrame';
+import { useControlSize } from '../internal/controlSizeContext';
 
 export type PinInputType = 'numeric' | 'alphanumeric';
 
-export type PinInputProps = FieldMeta & {
-  /** Number of digit cells. @default 4 */
-  length?: number;
-  /** Controlled value — one character per cell, no separators. */
-  value?: string;
-  /** Initial value for uncontrolled usage. */
-  defaultValue?: string;
-  /** Called when any cell changes. */
-  onChange?: (value: string) => void;
-  /** Called once when every cell is filled. */
-  onComplete?: (value: string) => void;
-  /** Accepted characters. @default numeric */
-  type?: PinInputType;
-  size?: NonNullable<PinInputVariantProps['size']>;
-  isDisabled?: boolean;
-  isRequired?: boolean;
-  autoFocus?: boolean;
-  /** Name of a hidden input carrying the joined value, so the PIN is included in form submission. */
-  name?: string;
-  className?: string;
-  'aria-label'?: string;
-  /** Ref to the root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type PinInputProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  | 'onChange'
+  | 'defaultValue'
+  | 'className'
+  | 'style'
+  | 'ref'
+  | 'children'
+  | 'role'
+  | 'aria-labelledby'
+  | 'aria-label'
+> &
+  FieldMeta & {
+    /** Number of digit cells. @default 4 */
+    length?: number;
+    /** Controlled value — one character per cell, no separators. */
+    value?: string;
+    /** Initial value for uncontrolled usage. */
+    defaultValue?: string;
+    /** Called when any cell changes. */
+    onChange?: (value: string) => void;
+    /** Called once when every cell is filled. */
+    onComplete?: (value: string) => void;
+    /**
+     * Accepted characters. @default numeric
+     * (Shadows the HTML `type` attribute; rename is tracked for the vocabulary PR.)
+     */
+    type?: PinInputType;
+    size?: NonNullable<PinInputVariantProps['size']>;
+    /** Marks the cells invalid; defaults to whether `errorMessage` is set. */
+    invalid?: boolean;
+    isDisabled?: boolean;
+    isRequired?: boolean;
+    autoFocus?: boolean;
+    /** Name of a hidden input carrying the joined value, so the PIN is included in form submission. */
+    name?: string;
+    /** Accessible name when there is no visible `label`. */
+    'aria-label'?: string;
+    /**
+     * Accessible name of each cell. Receives the zero-based cell index, the cell count and the
+     * group's name (`aria-label` or `label`).
+     * @default (index, length, groupLabel) => `${groupLabel}, digit ${index + 1} of ${length}`
+     */
+    getCellLabel?: (index: number, length: number, groupLabel: string | undefined) => string;
+    /** Additional CSS class names merged onto the root element. */
+    className?: string;
+    /** Inline style for the root element. */
+    style?: CSSProperties;
+    /** Ref to the first cell's `<input>` element. */
+    ref?: Ref<HTMLInputElement>;
+  };
+
+function defaultCellLabel(index: number, length: number, groupLabel: string | undefined): string {
+  return groupLabel
+    ? `${groupLabel}, digit ${index + 1} of ${length}`
+    : `Digit ${index + 1} of ${length}`;
+}
 
 function normalizeChar(char: string, type: PinInputType): string | null {
   if (type === 'numeric') {
@@ -68,22 +110,30 @@ export function PinInput({
   onChange,
   onComplete,
   type = 'numeric',
-  size = 'md',
+  size,
+  invalid,
   isDisabled,
   isRequired,
   autoFocus,
   name,
+  getCellLabel = defaultCellLabel,
   className,
+  style,
   'aria-label': ariaLabel,
   ref,
+  id,
+  'aria-describedby': userDescribedBy,
+  ...rest
 }: PinInputProps): JSX.Element {
-  const p = pinInput({ size });
-  const labelId = useId();
-  const descriptionId = useId();
-  const errorId = useId();
-  const describedBy =
-    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
-    undefined;
+  const contextSize = useControlSize();
+  const p = pinInput({ size: size ?? contextSize ?? 'md' });
+  const frame = useFieldFrame({
+    description,
+    errorMessage,
+    invalid,
+    id,
+    describedBy: userDescribedBy,
+  });
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const isControlled = controlledValue !== undefined;
   const [uncontrolledChars, setUncontrolledChars] = useState(() =>
@@ -185,16 +235,20 @@ export function PinInput({
   const groupLabel = ariaLabel ?? label;
 
   return (
-    <div {...mergeProps(p.root, className)} ref={ref}>
-      {label ? (
-        <Label {...mergeProps(p.label)} id={labelId}>
-          {label}
-        </Label>
-      ) : null}
+    <FieldFrame
+      slots={p}
+      frame={frame}
+      label={label}
+      description={description}
+      errorMessage={errorMessage}
+      className={className}
+      style={style}
+    >
       <div
+        {...rest}
         {...mergeProps(p.group)}
         role="group"
-        aria-labelledby={label ? labelId : undefined}
+        aria-labelledby={label ? frame.labelId : undefined}
         aria-label={label ? undefined : groupLabel}
         data-disabled={isDisabled ? true : undefined}
       >
@@ -203,21 +257,21 @@ export function PinInput({
             key={index}
             ref={(element) => {
               inputRefs.current[index] = element;
+              if (index !== 0) return;
+              if (typeof ref === 'function') ref(element);
+              else if (ref) ref.current = element;
             }}
             {...mergeProps(p.cell)}
+            id={index === 0 ? frame.controlId : undefined}
             type="text"
             inputMode={type === 'numeric' ? 'numeric' : 'text'}
             pattern={type === 'numeric' ? '[0-9]*' : undefined}
             maxLength={1}
             autoComplete={index === 0 ? 'one-time-code' : 'off'}
-            aria-label={
-              groupLabel
-                ? `${groupLabel}, digit ${index + 1} of ${length}`
-                : `Digit ${index + 1} of ${length}`
-            }
+            aria-label={getCellLabel(index, length, groupLabel)}
             aria-required={isRequired || undefined}
-            aria-invalid={errorMessage ? true : undefined}
-            aria-describedby={describedBy}
+            aria-invalid={frame.controlProps['aria-invalid']}
+            aria-describedby={frame.controlProps['aria-describedby']}
             value={char}
             disabled={isDisabled}
             autoFocus={autoFocus && index === 0 ? true : undefined}
@@ -231,16 +285,6 @@ export function PinInput({
       {name ? (
         <input type="hidden" name={name} value={valueFromChars(chars)} disabled={isDisabled} />
       ) : null}
-      {description ? (
-        <p {...mergeProps(p.description)} id={descriptionId}>
-          {description}
-        </p>
-      ) : null}
-      {errorMessage ? (
-        <p {...mergeProps(p.error)} id={errorId}>
-          {errorMessage}
-        </p>
-      ) : null}
-    </div>
+    </FieldFrame>
   );
 }

@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, KeyboardEvent } from 'react';
 import { useRef } from 'react';
 import { colorPicker } from '@var-ui/core/components/colorPicker';
 import type { ColorPickerVariantProps } from '@var-ui/core';
@@ -30,7 +30,10 @@ const DEFAULT_COLOR_SWATCHES = [
   '#fd7e14',
 ] as const;
 
-export type ColorPickerProps = {
+export type ColorPickerProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'value' | 'defaultValue' | 'onChange' | 'children'
+> & {
   /** Controlled hex color (e.g. `#228be6` or `#228be680` with alpha). */
   value?: string;
   /** Uncontrolled initial color. @default #228be6 */
@@ -42,9 +45,16 @@ export type ColorPickerProps = {
   swatchesPerRow?: 7 | 10;
   /** Show an alpha slider and emit 8-digit hex. @default false */
   withAlpha?: boolean;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  /** Accessible name of the saturation/brightness area. @default 'Saturation and brightness' */
+  saturationLabel?: string;
+  /** Accessible name of the hue slider. @default 'Hue' */
+  hueLabel?: string;
+  /** Accessible name of the alpha slider. @default 'Alpha' */
+  alphaLabel?: string;
+  /** Accessible name of the swatch list. @default 'Color swatches' */
+  swatchesLabel?: string;
+  /** Spoken value of the hue slider. @default (degrees) => `${degrees} degrees` */
+  hueValueText?: (degrees: number) => string;
 };
 
 function swatchColumnsVariant(
@@ -64,8 +74,14 @@ export function ColorPicker({
   swatches = [...DEFAULT_COLOR_SWATCHES],
   swatchesPerRow = 7,
   withAlpha = false,
+  saturationLabel = 'Saturation and brightness',
+  hueLabel = 'Hue',
+  alphaLabel = 'Alpha',
+  swatchesLabel = 'Color swatches',
+  hueValueText = (degrees) => `${degrees} degrees`,
   className,
   ref,
+  ...rest
 }: ColorPickerProps): JSX.Element {
   const cp = colorPicker({ swatchColumns: swatchColumnsVariant(swatchesPerRow) });
   const { hsv, setHsv, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
@@ -162,12 +178,12 @@ export function ColorPicker({
   };
 
   return (
-    <div {...mergeProps(cp.root, className)} ref={ref} data-var-ui-color-picker>
+    <div {...rest} {...mergeProps(cp.root, className)} ref={ref}>
       <div
         ref={saturationRef}
         {...mergeProps(cp.saturation)}
         role="application"
-        aria-label="Saturation and brightness"
+        aria-label={saturationLabel}
         tabIndex={0}
         style={{
           backgroundColor: pureHue,
@@ -191,11 +207,11 @@ export function ColorPicker({
         ref={hueRef}
         {...mergeProps(cp.hue)}
         role="slider"
-        aria-label="Hue"
+        aria-label={hueLabel}
         aria-valuemin={0}
         aria-valuemax={360}
         aria-valuenow={Math.round(hsv.h)}
-        aria-valuetext={`${Math.round(hsv.h)} degrees`}
+        aria-valuetext={hueValueText(Math.round(hsv.h))}
         aria-orientation="horizontal"
         tabIndex={0}
         onPointerDown={bindPointerDrag(hueRef, updateHue)}
@@ -209,7 +225,7 @@ export function ColorPicker({
           ref={alphaRef}
           {...mergeProps(cp.alpha)}
           role="slider"
-          aria-label="Alpha"
+          aria-label={alphaLabel}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round((hsv.a ?? 1) * 100)}
@@ -230,7 +246,7 @@ export function ColorPicker({
       ) : null}
 
       {swatches.length > 0 ? (
-        <div {...mergeProps(cp.swatches)} role="listbox" aria-label="Color swatches">
+        <div {...mergeProps(cp.swatches)} role="listbox" aria-label={swatchesLabel}>
           {swatches.map((swatch) => {
             const selected =
               normalizeHex(swatch).toLowerCase() === normalizeHex(currentHex).toLowerCase();

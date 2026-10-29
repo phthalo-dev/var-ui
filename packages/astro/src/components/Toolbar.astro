@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { toolbar } from '@var-ui/core/components/toolbar';
+import type { ToolbarVariantProps } from '@var-ui/core';
+import { mergeProps } from '../utils';
+
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'role'> & {
+  /** Accessible label for the toolbar (required; applied as aria-label). */
+  label: string;
+  /** Control density. @default md */
+  size?: NonNullable<ToolbarVariantProps['size']>;
+  /** Layout axis. @default horizontal */
+  orientation?: NonNullable<ToolbarVariantProps['orientation']>;
+  className?: string;
+};
+
+const { label, size = 'md', orientation = 'horizontal', className, ...rest } = Astro.props;
+const hasStart = Astro.slots.has('start');
+const hasCenter = Astro.slots.has('center');
+const hasEnd = Astro.slots.has('end');
+const s = toolbar({ size, orientation, layout: hasCenter ? 'grid' : 'flex' });
+---
+
+<div
+  {...rest}
+  role="toolbar"
+  aria-label={label}
+  aria-orientation={orientation}
+  {...mergeProps(s.root, className)}
+>
+  {hasStart && <div {...mergeProps(s.startSlot)}><slot name="start" /></div>}
+  {hasCenter && <div {...mergeProps(s.centerSlot)}><slot name="center" /></div>}
+  {hasEnd && <div {...mergeProps(s.endSlot)}><slot name="end" /></div>}
+</div>

@@ -3,12 +3,19 @@ import {
   isValidElement,
   useRef,
   type ChangeEvent,
+  type ComponentPropsWithRef,
   type JSX,
   type MouseEvent,
   type ReactElement,
 } from 'react';
+import { visuallyHidden } from '@var-ui/core/components/visuallyHidden';
+import { mergeProps } from 'typestyles';
+import { useMergedRef } from '../overlays/useMergedRef';
 
-export type FileTriggerProps = {
+export type FileTriggerProps = Omit<
+  ComponentPropsWithRef<'input'>,
+  'children' | 'type' | 'onSelect' | 'onChange' | 'accept' | 'multiple' | 'disabled'
+> & {
   /** Button that opens the file picker. Must be a single element. */
   children: ReactElement;
   /** Native `accept` filter, for example `image/*`. */
@@ -20,6 +27,11 @@ export type FileTriggerProps = {
   /** Disables the child when it accepts `disabled`, and does not open the picker. */
   isDisabled?: boolean;
 };
+
+// Not replaced with RAC's FileTrigger: it wraps children in a PressResponder (the
+// child must be a RAC pressable, so a plain <button> would never open the picker),
+// reports a FileList|null instead of File[], and has no equivalent of this
+// component's disabled-child handling for arbitrary elements.
 
 const disabledTags = new Set([
   'button',
@@ -58,8 +70,12 @@ export function FileTrigger({
   multiple = false,
   onSelect,
   isDisabled = false,
+  className,
+  ref,
+  ...rest
 }: FileTriggerProps): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
+  const mergedRef = useMergedRef(inputRef, ref);
 
   if (!isValidElement(children)) {
     throw new Error('FileTrigger requires a single React element child');
@@ -95,7 +111,8 @@ export function FileTrigger({
     <>
       {cloneElement(children, triggerProps)}
       <input
-        ref={inputRef}
+        {...rest}
+        ref={mergedRef}
         type="file"
         tabIndex={-1}
         aria-hidden="true"
@@ -104,17 +121,7 @@ export function FileTrigger({
         disabled={isDisabled || undefined}
         onChange={handleChange}
         // `hidden` is display:none, which blocks the file dialog in some browsers.
-        style={{
-          position: 'absolute',
-          width: 1,
-          height: 1,
-          margin: -1,
-          padding: 0,
-          border: 0,
-          overflow: 'hidden',
-          clip: 'rect(0, 0, 0, 0)',
-          whiteSpace: 'nowrap',
-        }}
+        {...mergeProps(visuallyHidden(), className)}
       />
     </>
   );

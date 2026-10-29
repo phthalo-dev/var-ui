@@ -1,16 +1,17 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { hiddenClassName } from '@var-ui/core/components/hidden';
 import type { HiddenMap } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   hide?: boolean | HiddenMap;
   as?: string;
   className?: string;
 };
 
-const { hide, as = 'div', className } = Astro.props;
+const { hide, as = 'div', className, ...rest } = Astro.props;
 const rp = mergeProps(hiddenClassName({ hide }), className);
 const Tag = as;
 ---
-<Tag {...rp}><slot /></Tag>
+<Tag {...rest} {...rp}><slot /></Tag>

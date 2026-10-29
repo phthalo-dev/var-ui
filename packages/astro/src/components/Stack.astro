@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { stack } from '@var-ui/core/components/stack';
 import type { StackVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'div'> & {
   direction?: NonNullable<StackVariantProps['direction']>;
   gap?: NonNullable<StackVariantProps['gap']>;
   align?: NonNullable<StackVariantProps['align']>;
@@ -19,10 +20,11 @@ const {
   justify = 'start',
   wrap = false,
   className,
+  ...rest
 } = Astro.props;
 const rp = mergeProps(
   stack({ direction, gap, align, justify, wrap: wrap ? 'wrap' : 'nowrap' }),
   className,
 );
 ---
-<div {...rp}><slot /></div>
+<div {...rest} {...rp}><slot /></div>

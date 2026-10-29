@@ -1,14 +1,15 @@
 ---
 import { sideNav } from '@var-ui/core/components/sideNav';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'title'> & {
   title: string;
   className?: string;
 };
 
-const { title, className } = Astro.props;
+const { title, className, ...rest } = Astro.props;
 const s = sideNav();
 ---
 
-<div {...mergeProps(s.sectionTitle, className)}>{title}</div>
+<div {...rest} {...mergeProps(s.sectionTitle, className)}>{title}</div>

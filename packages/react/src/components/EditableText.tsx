@@ -5,6 +5,8 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type ComponentPropsWithRef,
+  type MouseEvent,
   type FocusEvent,
   type JSX,
   type KeyboardEvent,
@@ -17,7 +19,10 @@ import { mergeProps } from 'typestyles';
 
 export type EditableTextActivation = 'click' | 'doubleClick' | 'focus';
 
-export type EditableTextProps = {
+export type EditableTextProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'onChange' | 'className' | 'ref' | 'role' | 'tabIndex'
+> & {
   /** Display element (for example a `Heading`). Its typography is inherited by the input. */
   children: ReactNode;
   /** Current committed text. */
@@ -37,10 +42,19 @@ export type EditableTextProps = {
   isDisabled?: boolean;
   /** Shows the text without allowing it to be edited. */
   isReadOnly?: boolean;
-  /** Accessible name for the input. Defaults to the current value, or "Edit text" when that is empty. */
+  /** Accessible name for the input. Defaults to the current value, or `emptyLabel` when that is empty. */
   'aria-label'?: string;
+  /**
+   * Accessible name of the input when there is neither `aria-label` nor a value.
+   * @default 'Edit text'
+   */
+  emptyLabel?: string;
+  /** Additional CSS class names merged onto the root element. */
   className?: string;
-  /** Ref to the root `<div>` element. */
+  /**
+   * Ref to the root `<div>`: the focusable element that starts editing. The `<input>` only
+   * exists while editing, so it cannot own a stable ref.
+   */
   ref?: Ref<HTMLDivElement>;
 };
 
@@ -63,8 +77,14 @@ export function EditableText({
   isDisabled = false,
   isReadOnly = false,
   'aria-label': ariaLabel,
+  emptyLabel = 'Edit text',
   className,
   ref,
+  onClick,
+  onDoubleClick,
+  onKeyDown,
+  onFocus,
+  ...rest
 }: EditableTextProps): JSX.Element {
   const et = editableText();
   const [isEditing, setIsEditing] = useState(false);
@@ -129,6 +149,7 @@ export function EditableText({
   };
 
   const handleRootKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
     if (isActive || event.target !== event.currentTarget) return;
     if (event.key === 'Enter' || event.key === 'F2') {
       event.preventDefault();
@@ -137,6 +158,7 @@ export function EditableText({
   };
 
   const handleRootFocus = (event: FocusEvent<HTMLDivElement>) => {
+    onFocus?.(event);
     if (activation === 'focus' && event.target === event.currentTarget) startEditing();
   };
 
@@ -151,7 +173,7 @@ export function EditableText({
       ref={inputRef}
       type="text"
       value={draft}
-      aria-label={ariaLabel || value || 'Edit text'}
+      aria-label={ariaLabel || value || emptyLabel}
       onChange={handleChange}
       onKeyDown={handleInputKeyDown}
       onBlur={() => finish(true, false)}
@@ -167,6 +189,7 @@ export function EditableText({
 
   return (
     <div
+      {...rest}
       {...mergeProps(et.root, className)}
       ref={(node) => {
         rootRef.current = node;
@@ -177,10 +200,16 @@ export function EditableText({
       aria-label={canEdit && !isActive ? ariaLabel : undefined}
       aria-disabled={isDisabled || undefined}
       tabIndex={canEdit && !isActive ? 0 : undefined}
-      onClick={canEdit && activation === 'click' ? startEditing : undefined}
-      onDoubleClick={canEdit && activation === 'doubleClick' ? startEditing : undefined}
-      onKeyDown={canEdit ? handleRootKeyDown : undefined}
-      onFocus={canEdit ? handleRootFocus : undefined}
+      onClick={(event: MouseEvent<HTMLDivElement>) => {
+        onClick?.(event);
+        if (canEdit && activation === 'click') startEditing();
+      }}
+      onDoubleClick={(event: MouseEvent<HTMLDivElement>) => {
+        onDoubleClick?.(event);
+        if (canEdit && activation === 'doubleClick') startEditing();
+      }}
+      onKeyDown={handleRootKeyDown}
+      onFocus={handleRootFocus}
     >
       {content}
     </div>

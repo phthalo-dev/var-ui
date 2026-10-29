@@ -1,18 +1,14 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { textBlock } from '@var-ui/core/components/typography';
 import { mergeProps } from 'typestyles';
 
-export type TimestampProps = {
+export type TimestampProps = Omit<ComponentPropsWithRef<'time'>, 'children' | 'dateTime'> & {
   /** Date value to format. Accepts a `Date`, ISO string, or epoch milliseconds. */
   date: Date | string | number;
   /** Output format: relative ("5 minutes ago"), date, time, or datetime. @default relative */
   format?: 'relative' | 'date' | 'time' | 'datetime';
   /** BCP 47 locale for formatting. Uses the runtime default when omitted. */
   locale?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<time>` element. */
-  ref?: Ref<HTMLTimeElement>;
 };
 
 const DIVISIONS: Array<{ amount: number; unit: Intl.RelativeTimeFormatUnit }> = [
@@ -66,6 +62,7 @@ export function Timestamp({
   locale,
   className,
   ref,
+  ...rest
 }: TimestampProps): JSX.Element {
   const target = date instanceof Date ? date : new Date(date);
   const text =
@@ -74,6 +71,7 @@ export function Timestamp({
     <time
       dateTime={target.toISOString()}
       title={formatAbsolute(target, 'datetime', locale)}
+      {...rest}
       ref={ref}
       {...mergeProps(textBlock({ size: 'sm', tone: 'secondary' }), className)}
     >

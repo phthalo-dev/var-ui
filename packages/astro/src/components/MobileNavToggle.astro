@@ -1,15 +1,16 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { icon } from '@var-ui/core/components/icon';
 import { mobileNav } from '@var-ui/core/components/mobileNav';
 import { svg as menuSvg } from '@var-ui/icons/glyphs/menu';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'button'>, 'class:list'> & {
   label?: string;
   className?: string;
 };
 
-const { label = 'Open navigation', className } = Astro.props;
+const { label = 'Open navigation', className, ...rest } = Astro.props;
 const s = mobileNav();
 const hasIcon = Astro.slots.has('default');
 const iconRecipe = mergeProps(icon({ size: 'md' }));
@@ -17,6 +18,7 @@ const iconRecipe = mergeProps(icon({ size: 'md' }));
 
 <button
   type="button"
+  {...rest}
   data-var-ui-mobile-nav-toggle
   aria-label={label}
   aria-expanded="false"

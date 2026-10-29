@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import type { VariantOptions } from 'typestyles';
 import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
@@ -6,7 +7,7 @@ import { mergeProps } from '../utils';
 
 type ToastPlacement = VariantOptions<typeof toastPlacement>;
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   /** Screen corner the region anchors to. @default bottom-end */
   placement?: ToastPlacement;
   /** Maximum number of toasts visible at once. @default 3 */
@@ -14,11 +15,12 @@ type Props = {
   className?: string;
 };
 
-const { placement = 'bottom-end', maxVisible = 3, className } = Astro.props;
+const { placement = 'bottom-end', maxVisible = 3, className, ...rest } = Astro.props;
 const region = toastRecipe({ placement });
 ---
 
 <div
+  {...rest}
   data-var-ui-toast-region
   data-max-visible={maxVisible}
   {...mergeProps(region.region, className)}

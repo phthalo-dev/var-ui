@@ -1,9 +1,9 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { toolbar } from '@var-ui/core/components/toolbar';
 import type { ToolbarVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type ToolbarProps = {
+export type ToolbarProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role'> & {
   /** Content aligned to the start (leading) edge. */
   startContent?: ReactNode;
   /** Content centered between the start and end slots; forces a grid layout. */
@@ -16,10 +16,6 @@ export type ToolbarProps = {
   size?: NonNullable<ToolbarVariantProps['size']>;
   /** Layout axis. @default horizontal */
   orientation?: NonNullable<ToolbarVariantProps['orientation']>;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -46,12 +42,14 @@ export function Toolbar({
   orientation = 'horizontal',
   className,
   ref,
+  ...rest
 }: ToolbarProps): JSX.Element {
   const layout = centerContent != null ? 'grid' : 'flex';
   const s = toolbar({ size, orientation, layout });
 
   return (
     <div
+      {...rest}
       ref={ref}
       role="toolbar"
       aria-label={label}

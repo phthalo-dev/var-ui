@@ -251,7 +251,7 @@ export const layoutContent = typestyles.recipe({
 export const layoutPanel = typestyles.recipe({
   name: 'layout-panel',
   layer: 'components',
-  slots: ['panel', 'overlay', 'overlayBackdrop'],
+  slots: ['panel', 'overlay', 'overlayBackdrop', 'overlayDialog'],
   variants: {
     isScrollable: zoneScrollable,
     hasDivider: panelDivider,
@@ -299,6 +299,9 @@ export const layoutPanel = typestyles.recipe({
               paddingInlineEnd: shell.padding.inner.x.var,
             },
           },
+        },
+        overlayDialog: {
+          display: 'contents',
         },
         overlayBackdrop: {
           position: 'fixed',

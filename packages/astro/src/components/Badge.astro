@@ -1,13 +1,14 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { badge } from '@var-ui/core/components/badge';
 import type { BadgeVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends BadgeVariantProps {
+interface Props extends HTMLAttributes<'span'>, BadgeVariantProps {
   className?: string;
 }
 
-const { tone = 'neutral', appearance = 'subtle', className } = Astro.props;
+const { tone = 'neutral', appearance = 'subtle', className, ...rest } = Astro.props;
 const rp = mergeProps(badge({ tone, appearance }), className);
 ---
-<span {...rp}><slot /></span>
+<span {...rest} {...rp}><slot /></span>

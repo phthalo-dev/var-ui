@@ -1,12 +1,8 @@
-import type { HTMLAttributes, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { buttonGroup } from '@var-ui/core/components/buttonGroup';
-import { cx } from 'typestyles';
+import { mergeProps } from 'typestyles';
 
-export type ButtonGroupProps = HTMLAttributes<HTMLDivElement> & {
-  children: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type ButtonGroupProps = ComponentPropsWithRef<'div'>;
 
 /**
  * Visually connects adjacent buttons with shared borders.
@@ -22,7 +18,7 @@ export type ButtonGroupProps = HTMLAttributes<HTMLDivElement> & {
 export function ButtonGroup({ className, children, ref, ...props }: ButtonGroupProps): JSX.Element {
   const g = buttonGroup();
   return (
-    <div {...props} className={cx(g.root, className)} role="group" ref={ref}>
+    <div role="group" {...props} {...mergeProps(g.root, className)} ref={ref}>
       {children}
     </div>
   );

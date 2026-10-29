@@ -1,35 +1,28 @@
-import type { JSX, ReactNode, Ref } from 'react';
-import { Button as AriaButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
-import { button } from '@var-ui/core/components/button';
-import type { ButtonVariantProps, IconName } from '@var-ui/core';
+import type { JSX, ReactNode } from 'react';
+import type { IconName } from '@var-ui/core';
 import { Icon } from '../icons';
-import { mergeProps } from 'typestyles';
+import { Button, type ButtonAsButtonProps } from './Button';
 
-export type IconButtonProps = Omit<RACButtonProps, 'className' | 'children'> & {
+export type IconButtonProps = Omit<ButtonAsButtonProps, 'children' | 'layout' | 'href'> & {
   'aria-label': string;
+  /**
+   * Icon to render. Note: this shadows the native `<button name>` attribute,
+   * which is therefore not reachable through IconButton.
+   */
   name: IconName;
-  className?: string;
   icon?: ReactNode;
   'data-mirror'?: boolean | '';
-  /** Ref to the underlying `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
-} & Omit<ButtonVariantProps, 'layout'>;
+};
 
 export function IconButton({
   name,
   icon,
-  tone,
-  appearance,
   size = 'md',
-  elevated,
-  className,
   'data-mirror': dataMirror,
-  ref,
   ...props
 }: IconButtonProps): JSX.Element {
-  const styles = button({ tone, appearance, size, layout: 'icon', elevated });
   return (
-    <AriaButton {...props} {...mergeProps(styles, className)} ref={ref}>
+    <Button {...props} size={size} layout="icon">
       {icon ?? (
         <Icon
           name={name}
@@ -37,6 +30,6 @@ export function IconButton({
           data-mirror={dataMirror}
         />
       )}
-    </AriaButton>
+    </Button>
   );
 }

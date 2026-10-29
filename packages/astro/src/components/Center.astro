@@ -1,14 +1,15 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { center } from '@var-ui/core/components/center';
 import type { CenterVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'div'> & {
   inline?: NonNullable<CenterVariantProps['inline']>;
   className?: string;
 };
 
-const { inline = false, className } = Astro.props;
+const { inline = false, className, ...rest } = Astro.props;
 const rp = mergeProps(center({ inline }), className);
 ---
-<div {...rp}><slot /></div>
+<div {...rest} {...rp}><slot /></div>

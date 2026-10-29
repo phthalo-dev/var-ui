@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Children, createContext, useContext, useMemo, useState } from 'react';
 import { button } from '@var-ui/core/components/button';
 import { descriptionList as descriptionListStyles } from '@var-ui/core/components/descriptionList';
@@ -17,25 +17,23 @@ export type DescriptionListItemData = {
   icon?: IconName | Exclude<ReactNode, string>;
 };
 
-export type DescriptionListProps = {
+export type DescriptionListProps = Omit<ComponentPropsWithRef<'dl'>, 'children' | 'title'> & {
   columns?: NonNullable<DescriptionListVariantProps['columns']> | number;
   labelPosition?: NonNullable<DescriptionListVariantProps['labelPosition']>;
   maxItems?: number;
   title?: ReactNode;
   items?: DescriptionListItemData[];
   children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<dl>` element. */
-  ref?: Ref<HTMLDListElement>;
+  /** Label of the expand button when `maxItems` truncates. @default 'Show more' */
+  showMoreLabel?: ReactNode;
+  /** Label of the collapse button. @default 'Show less' */
+  showLessLabel?: ReactNode;
 };
 
-export type DescriptionListItemProps = {
+export type DescriptionListItemProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   label: string;
   children?: ReactNode;
   icon?: IconName | Exclude<ReactNode, string>;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 type DescriptionListStyleSlots = ReturnType<typeof descriptionListStyles>;
@@ -71,12 +69,13 @@ function DescriptionListItemContent({
   icon,
   className,
   ref,
+  ...rest
 }: DescriptionListItemProps): JSX.Element {
   const { styles: s } = useDescriptionListContext();
   const iconNode = renderDescriptionListIcon(icon);
 
   return (
-    <div {...mergeProps(s.item, className)} ref={ref}>
+    <div {...rest} {...mergeProps(s.item, className)} ref={ref}>
       <dt {...mergeProps(s.term)}>
         {iconNode}
         {iconNode != null ? ' ' : null}
@@ -104,8 +103,12 @@ export function DescriptionList({
   title,
   items,
   children,
+  showMoreLabel = 'Show more',
+  showLessLabel = 'Show less',
   className,
+  style,
   ref,
+  ...rest
 }: DescriptionListProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const resolvedLabelPosition = labelPosition ?? (columns === 'single' ? 'start' : 'top');
@@ -132,7 +135,12 @@ export function DescriptionList({
 
   return (
     <DescriptionListContext.Provider value={{ styles: s }}>
-      <dl {...mergeProps(s.root, className)} style={rootStyle} ref={ref}>
+      <dl
+        {...rest}
+        {...mergeProps(s.root, className)}
+        style={rootStyle ? { ...style, ...rootStyle } : style}
+        ref={ref}
+      >
         {title != null ? <div {...mergeProps(s.title)}>{title}</div> : null}
         {visibleContent}
         {isCollapsible ? (
@@ -144,7 +152,7 @@ export function DescriptionList({
             )}
             onClick={() => setExpanded((value) => !value)}
           >
-            {expanded ? 'Show less' : 'Show more'}
+            {expanded ? showLessLabel : showMoreLabel}
           </button>
         ) : null}
       </dl>
@@ -159,9 +167,10 @@ export function DescriptionListItem({
   icon,
   className,
   ref,
+  ...rest
 }: DescriptionListItemProps): JSX.Element {
   return (
-    <DescriptionListItemContent label={label} icon={icon} className={className} ref={ref}>
+    <DescriptionListItemContent {...rest} label={label} icon={icon} className={className} ref={ref}>
       {children}
     </DescriptionListItemContent>
   );
