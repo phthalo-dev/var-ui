@@ -22,7 +22,7 @@ describe('FileTrigger', () => {
     expect(screen.getByRole('button', { name: 'Choose images' })).toBeTruthy();
     expect(input.tabIndex).toBe(-1);
     expect(input.getAttribute('aria-hidden')).toBe('true');
-    expect(input.hidden || input.style.clip !== '').toBe(true);
+    expect(input.className).toContain('visually-hidden');
   });
 
   it('opens the file picker when the button is activated', async () => {

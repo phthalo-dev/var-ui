@@ -1,6 +1,13 @@
-import type { ChangeEvent, JSX, Ref } from 'react';
-import { useEffect, useId, useState } from 'react';
-import { DialogTrigger, Label, Popover as AriaPopover, Pressable } from 'react-aria-components';
+import type {
+  ChangeEvent,
+  ComponentPropsWithRef,
+  CSSProperties,
+  FocusEvent,
+  JSX,
+  Ref,
+} from 'react';
+import { useEffect, useState } from 'react';
+import { DialogTrigger, Popover as AriaPopover, Pressable } from 'react-aria-components';
 import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps } from '@var-ui/core';
@@ -11,15 +18,32 @@ import { ColorPicker } from './ColorPicker';
 import type { ColorPickerProps } from './ColorPicker';
 import type { FieldMeta } from './Field';
 import { mergeProps } from 'typestyles';
+import { FieldFrame, useFieldFrame } from './FieldFrame';
+import { useControlSize } from '../internal/controlSizeContext';
 
-export type ColorInputProps = FieldMeta &
+export type ColorInputProps = Omit<
+  ComponentPropsWithRef<'input'>,
+  | 'value'
+  | 'defaultValue'
+  | 'onChange'
+  | 'size'
+  | 'type'
+  | 'className'
+  | 'style'
+  | 'ref'
+  | 'children'
+  | 'disabled'
+  | 'required'
+  | 'readOnly'
+> &
+  FieldMeta &
   Pick<ColorPickerProps, 'swatches' | 'swatchesPerRow' | 'withAlpha'> & {
     /** Controlled hex color value (e.g. `#6366f1`). */
     value?: string;
     /** Uncontrolled initial hex color. */
     defaultValue?: string;
     onChange?: (value: string) => void;
-    placeholder?: string;
+    /** Control density. Falls back to the surrounding control size, then `md`. */
     size?: NonNullable<ColorFieldVariantProps['size']>;
     /**
      * `field` shows the hex input beside the swatch. `swatch` renders only the
@@ -32,17 +56,21 @@ export type ColorInputProps = FieldMeta &
      * @default 'Open color picker'
      */
     swatchLabel?: string;
+    /** Marks the field invalid; defaults to whether `errorMessage` is set. */
+    invalid?: boolean;
     isDisabled?: boolean;
     isRequired?: boolean;
+    /** Additional CSS class names merged onto the root element. */
     className?: string;
-    name?: string;
+    /** Inline style for the root element. */
+    style?: CSSProperties;
     /**
      * Element the picker popover portals into instead of `document.body`.
      * Needed when a subtree renders under a different theme than the page ambient.
      */
     portalContainer?: Element;
-    /** Ref to the underlying `<div>` element. */
-    ref?: Ref<HTMLDivElement>;
+    /** Ref to the hex `<input>` (not rendered when `appearance="swatch"`). */
+    ref?: Ref<HTMLInputElement>;
   };
 
 /**
@@ -60,26 +88,34 @@ export function ColorInput({
   swatches,
   swatchesPerRow,
   withAlpha,
-  size = 'md',
+  size,
   appearance = 'field',
   swatchLabel = 'Open color picker',
+  invalid,
   isDisabled,
   isRequired,
   className,
+  style,
   name,
   portalContainer,
   ref,
+  id,
+  'aria-describedby': userDescribedBy,
+  onBlur,
+  ...rest
 }: ColorInputProps): JSX.Element {
-  const cf = colorField({ size, appearance });
+  const contextSize = useControlSize();
+  const cf = colorField({ size: size ?? contextSize ?? 'md', appearance });
   const isField = appearance === 'field';
   const p = popover();
   const { style: layerStyle } = useLayer();
-  const inputId = useId();
-  const descriptionId = useId();
-  const errorId = useId();
-  const describedBy =
-    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
-    undefined;
+  const frame = useFieldFrame({
+    description,
+    errorMessage,
+    invalid,
+    id,
+    describedBy: userDescribedBy,
+  });
   const { color, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
   const [textValue, setTextValue] = useState(color);
   const swatchColor = isValidHex(color) ? normalizeHex(color) : normalizeHex(defaultValue);
@@ -96,7 +132,8 @@ export function ColorInput({
     }
   };
 
-  const handleTextBlur = () => {
+  const handleTextBlur = (event: FocusEvent<HTMLInputElement>) => {
+    onBlur?.(event);
     if (isValidHex(textValue)) {
       setTextValue(normalizeHex(textValue));
     } else {
@@ -110,12 +147,17 @@ export function ColorInput({
   };
 
   return (
-    <div {...mergeProps(cf.root, className)} ref={ref}>
-      {isField && label ? (
-        <Label {...mergeProps(cf.label)} htmlFor={inputId}>
-          {label}
-        </Label>
-      ) : null}
+    <FieldFrame
+      slots={cf}
+      frame={frame}
+      chrome={isField}
+      label={label}
+      description={description}
+      errorMessage={errorMessage}
+      errorRole="alert"
+      className={className}
+      style={style}
+    >
       <div {...mergeProps(cf.inputWrapper)} data-disabled={isDisabled || undefined}>
         <DialogTrigger>
           <Pressable>
@@ -150,8 +192,12 @@ export function ColorInput({
         </DialogTrigger>
         {isField ? (
           <input
-            id={inputId}
+            spellCheck={false}
+            autoComplete="off"
+            {...rest}
             {...mergeProps(cf.input)}
+            {...frame.controlProps}
+            ref={ref}
             type="text"
             name={name}
             value={textValue}
@@ -159,10 +205,6 @@ export function ColorInput({
             disabled={isDisabled}
             required={isRequired}
             aria-required={isRequired || undefined}
-            aria-invalid={errorMessage ? true : undefined}
-            aria-describedby={describedBy}
-            spellCheck={false}
-            autoComplete="off"
             onChange={handleTextChange}
             onBlur={handleTextBlur}
           />
@@ -170,16 +212,6 @@ export function ColorInput({
           <input type="hidden" name={name} value={color} />
         ) : null}
       </div>
-      {isField && description ? (
-        <p {...mergeProps(cf.description)} id={descriptionId}>
-          {description}
-        </p>
-      ) : null}
-      {isField && errorMessage ? (
-        <p {...mergeProps(cf.error)} id={errorId} role="alert">
-          {errorMessage}
-        </p>
-      ) : null}
-    </div>
+    </FieldFrame>
   );
 }

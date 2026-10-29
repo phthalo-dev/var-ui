@@ -1,19 +1,10 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { inlineCode } from '@var-ui/core/components/inlineCode';
 import { mergeProps } from 'typestyles';
 
-export type CodeProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<code>` element. */
-  ref?: Ref<HTMLElement>;
-};
+export type CodeProps = ComponentPropsWithRef<'code'>;
 
 /** Inline code snippet styling. */
-export function Code({ children, className, ref }: CodeProps): JSX.Element {
-  return (
-    <code {...mergeProps(inlineCode(), className)} ref={ref}>
-      {children}
-    </code>
-  );
+export function Code({ className, ref, ...rest }: CodeProps): JSX.Element {
+  return <code {...rest} {...mergeProps(inlineCode(), className)} ref={ref} />;
 }

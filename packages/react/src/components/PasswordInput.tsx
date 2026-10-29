@@ -1,66 +1,79 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { useState } from 'react';
-import { FieldError, Input, Label, TextField as AriaTextField } from 'react-aria-components';
+import { Input, TextField as AriaTextField } from 'react-aria-components';
 import { passwordField } from '@var-ui/core/components/passwordField';
 import type { PasswordFieldVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import type { BaseTextFieldProps } from './TextField';
+import { RacFieldFrame, racInvalid } from './FieldFrame';
+import type { BaseTextFieldProps, RacTextFieldReplacedKeys } from './TextField';
 import { mergeProps } from 'typestyles';
 import { mergeRacClassName } from '../internal/racClassName';
+import { useControlSize } from '../internal/controlSizeContext';
+import { splitRacFieldProps } from '../internal/racFieldProps';
 
-export type PasswordInputProps = BaseTextFieldProps & {
-  placeholder?: string;
-  size?: NonNullable<PasswordFieldVariantProps['size']>;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type PasswordInputProps = Omit<
+  ComponentPropsWithRef<'input'>,
+  RacTextFieldReplacedKeys | 'type'
+> &
+  BaseTextFieldProps & {
+    /** Control density. Falls back to the surrounding control size, then `md`. */
+    size?: NonNullable<PasswordFieldVariantProps['size']>;
+    /**
+     * Accessible name of the visibility toggle while the password is hidden.
+     * @default 'Show password'
+     */
+    showPasswordLabel?: string;
+    /**
+     * Accessible name of the visibility toggle while the password is shown.
+     * @default 'Hide password'
+     */
+    hidePasswordLabel?: string;
+  };
 
 /**
  * Password field with show/hide visibility toggle. Mantine `PasswordInput`
- * equivalent built on the `passwordField` recipe.
+ * equivalent built on the `passwordField` recipe. `className`/`style` style
+ * the root; `ref` and every other native attribute reach the `<input>`.
  */
 export function PasswordInput({
   label,
   description,
   errorMessage,
-  placeholder,
-  size = 'md',
-  isDisabled,
+  size,
+  showPasswordLabel = 'Show password',
+  hidePasswordLabel = 'Hide password',
   className,
-  ref,
+  style,
   ...props
 }: PasswordInputProps): JSX.Element {
-  const pf = passwordField({ size });
+  const contextSize = useControlSize();
+  const pf = passwordField({ size: size ?? contextSize ?? 'md' });
   const [visible, setVisible] = useState(false);
+  const [rootProps, inputProps] = splitRacFieldProps(props);
+  const isDisabled = rootProps.isDisabled;
 
   return (
     <AriaTextField
-      {...props}
-      isDisabled={isDisabled}
-      isInvalid={errorMessage ? true : undefined}
+      {...rootProps}
+      isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
       className={mergeRacClassName(pf.root, className)}
-      ref={ref}
+      style={style}
     >
-      {label ? <Label {...mergeProps(pf.label)}>{label}</Label> : null}
-      <div {...mergeProps(pf.inputWrapper)} data-disabled={isDisabled || undefined}>
-        <Input
-          {...mergeProps(pf.input)}
-          type={visible ? 'text' : 'password'}
-          placeholder={placeholder}
-        />
-        <button
-          type="button"
-          {...mergeProps(pf.visibilityToggle)}
-          onClick={() => setVisible((v) => !v)}
-          disabled={isDisabled}
-          aria-label={visible ? 'Hide password' : 'Show password'}
-          aria-pressed={visible}
-        >
-          <Icon name={visible ? 'eyeOff' : 'eye'} size="sm" />
-        </button>
-      </div>
-      {description ? <p {...mergeProps(pf.description)}>{description}</p> : null}
-      <FieldError {...mergeProps(pf.error)}>{errorMessage ?? ''}</FieldError>
+      <RacFieldFrame slots={pf} label={label} description={description} errorMessage={errorMessage}>
+        <div {...mergeProps(pf.inputWrapper)} data-disabled={isDisabled || undefined}>
+          <Input {...inputProps} {...mergeProps(pf.input)} type={visible ? 'text' : 'password'} />
+          <button
+            type="button"
+            {...mergeProps(pf.visibilityToggle)}
+            onClick={() => setVisible((v) => !v)}
+            disabled={isDisabled}
+            aria-label={visible ? hidePasswordLabel : showPasswordLabel}
+            aria-pressed={visible}
+          >
+            <Icon name={visible ? 'eyeOff' : 'eye'} size="sm" />
+          </button>
+        </div>
+      </RacFieldFrame>
     </AriaTextField>
   );
 }

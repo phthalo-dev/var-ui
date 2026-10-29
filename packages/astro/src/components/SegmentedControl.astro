@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { SegmentedControlVariantProps } from '@var-ui/core';
@@ -11,7 +12,7 @@ type SegmentOption = {
   "aria-label"?: string;
 };
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
   /** Segment definitions. Render rich content (e.g. icons) via a named slot matching each `id`. */
   options: SegmentOption[];
   /** Initially selected segment id. Defaults to the first option. */
@@ -28,6 +29,7 @@ const {
   size = "md",
   className,
   "aria-label": ariaLabel,
+  ...rest
 } = Astro.props;
 
 const s = segmentedControl({ size });
@@ -45,6 +47,7 @@ const optionContent = await Promise.all(
 
 <div
   role="group"
+  {...rest}
   aria-label={ariaLabel}
   data-var-ui-segmented-control
   {...mergeProps(s.root, className)}

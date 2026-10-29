@@ -1,4 +1,11 @@
-import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  JSX,
+  ReactElement,
+  ReactNode,
+  Ref,
+} from 'react';
 import { Children, createContext, useCallback, useContext, useMemo } from 'react';
 import { overflowList as overflowListStyles } from '@var-ui/core/components/overflowList';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
@@ -20,7 +27,10 @@ const GAP_PX: Record<OverflowGapToken, number> = {
   xl: 48,
 };
 
-export type OverflowListProps<T = unknown> = {
+export type OverflowListProps<T = unknown> = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'ref'
+> & {
   items?: T[];
   children?: ReactNode;
   renderItem?: (item: T, index: number) => ReactNode;
@@ -30,17 +40,11 @@ export type OverflowListProps<T = unknown> = {
   maxVisible?: number;
   fillParent?: NonNullable<OverflowListVariantProps['fillParent']>;
   gap?: NonNullable<OverflowListVariantProps['gap']> | number;
-  className?: string;
   /** Ref to the visible root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };
 
-export type OverflowListItemProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<span>` element. */
-  ref?: Ref<HTMLSpanElement>;
-};
+export type OverflowListItemProps = ComponentPropsWithRef<'span'>;
 
 type OverflowListStyleSlots = ReturnType<typeof overflowListStyles>;
 
@@ -71,13 +75,9 @@ const measureRowStyle: CSSProperties = {
 };
 
 /** Row within an `OverflowList` — applies the recipe's `item` slot styling. */
-export function OverflowListItem({ children, className, ref }: OverflowListItemProps): JSX.Element {
+export function OverflowListItem({ className, ref, ...rest }: OverflowListItemProps): JSX.Element {
   const { styles: s } = useOverflowListContext();
-  return (
-    <span {...mergeProps(s.item, className)} ref={ref}>
-      {children}
-    </span>
-  );
+  return <span {...rest} {...mergeProps(s.item, className)} ref={ref} />;
 }
 
 /**
@@ -101,7 +101,9 @@ export function OverflowList<T = unknown>({
   fillParent = false,
   gap = 'md',
   className,
+  style,
   ref,
+  ...rest
 }: OverflowListProps<T>): JSX.Element {
   const isItemsMode = items != null;
   const childArray = useMemo(
@@ -156,7 +158,12 @@ export function OverflowList<T = unknown>({
 
   return (
     <OverflowListContext.Provider value={{ styles: s }}>
-      <div {...mergeProps(s.root, className)} style={rootStyle} ref={setContainer}>
+      <div
+        {...rest}
+        {...mergeProps(s.root, className)}
+        style={rootStyle ? { ...style, ...rootStyle } : style}
+        ref={setContainer}
+      >
         {visibleItems.map((entry, index) => renderEntry(entry, index))}
         {hiddenItems.length > 0 ? (
           <span {...mergeProps(s.overflow)}>{renderOverflow(hiddenForCallback)}</span>

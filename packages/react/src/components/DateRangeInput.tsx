@@ -2,54 +2,38 @@ import type { JSX, Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
   Button,
-  CalendarCell,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHeader,
-  CalendarHeaderCell,
   DateInput as AriaDateInput,
   DateRangePicker as AriaDateRangePicker,
   DateSegment,
-  Dialog,
-  FieldError,
   Group,
-  Heading,
-  Label,
-  Popover,
-  RangeCalendar,
-  Text,
   type DateRangePickerProps as RACDateRangePickerProps,
 } from 'react-aria-components';
 import { dateRangeInput } from '@var-ui/core/components/dateRangeInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
+import type { FieldMeta } from './Field';
+import { RacFieldFrame, racInvalid } from './FieldFrame';
+import { CalendarPopover } from '../internal/CalendarBody';
+import { splitDataAttributes } from '../internal/dateFieldProps';
+import { mergeRacClassName } from '../internal/racClassName';
 
 export type DateRangeInputProps<T extends DateValue = DateValue> = Omit<
   RACDateRangePickerProps<T>,
   'children'
-> & {
-  /** Field label rendered above the segmented start/end groups. */
-  label?: string;
-  /** Helper text shown below the control when there is no error. */
-  description?: string;
-  /** Validation message; when set, the field is shown in an error state. */
-  errorMessage?: string;
-  className?: string;
-  /** Ref to the underlying picker `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+> &
+  FieldMeta & {
+    /** Ref to the start-date segmented input (the field's primary control). */
+    ref?: Ref<HTMLDivElement>;
+  };
 
 /**
  * A start-date/end-date field with segmented text entry for both, plus a
  * trigger button that opens a popover range-calendar. Wraps RAC's
- * `DateRangePicker` + `RangeCalendar`.
+ * `DateRangePicker`. `className`/`style` style the root; `ref` and `data-*`
+ * attributes reach the start segmented input.
  *
  * ```tsx
- * <DateRangeInput
- *   label="Trip dates"
- *   value={value}
- *   onChange={setValue}
- * />
+ * <DateRangeInput label="Trip dates" value={value} onChange={setValue} />
  * ```
  */
 export function DateRangeInput<T extends DateValue = DateValue>({
@@ -61,54 +45,39 @@ export function DateRangeInput<T extends DateValue = DateValue>({
   ...props
 }: DateRangeInputProps<T>): JSX.Element {
   const dr = dateRangeInput();
+  const [rootProps, dataProps] = splitDataAttributes(props);
   return (
-    <AriaDateRangePicker {...props} ref={ref} {...mergeProps(dr.root, className)}>
-      {label ? <Label {...mergeProps(dr.label)}>{label}</Label> : null}
-      <Group {...mergeProps(dr.group)}>
-        <AriaDateInput slot="start">
-          {(segment) => <DateSegment segment={segment} {...mergeProps(dr.segment)} />}
-        </AriaDateInput>
-        <span {...mergeProps(dr.separator)}>–</span>
-        <AriaDateInput slot="end">
-          {(segment) => <DateSegment segment={segment} {...mergeProps(dr.segment)} />}
-        </AriaDateInput>
-        <Button {...mergeProps(dr.trigger)}>
-          <Icon name="chevronDown" size="sm" />
-        </Button>
-      </Group>
-      {description ? (
-        <Text slot="description" {...mergeProps(dr.description)}>
-          {description}
-        </Text>
-      ) : null}
-      <FieldError {...mergeProps(dr.error)}>{errorMessage ?? ''}</FieldError>
-      <Popover {...mergeProps(dr.popover)}>
-        <Dialog>
-          <RangeCalendar>
-            <header {...mergeProps(dr.calendarHeader)}>
-              <Button slot="previous" {...mergeProps(dr.calendarNavButton)}>
-                <Icon name="chevronLeft" size="sm" />
-              </Button>
-              <Heading {...mergeProps(dr.calendarHeading)} />
-              <Button slot="next" {...mergeProps(dr.calendarNavButton)}>
-                <Icon name="chevronRight" size="sm" />
-              </Button>
-            </header>
-            <CalendarGrid {...mergeProps(dr.calendarGrid)}>
-              <CalendarGridHeader>
-                {(day) => (
-                  <CalendarHeaderCell {...mergeProps(dr.calendarHeaderCell)}>
-                    {day}
-                  </CalendarHeaderCell>
-                )}
-              </CalendarGridHeader>
-              <CalendarGridBody>
-                {(date) => <CalendarCell date={date} {...mergeProps(dr.calendarCell)} />}
-              </CalendarGridBody>
-            </CalendarGrid>
-          </RangeCalendar>
-        </Dialog>
-      </Popover>
+    <AriaDateRangePicker
+      {...rootProps}
+      isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
+      className={mergeRacClassName(dr.root, className)}
+    >
+      <RacFieldFrame slots={dr} label={label} description={description} errorMessage={errorMessage}>
+        <Group {...mergeProps(dr.group)}>
+          <AriaDateInput slot="start" {...dataProps} ref={ref}>
+            {(segment) => <DateSegment segment={segment} {...mergeProps(dr.segment)} />}
+          </AriaDateInput>
+          <span {...mergeProps(dr.separator)}>–</span>
+          <AriaDateInput slot="end">
+            {(segment) => <DateSegment segment={segment} {...mergeProps(dr.segment)} />}
+          </AriaDateInput>
+          <Button {...mergeProps(dr.trigger)}>
+            <Icon name="chevronDown" size="sm" />
+          </Button>
+        </Group>
+      </RacFieldFrame>
+      <CalendarPopover
+        range
+        popover={dr.popover}
+        slots={{
+          header: dr.calendarHeader,
+          navButton: dr.calendarNavButton,
+          heading: dr.calendarHeading,
+          grid: dr.calendarGrid,
+          headerCell: dr.calendarHeaderCell,
+          cell: dr.calendarCell,
+        }}
+      />
     </AriaDateRangePicker>
   );
 }

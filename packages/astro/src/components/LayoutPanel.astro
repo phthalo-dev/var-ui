@@ -3,14 +3,14 @@ import type { HTMLAttributes } from 'astro/types';
 import { layoutPanel } from '@var-ui/core/components/layout';
 import type { LayoutPadding, LayoutPanelVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   width?: number | string;
   hasDivider?: boolean;
   isScrollable?: boolean;
   padding?: LayoutPadding;
   side?: 'start' | 'end';
-  role?: NonNullable<HTMLAttributes<'div'>['role']>;
   label?: string;
   className?: string;
 };
@@ -36,19 +36,22 @@ const {
   role,
   label,
   className,
+  style: styleProp,
+  ...rest
 } = Astro.props;
 const s = layoutPanel({ isScrollable, hasDivider, padding: toZonePaddingVariant(padding) });
 const resolvedRole = role ?? (label != null ? 'region' : undefined);
 const widthValue = toCssSize(width);
-const style = widthValue != null ? { width: widthValue } : undefined;
+const style = mergeInlineStyle(widthValue != null ? { width: widthValue } : undefined, styleProp);
 ---
 
 <div
+  aria-label={label}
+  {...rest}
   {...mergeProps(s.panel, className)}
   data-side={side}
   style={style}
   role={resolvedRole}
-  aria-label={label}
 >
   <slot />
 </div>

@@ -1,35 +1,33 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { fileTree } from '@var-ui/core/components/fileTree';
 import { mergeProps } from 'typestyles';
 
-export type FileTreeProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type FileTreeProps = ComponentPropsWithRef<'div'>;
 
-function FileTreeRoot({ children, className, ref }: FileTreeProps): JSX.Element {
+function FileTreeRoot({ children, className, ref, ...rest }: FileTreeProps): JSX.Element {
   const t = fileTree();
   return (
-    <div {...mergeProps(t.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(t.root, className)} ref={ref}>
       <ul {...mergeProps(t.list)}>{children}</ul>
     </div>
   );
 }
 
-export type FileTreeFolderProps = {
+export type FileTreeFolderProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
   name: string;
   children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
-function FileTreeFolder({ name, children, className, ref }: FileTreeFolderProps): JSX.Element {
+function FileTreeFolder({
+  name,
+  children,
+  className,
+  ref,
+  ...rest
+}: FileTreeFolderProps): JSX.Element {
   const t = fileTree();
   return (
-    <li {...mergeProps(t.item, className)} ref={ref}>
+    <li {...rest} {...mergeProps(t.item, className)} ref={ref}>
       <span {...mergeProps(t.row)}>
         <span {...mergeProps(t.folder)}>{name}</span>
       </span>
@@ -38,17 +36,14 @@ function FileTreeFolder({ name, children, className, ref }: FileTreeFolderProps)
   );
 }
 
-export type FileTreeFileProps = {
+export type FileTreeFileProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
   name: string;
-  className?: string;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
-function FileTreeFile({ name, className, ref }: FileTreeFileProps): JSX.Element {
+function FileTreeFile({ name, className, ref, ...rest }: FileTreeFileProps): JSX.Element {
   const t = fileTree();
   return (
-    <li {...mergeProps(t.item, className)} ref={ref}>
+    <li {...rest} {...mergeProps(t.item, className)} ref={ref}>
       <span {...mergeProps(t.row)}>
         <span {...mergeProps(t.file)}>{name}</span>
       </span>

@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useContext } from 'react';
 import type { Key, Selection } from 'react-aria-components';
 import type { ControlSize, IconName } from '@var-ui/core';
@@ -13,7 +13,10 @@ import { SegmentedControl, type SegmentedControlOption } from './SegmentedContro
 
 export type ColorModeToggleAppearance = 'icons' | 'labels' | 'iconsAndLabels';
 
-export type ColorModeToggleProps = {
+export type ColorModeToggleProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'onChange' | 'color'
+> & {
   /**
    * When true, includes a System segment alongside Light and Dark.
    * @default false
@@ -34,27 +37,38 @@ export type ColorModeToggleProps = {
    */
   resolvedColorMode?: ResolvedColorMode;
   size?: ControlSize;
-  className?: string;
+  /**
+   * Text of each segment (visible with `labels`, the accessible name with `icons`).
+   * @default { light: 'Light', dark: 'Dark', system: 'System' }
+   */
+  labels?: Partial<Record<ColorMode, string>>;
   /** Accessible name for the control group. @default 'Color mode' */
   'aria-label'?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-const MODE_META: Record<ColorMode, { label: string; icon: IconName }> = {
-  light: { label: 'Light', icon: 'colorModeLight' },
-  dark: { label: 'Dark', icon: 'colorModeDark' },
-  system: { label: 'System', icon: 'colorModeSystem' },
+const MODE_ICONS: Record<ColorMode, IconName> = {
+  light: 'colorModeLight',
+  dark: 'colorModeDark',
+  system: 'colorModeSystem',
 };
 
-function modeLabel(mode: ColorMode, appearance: ColorModeToggleAppearance): ReactNode {
-  const meta = MODE_META[mode];
-  const icon = <Icon name={meta.icon} />;
-  if (appearance === 'labels') return meta.label;
+const DEFAULT_LABELS: Record<ColorMode, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'System',
+};
+
+function modeLabel(
+  mode: ColorMode,
+  appearance: ColorModeToggleAppearance,
+  text: string,
+): ReactNode {
+  const icon = <Icon name={MODE_ICONS[mode]} />;
+  if (appearance === 'labels') return text;
   if (appearance === 'iconsAndLabels') {
     return (
       <>
-        {icon} {meta.label}
+        {icon} {text}
       </>
     );
   }
@@ -64,15 +78,13 @@ function modeLabel(mode: ColorMode, appearance: ColorModeToggleAppearance): Reac
 function buildOptions(
   modes: ColorMode[],
   appearance: ColorModeToggleAppearance,
+  labels: Record<ColorMode, string>,
 ): SegmentedControlOption[] {
-  return modes.map((mode) => {
-    const meta = MODE_META[mode];
-    return {
-      id: mode,
-      label: modeLabel(mode, appearance),
-      ...(appearance === 'icons' ? { 'aria-label': meta.label } : {}),
-    };
-  });
+  return modes.map((mode) => ({
+    id: mode,
+    label: modeLabel(mode, appearance, labels[mode]),
+    ...(appearance === 'icons' ? { 'aria-label': labels[mode] } : {}),
+  }));
 }
 
 function useColorModeToggleState({
@@ -122,9 +134,11 @@ export function ColorModeToggle({
   onColorModeChange,
   resolvedColorMode: resolvedColorModeProp,
   size = 'md',
+  labels,
   className,
   'aria-label': ariaLabel = 'Color mode',
   ref,
+  ...rest
 }: ColorModeToggleProps): JSX.Element {
   const { colorMode, resolvedColorMode, setColorMode, colorModeReady } = useColorModeToggleState({
     colorMode: colorModeProp,
@@ -146,10 +160,11 @@ export function ColorModeToggle({
 
   return (
     <SegmentedControl
+      {...(rest as object)}
       aria-label={ariaLabel}
       className={className}
       ref={ref}
-      options={buildOptions(modes, appearance)}
+      options={buildOptions(modes, appearance, { ...DEFAULT_LABELS, ...labels })}
       // Avoid selecting `defaultColorMode` for one frame while `storageKey` hydrates —
       // SSR and the first client render both omit selection, then the real preference paints.
       selectedKeys={colorModeReady ? [selectedId] : []}

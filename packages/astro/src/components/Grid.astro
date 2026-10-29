@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { grid } from '@var-ui/core/components/grid';
 import type { GridVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'div'> & {
   columns?: 'auto' | 1 | 2 | 3 | 4;
   gap?: NonNullable<GridVariantProps['gap']>;
   className?: string;
@@ -20,7 +21,7 @@ const columnVariant = {
   NonNullable<GridVariantProps['columns']>
 >;
 
-const { columns = 'auto', gap = 'md', className } = Astro.props;
+const { columns = 'auto', gap = 'md', className, ...rest } = Astro.props;
 const rp = mergeProps(grid({ columns: columnVariant[columns], gap }), className);
 ---
-<div {...rp}><slot /></div>
+<div {...rest} {...rp}><slot /></div>

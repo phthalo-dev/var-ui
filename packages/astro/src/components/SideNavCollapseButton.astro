@@ -1,20 +1,22 @@
 ---
 import { sideNav } from '@var-ui/core/components/sideNav';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'button'>, 'class:list'> & {
   className?: string;
   label?: string;
 };
 
-const { className, label } = Astro.props;
+const { className, label, ...rest } = Astro.props;
 const s = sideNav();
 ---
 
 <button
   type="button"
-  data-var-ui-side-nav-collapse
   aria-label={label ?? 'Collapse navigation'}
+  {...rest}
+  data-var-ui-side-nav-collapse
   {...mergeProps(s.collapseButton, className)}
 >
   <slot />

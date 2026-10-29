@@ -1,8 +1,9 @@
 ---
 import { sideNav } from '@var-ui/core/components/sideNav';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   heading: string;
   headingHref?: string;
   superheading?: string;
@@ -10,11 +11,11 @@ type Props = {
   className?: string;
 };
 
-const { heading, headingHref, superheading, subheading, className } = Astro.props;
+const { heading, headingHref, superheading, subheading, className, ...rest } = Astro.props;
 const s = sideNav();
 ---
 
-<div {...mergeProps(s.headingBar, className)}>
+<div {...rest} {...mergeProps(s.headingBar, className)}>
   {
     headingHref ? (
       <a href={headingHref} {...mergeProps(s.headingBrand)}>

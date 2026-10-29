@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import {
   Button as AriaButton,
   Disclosure,
@@ -30,43 +30,36 @@ function useAccordionContext(): AccordionContextValue {
   return ctx;
 }
 
-export type AccordionProps = AccordionGroupVariantProps & {
-  /** When `single`, only one panel may be open at a time. @default single */
-  type?: 'single' | 'multiple';
-  /** When `type` is `single`, allow closing every panel. @default true */
-  collapsible?: boolean;
-  expandedKeys?: Iterable<Key>;
-  defaultExpandedKeys?: Iterable<Key>;
-  onExpandedChange?: (keys: Set<Key>) => void;
-  isDisabled?: boolean;
-  className?: string;
-  children: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type AccordionItemProps = {
+export type AccordionProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'onChange'> &
+  AccordionGroupVariantProps & {
+    /** When `single`, only one panel may be open at a time. @default single */
+    type?: 'single' | 'multiple';
+    /** When `type` is `single`, allow closing every panel. @default true */
+    collapsible?: boolean;
+    expandedKeys?: Iterable<Key>;
+    defaultExpandedKeys?: Iterable<Key>;
+    onExpandedChange?: (keys: Set<Key>) => void;
+    isDisabled?: boolean;
+    children: ReactNode;
+  };
+
+export type AccordionItemProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'id'> & {
   /** Stable id used in `expandedKeys` / `defaultExpandedKeys`. */
   id: string;
   isDisabled?: boolean;
-  className?: string;
   children: ReactNode;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-export type AccordionTriggerProps = {
+export type AccordionTriggerProps = Omit<ComponentPropsWithRef<'button'>, 'children'> & {
   children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
+  /** Semantic level of the heading wrapping the trigger. @default 3 */
+  headingLevel?: HeadingLevel;
 };
 
-export type AccordionPanelProps = {
+export type AccordionPanelProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 function toKeySet(keys?: Iterable<Key>): Set<Key> {
@@ -118,6 +111,7 @@ export function Accordion({
   className,
   children,
   ref,
+  ...rest
 }: AccordionProps): JSX.Element {
   const group = accordionGroup({ variant: variant ?? 'bordered' });
   const itemVariant: CollapsibleVariant = variant === 'flush' ? 'flush' : 'accordion';
@@ -144,6 +138,7 @@ export function Accordion({
 
   return (
     <DisclosureGroup
+      {...(rest as object)}
       allowsMultipleExpanded={type === 'multiple'}
       expandedKeys={resolvedKeys}
       onExpandedChange={handleExpandedChange}
@@ -163,28 +158,45 @@ function AccordionItem({
   className,
   children,
   ref,
+  ...rest
 }: AccordionItemProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
   return (
-    <Disclosure id={id} isDisabled={isDisabled} {...mergeProps(c.root, className)} ref={ref}>
+    <Disclosure
+      {...(rest as object)}
+      id={id}
+      isDisabled={isDisabled}
+      {...mergeProps(c.root, className)}
+      ref={ref}
+    >
       {children}
     </Disclosure>
   );
 }
 
-function AccordionTrigger({ children, className, ref }: AccordionTriggerProps): JSX.Element {
+function AccordionTrigger({
+  children,
+  headingLevel = 3,
+  className,
+  ref,
+  onKeyDown,
+  ...rest
+}: AccordionTriggerProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
 
   return (
-    <Heading level={3} style={{ margin: 0 }}>
+    <Heading level={headingLevel} {...mergeProps(c.heading)}>
       <AriaButton
+        {...(rest as object)}
         slot="trigger"
         {...mergeProps(c.trigger, className)}
         data-var-ui-accordion-trigger
         ref={ref}
         onKeyDown={(event) => {
+          onKeyDown?.(event);
+          if (event.defaultPrevented) return;
           if (event.key === 'Home') {
             event.preventDefault();
             focusSiblingTrigger(event.currentTarget, 'first');
@@ -209,11 +221,11 @@ function AccordionTrigger({ children, className, ref }: AccordionTriggerProps): 
   );
 }
 
-function AccordionPanel({ children, className, ref }: AccordionPanelProps): JSX.Element {
+function AccordionPanel({ children, className, ref, ...rest }: AccordionPanelProps): JSX.Element {
   const { itemVariant } = useAccordionContext();
   const c = collapsible({ variant: itemVariant });
   return (
-    <DisclosurePanel {...mergeProps(c.panel, className)} ref={ref}>
+    <DisclosurePanel {...(rest as object)} {...mergeProps(c.panel, className)} ref={ref}>
       {children}
     </DisclosurePanel>
   );

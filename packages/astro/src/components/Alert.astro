@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { alert } from '@var-ui/core/components/alert';
 import type { AlertVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'title'> & {
   variant: NonNullable<AlertVariantProps['tone']>;
   appearance?: NonNullable<AlertVariantProps['appearance']>;
   title?: string;
@@ -11,7 +12,11 @@ type Props = {
   className?: string;
 };
 
-const { variant, appearance = alert.defaults.appearance, title, action, className } = Astro.props;
+const { variant, appearance = alert.defaults.appearance, title,
+  action,
+  className,
+  ...rest
+} = Astro.props;
 const a = alert({
   tone: variant,
   appearance,
@@ -21,6 +26,7 @@ const hasIcon = Astro.slots.has('icon');
 ---
 
 <div
+  {...rest}
   {...mergeProps(a.root, className)}
   data-alert
   data-alert-variant={variant}

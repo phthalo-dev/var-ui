@@ -1,13 +1,20 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { aspectRatio } from '@var-ui/core/components/aspectRatio';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'div'> & {
   ratio?: number;
   className?: string;
 };
 
-const { ratio, className } = Astro.props;
+const { ratio, className, style, ...rest } = Astro.props;
+const ratioStyle =
+  ratio != null
+    ? typeof style === 'string'
+      ? [`aspect-ratio: ${ratio}`, style].filter(Boolean).join('; ')
+      : { ...(style && typeof style === 'object' ? style : {}), aspectRatio: String(ratio) }
+    : style;
 const rp = mergeProps(aspectRatio(), className);
 ---
-<div {...rp} style={ratio ? `aspect-ratio: ${ratio}` : undefined}><slot /></div>
+<div {...rest} {...rp} style={ratioStyle}><slot /></div>

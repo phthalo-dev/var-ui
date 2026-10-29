@@ -1,31 +1,44 @@
-import type { JSX } from 'react';
-import { FieldError, Label, TextArea, TextField as AriaTextField } from 'react-aria-components';
+import type { ComponentPropsWithRef, JSX } from 'react';
+import { TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { textAreaField } from '@var-ui/core/components/textAreaField';
-import type { BaseTextFieldProps } from './TextField';
 import { mergeProps } from 'typestyles';
+import { RacFieldFrame, racInvalid } from './FieldFrame';
+import type { BaseTextFieldProps, RacTextFieldReplacedKeys } from './TextField';
 import { mergeRacClassName } from '../internal/racClassName';
+import { splitRacFieldProps } from '../internal/racFieldProps';
 
-export type TextAreaFieldProps = BaseTextFieldProps & {
-  /** Placeholder text shown when the textarea is empty. */
-  placeholder?: string;
-};
+export type TextAreaFieldProps = Omit<ComponentPropsWithRef<'textarea'>, RacTextFieldReplacedKeys> &
+  BaseTextFieldProps;
 
+/**
+ * Multi-line text field with label, description and error. `className`/`style`
+ * style the root; `ref` and every other native attribute reach the `<textarea>`.
+ */
 export function TextAreaField({
   label,
   description,
   errorMessage,
-  placeholder,
   className,
-  ref,
+  style,
   ...props
 }: TextAreaFieldProps): JSX.Element {
   const field = textAreaField();
+  const [rootProps, textAreaProps] = splitRacFieldProps(props);
   return (
-    <AriaTextField {...props} className={mergeRacClassName(field.root, className)} ref={ref}>
-      {label ? <Label {...mergeProps(field.label)}>{label}</Label> : null}
-      <TextArea {...mergeProps(field.input)} placeholder={placeholder} />
-      {description ? <p {...mergeProps(field.description)}>{description}</p> : null}
-      <FieldError {...mergeProps(field.error)}>{errorMessage ?? ''}</FieldError>
+    <AriaTextField
+      {...rootProps}
+      isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
+      className={mergeRacClassName(field.root, className)}
+      style={style}
+    >
+      <RacFieldFrame
+        slots={field}
+        label={label}
+        description={description}
+        errorMessage={errorMessage}
+      >
+        <TextArea {...textAreaProps} {...mergeProps(field.input)} />
+      </RacFieldFrame>
     </AriaTextField>
   );
 }

@@ -7,11 +7,11 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type JSX,
   type MutableRefObject,
   type ReactElement,
   type ReactNode,
-  type Ref,
 } from 'react';
 import {
   Dialog as AriaDialog,
@@ -28,9 +28,11 @@ import {
   createOverlayChangeDetails,
   inferOverlayCloseReason,
   mergeOverlayChild,
+  useMergedRef,
   useOverlayPresence,
   usePositionerVars,
   type OverlayOpenChangeHandler,
+  type OverlayTriggerProps,
   type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
@@ -50,42 +52,25 @@ export type PopoverRootProps = {
 /** Alias for docs and consumers referring to the root popover props. */
 export type PopoverProps = PopoverRootProps;
 
-export type PopoverTriggerProps = {
-  children: ReactElement;
-  className?: string;
-  /** Ref to the trigger element. */
-  ref?: Ref<HTMLElement>;
-};
+export type PopoverTriggerProps = OverlayTriggerProps;
 
-export type PopoverPopupProps = {
+/**
+ * Native props go to the popover `<div>`; `aria-label` and `aria-labelledby` go to the inner
+ * dialog element. When `Popover.Title` is rendered it names the dialog, otherwise pass
+ * `aria-label` / `aria-labelledby`.
+ */
+export type PopoverPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
   /** Preferred placement relative to the trigger. @default bottom */
   placement?: Placement;
   portalContainer?: Element;
-  /** Ref to the underlying popover `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-export type PopoverTitleProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying heading element. */
-  ref?: Ref<HTMLHeadingElement>;
-};
+export type PopoverTitleProps = ComponentPropsWithRef<'h2'>;
 
-export type PopoverContentProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type PopoverContentProps = ComponentPropsWithRef<'div'>;
 
-export type PopoverArrowProps = {
-  className?: string;
-  /** Ref to the underlying arrow `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type PopoverArrowProps = Omit<ComponentPropsWithRef<'div'>, 'children'>;
 
 type PopoverContextValue = {
   presence: UseOverlayPresenceResult;
@@ -252,9 +237,13 @@ function PopoverTrigger({ children, className, ref, ...props }: PopoverTriggerPr
 function PopoverPopup({
   children,
   className,
+  style,
   placement = 'bottom',
   portalContainer,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ref,
+  ...rest
 }: PopoverPopupProps): JSX.Element {
   const ctx = usePopoverContext();
   const p = popover();
@@ -264,57 +253,49 @@ function PopoverPopup({
     popupRef: ctx.popupRef,
     triggerRef: ctx.triggerRef,
   });
+  const setRef = useMergedRef(ctx.popupRef, ref, ctx.setPopupEl);
 
   return (
     <AriaPopover
+      {...rest}
       {...mergeProps(p.root, className)}
       {...ctx.presence.attrs}
-      ref={(node: HTMLDivElement | null) => {
-        ctx.popupRef.current = node;
-        ctx.setPopupEl(node);
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          (ref as MutableRefObject<HTMLDivElement | null>).current = node;
-        }
-      }}
+      ref={setRef}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style }}
+      style={{ ...layerStyle, ...positioner.style, ...style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
     >
-      <AriaDialog>{children}</AriaDialog>
+      <AriaDialog aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
+        {children}
+      </AriaDialog>
     </AriaPopover>
   );
 }
 
-function PopoverTitle({ children, className, ref }: PopoverTitleProps): JSX.Element {
+function PopoverTitle({ className, children, ...rest }: PopoverTitleProps): JSX.Element {
   const p = popover();
   return (
-    <Heading slot="title" {...mergeProps(p.title, className)} ref={ref}>
+    <Heading {...rest} slot="title" {...mergeProps(p.title, className)}>
       {children}
     </Heading>
   );
 }
 
-function PopoverContent({ children, className, ref }: PopoverContentProps): JSX.Element {
+function PopoverContent({ className, ...rest }: PopoverContentProps): JSX.Element {
   const p = popover();
-  return (
-    <div {...mergeProps(p.content, className)} ref={ref}>
-      {children}
-    </div>
-  );
+  return <div {...rest} {...mergeProps(p.content, className)} />;
 }
 
-function PopoverArrow({ className, ref }: PopoverArrowProps): JSX.Element {
+function PopoverArrow({ className, ...rest }: PopoverArrowProps): JSX.Element {
   const p = popover();
   return (
     <OverlayArrow>
       {({ placement }) => (
         <div
+          {...rest}
           {...mergeProps(p.arrow, className)}
-          ref={ref}
           data-placement={placement ?? undefined}
         />
       )}

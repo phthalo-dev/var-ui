@@ -1,12 +1,12 @@
-import type { HTMLAttributes, JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { section } from '@var-ui/core/components/section';
 import { mergeProps } from 'typestyles';
 
-export type SectionProps = HTMLAttributes<HTMLElement> & {
-  /** Optional heading rendered as an h2 inside the section. */
+export type SectionProps = ComponentPropsWithRef<'section'> & {
+  /** Optional heading rendered inside the section. */
   title?: string;
-  /** Ref to the underlying `<section>` element. */
-  ref?: Ref<HTMLElement>;
+  /** Semantic level of the title heading. @default 2 */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 /**
@@ -16,11 +16,19 @@ export type SectionProps = HTMLAttributes<HTMLElement> & {
  * <Section title="Feedback">{demos}</Section>
  * ```
  */
-export function Section({ title, className, children, ref, ...props }: SectionProps): JSX.Element {
+export function Section({
+  title,
+  headingLevel = 2,
+  className,
+  children,
+  ref,
+  ...props
+}: SectionProps): JSX.Element {
   const s = section();
+  const Heading = `h${headingLevel}` as const;
   return (
     <section {...props} {...mergeProps(s.root, className)} ref={ref}>
-      {title ? <h2 {...mergeProps(s.title)}>{title}</h2> : null}
+      {title ? <Heading {...mergeProps(s.title)}>{title}</Heading> : null}
       {children}
     </section>
   );

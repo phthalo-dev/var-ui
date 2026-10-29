@@ -1,26 +1,18 @@
 import type { JSX, Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
-  Button,
   Calendar as AriaCalendar,
-  CalendarCell,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHeader,
-  CalendarHeaderCell,
-  Heading,
   type CalendarProps as RACCalendarProps,
 } from 'react-aria-components';
 import { calendar } from '@var-ui/core/components/calendar';
-import { Icon } from '../icons';
-import { mergeProps } from 'typestyles';
+import { CalendarBody } from '../internal/CalendarBody';
+import { mergeRacClassName } from '../internal/racClassName';
 
 export type CalendarProps<T extends DateValue = DateValue> = Omit<
   RACCalendarProps<T>,
   'children'
 > & {
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
+  /** Ref to the calendar's root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };
 
@@ -40,24 +32,17 @@ export function Calendar<T extends DateValue = DateValue>({
 }: CalendarProps<T>): JSX.Element {
   const c = calendar();
   return (
-    <AriaCalendar {...props} {...mergeProps(c.root, className)} ref={ref}>
-      <header {...mergeProps(c.header)}>
-        <Button slot="previous" {...mergeProps(c.navButton)}>
-          <Icon name="chevronLeft" size="sm" />
-        </Button>
-        <Heading {...mergeProps(c.heading)} />
-        <Button slot="next" {...mergeProps(c.navButton)}>
-          <Icon name="chevronRight" size="sm" />
-        </Button>
-      </header>
-      <CalendarGrid {...mergeProps(c.grid)}>
-        <CalendarGridHeader>
-          {(day) => <CalendarHeaderCell {...mergeProps(c.headerCell)}>{day}</CalendarHeaderCell>}
-        </CalendarGridHeader>
-        <CalendarGridBody>
-          {(date) => <CalendarCell date={date} {...mergeProps(c.cell)} />}
-        </CalendarGridBody>
-      </CalendarGrid>
+    <AriaCalendar {...props} className={mergeRacClassName(c.root, className)} ref={ref}>
+      <CalendarBody
+        slots={{
+          header: c.header,
+          navButton: c.navButton,
+          heading: c.heading,
+          grid: c.grid,
+          headerCell: c.headerCell,
+          cell: c.cell,
+        }}
+      />
     </AriaCalendar>
   );
 }

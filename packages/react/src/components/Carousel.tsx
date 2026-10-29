@@ -1,13 +1,13 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Children, useRef } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { carousel } from '@var-ui/core/components/carousel';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
-export type CarouselProps = {
+export type CarouselProps = Omit<ComponentPropsWithRef<'section'>, 'children'> & {
   /** Slides to render inside the scroll viewport. */
-  children: ReactNode;
+  children?: ReactNode;
   /** Accessible name for the carousel region. */
   label: string;
   /** Accessible name for the scrollable viewport. @default `label` */
@@ -16,10 +16,10 @@ export type CarouselProps = {
   getSlideLabel?: (index: number, count: number) => string;
   /** CSS length for each snap item. @default 280px */
   itemWidth?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<section>` element. */
-  ref?: Ref<HTMLElement>;
+  /** Accessible label for the previous button. @default Previous */
+  previousLabel?: string;
+  /** Accessible label for the next button. @default Next */
+  nextLabel?: string;
 };
 
 function defaultSlideLabel(index: number, count: number): string {
@@ -40,8 +40,11 @@ export function Carousel({
   viewportLabel,
   getSlideLabel = defaultSlideLabel,
   itemWidth,
+  previousLabel = 'Previous',
+  nextLabel = 'Next',
   className,
   ref,
+  ...rest
 }: CarouselProps): JSX.Element {
   const s = carousel();
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -59,6 +62,7 @@ export function Carousel({
 
   return (
     <section
+      {...rest}
       {...mergeProps(s.root, className)}
       role="region"
       aria-roledescription="carousel"
@@ -88,10 +92,10 @@ export function Carousel({
         ))}
       </div>
       <div {...mergeProps(s.controls)}>
-        <AriaButton {...mergeProps(s.control)} aria-label="Previous" onPress={() => nudge(-1)}>
+        <AriaButton {...mergeProps(s.control)} aria-label={previousLabel} onPress={() => nudge(-1)}>
           <Icon name="chevronLeft" size="sm" />
         </AriaButton>
-        <AriaButton {...mergeProps(s.control)} aria-label="Next" onPress={() => nudge(1)}>
+        <AriaButton {...mergeProps(s.control)} aria-label={nextLabel} onPress={() => nudge(1)}>
           <Icon name="chevronRight" size="sm" />
         </AriaButton>
       </div>

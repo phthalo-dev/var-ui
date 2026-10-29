@@ -1,5 +1,12 @@
-import type { JSX, ReactNode, Ref } from 'react';
-import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
+import type {
+  AnchorHTMLAttributes,
+  ComponentPropsWithRef,
+  HTMLAttributes,
+  JSX,
+  MouseEvent,
+  ReactNode,
+  Ref,
+} from 'react';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { topNav } from '@var-ui/core/components/topNav';
 import type { IconName } from '@var-ui/core';
@@ -8,6 +15,7 @@ import { HoverCard } from './HoverCard';
 import { TopNavMegaMenu } from './TopNavMegaMenu';
 import { Text } from './Typography';
 import { mergeProps } from 'typestyles';
+import { RacLinkOrButton } from '../internal/racDomProps';
 
 /** Registry name or a caller-supplied node — excludes bare `string` so it isn't redundant with `IconName`. */
 export type TopNavIcon = IconName | Exclude<ReactNode, string>;
@@ -36,7 +44,7 @@ export type TopNavRichItem = {
   isDisabled?: boolean;
 };
 
-export type TopNavProps = {
+export type TopNavProps = ComponentPropsWithRef<'nav'> & {
   /** Brand block, usually a `TopNav.Heading`. */
   heading?: ReactNode;
   /** Content that begins the bar (nav items, `TopNav.Menu` / `TopNav.MegaMenu`). Alias for `startContent`. */
@@ -45,11 +53,8 @@ export type TopNavProps = {
   /** Centered content — switches the root to a 3-column grid layout when set. */
   centerContent?: ReactNode;
   endContent?: ReactNode;
-  className?: string;
   /** Accessible name for the `nav` landmark. @default 'Top navigation' */
   label?: string;
-  /** Ref to the underlying `<nav>` element. */
-  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -73,6 +78,7 @@ export function TopNav({
   className,
   label = 'Top navigation',
   ref,
+  ...rest
 }: TopNavProps): JSX.Element {
   const s = topNav();
   const start = startContent ?? children;
@@ -80,8 +86,9 @@ export function TopNav({
 
   return (
     <nav
-      ref={ref}
       aria-label={label}
+      {...rest}
+      ref={ref}
       data-var-ui-top-nav
       data-layout={hasCenter ? 'grid' : undefined}
       {...mergeProps(s.root, className)}
@@ -110,23 +117,14 @@ export function TopNav({
   );
 }
 
-export type TopNavHeadingProps = {
-  heading: ReactNode;
-  icon?: TopNavIcon;
-  headingHref?: string;
-  className?: string;
-  /** Ref to the underlying `<a>` (with `headingHref`) or `<span>` element. */
-  ref?: Ref<HTMLElement>;
-};
-
-const brandRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.5rem',
-  minWidth: 0,
-  color: 'inherit',
-  textDecoration: 'none',
-} as const;
+export type TopNavHeadingProps = Omit<HTMLAttributes<HTMLElement>, 'children'> &
+  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel'> & {
+    heading: ReactNode;
+    icon?: TopNavIcon;
+    headingHref?: string;
+    /** Ref to the underlying `<a>` (with `headingHref`) or `<span>` element. */
+    ref?: Ref<HTMLElement>;
+  };
 
 /** Brand block for the `heading` slot: icon + heading text, optionally linked. */
 export function TopNavHeading({
@@ -135,7 +133,9 @@ export function TopNavHeading({
   headingHref,
   className,
   ref,
+  ...rest
 }: TopNavHeadingProps): JSX.Element {
+  const s = topNav();
   const iconNode = renderTopNavIcon(icon);
   const content = (
     <>
@@ -145,35 +145,34 @@ export function TopNavHeading({
   );
 
   return headingHref ? (
-    <AriaLink
-      href={headingHref}
-      className={className}
-      style={brandRowStyle}
-      ref={ref as Ref<HTMLAnchorElement>}
-    >
+    <RacLinkOrButton href={headingHref} {...rest} {...mergeProps(s.brand, className)} ref={ref}>
       {content}
-    </AriaLink>
+    </RacLinkOrButton>
   ) : (
-    <span className={className} style={brandRowStyle} ref={ref}>
+    <span {...rest} {...mergeProps(s.brand, className)} ref={ref}>
       {content}
     </span>
   );
 }
 
-export type TopNavItemProps = {
-  label: string;
-  href?: string;
-  onPress?: () => void;
-  icon?: TopNavIcon;
-  isSelected?: boolean;
-  isDisabled?: boolean;
-  /** Hides the visible label, showing only the icon; `label` still provides the accessible name. @default false */
-  isIconOnly?: boolean;
-  endContent?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
-  ref?: Ref<HTMLElement>;
-};
+export type TopNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'onClick'> &
+  Pick<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    'target' | 'rel' | 'download' | 'hrefLang' | 'referrerPolicy' | 'ping'
+  > & {
+    label: string;
+    href?: string;
+    onPress?: () => void;
+    onClick?: (event: MouseEvent<HTMLElement>) => void;
+    icon?: TopNavIcon;
+    isSelected?: boolean;
+    isDisabled?: boolean;
+    /** Hides the visible label, showing only the icon; `label` still provides the accessible name. @default false */
+    isIconOnly?: boolean;
+    endContent?: ReactNode;
+    /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
+    ref?: Ref<HTMLElement>;
+  };
 
 /** Link (`href`) or button (`onPress`) bar item; `isSelected` sets `aria-current="page"`. */
 export function TopNavItem({
@@ -187,6 +186,7 @@ export function TopNavItem({
   endContent,
   className,
   ref,
+  ...rest
 }: TopNavItemProps): JSX.Element {
   const s = topNav();
   const iconNode = renderTopNavIcon(icon);
@@ -199,50 +199,31 @@ export function TopNavItem({
     </>
   );
 
-  const sharedProps = {
-    ...mergeProps(s.item, className),
-    'data-selected': isSelected ? '' : undefined,
-    'data-disabled': isDisabled ? '' : undefined,
-    'aria-current': isSelected ? ('page' as const) : undefined,
-    'aria-label': isIconOnly ? label : undefined,
-    isDisabled,
-  };
-
-  return href ? (
-    <AriaLink href={href} {...sharedProps} ref={ref as Ref<HTMLAnchorElement>}>
+  return (
+    <RacLinkOrButton
+      href={href}
+      onPress={onPress}
+      aria-current={isSelected ? 'page' : undefined}
+      aria-label={isIconOnly ? label : undefined}
+      {...rest}
+      {...mergeProps(s.item, className)}
+      data-selected={isSelected ? '' : undefined}
+      data-disabled={isDisabled ? '' : undefined}
+      isDisabled={isDisabled}
+      ref={ref}
+    >
       {content}
-    </AriaLink>
-  ) : (
-    <AriaButton onPress={onPress} {...sharedProps} ref={ref as Ref<HTMLButtonElement>}>
-      {content}
-    </AriaButton>
+    </RacLinkOrButton>
   );
 }
 
-const menuListStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.125rem',
-  minWidth: '14rem',
-} as const;
-
-const richItemBodyStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.125rem',
-  minWidth: 0,
-} as const;
-
-export type TopNavMenuProps = {
+export type TopNavMenuProps = Omit<ComponentPropsWithRef<'button'>, 'children'> & {
   label: string;
   items: TopNavRichItem[];
   /** Delay before the menu opens on hover/focus, in milliseconds. @default 150 */
   openDelay?: number;
   /** Delay before the menu closes after the pointer/focus leaves, in milliseconds. @default 200 */
   closeDelay?: number;
-  className?: string;
-  /** Ref to the underlying trigger `<button>` element. */
-  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -256,31 +237,27 @@ export function TopNavMenu({
   closeDelay = 200,
   className,
   ref,
+  ...rest
 }: TopNavMenuProps): JSX.Element {
   const s = topNav();
 
   return (
     <HoverCard
       trigger={
-        <AriaButton {...mergeProps(s.menuTrigger, className)} ref={ref}>
+        <RacLinkOrButton {...rest} {...mergeProps(s.menuTrigger, className)} ref={ref}>
           <span>{label}</span>
           <Icon name="chevronDown" size="sm" />
-        </AriaButton>
+        </RacLinkOrButton>
       }
       openDelay={openDelay}
       closeDelay={closeDelay}
     >
-      <div style={menuListStyle}>
+      <div {...mergeProps(s.menuList)}>
         {items.map((item) => {
-          const itemProps = {
-            ...mergeProps(s.megaItem),
-            'data-disabled': item.isDisabled ? '' : undefined,
-            isDisabled: item.isDisabled,
-          };
           const itemContent = (
             <>
               {renderTopNavIcon(item.icon)}
-              <span style={richItemBodyStyle}>
+              <span {...mergeProps(s.richBody)}>
                 <span>{item.title}</span>
                 {item.description != null ? (
                   <Text as="span" size="sm" tone="secondary">
@@ -290,14 +267,17 @@ export function TopNavMenu({
               </span>
             </>
           );
-          return item.href ? (
-            <AriaLink key={item.id} href={item.href} {...itemProps}>
+          return (
+            <RacLinkOrButton
+              key={item.id}
+              href={item.href}
+              onPress={item.onPress}
+              {...mergeProps(s.megaItem)}
+              data-disabled={item.isDisabled ? '' : undefined}
+              isDisabled={item.isDisabled}
+            >
               {itemContent}
-            </AriaLink>
-          ) : (
-            <AriaButton key={item.id} onPress={item.onPress} {...itemProps}>
-              {itemContent}
-            </AriaButton>
+            </RacLinkOrButton>
           );
         })}
       </div>

@@ -1,7 +1,15 @@
-import { type JSX, type Ref, useId, useRef, useState } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type JSX,
+  type Ref,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Button as AriaButton,
-  Label,
   ListBox,
   ListBoxItem,
   Popover,
@@ -10,6 +18,9 @@ import {
 import { multiSelector } from '@var-ui/core/components/multiSelector';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';
+import { FieldFrame, useFieldFrame } from './FieldFrame';
+import { mergeRefs } from '../internal/mergeRefs';
+import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { mergeProps } from 'typestyles';
 
 export type MultiSelectorOption = {
@@ -19,23 +30,46 @@ export type MultiSelectorOption = {
   label: string;
 };
 
-export type MultiSelectorProps = FieldMeta & {
-  /** Options shown in the dropdown listbox. */
-  options: MultiSelectorOption[];
-  /** Currently selected option ids. */
-  value: string[];
-  /** Called with the updated selected option ids whenever selection changes. */
-  onChange: (value: string[]) => void;
-  /** Placeholder text when no value is selected. @default Select… */
-  placeholder?: string;
-  isDisabled?: boolean;
-  /** Name for form submission: one hidden input per selected id, like `<select multiple>`. */
-  name?: string;
-  className?: string;
-  /** Ref to the root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type MultiSelectorProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  | 'value'
+  | 'defaultValue'
+  | 'onChange'
+  | 'className'
+  | 'style'
+  | 'children'
+  | 'name'
+  | 'placeholder'
+  | 'disabled'
+  | 'type'
+  | 'ref'
+> &
+  FieldMeta & {
+    /** Options shown in the dropdown listbox. */
+    options: MultiSelectorOption[];
+    /** Currently selected option ids. */
+    value: string[];
+    /** Called with the updated selected option ids whenever selection changes. */
+    onChange: (value: string[]) => void;
+    /** Placeholder text when no value is selected. @default Select… */
+    placeholder?: string;
+    isDisabled?: boolean;
+    /** Marks the field invalid; defaults to whether `errorMessage` is set. */
+    invalid?: boolean;
+    /** Name for form submission: one hidden input per selected id, like `<select multiple>`. */
+    name?: string;
+    /** Merged onto the root wrapper. */
+    className?: string;
+    /** Applied to the root wrapper. */
+    style?: CSSProperties;
+    /** Ref to the trigger `<button>` element. */
+    ref?: Ref<HTMLButtonElement>;
+  };
 
+/**
+ * Multi-select dropdown. `className`/`style` style the root; `ref`, `id` and every other native
+ * attribute reach the trigger `<button>`.
+ */
 export function MultiSelector({
   label,
   description,
@@ -45,20 +79,27 @@ export function MultiSelector({
   onChange,
   placeholder = 'Select…',
   isDisabled,
+  invalid,
   name,
   className,
+  style,
+  id,
   ref,
+  'aria-describedby': describedByProp,
+  ...rest
 }: MultiSelectorProps): JSX.Element {
   const ms = multiSelector();
-  const labelId = useId();
   const triggerTextId = useId();
-  const descriptionId = useId();
-  const errorId = useId();
-  const describedBy =
-    [description ? descriptionId : null, errorMessage ? errorId : null].filter(Boolean).join(' ') ||
-    undefined;
+  const frame = useFieldFrame({
+    description,
+    errorMessage,
+    invalid,
+    id,
+    describedBy: describedByProp,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const setTrigger = useMemo(() => mergeRefs(triggerRef, ref), [ref]);
   const selectedLabels = options.filter((o) => value.includes(o.id)).map((o) => o.label);
   const isPlaceholder = selectedLabels.length === 0;
   const triggerText = isPlaceholder ? placeholder : selectedLabels.join(', ');
@@ -72,18 +113,29 @@ export function MultiSelector({
   }
 
   return (
-    <div {...mergeProps(ms.root, className)} ref={ref}>
-      {label ? (
-        <Label id={labelId} {...mergeProps(ms.label)}>
-          {label}
-        </Label>
-      ) : null}
+    <FieldFrame
+      slots={ms}
+      frame={frame}
+      label={label}
+      description={description}
+      errorMessage={errorMessage}
+      errorRole="alert"
+      className={className}
+      style={style}
+    >
       <AriaButton
-        ref={triggerRef}
+        {...(rest as object)}
+        {...frame.controlProps}
+        ref={setTrigger}
         {...mergeProps(ms.trigger)}
+        render={
+          racRenderWithExtras(
+            'button',
+            pickRacDroppedDomProps({ ...rest, ...frame.controlProps }),
+          ) as never
+        }
         isDisabled={isDisabled}
-        aria-labelledby={label ? `${labelId} ${triggerTextId}` : undefined}
-        aria-describedby={describedBy}
+        aria-labelledby={label ? `${frame.labelId} ${triggerTextId}` : undefined}
         onPress={() => setIsOpen((open) => !open)}
       >
         <span
@@ -109,7 +161,7 @@ export function MultiSelector({
           selectionMode="multiple"
           selectedKeys={new Set(value)}
           onSelectionChange={handleSelectionChange}
-          aria-labelledby={label ? labelId : undefined}
+          aria-labelledby={label ? frame.labelId : undefined}
         >
           {(option) => (
             <ListBoxItem id={option.id} textValue={option.label} {...mergeProps(ms.item)}>
@@ -130,16 +182,6 @@ export function MultiSelector({
             <input key={id} type="hidden" name={name} value={id} disabled={isDisabled} />
           ))
         : null}
-      {description ? (
-        <p {...mergeProps(ms.description)} id={descriptionId}>
-          {description}
-        </p>
-      ) : null}
-      {errorMessage ? (
-        <p {...mergeProps(ms.error)} id={errorId} role="alert">
-          {errorMessage}
-        </p>
-      ) : null}
-    </div>
+    </FieldFrame>
   );
 }

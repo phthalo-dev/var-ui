@@ -1,14 +1,15 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { steps } from '@var-ui/core/components/steps';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'ol'> & {
   className?: string;
 };
 
-const { className } = Astro.props;
+const { className, ...rest } = Astro.props;
 ---
 
-<ol {...mergeProps(steps().root, className)}>
+<ol {...rest} {...mergeProps(steps().root, className)}>
   <slot />
 </ol>

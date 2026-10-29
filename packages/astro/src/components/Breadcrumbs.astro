@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core/components/breadcrumbs';
 import { mergeProps } from '../utils';
 
@@ -8,7 +9,7 @@ type BreadcrumbItemData = {
   href?: string;
 };
 
-type Props = {
+type Props = Omit<HTMLAttributes<'nav'>, 'children'> & {
   items: BreadcrumbItemData[];
   maxItems?: number;
   itemsBeforeCollapse?: number;
@@ -26,6 +27,8 @@ const {
   separator,
   label = 'Breadcrumb',
   className,
+  style: styleProp,
+  ...rest
 } = Astro.props;
 
 const ELLIPSIS_ID = '__ellipsis__';
@@ -50,11 +53,13 @@ function getVisibleItems(
 
 const b = breadcrumbsStyles();
 const visibleItems = getVisibleItems(items, maxItems, itemsBeforeCollapse, itemsAfterCollapse);
-const style = separator ? `--var-ui-breadcrumbs-separator: "${separator}"` : undefined;
+const separatorStyle = separator ? `--var-ui-breadcrumbs-separator: "${separator}"` : undefined;
+const baseStyle = typeof styleProp === 'string' ? styleProp : undefined;
+const style = [baseStyle, separatorStyle].filter(Boolean).join('; ') || undefined;
 const lastId = items[items.length - 1]?.id;
 ---
 
-<nav aria-label={label} {...mergeProps(b.root, className)} style={style}>
+<nav aria-label={label} {...rest} {...mergeProps(b.root, className)} style={style}>
   <ol {...mergeProps(b.list)}>
     {
       visibleItems.map((item) => {

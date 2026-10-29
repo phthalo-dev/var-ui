@@ -1,10 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { collapsible } from '@var-ui/core/components/collapsible';
 import type { CollapsibleVariantProps } from '@var-ui/core';
 import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { mergeProps } from '../utils';
 
-interface Props extends CollapsibleVariantProps {
+interface Props extends Omit<HTMLAttributes<'details'>, 'id' | 'title'>, CollapsibleVariantProps {
   /** Stable id for the panel. */
   id: string;
   /** Default trigger label when `AccordionTrigger` is omitted. */
@@ -19,6 +20,7 @@ const {
   defaultExpanded = false,
   variant = 'accordion',
   className,
+  ...rest
 } = Astro.props;
 
 const c = collapsible({ variant });
@@ -26,6 +28,7 @@ const hasTriggerSlot = Astro.slots.has('trigger');
 ---
 
 <details
+  {...rest}
   data-var-ui-accordion-item
   data-accordion-id={id}
   id={id}

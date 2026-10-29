@@ -1,7 +1,6 @@
-import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles } from '@var-ui/core/components/table';
-import { tokens as t } from '@var-ui/core/tokens/declare';
 import type { TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -18,7 +17,14 @@ export type TableColumnDef<T extends Record<string, unknown> = Record<string, un
   allowsSorting?: boolean;
 };
 
-export type TableProps<T extends Record<string, unknown> = Record<string, unknown>> = {
+/**
+ * `className`, `style` and `ref` target the root wrapper `<div>`; all other attributes are
+ * forwarded to the `<table>` element.
+ */
+export type TableProps<T extends Record<string, unknown> = Record<string, unknown>> = Omit<
+  ComponentPropsWithRef<'table'>,
+  'children' | 'ref'
+> & {
   density?: NonNullable<TableVariantProps['density']>;
   dividers?: NonNullable<TableVariantProps['dividers']>;
   isStriped?: NonNullable<TableVariantProps['isStriped']>;
@@ -39,13 +45,15 @@ export type TableProps<T extends Record<string, unknown> = Record<string, unknow
   sortDescriptor?: SortDescriptor;
   onSortChange?: (next: SortDescriptor) => void;
   children?: ReactNode;
-  className?: string;
   caption?: ReactNode;
   /** Ref to the underlying root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };
 
-export type TableColumnProps = {
+export type TableColumnProps = Omit<
+  ComponentPropsWithRef<'th'>,
+  'children' | 'align' | 'onSort'
+> & {
   children?: ReactNode;
   isRowHeader?: boolean;
   align?: TableColumnAlign;
@@ -54,56 +62,21 @@ export type TableColumnProps = {
   sortDirection?: SortDirection | 'none';
   onSort?: () => void;
   resizeHandle?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<th>` element. */
-  ref?: Ref<HTMLTableCellElement>;
 };
 
-export type TableHeaderProps = {
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<thead>` element. */
-  ref?: Ref<HTMLTableSectionElement>;
-};
-export type TableBodyProps = {
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<tbody>` element. */
-  ref?: Ref<HTMLTableSectionElement>;
-};
-export type TableFooterProps = {
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<tfoot>` element. */
-  ref?: Ref<HTMLTableSectionElement>;
-};
+export type TableHeaderProps = ComponentPropsWithRef<'thead'>;
+export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
+export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 /** Remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) are forwarded to the `<tr>`. */
-export type TableRowProps = Omit<ComponentPropsWithoutRef<'tr'>, 'children' | 'className'> & {
-  children?: ReactNode;
+export type TableRowProps = ComponentPropsWithRef<'tr'> & {
   isSelected?: boolean;
-  className?: string;
-  /** Ref to the underlying `<tr>` element. */
-  ref?: Ref<HTMLTableRowElement>;
 };
 /** Remaining props (`onClick`, `data-*`, `aria-*`, `headers`, …) are forwarded to the `<td>`/`<th>`. */
-export type TableCellProps = Omit<
-  ComponentPropsWithoutRef<'td'>,
-  'children' | 'className' | 'align' | 'colSpan'
-> & {
-  children?: ReactNode;
+export type TableCellProps = Omit<ComponentPropsWithRef<'td'>, 'align'> & {
   align?: TableColumnAlign;
   isRowHeader?: boolean;
-  colSpan?: number;
-  className?: string;
-  /** Ref to the underlying `<td>`/`<th>` element. */
-  ref?: Ref<HTMLTableCellElement>;
 };
-export type TableCaptionProps = {
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<caption>` element. */
-  ref?: Ref<HTMLTableCaptionElement>;
-};
+export type TableCaptionProps = ComponentPropsWithRef<'caption'>;
 
 type TableStyleSlots = ReturnType<typeof tableStyles>;
 
@@ -138,19 +111,6 @@ function nextSortDirection(current: SortDirection | 'none'): SortDirection {
   return current === 'ascending' ? 'descending' : 'ascending';
 }
 
-const sortButtonStyle: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: String(t.space[1]),
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  margin: 0,
-  font: 'inherit',
-  color: 'inherit',
-  cursor: 'pointer',
-};
-
 function sortIconName(direction: SortDirection | 'none'): 'arrowUp' | 'arrowDown' | 'arrowsUpDown' {
   if (direction === 'ascending') return 'arrowUp';
   if (direction === 'descending') return 'arrowDown';
@@ -168,12 +128,14 @@ export function TableColumn({
   onSort,
   resizeHandle,
   className,
+  style: styleProp,
   ref,
+  ...rest
 }: TableColumnProps): JSX.Element {
   const { styles: s } = useTableContext();
-  const style: CSSProperties | undefined = width != null ? { width } : undefined;
+  const style: CSSProperties | undefined = width != null ? { ...styleProp, width } : styleProp;
   const label = allowsSorting ? (
-    <button type="button" style={sortButtonStyle} onClick={onSort}>
+    <button type="button" {...mergeProps(s.sortButton)} onClick={onSort}>
       {children}
       <Icon name={sortIconName(sortDirection)} size="sm" />
     </button>
@@ -183,8 +145,9 @@ export function TableColumn({
 
   return (
     <th
-      ref={ref}
       scope="col"
+      {...rest}
+      ref={ref}
       {...mergeProps(s.headerCell, className)}
       data-align={align !== 'start' ? align : undefined}
       data-row-header={isRowHeader ? '' : undefined}
@@ -246,43 +209,27 @@ export function TableRow({
 }
 
 /** `<thead>` within a `Table`. */
-export function TableHeader({ children, className, ref }: TableHeaderProps): JSX.Element {
+export function TableHeader({ className, ref, ...rest }: TableHeaderProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return (
-    <thead {...mergeProps(s.header, className)} ref={ref}>
-      {children}
-    </thead>
-  );
+  return <thead {...rest} {...mergeProps(s.header, className)} ref={ref} />;
 }
 
 /** `<tbody>` within a `Table`. */
-export function TableBody({ children, className, ref }: TableBodyProps): JSX.Element {
+export function TableBody({ className, ref, ...rest }: TableBodyProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return (
-    <tbody {...mergeProps(s.body, className)} ref={ref}>
-      {children}
-    </tbody>
-  );
+  return <tbody {...rest} {...mergeProps(s.body, className)} ref={ref} />;
 }
 
 /** `<tfoot>` within a `Table`. */
-export function TableFooter({ children, className, ref }: TableFooterProps): JSX.Element {
+export function TableFooter({ className, ref, ...rest }: TableFooterProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return (
-    <tfoot {...mergeProps(s.footer, className)} ref={ref}>
-      {children}
-    </tfoot>
-  );
+  return <tfoot {...rest} {...mergeProps(s.footer, className)} ref={ref} />;
 }
 
 /** `<caption>` within a `Table`. */
-export function TableCaption({ children, className, ref }: TableCaptionProps): JSX.Element {
+export function TableCaption({ className, ref, ...rest }: TableCaptionProps): JSX.Element {
   const { styles: s } = useTableContext();
-  return (
-    <caption {...mergeProps(s.caption, className)} ref={ref}>
-      {children}
-    </caption>
-  );
+  return <caption {...rest} {...mergeProps(s.caption, className)} ref={ref} />;
 }
 
 /**
@@ -320,8 +267,10 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   onSortChange,
   children,
   className,
+  style,
   caption,
   ref,
+  ...rest
 }: TableProps<T>): JSX.Element {
   const s = tableStyles({
     density,
@@ -403,8 +352,8 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
 
   return (
     <TableContext.Provider value={{ styles: s }}>
-      <div {...mergeProps(s.root, className)} ref={ref}>
-        <table {...mergeProps(s.table)}>
+      <div {...mergeProps(s.root, className)} style={style} ref={ref}>
+        <table {...rest} {...mergeProps(s.table)}>
           {caption != null ? <TableCaption>{caption}</TableCaption> : null}
           {colgroup}
           {content}

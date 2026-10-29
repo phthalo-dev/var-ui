@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link as AriaLink } from 'react-aria-components';
 import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
@@ -10,14 +10,13 @@ const tocVars = recipeVars(tocStyles);
 import { useTocSpy } from '../hooks/useTocSpy';
 import { mergeProps } from 'typestyles';
 
-export type TocItemProps = {
+export type TocItemProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
   label: string;
   href: string;
   isSelected?: boolean;
   isNested?: boolean;
+  /** Merged onto the anchor (the visible row), not the `<li>`. */
   className?: string;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
 /** Anchor row for one heading in a `Toc` list. */
@@ -28,11 +27,12 @@ export function TocItem({
   isNested = false,
   className,
   ref,
+  ...rest
 }: TocItemProps): JSX.Element {
   const s = tocStyles();
 
   return (
-    <li {...mergeProps(s.item)} ref={ref} data-nested={isNested || undefined}>
+    <li {...rest} {...mergeProps(s.item)} ref={ref} data-nested={isNested || undefined}>
       <AriaLink
         href={href}
         {...mergeProps(s.link, className)}
@@ -45,7 +45,7 @@ export function TocItem({
   );
 }
 
-export type TocProps = {
+export type TocProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'title'> & {
   /** Visible section label above the list. @default 'On this page' */
   title?: ReactNode;
   /** Manual `Toc.Item` children. Omit when using `auto`. */
@@ -56,15 +56,10 @@ export type TocProps = {
   headingSelector?: string;
   minHeadings?: number;
   headerOffset?: number;
-  /** Hide the nav below the `xl` breakpoint. @default false */
-  hideBelowXl?: boolean;
   /** Sets `--var-ui-toc-stickytop` on the root. */
   stickyTop?: string;
-  className?: string;
   /** Accessible name for the nav landmark. @default title or 'On this page' */
   label?: string;
-  /** Ref to the underlying `<nav>` element. */
-  ref?: Ref<HTMLElement>;
 };
 
 function TocList({
@@ -110,8 +105,10 @@ export function Toc({
   headerOffset,
   stickyTop,
   className,
+  style,
   label,
   ref,
+  ...rest
 }: TocProps): JSX.Element | null {
   const listRef = useRef<HTMLOListElement>(null);
   const [contentRoot, setContentRoot] = useState<ParentNode | null>(null);
@@ -147,7 +144,13 @@ export function Toc({
   }
 
   return (
-    <nav aria-label={resolvedLabel} style={rootStyle} {...mergeProps(s.root, className)} ref={ref}>
+    <nav
+      aria-label={resolvedLabel}
+      {...rest}
+      {...mergeProps(s.root, className)}
+      style={rootStyle ? { ...style, ...rootStyle } : style}
+      ref={ref}
+    >
       {title != null ? <p {...mergeProps(s.title)}>{title}</p> : null}
       <TocList listRef={listRef} headings={auto ? headings : undefined} activeId={activeId}>
         {children}

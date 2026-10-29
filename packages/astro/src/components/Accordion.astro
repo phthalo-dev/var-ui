@@ -1,9 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { accordionGroup } from '@var-ui/core/components/accordionGroup';
 import type { AccordionGroupVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = AccordionGroupVariantProps & {
+type Props = Omit<HTMLAttributes<'div'>, 'children'> &
+  AccordionGroupVariantProps & {
   /** When `single`, only one panel may be open at a time. @default single */
   type?: 'single' | 'multiple';
   /** When `type` is `single`, allow closing every panel. @default true */
@@ -11,11 +13,12 @@ type Props = AccordionGroupVariantProps & {
   className?: string;
 };
 
-const { type = 'single', collapsible = true, variant = 'bordered', className } = Astro.props;
+const { type = 'single', collapsible = true, variant = 'bordered', className, ...rest } = Astro.props;
 const group = accordionGroup({ variant: variant ?? 'bordered' });
 ---
 
 <div
+  {...rest}
   data-var-ui-accordion
   data-accordion-type={type}
   data-collapsible={collapsible ? 'true' : 'false'}

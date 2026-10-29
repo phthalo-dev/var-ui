@@ -305,8 +305,9 @@ describe('Tree', () => {
     const toggle = row.querySelector('button')!;
     const link = screen.getByRole('link', { name: 'Docs' });
 
-    expect(toggle.style.zIndex).toBe('2');
-    expect(link.style.left).toBe('calc(22px)');
+    expect(toggle.getAttribute('style')).toBeNull();
+    expect(link.getAttribute('style')).toBeNull();
+    expect(link.getAttribute('data-inset')).toBe('after-toggle');
 
     await userEvent.click(toggle);
     expect(row.getAttribute('aria-expanded')).toBe('true');

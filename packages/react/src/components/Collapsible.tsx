@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import {
   Button as AriaButton,
   Disclosure,
@@ -13,34 +13,34 @@ import { mergeProps } from 'typestyles';
 
 export type { CollapsibleVariant } from '@var-ui/core';
 
-export type CollapsibleProps = CollapsibleVariantProps & {
-  /** Stable id when used inside `CollapsibleGroup` (maps to RAC `Disclosure` id / expanded keys). */
-  id?: string;
-  /** Default trigger label when `trigger` is omitted. */
-  title?: ReactNode;
-  /** Overrides the default title + chevron trigger contents. */
-  trigger?: ReactNode;
-  children: ReactNode;
-  /** Controlled expanded state. */
-  isExpanded?: boolean;
-  /** Uncontrolled initial expanded state. */
-  defaultExpanded?: boolean;
-  onExpandedChange?: (expanded: boolean) => void;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type CollapsibleProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'title' | 'id' | 'onChange'
+> &
+  CollapsibleVariantProps & {
+    /** Stable id when used inside `CollapsibleGroup` (maps to RAC `Disclosure` id / expanded keys). */
+    id?: string;
+    /** Default trigger label when `trigger` is omitted. */
+    title?: ReactNode;
+    /** Overrides the default title + chevron trigger contents. */
+    trigger?: ReactNode;
+    children: ReactNode;
+    /** Controlled expanded state. */
+    isExpanded?: boolean;
+    /** Uncontrolled initial expanded state. */
+    defaultExpanded?: boolean;
+    onExpandedChange?: (expanded: boolean) => void;
+    /** Semantic level of the heading wrapping the trigger. @default 3 */
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  };
 
-export type CollapsibleGroupProps = {
+export type CollapsibleGroupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'onChange'> & {
   children: ReactNode;
   /**
    * When true, multiple panels may stay open.
    * When false (default), opening one panel collapses the others.
    */
   allowsMultipleExpanded?: boolean;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /**
@@ -61,12 +61,15 @@ export function Collapsible({
   defaultExpanded,
   onExpandedChange,
   variant = 'flush',
+  headingLevel = 3,
   className,
   ref,
+  ...rest
 }: CollapsibleProps): JSX.Element {
   const c = collapsible({ variant });
   return (
     <Disclosure
+      {...(rest as object)}
       id={id}
       isExpanded={isExpanded}
       defaultExpanded={defaultExpanded}
@@ -74,7 +77,7 @@ export function Collapsible({
       {...mergeProps(c.root, className)}
       ref={ref}
     >
-      <Heading level={3} style={{ margin: 0 }}>
+      <Heading level={headingLevel} {...mergeProps(c.heading)}>
         <AriaButton slot="trigger" {...mergeProps(c.trigger)}>
           {trigger ?? (
             <>
@@ -106,9 +109,11 @@ export function CollapsibleGroup({
   allowsMultipleExpanded = false,
   className,
   ref,
+  ...rest
 }: CollapsibleGroupProps): JSX.Element {
   return (
     <DisclosureGroup
+      {...(rest as object)}
       allowsMultipleExpanded={allowsMultipleExpanded}
       className={className}
       ref={ref}

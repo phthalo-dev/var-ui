@@ -1,9 +1,10 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { textBlock } from '@var-ui/core/components/typography';
 import type { TextBlockVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'p'> & {
   as?: 'p' | 'span' | 'div';
   size?: NonNullable<TextBlockVariantProps['size']>;
   tone?: NonNullable<TextBlockVariantProps['tone']>;
@@ -11,8 +12,8 @@ type Props = {
   className?: string;
 };
 
-const { as = 'p', size = 'md', tone = 'primary', weight = 'normal', className } = Astro.props;
+const { as = 'p', size = 'md', tone = 'primary', weight = 'normal', className, ...rest } = Astro.props;
 const rp = mergeProps(textBlock({ size, tone, weight }), className);
 const TextTag = as;
 ---
-<TextTag {...rp}><slot /></TextTag>
+<TextTag {...rest} {...rp}><slot /></TextTag>

@@ -1,15 +1,15 @@
 import {
   useCallback,
   useRef,
+  type ComponentPropsWithRef,
   type JSX,
   type KeyboardEvent,
   type PointerEvent as ReactPointerEvent,
-  type Ref,
 } from 'react';
 import { resizeHandle } from '@var-ui/core/components/resizeHandle';
 import { mergeProps } from 'typestyles';
 
-export type ResizeHandleProps = {
+export type ResizeHandleProps = Omit<ComponentPropsWithRef<'div'>, 'onChange' | 'children'> & {
   /** @default 'horizontal' */
   direction?: 'horizontal' | 'vertical';
   value: number;
@@ -25,9 +25,6 @@ export type ResizeHandleProps = {
    */
   isReversed?: boolean;
   'aria-label'?: string;
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 const ARROW_STEP = 10;
@@ -55,7 +52,14 @@ export function ResizeHandle({
   isReversed = false,
   'aria-label': ariaLabel,
   className,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onPointerCancel,
+  onKeyDown,
+  onDoubleClick,
   ref,
+  ...rest
 }: ResizeHandleProps): JSX.Element {
   const s = resizeHandle();
   const dragState = useRef<DragState | null>(null);
@@ -67,6 +71,8 @@ export function ResizeHandle({
   );
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    onPointerDown?.(event);
+    if (event.defaultPrevented) return;
     if (dragState.current != null) return;
     if (isCollapsed || (event.pointerType === 'mouse' && event.button !== 0)) return;
     event.preventDefault();
@@ -83,6 +89,7 @@ export function ResizeHandle({
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    onPointerMove?.(event);
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const pos = isHorizontal ? event.clientX : event.clientY;
@@ -90,6 +97,8 @@ export function ResizeHandle({
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>): void => {
+    if (event.type === 'pointerup') onPointerUp?.(event);
+    else onPointerCancel?.(event);
     if (dragState.current?.pointerId !== event.pointerId) return;
     dragState.current = null;
     try {
@@ -100,6 +109,8 @@ export function ResizeHandle({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) return;
     const forwardKey = isHorizontal ? 'ArrowRight' : 'ArrowDown';
     const backwardKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
     const increaseKey = isReversed ? backwardKey : forwardKey;
@@ -135,6 +146,7 @@ export function ResizeHandle({
 
   return (
     <div
+      {...rest}
       ref={ref}
       role="separator"
       aria-orientation={direction}
@@ -150,7 +162,10 @@ export function ResizeHandle({
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
       onKeyDown={handleKeyDown}
-      onDoubleClick={onCollapse}
+      onDoubleClick={(event) => {
+        onDoubleClick?.(event);
+        if (!event.defaultPrevented) onCollapse?.();
+      }}
       {...mergeProps(s.root, className)}
     >
       <div {...mergeProps(s.pill)} />

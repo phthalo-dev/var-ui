@@ -4,10 +4,9 @@ import { layoutContent } from '@var-ui/core/components/layout';
 import type { LayoutContentVariantProps, LayoutPadding } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   padding?: LayoutPadding;
   isScrollable?: boolean;
-  role?: NonNullable<HTMLAttributes<'div'>['role']>;
   label?: string;
   className?: string;
 };
@@ -19,11 +18,11 @@ function toZonePaddingVariant(
   return padding === 0 ? '0' : 'inherit';
 }
 
-const { padding, isScrollable = true, role, label, className } = Astro.props;
+const { padding, isScrollable = true, role, label, className, ...rest } = Astro.props;
 const s = layoutContent({ isScrollable, padding: toZonePaddingVariant(padding) });
 const resolvedRole = role ?? (label != null ? 'region' : undefined);
 ---
 
-<div {...mergeProps(s.content, className)} role={resolvedRole} aria-label={label}>
+<div aria-label={label} {...rest} {...mergeProps(s.content, className)} role={resolvedRole}>
   <slot />
 </div>

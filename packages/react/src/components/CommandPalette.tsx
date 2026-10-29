@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import {
@@ -47,7 +47,7 @@ export type CommandPaletteItem = {
   onSelect?: () => void;
 };
 
-export type CommandPaletteProps = {
+export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 'open'> & {
   /** Controls the open state. */
   isOpen?: NonNullable<CommandPaletteVariantProps['open']>;
   /** Called when the open state changes (Escape, backdrop click, hotkey, or item selection). */
@@ -93,8 +93,6 @@ export type CommandPaletteProps = {
    * cascade to descendants of the themed element).
    */
   portalContainer?: Element;
-  /** Ref to the underlying `<dialog>` element. */
-  ref?: Ref<HTMLDialogElement>;
 };
 
 type CommandPaletteSlot =
@@ -205,7 +203,14 @@ export function CommandPalette({
   isLoading = false,
   loadingLabel = 'Loading…',
   portalContainer,
+  className,
+  style,
+  'aria-label': ariaLabel,
+  onClick,
+  onCancel,
+  onKeyDownCapture,
   ref,
+  ...rest
 }: CommandPaletteProps): JSX.Element | null {
   const [query, setQueryState] = useState('');
   const onQueryChangeRef = useRef(onQueryChange);
@@ -333,17 +338,21 @@ export function CommandPalette({
         if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}
-      aria-label={placeholder}
-      {...mergeProps(cp.root)}
-      style={layerStyle}
+      {...rest}
+      aria-label={ariaLabel ?? placeholder}
+      {...mergeProps(cp.root, className)}
+      style={{ ...layerStyle, ...style }}
       onClick={(event) => {
+        onClick?.(event);
         if (event.target === event.currentTarget) requestOpen(false);
       }}
       onCancel={(event) => {
+        onCancel?.(event);
         event.preventDefault();
         requestOpen(false);
       }}
       onKeyDownCapture={(event) => {
+        onKeyDownCapture?.(event);
         if (event.key !== 'Escape') return;
         event.preventDefault();
         requestOpen(false);

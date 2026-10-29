@@ -1,8 +1,9 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { toc } from '@var-ui/core/components/toc';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'nav'>, 'title'> & {
   title?: string;
   label?: string;
   auto?: boolean;
@@ -10,7 +11,6 @@ type Props = {
   headingSelector?: string;
   minHeadings?: number;
   headerOffset?: number;
-  hideBelowXl?: boolean;
   stickyTop?: string;
   className?: string;
 };
@@ -23,19 +23,22 @@ const {
   headingSelector,
   minHeadings = 2,
   headerOffset,
-  hideBelowXl = false,
   stickyTop,
   className,
+  style: styleProp,
+  ...rest
 } = Astro.props;
 
 const resolvedLabel = label ?? title;
-// The recipe always hides the rail below `xl`; `hideBelowXl` predates that and has no
-// selection of its own, so the recipe is called without arguments.
+// The recipe always hides the rail below `xl`.
 const s = toc();
-const rootStyle = stickyTop ? `--var-ui-toc-stickytop: ${stickyTop}` : undefined;
+const stickyStyle = stickyTop ? `--var-ui-toc-stickytop: ${stickyTop}` : undefined;
+const baseStyle = typeof styleProp === 'string' ? styleProp : undefined;
+const rootStyle = [baseStyle, stickyStyle].filter(Boolean).join('; ') || undefined;
 ---
 
 <nav
+  {...rest}
   {...mergeProps(s.root, className)}
   style={rootStyle}
   aria-label={resolvedLabel}

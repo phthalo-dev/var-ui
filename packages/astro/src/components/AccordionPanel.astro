@@ -1,16 +1,17 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { collapsible } from '@var-ui/core/components/collapsible';
 import type { CollapsibleVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends CollapsibleVariantProps {
+interface Props extends HTMLAttributes<'div'>, CollapsibleVariantProps {
   className?: string;
 }
 
-const { variant = 'accordion', className } = Astro.props;
+const { variant = 'accordion', className, ...rest } = Astro.props;
 const c = collapsible({ variant });
 ---
 
-<div slot="panel" {...mergeProps(c.panel, className)}>
+<div slot="panel" {...rest} {...mergeProps(c.panel, className)}>
   <slot />
 </div>

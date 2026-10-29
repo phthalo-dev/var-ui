@@ -2,9 +2,11 @@
 import { layoutHeader } from '@var-ui/core/components/layout';
 import { layoutShellPaddingAssignments } from '@var-ui/core/components/layoutShellVars';
 import type { LayoutPadding } from '@var-ui/core';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   hasDivider?: boolean;
   height?: number | string;
   padding?: LayoutPadding;
@@ -29,11 +31,11 @@ function zoneOverrideStyle(
   };
 }
 
-const { hasDivider = false, height, padding, className } = Astro.props;
+const { hasDivider = false, height, padding, className, style: styleProp, ...rest } = Astro.props;
 const s = layoutHeader();
-const style = zoneOverrideStyle(height, padding);
+const style = mergeInlineStyle(zoneOverrideStyle(height, padding), styleProp);
 ---
 
-<div {...mergeProps(s.header, className)} style={style} data-divider={hasDivider ? '' : undefined}>
+<div {...rest} {...mergeProps(s.header, className)} style={style} data-divider={hasDivider ? '' : undefined}>
   <div {...mergeProps(s.headerInner)}><slot /></div>
 </div>

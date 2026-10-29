@@ -3,15 +3,9 @@ import type { HTMLAttributes } from 'astro/types';
 import { link } from '@var-ui/core/components/link';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'a'> & {
   href: string;
   className?: string;
-  target?: string;
-  rel?: string;
-  download?: string | boolean;
-  hreflang?: string;
-  referrerpolicy?: NonNullable<HTMLAttributes<'a'>['referrerpolicy']>;
-  title?: string;
 };
 
 const { href, className, ...rest } = Astro.props;

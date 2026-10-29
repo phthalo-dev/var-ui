@@ -176,7 +176,7 @@ export function initSideNav(root: HTMLElement): () => void {
         onChange: applyWidth,
         getIsCollapsed: () => isCollapsed,
         onCollapse: resizeCollapsible ? () => applyCollapsed(!isCollapsed) : undefined,
-        'aria-label': 'Resize side navigation',
+        'aria-label': resizeHandleEl.getAttribute('aria-label') ?? 'Resize side navigation',
       }),
     );
   }

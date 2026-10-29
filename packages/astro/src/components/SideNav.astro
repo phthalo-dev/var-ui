@@ -3,6 +3,7 @@ import { sideNav } from '@var-ui/core/components/sideNav';
 import SideNavCollapseButton from './SideNavCollapseButton.astro';
 import ResizeHandle from './ResizeHandle.astro';
 import ScrollArea from './ScrollArea.astro';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
 type SideNavCollapsibleConfig = {
@@ -20,14 +21,23 @@ type ResizableConfig = {
   collapsedSize?: number;
 };
 
-type Props = {
+type Props = Omit<HTMLAttributes<'nav'>, 'class:list'> & {
   label?: string;
   collapsible?: boolean | SideNavCollapsibleConfig;
   resizable?: boolean | ResizableConfig;
+  /** Accessible name of the drag handle rendered by `resizable`. @default 'Resize side navigation' */
+  resizeHandleLabel?: string;
   className?: string;
 };
 
-const { label = 'Side navigation', collapsible, resizable, className } = Astro.props;
+const {
+  label = 'Side navigation',
+  collapsible,
+  resizable,
+  resizeHandleLabel = 'Resize side navigation',
+  className,
+  ...rest
+} = Astro.props;
 const s = sideNav();
 
 const collapsibleEnabled = Boolean(collapsible);
@@ -47,6 +57,8 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
 
 <nav
   aria-label={label}
+  {...rest}
+  data-collapsed={collapsibleConfig.defaultIsCollapsed ? '' : undefined}
   data-var-ui-side-nav
   data-collapsible={collapsibleEnabled || undefined}
   data-resizable={resizableEnabled || undefined}
@@ -80,7 +92,7 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
       </div>
     )
   }
-  {resizableEnabled && <ResizeHandle />}
+  {resizableEnabled && <ResizeHandle aria-label={resizeHandleLabel} />}
 </nav>
 
 <script>

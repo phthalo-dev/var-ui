@@ -19,3 +19,5 @@ export {
   type UsePositionerVarsOptions,
   type UsePositionerVarsResult,
 } from './usePositionerVars';
+export { useMergedRef } from './useMergedRef';
+export type { OverlayCloseProps, OverlayTriggerProps } from './types';

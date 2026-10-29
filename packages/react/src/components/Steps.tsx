@@ -1,19 +1,10 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { steps } from '@var-ui/core/components/steps';
 import { mergeProps } from 'typestyles';
 
-export type StepsProps = {
-  children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<ol>` element. */
-  ref?: Ref<HTMLOListElement>;
-};
+export type StepsProps = ComponentPropsWithRef<'ol'>;
 
 /** Numbered steps list (`<ol>`). Children should be `<li>` elements. */
-export function Steps({ children, className, ref }: StepsProps): JSX.Element {
-  return (
-    <ol {...mergeProps(steps().root, className)} ref={ref}>
-      {children}
-    </ol>
-  );
+export function Steps({ className, ref, ...rest }: StepsProps): JSX.Element {
+  return <ol {...rest} {...mergeProps(steps().root, className)} ref={ref} />;
 }

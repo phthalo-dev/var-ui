@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
 import type { Tone, ToastVariantProps } from '@var-ui/core';
 import { svg as errorSvg } from '@var-ui/icons/glyphs/error';
@@ -7,7 +8,7 @@ import { svg as successSvg } from '@var-ui/icons/glyphs/success';
 import { svg as warningSvg } from '@var-ui/icons/glyphs/warning';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'title'> & {
   tone?: NonNullable<ToastVariantProps['tone']>;
   title: string;
   description?: string;
@@ -23,11 +24,11 @@ const toneIcon: Record<Tone, string> = {
   danger: errorSvg,
 };
 
-const { tone = 'info', title, description, className } = Astro.props;
+const { tone = 'info', title, description, className, role = 'status', ...rest } = Astro.props;
 const t = toastRecipe({ tone, appearance: 'subtle' });
 ---
 
-<div {...mergeProps(t.item, className)} role="status">
+<div {...rest} {...mergeProps(t.item, className)} role={role}>
   <span {...mergeProps(t.icon)} set:html={toneIcon[tone]} />
   <div {...mergeProps(t.body)}>
     <div {...mergeProps(t.title)}>{title}</div>

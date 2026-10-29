@@ -6,11 +6,11 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type JSX,
   type MutableRefObject,
   type ReactElement,
   type ReactNode,
-  type Ref,
 } from 'react';
 import {
   Focusable,
@@ -24,9 +24,11 @@ import {
   createOverlayChangeDetails,
   inferOverlayCloseReason,
   mergeOverlayChild,
+  useMergedRef,
   useOverlayPresence,
   usePositionerVars,
   type OverlayOpenChangeHandler,
+  type OverlayTriggerProps,
   type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
@@ -48,16 +50,10 @@ export type TooltipRootProps = {
 /** Alias for docs and consumers referring to the root tooltip props. */
 export type TooltipProps = TooltipRootProps;
 
-export type TooltipTriggerProps = {
-  children: ReactElement;
-  className?: string;
-  /** Ref to the trigger element. */
-  ref?: Ref<HTMLElement>;
-};
+export type TooltipTriggerProps = OverlayTriggerProps;
 
-export type TooltipPopupProps = {
+export type TooltipPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  className?: string;
   /** Preferred placement relative to the trigger. @default top */
   placement?: Placement;
   portalContainer?: Element;
@@ -178,8 +174,11 @@ function TooltipTriggerPart({
 function TooltipPopup({
   children,
   className,
+  style,
   placement = 'top',
   portalContainer,
+  ref,
+  ...rest
 }: TooltipPopupProps): JSX.Element {
   const ctx = useTooltipContext();
   const tip = tooltip();
@@ -189,17 +188,16 @@ function TooltipPopup({
     popupRef: ctx.popupRef,
     triggerRef: ctx.triggerRef,
   });
+  const setRef = useMergedRef(ctx.popupRef, ref, ctx.setPopupEl);
 
   return (
     <AriaTooltip
+      {...rest}
       {...mergeProps(tip.root, className)}
       {...ctx.presence.attrs}
-      ref={(node: HTMLDivElement | null) => {
-        ctx.popupRef.current = node;
-        ctx.setPopupEl(node);
-      }}
+      ref={setRef}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style }}
+      style={{ ...layerStyle, ...positioner.style, ...style }}
       UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
     >
       {children}

@@ -1,18 +1,17 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { heading } from '@var-ui/core/components/typography';
 import type { HeadingVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = HTMLAttributes<'h1'> & {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   size?: NonNullable<HeadingVariantProps['size']>;
-  /** Anchor target, e.g. for `aria-labelledby` on the section that owns the heading. */
-  id?: string;
   className?: string;
 };
 
-const { level = 2, size = 'md', id, className } = Astro.props;
+const { level = 2, size = 'md', className, ...rest } = Astro.props;
 const rp = mergeProps(heading({ size }), className);
 const HeadingTag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 ---
-<HeadingTag {...rp} id={id}><slot /></HeadingTag>
+<HeadingTag {...rest} {...rp}><slot /></HeadingTag>

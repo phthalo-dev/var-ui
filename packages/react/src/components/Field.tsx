@@ -12,6 +12,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type JSX,
   type MutableRefObject,
   type ReactElement,
@@ -31,46 +32,39 @@ export type FieldMeta = {
   errorMessage?: string;
 };
 
-export type FieldProps = FieldMeta & {
+export type FieldRootProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+  /**
+   * Field name. Looks up the server error in `<Form errors>` and is passed to
+   * the wrapped control.
+   */
+  name?: string;
   /** id of the wrapped control, wired to the label's `htmlFor`. */
   htmlFor?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** The input or custom control to wrap with field chrome. */
   children: ReactNode;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
-
-export type FieldRootProps = {
-  name?: string;
-  children: ReactNode;
-  className?: string;
   invalid?: boolean;
   onInvalidChange?: (invalid: boolean) => void;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-export type FieldLabelProps = {
+/**
+ * Convenience wrapper props: `label` / `description` / `errorMessage` plus the
+ * root `<div>` props (`className`, `style`, `ref`, `data-*`, ...).
+ */
+export type FieldProps = FieldMeta &
+  Omit<FieldRootProps, 'invalid' | 'onInvalidChange'> & {
+    /** The input or custom control to wrap with field chrome. */
+    children: ReactNode;
+  };
+
+export type FieldLabelProps = Omit<ComponentPropsWithRef<'label'>, 'children'> & {
   children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<label>` element. */
-  ref?: Ref<HTMLLabelElement>;
 };
 export type FieldControlProps = { children: ReactElement; className?: string };
-export type FieldDescriptionProps = {
+export type FieldDescriptionProps = Omit<ComponentPropsWithRef<'p'>, 'children'> & {
   children: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<p>` element. */
-  ref?: Ref<HTMLParagraphElement>;
 };
-export type FieldErrorProps = {
+export type FieldErrorProps = Omit<ComponentPropsWithRef<'p'>, 'children'> & {
   children?: ReactNode;
-  className?: string;
   forceMount?: boolean;
-  /** Ref to the underlying `<p>` element. */
-  ref?: Ref<HTMLParagraphElement>;
 };
 
 type ControlReport = {
@@ -231,6 +225,8 @@ function asConstraintElement(
   return null;
 }
 
+// Not `useMergedRef`: React 19 callback refs may return a cleanup, which must run on
+// unmount or when the host node is replaced, and `useMergedRef` does not forward it.
 function assignChildRef(
   ref: Ref<HTMLElement | null> | undefined,
   node: HTMLElement | null,
@@ -289,7 +285,8 @@ function FieldRoot({
   onInvalidChange,
   htmlFor,
   ref,
-}: FieldRootProps & { htmlFor?: string }): JSX.Element {
+  ...rest
+}: FieldRootProps): JSX.Element {
   const generatedId = useId();
   const walkedControl = findControlChild(children);
   const controlId = walkedControl.id ?? htmlFor ?? generatedId;
@@ -371,6 +368,7 @@ function FieldRoot({
   return (
     <FieldContext.Provider value={value}>
       <div
+        {...rest}
         {...mergeProps(f.root, className)}
         ref={ref}
         data-invalid={isInvalid ? '' : undefined}
@@ -386,11 +384,11 @@ function FieldRoot({
   );
 }
 
-function FieldLabel({ children, className, ref }: FieldLabelProps): JSX.Element {
+function FieldLabel({ children, className, ref, ...rest }: FieldLabelProps): JSX.Element {
   const { controlId } = useFieldContext();
   const f = field();
   return (
-    <label {...mergeProps(f.label, className)} htmlFor={controlId} ref={ref}>
+    <label htmlFor={controlId} {...rest} {...mergeProps(f.label, className)} ref={ref}>
       {children}
     </label>
   );
@@ -459,17 +457,28 @@ function FieldControl({ children, className }: FieldControlProps): ReactElement 
   } as Partial<ControlChildProps>);
 }
 
-function FieldDescription({ children, className, ref }: FieldDescriptionProps): JSX.Element {
+function FieldDescription({
+  children,
+  className,
+  ref,
+  ...rest
+}: FieldDescriptionProps): JSX.Element {
   const { descriptionId } = useFieldContext();
   const f = field();
   return (
-    <p {...mergeProps(f.description, className)} id={descriptionId} ref={ref}>
+    <p {...rest} {...mergeProps(f.description, className)} id={descriptionId} ref={ref}>
       {children}
     </p>
   );
 }
 
-function FieldError({ children, className, forceMount, ref }: FieldErrorProps): JSX.Element | null {
+function FieldError({
+  children,
+  className,
+  forceMount,
+  ref,
+  ...rest
+}: FieldErrorProps): JSX.Element | null {
   const { errorId, nativeMessage, formError } = useFieldContext();
   const hasExplicitChildren = !(children === undefined || children === null || children === false);
   const content = hasExplicitChildren ? children : formError || nativeMessage;
@@ -478,7 +487,7 @@ function FieldError({ children, className, forceMount, ref }: FieldErrorProps): 
   }
   const f = field();
   return (
-    <p {...mergeProps(f.error, className)} id={errorId} role="alert" ref={ref}>
+    <p {...rest} {...mergeProps(f.error, className)} id={errorId} role="alert" ref={ref}>
       {content}
     </p>
   );
@@ -506,10 +515,11 @@ function Field({
   description,
   errorMessage,
   htmlFor,
-  className,
+  name,
   children,
-  ref,
+  ...rest
 }: FieldProps): JSX.Element {
+  const serverError = useContext(FormErrorsContext)[name ?? ''];
   const control = isSingleHostElement(children) ? (
     <FieldControl>
       {cloneElement(children as ReactElement<ControlChildProps>, {
@@ -520,16 +530,11 @@ function Field({
     children
   );
   return (
-    <FieldRoot
-      className={className}
-      invalid={Boolean(errorMessage) || undefined}
-      htmlFor={htmlFor}
-      ref={ref}
-    >
+    <FieldRoot {...rest} name={name} invalid={Boolean(errorMessage) || undefined} htmlFor={htmlFor}>
       {label ? <FieldLabel>{label}</FieldLabel> : null}
       {control}
       {description ? <FieldDescription>{description}</FieldDescription> : null}
-      {errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
+      {errorMessage || serverError ? <FieldError>{errorMessage}</FieldError> : null}
     </FieldRoot>
   );
 }

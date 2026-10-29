@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { banner } from '@var-ui/core/components/banner';
 import type { BannerVariantProps, IconName, Tone } from '@var-ui/core';
@@ -14,24 +14,21 @@ const toneIcon: Record<Tone, IconName> = {
   danger: 'error',
 };
 
-export type BannerProps = BannerVariantProps & {
-  /** Optional bold headline shown before the body text. */
-  title?: string;
-  /** Override the default tone glyph; pass null to hide the icon slot. */
-  icon?: ReactNode | null;
-  /** Inline action elements (links, small buttons). */
-  actions?: ReactNode;
-  /** When provided, renders a dismiss button that calls this handler on press. */
-  onDismiss?: () => void;
-  /** Accessible label for the dismiss button. @default Dismiss */
-  dismissLabel?: string;
-  /** Announcement body text. */
-  children: ReactNode;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
-};
+export type BannerProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children'> &
+  BannerVariantProps & {
+    /** Optional bold headline shown before the body text. */
+    title?: string;
+    /** Override the default tone glyph; pass null to hide the icon slot. */
+    icon?: ReactNode | null;
+    /** Inline action elements (links, small buttons). */
+    actions?: ReactNode;
+    /** When provided, renders a dismiss button that calls this handler on press. */
+    onDismiss?: () => void;
+    /** Accessible label for the dismiss button. @default Dismiss */
+    dismissLabel?: string;
+    /** Announcement body text. */
+    children: ReactNode;
+  };
 
 /**
  * Full-width page announcement with tone icon, actions, and optional dismiss.
@@ -53,14 +50,16 @@ export function Banner({
   children,
   className,
   ref,
+  ...rest
 }: BannerProps): JSX.Element {
   const b = banner({ tone, appearance });
   const glyph = icon === undefined ? <Icon name={toneIcon[tone]} /> : icon;
   return (
     <div
+      role={tone === 'warning' || tone === 'danger' ? 'alert' : 'status'}
+      {...rest}
       {...mergeProps(b.root, className)}
       ref={ref}
-      role={tone === 'warning' || tone === 'danger' ? 'alert' : 'status'}
     >
       {glyph !== null ? <span {...mergeProps(b.icon)}>{glyph}</span> : null}
       <div {...mergeProps(b.content)}>

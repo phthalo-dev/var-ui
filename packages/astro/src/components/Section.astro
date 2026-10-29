@@ -1,18 +1,22 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { section } from '@var-ui/core/components/section';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'section'>, 'title'> & {
   title?: string;
+  /** Semantic level of the title heading. @default 2 */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
 };
 
-const { title, className } = Astro.props;
+const { title, headingLevel = 2, className, ...rest } = Astro.props;
+const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 const s = section();
 const rootProps = mergeProps(s.root, className);
 const titleProps = mergeProps(s.title);
 ---
-<section {...rootProps}>
-  {title ? <h2 {...titleProps}>{title}</h2> : null}
+<section {...rest} {...rootProps}>
+  {title ? <Heading {...titleProps}>{title}</Heading> : null}
   <slot />
 </section>

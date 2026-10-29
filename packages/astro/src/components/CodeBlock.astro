@@ -1,10 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { combine, cx, mergeProps } from '../utils';
 
-interface Props extends CodeBlockVariantProps {
+interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVariantProps {
   code: string;
   language?: string;
   codeHtml?: string;
@@ -45,6 +46,7 @@ const {
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
+  ...rest
 } = Astro.props as Props;
 
 const cb = codeBlock({ variant });
@@ -61,11 +63,11 @@ const feedbackProps = combine(cb.feedback, cb.feedbackInline);
 
 {
   inline ? (
-    <code {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
+    <code {...rest} {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
       {code}
     </code>
   ) : (
-    <div {...mergeProps(cb.root, className)} data-codeblock>
+    <div {...rest} {...mergeProps(cb.root, className)} data-codeblock>
       <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}

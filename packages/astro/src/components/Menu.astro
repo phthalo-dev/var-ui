@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { svg as checkSvg } from '@var-ui/icons/glyphs/check';
 import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { button } from '@var-ui/core/components/button';
@@ -13,7 +14,8 @@ import {
   type MenuSelectionMode,
 } from "../scripts/menu";
 
-interface Props extends ButtonVariantProps {
+/** Native attributes are forwarded to the popover `<div>` (as React `Menu.FromSections` does). */
+interface Props extends ButtonVariantProps, Omit<HTMLAttributes<'div'>, 'class:list' | 'placeholder'> {
   /** Sections of items, mirroring the React `Menu.FromSections` preset. */
   sections: MenuSectionDefinition[];
   /** Text label for the default trigger button (a chevron is added automatically). */
@@ -48,6 +50,7 @@ const {
   layout,
   elevated,
   className,
+  ...rest
 } = Astro.props;
 
 const menuId = nextMenuId();
@@ -111,6 +114,7 @@ const itemContents = await Promise.all(
     )}
   </button>
   <div
+    {...rest}
     data-var-ui-menu-popover
     data-placement={placement}
     hidden

@@ -1,14 +1,10 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { statusDot } from '@var-ui/core/components/statusDot';
 import type { StatusDotVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type StatusDotProps = StatusDotVariantProps & {
-  'aria-label'?: string;
-  className?: string;
-  /** Ref to the underlying `<span>` element. */
-  ref?: Ref<HTMLSpanElement>;
-};
+export type StatusDotProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
+  StatusDotVariantProps;
 
 export function StatusDot({
   tone = 'neutral',
@@ -17,9 +13,11 @@ export function StatusDot({
   'aria-label': ariaLabel,
   className,
   ref,
+  ...rest
 }: StatusDotProps): JSX.Element {
   return (
     <span
+      {...rest}
       {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
       ref={ref}
       aria-label={ariaLabel}

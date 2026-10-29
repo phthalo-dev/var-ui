@@ -1,10 +1,5 @@
-import type { JSX, Ref } from 'react';
-import {
-  Header,
-  Menu as AriaMenu,
-  MenuItem as AriaMenuItem,
-  Separator,
-} from 'react-aria-components';
+import type { JSX } from 'react';
+import { Header, MenuItem as AriaMenuItem, Separator } from 'react-aria-components';
 import { menu } from '@var-ui/core/components/menu';
 import { Icon } from '../icons';
 import { combine, mergeProps } from 'typestyles';
@@ -25,12 +20,19 @@ export type MenuSectionDefinition = {
 
 export type MenuContentProps = {
   sections: MenuSectionDefinition[];
-  /** Ref to the underlying menu `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-/** Renders `sections` of items inside `Menu.Popup` or other menu containers. */
-export function MenuContent({ sections, ref }: MenuContentProps): JSX.Element {
+/**
+ * Renders `sections` of items (headers, items, separators) as children of `Menu.Popup`, which
+ * already provides the single `role="menu"` element.
+ *
+ * ```tsx
+ * <Menu.Popup>
+ *   <Menu.Content sections={sections} />
+ * </Menu.Popup>
+ * ```
+ */
+export function MenuContent({ sections }: MenuContentProps): JSX.Element {
   const m = menu();
   const nodes: JSX.Element[] = [];
 
@@ -69,9 +71,5 @@ export function MenuContent({ sections, ref }: MenuContentProps): JSX.Element {
     }
   });
 
-  return (
-    <AriaMenu {...mergeProps(m.menu)} ref={ref} selectionMode="none">
-      {nodes}
-    </AriaMenu>
-  );
+  return <>{nodes}</>;
 }

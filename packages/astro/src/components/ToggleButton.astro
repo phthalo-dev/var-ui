@@ -1,33 +1,30 @@
 ---
 import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { ToggleButtonVariantProps } from '@var-ui/core';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from "../utils";
 
-type Props = {
+type Props = Omit<HTMLAttributes<'button'>, 'class:list'> & {
   /** Initial pressed state. */
   pressed?: boolean;
   size?: NonNullable<ToggleButtonVariantProps['size']>;
   className?: string;
-  "aria-label"?: string;
-  disabled?: boolean;
 };
 
 const {
   pressed = false,
   size = "md",
   className,
-  "aria-label": ariaLabel,
-  disabled,
+  ...rest
 } = Astro.props;
 ---
 
 <button
   type="button"
+  {...rest}
   data-var-ui-toggle-button
   aria-pressed={pressed ? "true" : "false"}
   data-selected={pressed ? "" : undefined}
-  aria-label={ariaLabel}
-  disabled={disabled}
   {...mergeProps(toggleButton({ size }), className)}
 >
   <slot />

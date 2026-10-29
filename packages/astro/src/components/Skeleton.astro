@@ -1,15 +1,15 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { skeleton } from '@var-ui/core/components/skeleton';
 import type { SkeletonVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'children'> & {
   shape?: NonNullable<SkeletonVariantProps['shape']>;
   className?: string;
-  style?: string;
 };
 
-const { shape = 'text', className, style } = Astro.props;
+const { shape = 'text', className, ...rest } = Astro.props;
 const rp = mergeProps(skeleton({ shape }), className);
 ---
-<div {...rp} aria-hidden="true" style={style} />
+<div aria-hidden="true" {...rest} {...rp} />

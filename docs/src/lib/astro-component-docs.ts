@@ -125,30 +125,37 @@ type ExtractedProps = {
   extendsType?: string;
 };
 
+/**
+ * Locate the body `{` of `interface Props extends …` / `type Props = … & {`, skipping braces
+ * nested in generics (`Omit<HTMLAttributes<'div'>, 'title'>`), and report which known variant
+ * prop type the header mentions (`interface Props extends Omit<…>, AvatarVariantProps {`).
+ */
 function extractProps(source: string): ExtractedProps | undefined {
-  const interfaceMatch = source.match(/interface\s+Props\s+extends\s+(\w+)\s*\{/);
-  if (interfaceMatch) {
-    const open = source.indexOf('{', interfaceMatch.index!);
-    return {
-      extendsType: interfaceMatch[1],
-      block: extractBraceBlock(source, open),
-    };
+  const decl = source.match(/(?:interface\s+Props\s+extends\b|type\s+Props\s*=)/);
+  if (!decl) return undefined;
+
+  const headerStart = decl.index! + decl[0].length;
+  let angle = 0;
+  let paren = 0;
+  let open = -1;
+  for (let i = headerStart; i < source.length; i += 1) {
+    const ch = source[i];
+    if (ch === '<') angle += 1;
+    else if (ch === '>' && source[i - 1] !== '=') angle = Math.max(0, angle - 1);
+    else if (ch === '(') paren += 1;
+    else if (ch === ')') paren = Math.max(0, paren - 1);
+    else if (ch === '{' && angle === 0 && paren === 0) {
+      open = i;
+      break;
+    }
   }
+  if (open === -1) return undefined;
 
-  const intersectionMatch = source.match(/type\s+Props\s*=\s*(\w+)\s*&\s*\{/);
-  if (intersectionMatch) {
-    const open = source.indexOf('{', intersectionMatch.index!);
-    return {
-      extendsType: intersectionMatch[1],
-      block: extractBraceBlock(source, open),
-    };
-  }
-
-  const start = source.search(/type\s+Props\s*=\s*\{/);
-  if (start === -1) return undefined;
-
-  const open = source.indexOf('{', start);
-  return { block: extractBraceBlock(source, open) };
+  const header = source.slice(headerStart, open);
+  const extendsType = Object.keys(VARIANT_RECIPES).find((name) =>
+    new RegExp(`\\b${name}\\b`).test(header),
+  );
+  return { extendsType, block: extractBraceBlock(source, open) };
 }
 
 function parseProps(block: string): AstroPropDoc[] {

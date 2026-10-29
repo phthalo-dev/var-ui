@@ -1,11 +1,11 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { thumbnail } from '@var-ui/core/components/thumbnail';
 import type { ThumbnailVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
-export type ThumbnailProps = {
+export type ThumbnailProps = Omit<ComponentPropsWithRef<'span'>, 'children'> & {
   /** Image URL for the preview. */
   src: string;
   /** Accessible description of the image. */
@@ -16,10 +16,6 @@ export type ThumbnailProps = {
   onDismiss?: () => void;
   /** Accessible label for the remove button. @default Remove */
   dismissLabel?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Ref to the underlying root `<span>` element. */
-  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
@@ -37,10 +33,11 @@ export function Thumbnail({
   dismissLabel = 'Remove',
   className,
   ref,
+  ...rest
 }: ThumbnailProps): JSX.Element {
   const s = thumbnail({ size });
   return (
-    <span {...mergeProps(s.root, className)} ref={ref}>
+    <span {...rest} {...mergeProps(s.root, className)} ref={ref}>
       <img {...mergeProps(s.image)} src={src} alt={alt} />
       {onDismiss ? (
         <AriaButton {...mergeProps(s.dismiss)} aria-label={dismissLabel} onPress={onDismiss}>

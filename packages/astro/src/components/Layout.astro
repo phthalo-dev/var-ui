@@ -1,25 +1,38 @@
 ---
 import { layout } from '@var-ui/core/components/layout';
 import { layoutShellPaddingAssignments, layoutContentWidthAssignment } from '@var-ui/core/components/layoutShellVars';
+import type { HTMLAttributes } from 'astro/types';
 import type { LayoutPadding, LayoutVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'content'> & {
   height?: NonNullable<LayoutVariantProps['height']>;
   /** Sets shell CSS vars on the root. Omit for recipe default (`space[4]`). */
   padding?: LayoutPadding;
   /** Constrains header/footer inner wrappers via shell CSS vars. */
   contentWidth?: number;
+  /** Divider default for the header and footer bands. @default false */
+  defaultHasDividers?: boolean;
   className?: string;
 };
 
-const { height = 'fill', padding, contentWidth, className } = Astro.props;
+const {
+  height = 'fill',
+  padding,
+  contentWidth,
+  defaultHasDividers = false,
+  className,
+  style,
+  ...rest
+} = Astro.props;
 const l = layout({ height });
 const rootStyle = {
   ...(padding != null ? layoutShellPaddingAssignments(padding) : {}),
   ...(contentWidth != null ? layoutContentWidthAssignment(contentWidth) : {}),
 };
 const hasRootStyle = Object.keys(rootStyle).length > 0;
+const mergedStyle = mergeInlineStyle(hasRootStyle ? rootStyle : undefined, style);
 
 const hasHeader = Astro.slots.has('header');
 const hasFooter = Astro.slots.has('footer');
@@ -28,12 +41,15 @@ const hasEnd = Astro.slots.has('end');
 ---
 
 <div
+  {...rest}
   {...mergeProps(l.root, className)}
-  style={hasRootStyle ? rootStyle : undefined}
+  style={mergedStyle}
   data-has-header={hasHeader ? '' : undefined}
   data-has-footer={hasFooter ? '' : undefined}
   data-has-start={hasStart ? '' : undefined}
   data-has-end={hasEnd ? '' : undefined}
+  data-divider-header={defaultHasDividers && hasHeader ? '' : undefined}
+  data-divider-footer={defaultHasDividers && hasFooter ? '' : undefined}
 >
   <div {...mergeProps(l.outer)}>
     <div {...mergeProps(l.inner)}>

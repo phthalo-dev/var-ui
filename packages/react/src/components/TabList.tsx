@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, KeyboardEvent, ReactNode, Ref } from 'react';
 import {
   Children,
   createContext,
@@ -44,7 +44,10 @@ function useTabListContext(): TabListContextValue {
   return useContext(TabListContext) ?? defaultContextValue;
 }
 
-export type TabListTabProps = {
+export type TabListTabProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'value' | 'children' | 'ref' | 'onChange'
+> & {
   /** Identifies this tab; passed to `onChange` and compared against `TabList`'s `value`. */
   value: string;
   label: string;
@@ -55,7 +58,6 @@ export type TabListTabProps = {
   /** Hides the visible label, showing only the icon; `label` still provides the accessible name. @default false */
   isLabelHidden?: boolean;
   isDisabled?: boolean;
-  className?: string;
   /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
   ref?: Ref<HTMLElement>;
 };
@@ -74,6 +76,7 @@ export function TabListTab({
   isDisabled = false,
   className,
   ref,
+  ...rest
 }: TabListTabProps): JSX.Element {
   const ctx = useTabListContext();
   const s = tabList({ size: ctx.size });
@@ -90,6 +93,7 @@ export function TabListTab({
   );
 
   const sharedProps = {
+    ...(rest as object),
     ...mergeProps(s.tab, className),
     'data-selected': isSelected ? '' : undefined,
     'data-disabled': isDisabled ? '' : undefined,
@@ -124,17 +128,20 @@ export type TabListMenuOption = {
   isDisabled?: boolean;
 };
 
-export type TabListMenuProps = {
+export type TabListMenuProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** Accessible name + visible text for the overflow trigger (e.g. "More"). */
   label: string;
   options: TabListMenuOption[];
-  className?: string;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 /** Overflow "More" trigger — reuses `Menu.FromSections`; selecting an option calls `onChange`. */
-export function TabListMenu({ label, options, className, ref }: TabListMenuProps): JSX.Element {
+export function TabListMenu({
+  label,
+  options,
+  className,
+  ref,
+  ...rest
+}: TabListMenuProps): JSX.Element {
   const ctx = useTabListContext();
   const s = tabList({ size: ctx.size });
   const isSelected = options.some((option) => option.value === ctx.value);
@@ -149,7 +156,7 @@ export function TabListMenu({ label, options, className, ref }: TabListMenuProps
   };
 
   return (
-    <div {...mergeProps(s.menu, className)} ref={ref}>
+    <div {...rest} {...mergeProps(s.menu, className)} ref={ref}>
       <Menu.FromSections
         trigger={
           <AriaButton {...triggerProps}>
@@ -188,7 +195,7 @@ function collectTabListValues(children: ReactNode): string[] {
   return values;
 }
 
-export type TabListProps = {
+export type TabListProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'onChange' | 'ref'> & {
   /** Selected tab/menu-option value. */
   value?: string;
   onChange?: (value: string) => void;
@@ -202,7 +209,6 @@ export type TabListProps = {
   orientation?: 'horizontal' | 'vertical';
   /** `TabList.Tab` / `TabList.Menu` children. */
   children?: ReactNode;
-  className?: string;
   /** Accessible name for the `nav` landmark. @default 'Tabs' */
   label?: string;
   /** Ref to the underlying `<nav>` element. */
@@ -240,7 +246,9 @@ export function TabList({
   children,
   className,
   label = 'Tabs',
+  onKeyDown,
   ref,
+  ...rest
 }: TabListProps): JSX.Element {
   const s = tabList({ size });
   const rootRef = useRef<HTMLElement>(null);
@@ -263,6 +271,8 @@ export function TabList({
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented) return;
       const root = rootRef.current;
       if (!root) return;
       const items = Array.from(
@@ -292,12 +302,13 @@ export function TabList({
       event.preventDefault();
       items[nextIndex]?.focus();
     },
-    [orientation],
+    [orientation, onKeyDown],
   );
 
   return (
     <TabListContext.Provider value={contextValue}>
       <nav
+        {...rest}
         ref={setRoot}
         aria-label={label}
         data-orientation={orientation}

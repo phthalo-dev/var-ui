@@ -1,8 +1,9 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { card } from '@var-ui/core/components/card';
 import { combine, mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'a'>, 'title'> & {
   title: string;
   description?: string;
   hint?: string;
@@ -10,10 +11,10 @@ type Props = {
   className?: string;
 };
 
-const { title, description, hint, href, className } = Astro.props;
+const { title, description, hint, href, className, ...rest } = Astro.props;
 const c = card();
 ---
-<a href={href} {...combine(c.root, c.linkRoot, className)}>
+<a href={href} {...rest} {...combine(c.root, c.linkRoot, className)}>
   <span {...mergeProps(c.linkTitle)}>{title}</span>
   {description ? <p {...mergeProps(c.linkDescription)}>{description}</p> : null}
   {hint ? <span {...mergeProps(c.linkHint)}>{hint}</span> : null}

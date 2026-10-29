@@ -1,4 +1,4 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithoutRef, JSX, Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
@@ -17,38 +17,41 @@ function escapeHtml(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
-export type CodeBlockProps = CodeBlockVariantProps & {
-  /** Source code string to display and copy. */
-  code: string;
-  /** Language tag shown in the header (e.g. `tsx`, `bash`). */
-  language?: string;
-  /** Pre-highlighted HTML for the code body. Pair with `codeClassName` from your highlighter. */
-  codeHtml?: string;
-  /** Classes for the highlighted `<code>` element (e.g. `hljs language-tsx`). */
-  codeClassName?: string;
-  /** Pre-highlighted HTML per line when `showLineNumbers` is enabled. */
-  lineHtml?: string[];
-  /** Optional filename shown in the header. */
-  filename?: string;
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  /** Whether to show the copy-to-clipboard button. @default true */
-  copyable?: boolean;
-  /** Wrap long lines instead of horizontal scrolling. @default false */
-  wrapLongLines?: boolean;
-  /** Show line numbers in a gutter column. @default false */
-  showLineNumbers?: boolean;
-  /** 1-based line numbers to highlight. */
-  highlightedLines?: number[];
-  /** Accessible label for the copy button. @default Copy code */
-  copyLabel?: string;
-  /** Feedback text after a successful copy. @default Copied */
-  copiedLabel?: string;
-  /** Feedback text when clipboard write fails. @default Copy failed */
-  copyErrorLabel?: string;
-  /** Ref to the root element: a `<div>`, or a `<code>` for the `inline` variant. */
-  ref?: Ref<HTMLElement>;
-};
+export type CodeBlockProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
+  CodeBlockVariantProps & {
+    /** Source code string to display and copy. */
+    code: string;
+    /** Language tag shown in the header (e.g. `tsx`, `bash`). */
+    language?: string;
+    /** Pre-highlighted HTML for the code body. Pair with `codeClassName` from your highlighter. */
+    codeHtml?: string;
+    /** Classes for the highlighted `<code>` element (e.g. `hljs language-tsx`). */
+    codeClassName?: string;
+    /** Pre-highlighted HTML per line when `showLineNumbers` is enabled. */
+    lineHtml?: string[];
+    /** Optional filename shown in the header. */
+    filename?: string;
+    /** Whether to show the copy-to-clipboard button. @default true */
+    copyable?: boolean;
+    /** Wrap long lines instead of horizontal scrolling. @default false */
+    wrapLongLines?: boolean;
+    /** Show line numbers in a gutter column. @default false */
+    showLineNumbers?: boolean;
+    /** 1-based line numbers to highlight. */
+    highlightedLines?: number[];
+    /** Accessible label for the copy button. @default Copy code */
+    copyLabel?: string;
+    /** Feedback text after a successful copy. @default Copied */
+    copiedLabel?: string;
+    /** Feedback text when clipboard write fails. @default Copy failed */
+    copyErrorLabel?: string;
+    /** Visible text of the copy button. @default Copy */
+    copyText?: string;
+    /** Visible text of the copy button after a failed copy. @default Error */
+    errorText?: string;
+    /** Ref to the root element: a `<div>`, or a `<code>` for the `inline` variant. */
+    ref?: Ref<HTMLElement>;
+  };
 
 export function CodeBlock({
   code,
@@ -66,7 +69,10 @@ export function CodeBlock({
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
+  copyText = 'Copy',
+  errorText = 'Error',
   ref,
+  ...rest
 }: CodeBlockProps): JSX.Element {
   const cb = codeBlock({ variant });
 
@@ -116,14 +122,24 @@ export function CodeBlock({
 
   if (inline) {
     return (
-      <code {...mergeProps(cb.root, cx(cb.code, className))} ref={ref} data-codeblock>
+      <code
+        {...(rest as ComponentPropsWithoutRef<'code'>)}
+        {...mergeProps(cb.root, cx(cb.code, className))}
+        ref={ref}
+        data-codeblock
+      >
         {code}
       </code>
     );
   }
 
   return (
-    <div {...mergeProps(cb.root, className)} ref={ref as Ref<HTMLDivElement>} data-codeblock>
+    <div
+      {...rest}
+      {...mergeProps(cb.root, className)}
+      ref={ref as Ref<HTMLDivElement>}
+      data-codeblock
+    >
       <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
@@ -145,7 +161,7 @@ export function CodeBlock({
               aria-label={isCopied ? copiedLabel : copyLabel}
             >
               <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
-              {isCopied ? 'Copied' : hasError ? 'Error' : 'Copy'}
+              {isCopied ? copiedLabel : hasError ? errorText : copyText}
             </button>
             <span {...feedbackProps} role="status" aria-live="polite">
               {feedbackText}

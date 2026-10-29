@@ -1,13 +1,14 @@
 ---
 import { topNav } from '@var-ui/core/components/topNav';
+import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
-type Props = {
+type Props = Omit<HTMLAttributes<'nav'>, 'class:list'> & {
   label?: string;
   className?: string;
 };
 
-const { label = 'Top navigation', className } = Astro.props;
+const { label = 'Top navigation', className, ...rest } = Astro.props;
 const s = topNav();
 const hasCenter = Astro.slots.has('center');
 const hasStart = Astro.slots.has('default');
@@ -15,6 +16,7 @@ const hasStart = Astro.slots.has('default');
 
 <nav
   aria-label={label}
+  {...rest}
   data-var-ui-top-nav
   data-layout={hasCenter ? 'grid' : undefined}
   {...mergeProps(s.root, className)}

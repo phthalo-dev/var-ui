@@ -1,6 +1,6 @@
-import { createContext, type FormEvent, type FormHTMLAttributes, type JSX, type Ref } from 'react';
+import { createContext, type ComponentPropsWithRef, type FormEvent, type JSX } from 'react';
 
-export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & {
+export type FormProps = Omit<ComponentPropsWithRef<'form'>, 'onSubmit'> & {
   /**
    * Called with the event and `FormData` once the form is valid. If it returns
    * a promise that rejects, the rejection goes to `onError`, or is reported
@@ -9,9 +9,8 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> & 
   onSubmit?: (event: FormEvent<HTMLFormElement>, data: FormData) => void | Promise<void>;
   /** Receives the rejection of an async `onSubmit`. Defaults to `reportError`. */
   onError?: (error: unknown) => void;
+  /** Server-side errors by field `name`, shown by `Field` and focused on submit. */
   errors?: Record<string, string | undefined>;
-  /** Ref to the underlying `<form>` element. */
-  ref?: Ref<HTMLFormElement>;
 };
 
 export const FormErrorsContext = createContext<Record<string, string | undefined>>({});

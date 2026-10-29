@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Children, cloneElement, createContext, isValidElement, useContext } from 'react';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { timeline } from '@var-ui/core/components/timeline';
@@ -42,17 +42,15 @@ function renderBulletContent(
   return isIconName(icon) ? <Icon name={icon} size="sm" /> : icon;
 }
 
-export type TimelineProps = TimelineVariantProps & {
-  /** Index of the last active item (inclusive). Later items render as pending. */
-  activeIndex?: number;
-  items?: TimelineItemData[];
-  children?: ReactNode;
-  className?: string;
-  /** Ref to the underlying `<ol>` element. */
-  ref?: Ref<HTMLOListElement>;
-};
+export type TimelineProps = Omit<ComponentPropsWithRef<'ol'>, 'children'> &
+  TimelineVariantProps & {
+    /** Index of the last active item (inclusive). Later items render as pending. */
+    activeIndex?: number;
+    items?: TimelineItemData[];
+    children?: ReactNode;
+  };
 
-export type TimelineItemProps = {
+export type TimelineItemProps = Omit<ComponentPropsWithRef<'li'>, 'title' | 'children'> & {
   title: ReactNode;
   description?: ReactNode;
   timestamp?: ReactNode;
@@ -60,12 +58,9 @@ export type TimelineItemProps = {
   bullet?: ReactNode;
   tone?: Tone;
   children?: ReactNode;
-  className?: string;
   index?: number;
   isActive?: boolean;
   isPending?: boolean;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
 function TimelineItemContent({
@@ -81,6 +76,7 @@ function TimelineItemContent({
   isActive = true,
   isPending = false,
   ref,
+  ...rest
 }: TimelineItemProps): JSX.Element {
   const { size = 'md', tone: groupTone = 'accent' } = useTimelineContext();
   const tone = toneProp ?? groupTone;
@@ -89,6 +85,7 @@ function TimelineItemContent({
 
   return (
     <li
+      {...rest}
       {...mergeProps(styles.item, className)}
       ref={ref}
       data-timeline-item={index}
@@ -131,6 +128,7 @@ export function Timeline({
   children,
   className,
   ref,
+  ...rest
 }: TimelineProps): JSX.Element {
   const styles = timeline({ size, tone });
   const contextValue: TimelineContextValue = { size, tone, activeIndex };
@@ -166,7 +164,7 @@ export function Timeline({
 
   return (
     <TimelineContext.Provider value={contextValue}>
-      <ol {...mergeProps(styles.root, className)} ref={ref} data-timeline>
+      <ol {...rest} {...mergeProps(styles.root, className)} ref={ref} data-timeline>
         {enhancedChildren ?? itemNodes}
       </ol>
     </TimelineContext.Provider>

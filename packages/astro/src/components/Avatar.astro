@@ -1,10 +1,11 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { avatar } from '@var-ui/core/components/avatar';
 import { statusDot } from '@var-ui/core/components/statusDot';
 import type { AvatarVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends AvatarVariantProps {
+interface Props extends Omit<HTMLAttributes<'span'>, 'children'>, AvatarVariantProps {
   src?: string;
   alt?: string;
   name?: string;
@@ -20,12 +21,12 @@ function initialsOf(name: string): string {
     .join('');
 }
 
-const { src, alt, name, size = 'md', status, className } = Astro.props;
+const { src, alt, name, size = 'md', status, className, ...rest } = Astro.props;
 const a = avatar({ size });
 const accessibleName = alt ?? name;
 const showImage = Boolean(src);
 ---
-<span {...mergeProps(a.root, className)}>
+<span {...rest} {...mergeProps(a.root, className)}>
   {
     showImage ? (
       <>

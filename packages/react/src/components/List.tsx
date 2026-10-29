@@ -1,4 +1,4 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext, useId } from 'react';
 import { list as listStyles } from '@var-ui/core/components/list';
 import type { ListVariantProps } from '@var-ui/core';
@@ -14,7 +14,7 @@ export type ListItemData = {
   endContent?: ReactNode;
 };
 
-export type ListProps = {
+export type ListProps = Omit<ComponentPropsWithRef<'ul'>, 'children' | 'ref'> & {
   density?: NonNullable<ListVariantProps['density']>;
   listStyle?: NonNullable<ListVariantProps['listStyle']>;
   hasDividers?: NonNullable<ListVariantProps['hasDividers']>;
@@ -23,7 +23,6 @@ export type ListProps = {
   renderStart?: (item: ListItemData) => ReactNode;
   renderEnd?: (item: ListItemData) => ReactNode;
   children?: ReactNode;
-  className?: string;
   /** Ref to the underlying `<ul>` (or `<ol>` when `listStyle` is `decimal`) element. */
   ref?: Ref<HTMLUListElement & HTMLOListElement>;
   /** Fired for interactive items without href (items mode / Item onPress). */
@@ -37,7 +36,8 @@ export type ListProps = {
  * hit target — `startContent` and `endContent` must be non-interactive (decorative
  * or static content only; no links, buttons, or other controls).
  */
-export type ListItemProps = {
+export type ListItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children'> & {
+  /** Stable id used to label the row's hit target (not set on the `<li>`). */
   id?: string;
   label: ReactNode;
   description?: ReactNode;
@@ -48,9 +48,6 @@ export type ListItemProps = {
   href?: string;
   onPress?: () => void;
   isDisabled?: boolean;
-  className?: string;
-  /** Ref to the underlying `<li>` element. */
-  ref?: Ref<HTMLLIElement>;
 };
 
 type ListStyleSlots = ReturnType<typeof listStyles>;
@@ -61,18 +58,6 @@ type ListContextValue = {
 };
 
 const ListContext = createContext<ListContextValue | null>(null);
-
-const interactiveOverlayStyle = {
-  position: 'absolute',
-  inset: 0,
-  zIndex: 1,
-  margin: 0,
-  padding: 0,
-  border: 'none',
-  background: 'transparent',
-  cursor: 'inherit',
-  textDecoration: 'none',
-} as const;
 
 function ariaLabelFromNode(node: ReactNode): string | undefined {
   if (typeof node === 'string') return node;
@@ -88,7 +73,7 @@ function useListContext(): ListContextValue {
   return context;
 }
 
-type ListItemContentProps = {
+type ListItemContentProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
   itemId?: string;
   label: ReactNode;
   description?: ReactNode;
@@ -97,8 +82,6 @@ type ListItemContentProps = {
   href?: string;
   onPress?: () => void;
   isDisabled?: boolean;
-  className?: string;
-  ref?: Ref<HTMLLIElement>;
 };
 
 function ListItemContent({
@@ -112,6 +95,7 @@ function ListItemContent({
   isDisabled = false,
   className,
   ref,
+  ...rest
 }: ListItemContentProps): JSX.Element {
   const { styles: s, listId } = useListContext();
   const fallbackId = useId();
@@ -121,6 +105,7 @@ function ListItemContent({
 
   return (
     <li
+      {...rest}
       {...mergeProps(s.item, className)}
       ref={ref}
       data-interactive={isInteractive ? '' : undefined}
@@ -137,7 +122,7 @@ function ListItemContent({
           href={href}
           aria-label={stringLabel}
           aria-labelledby={stringLabel == null ? labelId : undefined}
-          style={interactiveOverlayStyle}
+          {...mergeProps(s.overlayLink)}
         />
       ) : null}
       {isInteractive && href == null && onPress != null ? (
@@ -145,7 +130,7 @@ function ListItemContent({
           type="button"
           aria-label={stringLabel}
           aria-labelledby={stringLabel == null ? labelId : undefined}
-          style={interactiveOverlayStyle}
+          {...mergeProps(s.overlayLink)}
           onClick={onPress}
         />
       ) : null}
@@ -179,6 +164,7 @@ export function List({
   className,
   ref,
   onAction,
+  ...rest
 }: ListProps): JSX.Element {
   const s = listStyles({ density, listStyle, hasDividers: hasDividers ? true : false });
   const listId = useId();
@@ -205,7 +191,7 @@ export function List({
 
   return (
     <ListContext.Provider value={{ styles: s, listId }}>
-      <RootTag {...mergeProps(s.root, className)} ref={ref}>
+      <RootTag {...rest} {...mergeProps(s.root, className)} ref={ref}>
         {header != null ? <li {...mergeProps(s.header)}>{header}</li> : null}
         {children ?? itemNodes}
       </RootTag>
@@ -225,9 +211,11 @@ export function ListItem({
   isDisabled,
   className,
   ref,
+  ...rest
 }: ListItemProps): JSX.Element {
   return (
     <ListItemContent
+      {...rest}
       itemId={id}
       label={label}
       description={description}
