@@ -1,5 +1,6 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { icon, type IconName, type IconVariantProps } from '@var-ui/core';
+import { icon } from '@var-ui/core/components/icon';
+import type { IconName, IconVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { emptyFallback } from './emptyFallback';
 import { useIcons } from './IconProvider';

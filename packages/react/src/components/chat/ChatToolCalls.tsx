@@ -1,5 +1,5 @@
 import { useState, type JSX, type KeyboardEvent, type ReactNode, type Ref } from 'react';
-import { chatToolCalls } from '@var-ui/core';
+import { chatToolCalls } from '@var-ui/core/components/chat/chatToolCalls';
 import { Icon } from '../../icons';
 import { Spinner } from '../Spinner';
 import { mergeProps } from 'typestyles';

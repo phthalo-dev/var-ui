@@ -1,6 +1,7 @@
 ---
 import type { VariantOptions } from 'typestyles';
-import { placement as toastPlacement, toast as toastRecipe } from '@var-ui/core';
+import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toast as toastRecipe } from '@var-ui/core/components/toast';
 import { mergeProps } from '../utils';
 
 type ToastPlacement = VariantOptions<typeof toastPlacement>;

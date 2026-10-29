@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { emptyState } from '@var-ui/core';
+import { emptyState } from '@var-ui/core/components/emptyState';
 import { mergeProps } from 'typestyles';
 
 export type EmptyStateProps = {

@@ -5,7 +5,7 @@ import { duration } from '../tokens/defaults/duration';
 import { easing } from '../tokens/defaults/easing';
 import { transition } from '../tokens/defaults/transition';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space[3].var;
 const nestedIndent = t.space[2].var;

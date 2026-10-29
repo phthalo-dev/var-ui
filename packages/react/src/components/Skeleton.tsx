@@ -1,5 +1,6 @@
 import type { CSSProperties, JSX, Ref } from 'react';
-import { skeleton, type SkeletonVariantProps } from '@var-ui/core';
+import { skeleton } from '@var-ui/core/components/skeleton';
+import type { SkeletonVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type SkeletonProps = {

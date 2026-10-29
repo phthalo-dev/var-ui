@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes, HTMLAttributes, JSX, Ref } from 'react';
-import { card } from '@var-ui/core';
+import { card } from '@var-ui/core/components/card';
 import { combine, mergeProps } from 'typestyles';
 
 export type CardProps = HTMLAttributes<HTMLDivElement> & {

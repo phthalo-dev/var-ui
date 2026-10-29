@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { dateFieldChrome } from './fieldChrome';
+import { dateFieldChrome } from '../internal/fieldChrome';
 
 /**
  * Segmented time-only field — hour/minute/AM-PM entered as individually

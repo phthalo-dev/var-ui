@@ -1,7 +1,7 @@
 import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' });
 

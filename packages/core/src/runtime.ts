@@ -23,4 +23,5 @@ export const typestyles = createTypeStyles({
   },
 });
 
+/** Internal to @var-ui/core modules; the package root re-exports only `typestyles`. */
 export const { style, recipe, tokens, global, override, breakpoint, media } = typestyles;

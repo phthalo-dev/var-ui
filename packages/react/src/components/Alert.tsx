@@ -1,5 +1,6 @@
 import type { AriaRole, JSX, ReactNode, Ref } from 'react';
-import { alert, type AlertVariantProps, type IconName, type Tone } from '@var-ui/core';
+import { alert } from '@var-ui/core/components/alert';
+import type { AlertVariantProps, IconName, Tone } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

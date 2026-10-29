@@ -1,7 +1,7 @@
 import { atProperty, variant, type RecipeVariants, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 const appShellHeight = variant.enum(['fill', 'auto', 'stretch'], { default: 'fill' });
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {

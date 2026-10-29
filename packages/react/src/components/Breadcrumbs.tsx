@@ -1,7 +1,8 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs as AriaBreadcrumbs, Link } from 'react-aria-components';
-import { breadcrumbs as breadcrumbsStyles, recipeVars, styleVars } from '@var-ui/core';
+import { breadcrumbs as breadcrumbsStyles } from '@var-ui/core/components/breadcrumbs';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 
 const breadcrumbsVars = recipeVars(breadcrumbsStyles);
 import { mergeProps } from 'typestyles';

@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { outline } from '@var-ui/core';
+import { outline } from '@var-ui/core/components/outline';
 import { cx, mergeProps } from 'typestyles';
 
 export type OutlineItemData = {

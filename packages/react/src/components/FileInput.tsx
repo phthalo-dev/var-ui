@@ -9,7 +9,7 @@ import {
   type MouseEvent,
   type Ref,
 } from 'react';
-import { fileInput } from '@var-ui/core';
+import { fileInput } from '@var-ui/core/components/fileInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

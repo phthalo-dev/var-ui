@@ -1,5 +1,6 @@
 import type { ChangeEvent, JSX, Ref } from 'react';
-import { searchInput, type SearchInputVariantProps } from '@var-ui/core';
+import { searchInput } from '@var-ui/core/components/searchInput';
+import type { SearchInputVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

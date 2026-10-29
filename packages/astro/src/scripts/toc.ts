@@ -1,6 +1,6 @@
 import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
 import { createTocSpy, type TocHeading } from '@var-ui/core/components/toc/spy';
-import { toc } from '@var-ui/core';
+import { toc } from '@var-ui/core/components/toc';
 import { mergeProps } from '../utils';
 
 const ROOT_SELECTOR = '[data-var-ui-toc]';

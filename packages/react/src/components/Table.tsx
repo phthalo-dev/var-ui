@@ -1,6 +1,8 @@
 import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
-import { table as tableStyles, designTokens as t, type TableVariantProps } from '@var-ui/core';
+import { table as tableStyles } from '@var-ui/core/components/table';
+import { tokens as t } from '@var-ui/core/tokens/declare';
+import type { TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 import type { SortDescriptor, SortDirection } from '../hooks/useTableSort';

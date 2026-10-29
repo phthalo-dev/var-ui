@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { media, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 export const card = typestyles.recipe({
   name: 'card',

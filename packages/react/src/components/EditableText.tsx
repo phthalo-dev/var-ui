@@ -12,7 +12,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
-import { editableText } from '@var-ui/core';
+import { editableText } from '@var-ui/core/components/editableText';
 import { mergeProps } from 'typestyles';
 
 export type EditableTextActivation = 'click' | 'doubleClick' | 'focus';

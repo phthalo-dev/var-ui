@@ -1,11 +1,8 @@
 import type { CSSProperties, JSX, ReactElement, ReactNode, Ref } from 'react';
 import { Children, createContext, useCallback, useContext, useMemo } from 'react';
-import {
-  overflowList as overflowListStyles,
-  recipeVars,
-  styleVars,
-  type OverflowListVariantProps,
-} from '@var-ui/core';
+import { overflowList as overflowListStyles } from '@var-ui/core/components/overflowList';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import type { OverflowListVariantProps } from '@var-ui/core';
 
 const overflowListVars = recipeVars(overflowListStyles);
 import { mergeProps } from 'typestyles';

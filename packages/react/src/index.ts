@@ -12,5 +12,18 @@ export {
 } from './colorMode';
 export * from './icons';
 export * from './layers/LayerProvider';
-export * from './overlays';
+export {
+  createOverlayChangeDetails,
+  useOverlayPresence,
+  usePositionerVars,
+  type OverlayChangeEventDetails,
+  type OverlayOpenChangeHandler,
+  type OverlayOpenChangeReason,
+  type OverlayPlacement,
+  type OverlayPresenceAttrs,
+  type UseOverlayPresenceOptions,
+  type UseOverlayPresenceResult,
+  type UsePositionerVarsOptions,
+  type UsePositionerVarsResult,
+} from './overlays';
 export * from './hooks';

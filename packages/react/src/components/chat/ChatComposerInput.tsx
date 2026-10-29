@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type JSX, type KeyboardEvent, type Ref } from 'react';
 import { TextArea, TextField as AriaTextField } from 'react-aria-components';
-import { chatComposer } from '@var-ui/core';
+import { chatComposer } from '@var-ui/core/components/chat/chatComposer';
 import { mergeProps } from 'typestyles';
 
 export type ChatComposerInputProps = {

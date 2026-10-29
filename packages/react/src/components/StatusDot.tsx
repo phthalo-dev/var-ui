@@ -1,5 +1,6 @@
 import type { JSX, Ref } from 'react';
-import { statusDot, type StatusDotVariantProps } from '@var-ui/core';
+import { statusDot } from '@var-ui/core/components/statusDot';
+import type { StatusDotVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type StatusDotProps = StatusDotVariantProps & {

@@ -1,7 +1,7 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { Children, useRef } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
-import { carousel } from '@var-ui/core';
+import { carousel } from '@var-ui/core/components/carousel';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

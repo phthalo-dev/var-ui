@@ -1,14 +1,10 @@
 import type { JSX, ReactNode, Ref } from 'react';
 import { Children, createContext, useContext, useMemo, useState } from 'react';
-import {
-  button,
-  descriptionList as descriptionListStyles,
-  recipeVars,
-  styleVars,
-  iconNameList,
-  type IconName,
-  type DescriptionListVariantProps,
-} from '@var-ui/core';
+import { button } from '@var-ui/core/components/button';
+import { descriptionList as descriptionListStyles } from '@var-ui/core/components/descriptionList';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import { iconNameList } from '@var-ui/core/icons/iconNames';
+import type { IconName, DescriptionListVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

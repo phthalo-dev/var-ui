@@ -23,7 +23,7 @@ import {
   Pressable,
   Separator,
 } from 'react-aria-components';
-import { menu } from '@var-ui/core';
+import { menu } from '@var-ui/core/components/menu';
 import { useLayer } from '../layers/LayerProvider';
 import {
   createOverlayChangeDetails,
@@ -34,12 +34,20 @@ import {
   type OverlayOpenChangeHandler,
   type UseOverlayPresenceResult,
 } from '../overlays';
-import { MenuContent } from './menuContent';
-import { MenuContextMenu, MenuFromSections, MenuOverflow } from './menuPresets';
+import { MenuContent } from '../internal/menuContent';
+import { MenuContextMenu, MenuFromSections, MenuOverflow } from '../internal/menuPresets';
 import { mergeProps } from 'typestyles';
 
-export type { MenuContentProps, MenuItemDefinition, MenuSectionDefinition } from './menuContent';
-export type { MenuContextMenuProps, MenuFromSectionsProps, MenuOverflowProps } from './menuPresets';
+export type {
+  MenuContentProps,
+  MenuItemDefinition,
+  MenuSectionDefinition,
+} from '../internal/menuContent';
+export type {
+  MenuContextMenuProps,
+  MenuFromSectionsProps,
+  MenuOverflowProps,
+} from '../internal/menuPresets';
 
 export type MenuRootProps = {
   children: ReactNode;

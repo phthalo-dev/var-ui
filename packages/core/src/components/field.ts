@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { fieldChrome } from './fieldChrome';
+import { fieldChrome } from '../internal/fieldChrome';
 
 /**
  * Standalone field chrome for custom inputs that aren't one of the built-in

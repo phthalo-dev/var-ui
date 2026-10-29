@@ -23,7 +23,8 @@ import {
   ModalOverlay,
   Pressable,
 } from 'react-aria-components';
-import { dialog, type DialogVariantProps } from '@var-ui/core';
+import { dialog } from '@var-ui/core/components/dialog';
+import type { DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import {

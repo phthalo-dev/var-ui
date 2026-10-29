@@ -18,7 +18,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
-import { field } from '@var-ui/core';
+import { field } from '@var-ui/core/components/field';
 import { cx, mergeProps } from 'typestyles';
 import { FormErrorsContext } from './Form';
 

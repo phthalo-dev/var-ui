@@ -1,8 +1,8 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { fieldChrome } from './fieldChrome';
-import { focusRing } from './focusRing';
+import { fieldChrome } from '../internal/fieldChrome';
+import { focusRing } from '../internal/focusRing';
 
 const sliderVarDefinitions = {
   labelColor: {

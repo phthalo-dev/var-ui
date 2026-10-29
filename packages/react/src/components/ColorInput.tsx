@@ -1,7 +1,9 @@
 import type { ChangeEvent, JSX, Ref } from 'react';
 import { useEffect, useId, useState } from 'react';
 import { DialogTrigger, Label, Popover as AriaPopover, Pressable } from 'react-aria-components';
-import { colorField, popover, type ColorFieldVariantProps } from '@var-ui/core';
+import { colorField } from '@var-ui/core/components/colorField';
+import { popover } from '@var-ui/core/components/popover';
+import type { ColorFieldVariantProps } from '@var-ui/core';
 import { isValidHex, normalizeHex } from '../color/convert';
 import { useLayer } from '../layers/LayerProvider';
 import { useColorValue } from '../color';

@@ -2,7 +2,7 @@ import { atProperty } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { atDarkMode } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 /** Mobile prose density — uses TypeStyles breakpoint map from `runtime.ts`. */
 const belowMd = breakpoint('md', 'max');

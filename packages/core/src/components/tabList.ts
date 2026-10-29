@@ -1,7 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { focusRing } from '../internal/focusRing';
+import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 

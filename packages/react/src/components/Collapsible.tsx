@@ -6,7 +6,8 @@ import {
   DisclosurePanel,
   Heading,
 } from 'react-aria-components';
-import { collapsible, type CollapsibleVariantProps } from '@var-ui/core';
+import { collapsible } from '@var-ui/core/components/collapsible';
+import type { CollapsibleVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 

@@ -1,6 +1,6 @@
 import { variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
-import { controlSizeMetrics, controlSizeVariants } from './controlSize';
+import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { controlSize, orientation } from '../shared/variantAxes';
 
 const toolbarLayout = variant.enum(['flex', 'grid'], { default: 'flex' });

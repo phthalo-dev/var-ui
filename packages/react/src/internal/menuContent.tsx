@@ -5,7 +5,7 @@ import {
   MenuItem as AriaMenuItem,
   Separator,
 } from 'react-aria-components';
-import { menu } from '@var-ui/core';
+import { menu } from '@var-ui/core/components/menu';
 import { Icon } from '../icons';
 import { combine, mergeProps } from 'typestyles';
 

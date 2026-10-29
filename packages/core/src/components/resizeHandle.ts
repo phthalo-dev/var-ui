@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing as focusRingStyle } from './focusRing';
+import { focusRing as focusRingStyle } from '../internal/focusRing';
 
 /**
  * Draggable/keyboard-resizable separator. Pair with the React `ResizeHandle`

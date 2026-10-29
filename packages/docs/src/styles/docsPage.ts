@@ -1,7 +1,7 @@
 import { atProperty, variant } from 'typestyles';
-import { designTokens as t, breakpoint, typestyles } from '@var-ui/core';
+import { designTokens as t, typestyles } from '@var-ui/core';
 
-const belowLg = breakpoint('lg', 'max');
+const belowLg = typestyles.breakpoint('lg', 'max');
 const contentWidth = variant.enum(['default', 'full'], { default: 'default' });
 const contentPlacement = variant.enum(['standalone', 'inPageBody'], { default: 'standalone' });
 

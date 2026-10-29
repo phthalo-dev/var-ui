@@ -3,7 +3,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link as AriaLink } from 'react-aria-components';
 import { positionTocIndicator } from '@var-ui/core/components/indicators/toc';
 import type { TocHeading } from '@var-ui/core/components/toc/spy';
-import { toc as tocStyles, recipeVars, styleVars } from '@var-ui/core';
+import { toc as tocStyles } from '@var-ui/core/components/toc';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 
 const tocVars = recipeVars(tocStyles);
 import { useTocSpy } from '../hooks/useTocSpy';

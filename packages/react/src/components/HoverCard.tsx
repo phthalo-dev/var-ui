@@ -20,7 +20,7 @@ import {
   Popover as AriaPopover,
   type Placement,
 } from 'react-aria-components';
-import { hoverCard } from '@var-ui/core';
+import { hoverCard } from '@var-ui/core/components/hoverCard';
 import { useLayer } from '../layers/LayerProvider';
 import {
   createOverlayChangeDetails,

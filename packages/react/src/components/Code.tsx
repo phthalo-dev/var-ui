@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { inlineCode } from '@var-ui/core';
+import { inlineCode } from '@var-ui/core/components/inlineCode';
 import { mergeProps } from 'typestyles';
 
 export type CodeProps = {

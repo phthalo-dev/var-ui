@@ -17,23 +17,23 @@ const FIXTURES = {
   'button-only': {
     path: 'examples/bundle-fixtures/button-only',
     mode: 'regression',
-    jsMaxKb: 2000,
-    cssMaxKb: 600,
-    cssMinKb: 250,
+    jsMaxKb: 600,
+    cssMaxKb: 250,
+    cssMinKb: 100,
   },
   'form-kit': {
     path: 'examples/bundle-fixtures/form-kit',
     mode: 'regression',
-    jsMaxKb: 2000,
-    cssMaxKb: 600,
-    cssMinKb: 250,
+    jsMaxKb: 800,
+    cssMaxKb: 250,
+    cssMinKb: 100,
   },
   'date-kit': {
     path: 'examples/bundle-fixtures/date-kit',
     mode: 'regression',
-    jsMaxKb: 2000,
-    cssMaxKb: 600,
-    cssMinKb: 250,
+    jsMaxKb: 900,
+    cssMaxKb: 250,
+    cssMinKb: 100,
   },
   gallery: {
     path: 'examples/vite-app',
@@ -54,6 +54,13 @@ const FORBIDDEN_JS_MARKERS = {
   'button-only': ['var-ui-calendar', 'var-ui-command-palette', 'var-ui-file-tree'],
 };
 
+/** CSS that must not appear in minimal fixtures: unused components cost no CSS. */
+const FORBIDDEN_CSS_MARKERS = {
+  'button-only': ['.var-ui-calendar', '.var-ui-command-palette', '.var-ui-file-tree'],
+  'form-kit': ['.var-ui-calendar', '.var-ui-command-palette', '.var-ui-file-tree'],
+  'date-kit': ['.var-ui-command-palette', '.var-ui-file-tree'],
+};
+
 function readDirFiles(dir, ext) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
@@ -72,6 +79,12 @@ function collectJsFiles(distDir) {
 function isRuntimeInjectionDisabled(jsSource) {
   if (jsSource.includes('TYPESTYLES_RUNTIME_DISABLED')) return true;
   // Minified guard: `var <id>=!0` where !0 is true → injection skipped via `if(<id>||`
+  // Fully constant-folded form: with `__TYPESTYLES_RUNTIME_DISABLED__` defined, the bundler drops
+  // the flag itself and the flush function only forwards pending rules to the SSR buffer (no DOM
+  // injection). This is what small bundles look like once unused recipes are tree-shaken.
+  if (/\.pendingRules=\[\],\w+\.ssrBuffer&&\w+\.ssrBuffer\.push\(\.\.\.\w+\)\}/.test(jsSource)) {
+    return true;
+  }
   for (const match of jsSource.matchAll(/var ([a-zA-Z_$][\w$]*)=!0/g)) {
     const flag = match[1];
     if (jsSource.includes(`if(${flag}||`)) return true;
@@ -109,6 +122,12 @@ function measureFixture(name, config) {
   for (const needle of REQUIRED_CSS) {
     if (!cssSource.includes(needle)) {
       throw new Error(`[${name}] typestyles.css missing required substring: ${needle}`);
+    }
+  }
+
+  for (const marker of FORBIDDEN_CSS_MARKERS[name] ?? []) {
+    if (cssSource.includes(marker)) {
+      throw new Error(`[${name}] typestyles.css includes unexpected recipe marker "${marker}"`);
     }
   }
 

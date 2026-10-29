@@ -1,8 +1,8 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { fieldChrome } from './fieldChrome';
+import { focusRing } from '../internal/focusRing';
+import { fieldChrome } from '../internal/fieldChrome';
 
 /**
  * File picker field: dashed dropzone (click or drag-and-drop) around field

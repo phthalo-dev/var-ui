@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { copyButton } from '@var-ui/core';
+import { copyButton } from '@var-ui/core/components/copyButton';
 import { Icon } from '../icons';
 import { useCopy } from '../hooks/useCopy';
 import { combine } from 'typestyles';

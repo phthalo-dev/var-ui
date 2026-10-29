@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, JSX, Ref } from 'react';
-import { colorSwatch, type ColorSwatchVariantProps } from '@var-ui/core';
+import { colorSwatch } from '@var-ui/core/components/colorPicker';
+import type { ColorSwatchVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ColorSwatchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {

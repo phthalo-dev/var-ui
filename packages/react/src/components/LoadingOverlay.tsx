@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { loadingOverlay } from '@var-ui/core';
+import { loadingOverlay } from '@var-ui/core/components/loadingOverlay';
 import { Spinner } from './Spinner';
 import { mergeProps } from 'typestyles';
 

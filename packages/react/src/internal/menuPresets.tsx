@@ -1,9 +1,9 @@
 import type { CSSProperties, JSX, MouseEvent, ReactElement, Ref } from 'react';
 import { useCallback, useState } from 'react';
 import { MenuTrigger, Popover, Pressable, type MenuTriggerProps } from 'react-aria-components';
-import { menu } from '@var-ui/core';
+import { menu } from '@var-ui/core/components/menu';
 import { mergeOverlayChild } from '../overlays';
-import { IconButton } from './IconButton';
+import { IconButton } from '../components/IconButton';
 import { MenuContent, type MenuContentProps } from './menuContent';
 import { mergeProps } from 'typestyles';
 

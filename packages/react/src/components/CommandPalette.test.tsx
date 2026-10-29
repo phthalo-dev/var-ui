@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { useState, type ReactElement } from 'react';
 import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
-import { createCommandPalette, useCommandPalette } from './commandPaletteController';
+import { createCommandPalette, useCommandPalette } from '../internal/commandPaletteController';
 
 function wrap(children: ReactElement) {
   return render(<LayerProvider>{children}</LayerProvider>);

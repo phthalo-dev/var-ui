@@ -1,5 +1,5 @@
 import type { JSX, ReactNode, Ref } from 'react';
-import { chatComposer } from '@var-ui/core';
+import { chatComposer } from '@var-ui/core/components/chat/chatComposer';
 import { mergeProps } from 'typestyles';
 
 export type ChatComposerProps = {

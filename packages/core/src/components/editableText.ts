@@ -1,6 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
+import { focusRing } from '../internal/focusRing';
 
 /**
  * Display-to-edit text chrome. The `input` slot is rendered inside the display element, so

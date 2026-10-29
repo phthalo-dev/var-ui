@@ -9,13 +9,9 @@ import {
   useRef,
 } from 'react';
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
-import {
-  iconNameList,
-  tabList,
-  type ControlSize,
-  type IconName,
-  type TabListVariantProps,
-} from '@var-ui/core';
+import { iconNameList } from '@var-ui/core/icons/iconNames';
+import { tabList } from '@var-ui/core/components/tabList';
+import type { ControlSize, IconName, TabListVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { Menu } from './Menu';
 import { mergeProps } from 'typestyles';

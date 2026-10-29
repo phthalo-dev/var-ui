@@ -25,7 +25,8 @@
     "./components/*": {
       "types": "./dist/components/*.d.mts",
       "import": "./dist/components/*.mjs"
-    }
+    },
+    "./components/index": null
   },
   "publishConfig": {
     "access": "public"

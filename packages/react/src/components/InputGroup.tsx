@@ -1,7 +1,8 @@
 import type { InputHTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import { useId } from 'react';
-import { inputGroup, type InputGroupVariantProps } from '@var-ui/core';
-import { ControlSizeContext, useControlSize } from './controlSizeContext';
+import { inputGroup } from '@var-ui/core/components/inputGroup';
+import type { InputGroupVariantProps } from '@var-ui/core';
+import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import { mergeProps } from 'typestyles';
 
 export type InputGroupProps = {

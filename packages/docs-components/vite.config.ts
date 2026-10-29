@@ -23,6 +23,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@var-ui/core/components': `${coreSrc}/components`,
+      '@var-ui/core/shared': `${coreSrc}/shared`,
+      '@var-ui/core/tokens': `${coreSrc}/tokens`,
+      '@var-ui/core/icons': `${coreSrc}/icons`,
     },
   },
   test: {

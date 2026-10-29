@@ -1,8 +1,8 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { focusRing } from './focusRing';
-import { dropdownPopoverChrome, fieldChrome } from './fieldChrome';
+import { focusRing } from '../internal/focusRing';
+import { dropdownPopoverChrome, fieldChrome } from '../internal/fieldChrome';
 
 export const multiSelector = typestyles.recipe({
   name: 'multiSelector',

@@ -1,6 +1,7 @@
 import type { ElementType, HTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import { createElement } from 'react';
-import { hiddenClassName, type HiddenMap } from '@var-ui/core';
+import { hiddenClassName } from '@var-ui/core/components/hidden';
+import type { HiddenMap } from '@var-ui/core';
 import { cx } from 'typestyles';
 
 export type HiddenProps = HTMLAttributes<HTMLElement> & {
