@@ -1,0 +1,142 @@
+---
+import { proseContent } from '@var-ui/core';
+import HighlightedCodeBlock from './HighlightedCodeBlock.astro';
+import { loadStylingHooks } from '../lib/load-styling-hooks';
+import { mergeProps } from '../lib/mergeProps';
+
+type Props = {
+  /** Component slug from the docs registry, e.g. `button`. */
+  slug: string;
+};
+
+const { slug } = Astro.props;
+const doc = loadStylingHooks(slug);
+const tableWrap = mergeProps(proseContent().tableWrap);
+const multiRecipe = doc ? doc.recipes.length > 1 : false;
+const slotCount = (recipe: string) => doc?.slots.filter((s) => s.recipe === recipe).length ?? 0;
+const slotLabel = (recipe: string, slots: string[]) =>
+  slots.length > 1 && slots.length === slotCount(recipe) ? 'all slots' : slots.join(', ');
+---
+
+{
+  doc ? (
+    <section class="styling-hooks" aria-labelledby="styling-hooks">
+      <h2 id="styling-hooks">Styling hooks</h2>
+      <p>
+        Generated from the component recipes. Select on these in a plain stylesheet; see{' '}
+        <a href="/theming/plain-css">Plain CSS</a> for cascade layers and specificity.
+      </p>
+
+      <h3 id="styling-hooks-starter">Starter selector</h3>
+      <HighlightedCodeBlock code={doc.starter} language="css" copyable />
+
+      <h3 id="styling-hooks-classes">Class names</h3>
+      <div {...tableWrap}>
+        <table>
+          <thead>
+            <tr>
+              {multiRecipe ? <th>Recipe</th> : null}
+              <th>Slot</th>
+              <th>Class</th>
+            </tr>
+          </thead>
+          <tbody>
+            {doc.slots.map((slot) => (
+              <tr>
+                {multiRecipe ? <td><code>{slot.recipe}</code></td> : null}
+                <td><code>{slot.slot}</code></td>
+                <td><code>.{slot.className}</code></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {doc.axes.length > 0 || doc.states.length > 0 ? (
+        <>
+          <h3 id="styling-hooks-attributes">Data attributes</h3>
+          <div {...tableWrap}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Attribute</th>
+                  <th>Kind</th>
+                  <th>Values</th>
+                  <th>Default</th>
+                  <th>On</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doc.axes.map((axis) => (
+                  <tr>
+                    <td><code>{axis.attribute}</code></td>
+                    <td>Variant</td>
+                    <td>
+                      {axis.kind === 'boolean' ? 'present when true' : axis.options.map((o, i) => (
+                        <>{i > 0 ? ', ' : ''}<code>{o}</code></>
+                      ))}
+                    </td>
+                    <td>{axis.default ? <code>{axis.default}</code> : '—'}</td>
+                    <td>{slotLabel(axis.recipe, axis.slots)}</td>
+                  </tr>
+                ))}
+                {doc.states.map((state) => (
+                  <tr>
+                    <td><code>{state.attribute}</code></td>
+                    <td>State</td>
+                    <td>
+                      {state.values.length === 0 ? 'present' : state.values.map((v, i) => (
+                        <>{i > 0 ? ', ' : ''}<code>{v}</code></>
+                      ))}
+                    </td>
+                    <td>—</td>
+                    <td>{slotLabel(state.recipe, state.slots)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : null}
+
+      {doc.vars.length > 0 ? (
+        <>
+          <h3 id="styling-hooks-variables">CSS variables</h3>
+          <div {...tableWrap}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Default</th>
+                  <th>Syntax</th>
+                  <th>Feeds</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doc.vars.map((v) => (
+                  <tr>
+                    <td><code>{v.name}</code></td>
+                    <td>{v.defaultValue ? <code>{v.defaultValue}</code> : '—'}</td>
+                    <td>{v.syntax ? <code>{v.syntax}</code> : '—'}</td>
+                    <td>
+                      {v.controls.length === 0 ? '—' : v.controls.map((c, i) => (
+                        <>{i > 0 ? ', ' : ''}<code>{c}</code></>
+                      ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : null}
+    </section>
+  ) : null
+}
+
+<style>
+  .styling-hooks :global(h2) {
+    margin-block: 1.75rem 0.75rem;
+    font-size: 1.15rem;
+  }
+</style>

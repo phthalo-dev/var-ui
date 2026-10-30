@@ -1,6 +1,7 @@
 ---
 import { proseContent } from '@var-ui/core';
 import { mergeProps } from '../lib/mergeProps';
+import StylingHooks from './StylingHooks.astro';
 import { getHtmlApiDoc } from '../lib/html-api-docs';
 
 type Props = {
@@ -13,6 +14,7 @@ const tableWrap = mergeProps(proseContent().tableWrap);
 ---
 
 <div class="component-styles-panel">
+  <StylingHooks slug={slug} />
   {
     htmlDoc ? (
       <>
