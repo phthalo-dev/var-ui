@@ -1,11 +1,11 @@
-import { SearchInput, Text, VStack } from '@var-ui/react';
+import { SearchInput, Text, Stack } from '@var-ui/react';
 import { useState } from 'react';
 
 export default function Preview() {
   const [query, setQuery] = useState('docs');
 
   return (
-    <VStack gap="sm">
+    <Stack gap="sm">
       <SearchInput
         value={query}
         onValueChange={setQuery}
@@ -15,6 +15,6 @@ export default function Preview() {
       <Text size="sm" tone="secondary">
         Query: {query || '(empty)'}
       </Text>
-    </VStack>
+    </Stack>
   );
 }

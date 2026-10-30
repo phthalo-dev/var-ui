@@ -86,8 +86,6 @@ import BreadcrumbsDefault from './breadcrumbs/default/react';
 import BreadcrumbsCollapse from './breadcrumbs/collapse/react';
 import AppShellDefault from './app-shell/default/react';
 import AppShellLayout from './app-shell/layout/react';
-import SimpleGridDefault from './simple-grid/default/react';
-import SimpleGridCols from './simple-grid/cols/react';
 import ScrollAreaDefault from './scroll-area/default/react';
 import ScrollAreaFade from './scroll-area/fade/react';
 import OverflowListDefault from './overflow-list/default/react';
@@ -269,8 +267,6 @@ export const reactDemoMap = {
   'breadcrumbs.collapse': BreadcrumbsCollapse,
   'app-shell.default': AppShellDefault,
   'app-shell.layout': AppShellLayout,
-  'simple-grid.default': SimpleGridDefault,
-  'simple-grid.cols': SimpleGridCols,
   'scroll-area.default': ScrollAreaDefault,
   'scroll-area.fade': ScrollAreaFade,
   'overflow-list.default': OverflowListDefault,

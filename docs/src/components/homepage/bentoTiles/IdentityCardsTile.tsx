@@ -8,7 +8,7 @@ import {
   ClickableCard,
   HStack,
   Thumbnail,
-  VStack,
+  Stack,
 } from '@var-ui/react';
 
 const PREVIEW_URL =
@@ -21,7 +21,7 @@ export type IdentityCardsTileProps = {
 export function IdentityCardsTile({ className }: IdentityCardsTileProps) {
   return (
     <div className={className}>
-      <VStack gap="md">
+      <Stack gap="md">
         <Card title="Design team">
           <HStack align="center" gap="sm" justify="between">
             <AvatarGroup max={3}>
@@ -43,7 +43,7 @@ export function IdentityCardsTile({ className }: IdentityCardsTileProps) {
           href="#"
           title="All files"
         />
-      </VStack>
+      </Stack>
     </div>
   );
 }

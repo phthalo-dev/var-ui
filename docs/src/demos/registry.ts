@@ -85,8 +85,6 @@ import { snippets as breadcrumbsDefaultSnippets } from './breadcrumbs/default/sn
 import { snippets as breadcrumbsCollapseSnippets } from './breadcrumbs/collapse/snippets';
 import { snippets as appShellDefaultSnippets } from './app-shell/default/snippets';
 import { snippets as appShellLayoutSnippets } from './app-shell/layout/snippets';
-import { snippets as simpleGridDefaultSnippets } from './simple-grid/default/snippets';
-import { snippets as simpleGridColsSnippets } from './simple-grid/cols/snippets';
 import { snippets as scrollAreaDefaultSnippets } from './scroll-area/default/snippets';
 import { snippets as scrollAreaFadeSnippets } from './scroll-area/fade/snippets';
 import { snippets as overflowListDefaultSnippets } from './overflow-list/default/snippets';
@@ -269,8 +267,6 @@ export const DEMO_IDS = [
   'breadcrumbs.collapse',
   'app-shell.default',
   'app-shell.layout',
-  'simple-grid.default',
-  'simple-grid.cols',
   'scroll-area.default',
   'scroll-area.fade',
   'overflow-list.default',
@@ -452,8 +448,6 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'breadcrumbs.collapse': breadcrumbsCollapseSnippets,
   'app-shell.default': appShellDefaultSnippets,
   'app-shell.layout': appShellLayoutSnippets,
-  'simple-grid.default': simpleGridDefaultSnippets,
-  'simple-grid.cols': simpleGridColsSnippets,
   'scroll-area.default': scrollAreaDefaultSnippets,
   'scroll-area.fade': scrollAreaFadeSnippets,
   'overflow-list.default': overflowListDefaultSnippets,
@@ -635,8 +629,6 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'breadcrumbs.collapse': () => import('./breadcrumbs/collapse/react'),
   'app-shell.default': () => import('./app-shell/default/react'),
   'app-shell.layout': () => import('./app-shell/layout/react'),
-  'simple-grid.default': () => import('./simple-grid/default/react'),
-  'simple-grid.cols': () => import('./simple-grid/cols/react'),
   'scroll-area.default': () => import('./scroll-area/default/react'),
   'scroll-area.fade': () => import('./scroll-area/fade/react'),
   'overflow-list.default': () => import('./overflow-list/default/react'),
@@ -1161,16 +1153,6 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'app-shell.layout',
     snippets: demoSnippets['app-shell.layout'],
     react: reactDemoLoaders['app-shell.layout'],
-  },
-  'simple-grid.default': {
-    id: 'simple-grid.default',
-    snippets: demoSnippets['simple-grid.default'],
-    react: reactDemoLoaders['simple-grid.default'],
-  },
-  'simple-grid.cols': {
-    id: 'simple-grid.cols',
-    snippets: demoSnippets['simple-grid.cols'],
-    react: reactDemoLoaders['simple-grid.cols'],
   },
   'scroll-area.default': {
     id: 'scroll-area.default',

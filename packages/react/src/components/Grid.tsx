@@ -5,7 +5,7 @@ import { mergeProps } from 'typestyles';
 
 export type GridProps = HTMLAttributes<HTMLDivElement> & {
   /** `auto` packs minmax(240px, 1fr) tracks; numbers give fixed equal tracks. @default auto */
-  columns?: 'auto' | 1 | 2 | 3 | 4;
+  columns?: 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 8;
   /** Gap between grid items. @default md */
   gap?: NonNullable<GridVariantProps['gap']>;
   /** Ref to the underlying `<div>` element. */
@@ -18,6 +18,9 @@ const columnVariant = {
   2: 'two',
   3: 'three',
   4: 'four',
+  5: 'five',
+  6: 'six',
+  8: 'eight',
 } as const satisfies Record<
   NonNullable<GridProps['columns']>,
   NonNullable<GridVariantProps['columns']>

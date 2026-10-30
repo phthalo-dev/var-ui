@@ -1,8 +1,8 @@
-import { HStack, IconButton, VStack } from '@var-ui/react';
+import { HStack, IconButton, Stack } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <VStack gap="lg">
+    <Stack gap="lg">
       <HStack gap="sm">
         <IconButton icon="search" aria-label="Search small" size="sm" />
         <IconButton icon="search" aria-label="Search medium" size="md" />
@@ -14,6 +14,6 @@ export default function Preview() {
         <IconButton icon="menu" aria-label="Menu" tone="accent" appearance="ghost" />
         <IconButton icon="close" aria-label="Delete" tone="danger" appearance="filled" />
       </HStack>
-    </VStack>
+    </Stack>
   );
 }
