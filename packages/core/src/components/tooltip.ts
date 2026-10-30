@@ -1,6 +1,8 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
 
@@ -31,6 +33,7 @@ export const tooltip = typestyles.recipe({
           padding: `${t.space[1].var} ${t.space[2].var}`,
           borderRadius: t.radius.sm.var,
           boxShadow: t.shadow.sm.var,
+          ...atForcedColors(forced.boundary),
           ...layerZIndex(t.zIndex.dropdown.var),
           maxWidth: '16rem',
           lineHeight: 1.4,

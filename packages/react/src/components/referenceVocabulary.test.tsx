@@ -235,10 +235,9 @@ describe('Dialog', () => {
 });
 
 describe('Alert', () => {
-  it('tone drives the recipe axis and data hook', () => {
+  it('tone drives the recipe axis and its data hook', () => {
     wrap(<Alert tone="danger">Boom</Alert>);
-    const root = document.querySelector('[data-alert]') as HTMLElement;
+    const root = document.querySelector('.var-ui-alert') as HTMLElement;
     expect(root.getAttribute('data-tone')).toBe('danger');
-    expect(root.getAttribute('data-alert-tone')).toBe('danger');
   });
 });

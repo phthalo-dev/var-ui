@@ -1,5 +1,6 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
+import { borderSide } from '../internal/border';
 import { designTokens as t } from '../tokens';
 import {
   getLayoutShellVars,
@@ -126,9 +127,7 @@ export const layoutHeader = typestyles.recipe({
           paddingBlockEnd: shell.padding.outer.y.var,
           '&[data-divider], [data-divider-header] &': {
             paddingBlockEnd: shell.padding.inner.y.var,
-            borderBlockEndWidth: t.borderWidth.default.var,
-            borderBlockEndStyle: 'solid',
-            borderBlockEndColor: vars.border.var,
+            ...borderSide('block-end', vars.border.var),
           },
         },
         headerInner: {
@@ -169,9 +168,7 @@ export const layoutFooter = typestyles.recipe({
           paddingBlockStart: shell.padding.outer.y.var,
           '&[data-divider], [data-divider-footer] &': {
             paddingBlockStart: shell.padding.inner.y.var,
-            borderBlockStartWidth: t.borderWidth.default.var,
-            borderBlockStartStyle: 'solid',
-            borderBlockStartColor: vars.border.var,
+            ...borderSide('block-start', vars.border.var),
           },
         },
         footerInner: {
@@ -321,15 +318,11 @@ export const layoutPanel = typestyles.recipe({
           boxShadow: t.shadow.lg.var,
           '&[data-side="start"]': {
             insetInlineStart: 0,
-            borderInlineEndWidth: t.borderWidth.default.var,
-            borderInlineEndStyle: 'solid',
-            borderInlineEndColor: vars.border.var,
+            ...borderSide('inline-end', vars.border.var),
           },
           '&[data-side="end"]': {
             insetInlineEnd: 0,
-            borderInlineStartWidth: t.borderWidth.default.var,
-            borderInlineStartStyle: 'solid',
-            borderInlineStartColor: vars.border.var,
+            ...borderSide('inline-start', vars.border.var),
           },
         },
       },
@@ -348,14 +341,10 @@ export const layoutPanel = typestyles.recipe({
           true: {
             panel: {
               '&[data-side="start"]': {
-                borderInlineEndWidth: t.borderWidth.default.var,
-                borderInlineEndStyle: 'solid',
-                borderInlineEndColor: vars.border.var,
+                ...borderSide('inline-end', vars.border.var),
               },
               '&[data-side="end"]': {
-                borderInlineStartWidth: t.borderWidth.default.var,
-                borderInlineStartStyle: 'solid',
-                borderInlineStartColor: vars.border.var,
+                ...borderSide('inline-start', vars.border.var),
               },
             },
           },

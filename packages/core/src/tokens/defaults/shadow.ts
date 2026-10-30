@@ -24,7 +24,7 @@ function layeredShadow(layers: readonly ShadowLayer[]): string {
     .join(', ');
 }
 
-/** Compound box-shadow tokens — use directly as `box-shadow` values. */
+/** Compound box-shadow tokens — the one shadow scale; use directly as `box-shadow` values. */
 export const shadow = {
   xs: layeredShadow([{ x: 0.5, y: 1, blur: 2, tint: 8 }]),
   sm: layeredShadow([
@@ -49,18 +49,4 @@ export const shadow = {
     { x: 8, y: 16, blur: 16, tint: 6 },
     { x: 16, y: 32, blur: 32, tint: 6 },
   ]),
-  elevation: {
-    low: layeredShadow([{ x: 0.5, y: 1, blur: 1, tint: 7 }]),
-    med: layeredShadow([
-      { x: 1, y: 2, blur: 2, tint: 6 },
-      { x: 2, y: 4, blur: 4, tint: 6 },
-    ]),
-    high: layeredShadow([
-      { x: 1, y: 2, blur: 2, tint: 5 },
-      { x: 2, y: 4, blur: 4, tint: 5 },
-      { x: 3, y: 6, blur: 6, tint: 5 },
-    ]),
-  },
 } satisfies DesignTokens['shadow'];
-
-export const shadowElevationValues = shadow.elevation;

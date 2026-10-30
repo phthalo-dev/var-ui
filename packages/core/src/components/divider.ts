@@ -1,4 +1,5 @@
 import { typestyles } from '../runtime';
+import { atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { orientation } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
@@ -27,6 +28,7 @@ export const divider = typestyles.recipe({
         margin: 0,
         backgroundColor: vars.color.var,
         flexShrink: 0,
+        ...atForcedColors({ backgroundColor: 'CanvasText' }),
       },
       variants: {
         orientation: {

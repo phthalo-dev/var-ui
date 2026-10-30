@@ -2,7 +2,7 @@ import { designTokens, tokenValues } from '@var-ui/core';
 import { formatCssVarName } from './color-tokens';
 
 export type ShadowSwatch = {
-  group: 'box' | 'elevation';
+  group: 'box';
   token: string;
   cssVar: string;
   defaultValue: string;
@@ -27,7 +27,7 @@ function walkShadowTokens(
     if (typeof value === 'string' && isTokenRef(ref)) {
       const tokenPath = [...path, key].join('.');
       results.push({
-        group: path[0] === 'elevation' ? 'elevation' : 'box',
+        group: 'box',
         token: `shadow.${tokenPath}`,
         cssVar: ref.var,
         defaultValue: value,

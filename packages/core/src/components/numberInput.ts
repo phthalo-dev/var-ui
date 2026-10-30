@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { fieldChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -66,10 +67,11 @@ export const numberInput = typestyles.recipe({
           flex: 1,
           minWidth: 0,
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
-          borderRadius: `${t.radius.md.var} 0 0 ${t.radius.md.var}`,
+          ...border(vars.inputBorder.var),
+          borderStartStartRadius: t.radius.md.var,
+          borderEndStartRadius: t.radius.md.var,
+          borderStartEndRadius: 0,
+          borderEndEndRadius: 0,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
           '&:focus': {
@@ -80,11 +82,12 @@ export const numberInput = typestyles.recipe({
         stepper: {
           display: 'flex',
           flexDirection: 'column',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderInlineStart: 'none',
-          borderRadius: `0 ${t.radius.md.var} ${t.radius.md.var} 0`,
+          borderStartStartRadius: 0,
+          borderEndStartRadius: 0,
+          borderStartEndRadius: t.radius.md.var,
+          borderEndEndRadius: t.radius.md.var,
           '& button': {
             appearance: 'none',
             border: 'none',

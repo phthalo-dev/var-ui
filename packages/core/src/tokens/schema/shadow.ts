@@ -7,9 +7,4 @@ export const shadowTokenSchema = {
   md: customToken,
   lg: customToken,
   xl: customToken,
-  elevation: {
-    low: customToken,
-    med: customToken,
-    high: customToken,
-  },
 } as const satisfies TokenSchema;

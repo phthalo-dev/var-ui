@@ -407,7 +407,8 @@ describe('createDesignTheme', () => {
     const liveTheme = themeSurfaceBlock(liveCssText(), 'live-edit');
     expect(liveTheme).toContain('--var-ui-fontSize-md: 19px');
     expect(liveTheme).not.toContain('--var-ui-fontSize-md: 16px');
-    expect(countInLiveCss('.theme-var-ui-live-edit')).toBe(1);
+    // Base rule + the reduced-motion mode rule every design theme carries.
+    expect(countInLiveCss('.theme-var-ui-live-edit')).toBe(2);
   });
 
   // @vitest-environment jsdom

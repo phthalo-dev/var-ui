@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
-import { atReducedMotion } from '../theme/conditions';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { designTokens as t } from '../tokens';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const tabsVarDefinitions = {
@@ -85,6 +86,7 @@ export const tabs = typestyles.recipe({
             borderRadius: vars.railRadius.var,
             backgroundColor: vars.railColor.var,
             pointerEvents: 'none',
+            ...atForcedColors({ backgroundColor: 'GrayText' }),
           },
           '&::after': {
             content: '""',
@@ -97,10 +99,9 @@ export const tabs = typestyles.recipe({
             backgroundColor: vars.tabIndicatorColor.var,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
-            zIndex: 1,
+            zIndex: t.zIndex.raised.var,
             transform: `translateX(${vars.indicatorX.var})`,
-            // transition: indicatorTransition,
-            ...atReducedMotion({ transition: 'none' }),
+            ...atForcedColors(forced.fill),
           },
         },
         tab: {

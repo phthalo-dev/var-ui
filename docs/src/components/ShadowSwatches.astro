@@ -4,7 +4,6 @@ import { shadowSwatchesStyles } from '@/styles/shadowSwatches';
 
 const shadowGroups = groupShadowSwatches(getShadowSwatches());
 const boxShadows = shadowGroups.get('box') ?? [];
-const elevationShadows = shadowGroups.get('elevation') ?? [];
 const c = shadowSwatchesStyles();
 ---
 
@@ -39,33 +38,4 @@ const c = shadowSwatchesStyles();
     </div>
   </section>
 
-  <section class={(c.section).className} aria-labelledby="elevation-shadow-heading">
-    <h2 id="elevation-shadow-heading" class={(c.sectionTitle).className}>Elevation</h2>
-    <p class={(c.sectionDescription).className}>
-      Softer elevation steps under <code>shadow.elevation</code> for surfaces that need subtle depth
-      without the stronger box-shadow scale.
-    </p>
-
-    <div class={(c.grid).className} role="list" aria-label="Elevation shadow tokens">
-      {
-        elevationShadows.map((swatch) => (
-          <div class={(c.card).className} role="listitem" title={swatch.defaultValue}>
-            <div class={(c.preview).className}>
-              <div
-                class={(c.previewSurface).className}
-                style={{ boxShadow: swatch.cssVar }}
-                aria-hidden="true"
-              />
-            </div>
-            <div class={(c.meta).className}>
-              <span class={(c.token).className}>
-                {swatch.token.replace('shadow.elevation.', 'elevation.')}
-              </span>
-              <span class={(c.cssVar).className}>{formatCssVarName(swatch.cssVar)}</span>
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </section>
 </div>

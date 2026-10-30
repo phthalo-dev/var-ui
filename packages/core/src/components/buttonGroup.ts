@@ -30,7 +30,7 @@ export const buttonGroup = typestyles.recipe({
           borderEndEndRadius: t.radius.md.var,
         },
         '& > *:hover, & > *:focus-visible': {
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
         },
       },
     },

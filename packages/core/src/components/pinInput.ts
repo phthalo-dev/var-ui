@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { fieldChrome } from '../internal/fieldChrome';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
@@ -69,14 +70,12 @@ export const pinInput = typestyles.recipe({
           gap: t.space[2].var,
           width: 'fit-content',
           '&[data-disabled]': {
-            opacity: 0.6,
+            opacity: t.opacity.muted.var,
             cursor: 'not-allowed',
           },
         },
         cell: {
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.cellBorder.var,
+          ...border(vars.cellBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.cellBackground.var,
           color: vars.cellForeground.var,

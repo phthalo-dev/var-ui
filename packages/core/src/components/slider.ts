@@ -3,6 +3,8 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from '../internal/fieldChrome';
 import { focusRing } from '../internal/focusRing';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 
 const sliderVarDefinitions = {
   labelColor: {
@@ -100,6 +102,7 @@ export const slider = typestyles.recipe({
           backgroundColor: vars.trackBackground.var,
           overflow: 'hidden',
           pointerEvents: 'none',
+          ...atForcedColors(forced.track),
         },
         fill: {
           height: '100%',
@@ -107,6 +110,7 @@ export const slider = typestyles.recipe({
           borderRadius: 'inherit',
           backgroundColor: vars.fillBackground.var,
           pointerEvents: 'none',
+          ...atForcedColors(forced.fill),
         },
         thumb: {
           position: 'absolute',

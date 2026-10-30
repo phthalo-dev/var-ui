@@ -2,6 +2,7 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 
 /**
  * Scroll-snap carousel. CSS does the snapping; the React wrapper only adds
@@ -59,9 +60,7 @@ export const carousel = typestyles.recipe({
           width: '32px',
           height: '32px',
           borderRadius: t.radius.md.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.controlBorder.var,
+          ...border(vars.controlBorder.var),
           backgroundColor: vars.controlBackground.var,
           cursor: 'pointer',
           '&:hover': { backgroundColor: t.color.background.subtle.var },

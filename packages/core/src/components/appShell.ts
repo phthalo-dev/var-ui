@@ -2,6 +2,10 @@ import { atProperty, variant, type RecipeVariants, type VariantOptions } from 't
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { transitionOf } from '../internal/motion';
+import { atForcedColors } from '../theme/conditions';
 
 const appShellHeight = variant.enum(['fill', 'auto', 'stretch'], { default: 'fill' });
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
@@ -64,7 +68,7 @@ export const appShell = typestyles.recipe({
     },
   },
   styles: ({ vars }) => {
-    const transition = `transform ${t.duration.fast.var} ${t.easing.standard.var}`;
+    const transition = transitionOf('transform', 'fast');
     return {
       base: {
         root: {
@@ -188,7 +192,7 @@ export const appShell = typestyles.recipe({
         topNav: {
           gridArea: 'top',
           minWidth: 0,
-          zIndex: 2,
+          zIndex: t.zIndex.sticky.var,
           flexShrink: 0,
           transition,
           '[data-header-hidden][data-header-offset] &': {
@@ -290,9 +294,7 @@ export const appShell = typestyles.recipe({
           section: {
             root: {
               [vars.background.name]: t.color.background.surface.var,
-              borderWidth: t.borderWidth.default.var,
-              borderStyle: 'solid',
-              borderColor: vars.border.var,
+              ...border(vars.border.var),
               borderRadius: t.radius.lg.var,
               boxShadow: t.shadow.xs.var,
             },
@@ -301,6 +303,7 @@ export const appShell = typestyles.recipe({
             root: {
               [vars.background.name]: t.color.background.elevated.var,
               boxShadow: t.shadow.sm.var,
+              ...atForcedColors(forced.boundary),
             },
           },
         },

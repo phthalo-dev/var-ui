@@ -1,0 +1,311 @@
+---
+title: Plain CSS
+description: Restyle var-ui components with a normal stylesheet — class names, data attributes, component variables and the cascade.
+---
+
+# Plain CSS
+
+Every var-ui component is ordinary DOM with stable class names, `data-*` state attributes and
+CSS custom properties. You can restyle any of it with a `.css` file. No theme object, build plugin
+or framework API is required, and the same selectors work in React and Astro because both render
+the same core recipes.
+
+## Finding the hooks
+
+### Class names
+
+Each recipe has a name and zero or more slots. The root (or only) slot is `var-ui-<name>`; other
+slots are `var-ui-<name>__<slot>`. Recipe names are kebab-case (`text-field`) and slot names keep
+their camelCase (`closeButton`).
+
+| Component | Classes                                                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Button    | `var-ui-button`                                                                                                          |
+| TextField | `var-ui-text-field`, `var-ui-text-field__label`, `__input`, `__description`, `__error`                                   |
+| Dialog    | `var-ui-dialog__overlay`, `__modal`, `__content`, `__header`, `__heading`, `__description`, `__actions`, `__closeButton` |
+
+The full inventory (every slot, variable and axis of every component) is the snapshot at
+`packages/core/test/__snapshots__/class-contract.test.ts.snap`.
+
+### Variant attributes
+
+Variant axes are written as data attributes on the slot that carries them, for example
+`data-tone="danger"`, `data-appearance="filled"`, `data-size="lg"`, `data-layout="icon"`,
+`data-orientation="vertical"`. Select on them instead of on generated or positional classes:
+
+```css
+.var-ui-button[data-tone='danger'][data-appearance='filled'] {
+}
+```
+
+### State attributes
+
+State is exposed as data attributes, the same set in React and Astro. Some come from
+react-aria-components in React, so they appear on the elements it controls.
+
+| Attribute                                                         | Meaning                                    |
+| ----------------------------------------------------------------- | ------------------------------------------ |
+| `data-disabled`, `data-invalid`, `data-required`, `data-readonly` | Field and control state                    |
+| `data-selected`, `data-checked`, `data-indeterminate`             | Selection state                            |
+| `data-open`, `data-expanded`                                      | Overlays, disclosures, tree and menu items |
+| `data-pressed`                                                    | Pointer or key press in progress           |
+| `data-orientation`, `data-placement`                              | Layout of the component or popup           |
+
+Overlay parts also get `data-open`, `data-closed`, `data-starting-style` and `data-ending-style`
+for enter and exit animation. Native `:hover`, `:focus-visible`, `[disabled]` and
+`[aria-disabled="true"]` are used by the recipes too, and a link-rendered Button has no `disabled`
+attribute, only `aria-disabled`.
+
+Other `data-*` attributes exist (`data-has-*` layout flags, `data-var-ui-*` script wiring in Astro).
+They are not part of the contract; see `UNDOCUMENTED_HOOKS` in
+`packages/react/src/dataAttributeContract.test.ts`.
+
+### Component variables
+
+Each component declares its own colors and sizes as CSS custom properties named
+`--var-ui-<recipe>-<name>`, with the name lowercased (`modalbackground`, not `modalBackground`).
+They are registered with `@property` and set on the component's own element, so you override them
+by setting the same variable on that element or an ancestor-scoped selector for it.
+
+| Component | Variables                                                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Button    | `--var-ui-button-background`, `-border`, `-foreground` (the resolved paint), plus `-semantic`, `-solidbg`, `-solidfg` (inputs the tone sets)      |
+| TextField | `--var-ui-text-field-inputbackground`, `-inputborder`, `-inputforeground`, `-labelcolor`, `-descriptioncolor`, `-errorcolor`, `-placeholdercolor` |
+| Dialog    | `--var-ui-dialog-modalbackground`, `-modalborder`, `-overlaybackground`, `-descriptioncolor`                                                      |
+| Divider   | `--var-ui-divider-color`                                                                                                                          |
+
+Prefer a variable over overriding the property it feeds: the recipe also uses it for hover,
+focus and tone states, so one assignment stays consistent. The `vars` list for every component is in
+the class-contract snapshot.
+
+## Cascade layers and specificity
+
+`@var-ui/core/styles.css` begins with the layer order and puts everything in it:
+
+```css
+@layer reset, base, tokens, components, overrides, utilities;
+```
+
+Design tokens are in `tokens`, component classes in `components`, and a few prose and utility
+rules in `utilities`. The `overrides` layer is declared between them for your use; var-ui does not
+put rules in it.
+
+- **Unlayered CSS always wins** over every layer, regardless of specificity. Your stylesheet needs
+  no `!important` and no selector tricks.
+- **Layered CSS** wins by layer order first. Write `@layer overrides { ... }` and it beats
+  `components` even with lower specificity. Layers you create yourself are placed after the
+  declared ones unless you restate the order, so a bare `@layer mine { ... }` also beats
+  `components` but loses to `utilities`.
+- Inside one layer, normal specificity applies. Variant rules are `.var-ui-button[data-tone='x']`
+  (class plus attribute); match or exceed that when you write in the same layer.
+- Use the plain class selector plus attributes. Do not depend on element order or nesting.
+
+```css
+/* unlayered: wins automatically */
+.var-ui-button {
+  --var-ui-button-background: tomato;
+}
+
+/* layered: wins because `overrides` is after `components` */
+@layer overrides {
+  .var-ui-button {
+    border-radius: 999px;
+  }
+}
+```
+
+One consequence for variables: an unlayered `--var-ui-button-background` assignment also beats the
+recipe's hover and tone rules, which set the same variable inside `components`. Scope it with the
+state you want (`:hover`, `[data-appearance='filled']`) if it should only apply there.
+
+## Tokens as CSS custom properties
+
+Tokens are `--var-ui-<group>-<name>`: `--var-ui-space-4`, `--var-ui-radius-md`,
+`--var-ui-color-background-surface`, `--var-ui-color-border-focus`, `--var-ui-shadow-md`,
+`--var-ui-duration-medium`. See [CSS variables](/theming/css-variables) and
+[Design tokens](/theming/tokens) for the groups.
+
+They are set on `:root` and on the theme class (`theme-var-ui-<name>`) in the `tokens` layer, so
+your CSS overrides them on any element, and the override applies to everything inside:
+
+```css
+:root {
+  --var-ui-radius-md: 2px;
+}
+
+.billing-page {
+  --var-ui-color-border-focus: rebeccapurple;
+  --var-ui-space-3: 0.5rem;
+}
+```
+
+If a theme class is applied to the same element you are overriding (the document root with
+`DesignSystemProvider` `applyToDocument`), use a selector that matches it, such as `html.theme-var-ui-default`
+or unlayered CSS.
+
+## Dark mode
+
+Color mode is the `data-color-mode` attribute with the value `light` or `dark`. Set it on any
+element and it applies to that element and its descendants; leave it off to follow
+`prefers-color-scheme`. Component dark rules honor the nearest pin, including `light` inside an OS-dark
+page. Tokens are mode-aware, so a rule written with tokens needs no dark variant:
+
+```css
+.card-note {
+  background: var(--var-ui-color-background-surface);
+  color: var(--var-ui-color-text-primary);
+}
+```
+
+For a mode-specific override, mirror the library's own pattern:
+
+```css
+[data-color-mode='dark'] .card-note,
+.card-note[data-color-mode='dark'] {
+  box-shadow: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-note:not([data-color-mode='light']):not([data-color-mode='light'] *) {
+    box-shadow: none;
+  }
+}
+```
+
+## Reduced motion, forced colors, RTL
+
+**Reduced motion.** The `--var-ui-duration-fast|medium|slow` tokens resolve to `0ms` under
+`prefers-reduced-motion: reduce`, and all transitions are built from them. Write your transitions
+with the tokens and they collapse too:
+
+```css
+.my-panel {
+  transition: transform var(--var-ui-duration-medium) var(--var-ui-easing-emphasized);
+}
+```
+
+Looping keyframe animations (spinner, skeleton, status dot, indeterminate progress) are not driven
+by tokens; var-ui turns them off with its own reduced-motion rule. Do the same for yours.
+
+**Forced colors.** Components add `@media (forced-colors: active)` rules where a boundary, selected
+state or fill would otherwise vanish, using the system colors `Canvas`, `CanvasText`, `Highlight`,
+`HighlightText` and `GrayText`. Focus is an `outline`, which the browser keeps. If you restyle a
+state with only `box-shadow`, a background or a tint, add an `outline` or `border` in
+`@media (forced-colors: active)`, since those are dropped.
+
+**RTL.** Component spacing, borders, radii and text alignment use logical properties
+(`padding-inline`, `border-inline-start`, `inset-inline-start`, `text-align: start`), so they flip
+with `dir`. Write yours the same way. Direction-dependent transforms (slide-in panels, chevron
+rotation, switch thumbs) are mirrored with `[dir='rtl'] &` rules, and directional icons set
+`data-mirror`. Direction comes from the `dir` attribute on an ancestor, which `DirectionProvider`
+(React) sets. Measured indicators (tabs, segmented control, table of contents) keep physical
+positions on purpose.
+
+**Container queries.** Nothing in var-ui sets `container-type`, so you can add it to your own
+wrappers and use `@container` in your CSS against any var-ui class.
+
+## Worked example
+
+One stylesheet, `brand.css`, loaded after `@var-ui/core/styles.css`. Every selector below is a class
+or attribute listed in the contract.
+
+```css
+/* Button */
+.var-ui-button {
+  --var-ui-button-border: transparent;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.var-ui-button[data-appearance='filled'][data-tone='accent'] {
+  --var-ui-button-background: #0b6b57;
+  --var-ui-button-foreground: white;
+}
+.var-ui-button[data-appearance='filled'][data-tone='accent']:hover:not([disabled]) {
+  --var-ui-button-background: #08503f;
+}
+
+/* TextField */
+.var-ui-text-field__label {
+  --var-ui-text-field-labelcolor: var(--var-ui-color-text-primary);
+  font-weight: 600;
+}
+.var-ui-text-field__input {
+  --var-ui-text-field-inputborder: var(--var-ui-color-border-strong);
+  border-radius: var(--var-ui-radius-sm);
+}
+.var-ui-text-field__input[data-size='lg'] {
+  font-size: var(--var-ui-fontSize-lg);
+}
+.var-ui-text-field[data-invalid] .var-ui-text-field__input {
+  --var-ui-text-field-inputborder: var(--var-ui-color-tone-danger-foreground);
+}
+
+/* Dialog */
+.var-ui-dialog__overlay {
+  --var-ui-dialog-overlaybackground: rgb(10 20 20 / 0.6);
+}
+.var-ui-dialog__modal {
+  --var-ui-dialog-modalborder: transparent;
+  border-radius: var(--var-ui-radius-xl);
+  padding: var(--var-ui-space-6);
+}
+.var-ui-dialog__heading {
+  font-size: var(--var-ui-fontSize-xl);
+}
+.var-ui-dialog__actions {
+  justify-content: flex-end;
+  gap: var(--var-ui-space-3);
+}
+```
+
+### React
+
+```tsx
+import '@var-ui/core/styles.css';
+import './brand.css';
+import { Button, Dialog, TextField } from '@var-ui/react';
+
+export function Example() {
+  return (
+    <Dialog>
+      <Dialog.Trigger>
+        <Button appearance="filled" tone="accent">
+          Rename
+        </Button>
+      </Dialog.Trigger>
+      <Dialog.Backdrop>
+        <Dialog.Popup>
+          <Dialog.Title>Rename project</Dialog.Title>
+          <TextField label="Name" size="lg" errorMessage="Name is required" />
+          <Dialog.Actions>
+            <Dialog.Close>Cancel</Dialog.Close>
+          </Dialog.Actions>
+        </Dialog.Popup>
+      </Dialog.Backdrop>
+    </Dialog>
+  );
+}
+```
+
+### Astro
+
+The Astro package currently ships Button but not TextField or Dialog, so the Button rules apply
+as-is and the field and dialog rules apply to markup you render with the same classes.
+
+```astro
+---
+import '@var-ui/core/styles.css';
+import '../styles/brand.css';
+import { Button } from '@var-ui/astro';
+---
+
+<Button appearance="filled" tone="accent">Rename</Button>
+```
+
+## What is stable
+
+Slot class names, component variable names and variant axes are snapshotted in
+`packages/core/test/class-contract.test.ts`, and the documented `data-*` hooks are enforced in
+`packages/react/src/dataAttributeContract.test.ts`. A rename of any of them is a deliberate,
+reviewed breaking change. `data-var-ui-*` and `data-class-*`
+attributes, `data-has-*` flags and DOM nesting depth are not part of the contract.

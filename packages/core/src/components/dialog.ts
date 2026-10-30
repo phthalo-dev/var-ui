@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
@@ -58,9 +59,7 @@ export const dialog = typestyles.recipe({
           width: 'min(480px, 100%)',
           backgroundColor: vars.modalBackground.var,
           borderRadius: t.radius.lg.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.modalBorder.var,
+          ...border(vars.modalBorder.var),
           boxShadow: t.shadow.md.var,
           padding: t.space[4].var,
         },
@@ -87,7 +86,7 @@ export const dialog = typestyles.recipe({
           cursor: 'pointer',
           display: 'inline-flex',
           padding: t.space[1].var,
-          marginRight: `calc(${t.space[1].var} * -1)`,
+          marginInlineEnd: `calc(${t.space[1].var} * -1)`,
           borderRadius: t.radius.sm.var,
           '&:hover': {
             backgroundColor: t.color.background.subtle.var,

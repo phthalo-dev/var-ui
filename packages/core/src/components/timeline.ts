@@ -2,6 +2,9 @@ import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { mapTone, toneChannelAssignments, toneWithDefault } from '../shared/semanticTone';
+import { border } from '../internal/border';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { controlSize } from '../shared/variantAxes';
 
 /**
@@ -51,23 +54,22 @@ export const timeline = typestyles.recipe({
             position: 'absolute',
             top: `calc(${vars.bulletSize.var} + ${t.space[1].var})`,
             bottom: 0,
-            left: `calc((${vars.bulletSize.var} - ${vars.lineWidth.var}) / 2)`,
+            insetInlineStart: `calc((${vars.bulletSize.var} - ${vars.lineWidth.var}) / 2)`,
             width: vars.lineWidth.var,
             backgroundColor: vars.line.var,
+            ...atForcedColors({ backgroundColor: 'GrayText' }),
           },
         },
         bullet: {
           position: 'relative',
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: vars.bulletSize.var,
           height: vars.bulletSize.var,
           borderRadius: t.radius.full.var,
-          borderWidth: vars.lineWidth.var,
-          borderStyle: 'solid',
-          borderColor: vars.bulletBorder.var,
+          ...border(vars.bulletBorder.var, vars.lineWidth.var),
           backgroundColor: vars.bulletBackground.var,
           color: vars.bulletForeground.var,
           flexShrink: 0,
@@ -75,6 +77,7 @@ export const timeline = typestyles.recipe({
             [vars.bulletBorder.name]: vars.solidBg.var,
             [vars.bulletBackground.name]: vars.solidBg.var,
             [vars.bulletForeground.name]: vars.solidFg.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-pending]': {
             [vars.bulletBorder.name]: vars.bulletBorder.var,

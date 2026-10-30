@@ -7,7 +7,7 @@ export function render(): string {
   const title = serializeHtmlTag('p', mergeProps(a.title), 'Registry icons');
   const content = serializeHtmlTag(
     'div',
-    { ...mergeProps(a.content), 'data-alert-content': true },
+    mergeProps(a.content),
     'Alerts pull their tone glyph from IconProvider automatically.',
   );
   const body = serializeHtmlTag('div', mergeProps(a.body), `${title}${content}`);
@@ -15,9 +15,6 @@ export function render(): string {
     'div',
     {
       ...mergeProps(a.root),
-      'data-alert': true,
-      'data-alert-tone': 'info',
-      'data-alert-appearance': 'subtle',
     },
     body,
   );

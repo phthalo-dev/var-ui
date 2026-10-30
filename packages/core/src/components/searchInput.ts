@@ -2,6 +2,7 @@ import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import {
   controlSizeMetrics,
   controlSizeVariants,
@@ -64,13 +65,11 @@ export const searchInput = typestyles.recipe({
           minWidth: 'min(220px, 100%)',
           maxWidth: '100%',
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.background.var,
           color: vars.foreground.var,
-          transition: 'border-color 140ms ease',
+          transition: t.transition.border.var,
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },

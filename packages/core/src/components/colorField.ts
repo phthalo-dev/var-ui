@@ -1,6 +1,9 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { fieldChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -82,20 +85,19 @@ export const colorField = typestyles.recipe({
           alignItems: 'center',
           gap: t.space[2].var,
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
-          transition: 'border-color 140ms ease',
+          transition: t.transition.border.var,
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },
           '&:focus-within': focusRing,
           '&[data-disabled]': {
-            opacity: 0.6,
+            opacity: t.opacity.muted.var,
             cursor: 'not-allowed',
+            ...atForcedColors(forced.disabled),
           },
         },
         swatchButton: {
@@ -114,7 +116,7 @@ export const colorField = typestyles.recipe({
           },
           '&:disabled': {
             cursor: 'not-allowed',
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
           },
         },
         swatchPreview: {
@@ -122,11 +124,10 @@ export const colorField = typestyles.recipe({
           width: '1.75rem',
           height: '1.75rem',
           borderRadius: t.radius.sm.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.swatchBorder.var,
+          ...border(vars.swatchBorder.var),
           backgroundColor: vars.swatchColor.var,
           boxSizing: 'border-box',
+          ...atForcedColors(forced.swatch),
         },
         nativePicker: {
           position: 'absolute',

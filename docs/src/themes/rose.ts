@@ -5,7 +5,6 @@ import {
   designTokens as p,
   darkSyntaxValues,
   lightSyntaxValues,
-  shadowElevationValues,
   type ColorTokenPatch,
   type DesignThemeTokenValues,
 } from '@var-ui/core';
@@ -188,11 +187,6 @@ export const roseThemeTokens = {
     md: { light: roseLightNeoShadow.md, dark: roseDarkNeoShadow.md },
     lg: { light: roseLightNeoShadow.lg, dark: roseDarkNeoShadow.lg },
     xl: { light: roseLightNeoShadow.xl, dark: roseDarkNeoShadow.xl },
-    elevation: {
-      low: { light: shadowElevationValues.low, dark: shadowElevationValues.low },
-      med: { light: shadowElevationValues.med, dark: shadowElevationValues.med },
-      high: { light: shadowElevationValues.high, dark: shadowElevationValues.high },
-    },
   },
 } satisfies DesignThemeTokenValues;
 

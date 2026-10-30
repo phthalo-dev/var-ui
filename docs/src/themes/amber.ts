@@ -5,7 +5,6 @@ import {
   designTokens as p,
   darkSyntaxValues,
   lightSyntaxValues,
-  shadowElevationValues,
   type ColorTokenPatch,
   type DesignThemeTokenValues,
 } from '@var-ui/core';
@@ -190,11 +189,6 @@ export const amberThemeTokens = {
     md: { light: amberLightNeoShadow.md, dark: amberDarkNeoShadow.md },
     lg: { light: amberLightNeoShadow.lg, dark: amberDarkNeoShadow.lg },
     xl: { light: amberLightNeoShadow.xl, dark: amberDarkNeoShadow.xl },
-    elevation: {
-      low: { light: shadowElevationValues.low, dark: shadowElevationValues.low },
-      med: { light: shadowElevationValues.med, dark: shadowElevationValues.med },
-      high: { light: shadowElevationValues.high, dark: shadowElevationValues.high },
-    },
   },
 } satisfies DesignThemeTokenValues;
 

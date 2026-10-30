@@ -9,43 +9,63 @@ import { typestyles } from '../runtime';
 import { COLOR_MODE_ATTRIBUTE } from './constants';
 
 const tsWhen = typestyles.tokens.when;
+
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
+const forcedColorsQuery = '(forced-colors: active)';
+const moreContrastQuery = '(prefers-contrast: more)';
 
-const explicitDark = tsWhen.or(
-  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'ancestor' }),
-  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'self' }),
-);
-const explicitLight = tsWhen.or(
-  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' }),
-  tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'self' }),
-);
+/** Attribute selectors for an explicit color-mode pin — the one source for both condition APIs below. */
+const pinnedDark = `[${COLOR_MODE_ATTRIBUTE}="dark"]`;
+const pinnedLight = `[${COLOR_MODE_ATTRIBUTE}="light"]`;
 
-/** OS dark when the document root is not explicitly light. Nested pins use {@link atDarkMode}. */
-const systemDark = tsWhen.and(
-  tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' })),
-  tsWhen.prefersDark,
-);
+const attrPinned = (value: 'dark' | 'light') =>
+  tsWhen.or(
+    tsWhen.attr(COLOR_MODE_ATTRIBUTE, value, { scope: 'ancestor' }),
+    tsWhen.attr(COLOR_MODE_ATTRIBUTE, value, { scope: 'self' }),
+  );
 
-/** Canonical `ThemeCondition` presets for var-ui color mode and a11y media queries. */
+/**
+ * `ThemeCondition` presets for theme-root and `override()` conditions, anchored on the
+ * document root. Recipe slots use {@link atDarkMode}, which also honors nested pins.
+ */
 const themeWhen = {
   /** Explicit `data-color-mode="dark"` or system dark when the root is not pinned to light. */
-  colorModeResolvedDark: tsWhen.or(explicitDark, systemDark),
-  colorModeExplicitDark: explicitDark,
-  colorModeExplicitLight: explicitLight,
-  colorModeSystemDark: tsWhen.and(
-    tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' })),
-    tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'dark', { scope: 'ancestor' })),
-    tsWhen.prefersDark,
+  colorModeResolvedDark: tsWhen.or(
+    attrPinned('dark'),
+    tsWhen.and(
+      tsWhen.not(tsWhen.attr(COLOR_MODE_ATTRIBUTE, 'light', { scope: 'ancestor' })),
+      tsWhen.prefersDark,
+    ),
   ),
+  colorModeExplicitLight: attrPinned('light'),
   reducedMotion: tsWhen.media(reducedMotionQuery),
+  forcedColors: tsWhen.media(forcedColorsQuery),
+  moreContrast: tsWhen.media(moreContrastQuery),
 } as const;
 
-/** `@media` key for reduced motion — internal; prefer {@link atReducedMotion}. */
-const reducedMotionAtRule = toMediaAtRuleKey(reducedMotionQuery);
-
-/** Reduced-motion styles for variant slots — spread into a style object. */
+/**
+ * Reduced-motion styles for keyframe animations — spread into a style object.
+ * Durations and `transition` tokens already collapse under reduced motion, so recipes that only
+ * use tokens need nothing; use this to stop `animation: …` loops (spinner, skeleton, pulse).
+ * Only one `atReducedMotion` per style object (a second spread replaces the first).
+ */
 export function atReducedMotion(style: VariantOptionStyle) {
-  return typestyles.atRuleBlock(reducedMotionAtRule, style);
+  return typestyles.atRuleBlock(toMediaAtRuleKey(reducedMotionQuery), style);
+}
+
+/**
+ * Windows High Contrast / `forced-colors: active` styles — spread into a style object.
+ * The browser replaces author colors with system colors (`CanvasText`, `Highlight`, …) and drops
+ * `box-shadow` and background images, so state or boundaries drawn only that way need an
+ * explicit `border`/`outline` here. Only one per style object.
+ */
+export function atForcedColors(style: VariantOptionStyle) {
+  return typestyles.atRuleBlock(toMediaAtRuleKey(forcedColorsQuery), style);
+}
+
+/** `prefers-contrast: more` styles — spread into a style object. Only one per style object. */
+export function atMoreContrast(style: VariantOptionStyle) {
+  return typestyles.atRuleBlock(toMediaAtRuleKey(moreContrastQuery), style);
 }
 
 /**
@@ -53,8 +73,6 @@ export function atReducedMotion(style: VariantOptionStyle) {
  * or an ancestor wins over the OS preference, including a light pin inside an OS-dark page.
  */
 export function atDarkMode(style: VariantOptionStyle) {
-  const pinnedDark = `[${COLOR_MODE_ATTRIBUTE}="dark"]`;
-  const pinnedLight = `[${COLOR_MODE_ATTRIBUTE}="light"]`;
   return {
     [`${pinnedDark} &, &${pinnedDark}`]: style,
     '@media (prefers-color-scheme: dark)': {
@@ -71,6 +89,10 @@ export const when = {
     conditional(themeWhen.colorModeExplicitLight, style, id),
   reducedMotion: (style: VariantOptionStyle, id?: string): ConditionalOverride =>
     conditional(themeWhen.reducedMotion, style, id),
+  forcedColors: (style: VariantOptionStyle, id?: string): ConditionalOverride =>
+    conditional(themeWhen.forcedColors, style, id),
+  moreContrast: (style: VariantOptionStyle, id?: string): ConditionalOverride =>
+    conditional(themeWhen.moreContrast, style, id),
   match: (condition: ThemeCondition, style: VariantOptionStyle, id?: string): ConditionalOverride =>
     conditional(condition, style, id),
 };

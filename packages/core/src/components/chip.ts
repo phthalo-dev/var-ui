@@ -2,6 +2,9 @@ import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import {
   mapTone,
   subtleBackgroundColor,
@@ -70,14 +73,12 @@ export const chip = typestyles.recipe({
           lineHeight: 1,
           padding: `${t.space[1].var} ${t.space[2].var}`,
           borderRadius: t.radius.full.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.borderColor.var,
+          ...border(vars.borderColor.var),
           backgroundColor: vars.backgroundColor.var,
           color: vars.textColor.var,
           '&[data-interactive]': {
             cursor: 'pointer',
-            transition: 'background-color 140ms ease, border-color 140ms ease, color 140ms ease',
+            transition: t.transition.chrome.var,
             '&:hover:not([data-disabled])': {
               backgroundColor: t.color.background.elevated.var,
             },
@@ -93,10 +94,12 @@ export const chip = typestyles.recipe({
             [vars.borderColor.name]: vars.solidBg.var,
             [vars.backgroundColor.name]: vars.solidBg.var,
             [vars.textColor.name]: vars.solidFg.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': {
-            opacity: 0.6,
+            opacity: t.opacity.muted.var,
             cursor: 'not-allowed',
+            ...atForcedColors(forced.disabled),
           },
         },
         wrapper: {

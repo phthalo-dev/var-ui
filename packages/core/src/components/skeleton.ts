@@ -1,6 +1,8 @@
 import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors, atReducedMotion } from '../theme/conditions';
 
 const shimmer = keyframes.create('var-ui-shimmer', {
   from: { backgroundPosition: '200% 0' },
@@ -39,10 +41,11 @@ export const skeleton = typestyles.recipe({
         backgroundImage: `linear-gradient(90deg, ${vars.baseColor.var} 25%, ${vars.highlightColor.var} 50%, ${vars.baseColor.var} 75%)`,
         backgroundSize: '200% 100%',
         animation: `${shimmer} 1600ms ease-in-out infinite`,
-        '@media (prefers-reduced-motion: reduce)': {
+        ...atReducedMotion({
           animation: 'none',
           backgroundImage: 'none',
-        },
+        }),
+        ...atForcedColors(forced.boundary),
       },
       variants: {
         shape: {

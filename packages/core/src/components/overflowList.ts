@@ -52,7 +52,7 @@ export const overflowList = typestyles.recipe({
         measure: {
           position: 'absolute',
           top: 0,
-          left: 0,
+          insetInlineStart: 0,
           height: 0,
           overflow: 'hidden',
           visibility: 'hidden',

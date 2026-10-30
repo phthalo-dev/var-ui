@@ -48,25 +48,11 @@ export function Alert({
   const resolvedIcon = icon === undefined ? <Icon name={toneIcon[tone]} /> : icon;
 
   return (
-    <div
-      {...rest}
-      {...mergeProps(a.root, className)}
-      role={role}
-      data-alert
-      data-alert-tone={tone}
-      data-alert-appearance={appearance}
-      ref={ref}
-    >
-      {resolvedIcon !== null ? (
-        <div {...mergeProps(a.icon)} data-alert-icon>
-          {resolvedIcon}
-        </div>
-      ) : null}
+    <div {...rest} {...mergeProps(a.root, className)} role={role} ref={ref}>
+      {resolvedIcon !== null ? <div {...mergeProps(a.icon)}>{resolvedIcon}</div> : null}
       <div {...mergeProps(a.body)}>
         {title ? <p {...mergeProps(a.title)}>{title}</p> : null}
-        <div {...mergeProps(a.content)} data-alert-content>
-          {children}
-        </div>
+        <div {...mergeProps(a.content)}>{children}</div>
         {action ? (
           <div {...mergeProps(a.action)}>
             <a {...mergeProps(a.actionLink)} href={action.href} data-alert-action>

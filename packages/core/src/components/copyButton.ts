@@ -2,6 +2,7 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { transitionOf } from '../internal/motion';
 
 /**
  * Standalone copy-to-clipboard button chrome. Extracted from `codeBlock` so
@@ -44,7 +45,7 @@ export const copyButton = typestyles.recipe({
           fontSize: t.fontSize.sm.var,
           fontFamily: t.fontFamily.body.var,
           cursor: 'pointer',
-          transition: 'background-color 140ms ease, color 140ms ease',
+          transition: transitionOf(['background-color', 'color']),
           '&:hover': {
             backgroundColor: vars.hoverBackground.var,
           },

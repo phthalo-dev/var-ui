@@ -32,7 +32,7 @@ export const steps = typestyles.recipe({
           '& > li': {
             position: 'relative',
             listStyle: 'none',
-            paddingLeft: `calc(${t.space[5].var} + ${t.space[3].var})`,
+            paddingInlineStart: `calc(${t.space[5].var} + ${t.space[3].var})`,
             marginBottom: t.space[5].var,
             counterIncrement: 'docs-step',
             fontSize: t.fontSize.md.var,
@@ -44,7 +44,7 @@ export const steps = typestyles.recipe({
             '&::before': {
               content: 'counter(docs-step)',
               position: 'absolute',
-              left: 0,
+              insetInlineStart: 0,
               top: 0,
               width: t.space[5].var,
               height: t.space[5].var,

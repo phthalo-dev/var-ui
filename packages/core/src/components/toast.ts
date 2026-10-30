@@ -9,6 +9,8 @@ import {
   toneChannelAssignments,
   toneWithDefault,
 } from '../shared/semanticTone';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { placement } from '../shared/variantAxes';
 import { layerZIndex } from './layerVars';
 
@@ -62,6 +64,8 @@ export const toast = typestyles.recipe({
           borderRadius: t.radius.md.var,
           boxShadow: t.shadow.md.var,
           outline: 'none',
+          // The tinted/shadowed card has no edge of its own in forced colors.
+          ...atForcedColors(forced.boundary),
           '&[data-focus-visible]': {
             ...focusRing,
           },
@@ -121,10 +125,10 @@ export const toast = typestyles.recipe({
           outline: { item: appearanceSurface(vars, 'outline') },
         },
         placement: {
-          'top-end': { region: { top: 0, right: 0 } },
-          'top-start': { region: { top: 0, left: 0 } },
-          'bottom-end': { region: { bottom: 0, right: 0 } },
-          'bottom-start': { region: { bottom: 0, left: 0 } },
+          'top-end': { region: { top: 0, insetInlineEnd: 0 } },
+          'top-start': { region: { top: 0, insetInlineStart: 0 } },
+          'bottom-end': { region: { bottom: 0, insetInlineEnd: 0 } },
+          'bottom-start': { region: { bottom: 0, insetInlineStart: 0 } },
         },
       },
     };

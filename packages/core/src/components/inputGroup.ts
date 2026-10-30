@@ -1,4 +1,5 @@
 import { typestyles } from '../runtime';
+import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
@@ -94,10 +95,10 @@ export const inputGroup = typestyles.recipe({
             borderEndEndRadius: t.radius.md.var,
           },
           '& > *:focus-within, & > *:hover': {
-            zIndex: 1,
+            zIndex: t.zIndex.raised.var,
           },
           '&[data-disabled]': {
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
           },
         },
@@ -105,9 +106,7 @@ export const inputGroup = typestyles.recipe({
           flex: 1,
           minWidth: 0,
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           fontSize: 'inherit',
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
@@ -128,9 +127,7 @@ export const inputGroup = typestyles.recipe({
           paddingInline: t.space[2].var,
           backgroundColor: vars.textBackground.var,
           color: vars.textForeground.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           whiteSpace: 'nowrap',
           flexShrink: 0,
         },

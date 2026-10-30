@@ -2,6 +2,7 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing as focusRingStyle } from '../internal/focusRing';
+import { atForcedColors } from '../theme/conditions';
 
 /**
  * Draggable/keyboard-resizable separator. Pair with the React `ResizeHandle`
@@ -41,6 +42,7 @@ export const resizeHandle = typestyles.recipe({
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: vars.lineColor.var,
+          ...atForcedColors({ backgroundColor: 'CanvasText' }),
           outline: 'none',
           touchAction: 'none',
           // Invisible hit area: the visible line stays 1px, the grab target is wider.
@@ -79,6 +81,7 @@ export const resizeHandle = typestyles.recipe({
           height: '24px',
           borderRadius: t.radius.sm.var,
           backgroundColor: vars.pillColor.var,
+          ...atForcedColors({ backgroundColor: 'CanvasText' }),
           pointerEvents: 'none',
           '[data-orientation="vertical"] &': {
             width: '24px',

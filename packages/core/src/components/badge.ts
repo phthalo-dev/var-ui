@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import {
   mapTone,
   subtleBackgroundColor,
@@ -56,9 +57,7 @@ export const badge = typestyles.recipe({
         lineHeight: 1,
         padding: `${t.space[1].var} ${t.space[2].var}`,
         borderRadius: t.radius.full.var,
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: vars.borderColor.var,
+        ...border(vars.borderColor.var),
         backgroundColor: vars.backgroundColor.var,
         color: vars.textColor.var,
       },

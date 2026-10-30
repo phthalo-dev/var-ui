@@ -1,6 +1,8 @@
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 import { atProperty, type RecipeVariants } from 'typestyles';
+import { forced } from '../../internal/forcedColors';
+import { atForcedColors } from '../../theme/conditions';
 import {
   mapTone,
   semanticTone,
@@ -53,6 +55,7 @@ export const chatSystemMessage = typestyles.recipe({
           backgroundColor: vars.background.var,
           color: vars.color.var,
           fontSize: t.fontSize.sm.var,
+          ...atForcedColors(forced.boundary),
         },
         icon: {
           display: 'inline-flex',

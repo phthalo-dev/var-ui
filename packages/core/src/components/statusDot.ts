@@ -1,6 +1,9 @@
 import { atProperty, keyframes, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { atForcedColors, atReducedMotion } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
+import { border } from '../internal/border';
 import { mapTone, semanticTone, tone, type SemanticToneKey } from '../shared/semanticTone';
 
 const pulse = keyframes.create('var-ui-status-pulse', {
@@ -40,6 +43,8 @@ export const statusDot = typestyles.recipe({
         color: t.color.text.secondary.var,
         flexShrink: 0,
         boxSizing: 'border-box',
+        // The dot is a `currentColor` background, which forced colors replaces with Canvas.
+        ...atForcedColors(forced.fill),
       },
       variants: {
         tone: mapTone((key) => (key === 'neutral' ? {} : toneColor(key))),
@@ -47,18 +52,18 @@ export const statusDot = typestyles.recipe({
           filled: {},
           outline: {
             backgroundColor: 'transparent',
-            borderWidth: t.borderWidth.thick.var,
-            borderStyle: 'solid',
-            borderColor: 'currentColor',
+            ...border('currentColor', t.borderWidth.thick.var),
+            ...atForcedColors({ backgroundColor: 'transparent' }),
           },
           subtle: {
             backgroundColor: 'color-mix(in srgb, currentColor 35%, transparent)',
+            ...atForcedColors(forced.track),
           },
         },
         pulse: {
           true: {
             animation: `${pulse} 1400ms ease-out infinite`,
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            ...atReducedMotion({ animation: 'none' }),
           },
           false: {},
         },

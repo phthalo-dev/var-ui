@@ -1,8 +1,10 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
-import { duration } from '../tokens/defaults/duration';
-import { easing } from '../tokens/defaults/easing';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
+import { transitionOf } from '../internal/motion';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
@@ -41,9 +43,7 @@ export const toggleButton = typestyles.recipe({
     return {
       base: {
         appearance: 'none',
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: vars.border.var,
+        ...border(vars.border.var),
         borderRadius: t.radius.md.var,
         backgroundColor: vars.background.var,
         color: vars.foreground.var,
@@ -55,7 +55,7 @@ export const toggleButton = typestyles.recipe({
         alignItems: 'center',
         justifyContent: 'center',
         gap: t.space[2].var,
-        transition: 'background-color 140ms ease, border-color 140ms ease',
+        transition: t.transition.controlSurface.var,
         '&:hover': {
           backgroundColor: t.color.background.subtle.var,
         },
@@ -70,6 +70,7 @@ export const toggleButton = typestyles.recipe({
             [vars.background.name]: t.color.link.hover.var,
             [vars.border.name]: t.color.link.hover.var,
           },
+          ...atForcedColors(forced.selected),
         },
       },
       variants: {
@@ -85,7 +86,7 @@ export const toggleButton = typestyles.recipe({
             [vars.foreground.name]: t.color.text.secondary.var,
             fontWeight: t.fontWeight.normal.var,
             boxShadow: 'none',
-            transition: `color ${duration.fast} ${easing.standard}`,
+            transition: transitionOf('color', 'fast'),
             '&:hover': {
               backgroundColor: 'transparent',
               borderColor: 'transparent',

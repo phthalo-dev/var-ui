@@ -10,7 +10,7 @@ describe('Alert', () => {
         <Alert tone="info">Heads up</Alert>
       </IconProvider>,
     );
-    expect(container.querySelector('[data-alert]')?.getAttribute('role')).toBeNull();
+    expect(container.querySelector('.var-ui-alert')?.getAttribute('role')).toBeNull();
   });
 
   it('passes through an explicit role', () => {

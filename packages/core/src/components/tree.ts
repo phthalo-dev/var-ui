@@ -1,5 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { density } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
@@ -100,12 +102,13 @@ export const tree = typestyles.recipe({
           '&[data-selected]': {
             backgroundColor: vars.selectedBg.var,
             fontWeight: t.fontWeight.medium.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': { opacity: t.opacity.disabled.var, pointerEvents: 'none' },
         },
         toggle: {
           position: 'relative',
-          zIndex: 2,
+          zIndex: t.zIndex.lifted.var,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -115,7 +118,7 @@ export const tree = typestyles.recipe({
           padding: 0,
           cursor: 'pointer',
           color: 'inherit',
-          transition: 'transform 0.15s ease',
+          transition: t.transition.transform.var,
           // Expand rotates toward "down". In RTL the chevron is mirrored
           // (scaleX(-1) on the icon), so +90deg would point up — use -90deg.
           '&[data-expanded]': { transform: 'rotate(90deg)' },
@@ -128,7 +131,7 @@ export const tree = typestyles.recipe({
           bottom: 0,
           insetInlineEnd: 0,
           insetInlineStart: 0,
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
           margin: 0,
           padding: 0,
           border: 'none',
@@ -159,10 +162,10 @@ export const tree = typestyles.recipe({
           listStyle: 'none',
           margin: 0,
           padding: 0,
-          paddingLeft: vars.indentSize.var,
+          paddingInlineStart: vars.indentSize.var,
         },
         start: { display: 'flex', flexShrink: 0, alignItems: 'center' },
-        end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginLeft: 'auto' },
+        end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginInlineStart: 'auto' },
       },
       variants: {
         density: {

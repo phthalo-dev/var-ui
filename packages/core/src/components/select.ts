@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { fieldChrome, dropdownPopoverChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -96,17 +97,15 @@ export const select = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space[2].var,
           width: '100%',
-          textAlign: 'left',
+          textAlign: 'start',
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.triggerBorder.var,
+          ...border(vars.triggerBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.triggerBackground.var,
           color: vars.triggerForeground.var,
           cursor: 'pointer',
           outline: 'none',
-          transition: 'border-color 140ms ease, box-shadow 140ms ease',
+          transition: t.transition.borderShadow.var,
           '&:hover, &[data-hovered]': {
             borderColor: t.color.border.strong.var,
           },

@@ -2,6 +2,9 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { dropdownPopoverChrome, fieldChrome } from '../internal/fieldChrome';
 
 export const multiSelector = typestyles.recipe({
@@ -99,10 +102,8 @@ export const multiSelector = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space[2].var,
           width: '100%',
-          textAlign: 'left',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.triggerBorder.var,
+          textAlign: 'start',
+          ...border(vars.triggerBorder.var),
           borderRadius: t.radius.md.var,
           padding: `${t.space[2].var} ${t.space[3].var}`,
           backgroundColor: vars.triggerBackground.var,
@@ -110,7 +111,7 @@ export const multiSelector = typestyles.recipe({
           fontSize: t.fontSize.md.var,
           cursor: 'pointer',
           outline: 'none',
-          transition: 'border-color 140ms ease, box-shadow 140ms ease',
+          transition: t.transition.borderShadow.var,
           '&:hover, &[data-hovered]': {
             borderColor: t.color.border.strong.var,
           },
@@ -148,15 +149,14 @@ export const multiSelector = typestyles.recipe({
           width: '1rem',
           height: '1rem',
           borderRadius: t.radius.sm.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.itemCheckboxBorder.var,
+          ...border(vars.itemCheckboxBorder.var),
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedColor.var,
+            ...atForcedColors(forced.fill),
           },
         },
         itemLabel: {

@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import { overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
 import { positioner } from './positionerVars';
@@ -36,9 +37,7 @@ export const popover = typestyles.recipe({
       base: {
         root: {
           ...overlayPresenceStyles({ scale: true }),
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.background.var,
           boxShadow: t.shadow.md.var,

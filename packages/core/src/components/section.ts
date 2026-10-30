@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 
 /**
  * Bordered surface region with an optional title — the page-section building
@@ -26,9 +27,7 @@ export const section = typestyles.recipe({
           display: 'grid',
           gap: t.space[3].var,
           padding: t.space[4].var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
           boxShadow: t.shadow.xs.var,

@@ -2,6 +2,7 @@ import { atProperty, type RecipeVariants, variant, type VariantOptions } from 't
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border, borderSide } from '../internal/border';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const codeBlockVarDefinitions = {
@@ -98,9 +99,7 @@ export const codeBlock = typestyles.recipe({
     return {
       base: {
         root: {
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
           overflow: 'hidden',
@@ -113,9 +112,7 @@ export const codeBlock = typestyles.recipe({
           gap: t.space[2].var,
           paddingBlock: t.space[1].var,
           paddingInline: t.space[3].var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.border.var,
+          ...borderSide('block-end', vars.border.var),
           backgroundColor: vars.backgroundHeader.var,
         },
         title: {
@@ -203,12 +200,10 @@ export const codeBlock = typestyles.recipe({
         },
         feedbackToast: {
           position: 'absolute',
-          right: t.space[3].var,
+          insetInlineEnd: t.space[3].var,
           top: t.space[3].var,
-          zIndex: 1,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          zIndex: t.zIndex.raised.var,
+          ...border(vars.border.var),
           backgroundColor: vars.background.var,
           borderRadius: t.radius.md.var,
           padding: `2px ${t.space[2].var}`,
@@ -264,7 +259,7 @@ export const codeBlock = typestyles.recipe({
         },
         lineNumber: {
           minWidth: '2ch',
-          textAlign: 'right',
+          textAlign: 'end',
           fontSize: t.fontSize.sm.var,
           color: vars.lineNumberColor.var,
           opacity: 0.8,
@@ -277,10 +272,10 @@ export const codeBlock = typestyles.recipe({
           backgroundColor: vars.lineHighlightBackground.var,
         },
         lineAdded: {
-          backgroundColor: 'rgb(16 185 129 / 0.12)',
+          backgroundColor: t.color.tone.success.subtleBackground.var,
         },
         lineDeleted: {
-          backgroundColor: 'rgb(248 113 113 / 0.12)',
+          backgroundColor: t.color.tone.danger.subtleBackground.var,
         },
       },
       variants: {
@@ -292,9 +287,7 @@ export const codeBlock = typestyles.recipe({
               alignItems: 'center',
               gap: t.space[1].var,
               borderRadius: t.radius.md.var,
-              borderWidth: t.borderWidth.default.var,
-              borderStyle: 'solid',
-              borderColor: vars.border.var,
+              ...border(vars.border.var),
               padding: '2px 8px',
               backgroundColor: vars.backgroundInline.var,
             },

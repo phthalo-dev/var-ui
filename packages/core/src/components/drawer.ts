@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { borderSide } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
@@ -71,26 +72,20 @@ export const drawer = typestyles.recipe({
             bottom: 0,
             insetInlineStart: 0,
             width: `min(${vars.panelWidth.var}, 92vw)`,
-            borderInlineEndWidth: t.borderWidth.default.var,
-            borderInlineEndStyle: 'solid',
-            borderInlineEndColor: vars.panelBorder.var,
+            ...borderSide('inline-end', vars.panelBorder.var),
           },
           '&[data-placement="end"]': {
             top: 0,
             bottom: 0,
             insetInlineEnd: 0,
             width: `min(${vars.panelWidth.var}, 92vw)`,
-            borderInlineStartWidth: t.borderWidth.default.var,
-            borderInlineStartStyle: 'solid',
-            borderInlineStartColor: vars.panelBorder.var,
+            ...borderSide('inline-start', vars.panelBorder.var),
           },
           '&[data-placement="bottom"]': {
             insetInline: 0,
             bottom: 0,
             height: `min(${vars.panelHeight.var}, 92vh)`,
-            borderBlockStartWidth: t.borderWidth.default.var,
-            borderBlockStartStyle: 'solid',
-            borderBlockStartColor: vars.panelBorder.var,
+            ...borderSide('block-start', vars.panelBorder.var),
             borderStartStartRadius: t.radius.lg.var,
             borderStartEndRadius: t.radius.lg.var,
           },
@@ -101,9 +96,7 @@ export const drawer = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space[3].var,
           padding: t.space[4].var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.panelBorder.var,
+          ...borderSide('block-end', vars.panelBorder.var),
           color: vars.headerColor.var,
           flexShrink: 0,
         },

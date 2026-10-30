@@ -2,6 +2,9 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 
 export const radio = typestyles.recipe({
   name: 'radio',
@@ -38,9 +41,7 @@ export const radio = typestyles.recipe({
           width: '18px',
           height: '18px',
           borderRadius: t.radius.full.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.controlBorder.var,
+          ...border(vars.controlBorder.var),
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -50,10 +51,11 @@ export const radio = typestyles.recipe({
             height: '8px',
             borderRadius: t.radius.full.var,
             backgroundColor: vars.indicatorBackground.var,
-            transition: 'background-color 120ms ease',
+            transition: t.transition.background.var,
           },
           '&[data-selected]::before': {
             [vars.indicatorBackground.name]: t.color.tone.accent.background.var,
+            ...atForcedColors(forced.fill),
           },
           ':focus-within > &': {
             ...focusRing,

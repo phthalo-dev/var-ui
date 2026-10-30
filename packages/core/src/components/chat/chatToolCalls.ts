@@ -81,17 +81,17 @@ export const chatToolCalls = typestyles.recipe({
       },
       chevron: {
         display: 'inline-flex',
-        marginLeft: 'auto',
-        transition: 'transform 0.15s ease',
+        marginInlineStart: 'auto',
+        transition: t.transition.transform.var,
       },
       list: {
         display: 'flex',
         flexDirection: 'column',
         gap: t.space[1].var,
-        paddingLeft: t.space[4].var,
+        paddingInlineStart: t.space[4].var,
       },
       detail: {
-        paddingLeft: t.space[4].var,
+        paddingInlineStart: t.space[4].var,
         paddingBottom: t.space[2].var,
       },
     },
