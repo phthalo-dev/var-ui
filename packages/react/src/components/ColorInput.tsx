@@ -25,7 +25,6 @@ export type ColorInputProps = Omit<
   ComponentPropsWithRef<'input'>,
   | 'value'
   | 'defaultValue'
-  | 'onChange'
   | 'size'
   | 'type'
   | 'className'
@@ -42,7 +41,8 @@ export type ColorInputProps = Omit<
     value?: string;
     /** Uncontrolled initial hex color. */
     defaultValue?: string;
-    onChange?: (value: string) => void;
+    /** Called with the hex color whenever it changes (typing a valid hex or picking). The native `onChange` also reaches the hex `<input>`. */
+    onValueChange?: (value: string) => void;
     /** Control density. Falls back to the surrounding control size, then `md`. */
     size?: NonNullable<ColorFieldVariantProps['size']>;
     /**
@@ -58,8 +58,10 @@ export type ColorInputProps = Omit<
     swatchLabel?: string;
     /** Marks the field invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
-    isDisabled?: boolean;
-    isRequired?: boolean;
+    /** Disables the field and the swatch button. */
+    disabled?: boolean;
+    /** Marks the hex input required. */
+    required?: boolean;
     /** Additional CSS class names merged onto the root element. */
     className?: string;
     /** Inline style for the root element. */
@@ -83,6 +85,7 @@ export function ColorInput({
   errorMessage,
   value,
   defaultValue = '#6366f1',
+  onValueChange,
   onChange,
   placeholder,
   swatches,
@@ -92,8 +95,8 @@ export function ColorInput({
   appearance = 'field',
   swatchLabel = 'Open color picker',
   invalid,
-  isDisabled,
-  isRequired,
+  disabled,
+  required,
   className,
   style,
   name,
@@ -116,7 +119,12 @@ export function ColorInput({
     id,
     describedBy: userDescribedBy,
   });
-  const { color, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
+  const { color, setColor } = useColorValue({
+    value,
+    defaultValue,
+    onChange: onValueChange,
+    withAlpha,
+  });
   const [textValue, setTextValue] = useState(color);
   const swatchColor = isValidHex(color) ? normalizeHex(color) : normalizeHex(defaultValue);
 
@@ -125,6 +133,7 @@ export function ColorInput({
   }, [color]);
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
     const next = event.target.value;
     setTextValue(next);
     if (isValidHex(next)) {
@@ -158,13 +167,13 @@ export function ColorInput({
       className={className}
       style={style}
     >
-      <div {...mergeProps(cf.inputWrapper)} data-disabled={isDisabled || undefined}>
+      <div {...mergeProps(cf.inputWrapper)} data-disabled={disabled || undefined}>
         <DialogTrigger>
           <Pressable>
             <button
               type="button"
               {...mergeProps(cf.swatchButton)}
-              disabled={isDisabled}
+              disabled={disabled}
               aria-label={swatchLabel}
             >
               <span
@@ -182,7 +191,7 @@ export function ColorInput({
             <div {...mergeProps(p.content)}>
               <ColorPicker
                 value={color}
-                onChange={handlePickerChange}
+                onValueChange={handlePickerChange}
                 swatches={swatches}
                 swatchesPerRow={swatchesPerRow}
                 withAlpha={withAlpha}
@@ -202,9 +211,9 @@ export function ColorInput({
             name={name}
             value={textValue}
             placeholder={placeholder}
-            disabled={isDisabled}
-            required={isRequired}
-            aria-required={isRequired || undefined}
+            disabled={disabled}
+            required={required}
+            aria-required={required || undefined}
             onChange={handleTextChange}
             onBlur={handleTextBlur}
           />

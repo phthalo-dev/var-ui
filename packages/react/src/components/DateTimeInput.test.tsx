@@ -10,7 +10,7 @@ function ControlledDateTimeInput() {
   const [value, setValue] = useState<CalendarDateTime>(new CalendarDateTime(2026, 7, 15, 14, 30));
   return (
     <>
-      <DateTimeInput label="Appointment" value={value} onChange={(v) => v && setValue(v)} />
+      <DateTimeInput label="Appointment" value={value} onValueChange={(v) => v && setValue(v)} />
       <output data-testid="value">{value.toString()}</output>
     </>
   );
@@ -59,7 +59,7 @@ describe('DateTimeInput', () => {
         <DateTimeInput
           label="Appointment"
           value={new CalendarDateTime(2026, 7, 15, 14, 30)}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -83,7 +83,7 @@ describe('DateTimeInput', () => {
   it('renders error message when passed', () => {
     render(
       <IconProvider icons={{}}>
-        <DateTimeInput label="Appointment" errorMessage="Required" isInvalid />
+        <DateTimeInput label="Appointment" errorMessage="Required" invalid />
       </IconProvider>,
     );
     expect(screen.getByText('Required')).toBeTruthy();

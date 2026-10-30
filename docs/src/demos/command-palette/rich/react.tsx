@@ -20,7 +20,7 @@ export default function Preview() {
   const run = (label: string) => () => setLast(label);
   return (
     <>
-      <Button onPress={palette.open}>Open palette</Button>
+      <Button onClick={palette.open}>Open palette</Button>
       <p>Last command: {last}</p>
       <CommandPalette
         controller={palette}

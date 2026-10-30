@@ -25,7 +25,7 @@ export type FileTriggerProps = Omit<
   /** Called with the chosen files. An empty selection is ignored. */
   onSelect: (files: File[]) => void;
   /** Disables the child when it accepts `disabled`, and does not open the picker. */
-  isDisabled?: boolean;
+  disabled?: boolean;
 };
 
 // Not replaced with RAC's FileTrigger: it wraps children in a PressResponder (the
@@ -46,7 +46,6 @@ const disabledTags = new Set([
 type TriggerChildProps = {
   onClick?: (event: MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  isDisabled?: boolean;
 };
 
 function childAcceptsDisabled(child: ReactElement): boolean {
@@ -69,7 +68,7 @@ export function FileTrigger({
   accept,
   multiple = false,
   onSelect,
-  isDisabled = false,
+  disabled = false,
   className,
   ref,
   ...rest
@@ -85,7 +84,7 @@ export function FileTrigger({
 
   function handleClick(event: MouseEvent<HTMLElement>) {
     childProps.onClick?.(event);
-    if (isDisabled || event.defaultPrevented) return;
+    if (disabled || event.defaultPrevented) return;
     inputRef.current?.click();
   }
 
@@ -100,11 +99,8 @@ export function FileTrigger({
   const triggerProps: TriggerChildProps & { onClick: (event: MouseEvent<HTMLElement>) => void } = {
     onClick: handleClick,
   };
-  if (isDisabled && childAcceptsDisabled(children)) {
+  if (disabled && childAcceptsDisabled(children)) {
     triggerProps.disabled = true;
-    if (typeof children.type !== 'string') {
-      triggerProps.isDisabled = true;
-    }
   }
 
   return (
@@ -118,7 +114,7 @@ export function FileTrigger({
         aria-hidden="true"
         accept={accept}
         multiple={multiple}
-        disabled={isDisabled || undefined}
+        disabled={disabled || undefined}
         onChange={handleChange}
         // `hidden` is display:none, which blocks the file dialog in some browsers.
         {...mergeProps(visuallyHidden(), className)}

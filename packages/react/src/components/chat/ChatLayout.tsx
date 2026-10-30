@@ -1,4 +1,12 @@
-import { useCallback, useRef, type JSX, type ReactNode, type Ref, type RefObject } from 'react';
+import {
+  useCallback,
+  useRef,
+  type ComponentPropsWithRef,
+  type JSX,
+  type ReactNode,
+  type Ref,
+  type RefObject,
+} from 'react';
 import { chatLayout } from '@var-ui/core/components/chat/chatLayout';
 import { Button } from '../Button';
 import { Icon } from '../../icons';
@@ -6,7 +14,10 @@ import { useChatStreamScroll } from '../../chat/useChatStreamScroll';
 import { useChatNewMessages } from '../../chat/useChatNewMessages';
 import { mergeProps } from 'typestyles';
 
-export type ChatLayoutProps = {
+export type ChatLayoutProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Message content — typically `ChatMessageList`. */
   children: ReactNode;
   /** Composer element, fixed to the bottom dock — typically `ChatComposer`. */
@@ -41,7 +52,7 @@ function hasVisibleContent(children: ReactNode): boolean {
  *
  * ```tsx
  * <ChatLayout composer={<ChatComposer>…</ChatComposer>}>
- *   <ChatMessageList isStreaming={isStreaming}>…</ChatMessageList>
+ *   <ChatMessageList streaming={isStreaming}>…</ChatMessageList>
  * </ChatLayout>
  * ```
  */
@@ -53,6 +64,7 @@ export function ChatLayout({
   scrollRef: externalScrollRef,
   className,
   ref,
+  ...rest
 }: ChatLayoutProps): JSX.Element {
   const messageAreaRef = useRef<HTMLElement | null>(null);
   const scrollContainerRef = externalScrollRef ?? messageAreaRef;
@@ -75,7 +87,7 @@ export function ChatLayout({
   const showButton = scroll.isScrolledUp || newMessages.hasNewMessages;
   const defaultButton = showButton ? (
     <Button
-      onPress={() => {
+      onClick={() => {
         newMessages.dismiss();
         scroll.scrollToBottom();
       }}
@@ -86,7 +98,7 @@ export function ChatLayout({
   ) : null;
 
   return (
-    <div {...mergeProps(l.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(l.root, className)} ref={ref}>
       <div {...mergeProps(l.messageArea)} ref={setMessageAreaRef}>
         {hasVisibleContent(children) ? children : (emptyState ?? null)}
       </div>

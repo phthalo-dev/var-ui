@@ -14,7 +14,7 @@ function setup(props: Partial<Parameters<typeof EditableText>[0]> = {}) {
       value="Road trip"
       onCommit={onCommit}
       onCancel={onCancel}
-      onChange={onChange}
+      onValueChange={onChange}
       aria-label="Playlist name"
       {...props}
     >
@@ -104,7 +104,7 @@ describe('EditableText', () => {
     expect(screen.queryByRole('textbox')).toBeNull();
   });
 
-  it.each([{ isDisabled: true }, { isReadOnly: true }])('does not edit when %o', async (props) => {
+  it.each([{ disabled: true }, { readOnly: true }])('does not edit when %o', async (props) => {
     setup(props);
     await userEvent.dblClick(screen.getByRole('heading'));
     await userEvent.tab();
@@ -147,7 +147,7 @@ describe('EditableText', () => {
     await userEvent.dblClick(screen.getByRole('heading'));
     await userEvent.keyboard('Summer');
     rerender(
-      <EditableText value="Road trip" onCommit={onCommit} isDisabled>
+      <EditableText value="Road trip" onCommit={onCommit} disabled>
         <Heading level={1}>Road trip</Heading>
       </EditableText>,
     );

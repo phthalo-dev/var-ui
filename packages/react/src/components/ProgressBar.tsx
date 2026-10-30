@@ -8,7 +8,10 @@ import { progressBar } from '@var-ui/core/components/progressBar';
 import type { ProgressBarVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className'> &
+export type ProgressBarProps = Omit<
+  RACProgressBarProps,
+  'children' | 'className' | 'isIndeterminate'
+> &
   ProgressBarVariantProps & {
     /** Label rendered above the track. */
     label?: string;
@@ -26,12 +29,13 @@ export type ProgressBarProps = Omit<RACProgressBarProps, 'children' | 'className
  *
  * ```tsx
  * <ProgressBar label="Uploading" value={40} />
- * <ProgressBar label="Working" isIndeterminate />
+ * <ProgressBar label="Working" indeterminate />
  * ```
  */
 export function ProgressBar({
   label,
   tone = 'accent',
+  indeterminate = false,
   appearance = 'solid',
   showValueText = true,
   className,
@@ -41,11 +45,16 @@ export function ProgressBar({
   const p = progressBar({
     tone,
     appearance,
-    indeterminate: Boolean(props.isIndeterminate),
+    indeterminate,
   });
-  const showValue = showValueText && !props.isIndeterminate;
+  const showValue = showValueText && !indeterminate;
   return (
-    <AriaProgressBar {...props} {...mergeProps(p.root, className)} ref={ref}>
+    <AriaProgressBar
+      {...props}
+      isIndeterminate={indeterminate}
+      {...mergeProps(p.root, className)}
+      ref={ref}
+    >
       {({ percentage, valueText }) => (
         <>
           {label || showValue ? (
@@ -57,7 +66,7 @@ export function ProgressBar({
           <div {...mergeProps(p.track)}>
             <div
               {...mergeProps(p.fill)}
-              style={props.isIndeterminate ? undefined : { width: `${percentage ?? 0}%` }}
+              style={indeterminate ? undefined : { width: `${percentage ?? 0}%` }}
             />
           </div>
         </>

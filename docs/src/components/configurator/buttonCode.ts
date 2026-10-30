@@ -5,7 +5,7 @@ export type ButtonConfiguratorState = {
   appearance: ToneAppearance;
   tone: Tone;
   size: 'sm' | 'md' | 'lg';
-  isDisabled: boolean;
+  disabled: boolean;
   elevated: boolean;
   label: string;
 };
@@ -36,7 +36,7 @@ function reactProps(state: ButtonConfiguratorState): string {
   if (state.appearance !== 'subtle') attrs.push(`appearance="${state.appearance}"`);
   if (state.size !== 'md') attrs.push(`size="${state.size}"`);
   if (state.elevated) attrs.push('elevated');
-  if (state.isDisabled) attrs.push('isDisabled');
+  if (state.disabled) attrs.push('disabled');
   return attrs.length > 0 ? ` ${attrs.join(' ')}` : '';
 }
 
@@ -46,7 +46,7 @@ function astroProps(state: ButtonConfiguratorState): string {
   if (state.appearance !== 'subtle') attrs.push(`appearance="${state.appearance}"`);
   if (state.size !== 'md') attrs.push(`size="${state.size}"`);
   if (state.elevated) attrs.push('elevated');
-  if (state.isDisabled) attrs.push('disabled');
+  if (state.disabled) attrs.push('disabled');
   return attrs.length > 0 ? ` ${attrs.join(' ')}` : '';
 }
 
@@ -60,7 +60,7 @@ function htmlAttrs(state: ButtonConfiguratorState): string {
     'data-layout="default"',
   ];
   if (state.elevated) attrs.push('data-elevated');
-  if (state.isDisabled) attrs.push('disabled');
+  if (state.disabled) attrs.push('disabled');
   return attrs.join(' ');
 }
 

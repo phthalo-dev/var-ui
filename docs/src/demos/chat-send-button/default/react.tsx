@@ -6,8 +6,8 @@ export default function Preview() {
 
   return (
     <ChatSendButton
-      isStreaming={isStreaming}
-      onPress={() => setIsStreaming(true)}
+      streaming={isStreaming}
+      onClick={() => setIsStreaming(true)}
       onStop={() => setIsStreaming(false)}
     />
   );

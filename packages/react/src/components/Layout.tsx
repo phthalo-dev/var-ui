@@ -302,7 +302,7 @@ export type LayoutContentProps = ComponentPropsWithRef<'div'> & {
   /** Only `0` (seamless) is distinct from the inherited default. */
   padding?: LayoutPadding;
   /** @default true */
-  isScrollable?: boolean;
+  scrollable?: boolean;
   /** Accessible name; paired with `role="region"` by default when set. */
   label?: string;
 };
@@ -310,7 +310,7 @@ export type LayoutContentProps = ComponentPropsWithRef<'div'> & {
 /** Flex-1 main column for `Layout`. Edge-aware padding reads `data-has-*` from the `Layout` root. */
 export function LayoutContent({
   padding,
-  isScrollable = true,
+  scrollable = true,
   role,
   label,
   className,
@@ -318,7 +318,7 @@ export function LayoutContent({
   ref,
   ...rest
 }: LayoutContentProps): JSX.Element {
-  const s = layoutContent({ isScrollable, padding: toZonePaddingVariant(padding) });
+  const s = layoutContent({ scrollable, padding: toZonePaddingVariant(padding) });
   const resolvedRole = role ?? (label != null ? 'region' : undefined);
 
   return (
@@ -356,7 +356,7 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
    */
   hasDivider?: boolean;
   /** @default true */
-  isScrollable?: boolean;
+  scrollable?: boolean;
   /** Only `0` (seamless) is distinct from the inherited default. */
   padding?: LayoutPadding;
   /**
@@ -376,7 +376,7 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
   /** Collapses the panel to `overlay` or `hidden` below a breakpoint. Inert above it. */
   responsive?: LayoutPanelResponsive;
   /** Controlled open state for `responsive` modes — omit to let the panel manage it internally. */
-  isOpen?: boolean;
+  open?: boolean;
   /** Initial open state for uncontrolled `responsive` usage. @default false */
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -390,21 +390,21 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
  * slide edge of the `responsive="overlay"` drawer.
  *
  * Above `responsive.below` (or when `responsive` is omitted), always renders
- * the plain inline panel — `isOpen`/`defaultOpen`/`onOpenChange` are inert.
- * Below it, `'hidden'` mounts/unmounts the inline panel with `isOpen`, and
+ * the plain inline panel — `open`/`defaultOpen`/`onOpenChange` are inert.
+ * Below it, `'hidden'` mounts/unmounts the inline panel with `open`, and
  * `'overlay'` swaps it for an RAC `Modal`/`ModalOverlay` drawer (focus trap,
  * Escape, backdrop dismissal, `useScrollLock` — same primitives as `MobileNav`).
  */
 export function LayoutPanel({
   width,
   hasDivider = false,
-  isScrollable = true,
+  scrollable = true,
   padding,
   resizable,
   hasResizeHandle = false,
   resizeHandleLabel = 'Resize panel',
   responsive,
-  isOpen: isOpenProp,
+  open: openProp,
   defaultOpen = false,
   onOpenChange,
   role,
@@ -434,16 +434,16 @@ export function LayoutPanel({
   const isResponsiveActive = responsive != null && isBelowBreakpoint;
   const showResizeHandle = hasResizeHandle && resizable != null && !isResponsiveActive;
   const s = layoutPanel({
-    isScrollable,
+    scrollable,
     hasDivider: showResizeHandle ? false : hasDivider,
     hasResizeHandle: showResizeHandle,
     padding: toZonePaddingVariant(padding),
   });
   const isOverlayMode = isResponsiveActive && responsive?.mode === 'overlay';
 
-  const isControlled = isOpenProp !== undefined;
+  const isControlled = openProp !== undefined;
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isOpen = isControlled ? (isOpenProp as boolean) : internalOpen;
+  const open = isControlled ? (openProp as boolean) : internalOpen;
   const setOpen = useCallback(
     (next: boolean) => {
       if (!isControlled) setInternalOpen(next);
@@ -452,7 +452,7 @@ export function LayoutPanel({
     [isControlled, onOpenChange],
   );
 
-  const isOverlayVisible = isOverlayMode && isOpen;
+  const isOverlayVisible = isOverlayMode && open;
   useScrollLock(isOverlayVisible);
   const { style: layerStyle } = useLayer();
 
@@ -460,7 +460,7 @@ export function LayoutPanel({
     return null;
   }
 
-  if (isResponsiveActive && responsive?.mode === 'hidden' && !isOpen) {
+  if (isResponsiveActive && responsive?.mode === 'hidden' && !open) {
     return null;
   }
 
@@ -482,14 +482,14 @@ export function LayoutPanel({
   if (isOverlayMode) {
     return (
       <ModalOverlay
-        isOpen={isOpen}
+        isOpen={open}
         onOpenChange={setOpen}
         isDismissable
         {...mergeProps(s.overlayBackdrop)}
-        data-open={isOpen ? '' : undefined}
+        data-open={open ? '' : undefined}
         style={layerStyle}
       >
-        <Modal {...mergeProps(s.overlay)} data-side={dataSide} data-open={isOpen ? '' : undefined}>
+        <Modal {...mergeProps(s.overlay)} data-side={dataSide} data-open={open ? '' : undefined}>
           <AriaDialog
             aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
             aria-labelledby={ariaLabelledBy}
@@ -506,7 +506,7 @@ export function LayoutPanel({
     const handle = (
       <ResizeHandle
         {...resizable.handleProps}
-        isReversed={(dataSide === 'end') !== isRtl}
+        reversed={(dataSide === 'end') !== isRtl}
         aria-label={resizeHandleLabel}
       />
     );

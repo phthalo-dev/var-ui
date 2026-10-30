@@ -8,7 +8,7 @@ const [italic, setItalic] = useState(true);
 
 <HStack gap="sm">
   <ToggleButton defaultSelected>Bold</ToggleButton>
-  <ToggleButton isSelected={italic} onChange={setItalic}>
+  <ToggleButton selected={italic} onSelectedChange={setItalic}>
     Italic
   </ToggleButton>
   <ToggleButton>Underline</ToggleButton>

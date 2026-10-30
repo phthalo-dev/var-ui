@@ -7,7 +7,7 @@ describe('Alert', () => {
   it('has no live role by default', () => {
     const { container } = render(
       <IconProvider icons={{}}>
-        <Alert variant="info">Heads up</Alert>
+        <Alert tone="info">Heads up</Alert>
       </IconProvider>,
     );
     expect(container.querySelector('[data-alert]')?.getAttribute('role')).toBeNull();
@@ -16,7 +16,7 @@ describe('Alert', () => {
   it('passes through an explicit role', () => {
     render(
       <IconProvider icons={{}}>
-        <Alert variant="danger" role="alert">
+        <Alert tone="danger" role="alert">
           Failed
         </Alert>
       </IconProvider>,

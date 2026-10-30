@@ -6,13 +6,13 @@ export const snippets = {
 <Select
   label="Fruit"
   options={[
-    { id: 'apple', label: 'Apple' },
-    { id: 'plum', label: 'Plum' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'plum', label: 'Plum' },
   ]}
 />`,
   astro: `---
 // No @var-ui/astro Select — core recipe + native <select>.
-// React uses options={{ id, label }}; HTML uses <option value>.
+// React uses options={[{ value, label }]}; HTML uses <option value>.
 import { select } from '@var-ui/core';
 
 const s = select();

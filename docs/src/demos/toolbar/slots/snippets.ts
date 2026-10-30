@@ -7,8 +7,8 @@ export const snippets = {
   label="Editor toolbar"
   startContent={
     <>
-      <IconButton name="menu" aria-label="Menu" />
-      <IconButton name="search" aria-label="Search" />
+      <IconButton icon="menu" aria-label="Menu" />
+      <IconButton icon="search" aria-label="Search" />
     </>
   }
   centerContent={<Button>Untitled</Button>}

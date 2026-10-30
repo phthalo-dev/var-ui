@@ -35,7 +35,7 @@ export default function PlaygroundShell({ framework }: PlaygroundShellProps) {
               resizable={start}
               hasDivider
               padding={0}
-              isScrollable
+              scrollable
               label="Theme editor"
               role="complementary"
             >

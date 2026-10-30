@@ -7,6 +7,7 @@ import {
   useContext,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
@@ -30,7 +31,7 @@ function renderTabListIcon(icon: TabListIcon | undefined, size: 'sm' | 'md' = 's
 
 type TabListContextValue = {
   value?: string;
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   size: ControlSize;
   /** Value of the item that currently holds the roving `tabIndex={0}` slot. */
   focusValue?: string;
@@ -48,7 +49,7 @@ export type TabListTabProps = Omit<
   ComponentPropsWithRef<'button'>,
   'value' | 'children' | 'ref' | 'onChange'
 > & {
-  /** Identifies this tab; passed to `onChange` and compared against `TabList`'s `value`. */
+  /** Identifies this tab; passed to `onValueChange` and compared against `TabList`'s `value`. */
   value: string;
   label: string;
   /** Renders as a link (with `aria-current` when selected) instead of a button. */
@@ -56,8 +57,9 @@ export type TabListTabProps = Omit<
   icon?: TabListIcon;
   endContent?: ReactNode;
   /** Hides the visible label, showing only the icon; `label` still provides the accessible name. @default false */
-  isLabelHidden?: boolean;
-  isDisabled?: boolean;
+  labelHidden?: boolean;
+  /** @default false */
+  disabled?: boolean;
   /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
   ref?: Ref<HTMLElement>;
 };
@@ -72,8 +74,8 @@ export function TabListTab({
   href,
   icon,
   endContent,
-  isLabelHidden = false,
-  isDisabled = false,
+  labelHidden = false,
+  disabled = false,
   className,
   ref,
   ...rest
@@ -86,8 +88,8 @@ export function TabListTab({
   const content = (
     <>
       {iconNode}
-      {!isLabelHidden ? <span>{label}</span> : null}
-      {!isLabelHidden && endContent != null ? endContent : null}
+      {!labelHidden ? <span>{label}</span> : null}
+      {!labelHidden && endContent != null ? endContent : null}
       <span {...mergeProps(s.indicator)} aria-hidden="true" />
     </>
   );
@@ -96,13 +98,13 @@ export function TabListTab({
     ...(rest as object),
     ...mergeProps(s.tab, className),
     'data-selected': isSelected ? '' : undefined,
-    'data-disabled': isDisabled ? '' : undefined,
-    'aria-label': isLabelHidden ? label : undefined,
+    'data-disabled': disabled ? '' : undefined,
+    'aria-label': labelHidden ? label : undefined,
     [FOCUSABLE_ATTR]: '',
     excludeFromTabOrder: ctx.focusValue !== value,
-    isDisabled,
+    isDisabled: disabled,
     onPress: () => {
-      if (!isDisabled) ctx.onChange?.(value);
+      if (!disabled) ctx.onValueChange?.(value);
     },
   };
 
@@ -125,7 +127,7 @@ export function TabListTab({
 export type TabListMenuOption = {
   value: string;
   label: string;
-  isDisabled?: boolean;
+  disabled?: boolean;
 };
 
 export type TabListMenuProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
@@ -134,7 +136,7 @@ export type TabListMenuProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & 
   options: TabListMenuOption[];
 };
 
-/** Overflow "More" trigger — reuses `Menu.FromSections`; selecting an option calls `onChange`. */
+/** Overflow "More" trigger — reuses `Menu.FromSections`; selecting an option calls `onValueChange`. */
 export function TabListMenu({
   label,
   options,
@@ -169,8 +171,8 @@ export function TabListMenu({
             items: options.map((option) => ({
               id: option.value,
               label: option.label,
-              disabled: option.isDisabled,
-              onAction: () => ctx.onChange?.(option.value),
+              disabled: option.disabled,
+              onAction: () => ctx.onValueChange?.(option.value),
             })),
           },
         ]}
@@ -195,10 +197,16 @@ function collectTabListValues(children: ReactNode): string[] {
   return values;
 }
 
-export type TabListProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'onChange' | 'ref'> & {
-  /** Selected tab/menu-option value. */
+export type TabListProps = Omit<
+  ComponentPropsWithRef<'nav'>,
+  'children' | 'onChange' | 'defaultValue' | 'ref'
+> & {
+  /** Controlled selected tab/menu-option value. */
   value?: string;
-  onChange?: (value: string) => void;
+  /** Uncontrolled initial selected value. */
+  defaultValue?: string;
+  /** Fires with the value of the tab (or menu option) the user selected. */
+  onValueChange?: (value: string) => void;
   /** @default 'md' */
   size?: NonNullable<TabListVariantProps['size']>;
   /** `hug` sizes tabs to content; `fill` stretches tabs/menu evenly across the width. @default 'hug' */
@@ -220,13 +228,13 @@ export type TabListProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'onCh
  * deliberately separate family from the panel `Tabs` component (see
  * `specs/phase-5-navigation-p2.md` § TabList).
  *
- * Controlled `value`/`onChange`; hand-rolled roving tabindex with Arrow /
+ * `value` / `defaultValue` / `onValueChange`; hand-rolled roving tabindex with Arrow /
  * Home / End support (`Tab` key stops once, on the selected — or first —
  * item, matching the ARIA tablist pattern without adopting `role="tablist"`
  * semantics, since these render as plain links/buttons).
  *
  * ```tsx
- * <TabList value={tab} onChange={setTab} label="Sections">
+ * <TabList value={tab} onValueChange={setTab} label="Sections">
  *   <TabList.Tab value="overview" label="Overview" href="/overview" />
  *   <TabList.Tab value="activity" label="Activity" endContent={<Badge>3</Badge>} />
  *   <TabList.Menu
@@ -237,8 +245,9 @@ export type TabListProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'onCh
  * ```
  */
 export function TabList({
-  value,
-  onChange,
+  value: valueProp,
+  defaultValue,
+  onValueChange,
   size = 'md',
   layout = 'hug',
   hasDivider = false,
@@ -251,6 +260,15 @@ export function TabList({
   ...rest
 }: TabListProps): JSX.Element {
   const s = tabList({ size });
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
+  const value = valueProp !== undefined ? valueProp : uncontrolledValue;
+  const onChange = useCallback(
+    (next: string) => {
+      if (valueProp === undefined) setUncontrolledValue(next);
+      onValueChange?.(next);
+    },
+    [valueProp, onValueChange],
+  );
   const rootRef = useRef<HTMLElement>(null);
   const setRoot = useCallback(
     (node: HTMLElement | null) => {
@@ -265,7 +283,7 @@ export function TabList({
   const focusValue = value != null && knownValues.includes(value) ? value : knownValues[0];
 
   const contextValue = useMemo<TabListContextValue>(
-    () => ({ value, onChange, size, focusValue }),
+    () => ({ value, onValueChange: onChange, size, focusValue }),
     [value, onChange, size, focusValue],
   );
 

@@ -217,7 +217,7 @@ const cases: Case[] = [
   {
     name: 'Pagination',
     tag: 'NAV',
-    ui: (ref) => <Pagination {...p(ref)} page={1} onChange={() => {}} totalPages={3} />,
+    ui: (ref) => <Pagination {...p(ref)} page={1} onValueChange={() => {}} totalPages={3} />,
   },
   { name: 'EmptyState', tag: 'DIV', ui: (ref) => <EmptyState {...p(ref)} title="t" /> },
   { name: 'Banner', tag: 'DIV', ui: (ref) => <Banner {...p(ref)}>b</Banner> },
@@ -225,7 +225,7 @@ const cases: Case[] = [
     name: 'Alert',
     tag: 'DIV',
     ui: (ref) => (
-      <Alert {...p(ref)} variant="info">
+      <Alert {...p(ref)} tone="info">
         a
       </Alert>
     ),
@@ -329,7 +329,11 @@ describe('handler + aria passthrough', () => {
 
   it('Tabs applies className to the root', () => {
     const { container } = render(
-      <Tabs className="custom" data-testid="tabs" tabs={[{ id: 'a', label: 'A', content: 'x' }]} />,
+      <Tabs
+        className="custom"
+        data-testid="tabs"
+        tabs={[{ value: 'a', label: 'A', content: 'x' }]}
+      />,
     );
     const root = screen.getByTestId('tabs');
     expect(root.classList.contains('custom')).toBe(true);
@@ -389,13 +393,13 @@ describe('handler + aria passthrough', () => {
   });
 
   it('Pagination labels are overridable and default to English', () => {
-    const { rerender } = render(<Pagination page={2} onChange={() => {}} totalPages={5} />);
+    const { rerender } = render(<Pagination page={2} onValueChange={() => {}} totalPages={5} />);
     expect(screen.getByRole('button', { name: 'Go to previous page' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Go to page 3' })).toBeTruthy();
     rerender(
       <Pagination
         page={2}
-        onChange={() => {}}
+        onValueChange={() => {}}
         totalPages={5}
         labels={{ previousPage: 'Zurueck', goToPage: (n) => `Seite ${n}` }}
       />,

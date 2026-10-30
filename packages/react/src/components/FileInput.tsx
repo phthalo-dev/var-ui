@@ -17,15 +17,7 @@ import { useMergedRef } from '../overlays/useMergedRef';
 
 export type FileInputProps = Omit<
   ComponentPropsWithRef<'input'>,
-  | 'type'
-  | 'value'
-  | 'defaultValue'
-  | 'onChange'
-  | 'disabled'
-  | 'children'
-  | 'className'
-  | 'style'
-  | 'size'
+  'type' | 'value' | 'defaultValue' | 'disabled' | 'children' | 'className' | 'style' | 'size'
 > & {
   /** Visible label rendered above the dropzone. */
   label: string;
@@ -35,14 +27,14 @@ export type FileInputProps = Omit<
   errorMessage?: string;
   /** Selected file(s); `File[]` when `multiple`, otherwise a single `File` or `null`. */
   value: File | File[] | null;
-  /** Called with the new selection, or `null` when cleared. */
-  onChange: (files: File | File[] | null) => void;
+  /** Called with the new selection, or `null` when cleared. The native `onChange` also reaches the hidden `<input type="file">`. */
+  onValueChange: (files: File | File[] | null) => void;
   /** Maximum size per file, in bytes. Oversized files are rejected. */
   maxSize?: number;
   /** Maximum number of files accepted when `multiple`. Extra files are rejected. */
   maxFiles?: number;
   /** Disables the dropzone: blocks click, keyboard activation, and drop. */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /**
    * Text shown in the dropzone while nothing is selected.
    * @default 'Choose file' ('Choose files' when `multiple`)
@@ -174,7 +166,7 @@ function validateFiles(
  * <FileInput
  *   label="Resume"
  *   value={file}
- *   onChange={setFile}
+ *   onValueChange={setFile}
  *   accept=".pdf,.doc,.docx"
  *   maxSize={5 * 1024 * 1024}
  * />
@@ -185,12 +177,13 @@ export function FileInput({
   description,
   errorMessage,
   value,
+  onValueChange,
   onChange,
   accept,
   multiple = false,
   maxSize,
   maxFiles,
-  isDisabled = false,
+  disabled = false,
   chooseLabel,
   clearLabel,
   filesSelectedLabel = (count) => `${count} files selected`,
@@ -227,7 +220,7 @@ export function FileInput({
   const placeholderLabel = chooseLabel ?? (multiple ? 'Choose files' : 'Choose file');
 
   function processFiles(selected: File[], fromDrop = false) {
-    if (isDisabled || selected.length === 0) return;
+    if (disabled || selected.length === 0) return;
     const candidates = multiple ? selected : selected.slice(0, 1);
     const { valid, error } = validateFiles(candidates, {
       accept,
@@ -245,11 +238,11 @@ export function FileInput({
     // Dropped files never pass through the native input, and rejected picks should not
     // linger in it, so keep the input in sync with what was accepted.
     if (fromDrop || valid.length !== selected.length) setNativeFiles(inputRef.current, valid);
-    onChange(multiple ? valid : (valid[0] ?? null));
+    onValueChange(multiple ? valid : (valid[0] ?? null));
   }
 
   function openPicker() {
-    if (isDisabled) return;
+    if (disabled) return;
     inputRef.current?.click();
   }
 
@@ -258,7 +251,7 @@ export function FileInput({
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (isDisabled) return;
+    if (disabled) return;
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       openPicker();
@@ -266,23 +259,24 @@ export function FileInput({
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    onChange?.(event);
     const files = event.target.files ? Array.from(event.target.files) : [];
     processFiles(files);
   }
 
   function handleDragEnter(event: DragEvent<HTMLDivElement>) {
-    if (isDisabled) return;
+    if (disabled) return;
     event.preventDefault();
     setIsDragOver(true);
   }
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
-    if (isDisabled) return;
+    if (disabled) return;
     event.preventDefault();
   }
 
   function handleDragLeave(event: DragEvent<HTMLDivElement>) {
-    if (isDisabled) return;
+    if (disabled) return;
     event.preventDefault();
     setIsDragOver(false);
   }
@@ -290,17 +284,17 @@ export function FileInput({
   function handleDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setIsDragOver(false);
-    if (isDisabled) return;
+    if (disabled) return;
     const files = event.dataTransfer.files ? Array.from(event.dataTransfer.files) : [];
     processFiles(files, true);
   }
 
   function handleClear(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
-    if (isDisabled) return;
+    if (disabled) return;
     setInternalError(null);
     if (inputRef.current) inputRef.current.value = '';
-    onChange(null);
+    onValueChange(null);
   }
 
   return (
@@ -317,11 +311,11 @@ export function FileInput({
       <div {...mergeProps(fi.frame)}>
         <div
           role="button"
-          tabIndex={isDisabled ? -1 : 0}
+          tabIndex={disabled ? -1 : 0}
           {...mergeProps(fi.dropzone)}
           data-drag-over={isDragOver || undefined}
-          data-disabled={isDisabled || undefined}
-          aria-disabled={isDisabled || undefined}
+          data-disabled={disabled || undefined}
+          aria-disabled={disabled || undefined}
           aria-labelledby={frame.labelId}
           aria-describedby={frame.controlProps['aria-describedby']}
           aria-invalid={frame.controlProps['aria-invalid']}
@@ -351,7 +345,7 @@ export function FileInput({
             {...mergeProps(fi.hiddenInput)}
             accept={accept}
             multiple={multiple}
-            disabled={isDisabled}
+            disabled={disabled}
             onChange={handleInputChange}
           />
         </div>
@@ -360,7 +354,7 @@ export function FileInput({
             type="button"
             {...mergeProps(fi.clearButton)}
             aria-label={clearLabel ?? `Clear ${label}`}
-            disabled={isDisabled}
+            disabled={disabled}
             onClick={handleClear}
           >
             <Icon name="close" size="sm" />

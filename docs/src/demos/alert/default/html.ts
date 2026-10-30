@@ -16,7 +16,7 @@ export function render(): string {
     {
       ...mergeProps(a.root),
       'data-alert': true,
-      'data-alert-variant': 'info',
+      'data-alert-tone': 'info',
       'data-alert-appearance': 'subtle',
     },
     body,

@@ -8,7 +8,7 @@ import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   width?: number | string;
   hasDivider?: boolean;
-  isScrollable?: boolean;
+  scrollable?: boolean;
   padding?: LayoutPadding;
   side?: 'start' | 'end';
   label?: string;
@@ -30,7 +30,7 @@ function toCssSize(value: number | string | undefined): string | undefined {
 const {
   width,
   hasDivider = false,
-  isScrollable = true,
+  scrollable = true,
   padding,
   side,
   role,
@@ -39,7 +39,7 @@ const {
   style: styleProp,
   ...rest
 } = Astro.props;
-const s = layoutPanel({ isScrollable, hasDivider, padding: toZonePaddingVariant(padding) });
+const s = layoutPanel({ scrollable, hasDivider, padding: toZonePaddingVariant(padding) });
 const resolvedRole = role ?? (label != null ? 'region' : undefined);
 const widthValue = toCssSize(width);
 const style = mergeInlineStyle(widthValue != null ? { width: widthValue } : undefined, styleProp);

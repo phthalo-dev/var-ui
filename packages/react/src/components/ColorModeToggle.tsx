@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useContext } from 'react';
-import type { Key, Selection } from 'react-aria-components';
 import type { ControlSize, IconName } from '@var-ui/core';
 import {
   ColorModeContext,
@@ -81,7 +80,7 @@ function buildOptions(
   labels: Record<ColorMode, string>,
 ): SegmentedControlOption[] {
   return modes.map((mode) => ({
-    id: mode,
+    value: mode,
     label: modeLabel(mode, appearance, labels[mode]),
     ...(appearance === 'icons' ? { 'aria-label': labels[mode] } : {}),
   }));
@@ -150,9 +149,7 @@ export function ColorModeToggle({
   const selectedId: ColorMode =
     includeSystem || colorMode !== 'system' ? colorMode : resolvedColorMode;
 
-  const onSelectionChange = (keys: Selection): void => {
-    if (keys === 'all') return;
-    const next = (keys as Set<Key>).values().next().value;
+  const onValueChange = (next: string | null): void => {
     if (next === 'light' || next === 'dark' || next === 'system') {
       setColorMode(next);
     }
@@ -167,10 +164,9 @@ export function ColorModeToggle({
       options={buildOptions(modes, appearance, { ...DEFAULT_LABELS, ...labels })}
       // Avoid selecting `defaultColorMode` for one frame while `storageKey` hydrates —
       // SSR and the first client render both omit selection, then the real preference paints.
-      selectedKeys={colorModeReady ? [selectedId] : []}
-      selectionMode="single"
+      value={colorModeReady ? selectedId : null}
       size={size}
-      onSelectionChange={onSelectionChange}
+      onValueChange={onValueChange}
     />
   );
 }

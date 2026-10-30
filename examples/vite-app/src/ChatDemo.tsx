@@ -76,8 +76,8 @@ export function ChatDemo() {
           <ChatComposer
             actions={
               <ChatSendButton
-                isStreaming={isStreaming}
-                onPress={() => {
+                streaming={isStreaming}
+                onClick={() => {
                   const trimmed = draft.trim();
                   if (trimmed) {
                     handleSubmit(trimmed);
@@ -88,14 +88,14 @@ export function ChatDemo() {
           >
             <ChatComposerInput
               value={draft}
-              onChange={setDraft}
+              onValueChange={setDraft}
               onSubmit={handleSubmit}
-              isDisabled={isStreaming}
+              disabled={isStreaming}
             />
           </ChatComposer>
         }
       >
-        <ChatMessageList isStreaming={isStreaming}>
+        <ChatMessageList streaming={isStreaming}>
           <ChatSystemMessage tone="info">Model: demo-assistant-1</ChatSystemMessage>
           {messages.map((message) => (
             <ChatMessage

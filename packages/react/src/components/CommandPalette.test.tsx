@@ -24,7 +24,7 @@ describe('CommandPalette', () => {
   it('marks the panel open while the palette is open', () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
         onAction={() => {}}
@@ -42,7 +42,7 @@ describe('CommandPalette', () => {
   it('keeps the native dialog mounted and unmounts only the panel after closing', async () => {
     const { rerender } = wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
         onAction={() => {}}
@@ -53,7 +53,7 @@ describe('CommandPalette', () => {
     rerender(
       <LayerProvider>
         <CommandPalette
-          isOpen={false}
+          open={false}
           hotkey={false}
           items={[{ id: 'a', title: 'Open settings' }]}
           onAction={() => {}}
@@ -70,7 +70,7 @@ describe('CommandPalette', () => {
   it('closes the native dialog after the panel exits so focus can be restored', async () => {
     const { rerender } = wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
         onAction={() => {}}
@@ -85,7 +85,7 @@ describe('CommandPalette', () => {
     rerender(
       <LayerProvider>
         <CommandPalette
-          isOpen={false}
+          open={false}
           hotkey={false}
           items={[{ id: 'a', title: 'Open settings' }]}
           onAction={() => {}}
@@ -102,7 +102,7 @@ describe('CommandPalette', () => {
     const onAction = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         onOpenChange={() => {}}
         hotkey={false}
         items={[
@@ -123,7 +123,7 @@ describe('CommandPalette', () => {
     const onAction = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         onOpenChange={() => {}}
         hotkey={false}
         items={[
@@ -145,7 +145,7 @@ describe('CommandPalette', () => {
   it('hides the heading of a group with no matching items', async () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         onOpenChange={() => {}}
         hotkey={false}
         items={[
@@ -164,7 +164,7 @@ describe('CommandPalette', () => {
     const onAction = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         onOpenChange={() => {}}
         hotkey={false}
         items={[
@@ -182,7 +182,7 @@ describe('CommandPalette', () => {
   it('matches via meta', async () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         onOpenChange={() => {}}
         hotkey={false}
         items={[
@@ -200,7 +200,7 @@ describe('CommandPalette', () => {
   it('renders empty state when nothing matches', async () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Only' }]}
         onAction={() => {}}
@@ -213,13 +213,7 @@ describe('CommandPalette', () => {
 
   it('renders empty state without crashing when items is []', () => {
     wrap(
-      <CommandPalette
-        isOpen
-        hotkey={false}
-        items={[]}
-        onAction={() => {}}
-        onOpenChange={() => {}}
-      />,
+      <CommandPalette open hotkey={false} items={[]} onAction={() => {}} onOpenChange={() => {}} />,
     );
     expect(screen.getByText('No results')).toBeTruthy();
   });
@@ -227,7 +221,7 @@ describe('CommandPalette', () => {
   it('supports a custom emptyLabel and placeholder', () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[]}
         onAction={() => {}}
@@ -243,7 +237,7 @@ describe('CommandPalette', () => {
   it('resets the query when closed and reopened', async () => {
     const { rerender } = wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
         onAction={() => {}}
@@ -256,7 +250,7 @@ describe('CommandPalette', () => {
     rerender(
       <LayerProvider>
         <CommandPalette
-          isOpen={false}
+          open={false}
           hotkey={false}
           items={[{ id: 'a', title: 'Open settings' }]}
           onAction={() => {}}
@@ -267,7 +261,7 @@ describe('CommandPalette', () => {
     rerender(
       <LayerProvider>
         <CommandPalette
-          isOpen
+          open
           hotkey={false}
           items={[{ id: 'a', title: 'Open settings' }]}
           onAction={() => {}}
@@ -282,21 +276,24 @@ describe('CommandPalette', () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen={false}
+        open={false}
         onOpenChange={onOpenChange}
         items={[{ id: 'a', title: 'Open settings' }]}
         onAction={() => {}}
       />,
     );
     await userEvent.keyboard('{Control>}k{/Control}');
-    expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      true,
+      expect.objectContaining({ reason: expect.any(String) }),
+    );
   });
 
   it('does not toggle on ⌘K when hotkey is disabled', async () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen={false}
+        open={false}
         onOpenChange={onOpenChange}
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
@@ -311,7 +308,7 @@ describe('CommandPalette', () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         onOpenChange={onOpenChange}
         items={[{ id: 'a', title: 'Open settings' }]}
@@ -320,13 +317,16 @@ describe('CommandPalette', () => {
     );
     expect(screen.getByPlaceholderText('Search…')).toBeTruthy();
     await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      false,
+      expect.objectContaining({ reason: expect.any(String) }),
+    );
   });
 
   it('supports a custom filter function', async () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[
           { id: 'a', title: 'Open settings' },
@@ -350,12 +350,12 @@ describe('CommandPalette', () => {
       onOpenChange: () => {},
       onQueryChange,
     };
-    const { rerender } = wrap(<CommandPalette isOpen {...props} />);
+    const { rerender } = wrap(<CommandPalette open {...props} />);
     await userEvent.type(screen.getByRole('textbox'), 'al');
     expect(onQueryChange).toHaveBeenLastCalledWith('al');
     rerender(
       <LayerProvider>
-        <CommandPalette isOpen={false} {...props} />
+        <CommandPalette open={false} {...props} />
       </LayerProvider>,
     );
     await waitFor(() => expect(onQueryChange).toHaveBeenLastCalledWith(''));
@@ -364,7 +364,7 @@ describe('CommandPalette', () => {
   it('skips client-side filtering when filter is false', async () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Remote hit' }]}
         onAction={() => {}}
@@ -379,12 +379,12 @@ describe('CommandPalette', () => {
   it('shows a busy loading row instead of the empty label while loading', () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[]}
         onAction={() => {}}
         onOpenChange={() => {}}
-        isLoading
+        loading
         loadingLabel="Searching…"
       />,
     );
@@ -402,7 +402,7 @@ describe('CommandPalette item actions and chrome', () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         onOpenChange={onOpenChange}
         items={[{ id: 'a', title: 'Alpha', onSelect: () => calls.push('select') }]}
@@ -411,12 +411,15 @@ describe('CommandPalette item actions and chrome', () => {
     );
     await userEvent.click(screen.getByText('Alpha'));
     expect(calls).toEqual(['select', 'action:a']);
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      false,
+      expect.objectContaining({ reason: expect.any(String) }),
+    );
   });
 
   it('works with onSelect alone (onAction is optional)', async () => {
     const onSelect = vi.fn();
-    wrap(<CommandPalette isOpen {...base} items={[{ id: 'a', title: 'Alpha', onSelect }]} />);
+    wrap(<CommandPalette open {...base} items={[{ id: 'a', title: 'Alpha', onSelect }]} />);
     await userEvent.type(screen.getByRole('textbox'), 'al');
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect(onSelect).toHaveBeenCalledOnce();
@@ -426,7 +429,7 @@ describe('CommandPalette item actions and chrome', () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         closeOnAction={false}
         onOpenChange={onOpenChange}
@@ -440,7 +443,7 @@ describe('CommandPalette item actions and chrome', () => {
   it('renders an icon and shortcut key caps', () => {
     wrap(
       <CommandPalette
-        isOpen
+        open
         {...base}
         items={[
           {
@@ -460,13 +463,13 @@ describe('CommandPalette item actions and chrome', () => {
 
   it('highlights matches only when highlightMatches is set', async () => {
     const items = [{ id: 'a', title: 'Open settings', meta: 'Preferences' }];
-    const { rerender } = wrap(<CommandPalette isOpen {...base} items={items} />);
+    const { rerender } = wrap(<CommandPalette open {...base} items={items} />);
     await userEvent.type(screen.getByRole('textbox'), 'sett');
     expect(document.querySelector('mark')).toBeNull();
 
     rerender(
       <LayerProvider>
-        <CommandPalette isOpen {...base} items={items} highlightMatches />
+        <CommandPalette open {...base} items={items} highlightMatches />
       </LayerProvider>,
     );
     expect(document.querySelector('mark')?.textContent).toBe('sett');
@@ -474,7 +477,7 @@ describe('CommandPalette item actions and chrome', () => {
 
   it('highlights the right characters when lowercasing changes string length', async () => {
     wrap(
-      <CommandPalette isOpen {...base} highlightMatches items={[{ id: 'a', title: 'İstanbul' }]} />,
+      <CommandPalette open {...base} highlightMatches items={[{ id: 'a', title: 'İstanbul' }]} />,
     );
     await userEvent.type(screen.getByRole('textbox'), 'stan');
     expect(document.querySelector('mark')?.textContent).toBe('stan');
@@ -484,7 +487,7 @@ describe('CommandPalette item actions and chrome', () => {
     const onOpenChange = vi.fn();
     wrap(
       <CommandPalette
-        isOpen={false}
+        open={false}
         onOpenChange={onOpenChange}
         hotkey={['ctrl+shift+p', 'alt+/']}
         items={[]}
@@ -525,7 +528,7 @@ describe('CommandPalette item actions and chrome', () => {
       const [open, setOpen] = useState(true);
       return (
         <CommandPalette
-          isOpen={open}
+          open={open}
           hotkey={false}
           items={[{ id: 'a', title: 'Open settings' }]}
           onAction={() => {}}
@@ -540,5 +543,49 @@ describe('CommandPalette item actions and chrome', () => {
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(false));
     expect(onOpenChange.mock.calls.filter(([n]) => n === false)).toHaveLength(1);
+  });
+
+  it('supports uncontrolled defaultOpen and closes itself on Escape', async () => {
+    wrap(
+      <CommandPalette
+        defaultOpen
+        hotkey={false}
+        items={[{ id: 'a', title: 'Open settings' }]}
+        onAction={() => {}}
+      />,
+    );
+    expect(document.querySelector('dialog')?.open).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(false));
+  });
+
+  it('opens uncontrolled via the hotkey', async () => {
+    wrap(<CommandPalette items={[{ id: 'a', title: 'Open settings' }]} onAction={() => {}} />);
+    await userEvent.keyboard('{Control>}k{/Control}');
+    await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(true));
+  });
+
+  it('passes details with a reason and honors details.cancel()', async () => {
+    const onOpenChange = vi.fn((_next: boolean, details: { cancel: () => void }) =>
+      details.cancel(),
+    );
+    wrap(
+      <CommandPalette
+        defaultOpen
+        hotkey={false}
+        items={[{ id: 'a', title: 'Open settings' }]}
+        onAction={() => {}}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    await userEvent.keyboard('{Escape}');
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(false);
+    expect(onOpenChange.mock.calls[0]?.[1]).toMatchObject({ reason: 'escape-key' });
+    expect(document.querySelector('dialog')?.open).toBe(true);
+  });
+
+  it('loading shows the busy state', () => {
+    wrap(<CommandPalette open hotkey={false} items={[]} loading onAction={() => {}} />);
+    expect(document.querySelector('[aria-busy="true"]')).toBeTruthy();
   });
 });

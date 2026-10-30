@@ -6,12 +6,12 @@ import { mergeProps } from '../utils';
 type Props = Omit<HTMLAttributes<'li'>, 'children'> & {
   label: string;
   href: string;
-  isSelected?: boolean;
-  isNested?: boolean;
+  selected?: boolean;
+  nested?: boolean;
   className?: string;
 };
 
-const { label, href, isSelected = false, isNested = false,
+const { label, href, selected = false, nested = false,
   className,
   ...rest
 } = Astro.props;
@@ -20,12 +20,12 @@ const itemClass = mergeProps(s.item).className;
 const linkClass = mergeProps(s.link, className).className;
 ---
 
-<li {...rest} class={itemClass} data-nested={isNested || undefined}>
+<li {...rest} class={itemClass} data-nested={nested || undefined}>
   <a
     href={href}
     class={linkClass}
-    data-selected={isSelected ? '' : undefined}
-    aria-current={isSelected ? 'location' : undefined}
+    data-selected={selected ? '' : undefined}
+    aria-current={selected ? 'location' : undefined}
   >
     {label}
   </a>

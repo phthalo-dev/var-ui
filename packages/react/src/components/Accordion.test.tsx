@@ -3,7 +3,6 @@ import type { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import type { Key } from 'react-aria-components';
 import { IconProvider } from '../icons';
 import { Accordion } from './Accordion';
 
@@ -60,25 +59,25 @@ describe('Accordion', () => {
     expect(panelFor('Shipping details').getAttribute('aria-hidden')).not.toBe('true');
   });
 
-  it('respects defaultExpandedKeys', () => {
-    renderAccordion({ defaultExpandedKeys: ['shipping'] });
+  it('respects defaultValue', () => {
+    renderAccordion({ defaultValue: ['shipping'] });
     expect(panelFor('Shipping details').getAttribute('aria-hidden')).not.toBe('true');
     expect(panelFor('Billing details').getAttribute('aria-hidden')).toBe('true');
   });
 
-  it('calls onExpandedChange with a Set of keys', async () => {
-    const onExpandedChange = vi.fn();
-    renderAccordion({ onExpandedChange });
+  it('calls onValueChange with the open ids', async () => {
+    const onValueChange = vi.fn();
+    renderAccordion({ onValueChange });
     await userEvent.click(screen.getByRole('button', { name: /Billing/i }));
-    expect(onExpandedChange).toHaveBeenCalledWith(new Set(['billing']));
+    expect(onValueChange).toHaveBeenCalledWith(['billing']);
   });
 
-  it('supports controlled expandedKeys', async () => {
+  it('supports controlled value', async () => {
     function Controlled() {
-      const [keys, setKeys] = useState<Set<Key>>(() => new Set(['billing']));
+      const [keys, setKeys] = useState<string[]>(['billing']);
       return (
         <IconProvider icons={{}}>
-          <Accordion expandedKeys={keys} onExpandedChange={setKeys}>
+          <Accordion value={keys} onValueChange={setKeys}>
             <Accordion.Item id="billing">
               <Accordion.Trigger>Billing</Accordion.Trigger>
               <Accordion.Panel>
@@ -104,7 +103,7 @@ describe('Accordion', () => {
   });
 
   it('prevents closing the last open panel when collapsible is false', async () => {
-    renderAccordion({ collapsible: false, defaultExpandedKeys: ['billing'] });
+    renderAccordion({ collapsible: false, defaultValue: ['billing'] });
     await userEvent.click(screen.getByRole('button', { name: /Billing/i }));
     expect(panelFor('Billing details').getAttribute('aria-hidden')).not.toBe('true');
   });

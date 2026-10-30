@@ -11,7 +11,7 @@ describe('icon wire-up', () => {
   it('Alert renders the registry glyph for its tone by default', () => {
     render(
       <IconProvider icons={{ success: glyph }}>
-        <Alert variant="success">Saved</Alert>
+        <Alert tone="success">Saved</Alert>
       </IconProvider>,
     );
     expect(screen.getByTestId('tone-glyph')).toBeTruthy();
@@ -20,7 +20,7 @@ describe('icon wire-up', () => {
   it('Alert icon={null} suppresses the default glyph', () => {
     const { container } = render(
       <IconProvider icons={{ success: glyph }}>
-        <Alert variant="success" icon={null}>
+        <Alert tone="success" icon={null}>
           Saved
         </Alert>
       </IconProvider>,
@@ -31,7 +31,7 @@ describe('icon wire-up', () => {
   it('Select trigger renders the chevronDown glyph', () => {
     render(
       <IconProvider icons={{ chevronDown: chevron }}>
-        <Select label="Fruit" options={[{ id: 'a', label: 'Apple' }]} />
+        <Select label="Fruit" options={[{ value: 'a', label: 'Apple' }]} />
       </IconProvider>,
     );
     expect(screen.getByTestId('chevron-glyph')).toBeTruthy();

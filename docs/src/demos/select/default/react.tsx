@@ -5,8 +5,8 @@ export default function Preview() {
     <Select
       label="Fruit"
       options={[
-        { id: 'apple', label: 'Apple' },
-        { id: 'plum', label: 'Plum' },
+        { value: 'apple', label: 'Apple' },
+        { value: 'plum', label: 'Plum' },
       ]}
     />
   );

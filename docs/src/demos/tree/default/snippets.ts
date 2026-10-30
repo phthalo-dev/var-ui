@@ -5,7 +5,7 @@ export const snippets = {
 
 <Tree
   aria-label="Files"
-  defaultExpandedKeys={['src']}
+  defaultExpanded={['src']}
   items={[{ id: 'src', label: 'src', children: [{ id: 'app', label: 'App.tsx' }] }]}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,

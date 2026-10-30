@@ -1,4 +1,11 @@
-import { type ComponentPropsWithRef, type JSX, type ReactNode, type Ref } from 'react';
+import {
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type JSX,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import {
   Button as AriaButton,
   FieldError,
@@ -9,10 +16,7 @@ import {
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
   Text,
-  type ListBoxItemProps,
-  type PopoverProps,
   type SelectProps as RACSelectProps,
-  type SelectValueProps as RACSelectValueProps,
 } from 'react-aria-components';
 import { select } from '@var-ui/core/components/select';
 import type { SelectVariantProps } from '@var-ui/core';
@@ -21,7 +25,14 @@ import { ControlSizeContext, useControlSize } from '../internal/controlSizeConte
 import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
-import { splitRacFieldProps } from '../internal/racFieldProps';
+import {
+  multiValueProps,
+  optionTextValue,
+  racItemProps,
+  singleValueProps,
+  toRacProps,
+  type Option,
+} from '../internal/racProps';
 import { mergeProps } from 'typestyles';
 
 /** Shared across every part so `size` set on `Select.Root` reaches the trigger. */
@@ -29,38 +40,122 @@ function useSelectStyles(): ReturnType<typeof select> {
   return select({ size: useControlSize() });
 }
 
-export type SelectOption = {
-  /** Unique option identifier passed to the select value. */
-  id: string;
-  /** Visible label in the trigger and listbox. */
-  label: string;
+/** `{ value, label, disabled? }`, the option shape shared by every VarUI collection. */
+export type SelectOption = Option;
+
+/** Single-selection value props (default). `null` means nothing is selected. */
+type SelectSingleProps = {
+  /** Allow several options. @default false */
+  multiple?: false;
+  /** Controlled selected value. */
+  value?: string | null;
+  /** Initially selected value when uncontrolled. */
+  defaultValue?: string | null;
+  /** Called with the selected option value. */
+  onValueChange?: (value: string | null) => void;
 };
 
-export type SelectRootProps<T extends object = SelectOption> = Omit<
-  RACSelectProps<T>,
-  'children' | 'className'
-> & {
-  children: ReactNode;
-  className?: string;
-  /** Control density. @default md */
-  size?: NonNullable<SelectVariantProps['size']>;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+/** Multiple-selection value props. */
+type SelectMultipleProps = {
+  /** Allow several options. */
+  multiple: true;
+  /** Controlled selected values. */
+  value?: string[];
+  /** Initially selected values when uncontrolled. */
+  defaultValue?: string[];
+  /** Called with the selected option values. */
+  onValueChange?: (value: string[]) => void;
 };
 
-function SelectRoot<T extends object>({
-  children,
-  className,
-  size,
-  ref,
-  ...props
-}: SelectRootProps<T>): JSX.Element {
+/** `value` / `defaultValue` / `onValueChange`: `string` for single, `string[]` when `multiple`. */
+export type SelectSelectionProps = SelectSingleProps | SelectMultipleProps;
+
+/** State props shared by `Select` and `Select.Root`. */
+type SelectStateProps = {
+  /** Disables the select. */
+  disabled?: boolean;
+  /** Marks the select required for form validation. */
+  required?: boolean;
+  /** Shows the error state. On `Select` it defaults to `Boolean(errorMessage)`. */
+  invalid?: boolean;
+  /** Controlled open state of the listbox. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  /** Called when the listbox opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+  /** Custom validation of the selected value(s); return a message to mark it invalid. */
+  validate?: (value: string | string[] | null) => string | string[] | true | null | undefined;
+  /** `native` uses browser constraint validation; `aria` validates on the fly. @default native */
+  validationBehavior?: 'native' | 'aria';
+};
+
+export type SelectRootProps = SelectStateProps &
+  SelectSelectionProps & {
+    children: ReactNode;
+    /** Classes for the root element. */
+    className?: string;
+    /** Inline style for the root element. */
+    style?: CSSProperties;
+    /** Control density. @default md */
+    size?: NonNullable<SelectVariantProps['size']>;
+    /** Name submitted with a form. */
+    name?: string;
+    /** Id of the form the select belongs to. */
+    form?: string;
+    autoComplete?: string;
+    autoFocus?: boolean;
+    id?: string;
+    'aria-label'?: string;
+    'aria-labelledby'?: string;
+    'aria-describedby'?: string;
+    /** Ref to the underlying `<div>` element. */
+    ref?: Ref<HTMLDivElement>;
+  };
+
+/** Converts VarUI select state + selection props to the RAC root's props. */
+function racSelectRootProps({
+  multiple,
+  value,
+  defaultValue,
+  onValueChange,
+  disabled,
+  required,
+  invalid,
+  open,
+  validate,
+  ...rest
+}: SelectStateProps & SelectSelectionProps) {
+  const selection = multiple
+    ? multiValueProps({
+        value: value as string[] | undefined,
+        defaultValue: defaultValue as string[] | undefined,
+        onValueChange: onValueChange as ((value: string[]) => void) | undefined,
+      })
+    : singleValueProps({
+        value: value as string | null | undefined,
+        defaultValue: defaultValue as string | null | undefined,
+        onValueChange: onValueChange as ((value: string | null) => void) | undefined,
+      });
+  return {
+    ...toRacProps({ disabled, required, invalid, open, validate }),
+    ...rest,
+    ...selection,
+    selectionMode: multiple ? ('multiple' as const) : ('single' as const),
+  };
+}
+
+function SelectRoot({ children, className, size, ref, ...props }: SelectRootProps): JSX.Element {
   const contextSize = useControlSize();
   const resolvedSize = size ?? contextSize;
   const s = select({ size: resolvedSize });
   return (
     <ControlSizeContext.Provider value={resolvedSize}>
-      <AriaSelect {...props} {...mergeProps(s.root, className)} ref={ref}>
+      <AriaSelect
+        {...(racSelectRootProps(props) as RACSelectProps<object, 'single'>)}
+        {...mergeProps(s.root, className)}
+        ref={ref}
+      >
         {children}
       </AriaSelect>
     </ControlSizeContext.Provider>
@@ -81,29 +176,40 @@ function SelectLabel({ children, className, ref, ...rest }: SelectLabelProps): J
   );
 }
 
-export type SelectValueProps<T extends object = SelectOption> = Omit<
-  ComponentPropsWithRef<'span'>,
-  'children' | 'className'
-> & {
+export type SelectValueProps = Omit<ComponentPropsWithRef<'span'>, 'children' | 'className'> & {
   /** Placeholder when no value is selected. @default Select… */
   placeholder?: string;
   className?: string;
-  /** Custom closed-trigger content. Receives RAC `SelectValue` render props. */
-  children?: RACSelectValueProps<T>['children'];
+  /** Custom closed-trigger content, or a function of the default content and placeholder state. */
+  children?:
+    | ReactNode
+    | ((state: {
+        defaultChildren: ReactNode;
+        isPlaceholder: boolean;
+        selectedText: string;
+      }) => ReactNode);
 };
 
-function SelectValue<T extends object = SelectOption>({
+function SelectValue({
   placeholder = 'Select…',
   className,
   children,
   ref,
   ...rest
-}: SelectValueProps<T>): JSX.Element {
+}: SelectValueProps): JSX.Element {
   const s = useSelectStyles();
   return (
     <AriaSelectValue {...(rest as object)} {...mergeProps(s.selectValue, className)} ref={ref}>
-      {children ??
-        (({ defaultChildren, isPlaceholder }) => (isPlaceholder ? placeholder : defaultChildren))}
+      {typeof children === 'function'
+        ? (state) =>
+            children({
+              defaultChildren: state.defaultChildren,
+              isPlaceholder: state.isPlaceholder,
+              selectedText: state.selectedText,
+            })
+        : (children ??
+          (({ defaultChildren, isPlaceholder }) =>
+            isPlaceholder ? placeholder : defaultChildren))}
     </AriaSelectValue>
   );
 }
@@ -180,8 +286,17 @@ function SelectError({ children, className, ref, ...rest }: SelectErrorProps): J
   );
 }
 
-export type SelectPopoverProps = PopoverProps & {
+export type SelectPopoverProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'style'
+> & {
+  children: ReactNode;
   className?: string;
+  style?: CSSProperties;
+  /** Side and alignment of the listbox relative to the trigger. @default 'bottom start' */
+  placement?: ComponentProps<typeof Popover>['placement'];
+  /** Gap between trigger and listbox in px. */
+  offset?: number;
   /**
    * Element the dropdown listbox portals into instead of `document.body`. Needed when a
    * subtree renders under a different theme than the page ambient (the theme's CSS custom
@@ -202,7 +317,7 @@ function SelectPopover({
   const s = useSelectStyles();
   return (
     <Popover
-      {...props}
+      {...(props as object)}
       {...mergeProps(s.popover, className)}
       ref={ref}
       UNSTABLE_portalContainer={portalContainer}
@@ -212,122 +327,129 @@ function SelectPopover({
   );
 }
 
-type SelectListBoxBaseProps = Omit<
-  ComponentPropsWithRef<'div'>,
-  'children' | 'className' | 'onSelect'
-> & {
+export type SelectListBoxProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'className'> & {
+  /** `Select.Item` rows. */
+  children: ReactNode;
   className?: string;
 };
 
-export type SelectListBoxProps<T extends object = SelectOption> =
-  | (SelectListBoxBaseProps & {
-      items: Iterable<T>;
-      children: (item: T) => ReactNode;
-    })
-  | (SelectListBoxBaseProps & {
-      items?: never;
-      children: ReactNode;
-    });
-
-function SelectListBox<T extends object>({
-  items,
-  children,
-  className,
-  ref,
-  ...rest
-}: SelectListBoxProps<T>): JSX.Element {
+function SelectListBox({ children, className, ref, ...rest }: SelectListBoxProps): JSX.Element {
   const s = useSelectStyles();
-  const listBoxProps = { ...rest, ...mergeProps(s.listbox, className) } as object;
-  if (items != null) {
-    return (
-      <ListBox {...listBoxProps} items={items} ref={ref}>
-        {children as (item: T) => ReactNode}
-      </ListBox>
-    );
-  }
   return (
-    <ListBox {...listBoxProps} ref={ref}>
-      {children as ReactNode}
+    <ListBox {...(rest as object)} {...mergeProps(s.listbox, className)} ref={ref}>
+      {children}
     </ListBox>
   );
 }
 
-export type SelectItemProps = ListBoxItemProps & {
+export type SelectItemProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'id' | 'value'
+> & {
+  /** Option value; this is what `value` / `onValueChange` carry. */
+  value: string;
+  /** Prevents selecting this option. */
+  disabled?: boolean;
+  /** Plain-text form of the row for typeahead and the trigger. Defaults to `value`. */
+  textValue?: string;
+  children: ReactNode;
   className?: string;
-  /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
-function SelectItem({ children, className, ref, ...props }: SelectItemProps): JSX.Element {
+function SelectItem({
+  children,
+  className,
+  value,
+  disabled,
+  textValue,
+  ref,
+  ...rest
+}: SelectItemProps): JSX.Element {
   const s = useSelectStyles();
   return (
-    <ListBoxItem {...props} {...mergeProps(s.item, className)} ref={ref}>
+    <ListBoxItem
+      {...(rest as object)}
+      {...racItemProps({ value, label: textValue ?? value, disabled })}
+      {...mergeProps(s.item, className)}
+      ref={ref}
+    >
       {children}
     </ListBoxItem>
   );
 }
 
 /**
- * RAC-owned `Select` root props (state, validation, labelling). They keep their RAC names until
- * the vocabulary PR. Every other attribute on the assembled `Select` lands on the trigger button.
+ * Root-level keys of the assembled `Select` (VarUI names). They reach the select root; every
+ * other attribute on the assembled `Select` lands on the trigger button.
  */
 const SELECT_ROOT_KEYS = [
-  'selectedKey',
-  'defaultSelectedKey',
-  'onSelectionChange',
-  'selectionMode',
-  'isOpen',
+  'multiple',
+  'open',
   'defaultOpen',
   'onOpenChange',
-  'disabledKeys',
   'name',
   'form',
   'autoComplete',
   'autoFocus',
   'onFocus',
   'onBlur',
-  'onFocusChange',
   'onKeyDown',
   'onKeyUp',
   'style',
-  'slot',
   'excludeFromTabOrder',
-] as const satisfies readonly (keyof RACSelectProps<SelectOption>)[];
+] as const;
 
-type SelectRootKey =
-  | (typeof SELECT_ROOT_KEYS)[number]
+type SelectRootKey = (typeof SELECT_ROOT_KEYS)[number];
+
+const ROOT_KEY_SET = new Set<string>([
+  ...SELECT_ROOT_KEYS,
+  'value',
+  'defaultValue',
+  'onValueChange',
+  'disabled',
+  'required',
+  'invalid',
+  'validate',
+  'validationBehavior',
+  'id',
+  'aria-label',
+  'aria-labelledby',
+  'aria-describedby',
+]);
+
+export type SelectProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  | SelectRootKey
   | 'value'
   | 'defaultValue'
-  | 'onChange'
-  | 'isDisabled'
-  | 'isRequired'
-  | 'isInvalid'
-  | 'validate'
-  | 'validationBehavior'
-  | 'id'
-  | 'aria-label'
-  | 'aria-labelledby'
-  | 'aria-describedby'
-  | 'aria-details';
-
-export type SelectProps = Pick<RACSelectProps<SelectOption>, SelectRootKey> &
-  Omit<
-    ComponentPropsWithRef<'button'>,
-    SelectRootKey | 'children' | 'className' | 'ref' | 'type' | 'disabled' | 'placeholder'
-  > &
+  | 'disabled'
+  | 'children'
+  | 'className'
+  | 'ref'
+  | 'type'
+  | 'placeholder'
+> &
+  SelectStateProps &
+  SelectSelectionProps &
   FieldMeta & {
     /** Options shown in the dropdown listbox. */
     options: SelectOption[];
     /** Placeholder text when no value is selected. @default Select… */
     placeholder?: string;
+    /** Name submitted with a form. */
+    name?: string;
+    /** Id of the form the select belongs to. */
+    form?: string;
     /**
      * Element the dropdown listbox portals into instead of `document.body`. Needed when a
      * subtree renders under a different theme than the page ambient (the theme's CSS custom
      * properties only cascade to descendants of the themed element).
      */
     portalContainer?: Element;
-    /** Additional CSS class names merged onto the root. */
+    /** Classes for the root. */
     className?: string;
+    /** Inline style for the root. */
+    style?: CSSProperties;
     /** Control density. Falls back to the surrounding control size, then `md`. */
     size?: NonNullable<SelectVariantProps['size']>;
     /** Ref to the trigger `<button>` element. */
@@ -335,10 +457,10 @@ export type SelectProps = Pick<RACSelectProps<SelectOption>, SelectRootKey> &
   };
 
 /**
- * Dropdown single-select. `Select` with `options` is the assembled preset. `className` and
- * `style` style the root; `ref` and native attributes (`data-*`, `title`, `onClick`, ...) reach
- * the trigger `<button>`. Compose `Root`, `Trigger`, `Value`, `Popover`, `ListBox`, and `Item`
- * for custom rows.
+ * Dropdown select. `Select` with `options` is the assembled preset; add `multiple` for several
+ * values. `className` and `style` style the root; `ref` and native attributes (`data-*`,
+ * `title`, `onClick`, ...) reach the trigger `<button>`. Compose `Root`, `Trigger`, `Value`,
+ * `Popover`, `ListBox`, and `Item` for custom rows.
  */
 function Select({
   label,
@@ -355,13 +477,18 @@ function Select({
   const contextSize = useControlSize();
   const resolvedSize = size ?? contextSize;
   const s = select({ size: resolvedSize });
-  const [rootProps, triggerProps] = splitRacFieldProps(props, SELECT_ROOT_KEYS);
+  // Root keys keep VarUI names: `SelectRoot` does the RAC conversion.
+  const rootProps: Record<string, unknown> = {};
+  const triggerProps: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(props)) {
+    (ROOT_KEY_SET.has(key) ? rootProps : triggerProps)[key] = val;
+  }
   return (
     <SelectRoot
-      {...(rootProps as object)}
+      {...(rootProps as unknown as SelectRootProps)}
       className={className}
       size={resolvedSize}
-      isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
+      invalid={racInvalid(props.invalid, errorMessage)}
     >
       <RacFieldFrame slots={s} label={label} description={description} errorMessage={errorMessage}>
         <SelectTrigger {...(triggerProps as object)} placeholder={placeholder} ref={ref} />
@@ -369,7 +496,12 @@ function Select({
       <SelectPopover portalContainer={portalContainer}>
         <SelectListBox>
           {options.map((option) => (
-            <SelectItem key={option.id} id={option.id} textValue={option.label}>
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              disabled={option.disabled}
+              textValue={optionTextValue(option)}
+            >
               {option.label}
             </SelectItem>
           ))}

@@ -38,7 +38,8 @@ export type ColorPickerProps = Omit<
   value?: string;
   /** Uncontrolled initial color. @default #228be6 */
   defaultValue?: string;
-  onChange?: (value: string) => void;
+  /** Called with the new hex color. */
+  onValueChange?: (value: string) => void;
   /** Preset swatches below the sliders. @default Mantine-compatible preset palette */
   swatches?: string[];
   /** Swatches per row. @default 7 */
@@ -70,7 +71,7 @@ function swatchColumnsVariant(
 export function ColorPicker({
   value,
   defaultValue,
-  onChange,
+  onValueChange,
   swatches = [...DEFAULT_COLOR_SWATCHES],
   swatchesPerRow = 7,
   withAlpha = false,
@@ -84,7 +85,12 @@ export function ColorPicker({
   ...rest
 }: ColorPickerProps): JSX.Element {
   const cp = colorPicker({ swatchColumns: swatchColumnsVariant(swatchesPerRow) });
-  const { hsv, setHsv, setColor } = useColorValue({ value, defaultValue, onChange, withAlpha });
+  const { hsv, setHsv, setColor } = useColorValue({
+    value,
+    defaultValue,
+    onChange: onValueChange,
+    withAlpha,
+  });
 
   const saturationRef = useRef<HTMLDivElement>(null);
   const hueRef = useRef<HTMLDivElement>(null);

@@ -6,13 +6,13 @@ import {
   DisclosurePanel,
   Heading,
 } from 'react-aria-components';
-import type { Key } from 'react-aria-components';
 import { accordionGroup } from '@var-ui/core/components/accordionGroup';
 import { collapsible } from '@var-ui/core/components/collapsible';
 import type { AccordionGroupVariantProps, CollapsibleVariant } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
+import { toRacProps } from '../internal/racProps';
 
 export type AccordionVariant = AccordionGroupVariantProps['variant'];
 
@@ -32,23 +32,28 @@ function useAccordionContext(): AccordionContextValue {
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type AccordionProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'onChange'> &
+export type AccordionProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'defaultValue'> &
   AccordionGroupVariantProps & {
     /** When `single`, only one panel may be open at a time. @default single */
     type?: 'single' | 'multiple';
     /** When `type` is `single`, allow closing every panel. @default true */
     collapsible?: boolean;
-    expandedKeys?: Iterable<Key>;
-    defaultExpandedKeys?: Iterable<Key>;
-    onExpandedChange?: (keys: Set<Key>) => void;
-    isDisabled?: boolean;
+    /** Controlled ids of the open items. With `type="single"` this holds at most one id. */
+    value?: string[];
+    /** Uncontrolled initial open item ids. */
+    defaultValue?: string[];
+    /** Fires with the ids of the open items after every toggle. */
+    onValueChange?: (value: string[]) => void;
+    /** Disables every item. @default false */
+    disabled?: boolean;
     children: ReactNode;
   };
 
 export type AccordionItemProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'id'> & {
-  /** Stable id used in `expandedKeys` / `defaultExpandedKeys`. */
+  /** Stable id used in `value` / `defaultValue`. */
   id: string;
-  isDisabled?: boolean;
+  /** @default false */
+  disabled?: boolean;
   children: ReactNode;
 };
 
@@ -61,10 +66,6 @@ export type AccordionTriggerProps = Omit<ComponentPropsWithRef<'button'>, 'child
 export type AccordionPanelProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
 };
-
-function toKeySet(keys?: Iterable<Key>): Set<Key> {
-  return keys ? new Set(keys) : new Set();
-}
 
 function focusSiblingTrigger(
   current: HTMLButtonElement,
@@ -92,7 +93,7 @@ function focusSiblingTrigger(
  * Multi-panel disclosure (FAQ / settings). Built on RAC `DisclosureGroup`.
  *
  * ```tsx
- * <Accordion type="single" defaultExpandedKeys={['billing']}>
+ * <Accordion type="single" defaultValue={['billing']}>
  *   <Accordion.Item id="billing">
  *     <Accordion.Trigger>Billing</Accordion.Trigger>
  *     <Accordion.Panel>…</Accordion.Panel>
@@ -103,11 +104,11 @@ function focusSiblingTrigger(
 export function Accordion({
   type = 'single',
   collapsible = true,
-  expandedKeys,
-  defaultExpandedKeys,
-  onExpandedChange,
+  value,
+  defaultValue,
+  onValueChange,
   variant = 'bordered',
-  isDisabled,
+  disabled,
   className,
   children,
   ref,
@@ -115,25 +116,22 @@ export function Accordion({
 }: AccordionProps): JSX.Element {
   const group = accordionGroup({ variant: variant ?? 'bordered' });
   const itemVariant: CollapsibleVariant = variant === 'flush' ? 'flush' : 'accordion';
-  const isControlled = expandedKeys !== undefined;
-  const [uncontrolledKeys, setUncontrolledKeys] = useState(() => toKeySet(defaultExpandedKeys));
-  const controlledKeys = useMemo(
-    () => (expandedKeys !== undefined ? toKeySet(expandedKeys) : undefined),
-    [expandedKeys],
-  );
-  const resolvedKeys = isControlled ? controlledKeys! : uncontrolledKeys;
+  const isControlled = value !== undefined;
+  const [uncontrolledValue, setUncontrolledValue] = useState<string[]>(() => defaultValue ?? []);
+  const resolvedKeys = new Set<string>(isControlled ? value : uncontrolledValue);
 
   const handleExpandedChange = useCallback(
-    (keys: Set<Key>) => {
+    (keys: Set<unknown>) => {
       if (type === 'single' && !collapsible && keys.size === 0) {
         return;
       }
+      const next = [...keys].map(String);
       if (!isControlled) {
-        setUncontrolledKeys(keys);
+        setUncontrolledValue(next);
       }
-      onExpandedChange?.(keys);
+      onValueChange?.(next);
     },
-    [collapsible, isControlled, onExpandedChange, type],
+    [collapsible, isControlled, onValueChange, type],
   );
 
   return (
@@ -142,7 +140,7 @@ export function Accordion({
       allowsMultipleExpanded={type === 'multiple'}
       expandedKeys={resolvedKeys}
       onExpandedChange={handleExpandedChange}
-      isDisabled={isDisabled}
+      {...toRacProps({ disabled })}
       {...mergeProps(group.root, className)}
       data-var-ui-accordion
       ref={ref}
@@ -154,7 +152,7 @@ export function Accordion({
 
 function AccordionItem({
   id,
-  isDisabled,
+  disabled,
   className,
   children,
   ref,
@@ -166,7 +164,7 @@ function AccordionItem({
     <Disclosure
       {...(rest as object)}
       id={id}
-      isDisabled={isDisabled}
+      {...toRacProps({ disabled })}
       {...mergeProps(c.root, className)}
       ref={ref}
     >

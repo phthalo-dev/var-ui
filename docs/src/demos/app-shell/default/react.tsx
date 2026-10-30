@@ -13,13 +13,13 @@ export default function Preview() {
       <AppShell
         topNav={
           <TopNav>
-            <TopNav.Item label="Home" href="/" isSelected />
+            <TopNav.Item label="Home" href="/" selected />
             <TopNav.Item label="Docs" href="/docs" />
           </TopNav>
         }
         sideNav={
           <SideNav header={<SideNav.Heading heading="Acme" />}>
-            <SideNav.Item label="Dashboard" href="/" isSelected />
+            <SideNav.Item label="Dashboard" href="/" selected />
             <SideNav.Item label="Settings" href="/settings" />
           </SideNav>
         }

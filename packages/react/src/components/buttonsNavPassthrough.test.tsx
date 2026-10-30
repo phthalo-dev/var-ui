@@ -49,7 +49,7 @@ describe('IconButton', () => {
     const onClick = vi.fn();
     wrap(
       <IconButton
-        name="close"
+        icon="close"
         aria-label="Close"
         data-testid="ib"
         title="Close it"
@@ -414,13 +414,13 @@ describe('ResizeHandle', () => {
   it('passes attributes, merges className, composes handlers and points ref at the separator', async () => {
     const ref = createRef<HTMLDivElement>();
     const onKeyDown = vi.fn();
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <ResizeHandle
         value={100}
         minValue={50}
         maxValue={300}
-        onChange={onChange}
+        onValueChange={onValueChange}
         aria-label="Resize"
         data-testid="rh"
         id="handle"
@@ -436,6 +436,6 @@ describe('ResizeHandle', () => {
     handle.focus();
     await userEvent.keyboard('{ArrowRight}');
     expect(onKeyDown).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(110);
+    expect(onValueChange).toHaveBeenCalledWith(110);
   });
 });

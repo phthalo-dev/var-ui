@@ -87,7 +87,7 @@ describe('HoverCard', () => {
     function Controlled() {
       const [open] = useState(true);
       return (
-        <HoverCard.Root isOpen={open}>
+        <HoverCard.Root open={open}>
           <HoverCard.Popup>
             <HoverCard.Content>Pinned</HoverCard.Content>
           </HoverCard.Popup>

@@ -8,7 +8,7 @@ describe('Drawer', () => {
   it('renders title and body when open', () => {
     render(
       <IconProvider icons={{}}>
-        <Drawer isOpen title="Settings" onOpenChange={() => {}}>
+        <Drawer open title="Settings" onOpenChange={() => {}}>
           <p>Drawer body</p>
         </Drawer>
       </IconProvider>,
@@ -22,7 +22,7 @@ describe('Drawer', () => {
   it('labels a compound drawer without a title via aria-label', () => {
     render(
       <IconProvider icons={{}}>
-        <Drawer.Root isOpen aria-label="Navigation drawer">
+        <Drawer.Root open aria-label="Navigation drawer">
           <Drawer.Backdrop>
             <Drawer.Panel>
               <Drawer.Body>Navigation links</Drawer.Body>
@@ -40,7 +40,7 @@ describe('Drawer', () => {
     const onPointerDown = vi.fn();
     render(
       <IconProvider icons={{}}>
-        <Drawer isOpen title="Settings" onPointerDown={onPointerDown}>
+        <Drawer open title="Settings" onPointerDown={onPointerDown}>
           Drawer body
         </Drawer>
       </IconProvider>,
@@ -75,5 +75,32 @@ describe('Drawer', () => {
     expect(screen.getByText('Settings')).toBeTruthy();
     await userEvent.click(screen.getByText('Dismiss'));
     await waitFor(() => expect(screen.queryByText('Settings')).toBeNull());
+  });
+
+  it('supports defaultOpen (uncontrolled) and closes through the close button', async () => {
+    render(
+      <IconProvider icons={{}}>
+        <Drawer defaultOpen title="Settings">
+          <p>Drawer body</p>
+        </Drawer>
+      </IconProvider>,
+    );
+    expect(screen.getByText('Drawer body')).toBeTruthy();
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await waitFor(() => expect(screen.queryByText('Drawer body')).toBeNull());
+  });
+
+  it('dismissable={false} keeps the drawer open on outside press', async () => {
+    const onOpenChange = vi.fn();
+    render(
+      <IconProvider icons={{}}>
+        <Drawer open dismissable={false} title="Settings" onOpenChange={onOpenChange}>
+          <p>Drawer body</p>
+        </Drawer>
+      </IconProvider>,
+    );
+    await userEvent.click(document.body);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByText('Drawer body')).toBeTruthy();
   });
 });

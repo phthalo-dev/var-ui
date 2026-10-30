@@ -13,8 +13,8 @@ import { mergeProps } from 'typestyles';
 export type TocItemProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
   label: string;
   href: string;
-  isSelected?: boolean;
-  isNested?: boolean;
+  selected?: boolean;
+  nested?: boolean;
   /** Merged onto the anchor (the visible row), not the `<li>`. */
   className?: string;
 };
@@ -23,8 +23,8 @@ export type TocItemProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
 export function TocItem({
   label,
   href,
-  isSelected = false,
-  isNested = false,
+  selected = false,
+  nested = false,
   className,
   ref,
   ...rest
@@ -32,12 +32,12 @@ export function TocItem({
   const s = tocStyles();
 
   return (
-    <li {...rest} {...mergeProps(s.item)} ref={ref} data-nested={isNested || undefined}>
+    <li {...rest} {...mergeProps(s.item)} ref={ref} data-nested={nested || undefined}>
       <AriaLink
         href={href}
         {...mergeProps(s.link, className)}
-        {...(isSelected ? { 'data-selected': '' } : {})}
-        aria-current={isSelected ? 'location' : undefined}
+        {...(selected ? { 'data-selected': '' } : {})}
+        aria-current={selected ? 'location' : undefined}
       >
         {label}
       </AriaLink>
@@ -83,8 +83,8 @@ function TocList({
             key={heading.id}
             label={heading.text}
             href={`#${heading.id}`}
-            isNested={heading.level === 3}
-            isSelected={heading.id === activeId}
+            nested={heading.level === 3}
+            selected={heading.id === activeId}
           />
         ))}
     </ol>

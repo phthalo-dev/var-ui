@@ -3,22 +3,22 @@ import type { HTMLAttributes } from 'astro/types';
 import { tabs as tabsRecipe } from '@var-ui/core/components/tabs';
 import { mergeProps } from "../utils";
 
-type TabDef = { id: string; label: string };
+type TabDef = { value: string; label: string; disabled?: boolean };
 
 type Props = Omit<HTMLAttributes<'div'>, 'children'> & {
   tabs: TabDef[];
-  defaultSelectedId?: string;
+  defaultValue?: string;
   className?: string;
 };
 
-const { tabs, defaultSelectedId, className, ...rest } = Astro.props;
-const selected = defaultSelectedId ?? tabs[0]?.id;
+const { tabs, defaultValue, className, ...rest } = Astro.props;
+const selected = defaultValue ?? tabs[0]?.value;
 const t = tabsRecipe();
 
 const panelSlots = await Promise.all(
   tabs.map(async (tab) => ({
-    id: tab.id,
-    content: Astro.slots.has(tab.id) ? await Astro.slots.render(tab.id) : null,
+    value: tab.value,
+    content: Astro.slots.has(tab.value) ? await Astro.slots.render(tab.value) : null,
   })),
 );
 ---
@@ -29,11 +29,13 @@ const panelSlots = await Promise.all(
       <button
         type="button"
         role="tab"
-        id={`tab-${tab.id}`}
-        aria-controls={`panel-${tab.id}`}
-        aria-selected={tab.id === selected ? "true" : "false"}
-        tabindex={tab.id === selected ? 0 : -1}
-        data-selected={tab.id === selected ? "" : undefined}
+        id={`tab-${tab.value}`}
+        aria-controls={`panel-${tab.value}`}
+        aria-selected={tab.value === selected ? "true" : "false"}
+        tabindex={tab.value === selected ? 0 : -1}
+        data-selected={tab.value === selected ? "" : undefined}
+        disabled={tab.disabled || undefined}
+        data-disabled={tab.disabled ? "" : undefined}
         {...mergeProps(t.tab)}
       >
         {tab.label}
@@ -42,14 +44,14 @@ const panelSlots = await Promise.all(
   </div>
   {tabs.map((tab) => {
     const slotContent = panelSlots.find(
-      (panel) => panel.id === tab.id,
+      (panel) => panel.value === tab.value,
     )?.content;
     return (
       <div
         role="tabpanel"
-        id={`panel-${tab.id}`}
-        aria-labelledby={`tab-${tab.id}`}
-        hidden={tab.id !== selected ? true : undefined}
+        id={`panel-${tab.value}`}
+        aria-labelledby={`tab-${tab.value}`}
+        hidden={tab.value !== selected ? true : undefined}
         {...mergeProps(t.panel)}
       >
         {slotContent ? <Fragment set:html={slotContent} /> : null}

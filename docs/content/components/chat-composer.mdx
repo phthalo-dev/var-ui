@@ -17,15 +17,15 @@ There is no `@var-ui/astro` ChatComposer — Astro and HTML previews show static
 
 ## ChatComposerInput
 
-| Prop          | Type                      | Default             |
-| ------------- | ------------------------- | ------------------- |
-| `value`       | `string`                  | (required)          |
-| `onChange`    | `(value: string) => void` | (required)          |
-| `onSubmit`    | `(value: string) => void` | (required)          |
-| `placeholder` | `string`                  | `'Type a message…'` |
-| `maxRows`     | `number`                  | `8`                 |
-| `isDisabled`  | `boolean`                 | `false`             |
-| `className`   | `string`                  | —                   |
+| Prop            | Type                      | Default             |
+| --------------- | ------------------------- | ------------------- |
+| `value`         | `string`                  | (required)          |
+| `onValueChange` | `(value: string) => void` | (required)          |
+| `onSubmit`      | `(value: string) => void` | (required)          |
+| `placeholder`   | `string`                  | `'Type a message…'` |
+| `maxRows`       | `number`                  | `8`                 |
+| `disabled`      | `boolean`                 | `false`             |
+| `className`     | `string`                  | —                   |
 
 Enter submits (trimmed, non-empty only); Shift+Enter inserts a newline.
 

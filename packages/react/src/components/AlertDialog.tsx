@@ -21,13 +21,15 @@ export type AlertDialogProps = {
   /** Label for the confirm action. @default Confirm */
   confirmLabel?: string;
   /** Renders the confirm action with `tone="danger"` and autofocuses Cancel. @default false */
-  isDestructive?: boolean;
+  destructive?: boolean;
   /** Called when the confirm action is pressed. Never called on cancel or Escape dismissal. */
   onConfirm: () => void;
-  /** Label on the button that opens the modal. If omitted, use `isOpen`/`onOpenChange` to control it. */
+  /** Label on the button that opens the modal. If omitted, use `open`/`onOpenChange` to control it. */
   triggerLabel?: string;
   /** Controls the open state. Required when `triggerLabel` is omitted. */
-  isOpen?: boolean;
+  open?: boolean;
+  /** Initial open state when uncontrolled. @default false */
+  defaultOpen?: boolean;
   /** Called when the open state changes (including Escape/cancel dismissal). */
   onOpenChange?: OverlayOpenChangeHandler;
   /**
@@ -45,9 +47,9 @@ export type AlertDialogPopupProps = Omit<DialogPopupProps, 'role'>;
 export type AlertDialogTitleProps = DialogTitleProps;
 export type AlertDialogActionsProps = DialogActionsProps;
 
-/** Dialog root that requires an explicit choice: backdrop clicks do not dismiss unless `isDismissable` is set. */
-function AlertDialogRoot({ isDismissable = false, ...props }: AlertDialogRootProps): JSX.Element {
-  return <Dialog.Root {...props} isDismissable={isDismissable} />;
+/** Dialog root that requires an explicit choice: backdrop clicks do not dismiss unless `dismissable` is set. */
+function AlertDialogRoot({ dismissable = false, ...props }: AlertDialogRootProps): JSX.Element {
+  return <Dialog.Root {...props} dismissable={dismissable} />;
 }
 const AlertDialogTrigger = Dialog.Trigger;
 const AlertDialogBackdrop = Dialog.Backdrop;
@@ -64,10 +66,11 @@ function AlertDialogPreset({
   description,
   cancelLabel = 'Cancel',
   confirmLabel = 'Confirm',
-  isDestructive = false,
+  destructive = false,
   onConfirm,
   triggerLabel,
-  isOpen,
+  open,
+  defaultOpen,
   onOpenChange,
   portalContainer,
 }: AlertDialogProps): JSX.Element {
@@ -80,13 +83,13 @@ function AlertDialogPreset({
         <Dialog.Description>{description}</Dialog.Description>
         <AlertDialogActions>
           <Dialog.Close>
-            <Button autoFocus={isDestructive}>{cancelLabel}</Button>
+            <Button autoFocus={destructive}>{cancelLabel}</Button>
           </Dialog.Close>
           <Dialog.Close>
             <Button
-              tone={isDestructive ? 'danger' : 'accent'}
+              tone={destructive ? 'danger' : 'accent'}
               appearance="filled"
-              onPress={onConfirm}
+              onClick={onConfirm}
             >
               {confirmLabel}
             </Button>
@@ -97,7 +100,12 @@ function AlertDialogPreset({
   );
 
   return (
-    <AlertDialogRoot isOpen={isOpen} onOpenChange={onOpenChange} portalContainer={portalContainer}>
+    <AlertDialogRoot
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+      portalContainer={portalContainer}
+    >
       {triggerLabel ? (
         <AlertDialogTrigger>
           <Button>{triggerLabel}</Button>

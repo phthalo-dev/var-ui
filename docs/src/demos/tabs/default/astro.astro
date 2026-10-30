@@ -2,12 +2,12 @@
 import { Tabs, Text } from '@var-ui/astro';
 
 const tabDefs = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'details', label: 'Details' },
+  { value: 'overview', label: 'Overview' },
+  { value: 'details', label: 'Details' },
 ];
 ---
 
-<Tabs tabs={tabDefs} defaultSelectedId="overview">
+<Tabs tabs={tabDefs} defaultValue="overview">
   <div slot="overview">
     <Text>First panel content.</Text>
   </div>

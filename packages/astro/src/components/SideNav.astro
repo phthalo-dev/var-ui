@@ -7,7 +7,7 @@ import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from '../utils';
 
 type SideNavCollapsibleConfig = {
-  defaultIsCollapsed?: boolean;
+  defaultCollapsed?: boolean;
   hasButton?: boolean;
   buttonLabel?: string;
 };
@@ -58,7 +58,7 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
 <nav
   aria-label={label}
   {...rest}
-  data-collapsed={collapsibleConfig.defaultIsCollapsed ? '' : undefined}
+  data-collapsed={collapsibleConfig.defaultCollapsed ? '' : undefined}
   data-var-ui-side-nav
   data-collapsible={collapsibleEnabled || undefined}
   data-resizable={resizableEnabled || undefined}

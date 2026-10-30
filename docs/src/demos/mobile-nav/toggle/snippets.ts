@@ -3,11 +3,11 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { MobileNav, MobileNavProvider, SideNav } from '@var-ui/react';
 
-<MobileNavProvider defaultIsOpen>
+<MobileNavProvider defaultOpen>
   <MobileNav.Toggle />
   <MobileNav header="Menu">
     <SideNav.Section title="Browse">
-      <SideNav.Item label="Home" href="/" isSelected />
+      <SideNav.Item label="Home" href="/" selected />
       <SideNav.Item label="Docs" href="/docs" />
     </SideNav.Section>
   </MobileNav>

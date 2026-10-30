@@ -18,7 +18,7 @@ describe('Chip', () => {
   it('toggles selection state', async () => {
     const onChange = vi.fn();
     wrap(
-      <Chip isSelected={false} onChange={onChange}>
+      <Chip selected={false} onSelectedChange={onChange}>
         React
       </Chip>,
     );
@@ -46,14 +46,9 @@ describe('Pill', () => {
 describe('ChipGroup', () => {
   it('selects multiple chips in multiple mode', async () => {
     function Demo() {
-      const [keys, setKeys] = useState<Set<string>>(() => new Set(['react']));
+      const [values, setValues] = useState<string[]>(['react']);
       return (
-        <ChipGroup
-          selectionMode="multiple"
-          selectedKeys={keys}
-          onSelectionChange={(next) => setKeys(new Set([...next].map(String)))}
-          aria-label="Frameworks"
-        >
+        <ChipGroup multiple value={values} onValueChange={setValues} aria-label="Frameworks">
           <Chip value="react">React</Chip>
           <Chip value="vue">Vue</Chip>
         </ChipGroup>
@@ -68,14 +63,9 @@ describe('ChipGroup', () => {
 
   it('allows only one selection in single mode', async () => {
     function Demo() {
-      const [keys, setKeys] = useState<Set<string>>(() => new Set(['react']));
+      const [value, setValue] = useState<string | null>('react');
       return (
-        <ChipGroup
-          selectionMode="single"
-          selectedKeys={keys}
-          onSelectionChange={(next) => setKeys(new Set([...next].map(String)))}
-          aria-label="Frameworks"
-        >
+        <ChipGroup value={value} onValueChange={setValue} aria-label="Frameworks">
           <Chip value="react">React</Chip>
           <Chip value="vue">Vue</Chip>
         </ChipGroup>
@@ -90,6 +80,7 @@ describe('ChipGroup', () => {
   it('renders from options', () => {
     wrap(
       <ChipGroup
+        multiple
         options={[
           { value: 'docs', label: 'Docs' },
           { value: 'api', label: 'API' },
@@ -110,7 +101,7 @@ describe('Chip nesting', () => {
   it('renders the remove control as a sibling of a toggle chip button', async () => {
     const onRemove = vi.fn();
     const { container } = wrap(
-      <Chip isSelected={false} onChange={() => {}} onRemove={onRemove}>
+      <Chip selected={false} onSelectedChange={() => {}} onRemove={onRemove}>
         React
       </Chip>,
     );
@@ -124,7 +115,7 @@ describe('Chip nesting', () => {
   it('removes a toggle chip with Delete', async () => {
     const onRemove = vi.fn();
     wrap(
-      <Chip isSelected={false} onChange={() => {}} onRemove={onRemove}>
+      <Chip selected={false} onSelectedChange={() => {}} onRemove={onRemove}>
         React
       </Chip>,
     );

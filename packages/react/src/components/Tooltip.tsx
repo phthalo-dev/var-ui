@@ -37,7 +37,7 @@ export type TooltipRootProps = {
   children: ReactNode;
   /** Delay before the tooltip opens, in milliseconds. @default 500 */
   delay?: number;
-  isOpen?: boolean;
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: OverlayOpenChangeHandler;
   /**
@@ -83,13 +83,13 @@ function useTooltipContext(): TooltipContextValue {
 function TooltipRoot({
   children,
   delay = 500,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
   portalContainer,
 }: TooltipRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const popupRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const [, setPopupEl] = useState<HTMLDivElement | null>(null);
@@ -110,9 +110,9 @@ function TooltipRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   const context = useMemo<TooltipContextValue>(

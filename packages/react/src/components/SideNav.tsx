@@ -34,10 +34,10 @@ import { RacLinkOrButton } from '../internal/racDomProps';
 
 export type SideNavCollapsibleConfig = {
   /** Initial collapsed state for uncontrolled usage. @default false */
-  defaultIsCollapsed?: boolean;
+  defaultCollapsed?: boolean;
   /** Controlled collapsed state — omit to let `SideNav` manage it internally. */
-  isCollapsed?: boolean;
-  onCollapsedChange?: (isCollapsed: boolean) => void;
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
   /** Renders the built-in `SideNav.CollapseButton` in the footer. @default true */
   hasButton?: boolean;
   /** Overrides the collapse button's accessible label for both states. */
@@ -253,20 +253,20 @@ export function SideNavSection({
   );
 }
 
-export type SideNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'onClick'> &
+export type SideNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children'> &
   Pick<
     AnchorHTMLAttributes<HTMLAnchorElement>,
     'target' | 'rel' | 'download' | 'hrefLang' | 'referrerPolicy' | 'ping'
   > & {
     label: string;
     href?: string;
-    onPress?: () => void;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
     icon?: SideNavIcon;
-    /** Swapped in for `icon` while `isSelected`. */
+    /** Swapped in for `icon` while `selected`. */
     selectedIcon?: SideNavIcon;
-    isSelected?: boolean;
-    isDisabled?: boolean;
+    /** Marks the current page (`aria-current="page"`). @default false */
+    selected?: boolean;
+    /** @default false */
+    disabled?: boolean;
     endContent?: ReactNode;
     /** Nested `SideNav.Item`s, indented under this item. */
     children?: ReactNode;
@@ -283,18 +283,17 @@ export type SideNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'o
   };
 
 /**
- * Link (`href`) or button (`onPress`) row; nests further `SideNav.Item`s via
+ * Link (`href`) or button (`onClick`) row; nests further `SideNav.Item`s via
  * `collapsible`. A leaf item renders just the row element (same DOM as the Astro
  * peer); an item with children wraps the row, chevron toggle and nested group.
  */
 export function SideNavItem({
   label,
   href,
-  onPress,
   icon,
   selectedIcon,
-  isSelected = false,
-  isDisabled = false,
+  selected = false,
+  disabled = false,
   endContent,
   children,
   collapsible = false,
@@ -310,9 +309,7 @@ export function SideNavItem({
   const { isRtl } = useDirection();
   const [isExpanded, setIsExpanded] = useState(true);
   const hasChildren = children != null;
-  const iconNode = renderSideNavIcon(
-    isSelected && selectedIcon !== undefined ? selectedIcon : icon,
-  );
+  const iconNode = renderSideNavIcon(selected && selectedIcon !== undefined ? selectedIcon : icon);
 
   const triggerContent = (
     <>
@@ -325,13 +322,12 @@ export function SideNavItem({
   const trigger = (
     <RacLinkOrButton
       href={href}
-      onPress={onPress}
-      aria-current={isSelected ? 'page' : undefined}
+      aria-current={selected ? 'page' : undefined}
       {...rest}
       {...mergeProps(s.item, className)}
-      data-selected={isSelected ? '' : undefined}
-      data-disabled={isDisabled ? '' : undefined}
-      isDisabled={isDisabled}
+      data-selected={selected ? '' : undefined}
+      data-disabled={disabled ? '' : undefined}
+      isDisabled={disabled}
       ref={ref}
     >
       {triggerContent}
@@ -357,7 +353,7 @@ export function SideNavItem({
         <div {...mergeProps(s.itemMain)}>{wrappedTrigger}</div>
         {showToggle ? (
           <IconButton
-            name={isExpanded ? 'chevronDown' : 'chevronRight'}
+            icon={isExpanded ? 'chevronDown' : 'chevronRight'}
             aria-label={
               isExpanded
                 ? (collapseLabel ?? `Collapse ${label}`)
@@ -366,7 +362,7 @@ export function SideNavItem({
             tone="accent"
             appearance="ghost"
             size="sm"
-            onPress={() => setIsExpanded((expanded) => !expanded)}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
             data-mirror={isRtl && !isExpanded ? true : undefined}
           />
         ) : null}
@@ -395,7 +391,7 @@ export function SideNavItem({
  *   resizable
  * >
  *   <SideNav.Section title="Main">
- *     <SideNav.Item label="Dashboard" href="/" isSelected />
+ *     <SideNav.Item label="Dashboard" href="/" selected />
  *     <SideNav.Item label="Projects" collapsible>
  *       <SideNav.Item label="Alpha" href="/projects/alpha" />
  *     </SideNav.Item>
@@ -424,14 +420,14 @@ export function SideNav({
   const collapsibleEnabled = Boolean(collapsible);
   const collapsibleConfig = normalizeCollapsible(collapsible);
   const hasCollapseButton = collapsibleEnabled && (collapsibleConfig.hasButton ?? true);
-  const isControlledCollapse = collapsibleConfig.isCollapsed !== undefined;
+  const isControlledCollapse = collapsibleConfig.collapsed !== undefined;
 
   const [internalCollapsed, setInternalCollapsed] = useState(
-    collapsibleConfig.defaultIsCollapsed ?? false,
+    collapsibleConfig.defaultCollapsed ?? false,
   );
   const isCollapsed = collapsibleEnabled
     ? isControlledCollapse
-      ? (collapsibleConfig.isCollapsed as boolean)
+      ? (collapsibleConfig.collapsed as boolean)
       : internalCollapsed
     : false;
 

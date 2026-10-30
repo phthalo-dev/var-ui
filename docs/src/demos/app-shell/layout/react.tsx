@@ -15,13 +15,13 @@ export default function Preview() {
         contentPadding={3}
         topNav={
           <TopNav heading={<TopNav.Heading heading="Acme" />}>
-            <TopNav.Item label="Home" href="/" isSelected />
+            <TopNav.Item label="Home" href="/" selected />
             <TopNav.Item label="Docs" href="/docs" />
           </TopNav>
         }
         sideNav={
           <SideNav header={<SideNav.Heading heading="Workspace" />}>
-            <SideNav.Item label="Dashboard" href="/" isSelected />
+            <SideNav.Item label="Dashboard" href="/" selected />
             <SideNav.Item label="Settings" href="/settings" />
           </SideNav>
         }

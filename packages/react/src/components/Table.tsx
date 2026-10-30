@@ -12,7 +12,7 @@ export type TableColumnDef<T extends Record<string, unknown> = Record<string, un
   key: Extract<keyof T, string>;
   header?: ReactNode;
   align?: TableColumnAlign;
-  isRowHeader?: boolean;
+  rowHeader?: boolean;
   width?: string;
   allowsSorting?: boolean;
 };
@@ -27,7 +27,7 @@ export type TableProps<T extends Record<string, unknown> = Record<string, unknow
 > & {
   density?: NonNullable<TableVariantProps['density']>;
   dividers?: NonNullable<TableVariantProps['dividers']>;
-  isStriped?: NonNullable<TableVariantProps['isStriped']>;
+  striped?: NonNullable<TableVariantProps['striped']>;
   hasHover?: NonNullable<TableVariantProps['hasHover']>;
   stickyHeader?: NonNullable<TableVariantProps['stickyHeader']>;
   textOverflow?: NonNullable<TableVariantProps['textOverflow']>;
@@ -55,7 +55,7 @@ export type TableColumnProps = Omit<
   'children' | 'align' | 'onSort'
 > & {
   children?: ReactNode;
-  isRowHeader?: boolean;
+  rowHeader?: boolean;
   align?: TableColumnAlign;
   width?: string;
   allowsSorting?: boolean;
@@ -69,12 +69,12 @@ export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
 export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 /** Remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) are forwarded to the `<tr>`. */
 export type TableRowProps = ComponentPropsWithRef<'tr'> & {
-  isSelected?: boolean;
+  selected?: boolean;
 };
 /** Remaining props (`onClick`, `data-*`, `aria-*`, `headers`, …) are forwarded to the `<td>`/`<th>`. */
 export type TableCellProps = Omit<ComponentPropsWithRef<'td'>, 'align'> & {
   align?: TableColumnAlign;
-  isRowHeader?: boolean;
+  rowHeader?: boolean;
 };
 export type TableCaptionProps = ComponentPropsWithRef<'caption'>;
 
@@ -120,7 +120,7 @@ function sortIconName(direction: SortDirection | 'none'): 'arrowUp' | 'arrowDown
 /** Header cell within a `Table` — sort chrome is wired by the caller from `useTableSort`. */
 export function TableColumn({
   children,
-  isRowHeader = false,
+  rowHeader = false,
   align,
   width,
   allowsSorting = false,
@@ -150,7 +150,7 @@ export function TableColumn({
       ref={ref}
       {...mergeProps(s.headerCell, className)}
       data-align={align !== 'start' ? align : undefined}
-      data-row-header={isRowHeader ? '' : undefined}
+      data-row-header={rowHeader ? '' : undefined}
       aria-sort={allowsSorting ? sortDirection : undefined}
       style={style}
     >
@@ -164,19 +164,19 @@ export function TableColumn({
 export function TableCell({
   children,
   align,
-  isRowHeader = false,
+  rowHeader = false,
   colSpan,
   className,
   ref,
   ...rest
 }: TableCellProps): JSX.Element {
   const { styles: s } = useTableContext();
-  const Tag = isRowHeader ? 'th' : 'td';
+  const Tag = rowHeader ? 'th' : 'td';
   return (
     <Tag
       {...rest}
       ref={ref}
-      {...(isRowHeader ? { scope: 'row' } : {})}
+      {...(rowHeader ? { scope: 'row' } : {})}
       colSpan={colSpan}
       {...mergeProps(s.cell, className)}
       data-align={align !== 'start' ? align : undefined}
@@ -186,10 +186,10 @@ export function TableCell({
   );
 }
 
-/** Row within a `Table` — pass `isSelected` when composing row selection. */
+/** Row within a `Table` — pass `selected` when composing row selection. */
 export function TableRow({
   children,
-  isSelected,
+  selected,
   className,
   ref,
   ...rest
@@ -200,8 +200,8 @@ export function TableRow({
       {...rest}
       ref={ref}
       {...mergeProps(s.row, className)}
-      aria-selected={isSelected ?? rest['aria-selected']}
-      data-selected={isSelected ? '' : undefined}
+      aria-selected={selected ?? rest['aria-selected']}
+      data-selected={selected ? '' : undefined}
     >
       {children}
     </tr>
@@ -241,7 +241,7 @@ export function TableCaption({ className, ref, ...rest }: TableCaptionProps): JS
  *
  * ```tsx
  * <Table
- *   columns={[{ key: 'name', header: 'Name', isRowHeader: true }]}
+ *   columns={[{ key: 'name', header: 'Name', rowHeader: true }]}
  *   data={rows}
  *   getRowId={(r) => r.id}
  *   emptyContent={<EmptyState title="No rows" />}
@@ -251,7 +251,7 @@ export function TableCaption({ className, ref, ...rest }: TableCaptionProps): JS
 export function Table<T extends Record<string, unknown> = Record<string, unknown>>({
   density = 'balanced',
   dividers = 'rows',
-  isStriped = false,
+  striped = false,
   hasHover = false,
   stickyHeader = false,
   textOverflow = 'wrap',
@@ -275,7 +275,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   const s = tableStyles({
     density,
     dividers,
-    isStriped: isStriped ? true : false,
+    striped: striped ? true : false,
     hasHover: hasHover ? true : false,
     stickyHeader: stickyHeader ? true : false,
     textOverflow,
@@ -304,7 +304,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
               return (
                 <TableColumn
                   key={column.key}
-                  isRowHeader={column.isRowHeader}
+                  rowHeader={column.rowHeader}
                   align={column.align}
                   width={column.width}
                   allowsSorting={column.allowsSorting}
@@ -336,7 +336,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
             rows.map((row, index) => (
               <TableRow key={getRowId ? getRowId(row) : index}>
                 {dataColumns.map((column) => (
-                  <TableCell key={column.key} align={column.align} isRowHeader={column.isRowHeader}>
+                  <TableCell key={column.key} align={column.align} rowHeader={column.rowHeader}>
                     {renderCell(column, row)}
                   </TableCell>
                 ))}

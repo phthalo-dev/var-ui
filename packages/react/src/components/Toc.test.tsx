@@ -6,8 +6,8 @@ describe('Toc', () => {
   it('renders manual items', () => {
     render(
       <Toc title="On this page">
-        <Toc.Item label="Examples" href="#examples" isSelected />
-        <Toc.Item label="Default" href="#default" isNested />
+        <Toc.Item label="Examples" href="#examples" selected />
+        <Toc.Item label="Default" href="#default" nested />
       </Toc>,
     );
 

@@ -9,7 +9,7 @@ export default function Preview() {
     <TimeInput
       label="Start"
       value={value}
-      onChange={(next) => {
+      onValueChange={(next) => {
         if (next) setValue(next);
       }}
     />

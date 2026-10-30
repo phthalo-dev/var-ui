@@ -104,7 +104,7 @@ describe('Button', () => {
 
   it('marks a disabled link as aria-disabled', () => {
     render(
-      <Button href="/docs" isDisabled>
+      <Button href="/docs" disabled>
         Docs
       </Button>,
     );

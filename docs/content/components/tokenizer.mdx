@@ -5,13 +5,13 @@ description: Token field for selecting multiple tagged values.
 
 # Tokenizer
 
-Combo-style field that turns selected options into removable tags. Always controlled via `value` / `onChange` — pass the full option objects, not just ids. Selected ids are filtered out of the dropdown so you cannot add the same token twice.
+Combo-style field that turns selected options into removable tags. Always controlled via `value` (an array of option values, like `Select multiple`) / `onValueChange`. Selected values are filtered out of the dropdown so you cannot add the same token twice.
 
 ## Examples
 
 ### Default
 
-Pass `options` as `{ id, label }[]` and keep selected tokens in React state. Type to filter, pick from the list, or press Backspace on an empty input to remove the last tag.
+Pass `options` as `{ value, label, disabled? }[]` and keep selected tokens in React state. Type to filter, pick from the list, or press Backspace on an empty input to remove the last tag.
 
 <Demo id="tokenizer.default" />
 

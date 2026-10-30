@@ -1,13 +1,24 @@
-import { useLayoutEffect, useRef, type JSX, type KeyboardEvent, type Ref } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type JSX,
+  type KeyboardEvent,
+} from 'react';
 import { TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { chatComposer } from '@var-ui/core/components/chat/chatComposer';
 import { mergeProps } from 'typestyles';
+import { mergeRefs } from '../../internal/mergeRefs';
 
-export type ChatComposerInputProps = {
+export type ChatComposerInputProps = Omit<
+  ComponentPropsWithRef<'textarea'>,
+  'value' | 'defaultValue' | 'disabled' | 'className' | 'style' | 'children' | 'rows' | 'onSubmit'
+> & {
   /** Controlled value. */
   value: string;
-  /** Change handler. */
-  onChange: (value: string) => void;
+  /** Fires with the new text on every edit. The native `onChange` event also reaches the `<textarea>`. */
+  onValueChange: (value: string) => void;
   /** Submit handler — called with the trimmed value on Enter (without Shift). */
   onSubmit: (value: string) => void;
   /** Placeholder text. @default 'Type a message…' */
@@ -15,32 +26,36 @@ export type ChatComposerInputProps = {
   /** Max rows before the textarea scrolls instead of growing. @default 8 */
   maxRows?: number;
   /** Disabled state. @default false */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /** Additional CSS class names merged onto the textarea. */
   className?: string;
-  /** Ref to the underlying root `<div>` element (the textarea's field wrapper). */
-  ref?: Ref<HTMLDivElement>;
+  /** Inline style for the textarea. */
+  style?: CSSProperties;
 };
 
 const LINE_HEIGHT_PX = 22;
 
 /**
  * Auto-resizing message textarea. Enter submits (trimmed, non-empty only);
- * Shift+Enter inserts a newline.
+ * Shift+Enter inserts a newline. `ref` and native attributes reach the
+ * `<textarea>`.
  *
  * ```tsx
- * <ChatComposerInput value={value} onChange={setValue} onSubmit={sendMessage} />
+ * <ChatComposerInput value={value} onValueChange={setValue} onSubmit={sendMessage} />
  * ```
  */
 export function ChatComposerInput({
   value,
-  onChange,
+  onValueChange,
   onSubmit,
   placeholder = 'Type a message…',
   maxRows = 8,
-  isDisabled = false,
+  disabled = false,
   className,
+  onKeyDown,
+  'aria-label': ariaLabel = 'Message',
   ref,
+  ...rest
 }: ChatComposerInputProps): JSX.Element {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const c = chatComposer();
@@ -56,6 +71,10 @@ export function ChatComposerInput({
   }, [value, maxRows]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       const trimmed = value.trim();
@@ -68,14 +87,14 @@ export function ChatComposerInput({
   return (
     <AriaTextField
       value={value}
-      onChange={onChange}
-      isDisabled={isDisabled}
-      aria-label="Message"
+      onChange={onValueChange}
+      isDisabled={disabled}
+      aria-label={ariaLabel}
       {...mergeProps(c.inputRow)}
-      ref={ref}
     >
       <TextArea
-        ref={textAreaRef}
+        {...rest}
+        ref={mergeRefs(textAreaRef, ref)}
         {...mergeProps(c.input, className)}
         placeholder={placeholder}
         onKeyDown={handleKeyDown}

@@ -13,27 +13,39 @@ import { mergeRacClassName } from '../internal/racClassName';
 import { useControlSize } from '../internal/controlSizeContext';
 import { splitRacFieldProps } from '../internal/racFieldProps';
 
-/** RAC-owned props shared by the text-like fields; their names stay RAC's until the vocabulary PR. */
-export type RacTextFieldRootProps = Pick<
-  AriaTextFieldProps,
-  | 'value'
-  | 'defaultValue'
-  | 'onChange'
-  | 'isDisabled'
-  | 'isReadOnly'
-  | 'isRequired'
-  | 'isInvalid'
-  | 'validate'
-  | 'validationBehavior'
-  | 'className'
-  | 'style'
->;
+/**
+ * Value, state and validation props shared by the text-like fields. VarUI names; the
+ * components convert to RAC at the boundary (`splitRacFieldProps`).
+ */
+export type BaseTextFieldProps = FieldMeta & {
+  /** Controlled value. */
+  value?: string;
+  /** Initial value when uncontrolled. */
+  defaultValue?: string;
+  /** Called with the new string value. The native `onChange` event still reaches the `<input>`. */
+  onValueChange?: (value: string) => void;
+  /** Disables the control. */
+  disabled?: boolean;
+  /** Makes the value read-only (focusable, not editable). */
+  readOnly?: boolean;
+  /** Marks the field required. */
+  required?: boolean;
+  /** Shows the error state. Defaults to `Boolean(errorMessage)`. */
+  invalid?: boolean;
+  /** Custom validation; return a message (or messages) to mark the value invalid. */
+  validate?: AriaTextFieldProps['validate'];
+  /** `native` uses browser constraint validation; `aria` validates on the fly. @default native */
+  validationBehavior?: 'native' | 'aria';
+  /** Classes for the root element. A function receives RAC render state. */
+  className?: AriaTextFieldProps['className'];
+  /** Inline style for the root element. */
+  style?: AriaTextFieldProps['style'];
+};
 
-/** Native `<input>`/`<textarea>` props that are replaced by the RAC equivalents above. */
+/** Native `<input>`/`<textarea>` props that {@link BaseTextFieldProps} or the root replace. Native `onChange` is kept. */
 export type RacTextFieldReplacedKeys =
   | 'value'
   | 'defaultValue'
-  | 'onChange'
   | 'className'
   | 'style'
   | 'children'
@@ -41,8 +53,6 @@ export type RacTextFieldReplacedKeys =
   | 'disabled'
   | 'required'
   | 'readOnly';
-
-export type BaseTextFieldProps = RacTextFieldRootProps & FieldMeta;
 
 export type TextFieldProps = Omit<ComponentPropsWithRef<'input'>, RacTextFieldReplacedKeys> &
   BaseTextFieldProps & {

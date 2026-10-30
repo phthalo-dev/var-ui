@@ -39,9 +39,9 @@ export type TopNavRichItem = {
   title: string;
   description?: ReactNode;
   href?: string;
-  onPress?: () => void;
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
   icon?: TopNavIcon;
-  isDisabled?: boolean;
+  disabled?: boolean;
 };
 
 export type TopNavProps = ComponentPropsWithRef<'nav'> & {
@@ -63,7 +63,7 @@ export type TopNavProps = ComponentPropsWithRef<'nav'> & {
  *
  * ```tsx
  * <TopNav heading={<TopNav.Heading heading="Acme" />} endContent={<Avatar />}>
- *   <TopNav.Item label="Home" href="/" isSelected />
+ *   <TopNav.Item label="Home" href="/" selected />
  *   <TopNav.Menu label="Products" items={[…]} />
  *   <TopNav.MegaMenu label="Solutions" items={[…]} featured={<TopNav.MegaMenu.FeaturedCard … />} />
  * </TopNav>
@@ -155,34 +155,33 @@ export function TopNavHeading({
   );
 }
 
-export type TopNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'onClick'> &
+export type TopNavItemProps = Omit<HTMLAttributes<HTMLElement>, 'children'> &
   Pick<
     AnchorHTMLAttributes<HTMLAnchorElement>,
     'target' | 'rel' | 'download' | 'hrefLang' | 'referrerPolicy' | 'ping'
   > & {
     label: string;
     href?: string;
-    onPress?: () => void;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
     icon?: TopNavIcon;
-    isSelected?: boolean;
-    isDisabled?: boolean;
+    /** Marks the current page (`aria-current="page"`). @default false */
+    selected?: boolean;
+    /** @default false */
+    disabled?: boolean;
     /** Hides the visible label, showing only the icon; `label` still provides the accessible name. @default false */
-    isIconOnly?: boolean;
+    iconOnly?: boolean;
     endContent?: ReactNode;
     /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
     ref?: Ref<HTMLElement>;
   };
 
-/** Link (`href`) or button (`onPress`) bar item; `isSelected` sets `aria-current="page"`. */
+/** Link (`href`) or button (`onClick`) bar item; `selected` sets `aria-current="page"`. */
 export function TopNavItem({
   label,
   href,
-  onPress,
   icon,
-  isSelected = false,
-  isDisabled = false,
-  isIconOnly = false,
+  selected = false,
+  disabled = false,
+  iconOnly = false,
   endContent,
   className,
   ref,
@@ -194,22 +193,21 @@ export function TopNavItem({
   const content = (
     <>
       {iconNode}
-      {!isIconOnly ? <span>{label}</span> : null}
-      {!isIconOnly && endContent != null ? endContent : null}
+      {!iconOnly ? <span>{label}</span> : null}
+      {!iconOnly && endContent != null ? endContent : null}
     </>
   );
 
   return (
     <RacLinkOrButton
       href={href}
-      onPress={onPress}
-      aria-current={isSelected ? 'page' : undefined}
-      aria-label={isIconOnly ? label : undefined}
+      aria-current={selected ? 'page' : undefined}
+      aria-label={iconOnly ? label : undefined}
       {...rest}
       {...mergeProps(s.item, className)}
-      data-selected={isSelected ? '' : undefined}
-      data-disabled={isDisabled ? '' : undefined}
-      isDisabled={isDisabled}
+      data-selected={selected ? '' : undefined}
+      data-disabled={disabled ? '' : undefined}
+      isDisabled={disabled}
       ref={ref}
     >
       {content}
@@ -271,10 +269,10 @@ export function TopNavMenu({
             <RacLinkOrButton
               key={item.id}
               href={item.href}
-              onPress={item.onPress}
+              onClick={item.onClick}
               {...mergeProps(s.megaItem)}
-              data-disabled={item.isDisabled ? '' : undefined}
-              isDisabled={item.isDisabled}
+              data-disabled={item.disabled ? '' : undefined}
+              isDisabled={item.disabled}
             >
               {itemContent}
             </RacLinkOrButton>

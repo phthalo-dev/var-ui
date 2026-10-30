@@ -135,7 +135,7 @@ export function useColumnResize(options: UseColumnResizeOptions): UseColumnResiz
         value: current,
         minValue: minWidth,
         maxValue: nextKey != null ? current + nextWidth - minWidth : current + minWidth,
-        onChange: (next: number) => {
+        onValueChange: (next: number) => {
           if (nextKey == null) {
             setWidths({ ...resolvedWidths, [key]: Math.max(next, minWidth) });
             return;

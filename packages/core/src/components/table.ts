@@ -51,7 +51,7 @@ export const table = typestyles.recipe({
   variants: {
     density,
     dividers: tableDividers,
-    isStriped: tableIsStriped,
+    striped: tableIsStriped,
     hasHover: tableHasHover,
     stickyHeader: tableStickyHeader,
     textOverflow: tableTextOverflow,
@@ -210,7 +210,7 @@ export const table = typestyles.recipe({
           grid: { ...rowDivider, ...columnDivider },
           none: {},
         },
-        isStriped: {
+        striped: {
           true: { row: { '&:nth-of-type(even)': { backgroundColor: vars.stripeBg.var } } },
           false: {},
         },

@@ -63,7 +63,7 @@ export type HoverCardRootProps = {
   children: ReactNode;
   openDelay?: number;
   closeDelay?: number;
-  isOpen?: boolean;
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: OverlayOpenChangeHandler;
   portalContainer?: Element;
@@ -129,13 +129,13 @@ function HoverCardRoot({
   children,
   openDelay = 700,
   closeDelay = 300,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
   portalContainer,
 }: HoverCardRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const popupRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const [, setPopupEl] = useState<HTMLDivElement | null>(null);
@@ -160,9 +160,9 @@ function HoverCardRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   const cancelOpenTimer = useCallback(() => {

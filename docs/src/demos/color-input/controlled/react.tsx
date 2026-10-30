@@ -6,7 +6,7 @@ export default function Preview() {
 
   return (
     <VStack gap="sm">
-      <ColorInput label="Accent" value={color} onChange={setColor} />
+      <ColorInput label="Accent" value={color} onValueChange={setColor} />
       <Text size="sm" tone="secondary">
         Value: {color}
       </Text>

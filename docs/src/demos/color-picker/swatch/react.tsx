@@ -8,7 +8,7 @@ export default function Preview() {
 
   return (
     <div style={{ display: 'grid', gap: 12, width: 260 }}>
-      <ColorPicker value={color} onChange={setColor} swatches={[]} />
+      <ColorPicker value={color} onValueChange={setColor} swatches={[]} />
       <HStack gap="sm">
         {presets.map((preset) => (
           <ColorSwatch

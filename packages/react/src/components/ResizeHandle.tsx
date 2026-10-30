@@ -15,15 +15,16 @@ export type ResizeHandleProps = Omit<ComponentPropsWithRef<'div'>, 'onChange' | 
   value: number;
   minValue: number;
   maxValue: number;
-  onChange: (next: number) => void;
+  /** Fires with the next (clamped) size while dragging or using the keyboard. */
+  onValueChange: (next: number) => void;
   /** Fired on double-click/Enter — bind to `useResizable().collapse`/`toggle`. */
   onCollapse?: () => void;
-  isCollapsed?: boolean;
+  collapsed?: boolean;
   /**
    * Flips drag and arrow-key direction, for a handle on the leading edge of an
    * end-side region (dragging toward the start edge grows it). @default false
    */
-  isReversed?: boolean;
+  reversed?: boolean;
   'aria-label'?: string;
 };
 
@@ -46,10 +47,10 @@ export function ResizeHandle({
   value,
   minValue,
   maxValue,
-  onChange,
+  onValueChange,
   onCollapse,
-  isCollapsed = false,
-  isReversed = false,
+  collapsed = false,
+  reversed = false,
   'aria-label': ariaLabel,
   className,
   onPointerDown,
@@ -74,7 +75,7 @@ export function ResizeHandle({
     onPointerDown?.(event);
     if (event.defaultPrevented) return;
     if (dragState.current != null) return;
-    if (isCollapsed || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    if (collapsed || (event.pointerType === 'mouse' && event.button !== 0)) return;
     event.preventDefault();
     dragState.current = {
       pointerId: event.pointerId,
@@ -93,7 +94,7 @@ export function ResizeHandle({
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const pos = isHorizontal ? event.clientX : event.clientY;
-    onChange(clamp(drag.startValue + (isReversed ? -1 : 1) * (pos - drag.startPos)));
+    onValueChange(clamp(drag.startValue + (reversed ? -1 : 1) * (pos - drag.startPos)));
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>): void => {
@@ -113,25 +114,25 @@ export function ResizeHandle({
     if (event.defaultPrevented) return;
     const forwardKey = isHorizontal ? 'ArrowRight' : 'ArrowDown';
     const backwardKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
-    const increaseKey = isReversed ? backwardKey : forwardKey;
-    const decreaseKey = isReversed ? forwardKey : backwardKey;
+    const increaseKey = reversed ? backwardKey : forwardKey;
+    const decreaseKey = reversed ? forwardKey : backwardKey;
     const step = event.shiftKey ? ARROW_STEP_LARGE : ARROW_STEP;
     switch (event.key) {
       case increaseKey:
         event.preventDefault();
-        onChange(clamp(value + step));
+        onValueChange(clamp(value + step));
         break;
       case decreaseKey:
         event.preventDefault();
-        onChange(clamp(value - step));
+        onValueChange(clamp(value - step));
         break;
       case 'Home':
         event.preventDefault();
-        onChange(minValue);
+        onValueChange(minValue);
         break;
       case 'End':
         event.preventDefault();
-        onChange(maxValue);
+        onValueChange(maxValue);
         break;
       case 'Enter':
         if (onCollapse) {
@@ -156,7 +157,7 @@ export function ResizeHandle({
       aria-label={ariaLabel}
       tabIndex={0}
       data-orientation={direction}
-      data-collapsed={isCollapsed ? '' : undefined}
+      data-collapsed={collapsed ? '' : undefined}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerEnd}

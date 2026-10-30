@@ -4,8 +4,8 @@ export default function Preview() {
   return (
     <Tabs
       tabs={[
-        { id: 'overview', label: 'Overview', content: <Text>First panel content.</Text> },
-        { id: 'details', label: 'Details', content: <Text>Second panel content.</Text> },
+        { value: 'overview', label: 'Overview', content: <Text>First panel content.</Text> },
+        { value: 'details', label: 'Details', content: <Text>Second panel content.</Text> },
       ]}
     />
   );

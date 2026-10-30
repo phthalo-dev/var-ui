@@ -24,7 +24,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={() => {}}
+        onValueChange={() => {}}
         aria-label="Resize sidebar"
       />,
     );
@@ -43,7 +43,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -60,7 +60,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -77,7 +77,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -94,7 +94,7 @@ describe('ResizeHandle', () => {
         value={478}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -111,7 +111,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -131,7 +131,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize panel"
       />,
     );
@@ -149,7 +149,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -171,7 +171,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={() => {}}
+        onValueChange={() => {}}
         aria-label="Resize"
       />,
     );
@@ -191,7 +191,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -212,7 +212,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
+        onValueChange={onChange}
         aria-label="Resize"
       />,
     );
@@ -232,8 +232,8 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
-        isCollapsed
+        onValueChange={onChange}
+        collapsed
         aria-label="Resize"
       />,
     );
@@ -251,7 +251,7 @@ describe('ResizeHandle', () => {
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={() => {}}
+        onValueChange={() => {}}
         onCollapse={onCollapse}
         aria-label="Resize"
       />,
@@ -261,15 +261,15 @@ describe('ResizeHandle', () => {
     expect(onCollapse).toHaveBeenCalledTimes(1);
   });
 
-  it('flips drag and arrow-key direction when isReversed', async () => {
+  it('flips drag and arrow-key direction when reversed', async () => {
     const onChange = vi.fn();
     render(
       <ResizeHandle
         value={260}
         minValue={180}
         maxValue={480}
-        onChange={onChange}
-        isReversed
+        onValueChange={onChange}
+        reversed
         aria-label="Resize"
       />,
     );

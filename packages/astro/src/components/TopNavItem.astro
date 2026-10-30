@@ -6,28 +6,28 @@ import { mergeProps } from '../utils';
 type Props = Omit<HTMLAttributes<'a'>, 'class:list' | 'href'> & {
   label: string;
   href?: string;
-  isSelected?: boolean;
-  isDisabled?: boolean;
-  isIconOnly?: boolean;
+  selected?: boolean;
+  disabled?: boolean;
+  iconOnly?: boolean;
   className?: string;
 };
 
 const {
   label,
   href,
-  isSelected = false,
-  isDisabled = false,
-  isIconOnly = false,
+  selected = false,
+  disabled = false,
+  iconOnly = false,
   className,
   ...rest
 } = Astro.props;
 const s = topNav();
 const sharedProps = {
   ...mergeProps(s.item, className),
-  'data-selected': isSelected || undefined,
-  'data-disabled': isDisabled || undefined,
-  'aria-current': isSelected ? ('page' as const) : undefined,
-  'aria-label': isIconOnly ? label : undefined,
+  'data-selected': selected || undefined,
+  'data-disabled': disabled || undefined,
+  'aria-current': selected ? ('page' as const) : undefined,
+  'aria-label': iconOnly ? label : undefined,
 };
 ---
 
@@ -35,14 +35,14 @@ const sharedProps = {
   href ? (
     <a {...rest} href={href} {...sharedProps}>
       <slot name="icon" />
-      {!isIconOnly ? <span>{label}</span> : null}
-      {!isIconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
+      {!iconOnly ? <span>{label}</span> : null}
+      {!iconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
     </a>
   ) : (
-    <button type="button" {...(rest as object)} disabled={isDisabled} {...sharedProps}>
+    <button type="button" {...(rest as object)} disabled={disabled} {...sharedProps}>
       <slot name="icon" />
-      {!isIconOnly ? <span>{label}</span> : null}
-      {!isIconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
+      {!iconOnly ? <span>{label}</span> : null}
+      {!iconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
     </button>
   )
 }

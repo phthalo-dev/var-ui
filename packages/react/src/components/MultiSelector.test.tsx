@@ -16,16 +16,16 @@ if (typeof globalThis.CSS.escape !== 'function') {
 }
 
 const OPTIONS: MultiSelectorOption[] = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'plum', label: 'Plum' },
-  { id: 'pear', label: 'Pear' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'pear', label: 'Pear' },
 ];
 
 function ControlledMultiSelector({ label }: { label?: string }) {
   const [value, setValue] = useState<string[]>([]);
   return (
     <>
-      <MultiSelector label={label} options={OPTIONS} value={value} onChange={setValue} />
+      <MultiSelector label={label} options={OPTIONS} value={value} onValueChange={setValue} />
       <output data-testid="value">{value.join(',')}</output>
     </>
   );
@@ -35,7 +35,7 @@ describe('MultiSelector', () => {
   it('renders the label and placeholder when no value is selected', () => {
     render(
       <IconProvider icons={{}}>
-        <MultiSelector label="Fruit" options={OPTIONS} value={[]} onChange={() => {}} />
+        <MultiSelector label="Fruit" options={OPTIONS} value={[]} onValueChange={() => {}} />
       </IconProvider>,
     );
     expect(screen.getByText('Fruit')).toBeTruthy();
@@ -49,7 +49,7 @@ describe('MultiSelector', () => {
           label="Fruit"
           options={OPTIONS}
           value={['apple', 'pear']}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -59,7 +59,7 @@ describe('MultiSelector', () => {
   it('shows all options with correct checked state when opened', async () => {
     render(
       <IconProvider icons={{}}>
-        <MultiSelector label="Fruit" options={OPTIONS} value={['plum']} onChange={() => {}} />
+        <MultiSelector label="Fruit" options={OPTIONS} value={['plum']} onValueChange={() => {}} />
       </IconProvider>,
     );
 
@@ -74,7 +74,7 @@ describe('MultiSelector', () => {
     expect(pear.getAttribute('aria-selected')).toBe('false');
   });
 
-  it('calls onChange with the updated id array when selecting and deselecting', async () => {
+  it('calls onValueChange with the updated value array when selecting and deselecting', async () => {
     render(<ControlledMultiSelector label="Fruit" />);
 
     await userEvent.click(screen.getByRole('button', { name: /Select…/ }));
@@ -101,7 +101,7 @@ describe('MultiSelector form wiring', () => {
           errorMessage="Required"
           options={OPTIONS}
           value={[]}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -119,7 +119,7 @@ describe('MultiSelector form wiring', () => {
             name="fruit"
             options={OPTIONS}
             value={['apple', 'pear']}
-            onChange={() => {}}
+            onValueChange={() => {}}
           />
         </form>
       </IconProvider>,

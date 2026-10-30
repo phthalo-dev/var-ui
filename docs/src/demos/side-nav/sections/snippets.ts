@@ -5,7 +5,7 @@ export const snippets = {
 
 <SideNav header={<SideNav.Heading heading="Acme" subheading="Workspace" />}>
   <SideNav.Section title="Main">
-    <SideNav.Item label="Dashboard" href="/" isSelected />
+    <SideNav.Item label="Dashboard" href="/" selected />
     <SideNav.Item label="Projects" href="/projects" />
   </SideNav.Section>
   <SideNav.Section title="Team" subtitle="Shared">

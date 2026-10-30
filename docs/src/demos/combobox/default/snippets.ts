@@ -1,9 +1,9 @@
 import type { DemoSnippets } from '../../types';
 
 const options = `[
-  { id: 'apple', label: 'Apple' },
-  { id: 'plum', label: 'Plum' },
-  { id: 'orange', label: 'Orange' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'orange', label: 'Orange' },
 ]`;
 
 export const snippets = {
@@ -17,7 +17,7 @@ const options = ${options};
   <Combobox.Popover>
     <Combobox.ListBox items={options}>
       {(option) => (
-        <Combobox.Item id={option.id} textValue={option.label}>
+        <Combobox.Item value={option.value} textValue={option.label}>
           {option.label}
         </Combobox.Item>
       )}

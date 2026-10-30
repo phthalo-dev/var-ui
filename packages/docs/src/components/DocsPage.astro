@@ -124,7 +124,7 @@ const defaultContent = docsPageContent();
             <TopNavItem
               label={item.text}
               href={item.link}
-              isSelected={currentPath.startsWith(item.match)}
+              selected={currentPath.startsWith(item.match)}
             />
           ))
         }
@@ -162,7 +162,7 @@ const defaultContent = docsPageContent();
                       <SideNavItem
                         label={item.text}
                         href={item.link}
-                        isSelected={currentPath.startsWith(item.match)}
+                        selected={currentPath.startsWith(item.match)}
                       />
                     ))}
                   </SideNavSection>
@@ -179,7 +179,7 @@ const defaultContent = docsPageContent();
       {
         sidebarSections ? (
           <Layout height="fill" padding={0} className={cx(page.siteLayout)}>
-            <LayoutPanel slot="start" side="start" width={280} hasDivider padding={0} isScrollable={false}>
+            <LayoutPanel slot="start" side="start" width={280} hasDivider padding={0} scrollable={false}>
               <SideNav label="Section navigation" collapsible>
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
               </SideNav>

@@ -12,7 +12,7 @@ describe('Checkbox', () => {
   });
 
   it('renders an indeterminate state distinct from checked', () => {
-    render(<Checkbox isIndeterminate>Some</Checkbox>);
+    render(<Checkbox indeterminate>Some</Checkbox>);
     const box = document.querySelector('span[data-indeterminate]');
     expect(box).not.toBeNull();
     expect(box?.textContent).toBe('−');

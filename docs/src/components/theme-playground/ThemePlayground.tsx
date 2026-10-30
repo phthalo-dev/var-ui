@@ -10,7 +10,6 @@ import {
   SegmentedControl,
   type ColorMode,
 } from '@var-ui/react';
-import type { Selection } from 'react-aria-components';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { readStoredColorMode } from '@/lib/storedColorMode';
 import { useDocsFramework } from '@/lib/useDocsFramework';
@@ -26,8 +25,8 @@ import type { ThemePlaygroundViewport } from './themePlaygroundState';
 const STORAGE_KEY = 'theme-mode';
 
 const VIEWPORT_OPTIONS = [
-  { id: 'desktop' as const, label: 'Desktop' },
-  { id: 'mobile' as const, label: 'Mobile' },
+  { value: 'desktop' as const, label: 'Desktop' },
+  { value: 'mobile' as const, label: 'Mobile' },
 ];
 
 export type ThemePlaygroundProps = {
@@ -90,14 +89,12 @@ export default function ThemePlayground({ framework: initialFramework }: ThemePl
                   <SegmentedControl
                     aria-label="Preview viewport"
                     options={VIEWPORT_OPTIONS}
-                    selectedKeys={[state.viewport]}
-                    onSelectionChange={(keys: Selection) => {
-                      if (keys === 'all') return;
-                      const id = [...keys][0] as ThemePlaygroundViewport;
-                      if (id) patchState({ viewport: id });
+                    value={state.viewport}
+                    onValueChange={(next) => {
+                      if (next) patchState({ viewport: next as ThemePlaygroundViewport });
                     }}
                   />
-                  <Button appearance="outline" size="sm" onPress={handleExport}>
+                  <Button appearance="outline" size="sm" onClick={handleExport}>
                     Export
                   </Button>
                 </div>

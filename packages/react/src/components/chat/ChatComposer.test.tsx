@@ -7,7 +7,7 @@ describe('ChatComposer', () => {
   it('renders children and the actions slot', () => {
     render(
       <ChatComposer actions={<button type="button">Send</button>}>
-        <ChatComposerInput value="" onChange={() => {}} onSubmit={() => {}} />
+        <ChatComposerInput value="" onValueChange={() => {}} onSubmit={() => {}} />
       </ChatComposer>,
     );
     expect(screen.getByRole('textbox')).toBeTruthy();

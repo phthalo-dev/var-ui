@@ -7,12 +7,12 @@ import { useControlSize } from '../internal/controlSizeContext';
 
 export type SearchInputProps = Omit<
   ComponentPropsWithRef<'input'>,
-  'size' | 'onChange' | 'type' | 'className' | 'style'
+  'size' | 'type' | 'className' | 'style'
 > & {
   /** Control density. Falls back to the surrounding control size, then `md`. */
   size?: NonNullable<SearchInputVariantProps['size']>;
-  /** Called with the new text on every change. */
-  onChange?: (value: string) => void;
+  /** Called with the new text on every change. The native `onChange` event also reaches the `<input>`. */
+  onValueChange?: (value: string) => void;
   /** Placeholder, also the default accessible name. @default 'Search…' */
   placeholder?: string;
   /** Classes merged onto the root wrapper. */
@@ -29,6 +29,7 @@ export type SearchInputProps = Omit<
  */
 export function SearchInput({
   size,
+  onValueChange,
   onChange,
   placeholder = 'Search…',
   className,
@@ -41,7 +42,8 @@ export function SearchInput({
   const s = searchInput({ variant: 'default', size: resolvedSize });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    onChange?.(event.target.value);
+    onChange?.(event);
+    onValueChange?.(event.target.value);
   };
 
   return (

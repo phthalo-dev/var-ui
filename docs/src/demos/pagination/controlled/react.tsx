@@ -6,7 +6,7 @@ export default function Preview() {
   return (
     <div style={{ display: 'grid', gap: 8 }}>
       <p style={{ margin: 0, fontSize: 14 }}>Page {page} of 12</p>
-      <Pagination page={page} onChange={setPage} totalPages={12} />
+      <Pagination page={page} onValueChange={setPage} totalPages={12} />
     </div>
   );
 }

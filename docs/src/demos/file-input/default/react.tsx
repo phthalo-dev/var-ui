@@ -7,7 +7,7 @@ export default function Preview() {
     <FileInput
       label="Upload"
       value={file}
-      onChange={(next) => setFile(Array.isArray(next) ? (next[0] ?? null) : next)}
+      onValueChange={(next) => setFile(Array.isArray(next) ? (next[0] ?? null) : next)}
       accept=".pdf,image/*"
     />
   );

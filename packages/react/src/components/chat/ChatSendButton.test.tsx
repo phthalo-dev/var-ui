@@ -5,32 +5,32 @@ import { IconProvider } from '../../icons';
 import { ChatSendButton } from './ChatSendButton';
 
 describe('ChatSendButton', () => {
-  it('calls onPress when not streaming', async () => {
-    const onPress = vi.fn();
+  it('calls onClick when not streaming', async () => {
+    const onClick = vi.fn();
     render(
       <IconProvider icons={{}}>
-        <ChatSendButton onPress={onPress} />
+        <ChatSendButton onClick={onClick} />
       </IconProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Send message' }));
-    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('calls onStop and swaps the label while streaming', async () => {
     const onStop = vi.fn();
     render(
       <IconProvider icons={{}}>
-        <ChatSendButton isStreaming onStop={onStop} />
+        <ChatSendButton streaming onStop={onStop} />
       </IconProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Stop generating' }));
     expect(onStop).toHaveBeenCalledTimes(1);
   });
 
-  it('disables the button when isDisabled and not streaming', () => {
+  it('disables the button when disabled and not streaming', () => {
     render(
       <IconProvider icons={{}}>
-        <ChatSendButton isDisabled />
+        <ChatSendButton disabled />
       </IconProvider>,
     );
     expect(screen.getByRole('button', { name: 'Send message' }).hasAttribute('disabled')).toBe(
@@ -38,11 +38,11 @@ describe('ChatSendButton', () => {
     );
   });
 
-  it('ignores isDisabled while streaming (stop stays pressable)', async () => {
+  it('ignores disabled while streaming (stop stays pressable)', async () => {
     const onStop = vi.fn();
     render(
       <IconProvider icons={{}}>
-        <ChatSendButton isStreaming isDisabled onStop={onStop} />
+        <ChatSendButton streaming disabled onStop={onStop} />
       </IconProvider>,
     );
     expect(screen.getByRole('button', { name: 'Stop generating' }).hasAttribute('disabled')).toBe(

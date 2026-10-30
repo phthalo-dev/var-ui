@@ -15,19 +15,19 @@ function wrap(ui: ReactNode) {
 }
 
 function ControlledTabList({
-  onChange,
+  onValueChange,
   orientation,
 }: {
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   orientation?: 'horizontal' | 'vertical';
 }) {
   const [value, setValue] = useState('overview');
   return (
     <TabList
       value={value}
-      onChange={(next) => {
+      onValueChange={(next) => {
         setValue(next);
-        onChange?.(next);
+        onValueChange?.(next);
       }}
       orientation={orientation}
       label="Sections"
@@ -71,10 +71,10 @@ describe('TabList', () => {
     expect(activity.hasAttribute('aria-current')).toBe(false);
   });
 
-  it('fires onChange when a TabList.Menu option is selected', async () => {
-    const onChange = vi.fn();
+  it('fires onValueChange when a TabList.Menu option is selected', async () => {
+    const onValueChange = vi.fn();
     wrap(
-      <TabList value="overview" onChange={onChange} label="Sections">
+      <TabList value="overview" onValueChange={onValueChange} label="Sections">
         <TabList.Tab value="overview" label="Overview" />
         <TabList.Menu
           label="More"
@@ -89,7 +89,7 @@ describe('TabList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'More' }));
     await userEvent.click(await screen.findByRole('menuitem', { name: 'Audit log' }));
 
-    expect(onChange).toHaveBeenCalledWith('audit');
+    expect(onValueChange).toHaveBeenCalledWith('audit');
   });
 
   it('moves focus to the next tab on ArrowRight, and wraps at the ends', async () => {

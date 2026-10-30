@@ -1,10 +1,13 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatMessageBubble } from '@var-ui/core/components/chat/chatMessageBubble';
 import type { ChatMessageBubbleVariantProps } from '@var-ui/core';
 import { useChatMessageContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 
-export type ChatMessageBubbleProps = {
+export type ChatMessageBubbleProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Bubble content — plain text or a consumer-rendered markdown tree. */
   children: ReactNode;
   /** Visual variant. `ghost` drops the background but keeps padding for alignment. @default filled */
@@ -33,12 +36,13 @@ export function ChatMessageBubble({
   group,
   className,
   ref,
+  ...rest
 }: ChatMessageBubbleProps): JSX.Element {
   const context = useChatMessageContext();
   const sender = context?.sender ?? 'assistant';
   const b = chatMessageBubble({ sender, variant, group: group ?? 'none' });
   return (
-    <div {...mergeProps(b.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(b.root, className)} ref={ref}>
       {children}
     </div>
   );

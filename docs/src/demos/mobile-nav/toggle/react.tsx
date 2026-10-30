@@ -2,7 +2,7 @@ import { MobileNav, MobileNavProvider, SideNav, Text } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <MobileNavProvider defaultIsOpen>
+    <MobileNavProvider defaultOpen>
       <div
         style={{
           position: 'relative',
@@ -19,7 +19,7 @@ export default function Preview() {
         </div>
         <MobileNav header="Menu">
           <SideNav.Section title="Browse">
-            <SideNav.Item label="Home" href="/" isSelected />
+            <SideNav.Item label="Home" href="/" selected />
             <SideNav.Item label="Docs" href="/docs" />
             <SideNav.Item label="Blog" href="/blog" />
           </SideNav.Section>

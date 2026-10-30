@@ -92,7 +92,7 @@ describe('SearchInput passthrough', () => {
         id="s"
         className="mine"
         ref={ref}
-        onChange={onChange}
+        onValueChange={onChange}
         onFocus={onFocus}
       />,
     );

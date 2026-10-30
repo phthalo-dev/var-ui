@@ -15,7 +15,13 @@ import { commandPalette } from '@var-ui/core/components/commandPalette';
 import type { CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
-import { useOverlayPresence } from '../overlays';
+import {
+  createOverlayChangeDetails,
+  inferOverlayCloseReason,
+  useOverlayPresence,
+  type OverlayOpenChangeHandler,
+  type OverlayOpenChangeReason,
+} from '../overlays';
 import { cx, mergeProps } from 'typestyles';
 import { Kbd } from './Kbd';
 import type { CommandPaletteController } from '../internal/commandPaletteController';
@@ -48,13 +54,18 @@ export type CommandPaletteItem = {
 };
 
 export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 'open'> & {
-  /** Controls the open state. */
-  isOpen?: NonNullable<CommandPaletteVariantProps['open']>;
-  /** Called when the open state changes (Escape, backdrop click, hotkey, or item selection). */
-  onOpenChange?: (open: boolean) => void;
+  /** Controlled open state. */
+  open?: NonNullable<CommandPaletteVariantProps['open']>;
+  /** Initial open state when uncontrolled. @default false */
+  defaultOpen?: boolean;
+  /**
+   * Called when the palette requests to open or close (Escape, backdrop click, hotkey, or item
+   * selection). Call `details.cancel()` to veto the change.
+   */
+  onOpenChange?: OverlayOpenChangeHandler;
   /**
    * Drives the open state from a store made by `createCommandPalette()` or `useCommandPalette()`,
-   * so the palette can be opened from outside the component tree. Takes precedence over `isOpen`;
+   * so the palette can be opened from outside the component tree. Takes precedence over `open`;
    * `onOpenChange` is still called.
    */
   controller?: CommandPaletteController;
@@ -84,8 +95,8 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   /** Called with the input value as it changes, and with `''` when the palette closes. */
   onQueryChange?: (query: string) => void;
   /** Shows a busy state and `loadingLabel` in place of `emptyLabel` while `items` is empty. */
-  isLoading?: boolean;
-  /** Message shown while `isLoading` and no items are listed. @default 'Loading…' */
+  loading?: boolean;
+  /** Message shown while `loading` and no items are listed. @default 'Loading…' */
   loadingLabel?: string;
   /**
    * Element the dialog renders into instead of its React parent. Needed when a subtree renders
@@ -184,11 +195,12 @@ function toBlocks(items: CommandPaletteItem[]): ItemBlock[] {
 
 /**
  * ⌘K-style search overlay: filters a list of commands and reports the chosen `id` via
- * `onSelect` / `onAction`. Callers own the open state (via `isOpen`, or a `controller`);
+ * `onSelect` / `onAction`. Callers own the open state (via `open`, or a `controller`);
  * the palette closes itself after an item is chosen unless `closeOnAction` is `false`.
  */
 export function CommandPalette({
-  isOpen,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
   controller,
   items,
@@ -200,7 +212,7 @@ export function CommandPalette({
   highlightMatches = false,
   filter = defaultFilter,
   onQueryChange,
-  isLoading = false,
+  loading = false,
   loadingLabel = 'Loading…',
   portalContainer,
   className,
@@ -226,15 +238,22 @@ export function CommandPalette({
     controller?.getSnapshot ?? getFalse,
     getFalse,
   );
-  const open = controller ? controllerOpen : Boolean(isOpen);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = controller ? controllerOpen : (openProp ?? uncontrolledOpen);
   const openRef = useRef(open);
   openRef.current = open;
   const requestOpen = useCallback(
-    (next: boolean) => {
+    (next: boolean, event: Event | null = null, reason?: OverlayOpenChangeReason) => {
+      const details = createOverlayChangeDetails({
+        reason: reason ?? inferOverlayCloseReason(event),
+        event,
+      });
+      onOpenChange?.(next, details);
+      if (details.isCanceled) return;
       controller?.setOpen(next);
-      onOpenChange?.(next);
+      if (openProp === undefined) setUncontrolledOpen(next);
     },
-    [controller, onOpenChange],
+    [controller, onOpenChange, openProp],
   );
   const presence = useOverlayPresence({
     isOpen: open,
@@ -251,7 +270,7 @@ export function CommandPalette({
     function handleKeyDown(event: KeyboardEvent) {
       if (combos.some((combo) => matchesHotkey(event, combo))) {
         event.preventDefault();
-        requestOpen(!open);
+        requestOpen(!open, event, 'imperative');
       }
     }
     window.addEventListener('keydown', handleKeyDown);
@@ -299,7 +318,7 @@ export function CommandPalette({
       onAction={() => {
         item.onSelect?.();
         onAction?.(item.id);
-        if (closeOnAction) requestOpen(false);
+        if (closeOnAction) requestOpen(false, null, 'trigger-press');
       }}
     >
       {({ isFocused }) => (
@@ -344,18 +363,20 @@ export function CommandPalette({
       style={{ ...layerStyle, ...style }}
       onClick={(event) => {
         onClick?.(event);
-        if (event.target === event.currentTarget) requestOpen(false);
+        if (event.target === event.currentTarget) {
+          requestOpen(false, event.nativeEvent, 'outside-press');
+        }
       }}
       onCancel={(event) => {
         onCancel?.(event);
         event.preventDefault();
-        requestOpen(false);
+        requestOpen(false, event.nativeEvent, 'escape-key');
       }}
       onKeyDownCapture={(event) => {
         onKeyDownCapture?.(event);
         if (event.key !== 'Escape') return;
         event.preventDefault();
-        requestOpen(false);
+        requestOpen(false, event.nativeEvent, 'escape-key');
       }}
     >
       {presence.mounted ? (
@@ -363,7 +384,7 @@ export function CommandPalette({
           ref={panelRef}
           {...mergeProps(cp.dialog)}
           {...presence.attrs}
-          aria-busy={isLoading || undefined}
+          aria-busy={loading || undefined}
         >
           <Autocomplete inputValue={query} onInputChange={setQuery}>
             <div {...mergeProps(cp.inputRow)}>
@@ -378,8 +399,8 @@ export function CommandPalette({
               {...mergeProps(cp.results)}
               aria-label={placeholder}
               renderEmptyState={() => (
-                <div {...mergeProps(cp.empty)} role={isLoading ? 'status' : undefined}>
-                  {isLoading ? loadingLabel : emptyLabel}
+                <div {...mergeProps(cp.empty)} role={loading ? 'status' : undefined}>
+                  {loading ? loadingLabel : emptyLabel}
                 </div>
               )}
             >

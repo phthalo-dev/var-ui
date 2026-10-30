@@ -5,8 +5,8 @@ import { IconProvider } from '../icons';
 import { Select } from './Select';
 
 const OPTIONS = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'plum', label: 'Plum' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
 ];
 
 describe('Select', () => {
@@ -78,7 +78,7 @@ describe('Select', () => {
           <Select.Trigger placeholder="Select…" />
           <Select.Popover>
             <Select.ListBox>
-              <Select.Item id="ada" textValue="Ada Lovelace">
+              <Select.Item value="ada" textValue="Ada Lovelace">
                 <span data-testid="row-avatar">A</span>
                 Ada Lovelace
               </Select.Item>
@@ -120,7 +120,7 @@ describe('Select', () => {
           </Select.Trigger>
           <Select.Popover>
             <Select.ListBox>
-              <Select.Item id="ada" textValue="Ada Lovelace">
+              <Select.Item value="ada" textValue="Ada Lovelace">
                 Ada Lovelace
               </Select.Item>
             </Select.ListBox>

@@ -5,19 +5,19 @@ description: Multi-select dropdown for choosing several options.
 
 # MultiSelector
 
-Dropdown that selects multiple options at once. Always controlled via `value` (option ids) and `onChange`. The trigger summarizes the current selection as a comma-separated label list.
+Dropdown that selects multiple options at once. Always controlled via `value` (option values) and `onValueChange`. The trigger summarizes the current selection as a comma-separated label list.
 
 ## Examples
 
 ### Default
 
-Pass `options` as `{ id, label }[]` and seed `value` with the selected ids.
+Pass `options` as `{ value, label, disabled? }[]` and seed `value` with the selected values.
 
 <Demo id="multi-selector.default" />
 
 ### Controlled selection
 
-Keep the selected ids in React state and update them from `onChange`. The trigger text and any app UI that depends on the selection stay in sync.
+Keep the selected values in React state and update them from `onValueChange`. The trigger text and any app UI that depends on the selection stay in sync.
 
 <Demo id="multi-selector.controlled" />
 

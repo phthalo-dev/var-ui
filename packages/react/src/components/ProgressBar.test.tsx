@@ -10,7 +10,7 @@ describe('ProgressBar', () => {
   });
 
   it('renders indeterminate without aria-valuenow', () => {
-    render(<ProgressBar label="Working" isIndeterminate />);
+    render(<ProgressBar label="Working" indeterminate />);
     const bar = screen.getByRole('progressbar', { name: 'Working' });
     expect(bar.getAttribute('aria-valuenow')).toBeNull();
   });

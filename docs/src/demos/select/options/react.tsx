@@ -1,10 +1,10 @@
 import { Grid, Select } from '@var-ui/react';
 
 const FRUIT_OPTIONS = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'plum', label: 'Plum' },
-  { id: 'orange', label: 'Orange' },
-  { id: 'grape', label: 'Grape' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'grape', label: 'Grape' },
 ];
 
 export default function Preview() {

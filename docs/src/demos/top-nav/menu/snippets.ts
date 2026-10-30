@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { TopNav } from '@var-ui/react';
 
 <TopNav heading={<TopNav.Heading heading="Acme" />}>
-  <TopNav.Item label="Home" href="/" isSelected />
+  <TopNav.Item label="Home" href="/" selected />
   <TopNav.Item label="Docs" href="/docs" />
   <TopNav.Menu
     label="Products"

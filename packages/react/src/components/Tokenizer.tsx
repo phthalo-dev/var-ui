@@ -16,20 +16,22 @@ import { tokenizer } from '@var-ui/core/components/tokenizer';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
+import { disabledKeysOf } from '../internal/racProps';
 import { mergeProps } from 'typestyles';
 
 export type TokenizerOption = {
-  /** Unique option identifier — also used as the token's key once selected. */
-  id: string;
+  /** Unique option value, also used as the token's key once selected. */
+  value: string;
   /** Visible label in the input's dropdown and the selected chip. */
   label: string;
+  /** Prevents adding this option. */
+  disabled?: boolean;
 };
 
 export type TokenizerProps = Omit<
   ComponentPropsWithRef<'input'>,
   | 'value'
   | 'defaultValue'
-  | 'onChange'
   | 'className'
   | 'style'
   | 'children'
@@ -43,16 +45,17 @@ export type TokenizerProps = Omit<
   FieldMeta & {
     /** Full candidate list; options already present in `value` are excluded from the dropdown. */
     options: TokenizerOption[];
-    /** Selected tokens (controlled). */
-    value: TokenizerOption[];
-    /** Called with the next token array when a token is added or removed. */
-    onChange: (value: TokenizerOption[]) => void;
+    /** Values of the selected tokens (controlled). Matches `Select multiple`. */
+    value: string[];
+    /** Called with the next array of token values when a token is added or removed. */
+    onValueChange: (value: string[]) => void;
     /** Placeholder text shown in the search input when no tokens are selected. @default Add… */
     placeholder?: string;
-    isDisabled?: boolean;
+    /** Disables the field and the hidden form inputs. */
+    disabled?: boolean;
     /** Marks the field invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
-    /** Name for form submission: one hidden input per token id, like `<select multiple>`. */
+    /** Name for form submission: one hidden input per token value, like `<select multiple>`. */
     name?: string;
     /** Accessible name for the token list when there is no `label`. @default Selected */
     tokensLabel?: string;
@@ -78,9 +81,9 @@ export function Tokenizer({
   errorMessage,
   options,
   value,
-  onChange,
+  onValueChange,
   placeholder = 'Add…',
-  isDisabled,
+  disabled,
   invalid,
   name,
   tokensLabel = 'Selected',
@@ -103,23 +106,26 @@ export function Tokenizer({
     id,
     describedBy: describedByProp,
   });
-  const selectedIds = new Set(value.map((option) => option.id));
-  const available = options.filter((option) => !selectedIds.has(option.id));
+  const selectedValues = new Set(value);
+  const available = options.filter((option) => !selectedValues.has(option.value));
+  const tokens = value
+    .map((v) => options.find((o) => o.value === v))
+    .filter((option): option is TokenizerOption => option !== undefined);
 
-  function addToken(id: string) {
-    const option = options.find((o) => o.id === id);
-    if (option) onChange([...value, option]);
+  function addToken(tokenValue: string) {
+    const option = options.find((o) => o.value === tokenValue);
+    if (option) onValueChange([...value, option.value]);
     setInputValue('');
   }
 
-  function removeToken(id: string) {
-    onChange(value.filter((option) => option.id !== id));
+  function removeToken(tokenValue: string) {
+    onValueChange(value.filter((v) => v !== tokenValue));
   }
 
   function handleInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     onKeyDown?.(event);
     if (event.key === 'Backspace' && inputValue === '' && value.length > 0) {
-      removeToken(value[value.length - 1].id);
+      removeToken(value[value.length - 1]);
     }
   }
 
@@ -133,7 +139,7 @@ export function Tokenizer({
       className={className}
       style={style}
     >
-      <Group {...mergeProps(tk.group)} isDisabled={isDisabled}>
+      <Group {...mergeProps(tk.group)} isDisabled={disabled}>
         <TagGroup
           aria-label={label ?? tokensLabel}
           {...mergeProps(tk.tokenList)}
@@ -141,9 +147,12 @@ export function Tokenizer({
             for (const key of keys) removeToken(String(key));
           }}
         >
-          <TagList items={value} {...mergeProps(tk.tokenList)}>
+          <TagList
+            items={tokens.map((token) => ({ ...token, id: token.value }))}
+            {...mergeProps(tk.tokenList)}
+          >
             {(item) => (
-              <Tag id={item.id} {...mergeProps(tk.token)} textValue={item.label}>
+              <Tag id={item.value} {...mergeProps(tk.token)} textValue={item.label}>
                 <span {...mergeProps(tk.tokenLabel)}>{item.label}</span>
                 <Button
                   slot="remove"
@@ -161,7 +170,7 @@ export function Tokenizer({
           id={frame.controlId}
           inputValue={inputValue}
           onInputChange={setInputValue}
-          isDisabled={isDisabled}
+          isDisabled={disabled}
           isInvalid={frame.invalid || undefined}
           aria-describedby={frame.controlProps['aria-describedby']}
           onSelectionChange={(key) => {
@@ -176,9 +185,9 @@ export function Tokenizer({
             onKeyDown={handleInputKeyDown}
           />
           <Popover {...mergeProps(tk.popover)}>
-            <ListBox items={available}>
+            <ListBox items={available} disabledKeys={disabledKeysOf(available)}>
               {(option) => (
-                <ListBoxItem id={option.id} textValue={option.label} {...mergeProps(tk.item)}>
+                <ListBoxItem id={option.value} textValue={option.label} {...mergeProps(tk.item)}>
                   {option.label}
                 </ListBoxItem>
               )}
@@ -187,14 +196,8 @@ export function Tokenizer({
         </AriaComboBox>
       </Group>
       {name
-        ? value.map((option) => (
-            <input
-              key={option.id}
-              type="hidden"
-              name={name}
-              value={option.id}
-              disabled={isDisabled}
-            />
+        ? value.map((v) => (
+            <input key={v} type="hidden" name={name} value={v} disabled={disabled} />
           ))
         : null}
     </FieldFrame>

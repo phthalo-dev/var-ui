@@ -6,7 +6,12 @@ export default function Preview() {
 
   return (
     <VStack gap="sm">
-      <SearchInput value={query} onChange={setQuery} placeholder="Search…" aria-label="Search" />
+      <SearchInput
+        value={query}
+        onValueChange={setQuery}
+        placeholder="Search…"
+        aria-label="Search"
+      />
       <Text size="sm" tone="secondary">
         Query: {query || '(empty)'}
       </Text>

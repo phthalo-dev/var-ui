@@ -61,30 +61,30 @@ export const PLAYGROUND_COLOR_FIELDS: PlaygroundColorField[] = [
 ];
 
 export const FONT_FAMILY_OPTIONS = [
-  { id: 'body', label: 'Body' },
-  { id: 'display', label: 'Display' },
-  { id: 'mono', label: 'Mono' },
+  { value: 'body', label: 'Body' },
+  { value: 'display', label: 'Display' },
+  { value: 'mono', label: 'Mono' },
 ] as const;
 
 export const TYPE_SCALE_OPTIONS = [
-  { id: '1.125', label: '1.125 — Major second' },
-  { id: '1.2', label: '1.200 — Minor third' },
-  { id: '1.25', label: '1.250 — Major third' },
-  { id: '1.333', label: '1.333 — Perfect fourth' },
+  { value: '1.125', label: '1.125 — Major second' },
+  { value: '1.2', label: '1.200 — Minor third' },
+  { value: '1.25', label: '1.250 — Major third' },
+  { value: '1.333', label: '1.333 — Perfect fourth' },
 ] as const;
 
 export const BASE_SIZE_OPTIONS = [
-  { id: 'sm', label: 'S' },
-  { id: 'md', label: 'M' },
-  { id: 'lg', label: 'L' },
-  { id: 'xl', label: 'XL' },
+  { value: 'sm', label: 'S' },
+  { value: 'md', label: 'M' },
+  { value: 'lg', label: 'L' },
+  { value: 'xl', label: 'XL' },
 ] as const;
 
 export const SPACING_PRESET_OPTIONS = [
-  { id: 'compact', label: 'Compact' },
-  { id: 'default', label: 'Default' },
-  { id: 'comfortable', label: 'Comfortable' },
-  { id: 'gigantic', label: 'Gigantic' },
+  { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
+  { value: 'comfortable', label: 'Comfortable' },
+  { value: 'gigantic', label: 'Gigantic' },
 ] as const;
 
 const BASE_SIZE_PX: Record<ThemePlaygroundTypography['baseSize'], number> = {

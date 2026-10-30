@@ -13,7 +13,7 @@ export default function Preview() {
     >
       <SideNav header={<SideNav.Heading heading="Acme" />}>
         <SideNav.Section title="Main">
-          <SideNav.Item label="Dashboard" href="/" isSelected />
+          <SideNav.Item label="Dashboard" href="/" selected />
           <SideNav.Item label="Projects" href="/projects" />
         </SideNav.Section>
       </SideNav>

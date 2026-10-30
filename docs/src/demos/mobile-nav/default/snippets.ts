@@ -3,7 +3,7 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { MobileNav } from '@var-ui/react';
 
-<MobileNav isOpen={open} onOpenChange={setOpen} header="Menu">
+<MobileNav open={open} onOpenChange={setOpen} header="Menu">
   <SideNav.Item label="Home" href="/" />
 </MobileNav>`,
   astro: `---

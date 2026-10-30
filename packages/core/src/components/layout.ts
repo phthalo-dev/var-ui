@@ -194,7 +194,7 @@ export const layoutContent = typestyles.recipe({
   layer: 'components',
   slots: ['content'],
   variants: {
-    isScrollable: zoneScrollable,
+    scrollable: zoneScrollable,
     padding: zonePadding,
   },
   styles: () => {
@@ -224,7 +224,7 @@ export const layoutContent = typestyles.recipe({
         },
       },
       variants: {
-        isScrollable: {
+        scrollable: {
           true: {
             content: { overflow: 'auto' },
           },
@@ -253,7 +253,7 @@ export const layoutPanel = typestyles.recipe({
   layer: 'components',
   slots: ['panel', 'overlay', 'overlayBackdrop', 'overlayDialog'],
   variants: {
-    isScrollable: zoneScrollable,
+    scrollable: zoneScrollable,
     hasDivider: panelDivider,
     hasResizeHandle: panelResizeHandle,
     padding: zonePadding,
@@ -334,7 +334,7 @@ export const layoutPanel = typestyles.recipe({
         },
       },
       variants: {
-        isScrollable: {
+        scrollable: {
           true: {
             panel: { overflow: 'auto' },
             overlay: { overflow: 'auto' },

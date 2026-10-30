@@ -14,7 +14,7 @@ describe('DateRangeInput', () => {
   it('renders the label', () => {
     render(
       <IconProvider icons={{}}>
-        <DateRangeInput label="Trip dates" value={value} onChange={() => {}} />
+        <DateRangeInput label="Trip dates" value={value} onValueChange={() => {}} />
       </IconProvider>,
     );
     expect(screen.getByText('Trip dates')).toBeTruthy();
@@ -23,7 +23,7 @@ describe('DateRangeInput', () => {
   it('renders both a start and end segment group', () => {
     render(
       <IconProvider icons={{}}>
-        <DateRangeInput label="Trip dates" value={value} onChange={() => {}} />
+        <DateRangeInput label="Trip dates" value={value} onValueChange={() => {}} />
       </IconProvider>,
     );
     // Each date is split into month/day/year segments; two groups means six
@@ -37,7 +37,7 @@ describe('DateRangeInput', () => {
   it('opens the popover and shows a range calendar grid', async () => {
     render(
       <IconProvider icons={{}}>
-        <DateRangeInput label="Trip dates" value={value} onChange={() => {}} />
+        <DateRangeInput label="Trip dates" value={value} onValueChange={() => {}} />
       </IconProvider>,
     );
 

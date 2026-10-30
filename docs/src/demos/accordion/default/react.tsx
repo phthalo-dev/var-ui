@@ -3,7 +3,7 @@ import { Accordion, IconProvider } from '@var-ui/react';
 export default function Preview() {
   return (
     <IconProvider icons={{}}>
-      <Accordion type="single" defaultExpandedKeys={['billing']}>
+      <Accordion type="single" defaultValue={['billing']}>
         <Accordion.Item id="billing">
           <Accordion.Trigger>Billing</Accordion.Trigger>
           <Accordion.Panel>

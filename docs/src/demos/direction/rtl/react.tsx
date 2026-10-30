@@ -16,7 +16,7 @@ export default function Preview() {
       >
         <SideNav header={<SideNav.Heading heading="Docs" />}>
           <SideNav.Section title="Main">
-            <SideNav.Item label="Overview" href="#overview" isSelected />
+            <SideNav.Item label="Overview" href="#overview" selected />
             <SideNav.Item label="Guides" collapsible>
               <SideNav.Item label="Hidden" href="#hidden" />
               <SideNav.Item label="Direction" href="#direction" />
@@ -30,7 +30,7 @@ export default function Preview() {
           { id: 'here', label: 'Current' },
         ]}
       />
-      <Pagination page={page} onChange={setPage} totalPages={5} variant="compact" />
+      <Pagination page={page} onValueChange={setPage} totalPages={5} variant="compact" />
       <Text>dir=rtl island</Text>
     </DirectionProvider>
   );

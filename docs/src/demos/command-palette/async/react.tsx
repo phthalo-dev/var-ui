@@ -25,14 +25,14 @@ export default function Preview() {
 
   return (
     <>
-      <Button onPress={() => setOpen(true)}>Search remotely</Button>
+      <Button onClick={() => setOpen(true)}>Search remotely</Button>
       <CommandPalette
-        isOpen={open}
+        open={open}
         onOpenChange={setOpen}
         hotkey={false}
         filter={false}
         highlightMatches
-        isLoading={loading}
+        loading={loading}
         onQueryChange={setQuery}
         placeholder="Search releases…"
         items={results.map((title) => ({ id: title, title, onSelect: () => {} }))}

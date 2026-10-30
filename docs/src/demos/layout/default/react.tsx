@@ -29,7 +29,7 @@ export default function Preview() {
                   key={item.id}
                   tone={item.id === selectedId ? 'accent' : 'neutral'}
                   appearance={item.id === selectedId ? 'filled' : 'subtle'}
-                  onPress={() => setSelectedId(item.id)}
+                  onClick={() => setSelectedId(item.id)}
                 >
                   {item.label}
                 </Button>

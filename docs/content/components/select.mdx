@@ -5,7 +5,7 @@ description: Dropdown single-select with options, or compound parts for custom r
 
 # Select
 
-Dropdown single-select. `Select` with `options` is the assembled preset (`label`, `description`, `errorMessage`, `placeholder`). Compose `Select.Root`, `Select.Trigger`, `Select.Value`, `Select.Popover`, `Select.ListBox`, and `Select.Item` when a row needs more than a label.
+Dropdown select (single, or `multiple`). `Select` with `options` is the assembled preset (`label`, `description`, `errorMessage`, `placeholder`). Compose `Select.Root`, `Select.Trigger`, `Select.Value`, `Select.Popover`, `Select.ListBox`, and `Select.Item` when a row needs more than a label.
 
 Custom item rows are React-only. Astro and HTML previews keep using a native `<select>` with the core recipe classes.
 
@@ -17,7 +17,7 @@ Custom item rows are React-only. Astro and HTML previews keep using a native `<s
 
 ### Options list
 
-Pass an `options` array of `{ id, label }` objects. Use `placeholder` when no value is selected.
+Pass an `options` array of `{ value, label, disabled? }` objects. Use `placeholder` when no value is selected.
 
 <Demo id="select.options" />
 

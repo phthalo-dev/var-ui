@@ -21,7 +21,7 @@ export type EditableTextActivation = 'click' | 'doubleClick' | 'focus';
 
 export type EditableTextProps = Omit<
   ComponentPropsWithRef<'div'>,
-  'children' | 'onChange' | 'className' | 'ref' | 'role' | 'tabIndex'
+  'children' | 'className' | 'ref' | 'role' | 'tabIndex'
 > & {
   /** Display element (for example a `Heading`). Its typography is inherited by the input. */
   children: ReactNode;
@@ -32,16 +32,16 @@ export type EditableTextProps = Omit<
   /** Called when editing is abandoned with Escape. */
   onCancel?: () => void;
   /** Called with the draft text on every keystroke while editing. */
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   /**
    * What starts editing with the pointer. Enter and F2 always start editing from the keyboard.
    * @default doubleClick
    */
   activation?: EditableTextActivation;
   /** Prevents editing. */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /** Shows the text without allowing it to be edited. */
-  isReadOnly?: boolean;
+  readOnly?: boolean;
   /** Accessible name for the input. Defaults to the current value, or `emptyLabel` when that is empty. */
   'aria-label'?: string;
   /**
@@ -72,10 +72,10 @@ export function EditableText({
   value,
   onCommit,
   onCancel,
-  onChange,
+  onValueChange,
   activation = 'doubleClick',
-  isDisabled = false,
-  isReadOnly = false,
+  disabled = false,
+  readOnly = false,
   'aria-label': ariaLabel,
   emptyLabel = 'Edit text',
   className,
@@ -94,7 +94,7 @@ export function EditableText({
   // Set once Enter/Escape finishes an edit, so the blur caused by unmounting the input is ignored.
   const isSettledRef = useRef(false);
   const restoreFocusRef = useRef(false);
-  const canEdit = !isDisabled && !isReadOnly;
+  const canEdit = !disabled && !readOnly;
   const isActive = isEditing && canEdit;
 
   // Losing the ability to edit mid-edit discards the draft, so it can't commit later.
@@ -164,7 +164,7 @@ export function EditableText({
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDraft(event.target.value);
-    onChange?.(event.target.value);
+    onValueChange?.(event.target.value);
   };
 
   const input = (
@@ -198,7 +198,7 @@ export function EditableText({
       }}
       role={canEdit ? 'group' : undefined}
       aria-label={canEdit && !isActive ? ariaLabel : undefined}
-      aria-disabled={isDisabled || undefined}
+      aria-disabled={disabled || undefined}
       tabIndex={canEdit && !isActive ? 0 : undefined}
       onClick={(event: MouseEvent<HTMLDivElement>) => {
         onClick?.(event);

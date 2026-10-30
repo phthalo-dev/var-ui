@@ -11,20 +11,48 @@ import {
 import { dateInput } from '@var-ui/core/components/dateInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
-import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { CalendarPopover } from '../internal/CalendarBody';
-import { splitDataAttributes } from '../internal/dateFieldProps';
+import { splitDataAttributes, type DateFieldBaseProps } from '../internal/dateFieldProps';
 import { mergeRacClassName } from '../internal/racClassName';
 
-export type DateInputProps<T extends DateValue = DateValue> = Omit<
-  RACDatePickerProps<T>,
-  'children'
-> &
-  FieldMeta & {
-    /** Ref to the segmented input element (the field's primary control). */
-    ref?: Ref<HTMLDivElement>;
-  };
+type DatePickerRac<T extends DateValue> = RACDatePickerProps<T>;
+
+export type DateInputProps<T extends DateValue = DateValue> = DateFieldBaseProps<
+  DatePickerRac<T>
+> & {
+  /** Controlled date. `null` means controlled-empty. */
+  value?: T | null;
+  /** Initial date when uncontrolled. */
+  defaultValue?: T | null;
+  /** Called with the new date, or `null` when the field is cleared. */
+  onValueChange?: NonNullable<DatePickerRac<T>['onChange']>;
+  /** Earliest selectable date. */
+  min?: DatePickerRac<T>['minValue'];
+  /** Latest selectable date. */
+  max?: DatePickerRac<T>['maxValue'];
+  /** Marks dates as unavailable: they cannot be selected. */
+  unavailable?: DatePickerRac<T>['isDateUnavailable'];
+  placeholderValue?: DatePickerRac<T>['placeholderValue'];
+  /** Smallest unit shown as an editable segment. */
+  granularity?: DatePickerRac<T>['granularity'];
+  hourCycle?: DatePickerRac<T>['hourCycle'];
+  hideTimeZone?: boolean;
+  shouldForceLeadingZeros?: boolean;
+  firstDayOfWeek?: DatePickerRac<T>['firstDayOfWeek'];
+  /** Custom validation; return a message (or messages) to mark the field invalid. */
+  validate?: DatePickerRac<T>['validate'];
+  /** Controlled open state of the calendar popover. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  /** Called when the calendar popover opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+  /** Close the popover after a date is picked. @default true */
+  shouldCloseOnSelect?: boolean;
+  /** Ref to the segmented input element (the field's primary control). */
+  ref?: Ref<HTMLDivElement>;
+};
 
 /**
  * Single-date field with segmented text entry (month/day/year as separate
@@ -33,7 +61,7 @@ export type DateInputProps<T extends DateValue = DateValue> = Omit<
  * root; `ref` and `data-*` attributes reach the segmented input.
  *
  * ```tsx
- * <DateInput label="Appointment date" value={value} onChange={setValue} />
+ * <DateInput label="Appointment date" value={value} onValueChange={setValue} />
  * ```
  */
 export function DateInput<T extends DateValue = DateValue>({
@@ -48,7 +76,7 @@ export function DateInput<T extends DateValue = DateValue>({
   const [rootProps, dataProps] = splitDataAttributes(props);
   return (
     <AriaDatePicker
-      {...rootProps}
+      {...(rootProps as RACDatePickerProps<T>)}
       isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
       className={mergeRacClassName(di.root, className)}
     >

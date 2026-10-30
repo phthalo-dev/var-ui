@@ -2,8 +2,8 @@ import { createRoot } from 'react-dom/client';
 import { Button, Checkbox, DesignSystemProvider, Field, Select, TextField } from '@var-ui/react';
 
 const options = [
-  { id: 'a', label: 'Option A' },
-  { id: 'b', label: 'Option B' },
+  { value: 'a', label: 'Option A' },
+  { value: 'b', label: 'Option B' },
 ];
 
 createRoot(document.getElementById('root')!).render(

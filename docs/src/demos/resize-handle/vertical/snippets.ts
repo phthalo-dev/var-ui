@@ -10,7 +10,7 @@ export const snippets = {
     value={height}
     minValue={60}
     maxValue={160}
-    onChange={setHeight}
+    onValueChange={setHeight}
     aria-label="Resize panels"
   />
   <div style={{ flex: 1 }}>Bottom</div>

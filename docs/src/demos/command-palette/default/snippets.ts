@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { CommandPalette } from '@var-ui/react';
 
 <CommandPalette
-  isOpen={open}
+  open={open}
   onOpenChange={setOpen}
   items={[{ id: 'docs', title: 'Docs', meta: 'Guides', onSelect: () => navigate('/docs') }]}
 />`,

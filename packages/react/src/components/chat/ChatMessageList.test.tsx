@@ -11,7 +11,7 @@ describe('ChatMessageList', () => {
   });
 
   it('sets aria-busy while streaming', () => {
-    render(<ChatMessageList isStreaming>content</ChatMessageList>);
+    render(<ChatMessageList streaming>content</ChatMessageList>);
     expect(screen.getByRole('log').getAttribute('aria-busy')).toBe('true');
   });
 

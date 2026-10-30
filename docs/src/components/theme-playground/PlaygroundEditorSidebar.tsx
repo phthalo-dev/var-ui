@@ -42,7 +42,7 @@ export default function PlaygroundEditorSidebar() {
   const presetOptions = useMemo(
     () =>
       docsThemePresets.map((theme) => ({
-        id: theme.id,
+        value: theme.id,
         label: theme.label,
       })),
     [],
@@ -80,8 +80,8 @@ export default function PlaygroundEditorSidebar() {
               <Select
                 aria-label="Theme preset"
                 options={presetOptions}
-                selectedKey={state.presetId}
-                onSelectionChange={(key) => {
+                value={state.presetId}
+                onValueChange={(key) => {
                   if (key) patchState({ presetId: key as ShowcaseThemeId });
                 }}
               />
@@ -91,17 +91,17 @@ export default function PlaygroundEditorSidebar() {
               // className={(s.editorTabs).className}
               tabs={[
                 {
-                  id: 'base',
+                  value: 'base',
                   label: 'Base Styles',
                   content: <ThemePlaygroundBaseStyles state={state} onChange={patchState} />,
                 },
                 {
-                  id: 'components',
+                  value: 'components',
                   label: 'Components',
                   content: <ThemePlaygroundComponentsTab />,
                 },
                 {
-                  id: 'advanced',
+                  value: 'advanced',
                   label: 'Advanced',
                   content: <ThemePlaygroundAdvancedTab />,
                 },

@@ -27,8 +27,10 @@ export type TopNavMegaMenuProps = Omit<ComponentPropsWithRef<'button'>, 'childre
   /** Extra panel content rendered alongside `items` (e.g. hand-composed `TopNav.MegaMenu.Item`s). */
   children?: ReactNode;
   /** Controlled open state — omit to let the menu manage it internally. */
-  isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
+  open?: boolean;
+  /** Initial open state when uncontrolled. @default false */
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   /** Delay before the panel opens on hover/focus, in milliseconds. @default 150 */
   openDelay?: number;
   /** Delay before the panel closes after the pointer/focus leaves, in milliseconds. @default 250 */
@@ -46,16 +48,18 @@ export function TopNavMegaMenu({
   items,
   featured,
   children,
-  isOpen: controlledOpen,
+  open: controlledOpen,
+  defaultOpen = false,
   onOpenChange,
   openDelay = OPEN_DELAY_DEFAULT,
   closeDelay = CLOSE_DELAY_DEFAULT,
   className,
+  onClick,
   ref,
   ...rest
 }: TopNavMegaMenuProps): JSX.Element {
   const s = topNav();
-  const [internalOpen, setInternalOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : internalOpen;
 
@@ -146,7 +150,10 @@ export function TopNavMegaMenu({
         {...mergeProps(s.menuTrigger, className)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        onPress={toggle}
+        onClick={(event: MouseEvent<HTMLElement>) => {
+          (onClick as ((event: MouseEvent<HTMLElement>) => void) | undefined)?.(event);
+          if (!event.defaultPrevented) toggle();
+        }}
         onMouseEnter={scheduleOpen}
         onMouseLeave={scheduleClose}
         onFocus={scheduleOpen}
@@ -164,9 +171,9 @@ export function TopNavMegaMenu({
                 title={item.title}
                 description={item.description}
                 href={item.href}
-                onPress={item.onPress}
+                onClick={item.onClick}
                 icon={item.icon}
-                isDisabled={item.isDisabled}
+                disabled={item.disabled}
               />
             ))}
             {children}
@@ -178,10 +185,7 @@ export function TopNavMegaMenu({
   );
 }
 
-export type TopNavMegaMenuItemProps = Omit<
-  HTMLAttributes<HTMLElement>,
-  'children' | 'title' | 'onClick'
-> &
+export type TopNavMegaMenuItemProps = Omit<HTMLAttributes<HTMLElement>, 'children' | 'title'> &
   Pick<
     AnchorHTMLAttributes<HTMLAnchorElement>,
     'target' | 'rel' | 'download' | 'hrefLang' | 'referrerPolicy' | 'ping'
@@ -189,10 +193,9 @@ export type TopNavMegaMenuItemProps = Omit<
     title: string;
     description?: ReactNode;
     href?: string;
-    onPress?: () => void;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
     icon?: TopNavIcon;
-    isDisabled?: boolean;
+    /** @default false */
+    disabled?: boolean;
     /** Ref to the underlying `<a>` (with `href`) or `<button>` element. */
     ref?: Ref<HTMLElement>;
   };
@@ -202,9 +205,8 @@ export function TopNavMegaMenuItem({
   title,
   description,
   href,
-  onPress,
   icon,
-  isDisabled,
+  disabled,
   className,
   ref,
   ...rest
@@ -229,11 +231,10 @@ export function TopNavMegaMenuItem({
   return (
     <RacLinkOrButton
       href={href}
-      onPress={onPress}
       {...rest}
       {...mergeProps(s.megaItem, className)}
-      data-disabled={isDisabled ? '' : undefined}
-      isDisabled={isDisabled}
+      data-disabled={disabled ? '' : undefined}
+      isDisabled={disabled}
       ref={ref}
     >
       {content}

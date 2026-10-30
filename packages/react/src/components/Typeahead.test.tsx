@@ -6,21 +6,16 @@ import { IconProvider } from '../icons';
 import { Typeahead, type TypeaheadOption } from './Typeahead';
 
 const OPTIONS: TypeaheadOption[] = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'apricot', label: 'Apricot' },
-  { id: 'plum', label: 'Plum' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'apricot', label: 'Apricot' },
+  { value: 'plum', label: 'Plum' },
 ];
 
 function ControlledTypeahead() {
   const [selected, setSelected] = useState<string | null>(null);
   return (
     <>
-      <Typeahead
-        label="Fruit"
-        options={OPTIONS}
-        selectedKey={selected}
-        onSelectionChange={(key) => setSelected(key as string | null)}
-      />
+      <Typeahead label="Fruit" options={OPTIONS} value={selected} onValueChange={setSelected} />
       <output data-testid="value">{selected ?? ''}</output>
     </>
   );
@@ -51,7 +46,7 @@ describe('Typeahead', () => {
     expect(listOptions.map((option) => option.textContent)).toEqual(['Apple', 'Apricot']);
   });
 
-  it('calls onSelectionChange when an option is selected', async () => {
+  it('calls onValueChange when an option is selected', async () => {
     render(
       <IconProvider icons={{}}>
         <ControlledTypeahead />
@@ -69,10 +64,10 @@ describe('Typeahead', () => {
   });
 
   it('clears the selection and input text via the clear button', async () => {
-    const onSelectionChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <IconProvider icons={{}}>
-        <Typeahead label="Fruit" options={OPTIONS} onSelectionChange={onSelectionChange} />
+        <Typeahead label="Fruit" options={OPTIONS} onValueChange={onValueChange} />
       </IconProvider>,
     );
 
@@ -86,6 +81,6 @@ describe('Typeahead', () => {
     await userEvent.click(clearButton);
 
     expect((input as HTMLInputElement).value).toBe('');
-    expect(onSelectionChange).toHaveBeenCalledWith(null);
+    expect(onValueChange).toHaveBeenCalledWith(null);
   });
 });

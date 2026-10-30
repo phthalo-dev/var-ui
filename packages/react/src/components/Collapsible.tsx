@@ -5,18 +5,17 @@ import {
   DisclosureGroup,
   DisclosurePanel,
   Heading,
+  type Key,
 } from 'react-aria-components';
 import { collapsible } from '@var-ui/core/components/collapsible';
 import type { CollapsibleVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
+import { toRacProps } from '../internal/racProps';
 
 export type { CollapsibleVariant } from '@var-ui/core';
 
-export type CollapsibleProps = Omit<
-  ComponentPropsWithRef<'div'>,
-  'children' | 'title' | 'id' | 'onChange'
-> &
+export type CollapsibleProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'title' | 'id'> &
   CollapsibleVariantProps & {
     /** Stable id when used inside `CollapsibleGroup` (maps to RAC `Disclosure` id / expanded keys). */
     id?: string;
@@ -26,7 +25,7 @@ export type CollapsibleProps = Omit<
     trigger?: ReactNode;
     children: ReactNode;
     /** Controlled expanded state. */
-    isExpanded?: boolean;
+    expanded?: boolean;
     /** Uncontrolled initial expanded state. */
     defaultExpanded?: boolean;
     onExpandedChange?: (expanded: boolean) => void;
@@ -34,13 +33,19 @@ export type CollapsibleProps = Omit<
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   };
 
-export type CollapsibleGroupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'onChange'> & {
+export type CollapsibleGroupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
   /**
    * When true, multiple panels may stay open.
    * When false (default), opening one panel collapses the others.
    */
-  allowsMultipleExpanded?: boolean;
+  multiple?: boolean;
+  /** Controlled ids of the expanded panels. */
+  expanded?: string[];
+  /** Ids of the panels expanded initially when uncontrolled. */
+  defaultExpanded?: string[];
+  /** Called with the ids of the expanded panels whenever they change. */
+  onExpandedChange?: (expanded: string[]) => void;
 };
 
 /**
@@ -57,7 +62,7 @@ export function Collapsible({
   title,
   trigger,
   children,
-  isExpanded,
+  expanded,
   defaultExpanded,
   onExpandedChange,
   variant = 'flush',
@@ -71,9 +76,7 @@ export function Collapsible({
     <Disclosure
       {...(rest as object)}
       id={id}
-      isExpanded={isExpanded}
-      defaultExpanded={defaultExpanded}
-      onExpandedChange={onExpandedChange}
+      {...toRacProps({ expanded, defaultExpanded, onExpandedChange })}
       {...mergeProps(c.root, className)}
       ref={ref}
     >
@@ -106,7 +109,10 @@ export function Collapsible({
  */
 export function CollapsibleGroup({
   children,
-  allowsMultipleExpanded = false,
+  multiple = false,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
   className,
   ref,
   ...rest
@@ -114,7 +120,12 @@ export function CollapsibleGroup({
   return (
     <DisclosureGroup
       {...(rest as object)}
-      allowsMultipleExpanded={allowsMultipleExpanded}
+      allowsMultipleExpanded={multiple}
+      {...(expanded !== undefined ? { expandedKeys: new Set<Key>(expanded) } : {})}
+      {...(defaultExpanded !== undefined ? { defaultExpandedKeys: defaultExpanded } : {})}
+      {...(onExpandedChange
+        ? { onExpandedChange: (keys: Set<Key>) => onExpandedChange([...keys].map(String)) }
+        : {})}
       className={className}
       ref={ref}
     >

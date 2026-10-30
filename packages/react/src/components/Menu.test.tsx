@@ -187,7 +187,7 @@ describe('Menu', () => {
     function Controlled() {
       const [open] = useState(true);
       return (
-        <Menu.Root isOpen={open}>
+        <Menu.Root open={open}>
           <Menu.Popup>
             <Menu.Item id="lib" onAction={vi.fn()}>
               Pinned
@@ -228,5 +228,25 @@ describe('Menu', () => {
     });
     expect(anchor.style.left).toBe('40px');
     expect(anchor.style.top).toBe('90px');
+  });
+
+  it('Menu.Item disabled blocks onAction', async () => {
+    const onAction = vi.fn();
+    render(
+      <Menu defaultOpen>
+        <Menu.Trigger>
+          <button type="button">Open</button>
+        </Menu.Trigger>
+        <Menu.Popup>
+          <Menu.Item id="a" disabled onAction={onAction}>
+            Alpha
+          </Menu.Item>
+        </Menu.Popup>
+      </Menu>,
+    );
+    const item = await screen.findByRole('menuitem', { name: 'Alpha' });
+    expect(item.getAttribute('aria-disabled')).toBe('true');
+    await userEvent.click(item);
+    expect(onAction).not.toHaveBeenCalled();
   });
 });

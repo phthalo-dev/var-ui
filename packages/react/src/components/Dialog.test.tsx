@@ -57,7 +57,7 @@ describe('Dialog', () => {
       return (
         <IconProvider icons={{}}>
           <LayerProvider>
-            <Dialog.Root isOpen={open} onOpenChange={(next) => setOpen(next)}>
+            <Dialog.Root open={open} onOpenChange={(next) => setOpen(next)}>
               <Dialog.Backdrop>
                 <Dialog.Popup>
                   <Dialog.Title>Pinned</Dialog.Title>
@@ -82,7 +82,7 @@ describe('Dialog', () => {
               <button type="button" onClick={() => setOpen(true)}>
                 Open
               </button>
-              <Dialog.Root isOpen={open} onOpenChange={setOpen}>
+              <Dialog.Root open={open} onOpenChange={setOpen}>
                 <Dialog.Backdrop>
                   <Dialog.Popup>
                     <Dialog.Title>Settings</Dialog.Title>

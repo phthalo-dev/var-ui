@@ -144,9 +144,9 @@ const components = [
     importLine: "import { Alert } from '@var-ui/react';",
     demoImports: ["import { Alert } from '@var-ui/react';"],
     demoReturn:
-      '<Alert variant="info" title="Registry icons">Alerts pull their tone glyph from IconProvider automatically.</Alert>',
+      '<Alert tone="info" title="Registry icons">Alerts pull their tone glyph from IconProvider automatically.</Alert>',
     codeExample:
-      'import { Alert } from \'@var-ui/react\';\n\n<Alert variant="info" title="Registry icons">Alerts pull their tone glyph from IconProvider automatically.</Alert>',
+      'import { Alert } from \'@var-ui/react\';\n\n<Alert tone="info" title="Registry icons">Alerts pull their tone glyph from IconProvider automatically.</Alert>',
   },
   {
     slug: 'badge',

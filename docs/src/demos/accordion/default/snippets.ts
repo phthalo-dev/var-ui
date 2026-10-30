@@ -3,7 +3,7 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { Accordion } from '@var-ui/react';
 
-<Accordion type="single" defaultExpandedKeys={['billing']}>
+<Accordion type="single" defaultValue={['billing']}>
   <Accordion.Item id="billing">
     <Accordion.Trigger>Billing</Accordion.Trigger>
     <Accordion.Panel>…</Accordion.Panel>

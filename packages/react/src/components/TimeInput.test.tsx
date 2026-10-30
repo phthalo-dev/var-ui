@@ -8,7 +8,7 @@ function ControlledTimeInput() {
   const [value, setValue] = useState<Time>(new Time(14, 30));
   return (
     <>
-      <TimeInput label="Start time" value={value} onChange={(v) => v && setValue(v)} />
+      <TimeInput label="Start time" value={value} onValueChange={(v) => v && setValue(v)} />
       <output data-testid="value">{value.toString()}</output>
     </>
   );
@@ -33,7 +33,7 @@ describe('TimeInput', () => {
   });
 
   it('renders error message when passed', () => {
-    render(<TimeInput label="Start time" errorMessage="Time is required" isInvalid />);
+    render(<TimeInput label="Start time" errorMessage="Time is required" invalid />);
     expect(screen.getByText('Time is required')).toBeTruthy();
   });
 

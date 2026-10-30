@@ -5,8 +5,8 @@ export default function Preview() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onPress={() => setOpen(true)}>Open drawer</Button>
-      <Drawer isOpen={open} onOpenChange={setOpen} title="Settings">
+      <Button onClick={() => setOpen(true)}>Open drawer</Button>
+      <Drawer open={open} onOpenChange={setOpen} title="Settings">
         <p>Drawer body content.</p>
       </Drawer>
     </>

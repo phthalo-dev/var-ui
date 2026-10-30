@@ -91,7 +91,7 @@ type OverlayChangeEventDetails = {
 
 v1 reasons you can rely on: `escape-key`, `outside-press`, `trigger-press`. Hover/focus overlays also report `hover` and `focus`. Anything else may be `unknown`.
 
-`cancel()` blocks the open-state update **when the overlay is uncontrolled**. If you pass `isOpen`, `cancel()` is a no-op — ignore `open` in the parent instead.
+`cancel()` blocks the open-state update **when the overlay is uncontrolled**. If you pass `open`, `cancel()` is a no-op — ignore `open` in the parent instead.
 
 ```tsx
 <Dialog.Root

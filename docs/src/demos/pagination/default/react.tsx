@@ -3,5 +3,5 @@ import { useState } from 'react';
 
 export default function Preview() {
   const [page, setPage] = useState(1);
-  return <Pagination page={page} onChange={setPage} totalPages={5} />;
+  return <Pagination page={page} onValueChange={setPage} totalPages={5} />;
 }

@@ -5,8 +5,8 @@ export default function Preview() {
     <NumberInput
       label="Quantity"
       defaultValue={1}
-      minValue={0}
-      maxValue={10}
+      min={0}
+      max={10}
       step={1}
       description="Between 0 and 10"
     />

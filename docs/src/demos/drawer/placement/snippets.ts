@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 const [open, setOpen] = useState(false);
 
-<Button onPress={() => setOpen(true)}>
+<Button onClick={() => setOpen(true)}>
   Open from start
 </Button>
 <Drawer
-  isOpen={open}
+  open={open}
   onOpenChange={setOpen}
   title="Filters"
   placement="start"

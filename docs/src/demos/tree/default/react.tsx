@@ -4,7 +4,7 @@ export default function Preview() {
   return (
     <Tree
       aria-label="Files"
-      defaultExpandedKeys={['src']}
+      defaultExpanded={['src']}
       items={[
         {
           id: 'src',
