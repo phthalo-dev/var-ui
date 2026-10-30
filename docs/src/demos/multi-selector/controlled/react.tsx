@@ -1,4 +1,4 @@
-import { MultiSelector, Text, VStack } from '@var-ui/react';
+import { MultiSelector, Text, Stack } from '@var-ui/react';
 import { useState } from 'react';
 
 const options = [
@@ -12,7 +12,7 @@ export default function Preview() {
   const [value, setValue] = useState<string[]>(['design', 'ops']);
 
   return (
-    <VStack gap="sm">
+    <Stack gap="sm">
       <MultiSelector
         label="Teams"
         description="Selection stays in React state"
@@ -23,6 +23,6 @@ export default function Preview() {
       <Text size="sm" tone="secondary">
         Selected: {value.length ? value.join(', ') : '(none)'}
       </Text>
-    </VStack>
+    </Stack>
   );
 }

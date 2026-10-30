@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Badge, Divider, HStack, ProgressBar, Spinner, VStack } from '@var-ui/react';
+import { Alert, Badge, Divider, HStack, ProgressBar, Spinner, Stack } from '@var-ui/react';
 
 export type StatusFeedbackTileProps = {
   className?: string;
@@ -9,7 +9,7 @@ export type StatusFeedbackTileProps = {
 export function StatusFeedbackTile({ className }: StatusFeedbackTileProps) {
   return (
     <div className={className}>
-      <VStack gap="md">
+      <Stack gap="md">
         <Alert title="Deploy queued" tone="info">
           Waiting for the previous build to finish.
         </Alert>
@@ -22,7 +22,7 @@ export function StatusFeedbackTile({ className }: StatusFeedbackTileProps) {
         <HStack align="center" gap="sm">
           <Spinner label="Syncing" size="sm" />
         </HStack>
-      </VStack>
+      </Stack>
     </div>
   );
 }

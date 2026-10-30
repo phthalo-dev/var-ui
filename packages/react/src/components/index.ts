@@ -210,7 +210,7 @@ export { Divider, type DividerProps } from './Divider';
 export { Grid, type GridProps } from './Grid';
 export { Section, type SectionProps } from './Section';
 export { ScrollArea, type ScrollAreaProps } from './ScrollArea';
-export { HStack, Stack, VStack, type StackProps } from './Stack';
+export { HStack, Stack, type StackProps } from './Stack';
 export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from './Avatar';
 export { Badge, type BadgeProps } from './Badge';
 export {
@@ -245,7 +245,6 @@ export {
 } from './FileTree';
 export { Kbd, type KbdProps } from './Kbd';
 export { Surface, type SurfaceProps } from './Surface';
-export { SimpleGrid, type SimpleGridProps } from './SimpleGrid';
 export { Skeleton, type SkeletonProps } from './Skeleton';
 export { StatusDot, type StatusDotProps } from './StatusDot';
 export { Steps, type StepsProps } from './Steps';

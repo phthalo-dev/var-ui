@@ -70,7 +70,6 @@ export * from './section';
 export * from './segmentedControl';
 export * from './select';
 export * from './sideNav';
-export * from './simpleGrid';
 export * from './skeleton';
 export * from './slider';
 export * from './spinner';

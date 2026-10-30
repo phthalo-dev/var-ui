@@ -251,8 +251,8 @@ const components = [
   {
     slug: 'stack',
     name: 'Stack',
-    description: 'Flex stack primitive (HStack / VStack).',
-    importLine: "import { HStack, VStack } from '@var-ui/react';",
+    description: 'Flex stack primitive (Stack / HStack).',
+    importLine: "import { HStack, Stack } from '@var-ui/react';",
     demoImports: ["import { Button, HStack } from '@var-ui/react';"],
     demoReturn: `<HStack gap="sm">
       <Button intent="secondary">Cancel</Button>

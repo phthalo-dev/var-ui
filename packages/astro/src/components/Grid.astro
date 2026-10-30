@@ -5,7 +5,7 @@ import type { GridVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = HTMLAttributes<'div'> & {
-  columns?: 'auto' | 1 | 2 | 3 | 4;
+  columns?: 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 8;
   gap?: NonNullable<GridVariantProps['gap']>;
   className?: string;
 };
@@ -16,6 +16,9 @@ const columnVariant = {
   2: 'two',
   3: 'three',
   4: 'four',
+  5: 'five',
+  6: 'six',
+  8: 'eight',
 } as const satisfies Record<
   NonNullable<Props['columns']>,
   NonNullable<GridVariantProps['columns']>

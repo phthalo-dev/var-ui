@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Slider,
   Switch,
-  VStack,
+  Stack,
 } from '@var-ui/react';
 
 export type SettingsFormTileProps = {
@@ -18,7 +18,7 @@ export type SettingsFormTileProps = {
 export function SettingsFormTile({ className }: SettingsFormTileProps) {
   return (
     <div className={className}>
-      <VStack gap="md">
+      <Stack gap="md">
         <Heading level={3} size="sm">
           Notification preferences
         </Heading>
@@ -36,7 +36,7 @@ export function SettingsFormTile({ className }: SettingsFormTileProps) {
         <Button tone="accent" appearance="filled">
           Save preferences
         </Button>
-      </VStack>
+      </Stack>
     </div>
   );
 }

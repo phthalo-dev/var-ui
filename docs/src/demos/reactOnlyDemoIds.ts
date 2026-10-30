@@ -13,8 +13,6 @@ export const REACT_ONLY_DEMO_IDS = new Set<DemoId>([
   'description-list.horizontal',
   'outline.default',
   'outline.nested',
-  'simple-grid.default',
-  'simple-grid.cols',
   'scroll-area.fade',
   'overflow-list.default',
   'overflow-list.many',

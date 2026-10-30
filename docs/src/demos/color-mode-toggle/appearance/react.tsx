@@ -1,4 +1,4 @@
-import { ColorModeToggle, VStack } from '@var-ui/react';
+import { ColorModeToggle, Stack } from '@var-ui/react';
 import { useState } from 'react';
 import type { ColorMode } from '@var-ui/react';
 
@@ -6,7 +6,7 @@ export default function Preview() {
   const [mode, setMode] = useState<ColorMode>('light');
 
   return (
-    <VStack gap="lg">
+    <Stack gap="lg">
       <ColorModeToggle
         appearance="labels"
         includeSystem
@@ -19,6 +19,6 @@ export default function Preview() {
         colorMode={mode}
         onColorModeChange={setMode}
       />
-    </VStack>
+    </Stack>
   );
 }

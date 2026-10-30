@@ -113,7 +113,7 @@ for your own UI, or `<Icon>{node}</Icon>` for one-off custom glyphs.
 | Category            | Examples                                                                                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------- |
 | **Actions & forms** | `Button`, `Link`, `TextField`, `TextAreaField`, `Checkbox`, `Switch`, `RadioGroup`, `Select`, `Field` |
-| **Layout**          | `Stack` / `HStack` / `VStack`, `Grid`, `Section`, `Center`, `AspectRatio`, `Divider`                  |
+| **Layout**          | `Stack` / `HStack`, `Grid`, `Section`, `Center`, `AspectRatio`, `Divider`                             |
 | **Content**         | `Heading`, `Text`, `Timestamp`, `EmptyState`, `CodeBlock`                                             |
 | **Containers**      | `Card`, `ClickableCard`, `Carousel`, `Thumbnail`, `Avatar`, `AvatarGroup`, `Badge`                    |
 | **Feedback**        | `Alert`, `Banner`, `Spinner`, `ProgressBar`                                                           |

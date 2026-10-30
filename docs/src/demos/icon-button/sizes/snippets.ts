@@ -1,9 +1,9 @@
 import type { DemoSnippets } from '../../types';
 
 export const snippets = {
-  react: `import { HStack, IconButton, VStack } from '@var-ui/react';
+  react: `import { HStack, IconButton, Stack } from '@var-ui/react';
 
-<VStack gap="lg">
+<Stack gap="lg">
   <HStack gap="sm">
     <IconButton icon="search" aria-label="Search small" size="sm" />
     <IconButton icon="search" aria-label="Search medium" size="md" />
@@ -15,7 +15,7 @@ export const snippets = {
     <IconButton icon="menu" aria-label="Menu" tone="accent" appearance="ghost" />
     <IconButton icon="close" aria-label="Delete" tone="danger" appearance="filled" />
   </HStack>
-</VStack>`,
+</Stack>`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,
 } satisfies DemoSnippets;

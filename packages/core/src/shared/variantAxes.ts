@@ -35,7 +35,7 @@ export const density = variant.enum(['compact', 'balanced', 'spacious'], {
   default: 'balanced',
 });
 
-/** Spacing scale axis for layout primitives (stack, grid, simple-grid, overflow-list). */
+/** Spacing scale axis for layout primitives (stack, grid, overflow-list). */
 export const gap = variant.enum(['none', 'xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
 
 /** Horizontal / vertical flow axis for dividers, toolbars, and separators. */
