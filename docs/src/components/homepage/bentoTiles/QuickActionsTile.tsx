@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Heading, HStack, Select, TextField, VStack } from '@var-ui/react';
+import { Button, Heading, HStack, Select, TextField, Stack } from '@var-ui/react';
 
 const ROLE_OPTIONS = [
   { value: 'viewer', label: 'Viewer' },
@@ -16,7 +16,7 @@ export type QuickActionsTileProps = {
 export function QuickActionsTile({ className, portalContainer }: QuickActionsTileProps) {
   return (
     <div className={className}>
-      <VStack gap="md">
+      <Stack gap="md">
         <Heading level={3} size="sm">
           Invite a teammate
         </Heading>
@@ -31,7 +31,7 @@ export function QuickActionsTile({ className, portalContainer }: QuickActionsTil
             Learn more
           </Button>
         </HStack>
-      </VStack>
+      </Stack>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { HighlightedCodeBlock } from '../../HighlightedCodeBlock';
-import { Heading, Link, Text, Timestamp, VStack } from '@var-ui/react';
+import { Heading, Link, Text, Timestamp, Stack } from '@var-ui/react';
 
 export type ContentSampleTileProps = {
   className?: string;
@@ -34,7 +34,7 @@ function frameworkCodeLanguage(framework: DocsFramework): string {
 export function ContentSampleTile({ className, framework = 'react' }: ContentSampleTileProps) {
   return (
     <div className={className}>
-      <VStack gap="sm">
+      <Stack gap="sm">
         <Heading level={3} size="sm">
           Release notes
         </Heading>
@@ -49,7 +49,7 @@ export function ContentSampleTile({ className, framework = 'react' }: ContentSam
           code={frameworkImportSnippet(framework)}
           language={frameworkCodeLanguage(framework)}
         />
-      </VStack>
+      </Stack>
     </div>
   );
 }

@@ -3,7 +3,9 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { gap } from '../shared/variantAxes';
 
-const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four'], { default: 'auto' });
+const gridColumns = variant.enum(['auto', 'one', 'two', 'three', 'four', 'five', 'six', 'eight'], {
+  default: 'auto',
+});
 
 /**
  * Responsive grid. `columns: 'auto'` packs `minmax(minColumnWidth, 1fr)`
@@ -35,10 +37,13 @@ export const grid = typestyles.recipe({
       variants: {
         columns: {
           auto: {},
-          one: { gridTemplateColumns: '1fr' },
-          two: { gridTemplateColumns: 'repeat(2, 1fr)' },
-          three: { gridTemplateColumns: 'repeat(3, 1fr)' },
-          four: { gridTemplateColumns: 'repeat(4, 1fr)' },
+          one: { gridTemplateColumns: 'minmax(0, 1fr)' },
+          two: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
+          three: { gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' },
+          four: { gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' },
+          five: { gridTemplateColumns: 'repeat(5, minmax(0, 1fr))' },
+          six: { gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' },
+          eight: { gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' },
         },
         gap: {
           none: { [vars.gap.name]: '0px' },

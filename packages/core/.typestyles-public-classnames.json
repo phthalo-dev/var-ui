@@ -462,7 +462,6 @@
     "side-nav__sectionTitles",
     "side-nav__stickyTop",
     "side-nav__topContent",
-    "simple-grid",
     "skeleton",
     "slider",
     "slider__control",
@@ -4264,14 +4263,6 @@
       "suffix": "topContent",
       "file": "src/components/sideNav.ts",
       "line": 74
-    },
-    {
-      "className": "simple-grid",
-      "kind": "component",
-      "namespace": "simple-grid",
-      "suffix": "base",
-      "file": "src/components/simpleGrid.ts",
-      "line": 14
     },
     {
       "className": "skeleton",

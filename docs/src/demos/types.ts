@@ -88,8 +88,6 @@ export type DemoId =
   | 'breadcrumbs.collapse'
   | 'app-shell.default'
   | 'app-shell.layout'
-  | 'simple-grid.default'
-  | 'simple-grid.cols'
   | 'scroll-area.default'
   | 'scroll-area.fade'
   | 'overflow-list.default'

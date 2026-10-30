@@ -19,7 +19,7 @@ export type StackProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 /**
- * Flex stack layout primitive. Vertical by default; see `HStack`/`VStack`.
+ * Flex stack layout primitive. Vertical by default; use `HStack` for a centered row.
  *
  * ```tsx
  * <Stack gap="lg">{sections}</Stack>
@@ -50,9 +50,4 @@ export function Stack({
 /** Horizontal stack — row direction with centered cross axis by default. */
 export function HStack({ align = 'center', ...props }: Omit<StackProps, 'direction'>): JSX.Element {
   return <Stack {...props} align={align} direction="row" />;
-}
-
-/** Vertical stack — explicit alias for readability at call sites. */
-export function VStack(props: Omit<StackProps, 'direction'>): JSX.Element {
-  return <Stack {...props} direction="column" />;
 }

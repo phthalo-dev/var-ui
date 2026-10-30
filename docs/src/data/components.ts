@@ -460,8 +460,8 @@ export const componentRegistry: ComponentEntry[] = [
     slug: 'stack',
     name: 'Stack',
     category: 'layout',
-    description: 'Flex stack primitive (HStack / VStack).',
-    importLine: "import { HStack, VStack } from '@var-ui/react';",
+    description: 'Flex stack primitive (Stack / HStack).',
+    importLine: "import { HStack, Stack } from '@var-ui/react';",
   },
   {
     slug: 'grid',
@@ -525,13 +525,6 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'layout',
     description: 'Application chrome with top nav, side nav, and main content slots.',
     importLine: "import { AppShell } from '@var-ui/react';",
-  },
-  {
-    slug: 'simple-grid',
-    name: 'SimpleGrid',
-    category: 'layout',
-    description: 'Equal-column CSS grid with shared spacing.',
-    importLine: "import { SimpleGrid } from '@var-ui/react';",
   },
   {
     slug: 'scroll-area',

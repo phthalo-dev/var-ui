@@ -45,7 +45,6 @@ const REQUIRED_FAMILY_SLUGS = [
   'command-palette',
   // Layout / nav
   'app-shell',
-  'simple-grid',
   'scroll-area',
   'overflow-list',
   'resize-handle',
