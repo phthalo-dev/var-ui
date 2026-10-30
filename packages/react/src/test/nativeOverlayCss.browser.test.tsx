@@ -2,7 +2,7 @@ import { afterEach, beforeAll, expect, test } from 'vite-plus/test';
 import { dialog } from '@var-ui/core/components/dialog';
 import { drawer } from '@var-ui/core/components/drawer';
 import '../../../core/src/theme/base-styles';
-import { raf } from './browser';
+import { raf, viewport } from './browser';
 
 // The core recipes style a native <dialog> directly: enter/exit is pure CSS (@starting-style plus
 // discrete `display`/`overlay` transitions) and the ::backdrop fades through an inherited
@@ -83,7 +83,7 @@ test('drawer popup slides in from its placement edge via translate', async () =>
   await sleep(400);
   expect(getComputedStyle(el).translate).toBe('none');
   const rect = el.getBoundingClientRect();
-  expect(Math.round(rect.right)).toBe(window.innerWidth); // docked to the inline end edge
+  expect(Math.round(rect.right)).toBe(viewport().right); // docked to the inline end edge
   el.close();
   await sleep(100);
   expect(getComputedStyle(el).translate).not.toBe('none');
