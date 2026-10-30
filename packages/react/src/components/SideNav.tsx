@@ -27,7 +27,7 @@ import { useResizable, type ResizableConfig } from '../hooks';
 import { IconButton } from './IconButton';
 import { ResizeHandle } from './ResizeHandle';
 import { Text } from './Typography';
-import { SimpleTooltip } from './SimpleTooltip';
+import { Tooltip } from './Tooltip';
 import { ScrollArea } from './ScrollArea';
 import { mergeProps } from 'typestyles';
 import { RacLinkOrButton } from '../internal/racDomProps';
@@ -335,9 +335,10 @@ export function SideNavItem({
   );
 
   const wrappedTrigger = navCollapsed ? (
-    <SimpleTooltip content={label} placement="right">
-      {trigger}
-    </SimpleTooltip>
+    <Tooltip.Root>
+      <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
+      <Tooltip.Popup placement="right">{label}</Tooltip.Popup>
+    </Tooltip.Root>
   ) : (
     trigger
   );

@@ -27,4 +27,4 @@ Pass `visible` over a bordered content surface so the backdrop and spinner cover
 
 ## Accessibility
 
-When `visible`, the overlay sets `aria-busy="true"` and the spinner uses `label` (default `"Loading"`). Keep meaningful content as children so the blocked region remains in the document; avoid nesting interactive controls that stay focusable while the overlay is shown.
+When `visible`, the root sets `aria-busy="true"`, the children are wrapped in an `inert` element (no focus, clicks or assistive-tech access while loading), and the spinner uses `label` (default `"Loading"`). Keep meaningful content as children so the blocked region remains in the document.

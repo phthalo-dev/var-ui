@@ -1,18 +1,10 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { banner } from '@var-ui/core/components/banner';
-import type { BannerVariantProps, IconName, Tone } from '@var-ui/core';
+import type { BannerVariantProps } from '@var-ui/core';
+import { toneIcon } from '../internal/toneIcon';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
-
-const toneIcon: Record<Tone, IconName> = {
-  neutral: 'info',
-  accent: 'info',
-  info: 'info',
-  success: 'success',
-  warning: 'warning',
-  danger: 'error',
-};
 
 export type BannerProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children'> &
   BannerVariantProps & {

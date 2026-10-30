@@ -6,7 +6,7 @@ import type {
   MouseEventHandler,
   ReactNode,
 } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
@@ -21,6 +21,15 @@ const mobileNavVars = recipeVars(mobileNav);
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import { useScrollLock } from '../hooks';
+import {
+  useMergedRef,
+  useOverlayClose,
+  OverlayCloseContext,
+  useOverlayRoot,
+  type OverlayOpenChangeHandler,
+  type OverlayRoot,
+  type OverlayRequestOptions,
+} from '../overlays';
 import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
@@ -29,8 +38,9 @@ export type MobileNavContextValue = {
   open: boolean;
   show: () => void;
   close: () => void;
-  toggle: () => void;
-  onOpenChange: (open: boolean) => void;
+  toggle: (options?: OverlayRequestOptions) => void;
+  /** Requests a change; `details` from a nested `MobileNav` can be passed straight through. */
+  onOpenChange: (open: boolean, options?: OverlayRequestOptions) => void;
 };
 
 const MobileNavContext = createContext<MobileNavContextValue | null>(null);
@@ -41,7 +51,8 @@ export type MobileNavProviderProps = {
   open?: boolean;
   /** Initial open state for uncontrolled usage. @default false */
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  /** Called when the nav requests to open or close. `details.cancel()` vetoes the change. */
+  onOpenChange?: OverlayOpenChangeHandler;
 };
 
 /**
@@ -62,25 +73,16 @@ export function MobileNavProvider({
   defaultOpen = false,
   onOpenChange,
 }: MobileNavProviderProps): JSX.Element {
-  const isControlled = openProp !== undefined;
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const open = isControlled ? (openProp as boolean) : internalOpen;
-
-  const setOpen = useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  const root = useOverlayRoot({ open: openProp, defaultOpen, onOpenChange });
+  const { open, setOpen } = root;
 
   const value = useMemo<MobileNavContextValue>(
     () => ({
       open,
-      show: () => setOpen(true),
-      close: () => setOpen(false),
-      toggle: () => setOpen(!open),
-      onOpenChange: setOpen,
+      show: () => void setOpen(true),
+      close: () => void setOpen(false),
+      toggle: (options) => void setOpen(!open, options),
+      onOpenChange: (next, options) => void setOpen(next, options),
     }),
     [open, setOpen],
   );
@@ -128,7 +130,7 @@ export function MobileNavToggle({
       aria-expanded={open}
       onClick={(event) => {
         if (onClick) onClick(event as MouseEvent<HTMLButtonElement>);
-        else context?.toggle();
+        else context?.toggle({ reason: 'trigger-press', event: event as unknown as Event });
       }}
     >
       <Icon name="menu" />
@@ -137,15 +139,20 @@ export function MobileNavToggle({
 }
 
 /**
- * Native props and `ref` go to the overlay `<div>`; `className` is merged onto the sliding panel
+ * Native props and `ref` go to the backdrop `<div>`; `className` is merged onto the sliding panel
  * (the visible surface). `aria-label` / `aria-labelledby` name the inner dialog and take
  * precedence over `label`.
  */
 export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** Controlled open state — falls back to a `MobileNavProvider` ancestor when omitted. */
   open?: boolean;
-  /** Falls back to a `MobileNavProvider` ancestor when omitted. */
-  onOpenChange?: (open: boolean) => void;
+  /** Initial open state when uncontrolled and there is no `MobileNavProvider`. @default false */
+  defaultOpen?: boolean;
+  /**
+   * Called when the nav requests to open or close. `details.cancel()` vetoes the change.
+   * Falls back to a `MobileNavProvider` ancestor's handler when omitted.
+   */
+  onOpenChange?: OverlayOpenChangeHandler;
   /** Rendered in the sticky header row, left of the close button. */
   header?: ReactNode;
   /** Panel width in px; the recipe caps it at 85vw. @default 320 */
@@ -166,11 +173,73 @@ export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   portalContainer?: Element;
 };
 
+function MobileNavPopup({
+  root,
+  className,
+  side,
+  style,
+  ariaLabel,
+  ariaLabelledBy,
+  header,
+  closeLabel,
+  children,
+}: {
+  root: OverlayRoot;
+  className?: string;
+  side: 'start' | 'end';
+  style?: CSSProperties;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  header?: ReactNode;
+  closeLabel: string;
+  children: ReactNode;
+}): JSX.Element {
+  const s = mobileNav();
+  return (
+    <Modal
+      {...mergeProps(s.panel, className)}
+      {...root.presenceAttrs}
+      ref={root.setPopupEl}
+      data-side={side}
+      style={style}
+    >
+      <AriaDialog
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        style={dialogContentStyle}
+      >
+        <OverlayCloseContext.Provider value={root.close}>
+          <div {...mergeProps(s.header)}>
+            <div style={{ minWidth: 0 }}>{header}</div>
+            <MobileNavClose label={closeLabel} />
+          </div>
+          {children}
+        </OverlayCloseContext.Provider>
+      </AriaDialog>
+    </Modal>
+  );
+}
+
+function MobileNavClose({ label }: { label: string }): JSX.Element {
+  const close = useOverlayClose();
+  const s = mobileNav();
+  return (
+    <AriaButton
+      {...mergeProps(s.closeButton)}
+      aria-label={label}
+      onPress={() => close({ reason: 'close-press' })}
+    >
+      <Icon name="close" size="sm" />
+    </AriaButton>
+  );
+}
+
 /**
- * Slide-out mobile navigation drawer built on RAC `Modal`/`ModalOverlay` — focus
- * trap, Escape, and backdrop dismissal come for free. Fully controlled via
- * `open`/`onOpenChange`, or pair with a `MobileNav.Toggle` under a shared
- * `MobileNavProvider` (what `AppShell` does at the mobile breakpoint).
+ * Slide-out mobile navigation drawer built on RAC `Modal`/`ModalOverlay` and the shared overlay
+ * root (the same behavior as a start-edge `Drawer`, with the `mobileNav` recipe): focus trap,
+ * Escape, backdrop dismissal and an exit animation. `open` / `defaultOpen` /
+ * `onOpenChange(open, details)` like every overlay; or pair with a `MobileNav.Toggle` under a
+ * shared `MobileNavProvider` (what `AppShell` does at the mobile breakpoint).
  *
  * ```tsx
  * <MobileNav open={open} onOpenChange={setOpen} header="Menu">
@@ -182,6 +251,7 @@ export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
  */
 export function MobileNav({
   open: openProp,
+  defaultOpen,
   onOpenChange: onOpenChangeProp,
   header,
   width = 320,
@@ -198,51 +268,42 @@ export function MobileNav({
   ...rest
 }: MobileNavProps): JSX.Element {
   const context = useMobileNav();
-  const open = openProp ?? context?.open ?? false;
-  const onOpenChange = onOpenChangeProp ?? context?.onOpenChange;
+  const root = useOverlayRoot({
+    open: openProp ?? context?.open,
+    defaultOpen,
+    onOpenChange: onOpenChangeProp ?? context?.onOpenChange,
+  });
+  const setBackdropRef = useMergedRef<HTMLDivElement>(root.setBackdropEl, ref);
   const resolvedSide = side === 'auto' ? 'start' : side;
   const s = mobileNav();
   const { style: layerStyle } = useLayer();
-  useScrollLock(open);
+  useScrollLock(root.mounted);
 
   const panelStyle = useMemo(() => styleVars([[mobileNavVars.panelWidth, `${width}px`]]), [width]);
 
   return (
     <ModalOverlay
       {...rest}
-      ref={ref}
-      isOpen={open}
-      onOpenChange={onOpenChange}
+      ref={setBackdropRef}
+      {...root.rac}
       isDismissable
       {...mergeProps(s.overlay)}
-      data-open={open ? '' : undefined}
+      {...root.presenceAttrs}
       style={{ ...layerStyle, ...style }}
       UNSTABLE_portalContainer={portalContainer}
     >
-      <Modal
-        {...mergeProps(s.panel, className)}
-        data-side={resolvedSide}
-        data-open={open ? '' : undefined}
+      <MobileNavPopup
+        root={root}
+        className={className}
+        side={resolvedSide}
         style={panelStyle}
+        ariaLabel={ariaLabel ?? (ariaLabelledBy ? undefined : label)}
+        ariaLabelledBy={ariaLabelledBy}
+        header={header}
+        closeLabel={closeLabel}
       >
-        <AriaDialog
-          aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : label)}
-          aria-labelledby={ariaLabelledBy}
-          style={dialogContentStyle}
-        >
-          {({ close }) => (
-            <>
-              <div {...mergeProps(s.header)}>
-                <div style={{ minWidth: 0 }}>{header}</div>
-                <AriaButton {...mergeProps(s.closeButton)} aria-label={closeLabel} onPress={close}>
-                  <Icon name="close" size="sm" />
-                </AriaButton>
-              </div>
-              {children}
-            </>
-          )}
-        </AriaDialog>
-      </Modal>
+        {children}
+      </MobileNavPopup>
     </ModalOverlay>
   );
 }

@@ -9,7 +9,7 @@ import { designTokens as t } from '../tokens';
 export const loadingOverlay = typestyles.recipe({
   name: 'loading-overlay',
   layer: 'components',
-  slots: ['root', 'overlay', 'loader'],
+  slots: ['root', 'content', 'overlay', 'loader'],
   vars: {
     backdrop: {
       ...atProperty.color,
@@ -21,6 +21,10 @@ export const loadingOverlay = typestyles.recipe({
       base: {
         root: {
           position: 'relative',
+        },
+        // Keeps the children's layout while giving `inert` an element to sit on.
+        content: {
+          display: 'contents',
         },
         overlay: {
           position: 'absolute',

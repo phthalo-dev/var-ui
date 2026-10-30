@@ -7,7 +7,7 @@ description: Transient notifications anchored to the viewport.
 
 For live notification queues without React, mount a `ToastRegion` and call the imperative
 `toast` API from any client script. In React apps, use `ToastProvider` with `useToast()` or
-`toast` from `@var-ui/react`.
+`toast` from `@var-ui/react`. The imperative `toast()` needs a mounted `ToastProvider`: without one (or during SSR) it does nothing, returns `''`, and warns once in development. Changing `maxVisibleToasts` keeps toasts already on screen.
 
 ## Examples
 

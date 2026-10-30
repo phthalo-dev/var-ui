@@ -15,13 +15,7 @@ import { commandPalette } from '@var-ui/core/components/commandPalette';
 import type { CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
-import {
-  createOverlayChangeDetails,
-  inferOverlayCloseReason,
-  useOverlayPresence,
-  type OverlayOpenChangeHandler,
-  type OverlayOpenChangeReason,
-} from '../overlays';
+import { useMergedRef, useOverlayRoot, type OverlayOpenChangeHandler } from '../overlays';
 import { cx, mergeProps } from 'typestyles';
 import { Kbd } from './Kbd';
 import type { CommandPaletteController } from '../internal/commandPaletteController';
@@ -232,33 +226,24 @@ export function CommandPalette({
     onQueryChangeRef.current?.(next);
   }, []);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
   const controllerOpen = useSyncExternalStore(
     controller?.subscribe ?? subscribeNever,
     controller?.getSnapshot ?? getFalse,
     getFalse,
   );
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
-  const open = controller ? controllerOpen : (openProp ?? uncontrolledOpen);
-  const openRef = useRef(open);
-  openRef.current = open;
-  const requestOpen = useCallback(
-    (next: boolean, event: Event | null = null, reason?: OverlayOpenChangeReason) => {
-      const details = createOverlayChangeDetails({
-        reason: reason ?? inferOverlayCloseReason(event),
-        event,
-      });
+  // Only the open state goes through the shared root: the palette stays a native `<dialog>`, so
+  // the RAC props, trigger/backdrop wiring and `OverlayTrigger` do not apply. A controller makes
+  // the palette controlled and is updated after `onOpenChange` unless it was canceled.
+  const root = useOverlayRoot({
+    open: controller ? controllerOpen : openProp,
+    defaultOpen,
+    onOpenChange: (next, details) => {
       onOpenChange?.(next, details);
-      if (details.isCanceled) return;
-      controller?.setOpen(next);
-      if (openProp === undefined) setUncontrolledOpen(next);
+      if (!details.isCanceled) controller?.setOpen(next);
     },
-    [controller, onOpenChange, openProp],
-  );
-  const presence = useOverlayPresence({
-    isOpen: open,
-    getAnimatedElements: () => [panelRef.current],
   });
+  const { open } = root;
+  const setDialogRef = useMergedRef<HTMLDialogElement>(dialogRef, ref);
   const cp = commandPaletteSlots({ open });
   const { style: layerStyle } = useLayer();
 
@@ -270,12 +255,12 @@ export function CommandPalette({
     function handleKeyDown(event: KeyboardEvent) {
       if (combos.some((combo) => matchesHotkey(event, combo))) {
         event.preventDefault();
-        requestOpen(!open, event, 'imperative');
+        root.setOpen(!root.open, { event, reason: 'imperative' });
       }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hotkeyId, open, requestOpen]);
+  }, [hotkeyId, root]);
 
   useEffect(() => {
     if (!open) setQuery('');
@@ -284,23 +269,22 @@ export function CommandPalette({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (presence.mounted) {
+    if (root.mounted) {
       if (!dialog.open) dialog.showModal();
     } else if (dialog.open) {
       dialog.close();
     }
-  }, [presence.mounted]);
+  }, [root.mounted]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    // Programmatic close (open flipped to false) also emits `close`; only report real closes.
-    const handleClose = () => {
-      if (openRef.current) requestOpen(false);
-    };
+    // Programmatic close (open flipped to false) also emits `close`; the root drops a request that
+    // matches the current state, so only real closes are reported.
+    const handleClose = (event: Event) => root.close({ event, reason: 'unknown' });
     dialog.addEventListener('close', handleClose);
     return () => dialog.removeEventListener('close', handleClose);
-  }, [requestOpen]);
+  }, [root]);
 
   const visibleItems = useMemo(
     () => (filter ? items.filter((item) => filter(item, query)) : items),
@@ -318,7 +302,7 @@ export function CommandPalette({
       onAction={() => {
         item.onSelect?.();
         onAction?.(item.id);
-        if (closeOnAction) requestOpen(false, null, 'trigger-press');
+        if (closeOnAction) root.close({ reason: 'trigger-press' });
       }}
     >
       {({ isFocused }) => (
@@ -352,11 +336,7 @@ export function CommandPalette({
 
   const palette = (
     <dialog
-      ref={(node) => {
-        dialogRef.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
-      }}
+      ref={setDialogRef}
       {...rest}
       aria-label={ariaLabel ?? placeholder}
       {...mergeProps(cp.root, className)}
@@ -364,26 +344,26 @@ export function CommandPalette({
       onClick={(event) => {
         onClick?.(event);
         if (event.target === event.currentTarget) {
-          requestOpen(false, event.nativeEvent, 'outside-press');
+          root.close({ event: event.nativeEvent, reason: 'outside-press' });
         }
       }}
       onCancel={(event) => {
         onCancel?.(event);
         event.preventDefault();
-        requestOpen(false, event.nativeEvent, 'escape-key');
+        root.close({ event: event.nativeEvent, reason: 'escape-key' });
       }}
       onKeyDownCapture={(event) => {
         onKeyDownCapture?.(event);
         if (event.key !== 'Escape') return;
         event.preventDefault();
-        requestOpen(false, event.nativeEvent, 'escape-key');
+        root.close({ event: event.nativeEvent, reason: 'escape-key' });
       }}
     >
-      {presence.mounted ? (
+      {root.mounted ? (
         <div
-          ref={panelRef}
+          ref={root.setPopupEl}
           {...mergeProps(cp.dialog)}
-          {...presence.attrs}
+          {...root.presenceAttrs}
           aria-busy={loading || undefined}
         >
           <Autocomplete inputValue={query} onInputChange={setQuery}>

@@ -1,19 +1,5 @@
+import { useMemo, type ComponentPropsWithRef, type JSX, type ReactNode } from 'react';
 import {
-  Children,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentPropsWithRef,
-  type JSX,
-  type MutableRefObject,
-  type ReactElement,
-  type ReactNode,
-} from 'react';
-import {
-  Focusable,
   Tooltip as AriaTooltip,
   TooltipTrigger as AriaTooltipTrigger,
   type Placement,
@@ -21,15 +7,14 @@ import {
 import { tooltip } from '@var-ui/core/components/tooltip';
 import { useLayer } from '../layers/LayerProvider';
 import {
-  createOverlayChangeDetails,
-  inferOverlayCloseReason,
-  mergeOverlayChild,
+  createOverlayContext,
+  OverlayTrigger,
   useMergedRef,
-  useOverlayPresence,
+  useOverlayRoot,
   usePositionerVars,
   type OverlayOpenChangeHandler,
+  type OverlayRoot,
   type OverlayTriggerProps,
-  type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
 
@@ -37,8 +22,11 @@ export type TooltipRootProps = {
   children: ReactNode;
   /** Delay before the tooltip opens, in milliseconds. @default 500 */
   delay?: number;
+  /** Controlled open state. */
   open?: boolean;
+  /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
+  /** Called when the tooltip requests to open or close. */
   onOpenChange?: OverlayOpenChangeHandler;
   /**
    * Element the tooltip portals into instead of `document.body`. Needed when a subtree renders
@@ -56,119 +44,41 @@ export type TooltipPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> &
   children: ReactNode;
   /** Preferred placement relative to the trigger. @default top */
   placement?: Placement;
-  portalContainer?: Element;
 };
 
 type TooltipContextValue = {
-  presence: UseOverlayPresenceResult;
-  popupRef: MutableRefObject<HTMLDivElement | null>;
-  triggerRef: MutableRefObject<HTMLElement | null>;
-  setPopupEl: (element: HTMLDivElement | null) => void;
-  setTriggerEl: (element: HTMLElement | null) => void;
+  root: OverlayRoot;
   portalContainer?: Element;
-  lastEventRef: MutableRefObject<Event | null>;
-  handleOpenChange: (next: boolean) => void;
 };
 
-const TooltipContext = createContext<TooltipContextValue | null>(null);
-
-function useTooltipContext(): TooltipContextValue {
-  const ctx = useContext(TooltipContext);
-  if (!ctx) {
-    throw new Error('Tooltip compound components must be rendered inside <Tooltip>.');
-  }
-  return ctx;
-}
+const { Context: TooltipContext, use: useTooltipContext } =
+  createOverlayContext<TooltipContextValue>('Tooltip');
 
 function TooltipRoot({
   children,
   delay = 500,
   open,
-  defaultOpen = false,
+  defaultOpen,
   onOpenChange,
   portalContainer,
 }: TooltipRootProps): JSX.Element {
-  const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = open ?? uncontrolledOpen;
-  const popupRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
-  const [, setPopupEl] = useState<HTMLDivElement | null>(null);
-  const [, setTriggerEl] = useState<HTMLElement | null>(null);
-  const lastEventRef = useRef<Event | null>(null);
-
-  const presence = useOverlayPresence({
-    isOpen: requestedOpen,
-    getAnimatedElements: () => [popupRef.current],
-  });
-
-  const handleOpenChange = useCallback(
-    (next: boolean) => {
-      const details = createOverlayChangeDetails({
-        reason: inferOverlayCloseReason(lastEventRef.current),
-        event: lastEventRef.current,
-      });
-      onOpenChange?.(next, details);
-      lastEventRef.current = null;
-      if (details.isCanceled) return;
-      if (open === undefined) setRequestedOpen(next);
-    },
-    [open, onOpenChange],
-  );
-
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const context = useMemo<TooltipContextValue>(
-    () => ({
-      presence,
-      popupRef,
-      triggerRef,
-      setPopupEl,
-      setTriggerEl,
-      portalContainer,
-      lastEventRef,
-      handleOpenChange,
-    }),
-    [handleOpenChange, portalContainer, presence],
+    () => ({ root, portalContainer }),
+    [root, portalContainer],
   );
 
   return (
     <TooltipContext.Provider value={context}>
-      <AriaTooltipTrigger delay={delay} isOpen={presence.mounted} onOpenChange={handleOpenChange}>
+      <AriaTooltipTrigger delay={delay} {...root.rac}>
         {children}
       </AriaTooltipTrigger>
     </TooltipContext.Provider>
   );
 }
 
-function TooltipTriggerPart({
-  children,
-  className,
-  ref,
-  ...props
-}: TooltipTriggerProps): JSX.Element {
-  const ctx = useTooltipContext();
-  const child = Children.only(children);
-  const assignTriggerEl = (node: HTMLElement | null) => {
-    ctx.triggerRef.current = node;
-    ctx.setTriggerEl(node);
-  };
-  const triggerProps = props as Record<string, unknown>;
-  const merged = mergeOverlayChild(child, {
-    ...triggerProps,
-    className,
-    ref: (node: HTMLElement | null) => {
-      assignTriggerEl(node);
-      if (typeof ref === 'function') {
-        ref(node);
-      } else if (ref) {
-        (ref as MutableRefObject<HTMLElement | null>).current = node;
-      }
-    },
-  });
-  // RAC TooltipTrigger injects hover/focus via FocusableProvider context, not cloneElement.
-  // Host nodes need Focusable so they register; RAC Button already does.
-  if (typeof child.type === 'string') {
-    return <Focusable>{merged as ReactElement<{ className?: string }, string>}</Focusable>;
-  }
-  return merged;
+function TooltipTriggerPart(props: TooltipTriggerProps): JSX.Element {
+  return <OverlayTrigger {...props} root={useTooltipContext().root} mode="focusable" />;
 }
 
 function TooltipPopup({
@@ -176,29 +86,28 @@ function TooltipPopup({
   className,
   style,
   placement = 'top',
-  portalContainer,
   ref,
   ...rest
 }: TooltipPopupProps): JSX.Element {
-  const ctx = useTooltipContext();
+  const { root, portalContainer } = useTooltipContext();
   const tip = tooltip();
   const { style: layerStyle } = useLayer();
   const positioner = usePositionerVars({
     placement,
-    popupRef: ctx.popupRef,
-    triggerRef: ctx.triggerRef,
+    popupRef: root.popupRef,
+    triggerRef: root.triggerRef,
   });
-  const setRef = useMergedRef(ctx.popupRef, ref, ctx.setPopupEl);
+  const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
 
   return (
     <AriaTooltip
       {...rest}
       {...mergeProps(tip.root, className)}
-      {...ctx.presence.attrs}
+      {...root.presenceAttrs}
       ref={setRef}
       placement={placement}
       style={{ ...layerStyle, ...positioner.style, ...style }}
-      UNSTABLE_portalContainer={portalContainer ?? ctx.portalContainer}
+      UNSTABLE_portalContainer={portalContainer}
     >
       {children}
     </AriaTooltip>

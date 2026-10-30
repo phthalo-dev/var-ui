@@ -1,9 +1,66 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import type { OverlayOpenChangeHandler } from '../overlays';
+import { Button } from './Button';
 import { LayerProvider } from '../layers/LayerProvider';
 import { AlertDialog } from './AlertDialog';
+
+/** The documented confirm recipe (AlertDialog docs), as the tests' fixture. */
+function Confirm({
+  title,
+  description,
+  triggerLabel,
+  cancelLabel = 'Cancel',
+  confirmLabel = 'Confirm',
+  destructive = false,
+  onConfirm,
+  ...root
+}: {
+  title: string;
+  description: ReactNode;
+  triggerLabel?: string;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  destructive?: boolean;
+  onConfirm: () => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: OverlayOpenChangeHandler;
+}) {
+  return (
+    <AlertDialog {...root}>
+      {triggerLabel ? (
+        <AlertDialog.Trigger>
+          <Button>{triggerLabel}</Button>
+        </AlertDialog.Trigger>
+      ) : null}
+      <AlertDialog.Backdrop>
+        <AlertDialog.Popup>
+          <AlertDialog.Header>
+            <AlertDialog.Title>{title}</AlertDialog.Title>
+          </AlertDialog.Header>
+          <AlertDialog.Description>{description}</AlertDialog.Description>
+          <AlertDialog.Actions>
+            <AlertDialog.Close>
+              <Button autoFocus={destructive}>{cancelLabel}</Button>
+            </AlertDialog.Close>
+            <AlertDialog.Close>
+              <Button
+                tone={destructive ? 'danger' : 'accent'}
+                appearance="filled"
+                onClick={onConfirm}
+              >
+                {confirmLabel}
+              </Button>
+            </AlertDialog.Close>
+          </AlertDialog.Actions>
+        </AlertDialog.Popup>
+      </AlertDialog.Backdrop>
+    </AlertDialog>
+  );
+}
 
 function wrap(children: ReactElement) {
   return render(<LayerProvider>{children}</LayerProvider>);
@@ -12,7 +69,7 @@ function wrap(children: ReactElement) {
 describe('AlertDialog', () => {
   it('renders with alertdialog role and shows title/description', async () => {
     wrap(
-      <AlertDialog
+      <Confirm
         triggerLabel="Open delete"
         title="Delete item?"
         description="This cannot be undone."
@@ -55,7 +112,7 @@ describe('AlertDialog', () => {
   it('calls onConfirm on confirm and not on cancel, focusing Cancel when destructive', async () => {
     const onConfirm = vi.fn();
     wrap(
-      <AlertDialog
+      <Confirm
         triggerLabel="Open delete"
         title="Delete item?"
         description="This cannot be undone."
@@ -81,7 +138,7 @@ describe('AlertDialog', () => {
   it('does not call onConfirm when dismissed via Escape', async () => {
     const onConfirm = vi.fn();
     wrap(
-      <AlertDialog
+      <Confirm
         triggerLabel="Open delete"
         title="Delete item?"
         description="This cannot be undone."
@@ -101,7 +158,7 @@ describe('AlertDialog', () => {
 
   it('uses accent tone for confirm when not destructive', async () => {
     wrap(
-      <AlertDialog
+      <Confirm
         triggerLabel="Open archive"
         title="Archive item?"
         description="You can restore it later."
@@ -118,7 +175,7 @@ describe('AlertDialog', () => {
   it('supports controlled isOpen/onOpenChange without a trigger', async () => {
     const onOpenChange = vi.fn();
     wrap(
-      <AlertDialog
+      <Confirm
         open
         onOpenChange={onOpenChange}
         title="Delete item?"
@@ -138,7 +195,7 @@ describe('AlertDialog', () => {
   it('is not dismissed by a backdrop click by default but still closes on Escape', async () => {
     const onOpenChange = vi.fn();
     wrap(
-      <AlertDialog
+      <Confirm
         triggerLabel="Open"
         title="Delete?"
         description="Sure?"
@@ -161,7 +218,7 @@ describe('AlertDialog', () => {
 
   it('opens initially with defaultOpen', () => {
     wrap(
-      <AlertDialog
+      <Confirm
         defaultOpen
         title="Delete item?"
         description="This cannot be undone."

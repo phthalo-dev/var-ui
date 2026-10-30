@@ -6,7 +6,6 @@ import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import { Button } from './Button';
-import { SimpleTooltip } from './SimpleTooltip';
 import { Tooltip } from './Tooltip';
 
 function wrap(ui: React.ReactNode) {
@@ -86,12 +85,15 @@ describe('Tooltip', () => {
   });
 });
 
-describe('SimpleTooltip', () => {
-  it('still accepts content', async () => {
+describe('Tooltip with a Button trigger', () => {
+  it('shows the popup content on focus', async () => {
     wrap(
-      <SimpleTooltip content="More info" delay={0}>
-        <Button>Hover me</Button>
-      </SimpleTooltip>,
+      <Tooltip.Root delay={0}>
+        <Tooltip.Trigger>
+          <Button>Hover me</Button>
+        </Tooltip.Trigger>
+        <Tooltip.Popup>More info</Tooltip.Popup>
+      </Tooltip.Root>,
     );
     await userEvent.tab();
     expect((await screen.findByRole('tooltip')).textContent).toBe('More info');

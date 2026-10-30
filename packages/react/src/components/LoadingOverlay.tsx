@@ -12,7 +12,8 @@ export type LoadingOverlayProps = ComponentPropsWithRef<'div'> & {
 };
 
 /**
- * Blocks interaction over its children while async work runs. Mantine
+ * Blocks interaction over its children while async work runs: the root is `aria-busy` and the
+ * children are `inert` while `visible`. Mantine
  * `LoadingOverlay` equivalent — parent must be relatively positioned by
  * the recipe's `root` slot.
  */
@@ -26,10 +27,13 @@ export function LoadingOverlay({
   const lo = loadingOverlay();
 
   return (
-    <div {...rest} {...mergeProps(lo.root, className)}>
-      {children}
+    <div {...rest} {...mergeProps(lo.root, className)} aria-busy={visible || undefined}>
+      {/* `inert` blocks focus and clicks under the overlay. */}
+      <div data-loading-overlay-content {...mergeProps(lo.content)} inert={visible}>
+        {children}
+      </div>
       {visible ? (
-        <div {...mergeProps(lo.overlay)} aria-busy="true">
+        <div {...mergeProps(lo.overlay)}>
           <span {...mergeProps(lo.loader)}>
             <Spinner label={label} />
           </span>

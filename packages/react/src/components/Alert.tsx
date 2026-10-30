@@ -1,20 +1,11 @@
 import type { AriaRole, ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { alert } from '@var-ui/core/components/alert';
-import type { AlertVariantProps, IconName, Tone } from '@var-ui/core';
+import type { AlertVariantProps } from '@var-ui/core';
+import { toneIcon } from '../internal/toneIcon';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as AlertAppearance } from '@var-ui/core';
-
-/** Tone → registry glyph. Danger uses the `error` glyph; neutral and accent use `info`. */
-const toneIconName: Record<Tone, IconName> = {
-  neutral: 'info',
-  accent: 'info',
-  info: 'info',
-  success: 'success',
-  warning: 'warning',
-  danger: 'error',
-};
 
 export type AlertProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children' | 'role'> & {
   /** Semantic tone that drives color and the default icon. */
@@ -54,7 +45,7 @@ export function Alert({
     contentGap: title ? 'spaced' : 'flush',
   });
 
-  const resolvedIcon = icon === undefined ? <Icon name={toneIconName[tone]} /> : icon;
+  const resolvedIcon = icon === undefined ? <Icon name={toneIcon[tone]} /> : icon;
 
   return (
     <div

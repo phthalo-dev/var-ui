@@ -8,6 +8,9 @@ import { defaultIcons } from '@var-ui/icons';
 import {
   Alert,
   AlertDialog,
+  Tooltip,
+  Popover,
+  Dialog,
   AppShell,
   Avatar,
   AvatarGroup,
@@ -32,7 +35,6 @@ import {
   DateRangeInput,
   DateTimeInput,
   DesignSystemProvider,
-  SimpleDialog,
   Divider,
   EmptyState,
   FileTree,
@@ -56,7 +58,6 @@ import {
   Outline,
   OverflowList,
   Pagination,
-  SimplePopover,
   ProgressBar,
   Section,
   Select,
@@ -77,7 +78,6 @@ import {
   ToastProvider,
   Tokenizer,
   Toolbar,
-  SimpleTooltip,
   TopNav,
   Typeahead,
   ColorModeToggle,
@@ -956,15 +956,22 @@ function OverflowListDemo() {
         gap="sm"
         renderItem={(tag) => <Badge>{tag.label}</Badge>}
         renderOverflow={(hidden) => (
-          <SimplePopover trigger={<Button size="sm">+{hidden.length}</Button>}>
-            <Stack gap="xs">
-              {(hidden as typeof tags).map((tag) => (
-                <Text key={tag.id} size="sm">
-                  {tag.label}
-                </Text>
-              ))}
-            </Stack>
-          </SimplePopover>
+          <Popover>
+            <Popover.Trigger>
+              <Button size="sm">+{hidden.length}</Button>
+            </Popover.Trigger>
+            <Popover.Popup aria-label="Hidden tags">
+              <Popover.Content>
+                <Stack gap="xs">
+                  {(hidden as typeof tags).map((tag) => (
+                    <Text key={tag.id} size="sm">
+                      {tag.label}
+                    </Text>
+                  ))}
+                </Stack>
+              </Popover.Content>
+            </Popover.Popup>
+          </Popover>
         )}
       />
     </Stack>
@@ -1184,32 +1191,97 @@ function CommandPaletteDemo() {
   );
 }
 
+/** Confirm recipe: `AlertDialog` is Root, so the arrangement is plain composition. */
+function ConfirmDialog({
+  triggerLabel,
+  title,
+  description,
+  confirmLabel,
+  destructive = false,
+  onConfirm,
+}: {
+  triggerLabel: string;
+  title: string;
+  description: string;
+  confirmLabel: string;
+  destructive?: boolean;
+  onConfirm: () => void;
+}) {
+  return (
+    <AlertDialog>
+      <AlertDialog.Trigger>
+        <Button>{triggerLabel}</Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Backdrop>
+        <AlertDialog.Popup>
+          <AlertDialog.Header>
+            <AlertDialog.Title>{title}</AlertDialog.Title>
+          </AlertDialog.Header>
+          <AlertDialog.Description>{description}</AlertDialog.Description>
+          <AlertDialog.Actions>
+            <AlertDialog.Close>
+              <Button autoFocus={destructive}>Cancel</Button>
+            </AlertDialog.Close>
+            <AlertDialog.Close>
+              <Button
+                tone={destructive ? 'danger' : 'accent'}
+                appearance="filled"
+                onClick={onConfirm}
+              >
+                {confirmLabel}
+              </Button>
+            </AlertDialog.Close>
+          </AlertDialog.Actions>
+        </AlertDialog.Popup>
+      </AlertDialog.Backdrop>
+    </AlertDialog>
+  );
+}
+
 function OverlaysSection() {
   return (
     <Section title="Overlays">
       <Stack gap="md">
         <ToastDemo />
         <HStack gap="md">
-          <SimpleTooltip content="Keyboard shortcut hint">
-            <Button>Tooltip</Button>
-          </SimpleTooltip>
-          <SimplePopover trigger={<Button>Popover</Button>} title="Details">
-            <Text>Interactive content inside a popover.</Text>
-          </SimplePopover>
-          <HoverCard trigger={<Button>Hover card</Button>}>
-            <Text>Richer preview with a link.</Text>
+          <Tooltip>
+            <Tooltip.Trigger>
+              <Button>Tooltip</Button>
+            </Tooltip.Trigger>
+            <Tooltip.Popup>Keyboard shortcut hint</Tooltip.Popup>
+          </Tooltip>
+          <Popover>
+            <Popover.Trigger>
+              <Button>Popover</Button>
+            </Popover.Trigger>
+            <Popover.Popup>
+              <Popover.Title>Details</Popover.Title>
+              <Popover.Content>
+                <Text>Interactive content inside a popover.</Text>
+              </Popover.Content>
+            </Popover.Popup>
+          </Popover>
+          <HoverCard>
+            <HoverCard.Trigger>
+              <Button>Hover card</Button>
+            </HoverCard.Trigger>
+            <HoverCard.Popup>
+              <HoverCard.Content>
+                <Text>Richer preview with a link.</Text>
+              </HoverCard.Content>
+            </HoverCard.Popup>
           </HoverCard>
         </HStack>
         <CommandPaletteDemo />
         <HStack gap="md">
-          <AlertDialog
+          <ConfirmDialog
             triggerLabel="Archive item"
             title="Archive this item?"
             description="You can restore it from the archive at any time."
             confirmLabel="Archive"
             onConfirm={() => console.log('archived')}
           />
-          <AlertDialog
+          <ConfirmDialog
             triggerLabel="Delete item"
             title="Delete this item?"
             description="This action is permanent and cannot be undone."
@@ -1251,11 +1323,22 @@ export function App() {
                 </Stack>
                 <HStack gap="sm">
                   <ColorModeToggle includeSystem />
-                  <SimpleDialog
-                    triggerLabel="Open dialog"
-                    title="Icon close button"
-                    description="The dismiss control now uses the registry close glyph."
-                  />
+                  <Dialog>
+                    <Dialog.Trigger>
+                      <Button>Open dialog</Button>
+                    </Dialog.Trigger>
+                    <Dialog.Backdrop>
+                      <Dialog.Popup>
+                        <Dialog.Header>
+                          <Dialog.Title>Icon close button</Dialog.Title>
+                          <Dialog.Close />
+                        </Dialog.Header>
+                        <Dialog.Description>
+                          The dismiss control now uses the registry close glyph.
+                        </Dialog.Description>
+                      </Dialog.Popup>
+                    </Dialog.Backdrop>
+                  </Dialog>
                 </HStack>
               </Stack>
 

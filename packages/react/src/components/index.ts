@@ -83,11 +83,13 @@ export {
   type DialogTitleProps,
   type DialogTriggerProps,
 } from './Dialog';
-export { SimpleDialog, type SimpleDialogProps } from './SimpleDialog';
 export {
   AlertDialog,
   type AlertDialogActionsProps,
   type AlertDialogBackdropProps,
+  type AlertDialogCloseProps,
+  type AlertDialogDescriptionProps,
+  type AlertDialogHeaderProps,
   type AlertDialogPopupProps,
   type AlertDialogProps,
   type AlertDialogRootProps,
@@ -111,7 +113,6 @@ export {
   type TooltipRootProps,
   type TooltipTriggerProps,
 } from './Tooltip';
-export { SimpleTooltip, type SimpleTooltipProps } from './SimpleTooltip';
 export {
   Popover,
   type PopoverArrowProps,
@@ -122,7 +123,6 @@ export {
   type PopoverTitleProps,
   type PopoverTriggerProps,
 } from './Popover';
-export { SimplePopover, type SimplePopoverProps } from './SimplePopover';
 export {
   HoverCard,
   type HoverCardContentProps,
@@ -301,10 +301,11 @@ export {
   type DrawerBodyProps,
   type DrawerCloseProps,
   type DrawerHeaderProps,
-  type DrawerPanelProps,
+  type DrawerPopupProps,
   type DrawerProps,
   type DrawerRootProps,
   type DrawerTitleProps,
+  type DrawerTriggerProps,
 } from './Drawer';
 export { Tokenizer, type TokenizerOption, type TokenizerProps } from './Tokenizer';
 export { cx, combine, mergeProps } from 'typestyles';

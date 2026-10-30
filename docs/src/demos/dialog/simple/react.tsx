@@ -1,11 +1,25 @@
-import { SimpleDialog } from '@var-ui/react';
+import { Button, Dialog } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <SimpleDialog
-      triggerLabel="Open dialog"
-      title="Notifications"
-      description="You are all caught up."
-    />
+    <Dialog>
+      <Dialog.Trigger>
+        <Button>Open dialog</Button>
+      </Dialog.Trigger>
+      <Dialog.Backdrop>
+        <Dialog.Popup>
+          <Dialog.Header>
+            <Dialog.Title>Notifications</Dialog.Title>
+            <Dialog.Close />
+          </Dialog.Header>
+          <Dialog.Description>You are all caught up.</Dialog.Description>
+          <Dialog.Actions>
+            <Dialog.Close>
+              <Button>Close</Button>
+            </Dialog.Close>
+          </Dialog.Actions>
+        </Dialog.Popup>
+      </Dialog.Backdrop>
+    </Dialog>
   );
 }

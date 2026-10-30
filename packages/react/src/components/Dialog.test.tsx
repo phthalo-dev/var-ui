@@ -5,8 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
+import { Button } from './Button';
 import { Dialog } from './Dialog';
-import { SimpleDialog } from './SimpleDialog';
 import { Tooltip } from './Tooltip';
 
 function renderReasonDialog(onOpenChange: OverlayOpenChangeHandler) {
@@ -235,20 +235,7 @@ describe('Dialog', () => {
   });
 });
 
-describe('SimpleDialog', () => {
-  it('opens on trigger press and shows the title/description', async () => {
-    render(
-      <IconProvider icons={{}}>
-        <LayerProvider>
-          <SimpleDialog triggerLabel="Open dialog" title="Confirm" description="Are you sure?" />
-        </LayerProvider>
-      </IconProvider>,
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }));
-    expect(screen.getByText('Confirm')).toBeTruthy();
-    expect(screen.getByText('Are you sure?')).toBeTruthy();
-  });
-
+describe('Dialog composition', () => {
   it('portals the modal into a custom portalContainer when provided', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
@@ -256,12 +243,20 @@ describe('SimpleDialog', () => {
     render(
       <IconProvider icons={{}}>
         <LayerProvider>
-          <SimpleDialog
-            triggerLabel="Open dialog"
-            title="Confirm"
-            description="Are you sure?"
-            portalContainer={container}
-          />
+          <Dialog.Root portalContainer={container}>
+            <Dialog.Trigger>
+              <Button>Open dialog</Button>
+            </Dialog.Trigger>
+            <Dialog.Backdrop>
+              <Dialog.Popup>
+                <Dialog.Header>
+                  <Dialog.Title>Confirm</Dialog.Title>
+                  <Dialog.Close />
+                </Dialog.Header>
+                <Dialog.Description>Are you sure?</Dialog.Description>
+              </Dialog.Popup>
+            </Dialog.Backdrop>
+          </Dialog.Root>
         </LayerProvider>
       </IconProvider>,
     );
@@ -269,6 +264,7 @@ describe('SimpleDialog', () => {
 
     const heading = await screen.findByText('Confirm');
     expect(container.contains(heading)).toBe(true);
+    expect(screen.getByText('Are you sure?')).toBeTruthy();
 
     document.body.removeChild(container);
   });

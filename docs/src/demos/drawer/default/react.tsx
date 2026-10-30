@@ -1,14 +1,22 @@
 import { Button, Drawer } from '@var-ui/react';
-import { useState } from 'react';
 
 export default function Preview() {
-  const [open, setOpen] = useState(false);
   return (
-    <>
-      <Button onClick={() => setOpen(true)}>Open drawer</Button>
-      <Drawer open={open} onOpenChange={setOpen} title="Settings">
-        <p>Drawer body content.</p>
-      </Drawer>
-    </>
+    <Drawer>
+      <Drawer.Trigger>
+        <Button>Open drawer</Button>
+      </Drawer.Trigger>
+      <Drawer.Backdrop>
+        <Drawer.Popup aria-label="Settings">
+          <Drawer.Header>
+            <Drawer.Title>Settings</Drawer.Title>
+            <Drawer.Close />
+          </Drawer.Header>
+          <Drawer.Body>
+            <p>Drawer body content.</p>
+          </Drawer.Body>
+        </Drawer.Popup>
+      </Drawer.Backdrop>
+    </Drawer>
   );
 }

@@ -1,5 +1,6 @@
 export type OverlayOpenChangeReason =
   | 'trigger-press'
+  | 'close-press'
   | 'escape-key'
   | 'outside-press'
   | 'imperative'
@@ -47,6 +48,8 @@ export function inferOverlayCloseReason(event: Event | null): OverlayOpenChangeR
     event.type === 'mouseleave' ||
     event.type === 'mouseover' ||
     event.type === 'mouseout' ||
+    event.type === 'pointerover' ||
+    event.type === 'pointerout' ||
     event.type === 'pointerenter' ||
     event.type === 'pointerleave' ||
     event.type === 'hover'

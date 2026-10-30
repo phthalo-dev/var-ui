@@ -1,21 +1,27 @@
 import type { Ref, RefCallback } from 'react';
 
-/** Combines several refs into one callback ref (React 19 cleanup functions are honored). */
+/**
+ * Combines several refs into one callback ref. React 19 cleanup functions are honored; when the
+ * node detaches, every object ref is reset to `null` and callback refs without a cleanup are
+ * called with `null`, so mixing the two kinds is safe.
+ */
 export function mergeRefs<T>(...refs: Array<Ref<T> | undefined>): RefCallback<T> {
   return (node) => {
-    const cleanups: Array<() => void> = [];
-    for (const ref of refs) {
+    const cleanups = refs.map((ref) => {
       if (typeof ref === 'function') {
         const cleanup = ref(node);
-        if (typeof cleanup === 'function') cleanups.push(cleanup);
-      } else if (ref) {
-        ref.current = node;
+        return typeof cleanup === 'function' ? cleanup : () => ref(null);
       }
-    }
-    if (cleanups.length > 0) {
-      return () => {
-        for (const cleanup of cleanups) cleanup();
-      };
-    }
+      if (ref) {
+        ref.current = node;
+        return () => {
+          ref.current = null;
+        };
+      }
+      return undefined;
+    });
+    return () => {
+      for (const cleanup of cleanups) cleanup?.();
+    };
   };
 }

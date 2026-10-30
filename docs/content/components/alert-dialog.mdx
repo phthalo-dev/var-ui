@@ -5,7 +5,7 @@ description: Modal confirmation for important or destructive actions.
 
 # AlertDialog
 
-Modal confirmation for important or destructive actions. Uses `role="alertdialog"`, a cancel action, and a confirm action that calls `onConfirm` (cancel / Escape never call `onConfirm`). The default export stays the assembled preset (`title` / `onConfirm` / `triggerLabel`). Compound parts (`AlertDialog.Root`, `AlertDialog.Trigger`, `AlertDialog.Backdrop`, `AlertDialog.Popup`, `AlertDialog.Title`, `AlertDialog.Actions`) are available for custom chrome. The trigger child must forward DOM props — there is no `render` prop.
+Modal confirmation for important or destructive actions. `AlertDialog` is the compound Root: a `Dialog` with `role="alertdialog"` and backdrop dismissal off (`AlertDialog.Trigger`, `Backdrop`, `Popup`, `Header`, `Title`, `Description`, `Actions`, `Close`). The cancel/confirm arrangement is a recipe you copy, not a preset: confirm is just your button inside `AlertDialog.Close`, so Cancel and Escape never run it. The trigger child must forward DOM props — there is no `render` prop.
 
 State attributes, exit animation, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -13,13 +13,13 @@ State attributes, exit animation, and `onOpenChange` details are documented in [
 
 ### Default
 
-Pass `triggerLabel` for a built-in open button. Set `destructive` to style confirm as danger and autofocus Cancel.
+Destructive confirms use `tone="danger"` and autofocus Cancel so Enter does not confirm by accident.
 
 <Demo id="alert-dialog.default" />
 
 ### Confirm pattern
 
-Non-destructive confirms use `tone="accent"` and `appearance="filled"`. Customize `cancelLabel` / `confirmLabel` to match the task.
+Non-destructive confirms use `tone="accent"` and `appearance="filled"`. Change the button labels to match the task. To confirm asynchronously, drop the confirm `AlertDialog.Close`, run your work in the button's `onClick`, then close with controlled `open`.
 
 <Demo id="alert-dialog.confirm" />
 

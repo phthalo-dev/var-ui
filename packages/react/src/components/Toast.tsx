@@ -1,5 +1,5 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
   Button as AriaButton,
   Text,
@@ -10,10 +10,15 @@ import {
 import { type VariantOptions } from 'typestyles';
 import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
-import type { IconName, ToastVariantProps, Tone } from '@var-ui/core';
+import type { ToastVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
-import { registerToastQueue, unregisterToastQueue } from '../toast/imperativeToast';
+import { toneIcon } from '../internal/toneIcon';
+import {
+  DEFAULT_TOAST_DURATION,
+  registerToastQueue,
+  unregisterToastQueue,
+} from '../toast/imperativeToast';
 import { ToastQueue } from '../toast/toastQueue';
 import type { ToastContentData } from '../toast/types';
 import { mergeProps } from 'typestyles';
@@ -23,16 +28,6 @@ export type { ToastContentData } from '../toast/types';
 export { toast, type ImperativeToast, type ToastShowInput } from '../toast/imperativeToast';
 export { ToastQueue } from '../toast/toastQueue';
 
-const toneIcon: Record<Tone, IconName> = {
-  neutral: 'info',
-  accent: 'info',
-  info: 'info',
-  success: 'success',
-  warning: 'warning',
-  danger: 'error',
-};
-
-const DEFAULT_DURATION = 4000;
 const DEFAULT_MAX = 3;
 
 type ToastContextValue = {
@@ -181,7 +176,12 @@ export function ToastProvider({
   maxVisibleToasts = DEFAULT_MAX,
   dismissLabel,
 }: ToastProviderProps): JSX.Element {
-  const queue = useMemo(() => new ToastQueue({ maxVisibleToasts }), [maxVisibleToasts]);
+  // Created once so changing `maxVisibleToasts` keeps the toasts on screen; the limit is applied to
+  // the live queue instead.
+  const [queue] = useState(() => new ToastQueue({ maxVisibleToasts }));
+  useEffect(() => {
+    queue.setMaxVisible(maxVisibleToasts);
+  }, [queue, maxVisibleToasts]);
   const value = useMemo(() => ({ queue, placement }), [queue, placement]);
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export function useToast(): UseToastReturn {
     throw new Error('useToast must be used within a ToastProvider');
   }
   return {
-    add: ({ durationMs = DEFAULT_DURATION, ...content }) =>
+    add: ({ durationMs = DEFAULT_TOAST_DURATION, ...content }) =>
       ctx.queue.add(content, {
         timeout: durationMs === 0 ? undefined : durationMs,
       }),

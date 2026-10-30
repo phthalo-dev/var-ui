@@ -589,3 +589,69 @@ describe('CommandPalette item actions and chrome', () => {
     expect(document.querySelector('[aria-busy="true"]')).toBeTruthy();
   });
 });
+
+describe('CommandPalette overlay root', () => {
+  const items = [{ id: 'a', title: 'Alpha' }];
+  const last = (fn: ReturnType<typeof vi.fn>) => {
+    const call = fn.mock.calls[fn.mock.calls.length - 1]!;
+    return [call[0], call[1].reason];
+  };
+
+  it('reports the hotkey as imperative', async () => {
+    const onOpenChange = vi.fn();
+    wrap(<CommandPalette open={false} items={items} onOpenChange={onOpenChange} />);
+    await userEvent.keyboard('{Control>}k{/Control}');
+    expect(last(onOpenChange)).toEqual([true, 'imperative']);
+  });
+
+  it('reports a backdrop click as outside-press and honors cancel()', async () => {
+    const onOpenChange = vi.fn((_n: boolean, d: { cancel: () => void }) => d.cancel());
+    wrap(<CommandPalette defaultOpen hotkey={false} items={items} onOpenChange={onOpenChange} />);
+    await userEvent.click(document.querySelector('dialog')!);
+    expect(last(onOpenChange)).toEqual([false, 'outside-press']);
+    expect(document.querySelector('dialog')?.open).toBe(true);
+  });
+
+  it('reports item selection and updates a controller after onOpenChange', async () => {
+    const controller = createCommandPalette(true);
+    const onOpenChange = vi.fn();
+    wrap(
+      <CommandPalette
+        controller={controller}
+        hotkey={false}
+        items={items}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    await userEvent.click(screen.getByText('Alpha'));
+    expect(last(onOpenChange)).toEqual([false, 'trigger-press']);
+    expect(controller.getSnapshot()).toBe(false);
+  });
+
+  it('does not close a controller when onOpenChange cancels', async () => {
+    const controller = createCommandPalette(true);
+    wrap(
+      <CommandPalette
+        controller={controller}
+        hotkey={false}
+        items={items}
+        onOpenChange={(_n, d) => d.cancel()}
+      />,
+    );
+    await userEvent.keyboard('{Escape}');
+    expect(controller.getSnapshot()).toBe(true);
+  });
+
+  it('stays controlled by the open prop', async () => {
+    const onOpenChange = vi.fn();
+    wrap(<CommandPalette open hotkey={false} items={items} onOpenChange={onOpenChange} />);
+    await userEvent.keyboard('{Escape}');
+    expect(last(onOpenChange)).toEqual([false, 'escape-key']);
+    expect(document.querySelector('dialog')?.open).toBe(true);
+  });
+
+  it('renders no display:contents wrapper', () => {
+    const { container } = wrap(<CommandPalette defaultOpen hotkey={false} items={items} />);
+    expect(container.querySelector('[style*="display: contents"]')).toBeNull();
+  });
+});

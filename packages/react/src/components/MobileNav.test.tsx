@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
@@ -53,7 +53,10 @@ describe('MobileNav', () => {
       </MobileNav>,
     );
     await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      false,
+      expect.objectContaining({ reason: 'escape-key' }),
+    );
   });
 
   it('calls onOpenChange(false) on backdrop click', async () => {
@@ -68,7 +71,10 @@ describe('MobileNav', () => {
     const backdrop = dialog.parentElement?.parentElement;
     expect(backdrop).toBeTruthy();
     await userEvent.click(backdrop as Element);
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      false,
+      expect.objectContaining({ reason: 'outside-press' }),
+    );
   });
 
   it('calls onOpenChange(false) when the close button is pressed', async () => {
@@ -79,7 +85,10 @@ describe('MobileNav', () => {
       </MobileNav>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Close nav' }));
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      false,
+      expect.objectContaining({ reason: 'close-press' }),
+    );
   });
 
   it('positions the panel via data-side, defaulting "auto" to "start"', () => {
@@ -157,5 +166,62 @@ describe('MobileNav', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Open navigation' }));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onClick.mock.calls[0]?.[0]).toHaveProperty('nativeEvent');
+  });
+
+  it('MobileNav defaultOpen opens uncontrolled and details.cancel() vetoes a close', async () => {
+    const onOpenChange = vi.fn((_open: boolean, details: { cancel: () => void }) =>
+      details.cancel(),
+    );
+    wrap(
+      <MobileNav defaultOpen onOpenChange={onOpenChange}>
+        <p>Drawer content</p>
+      </MobileNav>,
+    );
+    expect(screen.getByText('Drawer content')).toBeTruthy();
+    await userEvent.keyboard('{Escape}');
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Drawer content')).toBeTruthy();
+  });
+
+  it('MobileNav uncontrolled closes itself', async () => {
+    wrap(
+      <MobileNav defaultOpen>
+        <p>Drawer content</p>
+      </MobileNav>,
+    );
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Drawer content')).toBeNull());
+  });
+
+  it('MobileNavProvider reports trigger-press from the toggle and close-press from the nav', async () => {
+    const onOpenChange = vi.fn();
+    wrap(
+      <MobileNavProvider onOpenChange={onOpenChange}>
+        <MobileNav.Toggle />
+        <MobileNav closeLabel="Close nav">
+          <p>Drawer content</p>
+        </MobileNav>
+      </MobileNavProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Open navigation' }));
+    expect(onOpenChange).toHaveBeenLastCalledWith(
+      true,
+      expect.objectContaining({ reason: 'trigger-press' }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Close nav' }));
+    expect(onOpenChange).toHaveBeenLastCalledWith(
+      false,
+      expect.objectContaining({ reason: 'close-press' }),
+    );
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('renders no display:contents wrapper', () => {
+    const { container } = wrap(
+      <MobileNav open>
+        <p>Drawer content</p>
+      </MobileNav>,
+    );
+    expect(container.querySelector('[style*="display: contents"]')).toBeNull();
   });
 });

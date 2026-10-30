@@ -143,11 +143,14 @@ describe('TopNav', () => {
     expect(screen.getByText('Scale with confidence')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'For startups' })).toBeTruthy();
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
-    expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      true,
+      expect.objectContaining({ reason: expect.any(String) }),
+    );
 
     await userEvent.unhover(trigger);
     await waitFor(() => expect(screen.queryByText('New: Enterprise')).toBeNull());
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
   });
 
   it('closes the mega menu on Escape and refocuses the trigger', async () => {

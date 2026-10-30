@@ -249,4 +249,70 @@ describe('Menu', () => {
     await userEvent.click(item);
     expect(onAction).not.toHaveBeenCalled();
   });
+
+  it('reports trigger-press when the trigger closes the menu', async () => {
+    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
+    renderCompound(onOpenChange);
+    const trigger = screen.getByRole('button', { name: 'Song' });
+    fireEvent.keyDown(trigger, { key: 'Enter' });
+    await screen.findByRole('menu');
+    const last = onOpenChange.mock.calls[onOpenChange.mock.calls.length - 1]!;
+    expect([last[0], last[1].reason]).toEqual([true, 'trigger-press']);
+  });
+
+  it('reports imperative for a Close-less programmatic change and honors defaultOpen', async () => {
+    wrap(
+      <Menu.Root defaultOpen>
+        <Menu.Trigger>
+          <button type="button">Song</button>
+        </Menu.Trigger>
+        <Menu.Popup>
+          <Menu.Item id="lib">Add to Library</Menu.Item>
+        </Menu.Popup>
+      </Menu.Root>,
+    );
+    expect(await screen.findByRole('menuitem', { name: 'Add to Library' })).toBeTruthy();
+  });
+
+  it('keeps a controlled menu closed until the parent opens it', async () => {
+    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
+    wrap(
+      <Menu.Root open={false} onOpenChange={onOpenChange}>
+        <Menu.Trigger>
+          <button type="button">Song</button>
+        </Menu.Trigger>
+        <Menu.Popup>
+          <Menu.Item id="lib">Add to Library</Menu.Item>
+        </Menu.Popup>
+      </Menu.Root>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Song' }));
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalled());
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(true);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('reports trigger-press for Menu.ContextMenu and honors cancel()', async () => {
+    const onOpenChange = vi.fn<OverlayOpenChangeHandler>((_next, details) => details.cancel());
+    wrap(
+      <Menu.ContextMenu
+        onOpenChange={onOpenChange}
+        sections={[{ items: [{ id: 'copy', label: 'Copy' }] }]}
+      >
+        <div>Right-click me</div>
+      </Menu.ContextMenu>,
+    );
+    fireEvent.contextMenu(screen.getByText('Right-click me'), { clientX: 5, clientY: 6 });
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(true);
+    expect(onOpenChange.mock.calls[0]?.[1].reason).toBe('trigger-press');
+    expect(screen.queryByRole('menuitem', { name: 'Copy' })).toBeNull();
+  });
+
+  it('renders no display:contents wrapper', async () => {
+    const { container } = renderCompound();
+    await userEvent.click(screen.getByRole('button', { name: 'Song' }));
+    await screen.findByRole('menu');
+    expect(container.querySelector('[style*="display: contents"]')).toBeNull();
+  });
 });

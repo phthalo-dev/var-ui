@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DirectionProvider } from '../DirectionProvider';
 import { layoutContentWidthAssignment, layoutShellPaddingAssignments } from '@var-ui/core';
@@ -294,6 +294,49 @@ describe('LayoutPanel', () => {
         </LayoutPanel>,
       );
       expect(screen.getByRole('dialog', { name: 'Inspector drawer' })).toBeTruthy();
+      vi.unstubAllGlobals();
+    });
+
+    it('overlay mode: reports escape-key, outside-press and cancel() via onOpenChange details', async () => {
+      mockMatchMedia(true);
+      const onOpenChange = vi.fn((_open: boolean, details: { cancel: () => void }) => {
+        details.cancel();
+      });
+      render(
+        <LayoutPanel
+          responsive={{ below: 'lg', mode: 'overlay' }}
+          defaultOpen
+          onOpenChange={onOpenChange}
+          label="Details"
+        >
+          Inspector
+        </LayoutPanel>,
+      );
+      await userEvent.keyboard('{Escape}');
+      expect(onOpenChange).toHaveBeenLastCalledWith(
+        false,
+        expect.objectContaining({ reason: 'escape-key' }),
+      );
+      expect(screen.getByText('Inspector')).toBeTruthy();
+      await userEvent.click(document.body);
+      expect(onOpenChange).toHaveBeenLastCalledWith(
+        false,
+        expect.objectContaining({ reason: 'outside-press' }),
+      );
+      expect(screen.getByText('Inspector')).toBeTruthy();
+      vi.unstubAllGlobals();
+    });
+
+    it('overlay mode: uncontrolled defaultOpen closes on Escape; no display:contents wrapper', async () => {
+      mockMatchMedia(true);
+      const { container } = render(
+        <LayoutPanel responsive={{ below: 'lg', mode: 'overlay' }} defaultOpen label="Details">
+          Inspector
+        </LayoutPanel>,
+      );
+      expect(container.querySelector('[style*="display: contents"]')).toBeNull();
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByText('Inspector')).toBeNull());
       vi.unstubAllGlobals();
     });
 

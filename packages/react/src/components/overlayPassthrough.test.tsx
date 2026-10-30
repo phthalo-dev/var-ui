@@ -228,7 +228,7 @@ describe('Drawer passthrough', () => {
     wrap(
       <Drawer.Root defaultOpen>
         <Drawer.Backdrop data-testid="backdrop" className="my-backdrop" ref={backdropRef}>
-          <Drawer.Panel
+          <Drawer.Popup
             data-testid="panel"
             className="my-panel"
             aria-label="Filters"
@@ -244,7 +244,7 @@ describe('Drawer passthrough', () => {
             <Drawer.Body data-testid="body" className="my-body">
               body
             </Drawer.Body>
-          </Drawer.Panel>
+          </Drawer.Popup>
         </Drawer.Backdrop>
       </Drawer.Root>,
     );
@@ -265,9 +265,9 @@ describe('Drawer passthrough', () => {
     wrap(
       <Drawer.Root defaultOpen>
         <Drawer.Backdrop>
-          <Drawer.Panel>
+          <Drawer.Popup>
             <Drawer.Title>Settings</Drawer.Title>
-          </Drawer.Panel>
+          </Drawer.Popup>
         </Drawer.Backdrop>
       </Drawer.Root>,
     );
