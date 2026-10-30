@@ -1,14 +1,20 @@
-import { Button, HStack, SimpleTooltip } from '@var-ui/react';
+import { Button, HStack, Tooltip } from '@var-ui/react';
 
 export default function Preview() {
   return (
     <HStack gap="md" wrap>
-      <SimpleTooltip content="Below the trigger" placement="bottom" delay={200}>
-        <Button>Bottom · 200ms</Button>
-      </SimpleTooltip>
-      <SimpleTooltip content="After the trigger" placement="end">
-        <Button>End</Button>
-      </SimpleTooltip>
+      <Tooltip delay={200}>
+        <Tooltip.Trigger>
+          <Button>Bottom · 200ms</Button>
+        </Tooltip.Trigger>
+        <Tooltip.Popup placement="bottom">Below the trigger</Tooltip.Popup>
+      </Tooltip>
+      <Tooltip>
+        <Tooltip.Trigger>
+          <Button>End</Button>
+        </Tooltip.Trigger>
+        <Tooltip.Popup placement="end">After the trigger</Tooltip.Popup>
+      </Tooltip>
     </HStack>
   );
 }

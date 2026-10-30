@@ -5,7 +5,7 @@ description: Modal overlay for focused tasks.
 
 # Dialog
 
-Modal overlay for focused tasks. `Dialog` is the compound Root (`Dialog.Trigger`, `Dialog.Backdrop`, `Dialog.Popup`, and chrome parts). The trigger child must forward DOM props (a `Button` or a host element) — there is no `render` prop. For the previous `triggerLabel` / `title` / `description` API, use the `SimpleDialog` preset.
+Modal overlay for focused tasks. `Dialog` is the compound Root (`Dialog.Trigger`, `Dialog.Backdrop`, `Dialog.Popup`, and chrome parts). The trigger child must forward DOM props (a `Button` or a host element) — there is no `render` prop.
 
 There is no `@var-ui/astro` Dialog — Astro and HTML previews show a static core-recipe approximation of the open chrome; full interaction is React-only.
 
@@ -21,9 +21,9 @@ Compose Trigger, Backdrop, Popup, and chrome. `Dialog` is Root.
 
 <Demo id="dialog.default" />
 
-### SimpleDialog preset
+### Title, description and actions
 
-`SimpleDialog` keeps the assembled 80% case copy-pasteable.
+The usual arrangement for a short dialog.
 
 <Demo id="dialog.simple" />
 

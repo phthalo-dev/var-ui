@@ -5,7 +5,7 @@ description: Action menu namespace with compound parts and data presets.
 
 # Menu
 
-Action menu namespace. `Menu` is Root for compound menus; use `Menu.FromSections`, `Menu.ContextMenu`, or `Menu.Overflow` for common presets. The trigger child must forward DOM props — there is no `render` prop.
+Action menu namespace. `Menu` is Root for compound menus; use `Menu.FromSections`, `Menu.ContextMenu`, or `Menu.Overflow` for common presets. `onOpenChange(open, details)` reports `details.reason` (`trigger-press`, `escape-key`, `outside-press`, `focus`, `imperative`); `details.cancel()` vetoes the change, and `portalContainer` is a Root prop. The trigger child must forward DOM props — there is no `render` prop.
 
 State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 

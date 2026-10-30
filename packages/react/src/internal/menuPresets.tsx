@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX, MouseEvent, ReactElement, Ref } from 'react';
 import { useCallback, useState } from 'react';
-import { mergeOverlayChild } from '../overlays';
+import { createOverlayChangeDetails, mergeOverlayChild } from '../overlays';
 import { IconButton } from '../components/IconButton';
 import { MenuContent, type MenuContentProps } from './menuContent';
 import {
@@ -79,28 +79,36 @@ export function MenuContextMenu({
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
 
-  const handleContextMenu = useCallback((...args: unknown[]) => {
-    const event = args[0] as MouseEvent;
-    event.preventDefault();
-    let { clientX: x, clientY: y } = event;
-    // Keyboard invocation (Shift+F10 / ContextMenu key) reports 0,0 in some browsers:
-    // anchor to the focused target's bottom-start corner instead.
-    if (x === 0 && y === 0) {
-      const el =
-        event.target instanceof Element
-          ? event.target
-          : event.currentTarget instanceof Element
-            ? event.currentTarget
-            : null;
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        x = rect.left;
-        y = rect.bottom;
+  const handleContextMenu = useCallback(
+    (...args: unknown[]) => {
+      const event = args[0] as MouseEvent;
+      event.preventDefault();
+      let { clientX: x, clientY: y } = event;
+      // Keyboard invocation (Shift+F10 / ContextMenu key) reports 0,0 in some browsers:
+      // anchor to the focused target's bottom-start corner instead.
+      if (x === 0 && y === 0) {
+        const el =
+          event.target instanceof Element
+            ? event.target
+            : event.currentTarget instanceof Element
+              ? event.currentTarget
+              : null;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          x = rect.left;
+          y = rect.bottom;
+        }
       }
-    }
-    setAnchor({ x, y });
-    setOpen(true);
-  }, []);
+      setAnchor({ x, y });
+      const details = createOverlayChangeDetails({
+        reason: 'trigger-press',
+        event: event.nativeEvent,
+      });
+      onOpenChange?.(true, details);
+      if (!details.isCanceled) setOpen(true);
+    },
+    [onOpenChange],
+  );
 
   const host = mergeOverlayChild(children, {
     onContextMenu: handleContextMenu,

@@ -1,5 +1,5 @@
 import type { ComponentPropsWithRef, CSSProperties, JSX, ReactElement, ReactNode } from 'react';
-import { createContext, isValidElement, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, isValidElement, useContext, useMemo } from 'react';
 import { Dialog as AriaDialog, Modal, ModalOverlay } from 'react-aria-components';
 import {
   layout,
@@ -22,6 +22,7 @@ import type {
 import type { UseResizableResult } from '../hooks';
 import { useMediaQuery, useScrollLock } from '../hooks';
 import { useLayer } from '../layers/LayerProvider';
+import { OverlayCloseContext, useOverlayRoot, type OverlayOpenChangeHandler } from '../overlays';
 import { mergeProps } from 'typestyles';
 import { useDirection } from '../DirectionProvider';
 import { ResizeHandle } from './ResizeHandle';
@@ -379,7 +380,8 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
   open?: boolean;
   /** Initial open state for uncontrolled `responsive` usage. @default false */
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  /** Called when the overlay or hidden panel requests to open or close. `details.cancel()` vetoes it. */
+  onOpenChange?: OverlayOpenChangeHandler;
   /** Accessible name; paired with `role="region"` by default when set. */
   label?: string;
 };
@@ -405,7 +407,7 @@ export function LayoutPanel({
   resizeHandleLabel = 'Resize panel',
   responsive,
   open: openProp,
-  defaultOpen = false,
+  defaultOpen,
   onOpenChange,
   role,
   label,
@@ -441,19 +443,10 @@ export function LayoutPanel({
   });
   const isOverlayMode = isResponsiveActive && responsive?.mode === 'overlay';
 
-  const isControlled = openProp !== undefined;
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const open = isControlled ? (openProp as boolean) : internalOpen;
-  const setOpen = useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  const root = useOverlayRoot({ open: openProp, defaultOpen, onOpenChange });
+  const { open } = root;
 
-  const isOverlayVisible = isOverlayMode && open;
-  useScrollLock(isOverlayVisible);
+  useScrollLock(isOverlayMode && root.mounted);
   const { style: layerStyle } = useLayer();
 
   if (resizable?.isCollapsed) {
@@ -482,20 +475,27 @@ export function LayoutPanel({
   if (isOverlayMode) {
     return (
       <ModalOverlay
-        isOpen={open}
-        onOpenChange={setOpen}
+        {...root.rac}
         isDismissable
         {...mergeProps(s.overlayBackdrop)}
-        data-open={open ? '' : undefined}
+        {...root.presenceAttrs}
+        ref={root.setBackdropEl}
         style={layerStyle}
       >
-        <Modal {...mergeProps(s.overlay)} data-side={dataSide} data-open={open ? '' : undefined}>
+        <Modal
+          {...mergeProps(s.overlay)}
+          {...root.presenceAttrs}
+          ref={root.setPopupEl}
+          data-side={dataSide}
+        >
           <AriaDialog
             aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
             aria-labelledby={ariaLabelledBy}
             {...mergeProps(s.overlayDialog)}
           >
-            {panelBody}
+            <OverlayCloseContext.Provider value={root.close}>
+              {panelBody}
+            </OverlayCloseContext.Provider>
           </AriaDialog>
         </Modal>
       </ModalOverlay>

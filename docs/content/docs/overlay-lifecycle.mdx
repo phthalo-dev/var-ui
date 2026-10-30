@@ -79,7 +79,14 @@ onOpenChange?: (open: boolean, details: OverlayChangeEventDetails) => void;
 
 ```ts
 type OverlayOpenChangeReason =
-  'trigger-press' | 'escape-key' | 'outside-press' | 'imperative' | 'hover' | 'focus' | 'unknown';
+  | 'trigger-press'
+  | 'close-press'
+  | 'escape-key'
+  | 'outside-press'
+  | 'imperative'
+  | 'hover'
+  | 'focus'
+  | 'unknown';
 
 type OverlayChangeEventDetails = {
   reason: OverlayOpenChangeReason;
@@ -89,7 +96,7 @@ type OverlayChangeEventDetails = {
 };
 ```
 
-v1 reasons you can rely on: `escape-key`, `outside-press`, `trigger-press`. Hover/focus overlays also report `hover` and `focus`. Anything else may be `unknown`.
+Reasons you can rely on: `escape-key`, `outside-press`, `trigger-press`, `close-press` (a `Close` part), `focus` (focus left the popup), `imperative` (your own code, e.g. a `setOpen` call), plus `hover` for hover overlays. Anything else is `unknown`. Roots derive the reason from native events, so they add no wrapper element to the DOM.
 
 `cancel()` blocks the open-state update **when the overlay is uncontrolled**. If you pass `open`, `cancel()` is a no-op — ignore `open` in the parent instead.
 
@@ -118,6 +125,10 @@ Returns `{ mounted, attrs }`. Drive `isOpen` from the requested open state. Keep
 ### `usePositionerVars({ placement, popupRef, triggerRef? })`
 
 Returns `{ style }` with the variables above. Merge onto the popup root with `useLayer().style` when you also use `LayerProvider`.
+
+### `useOverlayRoot({ open, defaultOpen, onOpenChange })`
+
+The shared root hook behind every overlay: controlled/uncontrolled `open`, details-aware `onOpenChange`, presence, element tracking and reason derivation. See the source in `packages/react/src/overlays/useOverlayRoot.ts`.
 
 ### `createOverlayChangeDetails({ reason, event })`
 

@@ -240,46 +240,47 @@ export function TopNavMenu({
   const s = topNav();
 
   return (
-    <HoverCard
-      trigger={
+    <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
+      <HoverCard.Trigger>
         <RacLinkOrButton {...rest} {...mergeProps(s.menuTrigger, className)} ref={ref}>
           <span>{label}</span>
           <Icon name="chevronDown" size="sm" />
         </RacLinkOrButton>
-      }
-      openDelay={openDelay}
-      closeDelay={closeDelay}
-    >
-      <div {...mergeProps(s.menuList)}>
-        {items.map((item) => {
-          const itemContent = (
-            <>
-              {renderTopNavIcon(item.icon)}
-              <span {...mergeProps(s.richBody)}>
-                <span>{item.title}</span>
-                {item.description != null ? (
-                  <Text as="span" size="sm" tone="secondary">
-                    {item.description}
-                  </Text>
-                ) : null}
-              </span>
-            </>
-          );
-          return (
-            <RacLinkOrButton
-              key={item.id}
-              href={item.href}
-              onClick={item.onClick}
-              {...mergeProps(s.megaItem)}
-              data-disabled={item.disabled ? '' : undefined}
-              isDisabled={item.disabled}
-            >
-              {itemContent}
-            </RacLinkOrButton>
-          );
-        })}
-      </div>
-    </HoverCard>
+      </HoverCard.Trigger>
+      <HoverCard.Popup>
+        <HoverCard.Content>
+          <div {...mergeProps(s.menuList)}>
+            {items.map((item) => {
+              const itemContent = (
+                <>
+                  {renderTopNavIcon(item.icon)}
+                  <span {...mergeProps(s.richBody)}>
+                    <span>{item.title}</span>
+                    {item.description != null ? (
+                      <Text as="span" size="sm" tone="secondary">
+                        {item.description}
+                      </Text>
+                    ) : null}
+                  </span>
+                </>
+              );
+              return (
+                <RacLinkOrButton
+                  key={item.id}
+                  href={item.href}
+                  onClick={item.onClick}
+                  {...mergeProps(s.megaItem)}
+                  data-disabled={item.disabled ? '' : undefined}
+                  isDisabled={item.disabled}
+                >
+                  {itemContent}
+                </RacLinkOrButton>
+              );
+            })}
+          </div>
+        </HoverCard.Content>
+      </HoverCard.Popup>
+    </HoverCard.Root>
   );
 }
 

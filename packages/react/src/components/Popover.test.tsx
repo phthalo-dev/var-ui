@@ -7,7 +7,6 @@ import { LayerProvider } from '../layers/LayerProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import { Button } from './Button';
 import { Popover } from './Popover';
-import { SimplePopover } from './SimplePopover';
 
 function wrap(ui: React.ReactNode) {
   return render(
@@ -133,12 +132,18 @@ describe('Popover', () => {
   });
 });
 
-describe('SimplePopover', () => {
+describe('Popover with a Button trigger', () => {
   it('opens on trigger click and shows dialog content', async () => {
     wrap(
-      <SimplePopover trigger={<Button>Open</Button>} title="Details">
-        Popover body
-      </SimplePopover>,
+      <Popover.Root>
+        <Popover.Trigger>
+          <Button>Open</Button>
+        </Popover.Trigger>
+        <Popover.Popup>
+          <Popover.Title>Details</Popover.Title>
+          <Popover.Content>Popover body</Popover.Content>
+        </Popover.Popup>
+      </Popover.Root>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('dialog')).toBeTruthy();
@@ -148,9 +153,15 @@ describe('SimplePopover', () => {
 
   it('closes on Escape', async () => {
     wrap(
-      <SimplePopover trigger={<Button>Open</Button>} title="Details">
-        Popover body
-      </SimplePopover>,
+      <Popover.Root>
+        <Popover.Trigger>
+          <Button>Open</Button>
+        </Popover.Trigger>
+        <Popover.Popup>
+          <Popover.Title>Details</Popover.Title>
+          <Popover.Content>Popover body</Popover.Content>
+        </Popover.Popup>
+      </Popover.Root>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('dialog')).toBeTruthy();

@@ -5,7 +5,7 @@ description: Brief hint shown on hover or focus.
 
 # Tooltip
 
-Brief hint shown on hover or focus of a single trigger. Prefer tooltips for supplemental labels — not essential instructions. `Tooltip` is the compound Root (`Tooltip.Trigger` / `Tooltip.Popup`). The trigger child must forward DOM props — there is no `render` prop. For the previous `content` / `placement` / `delay` API, use the `SimpleTooltip` preset.
+Brief hint shown on hover or focus of a single trigger. Prefer tooltips for supplemental labels — not essential instructions. `Tooltip` is the compound Root (`Tooltip.Trigger` / `Tooltip.Popup`). The trigger child must forward DOM props — there is no `render` prop.
 
 State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -17,15 +17,15 @@ Compose Trigger and Popup.
 
 <Demo id="tooltip.default" />
 
-### SimpleTooltip preset
+### Minimal
 
-`SimpleTooltip` keeps the assembled 80% case copy-pasteable.
+The usual arrangement: one trigger and one popup.
 
 <Demo id="tooltip.simple" />
 
 ### Placement and delay
 
-Set `placement` relative to the trigger and `delay` (ms) before open. Default delay is 500ms. This demo uses the `SimpleTooltip` preset.
+Set `placement` on `Tooltip.Popup` relative to the trigger and `delay` (ms) on `Tooltip` before open. Default delay is 500ms.
 
 <Demo id="tooltip.placement" />
 

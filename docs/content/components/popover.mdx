@@ -5,7 +5,7 @@ description: Click-triggered panel for short interactive content.
 
 # Popover
 
-Click-triggered panel for short interactive content. Unlike `Tooltip` / `HoverCard`, it opens on press and can host actions. `Popover` is the compound Root (`Popover.Trigger`, `Popover.Popup`, `Popover.Title`, `Popover.Content`, `Popover.Arrow`). The trigger child must forward DOM props — there is no `render` prop. For the previous `trigger` / `title` API, use the `SimplePopover` preset.
+Click-triggered panel for short interactive content. Unlike `Tooltip` / `HoverCard`, it opens on press and can host actions. `Popover` is the compound Root (`Popover.Trigger`, `Popover.Popup`, `Popover.Title`, `Popover.Content`, `Popover.Arrow`). The trigger child must forward DOM props — there is no `render` prop.
 
 State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -17,15 +17,15 @@ Compose Trigger, Popup, and optional Arrow.
 
 <Demo id="popover.default" />
 
-### SimplePopover preset
+### With a title
 
-`SimplePopover` keeps the assembled 80% case copy-pasteable.
+The usual arrangement: a trigger, a titled popup and a content body.
 
 <Demo id="popover.simple" />
 
 ### With actions
 
-Put buttons or links in the body for lightweight confirm or follow-up flows without a full dialog. This demo uses the `SimplePopover` preset.
+Put buttons or links in the body for lightweight confirm or follow-up flows without a full dialog.
 
 <Demo id="popover.actions" />
 

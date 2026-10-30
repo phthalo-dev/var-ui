@@ -5,7 +5,9 @@ description: Slide-over panel for secondary flows.
 
 # Drawer
 
-Slide-over panel for secondary flows (settings, details, filters). Built on React Aria Modal with focus trap, Escape, and backdrop dismissal. Control open state with `open` / `onOpenChange`. The default export stays the assembled preset (`open` / `title` / children). Compound parts (`Drawer.Root`, `Drawer.Backdrop`, `Drawer.Panel`, `Drawer.Header`, `Drawer.Title`, `Drawer.Close`, `Drawer.Body`) are available for custom chrome. There is no `Drawer.Trigger`. A `Drawer.Close` child must forward DOM props (a `Button` or a host element) — there is no `render` prop.
+Slide-over panel for secondary flows (settings, details, filters). Built on React Aria Modal with focus trap, Escape, and backdrop dismissal. `Drawer` is the compound Root (`Drawer.Trigger`, `Drawer.Backdrop`, `Drawer.Popup`, `Drawer.Header`, `Drawer.Title`, `Drawer.Close`, `Drawer.Body`) with `open` / `defaultOpen` / `onOpenChange(open, details)`. `portalContainer` and `dismissable` are Root props. A `Drawer.Trigger` or `Drawer.Close` child must forward DOM props (a `Button` or a host element) — there is no `render` prop.
+
+There is no assembled preset: the recipe below (trigger, backdrop, popup with a header, title, close and body) is the usual arrangement, so copy it and change what you need.
 
 State attributes, exit animation, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -13,13 +15,13 @@ State attributes, exit animation, and `onOpenChange` details are documented in [
 
 ### Default
 
-Open from a button; `placement` defaults to `end`.
+The recipe: a trigger, then a header with title and close above the body. `placement` defaults to `end`.
 
 <Demo id="drawer.default" />
 
 ### Placement
 
-Use `placement` (`start`, `end`, or `bottom`) to match the layout edge that owns the flow.
+Set `placement` on `Drawer.Popup` (`start`, `end`, or `bottom`) to match the layout edge that owns the flow.
 
 <Demo id="drawer.placement" />
 
@@ -29,4 +31,4 @@ Use `placement` (`start`, `end`, or `bottom`) to match the layout edge that owns
 
 ## Accessibility
 
-Focus moves into the panel when opened and returns to the trigger on close. Provide `title` or `label` for an accessible name. The close control defaults to `aria-label="Close"`. Prefer drawers for multi-step or longer secondary UI; use `AlertDialog` for short confirmations.
+Focus moves into the popup when opened and returns to the trigger on close. Name the dialog with `aria-label` / `aria-labelledby` on `Drawer.Popup` (or `aria-label` on the Root). The close control defaults to `aria-label="Close"`. Prefer drawers for multi-step or longer secondary UI; use `AlertDialog` for short confirmations.

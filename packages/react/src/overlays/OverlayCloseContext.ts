@@ -1,8 +1,12 @@
 import { createContext, useContext } from 'react';
+import type { OverlayRequestOptions } from './useOverlayRoot';
 
-export const OverlayCloseContext = createContext<(() => void) | null>(null);
+/** Requests a close of the nearest overlay. Provided by each `Popup`. */
+export type OverlayClose = (options?: OverlayRequestOptions) => void;
 
-export function useOverlayClose(): () => void {
+export const OverlayCloseContext = createContext<OverlayClose | null>(null);
+
+export function useOverlayClose(): OverlayClose {
   const close = useContext(OverlayCloseContext);
 
   if (close === null) {

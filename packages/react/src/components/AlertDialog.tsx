@@ -1,130 +1,71 @@
-import type { JSX, ReactNode } from 'react';
-import type { OverlayOpenChangeHandler } from '../overlays';
-import { Button } from './Button';
+import type { JSX } from 'react';
 import {
   Dialog,
   type DialogActionsProps,
   type DialogBackdropProps,
+  type DialogCloseProps,
+  type DialogDescriptionProps,
+  type DialogHeaderProps,
   type DialogPopupProps,
   type DialogRootProps,
   type DialogTitleProps,
   type DialogTriggerProps,
 } from './Dialog';
 
-export type AlertDialogProps = {
-  /** Dialog heading shown in the modal header. */
-  title: string;
-  /** Supporting copy below the heading. */
-  description: ReactNode;
-  /** Label for the dismiss action. @default Cancel */
-  cancelLabel?: string;
-  /** Label for the confirm action. @default Confirm */
-  confirmLabel?: string;
-  /** Renders the confirm action with `tone="danger"` and autofocuses Cancel. @default false */
-  destructive?: boolean;
-  /** Called when the confirm action is pressed. Never called on cancel or Escape dismissal. */
-  onConfirm: () => void;
-  /** Label on the button that opens the modal. If omitted, use `open`/`onOpenChange` to control it. */
-  triggerLabel?: string;
-  /** Controls the open state. Required when `triggerLabel` is omitted. */
-  open?: boolean;
-  /** Initial open state when uncontrolled. @default false */
-  defaultOpen?: boolean;
-  /** Called when the open state changes (including Escape/cancel dismissal). */
-  onOpenChange?: OverlayOpenChangeHandler;
-  /**
-   * Element the modal portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient (the theme's CSS custom properties only
-   * cascade to descendants of the themed element).
-   */
-  portalContainer?: Element;
-};
-
 export type AlertDialogRootProps = DialogRootProps;
+/** Alias for docs and consumers referring to the root props. */
+export type AlertDialogProps = AlertDialogRootProps;
 export type AlertDialogTriggerProps = DialogTriggerProps;
 export type AlertDialogBackdropProps = DialogBackdropProps;
 export type AlertDialogPopupProps = Omit<DialogPopupProps, 'role'>;
+export type AlertDialogHeaderProps = DialogHeaderProps;
 export type AlertDialogTitleProps = DialogTitleProps;
+export type AlertDialogDescriptionProps = DialogDescriptionProps;
 export type AlertDialogActionsProps = DialogActionsProps;
+export type AlertDialogCloseProps = DialogCloseProps;
 
-/** Dialog root that requires an explicit choice: backdrop clicks do not dismiss unless `dismissable` is set. */
+/**
+ * Dialog root that requires an explicit choice: pressing the backdrop does not dismiss unless
+ * `dismissable` is set.
+ */
 function AlertDialogRoot({ dismissable = false, ...props }: AlertDialogRootProps): JSX.Element {
   return <Dialog.Root {...props} dismissable={dismissable} />;
 }
-const AlertDialogTrigger = Dialog.Trigger;
-const AlertDialogBackdrop = Dialog.Backdrop;
 
+/** `Dialog.Popup` with `role="alertdialog"`. */
 function AlertDialogPopup(props: AlertDialogPopupProps): JSX.Element {
   return <Dialog.Popup {...props} role="alertdialog" />;
 }
 
-const AlertDialogTitle = Dialog.Title;
-const AlertDialogActions = Dialog.Actions;
-
-function AlertDialogPreset({
-  title,
-  description,
-  cancelLabel = 'Cancel',
-  confirmLabel = 'Confirm',
-  destructive = false,
-  onConfirm,
-  triggerLabel,
-  open,
-  defaultOpen,
-  onOpenChange,
-  portalContainer,
-}: AlertDialogProps): JSX.Element {
-  const popup = (
-    <AlertDialogBackdrop>
-      <AlertDialogPopup>
-        <Dialog.Header>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-        </Dialog.Header>
-        <Dialog.Description>{description}</Dialog.Description>
-        <AlertDialogActions>
-          <Dialog.Close>
-            <Button autoFocus={destructive}>{cancelLabel}</Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button
-              tone={destructive ? 'danger' : 'accent'}
-              appearance="filled"
-              onClick={onConfirm}
-            >
-              {confirmLabel}
-            </Button>
-          </Dialog.Close>
-        </AlertDialogActions>
-      </AlertDialogPopup>
-    </AlertDialogBackdrop>
-  );
-
-  return (
-    <AlertDialogRoot
-      open={open}
-      defaultOpen={defaultOpen}
-      onOpenChange={onOpenChange}
-      portalContainer={portalContainer}
-    >
-      {triggerLabel ? (
-        <AlertDialogTrigger>
-          <Button>{triggerLabel}</Button>
-        </AlertDialogTrigger>
-      ) : null}
-      {popup}
-    </AlertDialogRoot>
-  );
-}
-
 /**
- * Confirmation dialog preset with compound parts for custom compositions.
- * The default call signature remains title/onConfirm/triggerLabel based.
+ * Confirmation dialog: `Dialog` with `role="alertdialog"` and backdrop dismissal off. `AlertDialog`
+ * is Root. The old assembled preset is a recipe (see the AlertDialog docs): it was a fixed
+ * arrangement of these parts and could not express async confirm, custom copy or extra actions.
+ *
+ * ```tsx
+ * <AlertDialog>
+ *   <AlertDialog.Trigger><Button>Delete</Button></AlertDialog.Trigger>
+ *   <AlertDialog.Backdrop>
+ *     <AlertDialog.Popup>
+ *       <AlertDialog.Header><AlertDialog.Title>Delete item?</AlertDialog.Title></AlertDialog.Header>
+ *       <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+ *       <AlertDialog.Actions>
+ *         <AlertDialog.Close><Button autoFocus>Cancel</Button></AlertDialog.Close>
+ *         <AlertDialog.Close><Button tone="danger" appearance="filled" onClick={remove}>Delete</Button></AlertDialog.Close>
+ *       </AlertDialog.Actions>
+ *     </AlertDialog.Popup>
+ *   </AlertDialog.Backdrop>
+ * </AlertDialog>
+ * ```
  */
-export const AlertDialog = Object.assign(AlertDialogPreset, {
+export const AlertDialog = Object.assign(AlertDialogRoot, {
   Root: AlertDialogRoot,
-  Trigger: AlertDialogTrigger,
-  Backdrop: AlertDialogBackdrop,
+  Trigger: Dialog.Trigger,
+  Backdrop: Dialog.Backdrop,
   Popup: AlertDialogPopup,
-  Title: AlertDialogTitle,
-  Actions: AlertDialogActions,
+  Header: Dialog.Header,
+  Title: Dialog.Title,
+  Description: Dialog.Description,
+  Actions: Dialog.Actions,
+  Close: Dialog.Close,
 });

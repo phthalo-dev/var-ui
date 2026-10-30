@@ -102,7 +102,10 @@ describe('SideNav / TopNav items', () => {
     );
     expect(screen.queryByRole('button', { name: 'Alpha' })).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: /Products/ }));
-    expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(onOpenChange).toHaveBeenCalledWith(
+      true,
+      expect.objectContaining({ reason: expect.any(String) }),
+    );
     rerender(
       <IconProvider icons={{}}>
         <LayerProvider>

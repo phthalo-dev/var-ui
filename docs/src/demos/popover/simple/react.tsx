@@ -1,9 +1,17 @@
-import { Button, SimplePopover } from '@var-ui/react';
+import { Button, Popover } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <SimplePopover trigger={<Button>Open</Button>} title="Details">
-      <p>Popover body content.</p>
-    </SimplePopover>
+    <Popover>
+      <Popover.Trigger>
+        <Button>Open</Button>
+      </Popover.Trigger>
+      <Popover.Popup>
+        <Popover.Title>Details</Popover.Title>
+        <Popover.Content>
+          <p>Popover body content.</p>
+        </Popover.Content>
+      </Popover.Popup>
+    </Popover>
   );
 }

@@ -1,17 +1,11 @@
 import {
   Children,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
   useEffect,
   useId,
+  useMemo,
   useState,
   type ComponentPropsWithRef,
   type JSX,
-  type MutableRefObject,
-  type ReactElement,
   type ReactNode,
 } from 'react';
 import {
@@ -22,24 +16,24 @@ import {
   Heading,
   Modal,
   ModalOverlay,
-  Pressable,
 } from 'react-aria-components';
 import { dialog } from '@var-ui/core/components/dialog';
 import type { DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useLayer } from '../layers/LayerProvider';
 import {
-  createOverlayChangeDetails,
-  inferOverlayCloseReason,
-  mergeOverlayChild,
+  composeHandlers,
+  createOverlayContext,
   OverlayCloseContext,
-  useOverlayClose,
+  OverlayTrigger,
   useMergedRef,
-  useOverlayPresence,
+  useOverlayClose,
+  useOverlayRoot,
+  wireOverlayChild,
   type OverlayCloseProps,
   type OverlayOpenChangeHandler,
+  type OverlayRoot,
   type OverlayTriggerProps,
-  type UseOverlayPresenceResult,
 } from '../overlays';
 import { mergeProps } from 'typestyles';
 
@@ -51,7 +45,7 @@ export type DialogRootProps = {
   defaultOpen?: boolean;
   /** Called when the dialog requests to open or close. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /** Whether clicking outside or pressing Escape closes the dialog. @default true */
+  /** Whether pressing outside the popup (on the backdrop) closes the dialog. Escape always closes. @default true */
   dismissable?: boolean;
   /**
    * Element the modal portals into instead of `document.body`. Needed when a subtree renders
@@ -68,8 +62,6 @@ export type DialogTriggerProps = OverlayTriggerProps;
 
 export type DialogBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  /** Overrides the root's `dismissable` for this backdrop. */
-  dismissable?: boolean;
 };
 
 /**
@@ -92,174 +84,65 @@ export type DialogActionsProps = ComponentPropsWithRef<'div'>;
 export type DialogCloseProps = OverlayCloseProps;
 
 type DialogContextValue = {
-  presence: UseOverlayPresenceResult;
-  backdropRef: MutableRefObject<HTMLDivElement | null>;
-  popupRef: MutableRefObject<HTMLDivElement | null>;
+  root: OverlayRoot;
   portalContainer?: Element;
   dismissable: boolean;
-  lastEventRef: MutableRefObject<Event | null>;
   /** Id of the mounted `Dialog.Description`, wired to the dialog's `aria-describedby`. */
   descriptionId: string | undefined;
   setDescriptionId: (id: string | undefined) => void;
-  handleOpenChange: (next: boolean) => void;
 };
 
-const DialogContext = createContext<DialogContextValue | null>(null);
-
-function useDialogContext(): DialogContextValue {
-  const ctx = useContext(DialogContext);
-  if (!ctx) {
-    throw new Error('Dialog compound components must be rendered inside <Dialog>.');
-  }
-  return ctx;
-}
+const { Context: DialogContext, use: useDialogContext } =
+  createOverlayContext<DialogContextValue>('Dialog');
 
 function DialogRoot({
   children,
   open,
-  defaultOpen = false,
+  defaultOpen,
   onOpenChange,
   dismissable = true,
   portalContainer,
 }: DialogRootProps): JSX.Element {
-  const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = open ?? uncontrolledOpen;
-  const backdropRef = useRef<HTMLDivElement | null>(null);
-  const popupRef = useRef<HTMLDivElement | null>(null);
-  const lastEventRef = useRef<Event | null>(null);
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const [descriptionId, setDescriptionId] = useState<string | undefined>(undefined);
 
-  const presence = useOverlayPresence({
-    isOpen: requestedOpen,
-    getAnimatedElements: () => [backdropRef.current, popupRef.current],
-  });
-
-  const handleOpenChange = useCallback(
-    (next: boolean) => {
-      const details = createOverlayChangeDetails({
-        reason: inferOverlayCloseReason(lastEventRef.current),
-        event: lastEventRef.current,
-      });
-      onOpenChange?.(next, details);
-      lastEventRef.current = null;
-      if (details.isCanceled) return;
-      if (open === undefined) setRequestedOpen(next);
-    },
-    [open, onOpenChange],
-  );
-
   const context = useMemo<DialogContextValue>(
-    () => ({
-      presence,
-      backdropRef,
-      popupRef,
-      portalContainer,
-      dismissable,
-      lastEventRef,
-      descriptionId,
-      setDescriptionId,
-      handleOpenChange,
-    }),
-    [handleOpenChange, dismissable, portalContainer, presence, descriptionId],
+    () => ({ root, portalContainer, dismissable, descriptionId, setDescriptionId }),
+    [root, portalContainer, dismissable, descriptionId],
   );
 
   return (
     <DialogContext.Provider value={context}>
-      {/*
-        RAC DialogTrigger has no DOM node. Root captures the last keydown here so
-        inferOverlayCloseReason can map Escape. Backdrop records overlay pointerdown
-        (outside-press); Trigger stashes press/click (trigger-press). cancel() only
-        blocks uncontrolled requestedOpen updates after onOpenChange.
-      */}
-      <div
-        style={{ display: 'contents' }}
-        onKeyDownCapture={(event) => {
-          lastEventRef.current = event.nativeEvent;
-        }}
-      >
-        <AriaDialogTrigger isOpen={presence.mounted} onOpenChange={handleOpenChange}>
-          {children}
-        </AriaDialogTrigger>
-      </div>
+      <AriaDialogTrigger {...root.rac}>{children}</AriaDialogTrigger>
     </DialogContext.Provider>
   );
 }
 
-function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
-  if (typeof existing !== 'function') {
-    return ours;
-  }
-  return (...args: unknown[]) => {
-    existing(...args);
-    ours(...args);
-  };
-}
-
-function DialogTrigger({ children, className, ref, ...props }: DialogTriggerProps): JSX.Element {
-  const ctx = useDialogContext();
-  const child = Children.only(children);
-  const stashTriggerPress = (...args: unknown[]) => {
-    const event = args[0] as { nativeEvent?: Event } | Event | undefined;
-    if (event instanceof Event) {
-      ctx.lastEventRef.current = event;
-      return;
-    }
-    if (event?.nativeEvent instanceof Event) {
-      ctx.lastEventRef.current = event.nativeEvent;
-      return;
-    }
-    ctx.lastEventRef.current = new Event('press');
-  };
-  const triggerProps = props as Record<string, unknown>;
-  const racTriggerProps: Record<string, unknown> = {
-    ...triggerProps,
-    className,
-    ref,
-    onClick: composeHandler(triggerProps.onClick, stashTriggerPress),
-    onPress: composeHandler(triggerProps.onPress, stashTriggerPress),
-    onPointerDown: composeHandler(triggerProps.onPointerDown, () => {
-      ctx.lastEventRef.current = new Event('press');
-    }),
-  };
-  const merged = mergeOverlayChild(child, racTriggerProps);
-  // RAC DialogTrigger injects press via PressResponder context, not cloneElement.
-  // Host nodes (e.g. <button>) need Pressable so they register; RAC Button already does.
-  if (typeof child.type === 'string') {
-    return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
-  }
-  return merged;
+function DialogTrigger(props: DialogTriggerProps): JSX.Element {
+  return <OverlayTrigger {...props} root={useDialogContext().root} />;
 }
 
 function DialogBackdrop({
   children,
   className,
   style,
-  dismissable,
-  onPointerDown,
   ref,
   ...rest
 }: DialogBackdropProps): JSX.Element {
   const ctx = useDialogContext();
   const { style: layerStyle } = useLayer();
   const d = dialog();
-  const setRef = useMergedRef(ctx.backdropRef, ref);
+  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setBackdropEl, ref);
   return (
     <ModalOverlay
       {...rest}
       {...mergeProps(d.overlay, className)}
-      {...ctx.presence.attrs}
+      {...ctx.root.presenceAttrs}
+      {...ctx.root.rac}
       ref={setRef}
       style={{ ...layerStyle, ...style }}
-      isOpen={ctx.presence.mounted}
-      onOpenChange={ctx.handleOpenChange}
-      isDismissable={dismissable ?? ctx.dismissable}
+      isDismissable={ctx.dismissable}
       UNSTABLE_portalContainer={ctx.portalContainer}
-      onPointerDown={(event) => {
-        onPointerDown?.(event);
-        if (event.target === event.currentTarget) {
-          ctx.lastEventRef.current = event.nativeEvent;
-        }
-      }}
     >
       {children}
     </ModalOverlay>
@@ -278,20 +161,18 @@ function DialogPopup({
 }: DialogPopupProps): JSX.Element {
   const ctx = useDialogContext();
   const d = dialog();
-  const setRef = useMergedRef(ctx.popupRef, ref);
+  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setPopupEl, ref);
   return (
-    <Modal {...rest} {...mergeProps(d.modal, className)} {...ctx.presence.attrs} ref={setRef}>
+    <Modal {...rest} {...mergeProps(d.modal, className)} {...ctx.root.presenceAttrs} ref={setRef}>
       <AriaDialog
         role={role}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy ?? ctx.descriptionId}
       >
-        {({ close }) => (
-          <OverlayCloseContext.Provider value={close}>
-            <div {...mergeProps(d.content)}>{children}</div>
-          </OverlayCloseContext.Provider>
-        )}
+        <OverlayCloseContext.Provider value={ctx.root.close}>
+          <div {...mergeProps(d.content)}>{children}</div>
+        </OverlayCloseContext.Provider>
       </AriaDialog>
     </Modal>
   );
@@ -342,21 +223,20 @@ function DialogClose({
 }: DialogCloseProps): JSX.Element {
   const close = useOverlayClose();
   const d = dialog();
+  const requestClose = (event: Event | null = null) => close({ reason: 'close-press', event });
 
   if (children) {
-    const child = Children.only(children);
-    const merged = mergeOverlayChild(child, {
-      ...rest,
-      ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
-      ref,
-      onPress: close,
-      onClick: composeHandler(rest.onClick, close),
-      className,
-    });
-    if (typeof child.type === 'string') {
-      return <Pressable>{merged as ReactElement<{ className?: string }, string>}</Pressable>;
-    }
-    return merged;
+    return wireOverlayChild(
+      Children.only(children),
+      {
+        ...rest,
+        ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+        ref,
+        className,
+      },
+      'press',
+      requestClose,
+    );
   }
 
   return (
@@ -365,7 +245,7 @@ function DialogClose({
       {...mergeProps(d.closeButton, className)}
       ref={ref}
       aria-label={ariaLabel ?? 'Close'}
-      onPress={close}
+      onPress={composeHandlers((rest as AriaButtonProps).onPress, () => requestClose())}
     >
       <Icon name="close" size="sm" />
     </AriaButton>

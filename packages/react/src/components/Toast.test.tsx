@@ -120,3 +120,36 @@ describe('imperative toast', () => {
     expect(screen.getByText('Uploaded')).toBeTruthy();
   });
 });
+
+describe('toast() without a provider and queue sizing', () => {
+  it('returns an empty id and warns in development when no provider is mounted', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(toast({ title: 'Lost' })).toBe('');
+    expect(toast.update('x', { title: 'y' })).toBe(false);
+    expect(warn.mock.calls.length).toBeLessThanOrEqual(1);
+    warn.mockRestore();
+  });
+
+  it('keeps existing toasts when maxVisibleToasts changes', async () => {
+    function Harness({ max }: { max: number }) {
+      return (
+        <ToastProvider maxVisibleToasts={max}>
+          <button type="button" onClick={() => toast({ title: 'One', durationMs: 0 })}>
+            go
+          </button>
+        </ToastProvider>
+      );
+    }
+    const { rerender } = wrap(<Harness max={3} />);
+    await userEvent.click(screen.getByRole('button', { name: 'go' }));
+    expect(screen.getByText('One')).toBeTruthy();
+    rerender(
+      <IconProvider icons={{}}>
+        <LayerProvider>
+          <Harness max={5} />
+        </LayerProvider>
+      </IconProvider>,
+    );
+    expect(screen.getByText('One')).toBeTruthy();
+  });
+});

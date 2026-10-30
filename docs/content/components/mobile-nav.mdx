@@ -5,7 +5,7 @@ description: Mobile drawer navigation with MobileNav.Toggle and provider.
 
 # MobileNav
 
-Slide-out mobile navigation drawer built on React Aria Modal — focus trap, Escape, and backdrop dismissal included. Control open state with `open` / `onOpenChange`, or share state through `MobileNavProvider` + `MobileNav.Toggle`.
+Slide-out mobile navigation drawer built on React Aria Modal — focus trap, Escape, and backdrop dismissal included. Like every overlay it takes `open` / `defaultOpen` / `onOpenChange(open, details)` (`details.reason` is `escape-key`, `outside-press`, `close-press`, `trigger-press` or `imperative`; `details.cancel()` vetoes the change), and it animates out. Or share state through `MobileNavProvider` + `MobileNav.Toggle`.
 
 ## Examples
 

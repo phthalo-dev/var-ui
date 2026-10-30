@@ -1,21 +1,11 @@
-import { useCallback, type MutableRefObject, type Ref } from 'react';
+import { useMemo, type Ref, type RefCallback } from 'react';
+import { mergeRefs } from '../internal/mergeRefs';
 
 /**
- * Returns a callback ref that assigns the node to an internal ref object and to the consumer's
- * forwarded `ref` (callback or object).
+ * Memoized callback ref that assigns the node to every given ref (object or callback, cleanup
+ * functions honored). Pass stable refs; an unstable callback ref re-attaches on every render.
  */
-export function useMergedRef<T>(
-  internal: MutableRefObject<T | null>,
-  external?: Ref<T>,
-  onNode?: (node: T | null) => void,
-): (node: T | null) => void {
-  return useCallback(
-    (node: T | null) => {
-      internal.current = node;
-      onNode?.(node);
-      if (typeof external === 'function') external(node);
-      else if (external) (external as MutableRefObject<T | null>).current = node;
-    },
-    [internal, external, onNode],
-  );
+export function useMergedRef<T>(...refs: Array<Ref<T> | undefined>): RefCallback<T> {
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- the ref list is the dependency list
+  return useMemo(() => mergeRefs(...refs), refs);
 }

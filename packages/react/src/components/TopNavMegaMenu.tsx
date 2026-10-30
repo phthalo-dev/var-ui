@@ -2,19 +2,26 @@ import type {
   AnchorHTMLAttributes,
   ComponentPropsWithRef,
   HTMLAttributes,
+  FocusEvent,
   JSX,
   KeyboardEvent,
   MouseEvent,
   ReactNode,
   Ref,
 } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { topNav } from '@var-ui/core/components/topNav';
 import { Icon } from '../icons';
 import { renderTopNavIcon, type TopNavIcon, type TopNavRichItem } from './TopNav';
 import { Text } from './Typography';
 import { mergeProps } from 'typestyles';
 import { RacLinkOrButton } from '../internal/racDomProps';
+import {
+  useHoverIntent,
+  useMergedRef,
+  useOverlayRoot,
+  type OverlayOpenChangeHandler,
+} from '../overlays';
 
 const OPEN_DELAY_DEFAULT = 150;
 const CLOSE_DELAY_DEFAULT = 250;
@@ -30,7 +37,8 @@ export type TopNavMegaMenuProps = Omit<ComponentPropsWithRef<'button'>, 'childre
   open?: boolean;
   /** Initial open state when uncontrolled. @default false */
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  /** Called when the panel requests to open or close. `details.cancel()` vetoes the change. */
+  onOpenChange?: OverlayOpenChangeHandler;
   /** Delay before the panel opens on hover/focus, in milliseconds. @default 150 */
   openDelay?: number;
   /** Delay before the panel closes after the pointer/focus leaves, in milliseconds. @default 250 */
@@ -59,80 +67,35 @@ export function TopNavMegaMenu({
   ...rest
 }: TopNavMegaMenuProps): JSX.Element {
   const s = topNav();
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const root = useOverlayRoot({ open: controlledOpen, defaultOpen, onOpenChange });
+  const isOpen = root.open;
+  const { setOpen, close } = root;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const setTrigger = useCallback(
-    (node: HTMLElement | null) => {
-      triggerRef.current = node as HTMLButtonElement | null;
-      if (typeof ref === 'function') return ref(node as HTMLButtonElement | null);
-      if (ref) ref.current = node as HTMLButtonElement | null;
-    },
-    [ref],
-  );
-  const openTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  const setOpen = useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
-
-  const clearTimers = useCallback(() => {
-    if (openTimerRef.current !== undefined) {
-      clearTimeout(openTimerRef.current);
-      openTimerRef.current = undefined;
-    }
-    if (closeTimerRef.current !== undefined) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = undefined;
-    }
-  }, []);
-
-  useEffect(() => clearTimers, [clearTimers]);
-
-  const scheduleOpen = useCallback(() => {
-    clearTimers();
-    openTimerRef.current = setTimeout(() => setOpen(true), openDelay);
-  }, [clearTimers, openDelay, setOpen]);
-
-  const scheduleClose = useCallback(() => {
-    clearTimers();
-    closeTimerRef.current = setTimeout(() => setOpen(false), closeDelay);
-  }, [clearTimers, closeDelay, setOpen]);
-
-  const toggle = useCallback(() => {
-    clearTimers();
-    setOpen(!isOpen);
-  }, [clearTimers, isOpen, setOpen]);
+  const setTrigger = useMergedRef<HTMLElement>(root.setTriggerEl, ref as Ref<HTMLElement>);
+  const { scheduleOpen, scheduleClose, cancel } = useHoverIntent(root, { openDelay, closeDelay });
 
   useEffect(() => {
     if (!isOpen) return;
     function handlePointerDown(event: PointerEvent) {
       if (containerRef.current?.contains(event.target as Node)) return;
-      clearTimers();
-      setOpen(false);
+      cancel();
+      close({ reason: 'outside-press', event });
     }
     document.addEventListener('pointerdown', handlePointerDown);
     return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [isOpen, clearTimers, setOpen]);
+  }, [isOpen, cancel, close]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Escape' && isOpen) {
         event.stopPropagation();
-        clearTimers();
-        setOpen(false);
-        triggerRef.current?.focus();
+        cancel();
+        close({ reason: 'escape-key', event: event.nativeEvent });
+        root.triggerRef.current?.focus();
       }
     },
-    [isOpen, clearTimers, setOpen],
+    [isOpen, cancel, close, root.triggerRef],
   );
 
   const hasPanelContent =
@@ -152,18 +115,33 @@ export function TopNavMegaMenu({
         aria-haspopup="true"
         onClick={(event: MouseEvent<HTMLElement>) => {
           (onClick as ((event: MouseEvent<HTMLElement>) => void) | undefined)?.(event);
-          if (!event.defaultPrevented) toggle();
+          if (event.defaultPrevented) return;
+          cancel();
+          setOpen(!isOpen, { reason: 'trigger-press', event: event.nativeEvent });
         }}
-        onMouseEnter={scheduleOpen}
-        onMouseLeave={scheduleClose}
-        onFocus={scheduleOpen}
-        onBlur={scheduleClose}
+        onMouseEnter={(event: MouseEvent<HTMLElement>) =>
+          scheduleOpen({ event: event.nativeEvent, reason: 'hover' })
+        }
+        onMouseLeave={(event: MouseEvent<HTMLElement>) =>
+          scheduleClose({ event: event.nativeEvent, reason: 'hover' })
+        }
+        onFocus={(event: FocusEvent<HTMLElement>) =>
+          scheduleOpen({ event: event.nativeEvent, reason: 'focus' })
+        }
+        onBlur={(event: FocusEvent<HTMLElement>) =>
+          scheduleClose({ event: event.nativeEvent, reason: 'focus' })
+        }
       >
         <span>{label}</span>
         <Icon name="chevronDown" size="sm" />
       </RacLinkOrButton>
       {isOpen && hasPanelContent ? (
-        <div {...mergeProps(s.megaPanel)} onMouseEnter={clearTimers} onMouseLeave={scheduleClose}>
+        <div
+          {...mergeProps(s.megaPanel)}
+          ref={root.setPopupEl}
+          onMouseEnter={cancel}
+          onMouseLeave={(event) => scheduleClose({ event: event.nativeEvent, reason: 'hover' })}
+        >
           <div {...mergeProps(s.megaItems)}>
             {items?.map((item) => (
               <TopNavMegaMenuItem
