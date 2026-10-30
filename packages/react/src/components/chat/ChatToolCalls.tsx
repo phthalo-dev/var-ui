@@ -1,4 +1,11 @@
-import { useState, type JSX, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import {
+  useState,
+  type ComponentPropsWithRef,
+  type JSX,
+  type KeyboardEvent,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import { chatToolCalls } from '@var-ui/core/components/chat/chatToolCalls';
 import { Icon } from '../../icons';
 import { Spinner } from '../Spinner';
@@ -19,7 +26,10 @@ export type ChatToolCallItem = {
   resultDetail?: ReactNode;
 };
 
-export type ChatToolCallsProps = {
+export type ChatToolCallsProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Tool call data — mirrors the shape LLM APIs (Vercel AI SDK, Anthropic, OpenAI) return. */
   calls: ChatToolCallItem[];
   /** Additional CSS class names merged onto the root element. */
@@ -83,7 +93,12 @@ function ToolCallRow({ call }: { call: ChatToolCallItem }) {
  * <ChatToolCalls calls={message.toolCalls.map((tc) => ({ name: tc.toolName, status: tc.state }))} />
  * ```
  */
-export function ChatToolCalls({ calls, className, ref }: ChatToolCallsProps): JSX.Element | null {
+export function ChatToolCalls({
+  calls,
+  className,
+  ref,
+  ...rest
+}: ChatToolCallsProps): JSX.Element | null {
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (calls.length === 0) {
@@ -94,7 +109,7 @@ export function ChatToolCalls({ calls, className, ref }: ChatToolCallsProps): JS
 
   if (calls.length === 1) {
     return (
-      <div {...mergeProps(classes.root, className)} ref={ref}>
+      <div {...rest} {...mergeProps(classes.root, className)} ref={ref}>
         <ToolCallRow call={calls[0]} />
       </div>
     );
@@ -103,7 +118,7 @@ export function ChatToolCalls({ calls, className, ref }: ChatToolCallsProps): JS
   const latest = calls[calls.length - 1];
 
   return (
-    <div {...mergeProps(classes.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(classes.root, className)} ref={ref}>
       <button
         type="button"
         aria-expanded={isExpanded}

@@ -5,19 +5,19 @@ description: Hex color field with swatch trigger and picker popover.
 
 # ColorInput
 
-Hex text field with a swatch button that opens a full HSV `ColorPicker` popover. Accepts controlled (`value` / `onChange`) or uncontrolled (`defaultValue`) hex strings. Invalid typed hex is ignored until blur, when the field snaps back to the last valid color.
+Hex text field with a swatch button that opens a full HSV `ColorPicker` popover. Accepts controlled (`value` / `onValueChange`) or uncontrolled (`defaultValue`) hex strings. Invalid typed hex is ignored until blur, when the field snaps back to the last valid color.
 
 ## Examples
 
 ### Default
 
-Pass a `label` and seed with `defaultValue` (or control via `value` / `onChange`).
+Pass a `label` and seed with `defaultValue` (or control via `value` / `onValueChange`).
 
 <Demo id="color-input.default" />
 
 ### Controlled value
 
-Drive the field with `value` and `onChange` when the hex must stay in sync with app state — typing a valid hex or picking from the popover both update the same value.
+Drive the field with `value` and `onValueChange` when the hex must stay in sync with app state — typing a valid hex or picking from the popover both update the same value.
 
 <Demo id="color-input.controlled" />
 

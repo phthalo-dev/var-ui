@@ -8,7 +8,7 @@ export default function Preview() {
   return (
     <HStack gap="md" wrap align="center">
       <Button
-        onPress={() => {
+        onClick={() => {
           setPlacement('start');
           setOpen(true);
         }}
@@ -16,7 +16,7 @@ export default function Preview() {
         Start
       </Button>
       <Button
-        onPress={() => {
+        onClick={() => {
           setPlacement('bottom');
           setOpen(true);
         }}
@@ -24,7 +24,7 @@ export default function Preview() {
         Bottom
       </Button>
       <Drawer
-        isOpen={open}
+        open={open}
         onOpenChange={setOpen}
         title={`${placement} drawer`}
         placement={placement}

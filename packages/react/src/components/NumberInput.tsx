@@ -15,19 +15,18 @@ import { mergeRacClassName } from '../internal/racClassName';
 import { useControlSize } from '../internal/controlSizeContext';
 import { splitRacFieldProps } from '../internal/racFieldProps';
 
-/** Props that stay with the RAC `NumberField` root (it owns the number state and hidden form input). */
+/** VarUI-named props that stay with the RAC `NumberField` root (it owns the number state and hidden form input). */
 const NUMBER_ROOT_KEYS = [
-  'minValue',
-  'maxValue',
+  'min',
+  'max',
   'step',
   'formatOptions',
-  'isWheelDisabled',
+  'wheelDisabled',
   'name',
   'form',
   'autoFocus',
   'onFocus',
   'onBlur',
-  'onFocusChange',
   'onKeyDown',
   'onKeyUp',
   'onCopy',
@@ -44,10 +43,54 @@ const NUMBER_ROOT_KEYS = [
 
 export type NumberInputProps = Omit<
   ComponentPropsWithRef<'input'>,
-  keyof RACNumberFieldProps | 'size' | 'disabled' | 'required' | 'readOnly' | 'type' | 'ref'
+  | 'value'
+  | 'defaultValue'
+  | 'className'
+  | 'style'
+  | 'children'
+  | 'size'
+  | 'disabled'
+  | 'required'
+  | 'readOnly'
+  | 'type'
+  | 'min'
+  | 'max'
+  | 'step'
+  | 'ref'
 > &
-  Omit<RACNumberFieldProps, 'children'> &
   FieldMeta & {
+    /** Controlled value. `NaN` when the field is empty. */
+    value?: number;
+    /** Initial value when uncontrolled. */
+    defaultValue?: number;
+    /** Called with the parsed number (`NaN` when cleared). The native `onChange` event still reaches the `<input>`. */
+    onValueChange?: (value: number) => void;
+    /** Smallest allowed value. */
+    min?: number;
+    /** Largest allowed value. */
+    max?: number;
+    /** Amount the stepper buttons and arrow keys change the value by. @default 1 */
+    step?: number;
+    /** Number formatting (currency, percent, units, ...). */
+    formatOptions?: Intl.NumberFormatOptions;
+    /** Disables changing the value with the mouse wheel while focused. */
+    wheelDisabled?: boolean;
+    /** Disables the control. */
+    disabled?: boolean;
+    /** Makes the value read-only (focusable, not editable). */
+    readOnly?: boolean;
+    /** Marks the field required. */
+    required?: boolean;
+    /** Shows the error state. Defaults to `Boolean(errorMessage)`. */
+    invalid?: boolean;
+    /** Custom validation; return a message (or messages) to mark the value invalid. */
+    validate?: RACNumberFieldProps['validate'];
+    /** `native` uses browser constraint validation; `aria` validates on the fly. @default native */
+    validationBehavior?: 'native' | 'aria';
+    /** Classes for the root element. A function receives RAC render state. */
+    className?: RACNumberFieldProps['className'];
+    /** Inline style for the root element. */
+    style?: RACNumberFieldProps['style'];
     /** Control density. Falls back to the surrounding control size, then `md`. */
     size?: NonNullable<NumberInputVariantProps['size']>;
     /**
@@ -83,10 +126,12 @@ export function NumberInput({
 }: NumberInputProps): JSX.Element {
   const contextSize = useControlSize();
   const n = numberInput({ size: size ?? contextSize ?? 'md' });
-  const [rootProps, inputProps] = splitRacFieldProps(props, NUMBER_ROOT_KEYS);
+  const [{ min, max, ...rootProps }, inputProps] = splitRacFieldProps(props, NUMBER_ROOT_KEYS);
   return (
     <AriaNumberField
-      {...(rootProps as Partial<RACNumberFieldProps>)}
+      {...(rootProps as unknown as Partial<RACNumberFieldProps>)}
+      minValue={min as number | undefined}
+      maxValue={max as number | undefined}
       isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
       className={mergeRacClassName(n.root, className)}
       style={style}

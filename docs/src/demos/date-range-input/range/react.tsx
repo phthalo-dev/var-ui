@@ -13,7 +13,7 @@ export default function Preview() {
     <DateRangeInput
       label="Trip"
       value={value}
-      onChange={(next) => {
+      onValueChange={(next) => {
         if (next) setValue(next);
       }}
     />

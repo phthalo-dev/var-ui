@@ -6,7 +6,7 @@ function ToastDemoButtons() {
   return (
     <HStack gap="sm" wrap>
       <Button
-        onPress={() =>
+        onClick={() =>
           add({
             tone: 'success',
             title: 'Saved',
@@ -17,7 +17,7 @@ function ToastDemoButtons() {
         useToast
       </Button>
       <Button
-        onPress={() =>
+        onClick={() =>
           toast.show({
             tone: 'info',
             title: 'Syncing',
@@ -30,7 +30,7 @@ function ToastDemoButtons() {
       <Button
         tone="accent"
         appearance="ghost"
-        onPress={() => {
+        onClick={() => {
           const id = toast.show({ tone: 'info', title: 'Uploading…', durationMs: 0 });
           window.setTimeout(() => {
             toast.update(id, { tone: 'success', title: 'Upload complete' });

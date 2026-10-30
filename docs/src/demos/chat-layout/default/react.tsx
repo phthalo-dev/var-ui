@@ -23,8 +23,8 @@ export default function Preview() {
     <div style={{ height: '280px' }}>
       <ChatLayout
         composer={
-          <ChatComposer actions={<ChatSendButton onPress={() => send(value)} />}>
-            <ChatComposerInput value={value} onChange={setValue} onSubmit={send} />
+          <ChatComposer actions={<ChatSendButton onClick={() => send(value)} />}>
+            <ChatComposerInput value={value} onValueChange={setValue} onSubmit={send} />
           </ChatComposer>
         }
       >

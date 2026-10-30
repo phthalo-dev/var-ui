@@ -6,7 +6,7 @@ describe('generateButtonCode', () => {
     appearance: 'subtle' as const,
     tone: 'neutral' as const,
     size: 'md' as const,
-    isDisabled: false,
+    disabled: false,
     elevated: false,
     label: 'Button',
   };
@@ -24,12 +24,12 @@ describe('generateButtonCode', () => {
       tone: 'accent',
       appearance: 'filled',
       size: 'lg',
-      isDisabled: true,
+      disabled: true,
     });
     expect(code).toContain('tone="accent"');
     expect(code).toContain('appearance="filled"');
     expect(code).toContain('size="lg"');
-    expect(code).toContain('isDisabled');
+    expect(code).toMatch(/ disabled/);
   });
 
   it('generates Astro markup with disabled', () => {
@@ -37,7 +37,7 @@ describe('generateButtonCode', () => {
       ...base,
       tone: 'danger',
       appearance: 'outline',
-      isDisabled: true,
+      disabled: true,
     });
     expect(filename).toBe('Demo.astro');
     expect(code).toContain('@var-ui/astro');

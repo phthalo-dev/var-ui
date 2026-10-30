@@ -6,7 +6,7 @@ import { createResizeHandle } from './resizeHandle';
 const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
 export type SideNavCollapsibleConfig = {
-  defaultIsCollapsed?: boolean;
+  defaultCollapsed?: boolean;
   hasButton?: boolean;
   buttonLabel?: string;
 };
@@ -92,7 +92,7 @@ export function initSideNav(root: HTMLElement): () => void {
   const collapsedSize = resizableConfig.collapsedSize ?? DEFAULT_COLLAPSED_SIZE;
   const resizeCollapsible = resizableEnabled && (resizableConfig.collapsible ?? collapsibleEnabled);
 
-  let isCollapsed = collapsibleConfig.defaultIsCollapsed ?? false;
+  let isCollapsed = collapsibleConfig.defaultCollapsed ?? false;
   let width = (() => {
     const stored = readStoredWidth(resizableConfig.autoSaveId);
     const initial = stored ?? defaultWidth;

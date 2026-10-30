@@ -39,7 +39,7 @@ import { mergeProps } from 'typestyles';
 
 export type PopoverRootProps = {
   children: ReactNode;
-  isOpen?: boolean;
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: OverlayOpenChangeHandler;
   /**
@@ -105,13 +105,13 @@ function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
 
 function PopoverRoot({
   children,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
   portalContainer,
 }: PopoverRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const popupRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const [, setPopupEl] = useState<HTMLDivElement | null>(null);
@@ -132,9 +132,9 @@ function PopoverRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   useEffect(() => {

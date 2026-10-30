@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, JSX } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode } from 'react';
 import {
   Button as AriaButton,
   Link as AriaLink,
@@ -9,36 +9,41 @@ import { button } from '@var-ui/core/components/button';
 import type { ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
+import { toRacProps } from '../internal/racProps';
 
 type ButtonOwnProps = ButtonVariantProps & {
   /** Additional CSS class names merged onto the root element. */
   className?: string;
+  /** Inline style for the root element. */
+  style?: CSSProperties;
+  /** Button content. */
+  children?: ReactNode;
+  /** Disables the button. A disabled button does not fire `onClick`. */
+  disabled?: boolean;
 };
 
-/** Native `<button>` attributes RAC does not model itself (`title`, `tabIndex`, `form`, ...). */
-type NativeButtonProps = Omit<
+/**
+ * A `<button>`: the default when no `href` is given. Every native button attribute and handler
+ * (`type`, `name`, `form`, `onClick`, `onFocus`, ...) reaches the element; `onClick` fires for
+ * mouse, touch and keyboard activation.
+ */
+export type ButtonAsButtonProps = Omit<
   ComponentPropsWithRef<'button'>,
-  keyof RACButtonProps | keyof ButtonOwnProps | 'children' | 'style' | 'href'
->;
-
-/** Native `<a>` attributes RAC does not model itself. */
-type NativeAnchorProps = Omit<
-  ComponentPropsWithRef<'a'>,
-  keyof RACLinkProps | keyof ButtonOwnProps | 'children' | 'style' | 'href'
->;
-
-/** A `<button>`: the default when no `href` is given. */
-export type ButtonAsButtonProps = Omit<RACButtonProps, 'className'> &
-  NativeButtonProps &
+  keyof ButtonOwnProps | 'ref'
+> &
   ButtonOwnProps & {
     href?: undefined;
+    /** Shows a loading state and ignores presses while an action is in flight. */
+    loading?: boolean;
     /** Ref to the underlying `<button>` element. */
     ref?: ComponentPropsWithRef<'button'>['ref'];
   };
 
 /** An `<a>` styled as a button: rendered when `href` is given. */
-export type ButtonAsLinkProps = Omit<RACLinkProps, 'className'> &
-  NativeAnchorProps &
+export type ButtonAsLinkProps = Omit<
+  ComponentPropsWithRef<'a'>,
+  keyof ButtonOwnProps | 'ref' | 'href'
+> &
   ButtonOwnProps & {
     /** Renders an `<a>` instead of a `<button>`. */
     href: string;
@@ -59,22 +64,20 @@ export function Button(props: ButtonProps): JSX.Element {
   const extras = pickRacDroppedDomProps(rest);
 
   if (props.href !== undefined) {
-    const linkRest = rest as Omit<ButtonAsLinkProps, keyof ButtonOwnProps>;
     return (
       <AriaLink
-        {...(linkRest as RACLinkProps)}
+        {...(toRacProps(rest) as RACLinkProps)}
         {...merged}
-        render={racRenderWithExtras('a', extras, linkRest.render as never) as never}
+        render={racRenderWithExtras('a', extras) as never}
       />
     );
   }
 
-  const buttonRest = rest as Omit<ButtonAsButtonProps, keyof ButtonOwnProps>;
   return (
     <AriaButton
-      {...(buttonRest as RACButtonProps)}
+      {...(toRacProps(rest) as RACButtonProps)}
       {...merged}
-      render={racRenderWithExtras('button', extras, buttonRest.render as never) as never}
+      render={racRenderWithExtras('button', extras) as never}
     />
   );
 }

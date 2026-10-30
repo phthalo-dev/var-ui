@@ -1,8 +1,11 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatComposer } from '@var-ui/core/components/chat/chatComposer';
 import { mergeProps } from 'typestyles';
 
-export type ChatComposerProps = {
+export type ChatComposerProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Composer input — typically `ChatComposerInput`. */
   children: ReactNode;
   /** Trailing actions — typically `ChatSendButton`. */
@@ -17,8 +20,8 @@ export type ChatComposerProps = {
  * Bordered composer chrome around the message input and trailing actions.
  *
  * ```tsx
- * <ChatComposer actions={<ChatSendButton onPress={send} />}>
- *   <ChatComposerInput value={value} onChange={setValue} onSubmit={send} />
+ * <ChatComposer actions={<ChatSendButton onClick={send} />}>
+ *   <ChatComposerInput value={value} onValueChange={setValue} onSubmit={send} />
  * </ChatComposer>
  * ```
  */
@@ -27,10 +30,11 @@ export function ChatComposer({
   actions,
   className,
   ref,
+  ...rest
 }: ChatComposerProps): JSX.Element {
   const c = chatComposer();
   return (
-    <div {...mergeProps(c.root, className)} ref={ref}>
+    <div {...rest} {...mergeProps(c.root, className)} ref={ref}>
       {children}
       {actions ? <div {...mergeProps(c.actions)}>{actions}</div> : null}
     </div>

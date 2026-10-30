@@ -154,7 +154,7 @@ export default function TokenReferenceTable({ rows }: TokenReferenceTableProps):
         startContent={
           <SearchInput
             value={query}
-            onChange={onQueryChange}
+            onValueChange={onQueryChange}
             placeholder="Search tokens…"
             aria-label="Search design tokens"
             size="sm"
@@ -193,7 +193,7 @@ export default function TokenReferenceTable({ rows }: TokenReferenceTableProps):
               Kind
             </Table.Column>
             <Table.Column
-              isRowHeader
+              rowHeader
               {...columnSort('tokenPath', sortDescriptor, onSortChange)}
               {...resize.getColumnProps('tokenPath')}
               resizeHandle={<ResizeHandle {...resize.getResizeHandleProps('tokenPath')} />}
@@ -231,7 +231,7 @@ export default function TokenReferenceTable({ rows }: TokenReferenceTableProps):
               <Table.Row key={row.id}>
                 <Table.Cell>{row.namespace}</Table.Cell>
                 <Table.Cell>{row.kind}</Table.Cell>
-                <Table.Cell isRowHeader>
+                <Table.Cell rowHeader>
                   <span style={monoStyle}>{row.tokenPath}</span>
                 </Table.Cell>
                 <Table.Cell>

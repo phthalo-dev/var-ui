@@ -88,9 +88,9 @@ describe('InputGroup', () => {
     expect(screen.getByRole('group').getAttribute('data-size')).toBe('md');
   });
 
-  it('sets aria-disabled and data-disabled when isDisabled is true', () => {
+  it('sets aria-disabled and data-disabled when disabled is true', () => {
     render(
-      <InputGroup label="Price" isDisabled>
+      <InputGroup label="Price" disabled>
         <InputGroupText>$</InputGroupText>
         <InputGroupInput aria-label="Price" />
       </InputGroup>,

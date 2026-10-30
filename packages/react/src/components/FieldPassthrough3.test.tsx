@@ -115,7 +115,7 @@ describe('FileInput passthrough', () => {
       <FileInput
         label="Resume"
         value={null}
-        onChange={() => {}}
+        onValueChange={() => {}}
         data-testid="t"
         name="resume"
         form="f"
@@ -140,7 +140,7 @@ describe('FileInput passthrough', () => {
       <FileInput
         label="Resume"
         value={null}
-        onChange={() => {}}
+        onValueChange={() => {}}
         description="Hint"
         errorMessage="Bad"
       />,
@@ -157,7 +157,7 @@ describe('FileInput passthrough', () => {
       <FileInput
         label="Img"
         value={null}
-        onChange={() => {}}
+        onValueChange={() => {}}
         accept="image/*"
         invalidTypeMessage={(n) => `${n} no`}
         data-testid="t"
@@ -189,7 +189,7 @@ describe('FileInput passthrough', () => {
       const onChange = vi.fn();
       const file = new File(['hello'], 'dropped.txt', { type: 'text/plain' });
       const { container } = render(
-        <FileInput label="Doc" name="doc" value={null} onChange={onChange} data-testid="t" />,
+        <FileInput label="Doc" name="doc" value={null} onValueChange={onChange} data-testid="t" />,
       );
       const input = screen.getByTestId('t') as HTMLInputElement;
       const assigned = vi.fn();
@@ -209,7 +209,7 @@ describe('FileInput passthrough', () => {
       (globalThis as { DataTransfer?: unknown }).DataTransfer = undefined;
       const onChange = vi.fn();
       const file = new File(['hello'], 'dropped.txt');
-      render(<FileInput label="Doc" value={null} onChange={onChange} />);
+      render(<FileInput label="Doc" value={null} onValueChange={onChange} />);
       fireEvent.drop(screen.getByRole('button'), { dataTransfer: { files: [file] } });
       expect(onChange).toHaveBeenCalledWith(file);
     });

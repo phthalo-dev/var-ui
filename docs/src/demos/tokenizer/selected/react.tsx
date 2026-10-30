@@ -2,14 +2,14 @@ import { Tokenizer } from '@var-ui/react';
 import { useState } from 'react';
 
 const options = [
-  { id: 'alpha', label: 'Alpha' },
-  { id: 'beta', label: 'Beta' },
-  { id: 'gamma', label: 'Gamma' },
-  { id: 'delta', label: 'Delta' },
+  { value: 'alpha', label: 'Alpha' },
+  { value: 'beta', label: 'Beta' },
+  { value: 'gamma', label: 'Gamma' },
+  { value: 'delta', label: 'Delta' },
 ];
 
 export default function Preview() {
-  const [value, setValue] = useState([options[0]!, options[2]!]);
+  const [value, setValue] = useState(['alpha', 'gamma']);
 
   return (
     <Tokenizer
@@ -17,7 +17,7 @@ export default function Preview() {
       description="Start with a few tokens already selected"
       options={options}
       value={value}
-      onChange={setValue}
+      onValueChange={setValue}
     />
   );
 }

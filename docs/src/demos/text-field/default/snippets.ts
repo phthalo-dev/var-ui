@@ -10,7 +10,6 @@ export const snippets = {
 />`,
   astro: `---
 // No @var-ui/astro TextField — use core recipe markup + native input.
-// React Aria uses isDisabled; native HTML uses disabled.
 import { textField } from '@var-ui/core';
 
 const tf = textField();

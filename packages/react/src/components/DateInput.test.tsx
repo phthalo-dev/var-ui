@@ -32,7 +32,7 @@ describe('DateInput', () => {
         <DateInput
           label="Appointment date"
           value={new CalendarDate(2026, 7, 15)}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -47,7 +47,7 @@ describe('DateInput', () => {
         <DateInput
           label="Appointment date"
           value={new CalendarDate(2026, 7, 15)}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );

@@ -26,7 +26,7 @@ describe('useColumnResize', () => {
       }),
     );
 
-    act(() => result.current.getResizeHandleProps('name').onChange(240));
+    act(() => result.current.getResizeHandleProps('name').onValueChange(240));
 
     expect(result.current.getColumnProps('name').width).toBe('240px');
     expect(result.current.getColumnProps('status').width).toBe('160px');
@@ -42,7 +42,7 @@ describe('useColumnResize', () => {
       }),
     );
 
-    act(() => result.current.getResizeHandleProps('a').onChange(360));
+    act(() => result.current.getResizeHandleProps('a').onValueChange(360));
     expect(result.current.getColumnProps('a').width).toBe('200px');
     expect(result.current.getColumnProps('b').width).toBe('200px');
   });
@@ -56,7 +56,7 @@ describe('useColumnResize', () => {
       { initialProps: { widths: initial } },
     );
 
-    act(() => result.current.getResizeHandleProps('name').onChange(220));
+    act(() => result.current.getResizeHandleProps('name').onValueChange(220));
     expect(onWidthsChange).toHaveBeenCalledWith({ name: 220, status: 180, region: 200 });
     expect(result.current.getColumnProps('name').width).toBe('200px');
 
@@ -75,7 +75,7 @@ describe('useColumnResize', () => {
       }),
     );
 
-    act(() => result.current.getResizeHandleProps('a').onChange(180));
+    act(() => result.current.getResizeHandleProps('a').onValueChange(180));
     expect(JSON.parse(window.localStorage.getItem('var-ui-column-resize:test-table')!)).toEqual({
       a: 180,
       b: 140,

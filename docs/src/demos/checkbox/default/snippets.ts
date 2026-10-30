@@ -6,7 +6,6 @@ export const snippets = {
 <Checkbox>Accept terms</Checkbox>`,
   astro: `---
 // No @var-ui/astro Checkbox — core recipe + native checkbox (visual box is decorative).
-// React Aria uses isDisabled; native HTML uses disabled.
 import { checkbox } from '@var-ui/core';
 
 const cb = checkbox();

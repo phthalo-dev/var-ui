@@ -3,11 +3,11 @@ import { Table } from '@var-ui/react';
 export default function Preview() {
   return (
     <Table
-      isStriped
+      striped
       density="compact"
       caption="Team roster"
       columns={[
-        { key: 'name', header: 'Name', isRowHeader: true },
+        { key: 'name', header: 'Name', rowHeader: true },
         { key: 'role', header: 'Role' },
         { key: 'status', header: 'Status' },
       ]}

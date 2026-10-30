@@ -4,18 +4,17 @@ import { Icon } from '../icons';
 import { Button, type ButtonAsButtonProps } from './Button';
 
 export type IconButtonProps = Omit<ButtonAsButtonProps, 'children' | 'layout' | 'href'> & {
+  /** Accessible name. Required: the button has no visible text. */
   'aria-label': string;
   /**
-   * Icon to render. Note: this shadows the native `<button name>` attribute,
-   * which is therefore not reachable through IconButton.
+   * Icon to render: a registry icon name (`'close'`), or any node (an `<svg>`, a custom icon).
+   * `name` stays the native `<button name>` attribute.
    */
-  name: IconName;
-  icon?: ReactNode;
+  icon: IconName | Exclude<ReactNode, string>;
   'data-mirror'?: boolean | '';
 };
 
 export function IconButton({
-  name,
   icon,
   size = 'md',
   'data-mirror': dataMirror,
@@ -23,12 +22,14 @@ export function IconButton({
 }: IconButtonProps): JSX.Element {
   return (
     <Button {...props} size={size} layout="icon">
-      {icon ?? (
+      {typeof icon === 'string' ? (
         <Icon
-          name={name}
+          name={icon as IconName}
           size={size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md'}
           data-mirror={dataMirror}
         />
+      ) : (
+        icon
       )}
     </Button>
   );

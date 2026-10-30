@@ -5,7 +5,7 @@ export const snippets = {
 
 <SideNav header={<SideNav.Heading heading="Acme" />}>
   <SideNav.Section title="Main">
-    <SideNav.Item label="Dashboard" href="/" isSelected />
+    <SideNav.Item label="Dashboard" href="/" selected />
   </SideNav.Section>
 </SideNav>`,
   astro: `---
@@ -14,7 +14,7 @@ import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@var-ui/as
 <SideNav>
   <SideNavHeading slot="header" heading="Acme" />
   <SideNavSection title="Main">
-    <SideNavItem label="Dashboard" href="/" isSelected />
+    <SideNavItem label="Dashboard" href="/" selected />
   </SideNavSection>
 </SideNav>`,
   html: `<nav class="var-ui-side-nav" aria-label="Side navigation">…</nav>`,

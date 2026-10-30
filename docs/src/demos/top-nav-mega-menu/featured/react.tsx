@@ -6,7 +6,7 @@ export default function Preview() {
       <TopNav heading={<TopNav.Heading heading="Acme" />}>
         <TopNav.MegaMenu
           label="Solutions"
-          isOpen
+          open
           items={[
             {
               id: 'startups',

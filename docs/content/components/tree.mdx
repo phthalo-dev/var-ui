@@ -5,7 +5,7 @@ description: Hierarchical tree with Tree.Item nodes and selection modes.
 
 # Tree
 
-Hierarchical expandable list with APG tree keyboard behavior. Compose nested `Tree.Item`s or pass a recursive `items` array; control expand/selection with `expandedKeys` / `selectedKeys`.
+Hierarchical expandable list with APG tree keyboard behavior. Compose nested `Tree.Item`s or pass a recursive `items` array; control expand/selection with `expanded` / `onExpandedChange` and `value` / `onValueChange` (string ids; `string[]` when `selectionMode="multiple"`).
 
 ## Examples
 
@@ -17,7 +17,7 @@ A small file tree with one folder expanded.
 
 ### Expanded selection
 
-Seed nested expansion with `defaultExpandedKeys` and highlight a leaf via `selectionMode` + `defaultSelectedKeys`.
+Seed nested expansion with `defaultExpandedKeys` and highlight a leaf via `selectionMode` + `defaultValue`.
 
 <Demo id="tree.expanded" />
 

@@ -2,12 +2,12 @@ import { Tokenizer } from '@var-ui/react';
 import { useState } from 'react';
 
 const options = [
-  { id: 'alpha', label: 'Alpha' },
-  { id: 'beta', label: 'Beta' },
-  { id: 'gamma', label: 'Gamma' },
+  { value: 'alpha', label: 'Alpha' },
+  { value: 'beta', label: 'Beta' },
+  { value: 'gamma', label: 'Gamma' },
 ];
 
 export default function Preview() {
-  const [value, setValue] = useState<typeof options>([]);
-  return <Tokenizer label="Tags" options={options} value={value} onChange={setValue} />;
+  const [value, setValue] = useState<string[]>([]);
+  return <Tokenizer label="Tags" options={options} value={value} onValueChange={setValue} />;
 }

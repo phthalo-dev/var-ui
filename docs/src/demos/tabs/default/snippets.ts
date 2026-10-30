@@ -5,20 +5,20 @@ export const snippets = {
 
 <Tabs
   tabs={[
-    { id: 'overview', label: 'Overview', content: <Text>First panel content.</Text> },
-    { id: 'details', label: 'Details', content: <Text>Second panel content.</Text> },
+    { value: 'overview', label: 'Overview', content: <Text>First panel content.</Text> },
+    { value: 'details', label: 'Details', content: <Text>Second panel content.</Text> },
   ]}
 />`,
   astro: `---
 import { Tabs, Text } from '@var-ui/astro';
 
 const tabDefs = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'details', label: 'Details' },
+  { value: 'overview', label: 'Overview' },
+  { value: 'details', label: 'Details' },
 ];
 ---
 
-<Tabs tabs={tabDefs} defaultSelectedId="overview">
+<Tabs tabs={tabDefs} defaultValue="overview">
   <div slot="overview">
     <Text>First panel content.</Text>
   </div>

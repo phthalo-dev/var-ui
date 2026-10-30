@@ -1,9 +1,12 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatSystemMessage } from '@var-ui/core/components/chat/chatSystemMessage';
 import type { ChatSystemMessageVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type ChatSystemMessageProps = {
+export type ChatSystemMessageProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Semantic tone. @default neutral */
   tone?: NonNullable<ChatSystemMessageVariantProps['tone']>;
   /** Optional leading icon — pass an `<Icon name="…" />`. */
@@ -29,10 +32,11 @@ export function ChatSystemMessage({
   children,
   className,
   ref,
+  ...rest
 }: ChatSystemMessageProps): JSX.Element {
   const s = chatSystemMessage({ tone });
   return (
-    <div {...mergeProps(s.root, className)} ref={ref} role="status">
+    <div role="status" {...rest} {...mergeProps(s.root, className)} ref={ref}>
       {icon ? <span {...mergeProps(s.icon)}>{icon}</span> : null}
       <span {...mergeProps(s.text)}>{children}</span>
     </div>

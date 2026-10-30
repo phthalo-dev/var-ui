@@ -41,7 +41,7 @@ describe('TopNav', () => {
   it('marks a selected item with data-selected and aria-current="page"', () => {
     wrap(
       <TopNav>
-        <TopNav.Item label="Home" href="/" isSelected />
+        <TopNav.Item label="Home" href="/" selected />
         <TopNav.Item label="Docs" href="/docs" />
       </TopNav>,
     );
@@ -55,7 +55,7 @@ describe('TopNav', () => {
   });
 
   it('exposes an accessible name from `label` for icon-only items', () => {
-    wrap(<TopNav.Item label="Search" isIconOnly onPress={() => {}} />);
+    wrap(<TopNav.Item label="Search" iconOnly onClick={() => {}} />);
     expect(screen.getByRole('button', { name: 'Search' })).toBeTruthy();
   });
 
@@ -157,7 +157,7 @@ describe('TopNav', () => {
           label="Solutions"
           items={[{ id: 'x', title: 'For startups', href: '/startups' }]}
           // `userEvent.click` also fires hover + focus, which schedule open. Short
-          // delays can open before `onPress` and then toggle the menu closed.
+          // delays can open before `onClick` and then toggle the menu closed.
           openDelay={10000}
           closeDelay={10000}
         />

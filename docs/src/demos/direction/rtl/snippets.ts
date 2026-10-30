@@ -6,7 +6,7 @@ export const snippets = {
 <DirectionProvider direction="rtl">
   <SideNav header={<SideNav.Heading heading="Docs" />}>
     <SideNav.Section title="Main">
-      <SideNav.Item label="Overview" href="#overview" isSelected />
+      <SideNav.Item label="Overview" href="#overview" selected />
       <SideNav.Item label="Guides" collapsible>
         <SideNav.Item label="Hidden" href="#hidden" />
         <SideNav.Item label="Direction" href="#direction" />
@@ -19,7 +19,7 @@ export const snippets = {
       { id: 'here', label: 'Current' },
     ]}
   />
-  <Pagination page={1} onChange={() => {}} totalPages={5} variant="compact" />
+  <Pagination page={1} onValueChange={() => {}} totalPages={5} variant="compact" />
   <Text>dir=rtl island</Text>
 </DirectionProvider>`,
   astro: `---
@@ -29,7 +29,7 @@ import { Breadcrumbs, SideNav, SideNavHeading, SideNavItem, SideNavSection, Text
   <SideNav>
     <SideNavHeading slot="header" heading="Docs" />
     <SideNavSection title="Main">
-      <SideNavItem label="Overview" href="#overview" isSelected />
+      <SideNavItem label="Overview" href="#overview" selected />
       <SideNavItem label="Hidden" href="#hidden" />
     </SideNavSection>
   </SideNav>

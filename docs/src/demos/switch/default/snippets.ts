@@ -6,7 +6,6 @@ export const snippets = {
 <Switch>Enable notifications</Switch>`,
   astro: `---
 // No @var-ui/astro Switch — core recipe + native checkbox (role="switch").
-// React Aria uses isDisabled / isSelected; native HTML uses disabled / checked.
 import { switchStyles } from '@var-ui/core';
 
 const sw = switchStyles();

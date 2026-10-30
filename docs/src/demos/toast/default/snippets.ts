@@ -5,7 +5,7 @@ export const snippets = {
 
 function NotifyButton() {
   const { add } = useToast();
-  return <Button onPress={() => add({ tone: 'success', title: 'Saved' })}>Save</Button>;
+  return <Button onClick={() => add({ tone: 'success', title: 'Saved' })}>Save</Button>;
 }
 
 <ToastProvider>

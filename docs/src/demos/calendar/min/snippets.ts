@@ -7,8 +7,8 @@ import { Calendar } from '@var-ui/react';
 <Calendar
   aria-label="Pick a day"
   value={value}
-  onChange={setValue}
-  minValue={new CalendarDate(2026, 8, 1)}
+  onValueChange={setValue}
+  min={new CalendarDate(2026, 8, 1)}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

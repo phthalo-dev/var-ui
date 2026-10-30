@@ -36,9 +36,9 @@ export type UseResizableResult = {
     value: number;
     minValue: number;
     maxValue: number;
-    onChange: (next: number) => void;
+    onValueChange: (next: number) => void;
     onCollapse?: () => void;
-    isCollapsed: boolean;
+    collapsed: boolean;
     'aria-label'?: string;
   };
 };
@@ -130,9 +130,9 @@ function useResizableRegion(
       value: width,
       minValue: minWidth,
       maxValue: maxWidth,
-      onChange: resize,
+      onValueChange: resize,
       onCollapse: collapsible ? collapse : undefined,
-      isCollapsed,
+      collapsed: isCollapsed,
     }),
     [collapse, collapsible, isCollapsed, maxWidth, minWidth, resize, width],
   );

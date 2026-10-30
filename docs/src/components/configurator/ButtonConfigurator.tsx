@@ -20,7 +20,7 @@ const DEFAULT_STATE: ButtonConfiguratorState = {
   appearance: 'subtle',
   tone: 'neutral',
   size: 'md',
-  isDisabled: false,
+  disabled: false,
   elevated: false,
   label: 'Button',
 };
@@ -49,7 +49,7 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
             appearance={state.appearance}
             size={state.size}
             elevated={state.elevated}
-            isDisabled={state.isDisabled}
+            disabled={state.disabled}
           >
             {state.label}
           </Button>
@@ -80,8 +80,8 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
             <ControlGroup label="Disabled">
               <Switch
                 aria-label="Disabled"
-                isSelected={state.isDisabled}
-                onChange={(isDisabled) => setState((s) => ({ ...s, isDisabled }))}
+                checked={state.disabled}
+                onCheckedChange={(disabled) => setState((s) => ({ ...s, disabled }))}
               >
                 Disabled
               </Switch>
@@ -90,8 +90,8 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
             <ControlGroup label="Elevated">
               <Switch
                 aria-label="Elevated"
-                isSelected={state.elevated}
-                onChange={(elevated) => setState((s) => ({ ...s, elevated }))}
+                checked={state.elevated}
+                onCheckedChange={(elevated) => setState((s) => ({ ...s, elevated }))}
               >
                 Elevated
               </Switch>

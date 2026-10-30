@@ -7,7 +7,7 @@ export default function Preview() {
       title="Delete item?"
       description="This cannot be undone."
       confirmLabel="Delete"
-      isDestructive
+      destructive
       onConfirm={() => {}}
     />
   );

@@ -38,9 +38,9 @@ const breadcrumbItems = [
 ];
 
 const tabDefs = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'api', label: 'API' },
-  { id: 'tokens', label: 'Tokens' },
+  { value: 'overview', label: 'Overview' },
+  { value: 'api', label: 'API' },
+  { value: 'tokens', label: 'Tokens' },
 ];
 ---
 
@@ -80,14 +80,14 @@ const tabDefs = [
 
     <Section title="Feedback">
       <Stack gap="md">
-        <Alert variant="info" title="Info alert">
+        <Alert tone="info" title="Info alert">
           Alerts support optional titles, actions, and icon slots.
         </Alert>
-        <Alert variant="success" appearance="solid" title="Success">
+        <Alert tone="success" appearance="solid" title="Success">
           Deploy finished in 42s.
         </Alert>
         <Alert
-          variant="warning"
+          tone="warning"
           title="Action required"
           action={{ href: '#', label: 'Review changes' }}
         >
@@ -105,7 +105,7 @@ const tabDefs = [
           </HStack>
         </HStack>
         <ProgressBar label="Uploading assets" value={64} />
-        <ProgressBar label="Reindexing" isIndeterminate />
+        <ProgressBar label="Reindexing" indeterminate />
         <div style="max-width: 320px;">
           <Stack gap="xs">
             <Skeleton shape="text" style="width: 60%;" />
@@ -151,9 +151,9 @@ const tabDefs = [
     </Section>
 
     <Section title="Tabs">
-      <Tabs tabs={tabDefs} defaultSelectedId="overview">
+      <Tabs tabs={tabDefs} defaultValue="overview">
         <div slot="overview">
-          <Text>Overview panel — selected by default via <Kbd>defaultSelectedId</Kbd>.</Text>
+          <Text>Overview panel — selected by default via <Kbd>defaultValue</Kbd>.</Text>
         </div>
         <div slot="api">
           <Text>API reference panel with keyboard navigation (Arrow keys, Home/End).</Text>

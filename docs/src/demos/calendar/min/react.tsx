@@ -8,8 +8,8 @@ export default function Preview() {
     <Calendar
       aria-label="Pick a day"
       value={value}
-      onChange={setValue}
-      minValue={new CalendarDate(2026, 8, 1)}
+      onValueChange={setValue}
+      min={new CalendarDate(2026, 8, 1)}
     />
   );
 }

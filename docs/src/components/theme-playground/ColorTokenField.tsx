@@ -32,7 +32,7 @@ export function ColorTokenField({ field, value, onChange }: ColorTokenFieldProps
         size="sm"
         value={value ?? ''}
         placeholder={field.defaultValue}
-        onChange={(next) => onChange(field.path, next)}
+        onValueChange={(next) => onChange(field.path, next)}
       />
     </div>
   );

@@ -4,7 +4,7 @@ export default function Preview() {
   return (
     <Table
       columns={[
-        { key: 'name', header: 'Name', isRowHeader: true },
+        { key: 'name', header: 'Name', rowHeader: true },
         { key: 'role', header: 'Role' },
       ]}
       data={[

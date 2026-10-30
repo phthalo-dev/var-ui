@@ -9,13 +9,13 @@ describe('Table', () => {
       <Table caption="Team">
         <Table.Header>
           <Table.Row>
-            <Table.Column isRowHeader>Name</Table.Column>
+            <Table.Column rowHeader>Name</Table.Column>
             <Table.Column>Role</Table.Column>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           <Table.Row>
-            <Table.Cell isRowHeader>Ada</Table.Cell>
+            <Table.Cell rowHeader>Ada</Table.Cell>
             <Table.Cell>Admin</Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -32,7 +32,7 @@ describe('Table', () => {
     render(
       <Table
         columns={[
-          { key: 'name', header: 'Name', isRowHeader: true },
+          { key: 'name', header: 'Name', rowHeader: true },
           { key: 'role', header: 'Role', align: 'end' },
         ]}
         data={[{ name: 'Ada', role: 'Admin' }]}
@@ -109,7 +109,7 @@ describe('Table', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('keeps a caller aria-selected on Row when isSelected is unset', () => {
+  it('keeps a caller aria-selected on Row when selected is unset', () => {
     render(
       <Table>
         <Table.Body>

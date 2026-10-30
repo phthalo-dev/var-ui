@@ -1,10 +1,13 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatMessageList } from '@var-ui/core/components/chat/chatMessageList';
 import type { ChatMessageListVariantProps } from '@var-ui/core';
 import { ChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 
-export type ChatMessageListProps = {
+export type ChatMessageListProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Message elements — typically `ChatMessage`. */
   children: ReactNode;
   /** Content shown when `children` is empty. */
@@ -15,7 +18,7 @@ export type ChatMessageListProps = {
    * message once, instead of re-announcing every streamed token.
    * @default false
    */
-  isStreaming?: boolean;
+  streaming?: boolean;
   /** Visual density — flows to child messages via context. @default balanced */
   density?: NonNullable<ChatMessageListVariantProps['density']>;
   /** Additional CSS class names merged onto the root element. */
@@ -36,7 +39,7 @@ function hasVisibleContent(children: ReactNode): boolean {
  * `aria-live="polite"` region with density-based spacing.
  *
  * ```tsx
- * <ChatMessageList isStreaming={isStreaming}>
+ * <ChatMessageList streaming={streaming}>
  *   {messages.map((m) => <ChatMessage key={m.id} sender={m.sender}>…</ChatMessage>)}
  * </ChatMessageList>
  * ```
@@ -44,19 +47,21 @@ function hasVisibleContent(children: ReactNode): boolean {
 export function ChatMessageList({
   children,
   emptyState,
-  isStreaming = false,
+  streaming = false,
   density = 'balanced',
   className,
   ref,
+  ...rest
 }: ChatMessageListProps): JSX.Element {
   const l = chatMessageList({ density });
   return (
     <ChatListContext.Provider value={{ density }}>
       <div
-        ref={ref}
         role="log"
         aria-live="polite"
-        aria-busy={isStreaming || undefined}
+        aria-busy={streaming || undefined}
+        {...rest}
+        ref={ref}
         {...mergeProps(l.root, className)}
       >
         <div {...mergeProps(l.inner)}>

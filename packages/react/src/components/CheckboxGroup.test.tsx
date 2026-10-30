@@ -14,7 +14,7 @@ function ControlledCheckboxGroup({ label }: { label?: string }) {
   const [value, setValue] = useState<string[]>([]);
   return (
     <>
-      <CheckboxGroup label={label} options={options} value={value} onChange={setValue} />
+      <CheckboxGroup label={label} options={options} value={value} onValueChange={setValue} />
       <output data-testid="value">{value.join(',')}</output>
     </>
   );
@@ -29,7 +29,7 @@ describe('CheckboxGroup', () => {
     expect(screen.getAllByRole('checkbox')).toHaveLength(3);
   });
 
-  it('toggles an option into the value array via onChange', async () => {
+  it('toggles an option into the value array via onValueChange', async () => {
     render(<ControlledCheckboxGroup />);
     const [redCheckbox, greenCheckbox] = screen.getAllByRole('checkbox');
     await userEvent.click(greenCheckbox);
@@ -48,18 +48,8 @@ describe('CheckboxGroup', () => {
     expect(screen.queryByText('Favorite colors')).toBeNull();
   });
 
-  it('applies string and function classNames to the root element', () => {
-    const { rerender } = render(
-      <CheckboxGroup label="Colors" options={options} className="custom" />,
-    );
+  it('applies className to the root element', () => {
+    render(<CheckboxGroup label="Colors" options={options} className="custom" />);
     expect(screen.getByRole('group', { name: 'Colors' }).className).toContain('custom');
-    rerender(
-      <CheckboxGroup
-        label="Colors"
-        options={options}
-        className={({ isDisabled }) => (isDisabled ? 'off' : 'fn-custom')}
-      />,
-    );
-    expect(screen.getByRole('group', { name: 'Colors' }).className).toContain('fn-custom');
   });
 });

@@ -6,7 +6,7 @@ export const snippets = {
 <TopNav>
   <TopNav.MegaMenu
     label="Solutions"
-    isOpen
+    open
     items={[
       { id: 'startups', title: 'For startups', href: '/startups' },
       { id: 'enterprise', title: 'For enterprise', href: '/enterprise' },

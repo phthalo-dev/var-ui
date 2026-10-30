@@ -11,7 +11,7 @@ const [value, setValue] = useState(['design', 'ops']);
   description="Selection stays in React state"
   options={options}
   value={value}
-  onChange={setValue}
+  onValueChange={setValue}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

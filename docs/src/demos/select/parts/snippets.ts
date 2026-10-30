@@ -27,7 +27,7 @@ const PEOPLE = [
   <Select.Popover>
     <Select.ListBox>
       {PEOPLE.map((person) => (
-        <Select.Item key={person.id} id={person.id} textValue={person.name}>
+        <Select.Item key={person.id} value={person.id} textValue={person.name}>
           <HStack gap="sm">
             <Avatar name={person.name} size="sm" />
             {person.name}

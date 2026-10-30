@@ -59,7 +59,7 @@ describe('useResizable', () => {
       value: 260,
       minValue: 180,
       maxValue: 480,
-      isCollapsed: false,
+      collapsed: false,
     });
   });
 

@@ -43,7 +43,8 @@ const defaultLabels: PaginationLabels = {
 export type PaginationProps = Omit<ComponentPropsWithRef<'nav'>, 'onChange' | 'children'> & {
   /** Current page number (1-based). */
   page: number;
-  onChange: (page: number) => void;
+  /** Fires with the page number the user navigated to. */
+  onValueChange: (page: number) => void;
   /** Total item count — takes precedence over `totalPages` when both are set. */
   totalItems?: number;
   /** Total page count, when the item count isn't known. */
@@ -61,7 +62,8 @@ export type PaginationProps = Omit<ComponentPropsWithRef<'nav'>, 'onChange' | 'c
   siblingCount?: number;
   /** @default 'md' */
   size?: NonNullable<PaginationVariantProps['size']>;
-  isDisabled?: boolean;
+  /** @default false */
+  disabled?: boolean;
   /** Accessible name for the nav landmark. @default 'Pagination' */
   label?: string;
   /** Override any user-visible/accessible string (e.g. for translation). */
@@ -117,12 +119,12 @@ export function generatePageRange(
  * selector. Controlled component — the caller owns `page`.
  *
  * ```tsx
- * <Pagination page={page} onChange={setPage} totalItems={200} pageSize={20} />
+ * <Pagination page={page} onValueChange={setPage} totalItems={200} pageSize={20} />
  * ```
  */
 export function Pagination({
   page,
-  onChange,
+  onValueChange,
   totalItems,
   totalPages: totalPagesProp,
   hasMore,
@@ -132,7 +134,7 @@ export function Pagination({
   variant = 'pages',
   siblingCount = 1,
   size = 'md',
-  isDisabled = false,
+  disabled = false,
   label = 'Pagination',
   labels: labelsProp,
   className,
@@ -154,8 +156,8 @@ export function Pagination({
   const hasNext = totalPages != null ? page < totalPages : (hasMore ?? false);
 
   const goTo = (next: number) => {
-    if (!isDisabled) {
-      onChange(next);
+    if (!disabled) {
+      onValueChange(next);
     }
   };
 
@@ -194,7 +196,7 @@ export function Pagination({
                 }),
               )}
               onPress={() => goTo(item)}
-              isDisabled={isDisabled}
+              isDisabled={disabled}
               aria-label={labels.goToPage(item)}
               aria-current={item === page ? 'page' : undefined}
             >
@@ -224,7 +226,7 @@ export function Pagination({
                 aria-label={labels.goToPage(i + 1)}
                 aria-current={i + 1 === page ? 'page' : undefined}
                 onClick={() => goTo(i + 1)}
-                disabled={isDisabled}
+                disabled={disabled}
                 {...mergeProps(p.dot, cx(i + 1 === page && p.dotActive))}
               />
             ))}
@@ -244,33 +246,33 @@ export function Pagination({
           <span>{labels.rowsPerPage}</span>
           <Select
             aria-label={labels.itemsPerPage}
-            options={pageSizeOptions.map((n) => ({ id: String(n), label: String(n) }))}
-            selectedKey={String(pageSize)}
-            onSelectionChange={(key) => handlePageSizeChange(String(key))}
-            isDisabled={isDisabled}
+            options={pageSizeOptions.map((n) => ({ value: String(n), label: String(n) }))}
+            value={String(pageSize)}
+            onValueChange={(value) => handlePageSizeChange(String(value))}
+            disabled={disabled}
           />
         </div>
       ) : null}
       <div {...mergeProps(p.controls)}>
         <IconButton
-          name="chevronLeft"
+          icon="chevronLeft"
           aria-label={labels.previousPage}
           tone="accent"
           appearance="ghost"
           size={size}
-          onPress={() => goTo(page - 1)}
-          isDisabled={isDisabled || !hasPrevious}
+          onClick={() => goTo(page - 1)}
+          disabled={disabled || !hasPrevious}
           data-mirror={isRtl || undefined}
         />
         {renderIndicator()}
         <IconButton
-          name="chevronRight"
+          icon="chevronRight"
           aria-label={labels.nextPage}
           tone="accent"
           appearance="ghost"
           size={size}
-          onPress={() => goTo(page + 1)}
-          isDisabled={isDisabled || !hasNext}
+          onClick={() => goTo(page + 1)}
+          disabled={disabled || !hasNext}
           data-mirror={isRtl || undefined}
         />
       </div>

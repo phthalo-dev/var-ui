@@ -84,7 +84,7 @@ const page = docsMarketingPage();
             <TopNavItem
               label={item.text}
               href={item.link}
-              isSelected={currentPath.startsWith(item.match)}
+              selected={currentPath.startsWith(item.match)}
             />
           ))
         }
@@ -118,7 +118,7 @@ const page = docsMarketingPage();
                   <SideNavItem
                     label={item.text}
                     href={item.link}
-                    isSelected={currentPath.startsWith(item.match)}
+                    selected={currentPath.startsWith(item.match)}
                   />
                 ))}
               </SideNavSection>

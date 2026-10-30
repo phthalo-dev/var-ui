@@ -17,7 +17,7 @@ export type SimplePopoverProps = {
    * under a different theme than the page ambient.
    */
   portalContainer?: Element;
-  isOpen?: boolean;
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: OverlayOpenChangeHandler;
 };
@@ -31,13 +31,13 @@ export function SimplePopover({
   children,
   placement = 'bottom',
   portalContainer,
-  isOpen,
+  open,
   defaultOpen,
   onOpenChange,
 }: SimplePopoverProps): JSX.Element {
   return (
     <Popover.Root
-      isOpen={isOpen}
+      open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
       portalContainer={portalContainer}

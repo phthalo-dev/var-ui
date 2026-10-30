@@ -5,20 +5,20 @@ import type { AlertVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'title'> & {
-  variant: NonNullable<AlertVariantProps['tone']>;
+  tone: NonNullable<AlertVariantProps['tone']>;
   appearance?: NonNullable<AlertVariantProps['appearance']>;
   title?: string;
   action?: { href: string; label: string };
   className?: string;
 };
 
-const { variant, appearance = alert.defaults.appearance, title,
+const { tone, appearance = alert.defaults.appearance, title,
   action,
   className,
   ...rest
 } = Astro.props;
 const a = alert({
-  tone: variant,
+  tone,
   appearance,
   contentGap: title ? 'spaced' : 'flush',
 });
@@ -29,7 +29,7 @@ const hasIcon = Astro.slots.has('icon');
   {...rest}
   {...mergeProps(a.root, className)}
   data-alert
-  data-alert-variant={variant}
+  data-alert-tone={tone}
   data-alert-appearance={appearance}
 >
   {

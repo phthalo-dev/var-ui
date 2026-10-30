@@ -18,7 +18,7 @@ export type InputGroupProps = Omit<
   /** Marks the group invalid; defaults to whether `errorMessage` is set. */
   invalid?: boolean;
   /** Disables the whole group (visually and via `aria-disabled`). */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Inline style for the root element. */
@@ -51,7 +51,7 @@ export function InputGroup({
   description,
   errorMessage,
   invalid,
-  isDisabled,
+  disabled,
   className,
   style,
   size,
@@ -80,8 +80,8 @@ export function InputGroup({
       >
         <div
           role="group"
-          aria-disabled={isDisabled || undefined}
-          data-disabled={isDisabled || undefined}
+          aria-disabled={disabled || undefined}
+          data-disabled={disabled || undefined}
           data-invalid={frame.invalid || undefined}
           {...rest}
           {...frame.controlProps}

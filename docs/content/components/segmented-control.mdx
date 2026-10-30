@@ -11,13 +11,13 @@ Segmented toggle group for mutually exclusive options. Built on React Aria `Togg
 
 ### Default
 
-Pass `options` as `{ id, label }` and seed selection with `defaultSelectedKeys`.
+Pass `options` as `{ value, label }` and seed selection with `defaultValue`.
 
 <Demo id="segmented-control.default" />
 
 ### Controlled selection
 
-Drive selection with `selectedKeys` and `onSelectionChange` when the active segment must sync with app state.
+Drive selection with `value` and `onValueChange` when the active segment must sync with app state.
 
 <Demo id="segmented-control.controlled" />
 
@@ -27,4 +27,4 @@ Drive selection with `selectedKeys` and `onSelectionChange` when the active segm
 
 ## Accessibility
 
-Each segment is a toggle button inside a group; keyboard users can move between segments with arrow keys (React Aria). For icon-only options, set `aria-label` on the option. Use `selectionMode="single"` (default) for exclusive choices.
+Each segment is a toggle button inside a group; keyboard users can move between segments with arrow keys (React Aria). For icon-only options, set `aria-label` on the option. Options are `{ value, label, disabled? }`; the control is always single-select.

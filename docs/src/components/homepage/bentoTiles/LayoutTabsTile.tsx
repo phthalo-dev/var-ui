@@ -13,7 +13,7 @@ export function LayoutTabsTile({ className }: LayoutTabsTileProps) {
         <Tabs
           tabs={[
             {
-              id: 'grid',
+              value: 'grid',
               label: 'Grid',
               content: (
                 <Grid columns={2} gap="sm">
@@ -23,7 +23,7 @@ export function LayoutTabsTile({ className }: LayoutTabsTileProps) {
               ),
             },
             {
-              id: 'center',
+              value: 'center',
               label: 'Center',
               content: (
                 <Center style={{ height: '80px' }}>

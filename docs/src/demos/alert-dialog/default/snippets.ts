@@ -8,7 +8,7 @@ export const snippets = {
   title="Delete item?"
   description="This cannot be undone."
   confirmLabel="Delete"
-  isDestructive
+  destructive
   onConfirm={() => {}}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,

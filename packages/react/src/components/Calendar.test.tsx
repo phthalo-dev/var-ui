@@ -20,13 +20,13 @@ describe('Calendar', () => {
     expect(screen.getByText('15')).toBeTruthy();
   });
 
-  it('fires onChange with the selected date when a day cell is clicked', async () => {
+  it('fires onValueChange with the selected date when a day cell is clicked', async () => {
     const onChange = vi.fn();
     render(
       <Calendar
         aria-label="Appointment date"
         defaultFocusedValue={focusedJuly2026}
-        onChange={onChange}
+        onValueChange={onChange}
       />,
     );
     await userEvent.click(screen.getByText('20'));
@@ -38,7 +38,9 @@ describe('Calendar', () => {
   });
 
   it('reflects a controlled value as the selected cell', () => {
-    render(<Calendar aria-label="Appointment date" value={focusedJuly2026} onChange={() => {}} />);
+    render(
+      <Calendar aria-label="Appointment date" value={focusedJuly2026} onValueChange={() => {}} />,
+    );
     const selectedCell = screen.getByText('15').closest('[role="button"]');
     expect(selectedCell?.getAttribute('aria-label')).toContain('selected');
   });

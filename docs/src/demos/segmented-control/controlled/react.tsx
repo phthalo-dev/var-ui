@@ -1,19 +1,17 @@
 import { SegmentedControl } from '@var-ui/react';
 import { useState } from 'react';
-import type { Selection } from 'react-aria-components';
 
 export default function Preview() {
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(['list']));
+  const [value, setValue] = useState<string | null>('list');
 
   return (
     <SegmentedControl
-      selectionMode="single"
-      selectedKeys={selectedKeys}
-      onSelectionChange={setSelectedKeys}
+      value={value}
+      onValueChange={setValue}
       options={[
-        { id: 'list', label: 'List' },
-        { id: 'grid', label: 'Grid' },
-        { id: 'board', label: 'Board' },
+        { value: 'list', label: 'List' },
+        { value: 'grid', label: 'Grid' },
+        { value: 'board', label: 'Board' },
       ]}
     />
   );

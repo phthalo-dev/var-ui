@@ -22,7 +22,6 @@ import {
   Modal,
   ModalOverlay,
   Pressable,
-  type ModalOverlayProps,
 } from 'react-aria-components';
 import { drawer } from '@var-ui/core/components/drawer';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
@@ -48,8 +47,17 @@ import { mergeProps } from 'typestyles';
 
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
-export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange' | 'style'> &
+export type DrawerProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'title' | 'style' | 'className' | 'ref'
+> &
   DrawerVariantProps & {
+    /** Controlled open state. */
+    open?: boolean;
+    /** Initial open state when uncontrolled. */
+    defaultOpen?: boolean;
+    /** Whether clicking outside or pressing Escape closes the drawer. @default true */
+    dismissable?: boolean;
     /** Panel title rendered in the header when `title` is set. */
     title?: ReactNode;
     /** Drawer body content. */
@@ -78,10 +86,14 @@ export type DrawerProps = Omit<ModalOverlayProps, 'children' | 'onOpenChange' | 
 
 export type DrawerRootProps = DrawerVariantProps & {
   children: ReactNode;
-  isOpen?: boolean;
+  /** Controlled open state. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
+  /** Called when the drawer requests to open or close. */
   onOpenChange?: OverlayOpenChangeHandler;
-  isDismissable?: boolean;
+  /** Whether clicking outside or pressing Escape closes the drawer. @default true */
+  dismissable?: boolean;
   portalContainer?: Element;
   'aria-label'?: string;
   /** Ref to the underlying wrapper `<div>` element. */
@@ -90,7 +102,8 @@ export type DrawerRootProps = DrawerVariantProps & {
 
 export type DrawerBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  isDismissable?: boolean;
+  /** Overrides the root's `dismissable` for this backdrop. */
+  dismissable?: boolean;
 };
 
 /**
@@ -118,7 +131,7 @@ type DrawerContextValue = {
   backdropRef: MutableRefObject<HTMLDivElement | null>;
   panelRef: MutableRefObject<HTMLDivElement | null>;
   portalContainer?: Element;
-  isDismissable: boolean;
+  dismissable: boolean;
   size: DrawerVariantProps['size'];
   ariaLabel?: string;
   lastEventRef: MutableRefObject<Event | null>;
@@ -137,17 +150,17 @@ function useDrawerContext(): DrawerContextValue {
 
 function DrawerRoot({
   children,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
-  isDismissable = true,
+  dismissable = true,
   portalContainer,
   size = 'md',
   'aria-label': ariaLabel,
   ref,
 }: DrawerRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const lastEventRef = useRef<Event | null>(null);
@@ -167,9 +180,9 @@ function DrawerRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   const context = useMemo<DrawerContextValue>(
@@ -178,13 +191,13 @@ function DrawerRoot({
       backdropRef,
       panelRef,
       portalContainer,
-      isDismissable,
+      dismissable,
       size,
       ariaLabel,
       lastEventRef,
       handleOpenChange,
     }),
-    [ariaLabel, handleOpenChange, isDismissable, portalContainer, presence, size],
+    [ariaLabel, handleOpenChange, dismissable, portalContainer, presence, size],
   );
 
   return (
@@ -206,7 +219,7 @@ function DrawerBackdrop({
   children,
   className,
   style,
-  isDismissable,
+  dismissable,
   onPointerDown,
   ref,
   ...rest
@@ -225,7 +238,7 @@ function DrawerBackdrop({
       style={{ ...layerStyle, ...style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
-      isDismissable={isDismissable ?? ctx.isDismissable}
+      isDismissable={dismissable ?? ctx.dismissable}
       UNSTABLE_portalContainer={ctx.portalContainer}
       onPointerDown={(event) => {
         onPointerDown?.(event);
@@ -352,7 +365,7 @@ function DrawerBody({ className, ...rest }: DrawerBodyProps): JSX.Element {
  * backdrop dismissal included.
  *
  * ```tsx
- * <Drawer isOpen={open} onOpenChange={setOpen} title="Settings">
+ * <Drawer open={open} onOpenChange={setOpen} title="Settings">
  *   <p>Drawer content</p>
  * </Drawer>
  * ```
@@ -368,13 +381,16 @@ export function Drawer({
   label = 'Drawer',
   className,
   portalContainer,
-  isOpen = false,
+  open,
+  defaultOpen,
+  dismissable = true,
   onOpenChange,
   ...props
 }: DrawerProps): JSX.Element {
   return (
     <DrawerRoot
-      isOpen={isOpen}
+      open={open}
+      defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
       portalContainer={portalContainer}
       size={size}
@@ -382,7 +398,7 @@ export function Drawer({
     >
       <DrawerBackdrop
         {...(props as Omit<DrawerBackdropProps, 'children'>)}
-        isDismissable={props.isDismissable ?? true}
+        dismissable={dismissable}
       >
         <DrawerPanel placement={placement} width={width} height={height} className={className}>
           {title ? (

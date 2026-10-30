@@ -14,7 +14,7 @@ import {
 /** Root-level props the presets forward to `Menu.Root`. */
 type MenuPresetRootProps = Pick<
   MenuRootProps,
-  'isOpen' | 'defaultOpen' | 'onOpenChange' | 'portalContainer'
+  'open' | 'defaultOpen' | 'onOpenChange' | 'portalContainer'
 >;
 
 /** Popup-level props the presets forward to `Menu.Popup` (native props, `placement`, aria-*). */
@@ -31,7 +31,7 @@ export type MenuFromSectionsProps = MenuPresetRootProps &
 export function MenuFromSections({
   trigger,
   sections,
-  isOpen,
+  open,
   defaultOpen,
   onOpenChange,
   portalContainer,
@@ -39,7 +39,7 @@ export function MenuFromSections({
 }: MenuFromSectionsProps): JSX.Element {
   return (
     <MenuRoot
-      isOpen={isOpen}
+      open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
       portalContainer={portalContainer}
@@ -110,7 +110,7 @@ export function MenuContextMenu({
     <>
       {host}
       <MenuRoot
-        isOpen={open}
+        open={open}
         onOpenChange={(next, details) => {
           onOpenChange?.(next, details);
           if (!details.isCanceled) setOpen(next);
@@ -150,7 +150,7 @@ export function MenuOverflow({
   sections,
   'aria-label': ariaLabel = 'More options',
   ref,
-  isOpen,
+  open,
   defaultOpen,
   onOpenChange,
   portalContainer,
@@ -160,13 +160,13 @@ export function MenuOverflow({
     <MenuFromSections
       {...popupProps}
       sections={sections}
-      isOpen={isOpen}
+      open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
       portalContainer={portalContainer}
       trigger={
         <IconButton
-          name="moreHorizontal"
+          icon="moreHorizontal"
           aria-label={ariaLabel}
           tone="accent"
           appearance="ghost"

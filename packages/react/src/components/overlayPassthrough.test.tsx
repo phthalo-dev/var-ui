@@ -507,7 +507,7 @@ describe('CommandPalette passthrough', () => {
     const onClick = vi.fn();
     wrap(
       <CommandPalette
-        isOpen
+        open
         hotkey={false}
         items={[{ id: 'a', title: 'Open settings' }]}
         data-testid="palette"
@@ -533,7 +533,7 @@ describe('MobileNav passthrough', () => {
   it('forwards native props to the overlay, className to the panel, aria-label to the dialog', () => {
     const ref = createRef<HTMLDivElement>();
     wrap(
-      <MobileNav isOpen data-testid="overlay" className="my-panel" aria-label="Site nav" ref={ref}>
+      <MobileNav open data-testid="overlay" className="my-panel" aria-label="Site nav" ref={ref}>
         <p>content</p>
       </MobileNav>,
     );

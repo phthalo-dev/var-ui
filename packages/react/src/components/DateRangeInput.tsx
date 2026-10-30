@@ -14,17 +14,48 @@ import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { CalendarPopover } from '../internal/CalendarBody';
-import { splitDataAttributes } from '../internal/dateFieldProps';
+import { splitDataAttributes, type DateFieldBaseProps } from '../internal/dateFieldProps';
 import { mergeRacClassName } from '../internal/racClassName';
 
-export type DateRangeInputProps<T extends DateValue = DateValue> = Omit<
-  RACDateRangePickerProps<T>,
-  'children'
-> &
-  FieldMeta & {
-    /** Ref to the start-date segmented input (the field's primary control). */
-    ref?: Ref<HTMLDivElement>;
-  };
+type DateRangePickerRac<T extends DateValue> = RACDateRangePickerProps<T>;
+
+export type DateRangeInputProps<T extends DateValue = DateValue> = DateFieldBaseProps<
+  DateRangePickerRac<T>
+> & {
+  /** Controlled range (`{ start, end }`). `null` means controlled-empty. */
+  value?: DateRangePickerRac<T>['value'];
+  /** Initial range when uncontrolled. */
+  defaultValue?: DateRangePickerRac<T>['defaultValue'];
+  /** Called with the new range, or `null` when the field is cleared. */
+  onValueChange?: NonNullable<DateRangePickerRac<T>['onChange']>;
+  /** Earliest selectable date. */
+  min?: DateRangePickerRac<T>['minValue'];
+  /** Latest selectable date. */
+  max?: DateRangePickerRac<T>['maxValue'];
+  /** Marks dates as unavailable: they cannot be selected. */
+  unavailable?: DateRangePickerRac<T>['isDateUnavailable'];
+  /** Whether a range may include unavailable dates. */
+  allowsNonContiguousRanges?: boolean;
+  placeholderValue?: DateRangePickerRac<T>['placeholderValue'];
+  /** Smallest unit shown as an editable segment. */
+  granularity?: DateRangePickerRac<T>['granularity'];
+  hourCycle?: DateRangePickerRac<T>['hourCycle'];
+  hideTimeZone?: boolean;
+  shouldForceLeadingZeros?: boolean;
+  firstDayOfWeek?: DateRangePickerRac<T>['firstDayOfWeek'];
+  /** Custom validation; return a message (or messages) to mark the field invalid. */
+  validate?: DateRangePickerRac<T>['validate'];
+  /** Controlled open state of the calendar popover. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  /** Called when the calendar popover opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+  /** Close the popover after a range is picked. @default true */
+  shouldCloseOnSelect?: boolean;
+  /** Ref to the start-date segmented input (the field's primary control). */
+  ref?: Ref<HTMLDivElement>;
+};
 
 /**
  * A start-date/end-date field with segmented text entry for both, plus a
@@ -33,7 +64,7 @@ export type DateRangeInputProps<T extends DateValue = DateValue> = Omit<
  * attributes reach the start segmented input.
  *
  * ```tsx
- * <DateRangeInput label="Trip dates" value={value} onChange={setValue} />
+ * <DateRangeInput label="Trip dates" value={value} onValueChange={setValue} />
  * ```
  */
 export function DateRangeInput<T extends DateValue = DateValue>({
@@ -48,7 +79,7 @@ export function DateRangeInput<T extends DateValue = DateValue>({
   const [rootProps, dataProps] = splitDataAttributes(props);
   return (
     <AriaDateRangePicker
-      {...rootProps}
+      {...(rootProps as RACDateRangePickerProps<T>)}
       isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
       className={mergeRacClassName(dr.root, className)}
     >

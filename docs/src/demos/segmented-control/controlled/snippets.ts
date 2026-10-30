@@ -3,18 +3,16 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { SegmentedControl } from '@var-ui/react';
 import { useState } from 'react';
-import type { Selection } from 'react-aria-components';
 
-const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(['list']));
+const [value, setValue] = useState<string | null>('list');
 
 <SegmentedControl
-  selectionMode="single"
-  selectedKeys={selectedKeys}
-  onSelectionChange={setSelectedKeys}
+  value={value}
+  onValueChange={setValue}
   options={[
-    { id: 'list', label: 'List' },
-    { id: 'grid', label: 'Grid' },
-    { id: 'board', label: 'Board' },
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' },
+    { value: 'board', label: 'Board' },
   ]}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,

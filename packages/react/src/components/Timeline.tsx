@@ -59,8 +59,8 @@ export type TimelineItemProps = Omit<ComponentPropsWithRef<'li'>, 'title' | 'chi
   tone?: Tone;
   children?: ReactNode;
   index?: number;
-  isActive?: boolean;
-  isPending?: boolean;
+  active?: boolean;
+  pending?: boolean;
 };
 
 function TimelineItemContent({
@@ -73,8 +73,8 @@ function TimelineItemContent({
   children,
   className,
   index = 0,
-  isActive = true,
-  isPending = false,
+  active = true,
+  pending = false,
   ref,
   ...rest
 }: TimelineItemProps): JSX.Element {
@@ -89,13 +89,13 @@ function TimelineItemContent({
       {...mergeProps(styles.item, className)}
       ref={ref}
       data-timeline-item={index}
-      data-active={isActive ? '' : undefined}
-      data-pending={isPending ? '' : undefined}
+      data-active={active ? '' : undefined}
+      data-pending={pending ? '' : undefined}
     >
       <div
         {...mergeProps(styles.bullet)}
-        data-active={isActive ? '' : undefined}
-        data-pending={isPending ? '' : undefined}
+        data-active={active ? '' : undefined}
+        data-pending={pending ? '' : undefined}
         data-tone={tone}
         aria-hidden={bulletContent == null ? true : undefined}
       >
@@ -135,8 +135,8 @@ export function Timeline({
 
   const itemNodes =
     items?.map((item, index) => {
-      const isActive = activeIndex == null || index <= activeIndex;
-      const isPending = activeIndex != null && index > activeIndex;
+      const active = activeIndex == null || index <= activeIndex;
+      const pending = activeIndex != null && index > activeIndex;
       return (
         <TimelineItemContent
           key={item.id}
@@ -146,8 +146,8 @@ export function Timeline({
           timestamp={item.timestamp}
           icon={item.icon}
           tone={item.tone}
-          isActive={isActive}
-          isPending={isPending}
+          active={active}
+          pending={pending}
         />
       );
     }) ?? null;
@@ -156,9 +156,9 @@ export function Timeline({
     children != null
       ? Children.map(children, (child, index) => {
           if (!isValidElement<TimelineItemProps>(child)) return child;
-          const isActive = activeIndex == null || index <= activeIndex;
-          const isPending = activeIndex != null && index > activeIndex;
-          return cloneElement(child, { index, isActive, isPending });
+          const active = activeIndex == null || index <= activeIndex;
+          const pending = activeIndex != null && index > activeIndex;
+          return cloneElement(child, { index, active, pending });
         })
       : null;
 

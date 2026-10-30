@@ -13,7 +13,6 @@ export { default as Divider } from './src/components/Divider.astro';
 export { default as AspectRatio } from './src/components/AspectRatio.astro';
 export { default as Badge } from './src/components/Badge.astro';
 export { default as Chip } from './src/components/Chip.astro';
-export { default as Pill } from './src/components/Pill.astro';
 export { default as Kbd } from './src/components/Kbd.astro';
 export { default as Heading } from './src/components/Heading.astro';
 export { default as Text } from './src/components/Text.astro';

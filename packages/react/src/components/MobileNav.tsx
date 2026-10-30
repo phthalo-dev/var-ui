@@ -1,4 +1,11 @@
-import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode } from 'react';
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  JSX,
+  MouseEvent,
+  MouseEventHandler,
+  ReactNode,
+} from 'react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import {
   Button as AriaButton,
@@ -19,8 +26,8 @@ import { mergeProps } from 'typestyles';
 const dialogContentStyle: CSSProperties = { display: 'contents' };
 
 export type MobileNavContextValue = {
-  isOpen: boolean;
-  open: () => void;
+  open: boolean;
+  show: () => void;
   close: () => void;
   toggle: () => void;
   onOpenChange: (open: boolean) => void;
@@ -31,15 +38,15 @@ const MobileNavContext = createContext<MobileNavContextValue | null>(null);
 export type MobileNavProviderProps = {
   children: ReactNode;
   /** Controlled open state — omit to let the provider manage it internally. */
-  isOpen?: boolean;
+  open?: boolean;
   /** Initial open state for uncontrolled usage. @default false */
-  defaultIsOpen?: boolean;
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
 
 /**
  * Shares open state between a `MobileNav` and one or more `MobileNav.Toggle`s
- * that aren't directly wired together with explicit `isOpen`/`onOpenChange`.
+ * that aren't directly wired together with explicit `open`/`onOpenChange`.
  * `AppShell` wraps its slots in this same provider for the mobile breakpoint.
  *
  * ```tsx
@@ -51,13 +58,13 @@ export type MobileNavProviderProps = {
  */
 export function MobileNavProvider({
   children,
-  isOpen: isOpenProp,
-  defaultIsOpen = false,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
 }: MobileNavProviderProps): JSX.Element {
-  const isControlled = isOpenProp !== undefined;
-  const [internalOpen, setInternalOpen] = useState(defaultIsOpen);
-  const isOpen = isControlled ? (isOpenProp as boolean) : internalOpen;
+  const isControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const open = isControlled ? (openProp as boolean) : internalOpen;
 
   const setOpen = useCallback(
     (next: boolean) => {
@@ -69,13 +76,13 @@ export function MobileNavProvider({
 
   const value = useMemo<MobileNavContextValue>(
     () => ({
-      isOpen,
-      open: () => setOpen(true),
+      open,
+      show: () => setOpen(true),
       close: () => setOpen(false),
-      toggle: () => setOpen(!isOpen),
+      toggle: () => setOpen(!open),
       onOpenChange: setOpen,
     }),
-    [isOpen, setOpen],
+    [open, setOpen],
   );
 
   return <MobileNavContext.Provider value={value}>{children}</MobileNavContext.Provider>;
@@ -86,28 +93,31 @@ export function useMobileNav(): MobileNavContextValue | null {
   return useContext(MobileNavContext);
 }
 
-export type MobileNavToggleProps = Omit<ComponentPropsWithRef<'button'>, 'value' | 'children'> & {
+export type MobileNavToggleProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'value' | 'children' | 'onClick'
+> & {
   /** Accessible label for the hamburger button. @default 'Open navigation' */
   label?: string;
   /**
-   * Explicit press handler — required when there's no `MobileNavProvider` ancestor.
-   * Takes priority over context when both are present.
+   * Explicit click handler — required when there's no `MobileNavProvider` ancestor.
+   * Takes priority over context toggling when both are present.
    */
-  onPress?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   /** Drives `aria-expanded` when there's no `MobileNavProvider` ancestor. */
-  isOpen?: boolean;
+  open?: boolean;
 };
 
 /** Hamburger trigger for `MobileNav`. Reads a `MobileNavProvider` when present. */
 export function MobileNavToggle({
   label = 'Open navigation',
-  onPress,
-  isOpen: isOpenProp,
+  onClick,
+  open: openProp,
   className,
   ...rest
 }: MobileNavToggleProps): JSX.Element {
   const context = useMobileNav();
-  const isOpen = isOpenProp ?? context?.isOpen ?? false;
+  const open = openProp ?? context?.open ?? false;
   const s = mobileNav();
 
   return (
@@ -115,9 +125,9 @@ export function MobileNavToggle({
       {...(rest as AriaButtonProps)}
       {...mergeProps(s.toggle, className)}
       aria-label={label}
-      aria-expanded={isOpen}
-      onPress={() => {
-        if (onPress) onPress();
+      aria-expanded={open}
+      onClick={(event) => {
+        if (onClick) onClick(event as MouseEvent<HTMLButtonElement>);
         else context?.toggle();
       }}
     >
@@ -133,7 +143,7 @@ export function MobileNavToggle({
  */
 export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** Controlled open state — falls back to a `MobileNavProvider` ancestor when omitted. */
-  isOpen?: boolean;
+  open?: boolean;
   /** Falls back to a `MobileNavProvider` ancestor when omitted. */
   onOpenChange?: (open: boolean) => void;
   /** Rendered in the sticky header row, left of the close button. */
@@ -159,19 +169,19 @@ export type MobileNavProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
 /**
  * Slide-out mobile navigation drawer built on RAC `Modal`/`ModalOverlay` — focus
  * trap, Escape, and backdrop dismissal come for free. Fully controlled via
- * `isOpen`/`onOpenChange`, or pair with a `MobileNav.Toggle` under a shared
+ * `open`/`onOpenChange`, or pair with a `MobileNav.Toggle` under a shared
  * `MobileNavProvider` (what `AppShell` does at the mobile breakpoint).
  *
  * ```tsx
- * <MobileNav isOpen={isOpen} onOpenChange={setIsOpen} header="Menu">
+ * <MobileNav open={open} onOpenChange={setOpen} header="Menu">
  *   <SideNav.Section title="Main">
- *     <SideNav.Item label="Dashboard" href="/" isSelected />
+ *     <SideNav.Item label="Dashboard" href="/" selected />
  *   </SideNav.Section>
  * </MobileNav>
  * ```
  */
 export function MobileNav({
-  isOpen: isOpenProp,
+  open: openProp,
   onOpenChange: onOpenChangeProp,
   header,
   width = 320,
@@ -188,12 +198,12 @@ export function MobileNav({
   ...rest
 }: MobileNavProps): JSX.Element {
   const context = useMobileNav();
-  const isOpen = isOpenProp ?? context?.isOpen ?? false;
+  const open = openProp ?? context?.open ?? false;
   const onOpenChange = onOpenChangeProp ?? context?.onOpenChange;
   const resolvedSide = side === 'auto' ? 'start' : side;
   const s = mobileNav();
   const { style: layerStyle } = useLayer();
-  useScrollLock(isOpen);
+  useScrollLock(open);
 
   const panelStyle = useMemo(() => styleVars([[mobileNavVars.panelWidth, `${width}px`]]), [width]);
 
@@ -201,18 +211,18 @@ export function MobileNav({
     <ModalOverlay
       {...rest}
       ref={ref}
-      isOpen={isOpen}
+      isOpen={open}
       onOpenChange={onOpenChange}
       isDismissable
       {...mergeProps(s.overlay)}
-      data-open={isOpen ? '' : undefined}
+      data-open={open ? '' : undefined}
       style={{ ...layerStyle, ...style }}
       UNSTABLE_portalContainer={portalContainer}
     >
       <Modal
         {...mergeProps(s.panel, className)}
         data-side={resolvedSide}
-        data-open={isOpen ? '' : undefined}
+        data-open={open ? '' : undefined}
         style={panelStyle}
       >
         <AriaDialog

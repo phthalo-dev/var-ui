@@ -23,9 +23,13 @@ if (typeof globalThis.CSS.escape !== 'function') {
   globalThis.CSS.escape = (value: string) => value.replace(/([^\w-])/g, '\\$1');
 }
 
+const SELECT_OPTIONS = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
+];
 const OPTIONS = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'plum', label: 'Plum' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'plum', label: 'Plum' },
 ];
 
 function wrap(ui: React.ReactNode) {
@@ -45,7 +49,7 @@ describe('Select passthrough', () => {
     wrap(
       <Select
         label="Fruit"
-        options={OPTIONS}
+        options={SELECT_OPTIONS}
         data-testid="t"
         title="Pick"
         className="mine"
@@ -67,7 +71,7 @@ describe('Select passthrough', () => {
     wrap(
       <Select
         label="Fruit"
-        options={OPTIONS}
+        options={SELECT_OPTIONS}
         description="Hint"
         errorMessage="Bad"
         placeholder="Elige"
@@ -164,7 +168,7 @@ describe('MultiSelector passthrough', () => {
         errorMessage="Bad"
         options={OPTIONS}
         value={[]}
-        onChange={() => {}}
+        onValueChange={() => {}}
         data-testid="t"
         id="ms"
         className="mine"
@@ -191,8 +195,8 @@ describe('Tokenizer passthrough', () => {
     wrap(
       <Tokenizer
         options={OPTIONS}
-        value={[OPTIONS[0]]}
-        onChange={() => {}}
+        value={['apple']}
+        onValueChange={() => {}}
         description="Hint"
         errorMessage="Bad"
         data-testid="t"
@@ -227,8 +231,8 @@ describe('SegmentedControl passthrough', () => {
         className="mine"
         ref={ref}
         options={[
-          { id: 'a', label: 'A' },
-          { id: 'b', label: 'B' },
+          { value: 'a', label: 'A' },
+          { value: 'b', label: 'B' },
         ]}
       />,
     );
@@ -259,8 +263,8 @@ describe('Chip passthrough', () => {
     const onMouseEnter = vi.fn();
     wrap(
       <Chip
-        isSelected={false}
-        onChange={() => {}}
+        selected={false}
+        onSelectedChange={() => {}}
         data-testid="t"
         title="tip"
         className="mine"
@@ -283,13 +287,14 @@ describe('Chip passthrough', () => {
     const ref = createRef<HTMLDivElement>();
     wrap(
       <ChipGroup
+        multiple
         aria-label="Tags"
         data-testid="t"
         className="mine"
         ref={ref}
         options={[
           { value: 'a', label: 'A' },
-          { value: 'b', label: 'B', isDisabled: true },
+          { value: 'b', label: 'B', disabled: true },
         ]}
       />,
     );
@@ -314,7 +319,7 @@ describe('RadioGroup / CheckboxGroup passthrough', () => {
         ref={ref}
         options={[
           { value: 's', label: 'Small' },
-          { value: 'l', label: 'Large', isDisabled: true },
+          { value: 'l', label: 'Large', disabled: true },
         ]}
       />,
     );
@@ -339,7 +344,7 @@ describe('RadioGroup / CheckboxGroup passthrough', () => {
         ref={ref}
         options={[
           { value: 'a', label: 'Cheese' },
-          { value: 'b', label: 'Ham', isDisabled: true },
+          { value: 'b', label: 'Ham', disabled: true },
         ]}
       />,
     );

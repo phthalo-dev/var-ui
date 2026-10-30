@@ -27,7 +27,7 @@ describe('List', () => {
 
   it('marks disabled items with data-disabled', () => {
     const { container } = render(
-      <List items={[{ id: 'a', label: 'Ada', href: '/u/ada', isDisabled: true }]} />,
+      <List items={[{ id: 'a', label: 'Ada', href: '/u/ada', disabled: true }]} />,
     );
     const item = container.querySelector('[data-disabled]');
     expect(item).toBeTruthy();

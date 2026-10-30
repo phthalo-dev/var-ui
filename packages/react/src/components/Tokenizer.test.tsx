@@ -6,10 +6,10 @@ import { IconProvider } from '../icons';
 import { Tokenizer, type TokenizerOption } from './Tokenizer';
 
 const OPTIONS: TokenizerOption[] = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'apricot', label: 'Apricot' },
-  { id: 'plum', label: 'Plum' },
-  { id: 'pear', label: 'Pear' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'apricot', label: 'Apricot' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'pear', label: 'Pear' },
 ];
 
 function ControlledTokenizer({
@@ -17,13 +17,13 @@ function ControlledTokenizer({
   initialValue = [],
 }: {
   label?: string;
-  initialValue?: TokenizerOption[];
+  initialValue?: string[];
 }) {
-  const [value, setValue] = useState<TokenizerOption[]>(initialValue);
+  const [value, setValue] = useState<string[]>(initialValue);
   return (
     <>
-      <Tokenizer label={label} options={OPTIONS} value={value} onChange={setValue} />
-      <output data-testid="value">{value.map((option) => option.id).join(',')}</output>
+      <Tokenizer label={label} options={OPTIONS} value={value} onValueChange={setValue} />
+      <output data-testid="value">{value.join(',')}</output>
     </>
   );
 }
@@ -35,8 +35,8 @@ describe('Tokenizer', () => {
         <Tokenizer
           label="Fruit"
           options={OPTIONS}
-          value={[OPTIONS[0], OPTIONS[2]]}
-          onChange={() => {}}
+          value={['apple', 'plum']}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -50,7 +50,7 @@ describe('Tokenizer', () => {
   it('filters remaining options as the user types, excluding already-selected ones', async () => {
     render(
       <IconProvider icons={{}}>
-        <Tokenizer label="Fruit" options={OPTIONS} value={[OPTIONS[0]]} onChange={() => {}} />
+        <Tokenizer label="Fruit" options={OPTIONS} value={['apple']} onValueChange={() => {}} />
       </IconProvider>,
     );
 
@@ -61,7 +61,7 @@ describe('Tokenizer', () => {
     expect(listOptions.map((option) => option.textContent)).toEqual(['Apricot']);
   });
 
-  it('adds a token and calls onChange when an option is selected', async () => {
+  it('adds a token and calls onValueChange when an option is selected', async () => {
     render(
       <IconProvider icons={{}}>
         <ControlledTokenizer label="Fruit" />
@@ -82,7 +82,7 @@ describe('Tokenizer', () => {
   it('removes a token when its remove button is clicked', async () => {
     render(
       <IconProvider icons={{}}>
-        <ControlledTokenizer label="Fruit" initialValue={[OPTIONS[0], OPTIONS[2]]} />
+        <ControlledTokenizer label="Fruit" initialValue={['apple', 'plum']} />
       </IconProvider>,
     );
 
@@ -105,7 +105,7 @@ describe('Tokenizer form wiring', () => {
           errorMessage="Required"
           options={OPTIONS}
           value={[]}
-          onChange={() => {}}
+          onValueChange={() => {}}
         />
       </IconProvider>,
     );
@@ -122,8 +122,8 @@ describe('Tokenizer form wiring', () => {
           <Tokenizer
             name="fruit"
             options={OPTIONS}
-            value={OPTIONS.slice(0, 2)}
-            onChange={() => {}}
+            value={['apple', 'apricot']}
+            onValueChange={() => {}}
           />
         </form>
       </IconProvider>,

@@ -5,9 +5,9 @@ export default function Preview() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onPress={() => setOpen(true)}>Open palette</Button>
+      <Button onClick={() => setOpen(true)}>Open palette</Button>
       <CommandPalette
-        isOpen={open}
+        open={open}
         onOpenChange={setOpen}
         hotkey={false}
         items={[

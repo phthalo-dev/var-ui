@@ -45,11 +45,14 @@ import { mergeProps } from 'typestyles';
 
 export type DialogRootProps = {
   children: ReactNode;
-  isOpen?: boolean;
+  /** Controlled open state. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
+  /** Called when the dialog requests to open or close. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /** RAC: isDismissable on the overlay. @default true */
-  isDismissable?: boolean;
+  /** Whether clicking outside or pressing Escape closes the dialog. @default true */
+  dismissable?: boolean;
   /**
    * Element the modal portals into instead of `document.body`. Needed when a subtree renders
    * under a different theme than the page ambient (the theme's CSS custom properties only
@@ -65,7 +68,8 @@ export type DialogTriggerProps = OverlayTriggerProps;
 
 export type DialogBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  isDismissable?: boolean;
+  /** Overrides the root's `dismissable` for this backdrop. */
+  dismissable?: boolean;
 };
 
 /**
@@ -92,7 +96,7 @@ type DialogContextValue = {
   backdropRef: MutableRefObject<HTMLDivElement | null>;
   popupRef: MutableRefObject<HTMLDivElement | null>;
   portalContainer?: Element;
-  isDismissable: boolean;
+  dismissable: boolean;
   lastEventRef: MutableRefObject<Event | null>;
   /** Id of the mounted `Dialog.Description`, wired to the dialog's `aria-describedby`. */
   descriptionId: string | undefined;
@@ -112,14 +116,14 @@ function useDialogContext(): DialogContextValue {
 
 function DialogRoot({
   children,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
-  isDismissable = true,
+  dismissable = true,
   portalContainer,
 }: DialogRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const lastEventRef = useRef<Event | null>(null);
@@ -139,9 +143,9 @@ function DialogRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   const context = useMemo<DialogContextValue>(
@@ -150,13 +154,13 @@ function DialogRoot({
       backdropRef,
       popupRef,
       portalContainer,
-      isDismissable,
+      dismissable,
       lastEventRef,
       descriptionId,
       setDescriptionId,
       handleOpenChange,
     }),
-    [handleOpenChange, isDismissable, portalContainer, presence, descriptionId],
+    [handleOpenChange, dismissable, portalContainer, presence, descriptionId],
   );
 
   return (
@@ -230,7 +234,7 @@ function DialogBackdrop({
   children,
   className,
   style,
-  isDismissable,
+  dismissable,
   onPointerDown,
   ref,
   ...rest
@@ -248,7 +252,7 @@ function DialogBackdrop({
       style={{ ...layerStyle, ...style }}
       isOpen={ctx.presence.mounted}
       onOpenChange={ctx.handleOpenChange}
-      isDismissable={isDismissable ?? ctx.isDismissable}
+      isDismissable={dismissable ?? ctx.dismissable}
       UNSTABLE_portalContainer={ctx.portalContainer}
       onPointerDown={(event) => {
         onPointerDown?.(event);

@@ -3,9 +3,9 @@
 import { Button, Heading, HStack, Select, TextField, VStack } from '@var-ui/react';
 
 const ROLE_OPTIONS = [
-  { id: 'viewer', label: 'Viewer' },
-  { id: 'editor', label: 'Editor' },
-  { id: 'admin', label: 'Admin' },
+  { value: 'viewer', label: 'Viewer' },
+  { value: 'editor', label: 'Editor' },
+  { value: 'admin', label: 'Admin' },
 ];
 
 export type QuickActionsTileProps = {

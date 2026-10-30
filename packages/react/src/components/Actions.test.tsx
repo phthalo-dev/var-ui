@@ -28,7 +28,7 @@ function wrap(ui: ReactNode) {
 
 describe('IconButton', () => {
   it('renders an icon-only button with layout attrs', () => {
-    wrap(<IconButton name="close" aria-label="Close" />);
+    wrap(<IconButton icon="close" aria-label="Close" />);
     const button = screen.getByRole('button', { name: 'Close' });
     expect(button.className).toContain('var-ui-button');
     expect(button.getAttribute('data-layout')).toBe('icon');
@@ -36,7 +36,7 @@ describe('IconButton', () => {
   });
 
   it('forwards data-mirror to the inner icon, not the button', () => {
-    wrap(<IconButton name="close" aria-label="Close" data-mirror />);
+    wrap(<IconButton icon="close" aria-label="Close" data-mirror />);
     const button = screen.getByRole('button', { name: 'Close' });
     expect(button.hasAttribute('data-mirror')).toBe(false);
     expect(button.querySelector('[data-mirror]')).toBeTruthy();
@@ -59,11 +59,10 @@ describe('SegmentedControl', () => {
   it('renders toggle segments', () => {
     wrap(
       <SegmentedControl
-        selectionMode="single"
-        defaultSelectedKeys={['list']}
+        defaultValue="list"
         options={[
-          { id: 'list', label: 'List' },
-          { id: 'grid', label: 'Grid' },
+          { value: 'list', label: 'List' },
+          { value: 'grid', label: 'Grid' },
         ]}
       />,
     );

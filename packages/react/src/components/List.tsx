@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, MouseEvent, ReactNode, Ref } from 'react';
 import { createContext, useContext, useId } from 'react';
 import { list as listStyles } from '@var-ui/core/components/list';
 import type { ListVariantProps } from '@var-ui/core';
@@ -9,7 +9,7 @@ export type ListItemData = {
   label: ReactNode;
   description?: ReactNode;
   href?: string;
-  isDisabled?: boolean;
+  disabled?: boolean;
   startContent?: ReactNode;
   endContent?: ReactNode;
 };
@@ -25,29 +25,30 @@ export type ListProps = Omit<ComponentPropsWithRef<'ul'>, 'children' | 'ref'> & 
   children?: ReactNode;
   /** Ref to the underlying `<ul>` (or `<ol>` when `listStyle` is `decimal`) element. */
   ref?: Ref<HTMLUListElement & HTMLOListElement>;
-  /** Fired for interactive items without href (items mode / Item onPress). */
+  /** Fired for interactive items without href (items mode / Item without onClick). */
   onAction?: (id: string) => void;
 };
 
 /**
  * Props for a row within {@link List}.
  *
- * When `href` or `onPress` is set, the row uses an invisible overlay as the sole
+ * When `href` or `onClick` is set, the row uses an invisible overlay as the sole
  * hit target — `startContent` and `endContent` must be non-interactive (decorative
  * or static content only; no links, buttons, or other controls).
  */
-export type ListItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children'> & {
+export type ListItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' | 'onClick'> & {
   /** Stable id used to label the row's hit target (not set on the `<li>`). */
   id?: string;
   label: ReactNode;
   description?: ReactNode;
-  /** Leading slot. Must not contain interactive elements when `href` / `onPress` is set. */
+  /** Leading slot. Must not contain interactive elements when `href` / `onClick` is set. */
   startContent?: ReactNode;
-  /** Trailing slot. Must not contain interactive elements when `href` / `onPress` is set. */
+  /** Trailing slot. Must not contain interactive elements when `href` / `onClick` is set. */
   endContent?: ReactNode;
   href?: string;
-  onPress?: () => void;
-  isDisabled?: boolean;
+  /** Makes the row a button (or fires in addition to navigation when `href` is set). */
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
+  disabled?: boolean;
 };
 
 type ListStyleSlots = ReturnType<typeof listStyles>;
@@ -73,15 +74,15 @@ function useListContext(): ListContextValue {
   return context;
 }
 
-type ListItemContentProps = Omit<ComponentPropsWithRef<'li'>, 'children'> & {
+type ListItemContentProps = Omit<ComponentPropsWithRef<'li'>, 'children' | 'onClick'> & {
   itemId?: string;
   label: ReactNode;
   description?: ReactNode;
   startContent?: ReactNode;
   endContent?: ReactNode;
   href?: string;
-  onPress?: () => void;
-  isDisabled?: boolean;
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
+  disabled?: boolean;
 };
 
 function ListItemContent({
@@ -91,8 +92,8 @@ function ListItemContent({
   startContent,
   endContent,
   href,
-  onPress,
-  isDisabled = false,
+  onClick,
+  disabled = false,
   className,
   ref,
   ...rest
@@ -100,7 +101,7 @@ function ListItemContent({
   const { styles: s, listId } = useListContext();
   const fallbackId = useId();
   const labelId = itemId != null ? `${listId}-${itemId}-label` : `${listId}-${fallbackId}-label`;
-  const isInteractive = !isDisabled && (href != null || onPress != null);
+  const isInteractive = !disabled && (href != null || onClick != null);
   const stringLabel = ariaLabelFromNode(label);
 
   return (
@@ -109,7 +110,7 @@ function ListItemContent({
       {...mergeProps(s.item, className)}
       ref={ref}
       data-interactive={isInteractive ? '' : undefined}
-      data-disabled={isDisabled ? '' : undefined}
+      data-disabled={disabled ? '' : undefined}
     >
       {startContent != null ? <span {...mergeProps(s.start)}>{startContent}</span> : null}
       <span id={isInteractive ? labelId : undefined} {...mergeProps(s.label)}>
@@ -123,15 +124,16 @@ function ListItemContent({
           aria-label={stringLabel}
           aria-labelledby={stringLabel == null ? labelId : undefined}
           {...mergeProps(s.overlayLink)}
+          onClick={onClick}
         />
       ) : null}
-      {isInteractive && href == null && onPress != null ? (
+      {isInteractive && href == null && onClick != null ? (
         <button
           type="button"
           aria-label={stringLabel}
           aria-labelledby={stringLabel == null ? labelId : undefined}
           {...mergeProps(s.overlayLink)}
-          onClick={onPress}
+          onClick={onClick}
         />
       ) : null}
     </li>
@@ -142,7 +144,7 @@ function ListItemContent({
  * Generic vertical list for settings rows, member lists, and static content.
  * Supports compound `List.Item` children or an `items` array with optional render props.
  *
- * Interactive rows (`href` / `onPress` / `onAction`) use an invisible overlay as the
+ * Interactive rows (`href` / `onClick` / `onAction`) use an invisible overlay as the
  * sole hit target — `startContent`, `endContent`, and `renderStart` / `renderEnd` output
  * must be non-interactive on those rows (no nested links or buttons).
  *
@@ -180,12 +182,12 @@ export function List({
         startContent={renderStart?.(item) ?? item.startContent}
         endContent={renderEnd?.(item) ?? item.endContent}
         href={item.href}
-        onPress={
-          item.href == null && onAction != null && !item.isDisabled
+        onClick={
+          item.href == null && onAction != null && !item.disabled
             ? () => onAction(item.id)
             : undefined
         }
-        isDisabled={item.isDisabled}
+        disabled={item.disabled}
       />
     )) ?? null;
 
@@ -199,7 +201,7 @@ export function List({
   );
 }
 
-/** Row within a `List` — link or button overlay when `href` / `onPress` is set. */
+/** Row within a `List` — link or button overlay when `href` / `onClick` is set. */
 export function ListItem({
   id,
   label,
@@ -207,8 +209,8 @@ export function ListItem({
   startContent,
   endContent,
   href,
-  onPress,
-  isDisabled,
+  onClick,
+  disabled,
   className,
   ref,
   ...rest
@@ -222,8 +224,8 @@ export function ListItem({
       startContent={startContent}
       endContent={endContent}
       href={href}
-      onPress={onPress}
-      isDisabled={isDisabled}
+      onClick={onClick}
+      disabled={disabled}
       className={className}
       ref={ref}
     />

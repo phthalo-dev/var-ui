@@ -7,7 +7,7 @@ export default function Preview() {
   return (
     <HStack gap="sm">
       <ToggleButton defaultSelected>Bold</ToggleButton>
-      <ToggleButton isSelected={italic} onChange={setItalic}>
+      <ToggleButton selected={italic} onSelectedChange={setItalic}>
         Italic
       </ToggleButton>
       <ToggleButton>Underline</ToggleButton>

@@ -61,7 +61,7 @@ describe('Tooltip', () => {
     function Controlled() {
       const [open] = useState(true);
       return (
-        <Tooltip.Root isOpen={open} delay={0}>
+        <Tooltip.Root open={open} delay={0}>
           <Tooltip.Trigger>
             <button type="button">Info</button>
           </Tooltip.Trigger>

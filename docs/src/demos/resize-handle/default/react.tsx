@@ -17,7 +17,7 @@ export default function Preview() {
         value={width}
         minValue={120}
         maxValue={280}
-        onChange={setWidth}
+        onValueChange={setWidth}
         aria-label="Resize sidebar"
       />
       <div style={{ flex: 1, padding: 8 }}>Main</div>

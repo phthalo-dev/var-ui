@@ -17,7 +17,7 @@ A simple two-column data table.
 
 ### Striped compact
 
-Enable `isStriped` and `density="compact"` for denser rosters; add `caption` for an accessible table title.
+Enable `striped` and `density="compact"` for denser rosters; add `caption` for an accessible table title.
 
 <Demo id="table.striped" />
 
@@ -27,4 +27,4 @@ Enable `isStriped` and `density="compact"` for denser rosters; add `caption` for
 
 ## Accessibility
 
-Renders a real `<table>`. Mark the identifying column with `isRowHeader` (`scope="row"`). Prefer a `caption` (or external heading referenced with `aria-labelledby`) so the table has an accessible name. Sort chrome sets `aria-sort` when you wire `allowsSorting` / `onSortChange`.
+Renders a real `<table>`. Mark the identifying column with `rowHeader` (`scope="row"`). Prefer a `caption` (or external heading referenced with `aria-labelledby`) so the table has an accessible name. Sort chrome sets `aria-sort` when you wire `allowsSorting` / `onSortChange`.

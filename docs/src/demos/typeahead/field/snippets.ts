@@ -8,9 +8,9 @@ export const snippets = {
   description="Start typing to filter the list."
   errorMessage="Choose a fruit to continue."
   options={[
-    { id: 'apple', label: 'Apple' },
-    { id: 'plum', label: 'Plum' },
-    { id: 'orange', label: 'Orange' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'plum', label: 'Plum' },
+    { value: 'orange', label: 'Orange' },
   ]}
 />`,
   astro: `---

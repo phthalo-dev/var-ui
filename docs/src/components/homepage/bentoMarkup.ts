@@ -172,7 +172,7 @@ export function renderStatusFeedbackTileMarkup(): string {
     {
       ...mergeProps(a.root),
       'data-alert': true,
-      'data-alert-variant': 'info',
+      'data-alert-tone': 'info',
       'data-alert-appearance': 'subtle',
     },
     alertBody,

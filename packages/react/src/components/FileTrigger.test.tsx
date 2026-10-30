@@ -98,7 +98,7 @@ describe('FileTrigger', () => {
   it('disables a Button and does not open the picker', () => {
     const clickSpy = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
     render(
-      <FileTrigger onSelect={vi.fn()} isDisabled>
+      <FileTrigger onSelect={vi.fn()} disabled>
         <Button>Choose images</Button>
       </FileTrigger>,
     );
@@ -111,7 +111,7 @@ describe('FileTrigger', () => {
 
   it('does not open the picker when disabled', () => {
     const clickSpy = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
-    renderFileTrigger({ isDisabled: true });
+    renderFileTrigger({ disabled: true });
     const button = screen.getByRole('button', { name: 'Choose images' }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
     fireEvent.click(button);

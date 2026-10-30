@@ -6,7 +6,7 @@ import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   padding?: LayoutPadding;
-  isScrollable?: boolean;
+  scrollable?: boolean;
   label?: string;
   className?: string;
 };
@@ -18,8 +18,8 @@ function toZonePaddingVariant(
   return padding === 0 ? '0' : 'inherit';
 }
 
-const { padding, isScrollable = true, role, label, className, ...rest } = Astro.props;
-const s = layoutContent({ isScrollable, padding: toZonePaddingVariant(padding) });
+const { padding, scrollable = true, role, label, className, ...rest } = Astro.props;
+const s = layoutContent({ scrollable, padding: toZonePaddingVariant(padding) });
 const resolvedRole = role ?? (label != null ? 'region' : undefined);
 ---
 

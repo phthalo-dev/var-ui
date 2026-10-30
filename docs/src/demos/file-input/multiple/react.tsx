@@ -8,7 +8,7 @@ export default function Preview() {
     <FileInput
       label="Attachments"
       value={files}
-      onChange={(next) => setFiles(Array.isArray(next) ? next : next ? [next] : null)}
+      onValueChange={(next) => setFiles(Array.isArray(next) ? next : next ? [next] : null)}
       multiple
       accept="image/*,.pdf"
       description="Select one or more files"

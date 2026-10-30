@@ -1,15 +1,18 @@
-import type { JSX, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, MouseEvent, Ref } from 'react';
 import { Button } from '../Button';
 import { Icon } from '../../icons';
 
-export type ChatSendButtonProps = {
+export type ChatSendButtonProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'children' | 'className' | 'ref' | 'disabled' | 'onClick'
+> & {
   /** Whether an assistant reply is currently streaming — swaps send → stop. @default false */
-  isStreaming?: boolean;
+  streaming?: boolean;
   /** Disables the button. Ignored while streaming (stop stays pressable). @default false */
-  isDisabled?: boolean;
-  /** Called on press when not streaming. */
-  onPress?: () => void;
-  /** Called on press while streaming (cancel). */
+  disabled?: boolean;
+  /** Called on click when not streaming. */
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  /** Called on click while streaming (cancel). */
   onStop?: () => void;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
@@ -22,28 +25,30 @@ export type ChatSendButtonProps = {
  * `Icon` rather than a dedicated recipe.
  *
  * ```tsx
- * <ChatSendButton isStreaming={isStreaming} onPress={send} onStop={cancel} />
+ * <ChatSendButton streaming={isStreaming} onClick={send} onStop={cancel} />
  * ```
  */
 export function ChatSendButton({
-  isStreaming = false,
-  isDisabled = false,
-  onPress,
+  streaming = false,
+  disabled = false,
+  onClick,
   onStop,
   className,
   ref,
+  ...rest
 }: ChatSendButtonProps): JSX.Element {
   return (
     <Button
+      aria-label={streaming ? 'Stop generating' : 'Send message'}
+      {...rest}
       tone="accent"
       appearance="filled"
       className={className}
       ref={ref}
-      isDisabled={isStreaming ? false : isDisabled}
-      aria-label={isStreaming ? 'Stop generating' : 'Send message'}
-      onPress={isStreaming ? onStop : onPress}
+      disabled={streaming ? false : disabled}
+      onClick={streaming ? () => onStop?.() : onClick}
     >
-      <Icon name={isStreaming ? 'stop' : 'arrowUp'} size="sm" />
+      <Icon name={streaming ? 'stop' : 'arrowUp'} size="sm" />
     </Button>
   );
 }

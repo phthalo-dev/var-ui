@@ -11,7 +11,7 @@ const FILE_TREE_ITEMS: TreeItemData[] = [
     label: 'src',
     children: [
       { id: 'app', label: 'App.tsx' },
-      { id: 'utils', label: 'utils.ts', isDisabled: true },
+      { id: 'utils', label: 'utils.ts', disabled: true },
     ],
   },
   { id: 'readme', label: 'README.md' },
@@ -19,29 +19,45 @@ const FILE_TREE_ITEMS: TreeItemData[] = [
 
 function ControlledTree({
   onExpandedChange,
-  onSelectionChange,
-  selectionMode = 'single' as const,
+  onValueChange,
+  selectionMode = 'single',
 }: {
-  onExpandedChange?: (keys: Set<string>) => void;
-  onSelectionChange?: (keys: Set<string>) => void;
-  selectionMode?: 'none' | 'single' | 'multiple';
+  onExpandedChange?: (expanded: string[]) => void;
+  onValueChange?: (value: string | string[] | null) => void;
+  selectionMode?: 'single' | 'multiple';
 }) {
-  const [expanded, setExpanded] = useState<Set<string>>(new Set(['src']));
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  return (
+  const [expanded, setExpanded] = useState<string[]>(['src']);
+  const [single, setSingle] = useState<string | null>(null);
+  const [multiple, setMultiple] = useState<string[]>([]);
+  const expandedProps = {
+    expanded,
+    onExpandedChange: (next: string[]) => {
+      setExpanded(next);
+      onExpandedChange?.(next);
+    },
+  };
+  return selectionMode === 'multiple' ? (
     <Tree
       aria-label="Files"
       items={FILE_TREE_ITEMS}
-      expandedKeys={expanded}
-      onExpandedChange={(next) => {
-        setExpanded(next);
-        onExpandedChange?.(next);
+      {...expandedProps}
+      selectionMode="multiple"
+      value={multiple}
+      onValueChange={(next) => {
+        setMultiple(next);
+        onValueChange?.(next);
       }}
-      selectionMode={selectionMode}
-      selectedKeys={selected}
-      onSelectionChange={(next) => {
-        setSelected(next);
-        onSelectionChange?.(next);
+    />
+  ) : (
+    <Tree
+      aria-label="Files"
+      items={FILE_TREE_ITEMS}
+      {...expandedProps}
+      selectionMode="single"
+      value={single}
+      onValueChange={(next) => {
+        setSingle(next);
+        onValueChange?.(next);
       }}
     />
   );
@@ -53,7 +69,7 @@ function treeitem(name: string) {
 
 describe('Tree', () => {
   it('renders items-array mode with role="tree"/"treeitem" and aria-level', () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     expect(screen.getByRole('tree', { name: 'Files' })).toBeTruthy();
     expect(treeitem('src').getAttribute('aria-level')).toBe('1');
     expect(treeitem('App.tsx').getAttribute('aria-level')).toBe('2');
@@ -99,25 +115,25 @@ describe('Tree', () => {
   });
 
   it('marks disabled items with aria-disabled and data-disabled', () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     const disabled = treeitem('utils.ts');
     expect(disabled.getAttribute('aria-disabled')).toBe('true');
     expect(disabled.hasAttribute('data-disabled')).toBe(true);
   });
 
   it('does not expand/select a disabled item on click', async () => {
-    const onSelectionChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <Tree
         aria-label="Files"
         items={FILE_TREE_ITEMS}
-        defaultExpandedKeys={['src']}
+        defaultExpanded={['src']}
         selectionMode="single"
-        onSelectionChange={onSelectionChange}
+        onValueChange={onValueChange}
       />,
     );
     await userEvent.click(treeitem('utils.ts'));
-    expect(onSelectionChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('selects a row on click when selectionMode !== "none", setting aria-selected', async () => {
@@ -128,12 +144,12 @@ describe('Tree', () => {
   });
 
   it('gives no row aria-selected when selectionMode is "none"', () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     expect(treeitem('src').hasAttribute('aria-selected')).toBe(false);
   });
 
   it('roving tabindex: only one row is tabbable at a time', () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     const rows = screen.getAllByRole('treeitem');
     const tabbable = rows.filter((row) => row.tabIndex === 0);
     expect(tabbable.length).toBe(1);
@@ -141,7 +157,7 @@ describe('Tree', () => {
   });
 
   it('ArrowDown moves the roving tabindex to the next visible row', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('src').focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(treeitem('App.tsx'));
@@ -150,7 +166,7 @@ describe('Tree', () => {
   });
 
   it('ArrowDown skips a disabled row', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(treeitem('README.md'));
@@ -165,14 +181,14 @@ describe('Tree', () => {
   });
 
   it('ArrowRight moves focus to the first child when already expanded', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('src').focus();
     await userEvent.keyboard('{ArrowRight}');
     expect(document.activeElement).toBe(treeitem('App.tsx'));
   });
 
   it('ArrowLeft collapses an expanded row without moving focus', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('src').focus();
     await userEvent.keyboard('{ArrowLeft}');
     expect(treeitem('src').getAttribute('aria-expanded')).toBe('false');
@@ -180,14 +196,14 @@ describe('Tree', () => {
   });
 
   it('ArrowLeft on a leaf/collapsed row moves focus to its parent', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{ArrowLeft}');
     expect(document.activeElement).toBe(treeitem('src'));
   });
 
   it('Home/End jump to the first/last visible row', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{End}');
     expect(document.activeElement).toBe(treeitem('README.md'));
@@ -203,28 +219,28 @@ describe('Tree', () => {
   });
 
   it('does not select on Enter when selectionMode is "none"', async () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{Enter}');
     expect(treeitem('App.tsx').hasAttribute('aria-selected')).toBe(false);
   });
 
-  it('supports multiple selection, accumulating selectedKeys', async () => {
-    const onSelectionChange = vi.fn();
-    render(<ControlledTree selectionMode="multiple" onSelectionChange={onSelectionChange} />);
+  it('supports multiple selection, accumulating value', async () => {
+    const onValueChange = vi.fn();
+    render(<ControlledTree selectionMode="multiple" onValueChange={onValueChange} />);
     await userEvent.click(treeitem('App.tsx'));
     await userEvent.click(treeitem('README.md'));
-    expect(onSelectionChange).toHaveBeenLastCalledWith(new Set(['app', 'readme']));
+    expect(onValueChange).toHaveBeenLastCalledWith(['app', 'readme']);
   });
 
-  it('is controlled when expandedKeys/selectedKeys are provided', async () => {
+  it('is controlled when expanded is provided', async () => {
     function Wrapper() {
-      const [expanded, setExpanded] = useState<Set<string>>(new Set());
+      const [expanded, setExpanded] = useState<string[]>([]);
       return (
         <Tree
           aria-label="Files"
           items={FILE_TREE_ITEMS}
-          expandedKeys={expanded}
+          expanded={expanded}
           onExpandedChange={setExpanded}
         />
       );
@@ -241,18 +257,18 @@ describe('Tree', () => {
   });
 
   it('does not select a row on click when it has an href (link handles navigation, not selection)', async () => {
-    const onSelectionChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <Tree
         aria-label="Nav"
         selectionMode="single"
-        onSelectionChange={onSelectionChange}
+        onValueChange={onValueChange}
         items={[{ id: 'docs', label: 'Docs', href: '/docs' }]}
       />,
     );
     const row = screen.getByRole('treeitem', { name: 'Docs' });
     await userEvent.click(row);
-    expect(onSelectionChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
     expect(row.getAttribute('aria-selected')).toBe('false');
   });
 
@@ -277,7 +293,7 @@ describe('Tree', () => {
   });
 
   it('nests the group DOM-inside its owning treeitem, not as a sibling under role="none"', () => {
-    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpandedKeys={['src']} />);
+    render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     const row = treeitem('src');
     const group = screen.getByRole('group');
     expect(row.contains(group)).toBe(true);
@@ -285,12 +301,12 @@ describe('Tree', () => {
   });
 
   it('expands href branch on chevron click without selecting; link stays on label', async () => {
-    const onSelectionChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <Tree
         aria-label="Nav"
         selectionMode="single"
-        onSelectionChange={onSelectionChange}
+        onValueChange={onValueChange}
         items={[
           {
             id: 'docs',
@@ -312,7 +328,7 @@ describe('Tree', () => {
     await userEvent.click(toggle);
     expect(row.getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByRole('treeitem', { name: 'Guide' })).toBeTruthy();
-    expect(onSelectionChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
 
     expect(link).toHaveProperty('href', expect.stringContaining('/docs'));
   });
@@ -346,5 +362,47 @@ describe('Tree', () => {
     // Collapsed→expanded must keep the mirrored icon; core CSS uses
     // rotate(-90deg) under [dir=rtl] so it points down, not up.
     expect(toggle.querySelector('[data-mirror]')).toBeTruthy();
+  });
+
+  it('single mode reports string | null and clears on re-click (controlled)', async () => {
+    const onValueChange = vi.fn();
+    render(<ControlledTree onValueChange={onValueChange} />);
+    await userEvent.click(treeitem('App.tsx'));
+    expect(onValueChange).toHaveBeenLastCalledWith('app');
+    expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('true');
+    await userEvent.click(treeitem('App.tsx'));
+    expect(onValueChange).toHaveBeenLastCalledWith(null);
+    expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('supports uncontrolled defaultValue (single and multiple)', async () => {
+    const onValueChange = vi.fn();
+    const { unmount } = render(
+      <Tree
+        aria-label="Files"
+        items={FILE_TREE_ITEMS}
+        defaultExpanded={['src']}
+        selectionMode="single"
+        defaultValue="app"
+        onValueChange={onValueChange}
+      />,
+    );
+    expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('true');
+    await userEvent.click(treeitem('README.md'));
+    expect(onValueChange).toHaveBeenLastCalledWith('readme');
+    expect(treeitem('README.md').getAttribute('aria-selected')).toBe('true');
+    expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('false');
+    unmount();
+
+    render(
+      <Tree
+        aria-label="Files"
+        items={FILE_TREE_ITEMS}
+        defaultExpanded={['src']}
+        selectionMode="multiple"
+        defaultValue={['app']}
+      />,
+    );
+    expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('true');
   });
 });

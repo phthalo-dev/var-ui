@@ -35,7 +35,7 @@ export { ColorPicker, type ColorPickerProps } from './ColorPicker';
 export { ColorSwatch, type ColorSwatchProps } from './ColorSwatch';
 export { CopyButton, type CopyButtonProps, type CopyButtonRenderProps } from './CopyButton';
 export { Slider, type SliderProps } from './Slider';
-export { PinInput, type PinInputProps, type PinInputType } from './PinInput';
+export { PinInput, type PinInputProps, type PinInputCharacters } from './PinInput';
 export { NumberInput, type NumberInputProps } from './NumberInput';
 export { LoadingOverlay, type LoadingOverlayProps } from './LoadingOverlay';
 export { Link, type LinkProps } from './Link';

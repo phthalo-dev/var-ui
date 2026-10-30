@@ -106,7 +106,7 @@ function PaletteSwitcher({
       <Button
         tone={selected === 'default' ? 'accent' : 'neutral'}
         appearance={selected === 'default' ? 'filled' : 'subtle'}
-        onPress={() => onSelect('default')}
+        onClick={() => onSelect('default')}
         aria-pressed={selected === 'default'}
       >
         Default
@@ -114,7 +114,7 @@ function PaletteSwitcher({
       <Button
         tone={selected === 'acme' ? 'accent' : 'neutral'}
         appearance={selected === 'acme' ? 'filled' : 'subtle'}
-        onPress={() => onSelect('acme')}
+        onClick={() => onSelect('acme')}
         aria-pressed={selected === 'acme'}
       >
         Acme (V7 + V8 demo)
@@ -132,17 +132,17 @@ function FeedbackSection() {
           tone="warning"
           title="Scheduled maintenance"
           onDismiss={() => setShowBanner(false)}
-          actions={<Button onPress={() => setShowBanner(false)}>Acknowledge</Button>}
+          actions={<Button onClick={() => setShowBanner(false)}>Acknowledge</Button>}
         >
           Sunday 02:00–04:00 UTC.
         </Banner>
       ) : (
-        <Button onPress={() => setShowBanner(true)}>Show banner again</Button>
+        <Button onClick={() => setShowBanner(true)}>Show banner again</Button>
       )}
       <Banner tone="success" appearance="solid">
         Deploy finished in 42s.
       </Banner>
-      <Alert variant="info" title="Registry icons">
+      <Alert tone="info" title="Registry icons">
         Alerts now pull their tone glyph from <code>IconProvider</code> automatically.
       </Alert>
       <HStack gap="lg" wrap>
@@ -162,7 +162,7 @@ function FeedbackSection() {
         </HStack>
       </HStack>
       <ProgressBar label="Uploading assets" value={64} />
-      <ProgressBar label="Reindexing" isIndeterminate />
+      <ProgressBar label="Reindexing" indeterminate />
       <Stack gap="xs" aria-hidden style={{ maxWidth: '320px' }}>
         <Skeleton shape="text" style={{ width: '60%' }} />
         <Skeleton shape="text" style={{ width: '90%' }} />
@@ -202,7 +202,7 @@ function LayoutSection() {
                     key={item.id}
                     tone={item.id === selectedId ? 'accent' : 'neutral'}
                     appearance={item.id === selectedId ? 'filled' : 'subtle'}
-                    onPress={() => setSelectedId(item.id)}
+                    onClick={() => setSelectedId(item.id)}
                   >
                     {item.label}
                   </Button>
@@ -219,7 +219,7 @@ function LayoutSection() {
                   label="Inspector"
                   role="complementary"
                   responsive={{ below: 'lg', mode: 'overlay' }}
-                  isOpen
+                  open
                   onOpenChange={(open) => {
                     if (!open) setSelectedId(null);
                   }}
@@ -350,18 +350,18 @@ function ContainerSection() {
 }
 
 const FRUIT_OPTIONS = [
-  { id: 'apple', label: 'Apple' },
-  { id: 'apricot', label: 'Apricot' },
-  { id: 'plum', label: 'Plum' },
-  { id: 'peach', label: 'Peach' },
-  { id: 'pear', label: 'Pear' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'apricot', label: 'Apricot' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'peach', label: 'Peach' },
+  { value: 'pear', label: 'Pear' },
 ];
 
 function FormsSection() {
   const [notifications, setNotifications] = useState(['email']);
   const [price, setPrice] = useState('49.00');
   const [resume, setResume] = useState<File | null>(null);
-  const [reviewers, setReviewers] = useState<typeof FRUIT_OPTIONS>([FRUIT_OPTIONS[0]]);
+  const [reviewers, setReviewers] = useState<string[]>([FRUIT_OPTIONS[0].value]);
   const [labels, setLabels] = useState<string[]>(['apricot']);
 
   return (
@@ -387,8 +387,8 @@ function FormsSection() {
         <Select
           label="Fruit"
           options={[
-            { id: 'apple', label: 'Apple' },
-            { id: 'plum', label: 'Plum' },
+            { value: 'apple', label: 'Apple' },
+            { value: 'plum', label: 'Plum' },
           ]}
         />
       </Grid>
@@ -411,7 +411,7 @@ function FormsSection() {
       <CheckboxGroup
         label="Notifications"
         value={notifications}
-        onChange={setNotifications}
+        onValueChange={setNotifications}
         options={[
           { value: 'email', label: 'Email' },
           { value: 'sms', label: 'SMS' },
@@ -422,19 +422,24 @@ function FormsSection() {
         label="Resume"
         description="PDF or Word document, up to 5MB."
         value={resume}
-        onChange={(files) => setResume(Array.isArray(files) ? (files[0] ?? null) : files)}
+        onValueChange={(files) => setResume(Array.isArray(files) ? (files[0] ?? null) : files)}
         accept=".pdf,.doc,.docx"
         maxSize={5 * 1024 * 1024}
       />
       <Grid columns={2} gap="lg">
         <Typeahead label="Assignee" options={FRUIT_OPTIONS} placeholder="Search people…" />
-        <MultiSelector label="Labels" options={FRUIT_OPTIONS} value={labels} onChange={setLabels} />
+        <MultiSelector
+          label="Labels"
+          options={FRUIT_OPTIONS}
+          value={labels}
+          onValueChange={setLabels}
+        />
       </Grid>
       <Tokenizer
         label="Reviewers"
         options={FRUIT_OPTIONS}
         value={reviewers}
-        onChange={setReviewers}
+        onValueChange={setReviewers}
         placeholder="Add a reviewer…"
       />
     </Section>
@@ -451,19 +456,24 @@ function PaginationDemo() {
 
   return (
     <Stack gap="md">
-      <Pagination page={pagesPage} onChange={setPagesPage} totalPages={12} />
+      <Pagination page={pagesPage} onValueChange={setPagesPage} totalPages={12} />
       <Pagination
         page={countPage}
-        onChange={setCountPage}
+        onValueChange={setCountPage}
         totalItems={45}
         pageSize={10}
         variant="count"
       />
-      <Pagination page={compactPage} onChange={setCompactPage} totalPages={6} variant="compact" />
-      <Pagination page={dotsPage} onChange={setDotsPage} totalPages={5} variant="dots" />
+      <Pagination
+        page={compactPage}
+        onValueChange={setCompactPage}
+        totalPages={6}
+        variant="compact"
+      />
+      <Pagination page={dotsPage} onValueChange={setDotsPage} totalPages={5} variant="dots" />
       <Pagination
         page={sizedPage}
-        onChange={setSizedPage}
+        onValueChange={setSizedPage}
         totalItems={230}
         pageSize={pageSize}
         pageSizeOptions={[10, 25, 50]}
@@ -482,7 +492,7 @@ function SideNavDemo() {
       <SideNav
         header={<SideNav.Heading heading="Acme" superheading="Workspace" icon="search" />}
         topContent={
-          <Button size="sm" onPress={() => setSelected('dashboard')}>
+          <Button size="sm" onClick={() => setSelected('dashboard')}>
             New project
           </Button>
         }
@@ -491,32 +501,32 @@ function SideNavDemo() {
             <Icon name="moreHorizontal" />
           </Button>
         }
-        collapsible={{ isCollapsed, onCollapsedChange: setIsCollapsed }}
+        collapsible={{ collapsed: isCollapsed, onCollapsedChange: setIsCollapsed }}
         resizable
       >
         <SideNav.Section title="Main">
           <SideNav.Item
             label="Dashboard"
             icon="search"
-            isSelected={selected === 'dashboard'}
-            onPress={() => setSelected('dashboard')}
+            selected={selected === 'dashboard'}
+            onClick={() => setSelected('dashboard')}
           />
           <SideNav.Item
             label="Projects"
             icon="clock"
             collapsible
-            isSelected={selected === 'projects'}
-            onPress={() => setSelected('projects')}
+            selected={selected === 'projects'}
+            onClick={() => setSelected('projects')}
           >
             <SideNav.Item
               label="Alpha"
-              isSelected={selected === 'alpha'}
-              onPress={() => setSelected('alpha')}
+              selected={selected === 'alpha'}
+              onClick={() => setSelected('alpha')}
             />
             <SideNav.Item
               label="Beta"
-              isSelected={selected === 'beta'}
-              onPress={() => setSelected('beta')}
+              selected={selected === 'beta'}
+              onClick={() => setSelected('beta')}
             />
           </SideNav.Item>
         </SideNav.Section>
@@ -524,8 +534,8 @@ function SideNavDemo() {
           <SideNav.Item
             label="Preferences"
             icon="wrench"
-            isSelected={selected === 'preferences'}
-            onPress={() => setSelected('preferences')}
+            selected={selected === 'preferences'}
+            onClick={() => setSelected('preferences')}
           />
         </SideNav.Section>
       </SideNav>
@@ -554,30 +564,30 @@ function MobileNavDemo() {
   return (
     <Stack gap="sm">
       <HStack gap="sm" align="center">
-        <MobileNav.Toggle isOpen={isOpen} onPress={() => setIsOpen(true)} />
+        <MobileNav.Toggle open={isOpen} onClick={() => setIsOpen(true)} />
         <Text size="sm" tone="secondary">
           Narrow-viewport drawer — click the hamburger to open.
         </Text>
       </HStack>
-      <MobileNav isOpen={isOpen} onOpenChange={setIsOpen} header="Acme" width={280}>
+      <MobileNav open={isOpen} onOpenChange={setIsOpen} header="Acme" width={280}>
         <SideNav.Section title="Main">
           <SideNav.Item
             label="Dashboard"
             icon="search"
-            isSelected={selected === 'dashboard'}
-            onPress={() => setSelected('dashboard')}
+            selected={selected === 'dashboard'}
+            onClick={() => setSelected('dashboard')}
           />
           <SideNav.Item
             label="Projects"
             icon="clock"
-            isSelected={selected === 'projects'}
-            onPress={() => setSelected('projects')}
+            selected={selected === 'projects'}
+            onClick={() => setSelected('projects')}
           />
           <SideNav.Item
             label="Settings"
             icon="wrench"
-            isSelected={selected === 'settings'}
-            onPress={() => setSelected('settings')}
+            selected={selected === 'settings'}
+            onClick={() => setSelected('settings')}
           />
         </SideNav.Section>
       </MobileNav>
@@ -613,13 +623,13 @@ function TopNavDemo() {
     >
       <TopNav.Item
         label="Home"
-        isSelected={selected === 'home'}
-        onPress={() => setSelected('home')}
+        selected={selected === 'home'}
+        onClick={() => setSelected('home')}
       />
       <TopNav.Item
         label="Docs"
-        isSelected={selected === 'docs'}
-        onPress={() => setSelected('docs')}
+        selected={selected === 'docs'}
+        onClick={() => setSelected('docs')}
       />
       <TopNav.Menu
         label="Products"
@@ -688,8 +698,8 @@ function AdminShellDemo() {
             key={item.id}
             label={item.label}
             icon={item.icon}
-            isSelected={selected === item.id}
-            onPress={() => setSelected(item.id)}
+            selected={selected === item.id}
+            onClick={() => setSelected(item.id)}
           />
         ))}
       </SideNav.Section>
@@ -781,10 +791,10 @@ function TabListDemo() {
 
   return (
     <Stack gap="sm">
-      <TabList value={tab} onChange={setTab} hasDivider label="Sections">
+      <TabList value={tab} onValueChange={setTab} hasDivider label="Sections">
         <TabList.Tab value="overview" label="Overview" />
         <TabList.Tab value="activity" label="Activity" endContent={<Badge>3</Badge>} />
-        <TabList.Tab value="disabled" label="Archived" isDisabled />
+        <TabList.Tab value="disabled" label="Archived" disabled />
         <TabList.Menu
           label="More"
           options={[
@@ -836,7 +846,7 @@ function DataDisplaySection() {
               id: 'billing',
               label: 'Billing',
               description: 'Plans and invoices',
-              isDisabled: true,
+              disabled: true,
             },
             { id: 'notifications', label: 'Notifications', description: 'Email and push' },
           ]}
@@ -877,8 +887,8 @@ function DataDisplaySection() {
 }
 
 function TreeDemo() {
-  const [expanded, setExpanded] = useState<Set<string>>(new Set(['src', 'src/components']));
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<string[]>(['src', 'src/components']);
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <Stack gap="sm">
@@ -888,11 +898,11 @@ function TreeDemo() {
       <Tree
         aria-label="Project files"
         density="compact"
-        expandedKeys={expanded}
+        expanded={expanded}
         onExpandedChange={setExpanded}
         selectionMode="single"
-        selectedKeys={selected}
-        onSelectionChange={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         items={[
           {
             id: 'src',
@@ -914,13 +924,13 @@ function TreeDemo() {
             id: 'node_modules',
             label: 'node_modules',
             description: 'Ignored',
-            isDisabled: true,
+            disabled: true,
             children: [{ id: 'node_modules/react', label: 'react' }],
           },
         ]}
       />
       <Text size="sm" tone="secondary">
-        Selected: {selected.size > 0 ? Array.from(selected).join(', ') : 'none'}
+        Selected: {selected ?? 'none'}
       </Text>
     </Stack>
   );
@@ -1028,11 +1038,13 @@ function TableDemo() {
             <Table.Column width="2.5rem">
               <Checkbox
                 aria-label="Select all rows on this page"
-                isSelected={allOnPageSelected}
-                onChange={() => (allOnPageSelected ? selection.clear() : selection.selectAll())}
+                checked={allOnPageSelected}
+                onCheckedChange={() =>
+                  allOnPageSelected ? selection.clear() : selection.selectAll()
+                }
               />
             </Table.Column>
-            <Table.Column isRowHeader {...columnSort('name')}>
+            <Table.Column rowHeader {...columnSort('name')}>
               Name
             </Table.Column>
             <Table.Column {...columnSort('status')}>Status</Table.Column>
@@ -1041,15 +1053,15 @@ function TableDemo() {
         </Table.Header>
         <Table.Body>
           {pageData.map((row) => (
-            <Table.Row key={row.id} isSelected={selection.isSelected(row.id)}>
+            <Table.Row key={row.id} selected={selection.isSelected(row.id)}>
               <Table.Cell>
                 <Checkbox
                   aria-label={`Select ${row.name}`}
-                  isSelected={selection.isSelected(row.id)}
-                  onChange={() => selection.toggle(row.id)}
+                  checked={selection.isSelected(row.id)}
+                  onCheckedChange={() => selection.toggle(row.id)}
                 />
               </Table.Cell>
-              <Table.Cell isRowHeader>{row.name}</Table.Cell>
+              <Table.Cell rowHeader>{row.name}</Table.Cell>
               <Table.Cell>
                 <Badge tone={SERVER_STATUS_TONE[row.status]}>{row.status}</Badge>
               </Table.Cell>
@@ -1062,7 +1074,7 @@ function TableDemo() {
         <Text size="sm" tone="secondary">
           {selection.selectedKeys.size} of {sortedData.length} selected
         </Text>
-        <Pagination page={page} onChange={setPage} totalPages={totalPages} size="sm" />
+        <Pagination page={page} onValueChange={setPage} totalPages={totalPages} size="sm" />
       </HStack>
     </Stack>
   );
@@ -1107,7 +1119,7 @@ function DatesSection() {
 
   return (
     <Section title="Dates & time">
-      <Calendar aria-label="Appointment date" value={date} onChange={setDate} />
+      <Calendar aria-label="Appointment date" value={date} onValueChange={setDate} />
       <Grid columns={2} gap="lg">
         <DateInput label="Start date" />
         <DateRangeInput label="Trip dates" />
@@ -1132,9 +1144,9 @@ function ToastDemo() {
   const toast = useToast();
   return (
     <HStack gap="sm">
-      <Button onPress={() => toast.add({ tone: 'success', title: 'Saved' })}>Success toast</Button>
+      <Button onClick={() => toast.add({ tone: 'success', title: 'Saved' })}>Success toast</Button>
       <Button
-        onPress={() =>
+        onClick={() =>
           toast.add({
             tone: 'danger',
             title: 'Failed',
@@ -1154,10 +1166,10 @@ function CommandPaletteDemo() {
   const [last, setLast] = useState<string | null>(null);
   return (
     <>
-      <Button onPress={() => setOpen(true)}>Open command palette</Button>
+      <Button onClick={() => setOpen(true)}>Open command palette</Button>
       {last ? <Text tone="secondary">Last action: {last}</Text> : null}
       <CommandPalette
-        isOpen={open}
+        open={open}
         onOpenChange={setOpen}
         items={[
           { id: 'theme', title: 'Toggle theme', meta: 'Appearance' },
@@ -1202,7 +1214,7 @@ function OverlaysSection() {
             title="Delete this item?"
             description="This action is permanent and cannot be undone."
             confirmLabel="Delete"
-            isDestructive
+            destructive
             onConfirm={() => console.log('deleted')}
           />
         </HStack>
@@ -1261,7 +1273,7 @@ export function App() {
 
               <Section {...{ [COLOR_MODE_ATTRIBUTE]: 'dark' }} title="Dark section">
                 <Text>This section pins dark color mode while the page stays light.</Text>
-                <Alert variant="info" appearance="subtle" title="Pinned dark chrome">
+                <Alert tone="info" appearance="subtle" title="Pinned dark chrome">
                   Mark subtrees with <code>{COLOR_MODE_ATTRIBUTE}=&quot;dark&quot;</code>.
                 </Alert>
               </Section>

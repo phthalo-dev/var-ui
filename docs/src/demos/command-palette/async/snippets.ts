@@ -2,11 +2,11 @@ import type { DemoSnippets } from '../../types';
 
 export const snippets = {
   react: `<CommandPalette
-  isOpen={open}
+  open={open}
   onOpenChange={setOpen}
   filter={false}            // items already are the server's results
   highlightMatches
-  isLoading={loading}
+  loading={loading}
   onQueryChange={setQuery}  // debounce + fetch, then setItems
   items={items}
 />`,

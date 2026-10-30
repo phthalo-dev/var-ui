@@ -4,11 +4,10 @@ export const snippets = {
   react: `import { SegmentedControl } from '@var-ui/react';
 
 <SegmentedControl
-  selectionMode="single"
-  defaultSelectedKeys={['list']}
+  defaultValue="list"
   options={[
-    { id: 'list', label: 'List' },
-    { id: 'grid', label: 'Grid' },
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' },
   ]}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,

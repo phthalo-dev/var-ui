@@ -7,10 +7,10 @@ import { ChatComposer, ChatComposerInput, ChatSendButton } from '@var-ui/react';
 function Composer() {
   const [value, setValue] = useState('');
   return (
-    <ChatComposer actions={<ChatSendButton onPress={() => setValue('')} />}>
+    <ChatComposer actions={<ChatSendButton onClick={() => setValue('')} />}>
       <ChatComposerInput
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         onSubmit={() => setValue('')}
         placeholder="Type a message…"
       />

@@ -15,9 +15,9 @@ function wrap(ui: ReactNode) {
 }
 
 describe('MobileNav', () => {
-  it('renders nothing when closed, and its children when isOpen is true', () => {
+  it('renders nothing when closed, and its children when open is true', () => {
     const { rerender } = wrap(
-      <MobileNav isOpen={false}>
+      <MobileNav open={false}>
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -26,7 +26,7 @@ describe('MobileNav', () => {
     rerender(
       <IconProvider icons={{}}>
         <LayerProvider>
-          <MobileNav isOpen>
+          <MobileNav open>
             <p>Drawer content</p>
           </MobileNav>
         </LayerProvider>
@@ -37,7 +37,7 @@ describe('MobileNav', () => {
 
   it('renders header content and children together', () => {
     wrap(
-      <MobileNav isOpen header="Menu">
+      <MobileNav open header="Menu">
         <p>Dashboard link</p>
       </MobileNav>,
     );
@@ -48,7 +48,7 @@ describe('MobileNav', () => {
   it('calls onOpenChange(false) on Escape', async () => {
     const onOpenChange = vi.fn();
     wrap(
-      <MobileNav isOpen onOpenChange={onOpenChange}>
+      <MobileNav open onOpenChange={onOpenChange}>
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -59,7 +59,7 @@ describe('MobileNav', () => {
   it('calls onOpenChange(false) on backdrop click', async () => {
     const onOpenChange = vi.fn();
     wrap(
-      <MobileNav isOpen onOpenChange={onOpenChange}>
+      <MobileNav open onOpenChange={onOpenChange}>
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -74,7 +74,7 @@ describe('MobileNav', () => {
   it('calls onOpenChange(false) when the close button is pressed', async () => {
     const onOpenChange = vi.fn();
     wrap(
-      <MobileNav isOpen onOpenChange={onOpenChange} closeLabel="Close nav">
+      <MobileNav open onOpenChange={onOpenChange} closeLabel="Close nav">
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -84,7 +84,7 @@ describe('MobileNav', () => {
 
   it('positions the panel via data-side, defaulting "auto" to "start"', () => {
     wrap(
-      <MobileNav isOpen>
+      <MobileNav open>
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -94,7 +94,7 @@ describe('MobileNav', () => {
 
   it('supports the "end" side', () => {
     wrap(
-      <MobileNav isOpen side="end">
+      <MobileNav open side="end">
         <p>Drawer content</p>
       </MobileNav>,
     );
@@ -103,13 +103,13 @@ describe('MobileNav', () => {
   });
 
   describe('MobileNav.Toggle', () => {
-    it('calls an explicit onPress handler and reflects isOpen via aria-expanded', async () => {
+    it('calls an explicit onClick handler and reflects open via aria-expanded', async () => {
       function Demo() {
         const [isOpen, setIsOpen] = useState(false);
         return (
           <>
-            <MobileNav.Toggle isOpen={isOpen} onPress={() => setIsOpen(true)} />
-            <MobileNav isOpen={isOpen} onOpenChange={setIsOpen}>
+            <MobileNav.Toggle open={isOpen} onClick={() => setIsOpen(true)} />
+            <MobileNav open={isOpen} onOpenChange={setIsOpen}>
               <p>Drawer content</p>
             </MobileNav>
           </>
@@ -138,5 +138,24 @@ describe('MobileNav', () => {
       await userEvent.click(screen.getByRole('button', { name: 'Open navigation' }));
       expect(screen.getByText('Drawer content')).toBeTruthy();
     });
+  });
+
+  it('MobileNavProvider honors defaultOpen', () => {
+    wrap(
+      <MobileNavProvider defaultOpen>
+        <MobileNav>
+          <p>Drawer content</p>
+        </MobileNav>
+      </MobileNavProvider>,
+    );
+    expect(screen.getByText('Drawer content')).toBeTruthy();
+  });
+
+  it('Toggle forwards a native onClick event', async () => {
+    const onClick = vi.fn();
+    wrap(<MobileNav.Toggle onClick={onClick} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open navigation' }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onClick.mock.calls[0]?.[0]).toHaveProperty('nativeEvent');
   });
 });

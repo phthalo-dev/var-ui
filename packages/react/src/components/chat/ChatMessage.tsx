@@ -1,10 +1,13 @@
-import type { JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatMessage } from '@var-ui/core/components/chat/chatMessage';
 import type { ChatMessageVariantProps } from '@var-ui/core';
 import { ChatMessageContext, useChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 
-export type ChatMessageProps = {
+export type ChatMessageProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'className' | 'ref'
+> & {
   /** Who sent this message — drives alignment and the default bubble color. */
   sender: NonNullable<ChatMessageVariantProps['sender']>;
   /** Sender name shown above the content. */
@@ -40,13 +43,14 @@ export function ChatMessage({
   children,
   className,
   ref,
+  ...rest
 }: ChatMessageProps): JSX.Element {
   const listContext = useChatListContext();
   const density = listContext?.density ?? 'balanced';
   const m = chatMessage({ sender });
   return (
     <ChatMessageContext.Provider value={{ sender, density }}>
-      <div {...mergeProps(m.root, className)} ref={ref}>
+      <div {...rest} {...mergeProps(m.root, className)} ref={ref}>
         {avatar ? <div {...mergeProps(m.avatar)}>{avatar}</div> : null}
         <div {...mergeProps(m.content)}>
           {name ? (

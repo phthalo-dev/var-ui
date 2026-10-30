@@ -3,7 +3,7 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { ColorPicker, ColorSwatch, HStack } from '@var-ui/react';
 
-<ColorPicker value={color} onChange={setColor} swatches={[]} />
+<ColorPicker value={color} onValueChange={setColor} swatches={[]} />
 <HStack gap="sm">
   <ColorSwatch
     color="#228be6"

@@ -1,7 +1,6 @@
 'use client';
 
 import { Link, SegmentedControl, Select, Text } from '@var-ui/react';
-import type { Selection as AriaSelection } from 'react-aria-components';
 import { themePlaygroundStyles } from '@/styles/themePlayground';
 import {
   BASE_SIZE_OPTIONS,
@@ -71,11 +70,9 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
         <SegmentedControl
           aria-label="Spacing preset"
           options={[...SPACING_PRESET_OPTIONS]}
-          selectedKeys={[state.spacingPreset]}
-          onSelectionChange={(keys: AriaSelection) => {
-            if (keys === 'all') return;
-            const id = [...keys][0] as ThemePlaygroundSpacingPreset;
-            if (id) onChange({ spacingPreset: id });
+          value={state.spacingPreset}
+          onValueChange={(next) => {
+            if (next) onChange({ spacingPreset: next as ThemePlaygroundSpacingPreset });
           }}
         />
       </ControlGroup>
@@ -83,12 +80,9 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
       <ControlGroup label="Heading font">
         <Select
           aria-label="Heading font"
-          options={FONT_FAMILY_OPTIONS.map((option) => ({
-            id: option.id,
-            label: option.label,
-          }))}
-          selectedKey={state.typography.headingFont}
-          onSelectionChange={(key) => {
+          options={[...FONT_FAMILY_OPTIONS]}
+          value={state.typography.headingFont}
+          onValueChange={(key) => {
             if (key) setTypography({ headingFont: key as ThemePlaygroundFontFamilyId });
           }}
         />
@@ -97,12 +91,9 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
       <ControlGroup label="Body font">
         <Select
           aria-label="Body font"
-          options={FONT_FAMILY_OPTIONS.map((option) => ({
-            id: option.id,
-            label: option.label,
-          }))}
-          selectedKey={state.typography.bodyFont}
-          onSelectionChange={(key) => {
+          options={[...FONT_FAMILY_OPTIONS]}
+          value={state.typography.bodyFont}
+          onValueChange={(key) => {
             if (key) setTypography({ bodyFont: key as ThemePlaygroundFontFamilyId });
           }}
         />
@@ -111,12 +102,9 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
       <ControlGroup label="Type scale">
         <Select
           aria-label="Type scale"
-          options={TYPE_SCALE_OPTIONS.map((option) => ({
-            id: option.id,
-            label: option.label,
-          }))}
-          selectedKey={state.typography.typeScale}
-          onSelectionChange={(key) => {
+          options={[...TYPE_SCALE_OPTIONS]}
+          value={state.typography.typeScale}
+          onValueChange={(key) => {
             if (key) setTypography({ typeScale: key as ThemePlaygroundTypeScale });
           }}
         />
@@ -126,11 +114,9 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
         <SegmentedControl
           aria-label="Base type size"
           options={[...BASE_SIZE_OPTIONS]}
-          selectedKeys={[state.typography.baseSize]}
-          onSelectionChange={(keys: AriaSelection) => {
-            if (keys === 'all') return;
-            const id = [...keys][0] as ThemePlaygroundBaseSize;
-            if (id) setTypography({ baseSize: id });
+          value={state.typography.baseSize}
+          onValueChange={(next) => {
+            if (next) setTypography({ baseSize: next as ThemePlaygroundBaseSize });
           }}
         />
       </ControlGroup>

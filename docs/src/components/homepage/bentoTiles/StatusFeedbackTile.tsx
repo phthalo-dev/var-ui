@@ -10,7 +10,7 @@ export function StatusFeedbackTile({ className }: StatusFeedbackTileProps) {
   return (
     <div className={className}>
       <VStack gap="md">
-        <Alert title="Deploy queued" variant="info">
+        <Alert title="Deploy queued" tone="info">
           Waiting for the previous build to finish.
         </Alert>
         <HStack gap="sm" wrap>

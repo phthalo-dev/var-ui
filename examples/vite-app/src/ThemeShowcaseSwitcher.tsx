@@ -72,7 +72,7 @@ export function ThemeShowcaseSwitcher({ selected, onSelect }: ThemeShowcaseSwitc
               key={theme.id}
               tone={isActive ? 'accent' : 'neutral'}
               appearance={isActive ? 'filled' : 'subtle'}
-              onPress={() => onSelect(theme.id)}
+              onClick={() => onSelect(theme.id)}
               aria-pressed={isActive}
             >
               <span

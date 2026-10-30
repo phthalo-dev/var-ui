@@ -112,7 +112,7 @@ describe('SideNav', () => {
   it('marks a selected item with data-selected and aria-current="page"', () => {
     wrap(
       <SideNav>
-        <SideNav.Item label="Dashboard" href="/" isSelected />
+        <SideNav.Item label="Dashboard" href="/" selected />
         <SideNav.Item label="Settings" href="/settings" />
       </SideNav>,
     );
@@ -151,7 +151,7 @@ describe('SideNav', () => {
       collapsedState = next;
     };
     const { rerender } = wrap(
-      <SideNav collapsible={{ isCollapsed: collapsedState, onCollapsedChange }}>content</SideNav>,
+      <SideNav collapsible={{ collapsed: collapsedState, onCollapsedChange }}>content</SideNav>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Collapse navigation' }));
     expect(collapsedState).toBe(true);
@@ -161,7 +161,7 @@ describe('SideNav', () => {
     rerender(
       <IconProvider icons={{}}>
         <LayerProvider>
-          <SideNav collapsible={{ isCollapsed: true, onCollapsedChange }}>content</SideNav>
+          <SideNav collapsible={{ collapsed: true, onCollapsedChange }}>content</SideNav>
         </LayerProvider>
       </IconProvider>,
     );

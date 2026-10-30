@@ -6,17 +6,19 @@ import type { SegmentedControlVariantProps } from '@var-ui/core';
 import { mergeProps } from "../utils";
 
 type SegmentOption = {
-  id: string;
+  /** Unique value; also the name of the optional slot that renders rich content. */
+  value: string;
   label: string;
+  disabled?: boolean;
   /** Accessible name when the slotted content is not plain text (e.g. icon-only segments). */
   "aria-label"?: string;
 };
 
 type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
-  /** Segment definitions. Render rich content (e.g. icons) via a named slot matching each `id`. */
+  /** Segment definitions. Render rich content (e.g. icons) via a named slot matching each `value`. */
   options: SegmentOption[];
-  /** Initially selected segment id. Defaults to the first option. */
-  selectedId?: string;
+  /** Initially selected segment value. Defaults to the first option. */
+  defaultValue?: string;
   size?: NonNullable<SegmentedControlVariantProps['size']>;
   className?: string;
   /** Accessible name for the group. */
@@ -25,7 +27,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
 
 const {
   options,
-  selectedId = options[0]?.id,
+  defaultValue = options[0]?.value,
   size = "md",
   className,
   "aria-label": ariaLabel,
@@ -37,9 +39,9 @@ const segmentRecipe = mergeProps(toggleButton({ segmented: true }));
 
 const optionContent = await Promise.all(
   options.map(async (option) => ({
-    id: option.id,
-    content: Astro.slots.has(option.id)
-      ? await Astro.slots.render(option.id)
+    value: option.value,
+    content: Astro.slots.has(option.value)
+      ? await Astro.slots.render(option.value)
       : null,
   })),
 );
@@ -53,14 +55,15 @@ const optionContent = await Promise.all(
   {...mergeProps(s.root, className)}
 >
   {options.map((option) => {
-    const selected = option.id === selectedId;
+    const selected = option.value === defaultValue;
     const content = optionContent.find(
-      (entry) => entry.id === option.id,
+      (entry) => entry.value === option.value,
     )?.content;
     return (
       <button
         type="button"
-        data-segment-id={option.id}
+        data-segment-id={option.value}
+        disabled={option.disabled}
         aria-pressed={selected ? "true" : "false"}
         data-selected={selected ? "" : undefined}
         aria-label={option["aria-label"]}

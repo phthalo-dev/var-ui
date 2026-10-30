@@ -5,7 +5,7 @@ description: Searchable command palette for quick actions and navigation.
 
 # CommandPalette
 
-⌘K-style searchable command overlay. Give each item an `onSelect`, or handle everything in a single `onAction(id)`; the palette closes itself afterwards unless `closeOnAction={false}`. You own `isOpen` / `onOpenChange`, or hand the palette a `controller` from `createCommandPalette()` / `useCommandPalette()` to open it from outside React. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.
+⌘K-style searchable command overlay. Give each item an `onSelect`, or handle everything in a single `onAction(id)`; the palette closes itself afterwards unless `closeOnAction={false}`. You own `open` / `onOpenChange`, or hand the palette a `controller` from `createCommandPalette()` / `useCommandPalette()` to open it from outside React. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange` is still `(open: boolean)`.
 
 ## Examples
 
@@ -29,7 +29,7 @@ Use `meta` (and `keywords`) so related commands are scannable and searchable eve
 
 ### Async results
 
-Pass `filter={false}` when `items` are already the results for the query, listen with `onQueryChange`, and show `isLoading` while fetching.
+Pass `filter={false}` when `items` are already the results for the query, listen with `onQueryChange`, and show `loading` while fetching.
 
 <Demo id="command-palette.async" />
 

@@ -19,15 +19,18 @@ import { multiSelector } from '@var-ui/core/components/multiSelector';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
+import { disabledKeysOf } from '../internal/racProps';
 import { mergeRefs } from '../internal/mergeRefs';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { mergeProps } from 'typestyles';
 
 export type MultiSelectorOption = {
-  /** Unique option identifier passed to the selected value array. */
-  id: string;
+  /** Unique option value passed to the selected value array. */
+  value: string;
   /** Visible label in the trigger summary and listbox. */
   label: string;
+  /** Prevents selecting this option. */
+  disabled?: boolean;
 };
 
 export type MultiSelectorProps = Omit<
@@ -47,13 +50,14 @@ export type MultiSelectorProps = Omit<
   FieldMeta & {
     /** Options shown in the dropdown listbox. */
     options: MultiSelectorOption[];
-    /** Currently selected option ids. */
+    /** Currently selected option values. */
     value: string[];
-    /** Called with the updated selected option ids whenever selection changes. */
-    onChange: (value: string[]) => void;
+    /** Called with the updated selected option values whenever selection changes. */
+    onValueChange: (value: string[]) => void;
     /** Placeholder text when no value is selected. @default Select… */
     placeholder?: string;
-    isDisabled?: boolean;
+    /** Disables the trigger and the hidden form inputs. */
+    disabled?: boolean;
     /** Marks the field invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
     /** Name for form submission: one hidden input per selected id, like `<select multiple>`. */
@@ -76,9 +80,9 @@ export function MultiSelector({
   errorMessage,
   options,
   value,
-  onChange,
+  onValueChange,
   placeholder = 'Select…',
-  isDisabled,
+  disabled,
   invalid,
   name,
   className,
@@ -100,15 +104,15 @@ export function MultiSelector({
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const setTrigger = useMemo(() => mergeRefs(triggerRef, ref), [ref]);
-  const selectedLabels = options.filter((o) => value.includes(o.id)).map((o) => o.label);
+  const selectedLabels = options.filter((o) => value.includes(o.value)).map((o) => o.label);
   const isPlaceholder = selectedLabels.length === 0;
   const triggerText = isPlaceholder ? placeholder : selectedLabels.join(', ');
 
   function handleSelectionChange(keys: Selection) {
     if (keys === 'all') {
-      onChange(options.map((o) => o.id));
+      onValueChange(options.map((o) => o.value));
     } else {
-      onChange(Array.from(keys, String));
+      onValueChange(Array.from(keys, String));
     }
   }
 
@@ -134,7 +138,7 @@ export function MultiSelector({
             pickRacDroppedDomProps({ ...rest, ...frame.controlProps }),
           ) as never
         }
-        isDisabled={isDisabled}
+        isDisabled={disabled}
         aria-labelledby={label ? `${frame.labelId} ${triggerTextId}` : undefined}
         onPress={() => setIsOpen((open) => !open)}
       >
@@ -158,13 +162,14 @@ export function MultiSelector({
         <ListBox
           {...mergeProps(ms.listbox)}
           items={options}
+          disabledKeys={disabledKeysOf(options)}
           selectionMode="multiple"
           selectedKeys={new Set(value)}
           onSelectionChange={handleSelectionChange}
           aria-labelledby={label ? frame.labelId : undefined}
         >
           {(option) => (
-            <ListBoxItem id={option.id} textValue={option.label} {...mergeProps(ms.item)}>
+            <ListBoxItem id={option.value} textValue={option.label} {...mergeProps(ms.item)}>
               {({ isSelected }) => (
                 <>
                   <span {...mergeProps(ms.itemCheckbox)} data-selected={isSelected || undefined}>
@@ -178,8 +183,8 @@ export function MultiSelector({
         </ListBox>
       </Popover>
       {name
-        ? value.map((id) => (
-            <input key={id} type="hidden" name={name} value={id} disabled={isDisabled} />
+        ? value.map((v) => (
+            <input key={v} type="hidden" name={name} value={v} disabled={disabled} />
           ))
         : null}
     </FieldFrame>

@@ -3,7 +3,7 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { ResizeHandle } from '@var-ui/react';
 
-<ResizeHandle value={width} minValue={120} maxValue={280} onChange={setWidth} aria-label="Resize sidebar" />`,
+<ResizeHandle value={width} minValue={120} maxValue={280} onValueChange={setWidth} aria-label="Resize sidebar" />`,
   astro: `---
 import { ResizeHandle } from '@var-ui/astro';
 ---

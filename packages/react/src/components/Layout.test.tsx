@@ -36,8 +36,8 @@ function fakeResizable(width: number): UseResizableResult {
       value: width,
       minValue: 0,
       maxValue: 999,
-      onChange: () => {},
-      isCollapsed: false,
+      onValueChange: () => {},
+      collapsed: false,
     },
   };
 }
@@ -221,12 +221,12 @@ describe('Layout', () => {
 });
 
 describe('LayoutContent', () => {
-  it('renders its children and stays labeled after toggling isScrollable', () => {
+  it('renders its children and stays labeled after toggling scrollable', () => {
     const { rerender } = render(<LayoutContent label="Main">Body</LayoutContent>);
     expect(screen.getByRole('region', { name: 'Main' }).textContent).toBe('Body');
 
     rerender(
-      <LayoutContent label="Main" isScrollable={false}>
+      <LayoutContent label="Main" scrollable={false}>
         Body
       </LayoutContent>,
     );
@@ -253,10 +253,10 @@ describe('LayoutPanel', () => {
       vi.unstubAllGlobals();
     });
 
-    it('hidden mode: panel visible when isOpen below breakpoint', () => {
+    it('hidden mode: panel visible when open below breakpoint', () => {
       mockMatchMedia(true);
       render(
-        <LayoutPanel responsive={{ below: 'lg', mode: 'hidden' }} isOpen>
+        <LayoutPanel responsive={{ below: 'lg', mode: 'hidden' }} open>
           Inspector
         </LayoutPanel>,
       );
@@ -264,12 +264,12 @@ describe('LayoutPanel', () => {
       vi.unstubAllGlobals();
     });
 
-    it('overlay mode: dialog landmark when isOpen below breakpoint', () => {
+    it('overlay mode: dialog landmark when open below breakpoint', () => {
       mockMatchMedia(true);
       render(
         <LayoutPanel
           responsive={{ below: 'lg', mode: 'overlay' }}
-          isOpen
+          open
           label="Details"
           role="complementary"
         >
@@ -287,7 +287,7 @@ describe('LayoutPanel', () => {
       render(
         <LayoutPanel
           responsive={{ below: 'lg', mode: 'overlay' }}
-          isOpen
+          open
           aria-label="Inspector drawer"
         >
           Inspector
@@ -308,7 +308,7 @@ describe('LayoutPanel', () => {
       expect(screen.getByText('Inspector')).toBeTruthy();
 
       const { unmount } = render(
-        <LayoutPanel responsive={{ below: 'lg', mode: 'overlay' }} isOpen={false}>
+        <LayoutPanel responsive={{ below: 'lg', mode: 'overlay' }} open={false}>
           Overlay panel
         </LayoutPanel>,
       );
@@ -364,7 +364,7 @@ describe('LayoutPanel', () => {
     it('resizes with the pointer direction under RTL', async () => {
       const onChange = vi.fn();
       const resizable = fakeResizable(300);
-      resizable.handleProps.onChange = onChange;
+      resizable.handleProps.onValueChange = onChange;
       render(
         <DirectionProvider direction="rtl">
           <Layout
@@ -390,7 +390,7 @@ describe('LayoutPanel', () => {
               hasDivider
               hasResizeHandle
               responsive={{ below: 'lg', mode: 'hidden' }}
-              isOpen
+              open
               resizable={fakeResizable(300)}
             >
               Panel

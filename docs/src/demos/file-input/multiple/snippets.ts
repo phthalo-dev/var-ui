@@ -9,7 +9,7 @@ const [files, setFiles] = useState<File[] | null>(null);
 <FileInput
   label="Attachments"
   value={files}
-  onChange={setFiles}
+  onValueChange={setFiles}
   multiple
   accept="image/*,.pdf"
 />`,

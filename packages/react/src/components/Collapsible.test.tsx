@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
@@ -56,5 +56,25 @@ describe('Collapsible', () => {
     await userEvent.click(screen.getByRole('button', { name: /Beta/i }));
     expect(panelFor('Beta panel').getAttribute('aria-hidden')).not.toBe('true');
     expect(panelFor('Alpha panel').getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('supports multiple, defaultExpanded and onExpandedChange(string[]) on CollapsibleGroup', async () => {
+    const onExpandedChange = vi.fn();
+    render(
+      <IconProvider icons={{}}>
+        <CollapsibleGroup multiple defaultExpanded={['a']} onExpandedChange={onExpandedChange}>
+          <Collapsible id="a" title="Alpha">
+            <p>Alpha panel</p>
+          </Collapsible>
+          <Collapsible id="b" title="Beta">
+            <p>Beta panel</p>
+          </Collapsible>
+        </CollapsibleGroup>
+      </IconProvider>,
+    );
+    expect(panelFor('Alpha panel').getAttribute('aria-hidden')).not.toBe('true');
+    await userEvent.click(screen.getByRole('button', { name: /Beta/i }));
+    expect(onExpandedChange).toHaveBeenLastCalledWith(['a', 'b']);
+    expect(panelFor('Alpha panel').getAttribute('aria-hidden')).not.toBe('true');
   });
 });

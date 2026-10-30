@@ -15,7 +15,7 @@ function renderFileInput(props: Partial<ComponentProps<typeof FileInput>> = {}) 
   const onChange = vi.fn();
   const utils = render(
     <IconProvider icons={{}}>
-      <FileInput label="Resume" value={null} onChange={onChange} {...props} />
+      <FileInput label="Resume" value={null} onValueChange={onChange} {...props} />
     </IconProvider>,
   );
   const input = utils.container.querySelector('input[type="file"]') as HTMLInputElement;

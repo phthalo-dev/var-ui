@@ -29,7 +29,7 @@ type RenderFn = (domProps: never, renderProps: never) => ReactElement;
  * receives the merged props instead.
  */
 export function racRenderWithExtras(
-  tag: 'button' | 'a',
+  tag: 'button' | 'a' | 'label' | 'div',
   extras: Record<string, unknown>,
   userRender?: RenderFn,
 ): RenderFn | undefined {
@@ -45,7 +45,6 @@ export function racRenderWithExtras(
 
 type LinkOrButtonProps = {
   href?: string;
-  onPress?: () => void;
   isDisabled?: boolean;
   ref?: Ref<HTMLElement>;
   children?: ReactNode;
@@ -56,13 +55,7 @@ type LinkOrButtonProps = {
  * RAC `Link` (when `href` is set) or `Button`, with native attributes RAC would
  * drop re-applied (see {@link pickRacDroppedDomProps}). Shared by the nav rows.
  */
-export function RacLinkOrButton({
-  href,
-  onPress,
-  ref,
-  children,
-  ...rest
-}: LinkOrButtonProps): JSX.Element {
+export function RacLinkOrButton({ href, ref, children, ...rest }: LinkOrButtonProps): JSX.Element {
   const extras = pickRacDroppedDomProps(rest);
   return href ? (
     <AriaLink
@@ -75,7 +68,6 @@ export function RacLinkOrButton({
     </AriaLink>
   ) : (
     <AriaButton
-      onPress={onPress}
       {...(rest as object)}
       render={racRenderWithExtras('button', extras, rest.render as never) as never}
       ref={ref as Ref<HTMLButtonElement>}

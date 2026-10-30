@@ -27,6 +27,7 @@ import {
 } from 'react-aria-components';
 import { menu } from '@var-ui/core/components/menu';
 import { useLayer } from '../layers/LayerProvider';
+import { toRacProps } from './racProps';
 import {
   createOverlayChangeDetails,
   inferOverlayCloseReason,
@@ -42,7 +43,7 @@ import { mergeProps } from 'typestyles';
 
 export type MenuRootProps = {
   children: ReactNode;
-  isOpen?: boolean;
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: OverlayOpenChangeHandler;
   /**
@@ -72,7 +73,8 @@ export type MenuItemProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'id'
   children: ReactNode;
   id: string;
   onAction?: () => void;
-  isDisabled?: boolean;
+  /** Prevents the item from being focused or activated. */
+  disabled?: boolean;
   /** Plain-text value used for typeahead when `children` is not a string. */
   textValue?: string;
 };
@@ -118,13 +120,13 @@ function composeHandler(existing: unknown, ours: (...args: unknown[]) => void) {
 
 function MenuRoot({
   children,
-  isOpen,
+  open,
   defaultOpen = false,
   onOpenChange,
   portalContainer,
 }: MenuRootProps): JSX.Element {
   const [uncontrolledOpen, setRequestedOpen] = useState(defaultOpen);
-  const requestedOpen = isOpen ?? uncontrolledOpen;
+  const requestedOpen = open ?? uncontrolledOpen;
   const popupRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const [, setPopupEl] = useState<HTMLDivElement | null>(null);
@@ -145,9 +147,9 @@ function MenuRoot({
       onOpenChange?.(next, details);
       lastEventRef.current = null;
       if (details.isCanceled) return;
-      if (isOpen === undefined) setRequestedOpen(next);
+      if (open === undefined) setRequestedOpen(next);
     },
-    [isOpen, onOpenChange],
+    [open, onOpenChange],
   );
 
   useEffect(() => {
@@ -295,7 +297,7 @@ function MenuItem({
   id,
   onAction,
   className,
-  isDisabled,
+  disabled,
   textValue,
   ref,
   ...rest
@@ -306,7 +308,7 @@ function MenuItem({
       {...(rest as AriaMenuItemProps)}
       id={id}
       onAction={onAction}
-      isDisabled={isDisabled}
+      {...toRacProps({ disabled })}
       textValue={textValue}
       {...mergeProps(m.item, className)}
       ref={ref}

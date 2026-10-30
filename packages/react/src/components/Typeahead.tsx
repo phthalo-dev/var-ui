@@ -1,33 +1,27 @@
 import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
-import type { ComboBoxProps as RACComboBoxProps } from 'react-aria-components';
 import { combobox } from '@var-ui/core/components/combobox';
 import { Combobox, type ComboboxOption, type ComboboxRootProps } from './Combobox';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { useControlSize } from '../internal/controlSizeContext';
-import { splitRacFieldProps } from '../internal/racFieldProps';
+import { optionTextValue } from '../internal/racProps';
 
 export type TypeaheadOption = ComboboxOption;
 
 /**
- * RAC-owned `ComboBox` props (selection, input text, menu state, validation). They keep their
- * RAC names until the vocabulary PR. Every other attribute lands on the `<input>`.
+ * Props that belong to the RAC `ComboBox` root (selection, input text, menu state, validation).
+ * Every other attribute lands on the `<input>`. The VarUI-named state keys (`value`, `disabled`,
+ * ...) are handled by `splitRacFieldProps`.
  */
 const TYPEAHEAD_ROOT_KEYS = [
-  'selectedKey',
-  'defaultSelectedKey',
-  'onSelectionChange',
   'inputValue',
   'defaultInputValue',
   'onInputChange',
-  'items',
-  'defaultItems',
   'defaultFilter',
   'formValue',
   'allowsCustomValue',
   'allowsEmptyCollection',
   'menuTrigger',
   'shouldFocusWrap',
-  'disabledKeys',
   'onOpenChange',
   'name',
   'form',
@@ -39,17 +33,17 @@ const TYPEAHEAD_ROOT_KEYS = [
   'onKeyUp',
   'style',
   'slot',
-] as const satisfies readonly (keyof RACComboBoxProps<TypeaheadOption>)[];
+] as const;
 
 type TypeaheadRootKey =
   | (typeof TYPEAHEAD_ROOT_KEYS)[number]
   | 'value'
   | 'defaultValue'
-  | 'onChange'
-  | 'isDisabled'
-  | 'isRequired'
-  | 'isInvalid'
-  | 'isReadOnly'
+  | 'onValueChange'
+  | 'disabled'
+  | 'required'
+  | 'invalid'
+  | 'readOnly'
   | 'validate'
   | 'validationBehavior'
   | 'id'
@@ -58,13 +52,31 @@ type TypeaheadRootKey =
   | 'aria-describedby'
   | 'aria-details';
 
+const ROOT_KEY_SET = new Set<string>([
+  ...TYPEAHEAD_ROOT_KEYS,
+  'value',
+  'defaultValue',
+  'onValueChange',
+  'disabled',
+  'required',
+  'invalid',
+  'readOnly',
+  'validate',
+  'validationBehavior',
+  'id',
+  'aria-label',
+  'aria-labelledby',
+  'aria-describedby',
+  'aria-details',
+]);
+
 export type TypeaheadProps = Pick<
-  ComboboxRootProps<TypeaheadOption>,
-  Extract<TypeaheadRootKey, keyof ComboboxRootProps<TypeaheadOption>>
+  ComboboxRootProps,
+  Extract<TypeaheadRootKey, keyof ComboboxRootProps>
 > &
   Omit<
     ComponentPropsWithRef<'input'>,
-    TypeaheadRootKey | 'className' | 'children' | 'ref' | 'size' | 'disabled' | 'required'
+    TypeaheadRootKey | 'className' | 'children' | 'ref' | 'size'
   > & {
     /** Field label rendered above the input. */
     label?: ReactNode;
@@ -72,7 +84,7 @@ export type TypeaheadProps = Pick<
     description?: ReactNode;
     /** Validation message; when set, the field is shown in an error state. */
     errorMessage?: ReactNode;
-    /** Options filtered as the user types. */
+    /** Options filtered as the user types: `{ value, label, disabled? }`. */
     options: TypeaheadOption[];
     /** Placeholder text shown when the input is empty. @default 'Search…' */
     placeholder?: string;
@@ -83,7 +95,7 @@ export type TypeaheadProps = Pick<
     /** Merged onto the root. */
     className?: string;
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: ComboboxRootProps<TypeaheadOption>['size'];
+    size?: ComboboxRootProps['size'];
     /** Ref to the `<input>` element. */
     ref?: Ref<HTMLInputElement>;
   };
@@ -108,13 +120,18 @@ export function Typeahead({
   const contextSize = useControlSize();
   const resolvedSize = size ?? contextSize;
   const styles = combobox({ size: resolvedSize });
-  const [rootProps, inputProps] = splitRacFieldProps(props, TYPEAHEAD_ROOT_KEYS);
+  // Root keys keep VarUI names: `Combobox.Root` does the RAC conversion.
+  const rootProps: Record<string, unknown> = {};
+  const inputProps: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(props)) {
+    (ROOT_KEY_SET.has(key) ? rootProps : inputProps)[key] = val;
+  }
   return (
     <Combobox.Root
-      {...(rootProps as object)}
+      {...(rootProps as Omit<ComboboxRootProps, 'children'>)}
       size={resolvedSize}
       className={className}
-      isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
+      invalid={racInvalid(props.invalid, errorMessage)}
     >
       <RacFieldFrame
         slots={styles}
@@ -133,7 +150,11 @@ export function Typeahead({
       <Combobox.Popover>
         <Combobox.ListBox items={options} emptyContent={emptyContent}>
           {(option) => (
-            <Combobox.Item id={option.id} textValue={option.label}>
+            <Combobox.Item
+              value={option.value}
+              disabled={option.disabled}
+              textValue={optionTextValue(option)}
+            >
               {option.label}
             </Combobox.Item>
           )}

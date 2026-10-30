@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
   Tab,
@@ -10,37 +10,58 @@ import {
 import { tabs as tabsStyles } from '@var-ui/core/components/tabs';
 import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
 import { mergeProps } from 'typestyles';
+import { keyToValue, toRacProps } from '../internal/racProps';
 
-type TabDefinition = {
-  id: string;
-  label: string;
+export type TabDefinition = {
+  /** Unique value; matches `Tabs` `value`. */
+  value: string;
+  label: ReactNode;
+  /** Panel content shown while this tab is selected. */
   content: ReactNode;
+  /** Prevents selecting this tab. */
+  disabled?: boolean;
 };
 
-export type TabsProps = Omit<RACTabsProps, 'children' | 'className' | 'style'> & {
-  /** Additional CSS class names merged onto the root element. */
-  className?: string;
-  style?: CSSProperties;
-  /** Tab definitions with id, label, and panel content. */
+/**
+ * Props for the panel `Tabs` (the selection callback is `onValueChange`; a native `onChange` is not
+ * supported because react-aria owns the tab selection).
+ */
+export type TabsProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'onChange' | 'defaultValue'
+> & {
+  /** Tab definitions with value, label, and panel content. */
   tabs: TabDefinition[];
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
+  /** Controlled selected tab value. */
+  value?: string;
+  /** Uncontrolled initial selected tab value. @default the first tab */
+  defaultValue?: string;
+  /** Fires with the newly selected tab value. */
+  onValueChange?: (value: string) => void;
+  /** Disables every tab. @default false */
+  disabled?: boolean;
+  /** @default 'horizontal' */
+  orientation?: 'horizontal' | 'vertical';
+  /** `automatic` selects a tab on focus; `manual` requires Enter/Space. @default 'automatic' */
+  keyboardActivation?: RACTabsProps['keyboardActivation'];
 };
 
 export function Tabs({
   tabs,
-  selectedKey,
-  defaultSelectedKey,
-  onSelectionChange,
+  value,
+  defaultValue,
+  onValueChange,
+  disabled,
   className,
   ref,
   ...props
 }: TabsProps): JSX.Element {
   const t = tabsStyles();
   const listRef = useRef<HTMLDivElement>(null);
-  const isControlled = selectedKey !== undefined;
-  const [uncontrolledKey, setUncontrolledKey] = useState(defaultSelectedKey ?? tabs[0]?.id);
-  const activeKey = isControlled ? selectedKey : uncontrolledKey;
+  const isControlled = value !== undefined;
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue ?? tabs[0]?.value);
+  const activeValue = isControlled ? value : uncontrolledValue;
+  const disabledKeys = tabs.filter((tab) => tab.disabled).map((tab) => tab.value);
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -48,31 +69,32 @@ export function Tabs({
 
     const activeTab = list.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
     positionTabsIndicator(list, activeTab);
-  }, [activeKey, tabs]);
+  }, [activeValue, tabs]);
 
   return (
     <AriaTabs
-      {...props}
+      {...(props as object)}
+      {...toRacProps({ disabled })}
       ref={ref}
-      selectedKey={selectedKey}
-      defaultSelectedKey={defaultSelectedKey}
+      disabledKeys={disabledKeys.length ? disabledKeys : undefined}
+      selectedKey={value}
+      defaultSelectedKey={defaultValue}
       onSelectionChange={(key) => {
-        if (!isControlled) {
-          setUncontrolledKey(key);
-        }
-        onSelectionChange?.(key);
+        const next = keyToValue(key);
+        if (!isControlled) setUncontrolledValue(next);
+        onValueChange?.(next);
       }}
       {...mergeProps(t.root, className)}
     >
       <TabList ref={listRef} {...mergeProps(t.list)}>
         {tabs.map((tab) => (
-          <Tab key={tab.id} id={tab.id} {...mergeProps(t.tab)}>
+          <Tab key={tab.value} id={tab.value} {...mergeProps(t.tab)}>
             {tab.label}
           </Tab>
         ))}
       </TabList>
       {tabs.map((tab) => (
-        <TabPanel key={tab.id} id={tab.id} {...mergeProps(t.panel)}>
+        <TabPanel key={tab.value} id={tab.value} {...mergeProps(t.panel)}>
           {tab.content}
         </TabPanel>
       ))}

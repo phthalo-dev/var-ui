@@ -31,36 +31,62 @@ export type TreeItemData = {
   label: ReactNode;
   description?: ReactNode;
   children?: TreeItemData[];
-  isDisabled?: boolean;
+  disabled?: boolean;
   href?: string;
 };
 
 export type TreeSelectionMode = 'none' | 'single' | 'multiple';
 
-export type TreeProps = Omit<ComponentPropsWithRef<'ul'>, 'children' | 'ref' | 'role'> & {
+type TreeSelectionProps =
+  | {
+      /** @default 'none' */
+      selectionMode?: 'none';
+      value?: undefined;
+      defaultValue?: undefined;
+      onValueChange?: undefined;
+    }
+  | {
+      selectionMode: 'single';
+      /** Selected item id (`null` = nothing selected). */
+      value?: string | null;
+      defaultValue?: string | null;
+      onValueChange?: (value: string | null) => void;
+    }
+  | {
+      selectionMode: 'multiple';
+      /** Selected item ids. */
+      value?: string[];
+      defaultValue?: string[];
+      onValueChange?: (value: string[]) => void;
+    };
+
+export type TreeProps = Omit<
+  ComponentPropsWithRef<'ul'>,
+  'children' | 'ref' | 'role' | 'onChange' | 'defaultValue'
+> & {
   items?: TreeItemData[];
   children?: ReactNode;
   density?: NonNullable<TreeVariantProps['density']>;
-  expandedKeys?: Iterable<string>;
-  defaultExpandedKeys?: Iterable<string>;
-  onExpandedChange?: (keys: Set<string>) => void;
-  selectedKeys?: Iterable<string>;
-  defaultSelectedKeys?: Iterable<string>;
-  onSelectionChange?: (keys: Set<string>) => void;
-  selectionMode?: TreeSelectionMode;
+  /** Controlled expanded item ids. */
+  expanded?: string[];
+  /** Initial expanded item ids when uncontrolled. */
+  defaultExpanded?: string[];
+  /** Called with the expanded item ids after the user expands or collapses an item. */
+  onExpandedChange?: (expanded: string[]) => void;
   renderStart?: (item: TreeItemData) => ReactNode;
   renderEnd?: (item: TreeItemData) => ReactNode;
   /** Ref to the underlying root `<ul>` element. */
   ref?: Ref<HTMLUListElement>;
-};
+} & TreeSelectionProps;
 
 export type TreeItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' | 'role'> & {
   id: string;
   label: ReactNode;
   description?: ReactNode;
-  isDisabled?: boolean;
+  /** @default false */
+  disabled?: boolean;
   href?: string;
-  /** Seeds the initial (uncontrolled) expanded set — ignored once `expandedKeys` is controlled. */
+  /** Seeds the initial (uncontrolled) expanded set — ignored once the root `expanded` is controlled. */
   defaultExpanded?: boolean;
   children?: ReactNode;
   startContent?: ReactNode;
@@ -95,6 +121,13 @@ function useTreeContext(): TreeContextValue {
 
 /** Nesting depth (1-indexed, per `aria-level`) — incremented by each `Tree.Item` for its own children. */
 const TreeLevelContext = createContext(1);
+
+/** `string | string[] | null` (the public `value` shape) to the id list the internal set expects. */
+function selectionToIds(value: string | string[] | null | undefined): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return [];
+  return typeof value === 'string' ? [value] : value;
+}
 
 function useControlledKeySet(options: {
   value?: Iterable<string>;
@@ -131,7 +164,7 @@ type TreeRowContentProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' |
   id: string;
   label: ReactNode;
   description?: ReactNode;
-  isDisabled?: boolean;
+  disabled?: boolean;
   href?: string;
   hasChildren: boolean;
   isExpanded: boolean;
@@ -147,7 +180,7 @@ function TreeRowContent({
   id,
   label,
   description,
-  isDisabled = false,
+  disabled: isDisabled = false,
   href,
   hasChildren,
   isExpanded,
@@ -271,7 +304,7 @@ function TreeItemsGroup({ items, level }: { items: TreeItemData[]; level: number
             id={item.id}
             label={item.label}
             description={item.description}
-            isDisabled={item.isDisabled}
+            disabled={item.disabled}
             href={item.href}
             hasChildren={hasChildren}
             isExpanded={isExpanded}
@@ -297,7 +330,7 @@ export function TreeItem({
   id,
   label,
   description,
-  isDisabled,
+  disabled,
   href,
   children,
   startContent,
@@ -318,7 +351,7 @@ export function TreeItem({
       id={id}
       label={label}
       description={description}
-      isDisabled={isDisabled}
+      disabled={disabled}
       href={href}
       hasChildren={hasChildren}
       isExpanded={isExpanded}
@@ -343,13 +376,13 @@ export function TreeItem({
  * Hierarchical expandable list with APG tree keyboard behavior (`useTreeFocus`
  * internally). Supports compound `Tree.Item` children (nest freely) or an
  * `items` array with recursive `children`. Controlled/uncontrolled
- * `expandedKeys` and `selectedKeys`; `selectionMode` defaults to `'none'`.
+ * `expanded` and `value`; `selectionMode` defaults to `'none'`.
  *
  * Clicking a row selects it when `selectionMode !== 'none'`; otherwise a
  * click toggles expansion (as does the chevron button, always).
  *
  * ```tsx
- * <Tree selectionMode="single" selectedKeys={selected} onSelectionChange={setSelected}>
+ * <Tree selectionMode="single" value={selected} onValueChange={setSelected}>
  *   <Tree.Item id="src" label="src" defaultExpanded>
  *     <Tree.Item id="app" label="App.tsx" />
  *   </Tree.Item>
@@ -360,12 +393,12 @@ export function Tree({
   items,
   children,
   density = 'balanced',
-  expandedKeys,
-  defaultExpandedKeys,
+  expanded,
+  defaultExpanded,
   onExpandedChange,
-  selectedKeys,
-  defaultSelectedKeys,
-  onSelectionChange,
+  value,
+  defaultValue,
+  onValueChange,
   selectionMode = 'none',
   renderStart,
   renderEnd,
@@ -389,21 +422,25 @@ export function Tree({
 
   // Computed once, at mount, for uncontrolled default expand state only.
   const initialExpandedIds = useMemo(() => {
-    const ids = new Set(defaultExpandedKeys ?? []);
+    const ids = new Set(defaultExpanded ?? []);
     if (children != null) collectDefaultExpandedIds(children, ids);
     return ids;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [expandedSet, commitExpanded] = useControlledKeySet({
-    value: expandedKeys,
+    value: expanded,
     defaultValue: initialExpandedIds,
-    onChange: onExpandedChange,
+    onChange: onExpandedChange && ((keys) => onExpandedChange([...keys])),
   });
   const [selectedSet, commitSelected] = useControlledKeySet({
-    value: selectedKeys,
-    defaultValue: defaultSelectedKeys,
-    onChange: onSelectionChange,
+    value: selectionToIds(value),
+    defaultValue: selectionToIds(defaultValue),
+    onChange: (keys) => {
+      const notify = onValueChange as ((next: string | string[] | null) => void) | undefined;
+      if (selectionMode === 'multiple') notify?.([...keys]);
+      else notify?.(keys.size > 0 ? [...keys][0]! : null);
+    },
   });
 
   const isExpanded = useCallback((id: string) => expandedSet.has(id), [expandedSet]);

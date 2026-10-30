@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 const [open, setOpen] = useState(false);
 
-<Button onPress={() => setOpen(true)}>
+<Button onClick={() => setOpen(true)}>
   Open palette
 </Button>
 <CommandPalette
-  isOpen={open}
+  open={open}
   onOpenChange={setOpen}
   hotkey={false}
   items={[

@@ -59,7 +59,7 @@ describe('AlertDialog', () => {
         triggerLabel="Open delete"
         title="Delete item?"
         description="This cannot be undone."
-        isDestructive
+        destructive
         confirmLabel="Delete"
         onConfirm={onConfirm}
       />,
@@ -119,7 +119,7 @@ describe('AlertDialog', () => {
     const onOpenChange = vi.fn();
     wrap(
       <AlertDialog
-        isOpen
+        open
         onOpenChange={onOpenChange}
         title="Delete item?"
         description="This cannot be undone."
@@ -157,5 +157,17 @@ describe('AlertDialog', () => {
     act(() => screen.getByRole('alertdialog').focus());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything()));
+  });
+
+  it('opens initially with defaultOpen', () => {
+    wrap(
+      <AlertDialog
+        defaultOpen
+        title="Delete item?"
+        description="This cannot be undone."
+        onConfirm={() => {}}
+      />,
+    );
+    expect(screen.getByRole('alertdialog')).toBeTruthy();
   });
 });

@@ -11,28 +11,54 @@ import {
 import { dateTimeInput } from '@var-ui/core/components/dateTimeInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
-import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { CalendarPopover } from '../internal/CalendarBody';
-import { splitDataAttributes } from '../internal/dateFieldProps';
+import { splitDataAttributes, type DateFieldBaseProps } from '../internal/dateFieldProps';
 import { mergeRacClassName } from '../internal/racClassName';
 
-export type DateTimeInputProps<T extends DateValue = DateValue> = Omit<
-  RACDatePickerProps<T>,
-  'children' | 'granularity'
-> &
-  FieldMeta & {
-    /**
-     * Smallest unit of time rendered as an editable segment. The popover
-     * calendar always operates at day granularity: time segments are edited
-     * via the text field, not the calendar.
-     *
-     * @default 'minute'
-     */
-    granularity?: 'day' | 'hour' | 'minute' | 'second';
-    /** Ref to the segmented input element (the field's primary control). */
-    ref?: Ref<HTMLDivElement>;
-  };
+type DatePickerRac<T extends DateValue> = RACDatePickerProps<T>;
+
+export type DateTimeInputProps<T extends DateValue = DateValue> = DateFieldBaseProps<
+  DatePickerRac<T>
+> & {
+  /** Controlled date and time. `null` means controlled-empty. */
+  value?: T | null;
+  /** Initial date and time when uncontrolled. */
+  defaultValue?: T | null;
+  /** Called with the new value, or `null` when the field is cleared. */
+  onValueChange?: NonNullable<DatePickerRac<T>['onChange']>;
+  /** Earliest selectable date. */
+  min?: DatePickerRac<T>['minValue'];
+  /** Latest selectable date. */
+  max?: DatePickerRac<T>['maxValue'];
+  /** Marks dates as unavailable: they cannot be selected. */
+  unavailable?: DatePickerRac<T>['isDateUnavailable'];
+  placeholderValue?: DatePickerRac<T>['placeholderValue'];
+  /**
+   * Smallest unit of time rendered as an editable segment. The popover
+   * calendar always operates at day granularity: time segments are edited
+   * via the text field, not the calendar.
+   *
+   * @default 'minute'
+   */
+  granularity?: 'day' | 'hour' | 'minute' | 'second';
+  hourCycle?: DatePickerRac<T>['hourCycle'];
+  hideTimeZone?: boolean;
+  shouldForceLeadingZeros?: boolean;
+  firstDayOfWeek?: DatePickerRac<T>['firstDayOfWeek'];
+  /** Custom validation; return a message (or messages) to mark the field invalid. */
+  validate?: DatePickerRac<T>['validate'];
+  /** Controlled open state of the calendar popover. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  /** Called when the calendar popover opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+  /** Close the popover after a date is picked. @default true */
+  shouldCloseOnSelect?: boolean;
+  /** Ref to the segmented input element (the field's primary control). */
+  ref?: Ref<HTMLDivElement>;
+};
 
 /**
  * A single field combining date AND time segments (month/day/year plus
@@ -42,7 +68,7 @@ export type DateTimeInputProps<T extends DateValue = DateValue> = Omit<
  * root; `ref` and `data-*` attributes reach the segmented input.
  *
  * ```tsx
- * <DateTimeInput label="Appointment" value={value} onChange={setValue} />
+ * <DateTimeInput label="Appointment" value={value} onValueChange={setValue} />
  * ```
  */
 export function DateTimeInput<T extends DateValue = DateValue>({
@@ -58,7 +84,7 @@ export function DateTimeInput<T extends DateValue = DateValue>({
   const [rootProps, dataProps] = splitDataAttributes(props);
   return (
     <AriaDatePicker
-      {...rootProps}
+      {...(rootProps as RACDatePickerProps<T>)}
       granularity={granularity}
       isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}
       className={mergeRacClassName(dt.root, className)}

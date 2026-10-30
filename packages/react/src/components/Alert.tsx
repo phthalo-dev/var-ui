@@ -7,7 +7,7 @@ import { mergeProps } from 'typestyles';
 export type { SurfaceAppearance as AlertAppearance } from '@var-ui/core';
 
 /** Tone → registry glyph. Danger uses the `error` glyph; neutral and accent use `info`. */
-const variantIconName: Record<Tone, IconName> = {
+const toneIconName: Record<Tone, IconName> = {
   neutral: 'info',
   accent: 'info',
   info: 'info',
@@ -18,7 +18,7 @@ const variantIconName: Record<Tone, IconName> = {
 
 export type AlertProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children' | 'role'> & {
   /** Semantic tone that drives color and the default icon. */
-  variant: NonNullable<AlertVariantProps['tone']>;
+  tone: NonNullable<AlertVariantProps['tone']>;
   /** Surface treatment. @default subtle */
   appearance?: NonNullable<AlertVariantProps['appearance']>;
   /** Optional bold headline above the body content. */
@@ -37,7 +37,7 @@ export type AlertProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children'
 };
 
 export function Alert({
-  variant,
+  tone,
   appearance = alert.defaults.appearance,
   title,
   action,
@@ -49,12 +49,12 @@ export function Alert({
   ...rest
 }: AlertProps): JSX.Element {
   const a = alert({
-    tone: variant,
+    tone,
     appearance,
     contentGap: title ? 'spaced' : 'flush',
   });
 
-  const resolvedIcon = icon === undefined ? <Icon name={variantIconName[variant]} /> : icon;
+  const resolvedIcon = icon === undefined ? <Icon name={toneIconName[tone]} /> : icon;
 
   return (
     <div
@@ -62,7 +62,7 @@ export function Alert({
       {...mergeProps(a.root, className)}
       role={role}
       data-alert
-      data-alert-variant={variant}
+      data-alert-tone={tone}
       data-alert-appearance={appearance}
       ref={ref}
     >

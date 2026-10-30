@@ -41,7 +41,7 @@ describe('useToast', () => {
     function Trigger() {
       const toast = useToast();
       return (
-        <Button onPress={() => toast.add({ tone: 'info', title: 'Hello', durationMs: 50 })}>
+        <Button onClick={() => toast.add({ tone: 'info', title: 'Hello', durationMs: 50 })}>
           Notify
         </Button>
       );
@@ -87,7 +87,7 @@ describe('imperative toast', () => {
   it('shows and dismisses through toast.show()', async () => {
     wrap(
       <ToastProvider>
-        <Button onPress={() => toast.show({ tone: 'success', title: 'Saved' })}>Save</Button>
+        <Button onClick={() => toast.show({ tone: 'success', title: 'Saved' })}>Save</Button>
       </ToastProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));

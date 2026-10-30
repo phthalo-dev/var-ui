@@ -121,7 +121,7 @@ describe('Popover', () => {
     function Controlled() {
       const [open] = useState(true);
       return (
-        <Popover.Root isOpen={open}>
+        <Popover.Root open={open}>
           <Popover.Popup>
             <Popover.Content>Pinned</Popover.Content>
           </Popover.Popup>
