@@ -7,7 +7,12 @@ import {
   layoutShellVarDefinitions,
   setLayoutShellVars,
 } from './layoutShellVars';
-import { layerZIndex } from './layerVars';
+import {
+  nativeBackdrop,
+  nativeDialogReset,
+  nativeEnterExit,
+  nativeSlideFrom,
+} from '../shared/overlayMotion';
 
 export type { LayoutPadding } from './layoutShellVars';
 export { layoutContentWidthAssignment, layoutShellPaddingAssignments } from './layoutShellVars';
@@ -241,14 +246,14 @@ export const layoutContent = typestyles.recipe({
 });
 
 /**
- * Fixed-width side panel for {@link layout} start/end slots, plus overlay
- * slots for responsive drawer mode. Divider borders target the content-facing
+ * Fixed-width side panel for {@link layout} start/end slots, plus a `popup`
+ * slot (native `<dialog>`) for responsive drawer mode. Divider borders target the content-facing
  * edge via `data-side`; negative margins collapse inner padding when seamless.
  */
 export const layoutPanel = typestyles.recipe({
   name: 'layout-panel',
   layer: 'components',
-  slots: ['panel', 'overlay', 'overlayBackdrop', 'overlayDialog'],
+  slots: ['panel', 'popup'],
   variants: {
     scrollable: zoneScrollable,
     hasDivider: panelDivider,
@@ -297,31 +302,32 @@ export const layoutPanel = typestyles.recipe({
             },
           },
         },
-        overlayDialog: {
-          display: 'contents',
-        },
-        overlayBackdrop: {
-          position: 'fixed',
-          inset: 0,
-          ...layerZIndex(t.zIndex.overlay.var),
-          backgroundColor: vars.overlayBackground.var,
-        },
-        overlay: {
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          display: 'flex',
+        // Responsive overlay mode: the native `<dialog>` that holds the panel body, sliding in
+        // from `data-side`.
+        popup: {
+          ...nativeDialogReset,
+          ...nativeEnterExit({ slide: true, backdrop: true, whenOpen: { display: 'flex' } }),
+          ...nativeBackdrop(vars.overlayBackground.var),
+          margin: 0,
+          insetBlock: 0,
+          height: '100dvh',
+          maxHeight: '100dvh',
+          maxWidth: '100vw',
           flexDirection: 'column',
           minWidth: 0,
           minHeight: 0,
           backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           '&[data-side="start"]': {
+            ...nativeSlideFrom('start'),
             insetInlineStart: 0,
+            insetInlineEnd: 'auto',
             ...borderSide('inline-end', vars.border.var),
           },
           '&[data-side="end"]': {
+            ...nativeSlideFrom('end'),
             insetInlineEnd: 0,
+            insetInlineStart: 'auto',
             ...borderSide('inline-start', vars.border.var),
           },
         },
@@ -330,11 +336,11 @@ export const layoutPanel = typestyles.recipe({
         scrollable: {
           true: {
             panel: { overflow: 'auto' },
-            overlay: { overflow: 'auto' },
+            popup: { overflow: 'auto' },
           },
           false: {
             panel: { overflow: 'visible' },
-            overlay: { overflow: 'visible' },
+            popup: { overflow: 'visible' },
           },
         },
         hasDivider: {

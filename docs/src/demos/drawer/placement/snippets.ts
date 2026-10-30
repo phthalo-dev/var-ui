@@ -7,17 +7,15 @@ export const snippets = {
   <Drawer.Trigger>
     <Button>Open from start</Button>
   </Drawer.Trigger>
-  <Drawer.Backdrop>
-    <Drawer.Popup placement="start" aria-label="Filters">
-      <Drawer.Header>
-        <Drawer.Title>Filters</Drawer.Title>
-        <Drawer.Close />
-      </Drawer.Header>
-      <Drawer.Body>
-        <p>Popup slides in from the start edge.</p>
-      </Drawer.Body>
-    </Drawer.Popup>
-  </Drawer.Backdrop>
+  <Drawer.Popup placement="start" aria-label="Filters">
+    <Drawer.Header>
+      <Drawer.Title>Filters</Drawer.Title>
+      <Drawer.Close />
+    </Drawer.Header>
+    <Drawer.Body>
+      <p>Popup slides in from the start edge.</p>
+    </Drawer.Body>
+  </Drawer.Popup>
 </Drawer>`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

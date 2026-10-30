@@ -60,15 +60,13 @@ export function initCommandPalette(root: HTMLElement): () => void {
   root.setAttribute(INITIALIZED_ATTR, '');
 
   const dialogEl = root.querySelector<HTMLDialogElement>('[data-var-ui-command-palette-dialog]');
-  const panelEl = root.querySelector<HTMLElement>('[data-var-ui-command-palette-panel]');
   const inputEl = root.querySelector<HTMLInputElement>('[data-var-ui-command-palette-input]');
   const resultsEl = root.querySelector<HTMLElement>('[data-var-ui-command-palette-results]');
-  if (!dialogEl || !panelEl || !inputEl || !resultsEl) {
+  if (!dialogEl || !inputEl || !resultsEl) {
     return () => {};
   }
 
   const dialog: HTMLDialogElement = dialogEl;
-  const panel: HTMLElement = panelEl;
   const input: HTMLInputElement = inputEl;
   const results: HTMLElement = resultsEl;
 
@@ -90,13 +88,11 @@ export function initCommandPalette(root: HTMLElement): () => void {
   function setOpen(open: boolean): void {
     if (open) {
       if (!dialog.open) dialog.showModal();
-      panel.setAttribute('data-open', '');
       input.value = '';
       render('');
       queueMicrotask(() => input.focus());
       syncTriggerState(true);
     } else if (dialog.open) {
-      panel.removeAttribute('data-open');
       dialog.close();
       syncTriggerState(false);
     }
@@ -196,7 +192,6 @@ export function initCommandPalette(root: HTMLElement): () => void {
   controllers.set(root, controller);
 
   dialog.addEventListener('close', () => {
-    panel.removeAttribute('data-open');
     activeIndex = -1;
     flatItems = [];
     syncTriggerState(false);

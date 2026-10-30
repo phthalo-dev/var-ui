@@ -10,6 +10,8 @@ export type OverlayPresenceAttrs = {
 export type UseOverlayPresenceOptions = {
   isOpen: boolean;
   reducedMotion?: boolean;
+  /** `false` turns the hook into a pass-through (`mounted === isOpen`, no timers). @default true */
+  enabled?: boolean;
   getAnimatedElements: () => readonly (HTMLElement | null)[];
 };
 
@@ -18,9 +20,11 @@ export type UseOverlayPresenceResult = {
   attrs: OverlayPresenceAttrs;
 };
 
+/** @deprecated until PR C: native shells use CSS `@starting-style` and `useMountedWhileAnimating`. */
 export function useOverlayPresence({
   isOpen,
   reducedMotion,
+  enabled = true,
   getAnimatedElements,
 }: UseOverlayPresenceOptions): UseOverlayPresenceResult {
   const [mounted, setMounted] = useState(isOpen);
@@ -37,6 +41,7 @@ export function useOverlayPresence({
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true);
 
   useEffect(() => {
+    if (!enabled) return undefined;
     const generation = ++generationRef.current;
 
     if (isOpen) {
@@ -91,7 +96,10 @@ export function useOverlayPresence({
         generationRef.current += 1;
       }
     };
-  }, [isOpen, prefersReducedMotion]);
+  }, [isOpen, prefersReducedMotion, enabled]);
 
+  if (!enabled) {
+    return { mounted: isOpen, attrs: isOpen ? { 'data-open': '' } : { 'data-closed': '' } };
+  }
   return { mounted, attrs };
 }

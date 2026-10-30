@@ -3,8 +3,12 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { borderSide } from '../internal/border';
-import { transitionOf } from '../internal/motion';
-import { layerZIndex } from './layerVars';
+import {
+  nativeBackdrop,
+  nativeDialogReset,
+  nativeEnterExit,
+  nativeSlideFrom,
+} from '../shared/overlayMotion';
 
 const mobileNavVarDefinitions = {
   overlayBackground: {
@@ -42,9 +46,9 @@ const mobileNavVarDefinitions = {
 } as const;
 
 /**
- * Mobile slide-out navigation drawer. Pair with the React `MobileNav` compound,
- * which drives open state on the overlay/panel and `data-side` on the panel
- * (`start` | `end`). Reuses SideNav section/item children inside the panel.
+ * Mobile slide-out navigation drawer on a native `<dialog>`. The `popup` slot is the dialog element
+ * itself (`showModal()` provides the top layer, `::backdrop` and focus handling); set `data-side`
+ * (`start` | `end`) on it. Reuses SideNav section/item children inside.
  *
  * ```tsx
  * const s = mobileNav();
@@ -52,70 +56,50 @@ const mobileNavVarDefinitions = {
  *   <button className={s.toggle} aria-label="Open navigation">
  *     <Icon name="menu" />
  *   </button>
- *   <div className={s.overlay} data-open={isOpen || undefined}>
- *     <div className={s.panel} data-side="start" data-open={isOpen || undefined}>
- *       <div className={s.header}>
- *         Menu
- *         <button className={s.closeButton} aria-label="Close navigation" />
- *       </div>
- *       {children}
+ *   <dialog className={s.popup} data-side="start">
+ *     <div className={s.header}>
+ *       Menu
+ *       <button className={s.closeButton} aria-label="Close navigation" />
  *     </div>
- *   </div>
+ *     {children}
+ *   </dialog>
  * </>
  * ```
  */
 export const mobileNav = typestyles.recipe({
   name: 'mobile-nav',
   layer: 'components',
-  slots: ['overlay', 'panel', 'header', 'headerTitle', 'closeButton', 'toggle'],
+  slots: ['popup', 'header', 'headerTitle', 'closeButton', 'toggle'],
   vars: mobileNavVarDefinitions,
   styles: ({ vars }) => {
     return {
       base: {
-        overlay: {
-          position: 'fixed',
-          inset: 0,
-          ...layerZIndex(t.zIndex.modal.var),
-          backgroundColor: vars.overlayBackground.var,
-          '&:not([data-open])': {
-            display: 'none',
-          },
-        },
-        panel: {
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
+        // The native `<dialog>`: slides in from `data-side` (`start` | `end`) via `translate`.
+        popup: {
+          ...nativeDialogReset,
+          ...nativeEnterExit({ slide: true, backdrop: true, whenOpen: { display: 'flex' } }),
+          ...nativeBackdrop(vars.overlayBackground.var),
+          margin: 0,
+          insetBlock: 0,
+          height: '100dvh',
+          maxHeight: '100dvh',
           width: `min(${vars.panelWidth.var}, 85vw)`,
           maxWidth: '85vw',
-          display: 'flex',
           flexDirection: 'column',
           backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           overflowY: 'auto',
-          transition: transitionOf('transform', 'slow'),
           '&[data-side="start"]': {
+            ...nativeSlideFrom('start'),
             insetInlineStart: 0,
+            insetInlineEnd: 'auto',
             ...borderSide('inline-end', vars.panelBorder.var),
-            transform: 'translateX(0)',
-            '&:not([data-open])': {
-              transform: 'translateX(-100%)',
-              boxShadow: 'none',
-            },
-            '[dir="rtl"] &:not([data-open])': {
-              transform: 'translateX(100%)',
-            },
           },
           '&[data-side="end"]': {
+            ...nativeSlideFrom('end'),
             insetInlineEnd: 0,
+            insetInlineStart: 'auto',
             ...borderSide('inline-start', vars.panelBorder.var),
-            transform: 'translateX(0)',
-            '&:not([data-open])': {
-              transform: 'translateX(100%)',
-              boxShadow: 'none',
-            },
-            '[dir="rtl"] &:not([data-open])': {
-              transform: 'translateX(-100%)',
-            },
           },
         },
         header: {

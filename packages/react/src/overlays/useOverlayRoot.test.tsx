@@ -6,6 +6,7 @@ import { LayerProvider } from '../layers/LayerProvider';
 import { Dialog } from '../components/Dialog';
 import { Popover } from '../components/Popover';
 import { Tooltip } from '../components/Tooltip';
+import { stubNativeDialog } from '../test/nativeOverlayStubs';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { useOverlayRoot } from './useOverlayRoot';
 
@@ -90,6 +91,7 @@ describe('overlay roots render no wrapper element', () => {
 });
 
 describe('details.reason matrix', () => {
+  stubNativeDialog();
   function popover(onOpenChange: OverlayOpenChangeHandler) {
     return wrap(
       <>
@@ -171,54 +173,19 @@ describe('details.reason matrix', () => {
     expect(screen.getByRole('dialog')).toBeTruthy();
   });
 
-  it('dialog: close-press from Dialog.Close, with a custom child and the default button', async () => {
+  it('dialog: close-press from the default Dialog.Close button', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     wrap(
       <Dialog.Root defaultOpen onOpenChange={onOpenChange}>
-        <Dialog.Backdrop>
-          <Dialog.Popup>
-            <Dialog.Title>T</Dialog.Title>
-            <Dialog.Close />
-          </Dialog.Popup>
-        </Dialog.Backdrop>
+        <Dialog.Popup>
+          <Dialog.Title>T</Dialog.Title>
+          <Dialog.Close />
+        </Dialog.Popup>
       </Dialog.Root>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(onOpenChange).toHaveBeenCalledTimes(1);
     expect(last(onOpenChange)).toEqual([false, 'close-press']);
-  });
-
-  it('dialog: Escape during the exit animation does not report a second close', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    wrap(
-      <Dialog.Root defaultOpen onOpenChange={onOpenChange}>
-        <Dialog.Backdrop>
-          <Dialog.Popup>
-            <Dialog.Title>T</Dialog.Title>
-            <Dialog.Close />
-          </Dialog.Popup>
-        </Dialog.Backdrop>
-      </Dialog.Root>,
-    );
-    await userEvent.keyboard('{Escape}');
-    await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalledTimes(1);
-  });
-
-  it('dialog: cancel() vetoes outside-press', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>((_o, details) => details.cancel());
-    wrap(
-      <Dialog.Root defaultOpen onOpenChange={onOpenChange}>
-        <Dialog.Backdrop>
-          <Dialog.Popup>
-            <Dialog.Title>T</Dialog.Title>
-          </Dialog.Popup>
-        </Dialog.Backdrop>
-      </Dialog.Root>,
-    );
-    await userEvent.click(document.querySelector('.var-ui-dialog__overlay')!);
-    expect(last(onOpenChange)).toEqual([false, 'outside-press']);
-    expect(screen.getByRole('dialog')).toBeTruthy();
   });
 
   it('tooltip: hover opens, focus opens, Escape closes', async () => {

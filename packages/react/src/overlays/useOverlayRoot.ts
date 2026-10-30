@@ -26,6 +26,13 @@ export type UseOverlayRootOptions = {
   onOpenChange?: OverlayOpenChangeHandler;
   /** Overrides the `prefers-reduced-motion` sample used by the exit animation wait. */
   reducedMotion?: boolean;
+  /**
+   * Native shells (`<dialog>` today, `[popover]` in PR B) animate in CSS and mount children with
+   * `useMountedWhileAnimating`: `mounted` is then just `open` and no rAF presence runs. Leave
+   * unset for the react-aria shells that still need `mounted`/`presenceAttrs`/`rac`.
+   * @default false
+   */
+  native?: boolean;
 };
 
 /** Optional explicit cause of a change; wins over anything observed from the DOM. */
@@ -35,6 +42,7 @@ export type OverlayRequestOptions = {
 };
 
 /** What a react-aria overlay (`DialogTrigger`, `ModalOverlay`, `Popover`, ...) needs. */
+/** @deprecated until PR B/C. */
 export type OverlayRacProps = {
   /** `true` from the moment the overlay opens until its exit animation has finished. */
   isOpen: boolean;
@@ -44,12 +52,28 @@ export type OverlayRacProps = {
 export type OverlayRoot = {
   /** The requested open state (flips immediately on open and close). */
   open: boolean;
-  /** `true` while the overlay must stay in the tree: `open` plus the exit animation. */
+  /**
+   * `true` while the overlay must stay in the tree: `open` plus the exit animation (`open` only
+   * with `native`).
+   * @deprecated until PR B/C: native shells use `useMountedWhileAnimating`.
+   */
   mounted: boolean;
-  /** `data-open`, `data-closed`, `data-starting-style` and `data-ending-style` for the parts. */
+  /**
+   * `data-open`, `data-closed`, `data-starting-style` and `data-ending-style` for the parts (only
+   * `data-open`/`data-closed` with `native`).
+   * @deprecated until PR B/C: react-aria shells only.
+   */
   presenceAttrs: OverlayPresenceAttrs;
-  /** Spread on the react-aria overlay: `isOpen={mounted}` and a details-aware change handler. */
+  /**
+   * Spread on the react-aria overlay: `isOpen={mounted}` and a details-aware change handler.
+   * @deprecated until PR B/C: react-aria shells only; native shells use `useDialogElement`.
+   */
   rac: OverlayRacProps;
+  /**
+   * Trigger `onClick`/`onPress` handler for native shells: toggles with reason `trigger-press`
+   * and the press event (`details.cancel()` vetoes it).
+   */
+  triggerPress: (event?: { nativeEvent?: Event } | Event | null) => boolean;
   /**
    * Requests a change with an explicit cause (`'imperative'` unless given). Returns `false` when
    * the handler vetoed it with `details.cancel()` or nothing would change.
@@ -60,6 +84,7 @@ export type OverlayRoot = {
   /** Stable callback refs: pass to the element (or merge with `useMergedRef`). */
   setPopupEl: RefCallback<HTMLElement>;
   setTriggerEl: RefCallback<HTMLElement>;
+  /** @deprecated until PR B/C: the backdrop is `::backdrop` of a native `<dialog>`. */
   setBackdropEl: RefCallback<HTMLElement>;
   /** Elements, as state: they re-render the root when they attach, so layout can read them. */
   popupEl: HTMLElement | null;
@@ -106,6 +131,7 @@ export function useOverlayRoot({
   defaultOpen = false,
   onOpenChange,
   reducedMotion,
+  native = false,
 }: UseOverlayRootOptions = {}): OverlayRoot {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -118,6 +144,7 @@ export function useOverlayRoot({
   const presence = useOverlayPresence({
     isOpen: open,
     reducedMotion,
+    enabled: !native,
     getAnimatedElements: () => [backdropRef.current, popupRef.current],
   });
   const { mounted } = presence;
@@ -154,6 +181,13 @@ export function useOverlayRoot({
   const close = useCallback(
     (options?: OverlayRequestOptions) => setOpenPublic(false, options),
     [setOpenPublic],
+  );
+  const triggerPress = useCallback(
+    (event?: { nativeEvent?: Event } | Event | null): boolean => {
+      const source = event && 'nativeEvent' in event ? event.nativeEvent : (event as Event | null);
+      return setOpen(!latest.current.open, { reason: 'trigger-press', event: source ?? null });
+    },
+    [setOpen],
   );
   const onRacOpenChange = useCallback((next: boolean) => void setOpen(next), [setOpen]);
 
@@ -233,6 +267,7 @@ export function useOverlayRoot({
       mounted,
       presenceAttrs: presence.attrs,
       rac,
+      triggerPress,
       setOpen: setOpenPublic,
       close,
       setPopupEl,
@@ -248,6 +283,7 @@ export function useOverlayRoot({
       mounted,
       presence.attrs,
       rac,
+      triggerPress,
       setOpenPublic,
       close,
       setPopupEl,

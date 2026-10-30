@@ -9,9 +9,9 @@ import {
   CalendarHeaderCell,
   Dialog,
   Heading,
-  Popover,
   RangeCalendar,
 } from 'react-aria-components';
+import { Popover } from './nativeDialogShim';
 import { mergeProps } from 'typestyles';
 import { Icon } from '../icons';
 

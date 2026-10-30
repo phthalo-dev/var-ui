@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vite-plus/test';
+import { afterEach, beforeEach, describe, expect, it } from 'vite-plus/test';
 import {
   getMobileNavProvider,
   initMobileNav,
@@ -12,11 +12,10 @@ function mountProvider(): HTMLElement {
   root.innerHTML = `
     <button type="button" data-var-ui-mobile-nav-toggle aria-label="Open navigation"></button>
     <div data-var-ui-mobile-nav>
-      <div data-var-ui-mobile-nav-overlay></div>
-      <div data-var-ui-mobile-nav-panel role="dialog" aria-label="Navigation" tabindex="-1">
+      <dialog data-var-ui-mobile-nav-popup aria-label="Navigation">
         <button type="button" data-var-ui-mobile-nav-close aria-label="Close navigation"></button>
         <a href="/docs">Docs</a>
-      </div>
+      </dialog>
     </div>
   `;
   document.body.appendChild(root);
@@ -24,9 +23,23 @@ function mountProvider(): HTMLElement {
 }
 
 describe('mobileNav', () => {
+  // jsdom has no top layer: stub showModal/close with their observable effects.
   beforeEach(() => {
     document.body.innerHTML = '';
-    document.body.style.overflow = '';
+    Object.assign(HTMLDialogElement.prototype, {
+      showModal(this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      },
+      close(this: HTMLDialogElement) {
+        if (!this.open) return;
+        this.removeAttribute('open');
+        this.dispatchEvent(new Event('close'));
+      },
+    });
+  });
+  afterEach(() => {
+    Reflect.deleteProperty(HTMLDialogElement.prototype, 'showModal');
+    Reflect.deleteProperty(HTMLDialogElement.prototype, 'close');
   });
 
   it('shares open state between toggle and drawer via the provider', () => {
@@ -36,40 +49,49 @@ describe('mobileNav', () => {
     initMobileNavToggle(root.querySelector('[data-var-ui-mobile-nav-toggle]') as HTMLElement);
 
     const provider = getMobileNavProvider(root);
-    const overlay = root.querySelector('[data-var-ui-mobile-nav-overlay]') as HTMLElement;
+    const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
     const toggle = root.querySelector('[data-var-ui-mobile-nav-toggle]') as HTMLElement;
 
     expect(provider?.isOpen).toBe(false);
     provider?.open();
-    expect(overlay.hasAttribute('data-open')).toBe(true);
+    expect(popup.open).toBe(true);
+    expect(popup.hasAttribute('data-open')).toBe(true);
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
 
     provider?.close();
-    expect(overlay.hasAttribute('data-open')).toBe(false);
+    expect(popup.open).toBe(false);
+    expect(popup.hasAttribute('data-open')).toBe(false);
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('closes when the overlay is clicked', () => {
+  it('closes when the backdrop (the dialog itself) is clicked', () => {
     const root = mountProvider();
     initMobileNavProvider(root);
     initMobileNav(root.querySelector('[data-var-ui-mobile-nav]') as HTMLElement);
 
     const provider = getMobileNavProvider(root);
-    const overlay = root.querySelector('[data-var-ui-mobile-nav-overlay]') as HTMLElement;
+    const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
 
     provider?.open();
-    overlay.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    popup.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(provider?.isOpen).toBe(false);
   });
 
-  it('locks body scroll while open', () => {
+  it('stays in sync when the dialog closes natively (Escape)', () => {
     const root = mountProvider();
     initMobileNavProvider(root);
-
+    initMobileNav(root.querySelector('[data-var-ui-mobile-nav]') as HTMLElement);
     const provider = getMobileNavProvider(root);
+    const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
     provider?.open();
-    expect(document.body.style.overflow).toBe('hidden');
-    provider?.close();
-    expect(document.body.style.overflow).toBe('');
+    // What the browser does on Escape: close the dialog and fire `close`.
+    popup.removeAttribute('open');
+    popup.dispatchEvent(new Event('close'));
+    expect(provider?.isOpen).toBe(false);
+    expect(
+      (root.querySelector('[data-var-ui-mobile-nav-toggle]') as HTMLElement).getAttribute(
+        'aria-expanded',
+      ),
+    ).toBe('false');
   });
 });

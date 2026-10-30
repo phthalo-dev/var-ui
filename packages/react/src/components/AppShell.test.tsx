@@ -24,6 +24,10 @@ function stubMatchMedia(matches: boolean) {
   }));
 }
 
+import { stubNativeDialog } from '../test/nativeOverlayStubs';
+
+stubNativeDialog();
+
 describe('AppShell', () => {
   it('renders the main landmark with the skip-link target id', () => {
     stubMatchMedia(false);

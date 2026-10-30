@@ -588,11 +588,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "command-palette": {
-    "axes": [
-      "open",
-    ],
+    "axes": [],
     "slots": {
-      "dialog": "var-ui-command-palette__dialog",
       "empty": "var-ui-command-palette__empty",
       "group": "var-ui-command-palette__group",
       "groupHeading": "var-ui-command-palette__groupHeading",
@@ -748,8 +745,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "description": "var-ui-dialog__description",
       "header": "var-ui-dialog__header",
       "heading": "var-ui-dialog__heading",
-      "modal": "var-ui-dialog__modal",
-      "overlay": "var-ui-dialog__overlay",
+      "popup": "var-ui-dialog__popup",
     },
     "vars": [
       "--var-ui-dialog-descriptioncolor",
@@ -799,8 +795,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "body": "var-ui-drawer__body",
       "closeButton": "var-ui-drawer__closeButton",
       "header": "var-ui-drawer__header",
-      "overlay": "var-ui-drawer__overlay",
-      "panel": "var-ui-drawer__panel",
+      "popup": "var-ui-drawer__popup",
       "title": "var-ui-drawer__title",
     },
     "vars": [
@@ -1060,10 +1055,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "scrollable",
     ],
     "slots": {
-      "overlay": "var-ui-layout-panel__overlay",
-      "overlayBackdrop": "var-ui-layout-panel__overlayBackdrop",
-      "overlayDialog": "var-ui-layout-panel__overlayDialog",
       "panel": "var-ui-layout-panel__panel",
+      "popup": "var-ui-layout-panel__popup",
     },
     "vars": [
       "--var-ui-layout-panel-border",
@@ -1151,8 +1144,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "closeButton": "var-ui-mobile-nav__closeButton",
       "header": "var-ui-mobile-nav__header",
       "headerTitle": "var-ui-mobile-nav__headerTitle",
-      "overlay": "var-ui-mobile-nav__overlay",
-      "panel": "var-ui-mobile-nav__panel",
+      "popup": "var-ui-mobile-nav__popup",
       "toggle": "var-ui-mobile-nav__toggle",
     },
     "vars": [
@@ -1240,16 +1232,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     },
     "vars": [
       "--var-ui-overflow-list-gap",
-    ],
-  },
-  "overlay": {
-    "axes": [],
-    "slots": {
-      "backdrop": "var-ui-overlay__backdrop",
-      "positioner": "var-ui-overlay__positioner",
-    },
-    "vars": [
-      "--var-ui-overlay-background",
     ],
   },
   "pagination": {

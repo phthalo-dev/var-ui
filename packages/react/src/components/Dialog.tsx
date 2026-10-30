@@ -8,24 +8,15 @@ import {
   type JSX,
   type ReactNode,
 } from 'react';
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-  Dialog as AriaDialog,
-  DialogTrigger as AriaDialogTrigger,
-  Heading,
-  Modal,
-  ModalOverlay,
-} from 'react-aria-components';
 import { dialog } from '@var-ui/core/components/dialog';
 import type { DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { useLayer } from '../layers/LayerProvider';
+import { NativeDialogContext } from '../internal/nativeDialogShim';
 import {
   composeHandlers,
   createOverlayContext,
   OverlayCloseContext,
-  OverlayTrigger,
+  useDialogElement,
   useMergedRef,
   useOverlayClose,
   useOverlayRoot,
@@ -43,32 +34,26 @@ export type DialogRootProps = {
   open?: boolean;
   /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
-  /** Called when the dialog requests to open or close. */
+  /** Called when the dialog requests to open or close. `details.cancel()` vetoes the change. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /** Whether pressing outside the popup (on the backdrop) closes the dialog. Escape always closes. @default true */
+  /** Whether pressing the backdrop closes the dialog. Escape is native and always reported. @default true */
   dismissable?: boolean;
-  /**
-   * Element the modal portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient (the theme's CSS custom properties only
-   * cascade to descendants of the themed element).
-   */
-  portalContainer?: Element;
 };
 
 /** Alias for docs and consumers referring to the root dialog props. */
 export type DialogProps = DialogRootProps;
 
+/** The single child must be a button (or a component that renders one): it receives `onClick`. */
 export type DialogTriggerProps = OverlayTriggerProps;
 
-export type DialogBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
-  children: ReactNode;
-};
-
 /**
- * Native props go to the modal `<div>`; `aria-label`, `aria-labelledby` and `aria-describedby`
- * go to the inner dialog element, which carries the role and the accessible name.
+ * Props of the native `<dialog>` element (the popup *is* the dialog): `ref`, `className`, `style`,
+ * handlers and `data-*`/`aria-*` attributes all land on it.
  */
-export type DialogPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role'> & {
+export type DialogPopupProps = Omit<
+  ComponentPropsWithRef<'dialog'>,
+  'children' | 'role' | 'open'
+> & {
   children: ReactNode;
   role?: NonNullable<DialogVariantProps['role']>;
 };
@@ -85,9 +70,10 @@ export type DialogCloseProps = OverlayCloseProps;
 
 type DialogContextValue = {
   root: OverlayRoot;
-  portalContainer?: Element;
   dismissable: boolean;
-  /** Id of the mounted `Dialog.Description`, wired to the dialog's `aria-describedby`. */
+  /** Ids of the mounted `Dialog.Title` / `Dialog.Description`, wired to the dialog's `aria-*`. */
+  titleId: string | undefined;
+  setTitleId: (id: string | undefined) => void;
   descriptionId: string | undefined;
   setDescriptionId: (id: string | undefined) => void;
 };
@@ -101,51 +87,41 @@ function DialogRoot({
   defaultOpen,
   onOpenChange,
   dismissable = true,
-  portalContainer,
 }: DialogRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const [titleId, setTitleId] = useState<string | undefined>(undefined);
   const [descriptionId, setDescriptionId] = useState<string | undefined>(undefined);
 
   const context = useMemo<DialogContextValue>(
-    () => ({ root, portalContainer, dismissable, descriptionId, setDescriptionId }),
-    [root, portalContainer, dismissable, descriptionId],
+    () => ({ root, dismissable, titleId, setTitleId, descriptionId, setDescriptionId }),
+    [root, dismissable, titleId, descriptionId],
   );
 
-  return (
-    <DialogContext.Provider value={context}>
-      <AriaDialogTrigger {...root.rac}>{children}</AriaDialogTrigger>
-    </DialogContext.Provider>
-  );
+  return <DialogContext.Provider value={context}>{children}</DialogContext.Provider>;
 }
 
-function DialogTrigger(props: DialogTriggerProps): JSX.Element {
-  return <OverlayTrigger {...props} root={useDialogContext().root} />;
-}
-
-function DialogBackdrop({
+function DialogTrigger({
   children,
   className,
-  style,
+  onClick,
   ref,
-  ...rest
-}: DialogBackdropProps): JSX.Element {
-  const ctx = useDialogContext();
-  const { style: layerStyle } = useLayer();
-  const d = dialog();
-  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setBackdropEl, ref);
-  return (
-    <ModalOverlay
-      {...rest}
-      {...mergeProps(d.overlay, className)}
-      {...ctx.root.presenceAttrs}
-      {...ctx.root.rac}
-      ref={setRef}
-      style={{ ...layerStyle, ...style }}
-      isDismissable={ctx.dismissable}
-      UNSTABLE_portalContainer={ctx.portalContainer}
-    >
-      {children}
-    </ModalOverlay>
+  ...props
+}: DialogTriggerProps): JSX.Element {
+  const { root } = useDialogContext();
+  const setRef = useMergedRef<HTMLElement>(ref, root.setTriggerEl);
+  // `press` registers a host child (`<button>`) with react-aria's trigger contexts, so a
+  // `Tooltip.Trigger` around `Dialog.Trigger` still finds its focusable.
+  return wireOverlayChild(
+    Children.only(children),
+    {
+      ...props,
+      'aria-haspopup': 'dialog',
+      'aria-expanded': root.open,
+      className,
+      ref: setRef,
+      onClick: composeHandlers(onClick, root.triggerPress),
+    },
+    'press',
   );
 }
 
@@ -160,21 +136,31 @@ function DialogPopup({
   ...rest
 }: DialogPopupProps): JSX.Element {
   const ctx = useDialogContext();
-  const d = dialog();
-  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setPopupEl, ref);
+  const { root } = ctx;
+  const d = dialog({ role });
+  const native = useDialogElement(root, { dismissable: ctx.dismissable });
+  const setRef = useMergedRef<HTMLDialogElement>(native.ref, ref);
   return (
-    <Modal {...rest} {...mergeProps(d.modal, className)} {...ctx.root.presenceAttrs} ref={setRef}>
-      <AriaDialog
-        role={role}
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy}
-        aria-describedby={ariaDescribedBy ?? ctx.descriptionId}
-      >
-        <OverlayCloseContext.Provider value={ctx.root.close}>
-          <div {...mergeProps(d.content)}>{children}</div>
-        </OverlayCloseContext.Provider>
-      </AriaDialog>
-    </Modal>
+    <dialog
+      {...rest}
+      {...mergeProps(d.popup, className)}
+      // `role="dialog"` is implicit; only `alertdialog` needs the attribute.
+      role={role === 'alertdialog' ? role : undefined}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy ?? (ariaLabel ? undefined : ctx.titleId)}
+      aria-describedby={ariaDescribedBy ?? ctx.descriptionId}
+      data-open={root.open ? '' : undefined}
+      data-closed={root.open ? undefined : ''}
+      ref={setRef}
+    >
+      {native.mounted ? (
+        <NativeDialogContext.Provider value={native.element}>
+          <OverlayCloseContext.Provider value={root.close}>
+            <div {...mergeProps(d.content)}>{children}</div>
+          </OverlayCloseContext.Provider>
+        </NativeDialogContext.Provider>
+      ) : null}
+    </dialog>
   );
 }
 
@@ -183,13 +169,16 @@ function DialogHeader({ className, ...rest }: DialogHeaderProps): JSX.Element {
   return <div {...rest} {...mergeProps(d.header, className)} />;
 }
 
-function DialogTitle({ className, children, ...rest }: DialogTitleProps): JSX.Element {
+function DialogTitle({ className, id: idProp, ...rest }: DialogTitleProps): JSX.Element {
+  const { setTitleId } = useDialogContext();
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
   const d = dialog();
-  return (
-    <Heading {...rest} slot="title" {...mergeProps(d.heading, className)}>
-      {children}
-    </Heading>
-  );
+  useEffect(() => {
+    setTitleId(id);
+    return () => setTitleId(undefined);
+  }, [id, setTitleId]);
+  return <h2 {...rest} id={id} {...mergeProps(d.heading, className)} />;
 }
 
 function DialogDescription({
@@ -197,10 +186,9 @@ function DialogDescription({
   id: idProp,
   ...rest
 }: DialogDescriptionProps): JSX.Element {
-  const ctx = useDialogContext();
+  const { setDescriptionId } = useDialogContext();
   const generatedId = useId();
   const id = idProp ?? generatedId;
-  const { setDescriptionId } = ctx;
   const d = dialog();
   useEffect(() => {
     setDescriptionId(id);
@@ -218,6 +206,7 @@ function DialogClose({
   children,
   className,
   'aria-label': ariaLabel,
+  onClick,
   ref,
   ...rest
 }: DialogCloseProps): JSX.Element {
@@ -231,47 +220,50 @@ function DialogClose({
       {
         ...rest,
         ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+        ...(onClick ? { onClick } : null),
         ref,
         className,
       },
-      'press',
+      'none',
       requestClose,
     );
   }
 
   return (
-    <AriaButton
-      {...(rest as AriaButtonProps)}
+    <button
+      type="button"
+      {...rest}
       {...mergeProps(d.closeButton, className)}
       ref={ref}
       aria-label={ariaLabel ?? 'Close'}
-      onPress={composeHandlers((rest as AriaButtonProps).onPress, () => requestClose())}
+      onClick={composeHandlers(onClick, (event: { nativeEvent: Event }) =>
+        requestClose(event.nativeEvent),
+      )}
     >
       <Icon name="close" size="sm" />
-    </AriaButton>
+    </button>
   );
 }
 
 /**
- * Compound modal dialog. `Dialog` is Root; compose Trigger, Backdrop, Popup, and chrome parts.
+ * Compound modal dialog on the native `<dialog>`. `Dialog` is Root; `Popup` is the `<dialog>`
+ * element itself (its `::backdrop` is the overlay, so there is no Backdrop part and no portal).
+ * Trigger merges `onClick` onto its single child, which must be a button.
  *
  * ```tsx
  * <Dialog.Root>
  *   <Dialog.Trigger>
  *     <Button>Open</Button>
  *   </Dialog.Trigger>
- *   <Dialog.Backdrop>
- *     <Dialog.Popup>
- *       <Dialog.Title>Title</Dialog.Title>
- *     </Dialog.Popup>
- *   </Dialog.Backdrop>
+ *   <Dialog.Popup>
+ *     <Dialog.Title>Title</Dialog.Title>
+ *   </Dialog.Popup>
  * </Dialog.Root>
  * ```
  */
 export const Dialog = Object.assign(DialogRoot, {
   Root: DialogRoot,
   Trigger: DialogTrigger,
-  Backdrop: DialogBackdrop,
   Popup: DialogPopup,
   Header: DialogHeader,
   Title: DialogTitle,

@@ -5,7 +5,7 @@ description: Modal overlay for focused tasks.
 
 # Dialog
 
-Modal overlay for focused tasks. `Dialog` is the compound Root (`Dialog.Trigger`, `Dialog.Backdrop`, `Dialog.Popup`, and chrome parts). The trigger child must forward DOM props (a `Button` or a host element) — there is no `render` prop.
+Modal overlay for focused tasks. `Dialog` is the compound Root (`Dialog.Trigger`, `Dialog.Popup`, and the chrome parts `Header`, `Title`, `Description`, `Actions`, `Close`). `Dialog.Popup` is a native `<dialog>` opened with `showModal()`: it renders in place (no portal, no `portalContainer`), and its backdrop is the popup's `::backdrop` (there is no `Backdrop` part). The trigger must be a button (a `Button` or a host `<button>`): `Dialog.Trigger` merges `onClick` onto it — there is no `render` prop.
 
 There is no `@var-ui/astro` Dialog — Astro and HTML previews show a static core-recipe approximation of the open chrome; full interaction is React-only.
 
@@ -17,7 +17,7 @@ State attributes, exit animation, and `onOpenChange` details are documented in [
 
 ### Compound parts
 
-Compose Trigger, Backdrop, Popup, and chrome. `Dialog` is Root.
+Compose Trigger, Popup, and chrome. `Dialog` is Root. Native props and `ref` on `Dialog.Popup` land on the `<dialog>`.
 
 <Demo id="dialog.default" />
 
@@ -33,4 +33,6 @@ The usual arrangement for a short dialog.
 
 ## Accessibility
 
-Built on React Aria Components where applicable. Focus moves into the dialog; Escape and the backdrop dismiss when `dismissable` is true.
+Built on the native `<dialog>` element. `showModal()` makes the rest of the page inert (Tab stays inside), moves focus into the dialog (use the `autofocus` attribute to pick the element) and returns it to the trigger on close. The title and description are wired to `aria-labelledby` / `aria-describedby`. Escape always reports `escape-key`; a backdrop press reports `outside-press` only while `dismissable` is true (the default); `details.cancel()` vetoes either.
+
+Select, Combobox and Menu popups used inside a dialog render into the dialog automatically.

@@ -45,6 +45,28 @@ jobs:
           node-version-file: .nvmrc
           cache: true
 
+      # Browser tests (`*.browser.test.tsx` in packages/react) run in headless Chromium. Cache the
+      # download keyed on the Playwright version; system libraries are not cached, so a cache hit
+      # still installs OS deps.
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./packages/react/node_modules/playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
+      - name: Install Chromium (with system deps)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: vp exec --filter @var-ui/react playwright install --with-deps chromium
+
+      - name: Install Chromium system deps (cached browser)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: vp exec --filter @var-ui/react playwright install-deps chromium
+
       - run: vp run ci
 
       # `vp run ci` builds every package that ships a dist, and generates the CLI's

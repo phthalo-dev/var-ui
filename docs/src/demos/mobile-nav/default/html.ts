@@ -4,23 +4,21 @@ import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
   const s = mobileNav();
+  // A non-modal `open` dialog renders in flow, which is what a static preview needs.
   return serializeHtmlTag(
     'div',
     { 'data-var-ui-mobile-nav': true },
     serializeHtmlTag(
-      'div',
-      { ...mergeProps(s.overlay), 'data-var-ui-mobile-nav-overlay': true },
-      '',
-    ) +
-      serializeHtmlTag(
-        'div',
-        {
-          ...mergeProps(s.panel),
-          'data-var-ui-mobile-nav-panel': true,
-          role: 'dialog',
-          'aria-label': 'Navigation',
-        },
-        'Menu',
-      ),
+      'dialog',
+      {
+        ...mergeProps(s.popup),
+        'data-var-ui-mobile-nav-popup': true,
+        'data-side': 'start',
+        'aria-label': 'Navigation',
+        open: true,
+        style: 'position: relative; inset: auto; margin: 0; height: 160px',
+      },
+      'Menu',
+    ),
   );
 }

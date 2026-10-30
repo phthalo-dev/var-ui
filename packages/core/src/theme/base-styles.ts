@@ -38,7 +38,13 @@ export function registerBaseStyles(): void {
     {
       html: {
         scrollBehavior: 'smooth',
+        // Reserve the scrollbar's space so locking scroll (below) does not shift the layout.
+        scrollbarGutter: 'stable',
         ...atReducedMotion({ scrollBehavior: 'auto' }),
+      },
+      // Scroll lock for native modal dialogs: pure CSS, no JS scroll-lock hook.
+      'html:has(dialog:modal)': {
+        overflow: 'hidden',
       },
       body: {
         margin: 0,

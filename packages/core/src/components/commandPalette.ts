@@ -1,17 +1,16 @@
-import { atProperty, variant, type RecipeVariants } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { border, borderSide } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { layerZIndex } from './layerVars';
+import { nativeBackdrop, nativeDialogReset, nativeEnterExit } from '../shared/overlayMotion';
 
 /**
  * Command / search palette overlay (⌘K-style).
  *
- * Built on native `<dialog>` with `showModal()`. Style the shell via `root`
- * (`::backdrop` included) and the surface panel via `dialog`. Toggle panel
- * enter animation with `data-open` on the panel element.
+ * Built on native `<dialog>` with `showModal()`. `root` is the `<dialog>` element itself: it carries
+ * the surface, the enter/exit animation and `::backdrop`.
  *
  * Multi-part UI: use the **slots** API (`commandPalette().dialog`) rather than flat
  * `component({ key: true })`, which is meant for optional style toggles on one surface.
@@ -21,7 +20,6 @@ export const commandPalette = typestyles.recipe({
   layer: 'components',
   slots: [
     'root',
-    'dialog',
     'inputRow',
     'inputIcon',
     'input',
@@ -39,9 +37,6 @@ export const commandPalette = typestyles.recipe({
     'mark',
     'empty',
   ],
-  variants: {
-    open: variant.boolean({ default: false }),
-  },
   vars: {
     backdropBackground: {
       ...atProperty.color,
@@ -128,41 +123,26 @@ export const commandPalette = typestyles.recipe({
           [vars.markForeground.name]: t.color.text.primary.var,
           [vars.groupHeadingColor.name]: t.color.text.secondary.var,
           [vars.emptyColor.name]: t.color.text.secondary.var,
-          // Closed <dialog> is display:none in the UA stylesheet; root layout must not
-          // override that or the element stays in the hit-test tree and blocks clicks.
-          display: 'none',
-          pointerEvents: 'none',
-          '&[open]': {
-            display: 'flex',
-            pointerEvents: 'auto',
-            border: 'none',
-            margin: 0,
-            padding: `max(12vh, 72px) ${t.space[4].var} ${t.space[5].var}`,
-            maxWidth: 'none',
-            maxHeight: 'none',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'transparent',
-            color: 'inherit',
-            ...layerZIndex(t.zIndex.overlay.var),
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            overflow: 'visible',
-            '&::backdrop': {
-              backgroundColor: vars.backdropBackground.var,
-              transition: t.transition.backdrop.var,
-              '@supports (backdrop-filter: blur(1px))': {
-                backdropFilter: 'blur(10px)',
-              },
+          // The native `<dialog>` is the surface itself (no padding, so a click whose target is the
+          // dialog is always a backdrop click). Positioned near the top; `margin-inline: auto`
+          // centers it, the UA `display: none` hides it while closed.
+          ...nativeDialogReset,
+          ...nativeEnterExit({
+            scale: true,
+            backdrop: true,
+            whenOpen: { display: 'flex' },
+          }),
+          '&::backdrop': {
+            ...nativeBackdrop(vars.backdropBackground.var)['&::backdrop'],
+            '@supports (backdrop-filter: blur(1px))': {
+              backdropFilter: 'blur(10px)',
             },
           },
-        },
-        dialog: {
-          position: 'relative',
-          zIndex: t.zIndex.raised.var,
-          width: 'min(560px, 100%)',
+          marginBlock: 'max(12vh, 72px) auto',
+          marginInline: 'auto',
+          width: `min(560px, calc(100% - 2 * ${t.space[4].var}))`,
+          maxWidth: 'none',
           maxHeight: 'min(72vh, 640px)',
-          display: 'flex',
           flexDirection: 'column',
           fontFamily: t.fontFamily.body.var,
           backgroundColor: vars.dialogBackground.var,
@@ -170,14 +150,6 @@ export const commandPalette = typestyles.recipe({
           ...border(vars.dialogBorder.var),
           boxShadow: t.shadow.xl.var,
           overflow: 'hidden',
-          opacity: 0,
-          transition: t.transition.panelEnter.var,
-          '&[data-open]': {
-            opacity: 1,
-          },
-          '&[data-starting-style], &[data-ending-style]': {
-            opacity: 0,
-          },
           ...atDarkMode({
             boxShadow: 'none',
           }),
@@ -299,16 +271,6 @@ export const commandPalette = typestyles.recipe({
           fontSize: t.fontSize.sm.var,
           color: vars.emptyColor.var,
           lineHeight: 1.5,
-        },
-      },
-      variants: {
-        open: {
-          false: {},
-          true: {
-            dialog: {
-              opacity: 1,
-            },
-          },
         },
       },
     };

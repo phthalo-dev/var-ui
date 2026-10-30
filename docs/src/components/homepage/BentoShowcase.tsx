@@ -73,10 +73,7 @@ export function BentoShowcase({ themeId, framework = 'react', previewStyle }: Be
           />
         )}
         {useReactTiles ? (
-          <EmptyStateDialogTile
-            className={b.tile.className}
-            portalContainer={portalContainer ?? undefined}
-          />
+          <EmptyStateDialogTile className={b.tile.className} />
         ) : (
           <MarkupTile className={b.tile.className} html={renderEmptyStateDialogTileMarkup()} />
         )}

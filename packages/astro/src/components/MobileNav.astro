@@ -4,10 +4,10 @@ import { mobileNav } from '@var-ui/core/components/mobileNav';
 import { mergeProps } from '../utils';
 
 /**
- * Native attributes go to the overlay `<div>` (as in React); `className` is merged onto the panel.
- * `aria-label` / `aria-labelledby` name the dialog and take precedence over `label`.
+ * Native attributes and `className` go to the native `<dialog>` (as in React): the panel is the
+ * dialog. `aria-label` / `aria-labelledby` name it and take precedence over `label`.
  */
-type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
+type Props = Omit<HTMLAttributes<'dialog'>, 'class:list' | 'open'> & {
   header?: string;
   width?: number;
   side?: 'start' | 'end' | 'auto';
@@ -35,16 +35,14 @@ const hasHeaderSlot = Astro.slots.has('header');
 ---
 
 <div data-var-ui-mobile-nav>
-  <div {...rest} data-var-ui-mobile-nav-overlay {...mergeProps(s.overlay)}></div>
-  <div
-    data-var-ui-mobile-nav-panel
+  <dialog
+    {...rest}
+    data-var-ui-mobile-nav-popup
     data-side={resolvedSide}
-    role="dialog"
     aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : label)}
     aria-labelledby={ariaLabelledBy}
-    tabindex="-1"
     style={panelStyle}
-    {...mergeProps(s.panel, className)}
+    {...mergeProps(s.popup, className)}
   >
     <div {...mergeProps(s.header)}>
       <div class="mobile-nav__header-content">
@@ -58,7 +56,7 @@ const hasHeaderSlot = Astro.slots.has('header');
       ></button>
     </div>
     <slot />
-  </div>
+  </dialog>
 </div>
 
 <style>

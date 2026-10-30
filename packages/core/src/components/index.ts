@@ -55,7 +55,6 @@ export * from './multiSelector';
 export * from './numberInput';
 export * from './outline';
 export * from './overflowList';
-export * from './overlay';
 export * from './pagination';
 export * from './passwordField';
 export * from './pinInput';

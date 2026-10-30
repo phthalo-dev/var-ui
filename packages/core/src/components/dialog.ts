@@ -3,22 +3,12 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
+import { nativeBackdrop, nativeDialogReset, nativeEnterExit } from '../shared/overlayMotion';
 
 export const dialog = typestyles.recipe({
   name: 'dialog',
   layer: 'components',
-  slots: [
-    'overlay',
-    'modal',
-    'content',
-    'header',
-    'heading',
-    'description',
-    'closeButton',
-    'actions',
-  ],
+  slots: ['popup', 'content', 'header', 'heading', 'description', 'closeButton', 'actions'],
   variants: {
     role: variant.enum(['dialog', 'alertdialog'], { default: 'dialog' }),
   },
@@ -43,27 +33,22 @@ export const dialog = typestyles.recipe({
   styles: ({ vars }) => {
     return {
       base: {
-        overlay: {
-          ...overlayPresenceStyles(),
-          ...overlayIosAbsoluteBackdrop,
-          position: 'fixed',
-          inset: 0,
-          ...layerZIndex(t.zIndex.modal.var),
-          backgroundColor: vars.overlayBackground.var,
-          display: 'grid',
-          placeItems: 'center',
-          padding: t.space[4].var,
-        },
-        modal: {
-          ...overlayPresenceStyles({ scale: true }),
-          width: 'min(480px, 100%)',
+        // The native `<dialog>` itself. No padding: the whole box is content so a click whose
+        // target is the dialog is always a backdrop click. `margin: auto` centers a modal dialog.
+        popup: {
+          ...nativeDialogReset,
+          ...nativeEnterExit({ scale: true, backdrop: true }),
+          ...nativeBackdrop(vars.overlayBackground.var),
+          width: `min(480px, calc(100% - 2 * ${t.space[4].var}))`,
+          maxWidth: 'none',
+          margin: 'auto',
           backgroundColor: vars.modalBackground.var,
           borderRadius: t.radius.lg.var,
           ...border(vars.modalBorder.var),
           boxShadow: t.shadow.md.var,
-          padding: t.space[4].var,
         },
         content: {
+          padding: t.space[4].var,
           display: 'grid',
           gap: t.space[3].var,
         },
@@ -112,7 +97,7 @@ export const dialog = typestyles.recipe({
         role: {
           dialog: {},
           alertdialog: {
-            modal: {
+            popup: {
               borderColor: t.color.border.strong.var,
             },
           },

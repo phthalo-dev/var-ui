@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
+import { stubNativeDialog } from '../test/nativeOverlayStubs';
 import { Dialog } from './Dialog';
 import { Drawer } from './Drawer';
 import { Hidden } from './Hidden';
@@ -25,38 +26,36 @@ function wrap(ui: ReactNode) {
 }
 
 describe('Dialog passthrough', () => {
+  stubNativeDialog();
+
   it('forwards native props, merges className and wires refs on every part', async () => {
     const onClick = vi.fn();
-    const backdropRef = createRef<HTMLDivElement>();
-    const popupRef = createRef<HTMLDivElement>();
+    const popupRef = createRef<HTMLDialogElement>();
     const closeRef = createRef<HTMLButtonElement>();
     const titleRef = createRef<HTMLHeadingElement>();
     wrap(
       <Dialog.Root defaultOpen>
-        <Dialog.Backdrop data-testid="backdrop" className="my-backdrop" ref={backdropRef}>
-          <Dialog.Popup
-            data-testid="popup"
-            className="my-popup"
-            aria-label="Settings dialog"
-            ref={popupRef}
-            onClick={onClick}
-          >
-            <Dialog.Header data-testid="header" className="my-header">
-              <Dialog.Title id="ttl" data-testid="title" className="my-title" ref={titleRef}>
-                Title
-              </Dialog.Title>
-              <Dialog.Close data-testid="close" className="my-close" ref={closeRef} />
-            </Dialog.Header>
-            <Dialog.Description id="desc" data-testid="desc" className="my-desc">
-              About
-            </Dialog.Description>
-            <Dialog.Actions data-testid="actions" className="my-actions" />
-          </Dialog.Popup>
-        </Dialog.Backdrop>
+        <Dialog.Popup
+          data-testid="popup"
+          className="my-popup"
+          aria-label="Settings dialog"
+          ref={popupRef}
+          onClick={onClick}
+        >
+          <Dialog.Header data-testid="header" className="my-header">
+            <Dialog.Title id="ttl" data-testid="title" className="my-title" ref={titleRef}>
+              Title
+            </Dialog.Title>
+            <Dialog.Close data-testid="close" className="my-close" ref={closeRef} />
+          </Dialog.Header>
+          <Dialog.Description id="desc" data-testid="desc" className="my-desc">
+            About
+          </Dialog.Description>
+          <Dialog.Actions data-testid="actions" className="my-actions" />
+        </Dialog.Popup>
       </Dialog.Root>,
     );
-    expect(screen.getByTestId('backdrop').className).toContain('my-backdrop');
-    expect(backdropRef.current).toBe(screen.getByTestId('backdrop'));
+    expect(screen.getByTestId('popup').tagName).toBe('DIALOG');
     expect(screen.getByTestId('popup').className).toContain('my-popup');
     expect(popupRef.current).toBe(screen.getByTestId('popup'));
     const dialog = screen.getByRole('dialog', { name: 'Settings dialog' });
@@ -77,11 +76,9 @@ describe('Dialog passthrough', () => {
     const onClick = vi.fn();
     wrap(
       <Dialog.Root defaultOpen>
-        <Dialog.Backdrop>
-          <Dialog.Popup aria-label="x">
-            <Dialog.Close data-testid="close" onClick={onClick} />
-          </Dialog.Popup>
-        </Dialog.Backdrop>
+        <Dialog.Popup aria-label="x">
+          <Dialog.Close data-testid="close" onClick={onClick} />
+        </Dialog.Popup>
       </Dialog.Root>,
     );
     await userEvent.click(screen.getByTestId('close'));
@@ -97,9 +94,7 @@ describe('Dialog passthrough', () => {
         <Dialog.Trigger data-testid="trigger" className="my-trigger" onClick={onClick} ref={ref}>
           <button type="button">Open</button>
         </Dialog.Trigger>
-        <Dialog.Backdrop>
-          <Dialog.Popup aria-label="x">x</Dialog.Popup>
-        </Dialog.Backdrop>
+        <Dialog.Popup aria-label="x">x</Dialog.Popup>
       </Dialog.Root>,
     );
     const trigger = screen.getByTestId('trigger');
@@ -220,36 +215,34 @@ describe('HoverCard passthrough', () => {
 });
 
 describe('Drawer passthrough', () => {
-  it('forwards native props on parts and honors aria-label on the panel', async () => {
-    const backdropRef = createRef<HTMLDivElement>();
-    const panelRef = createRef<HTMLDivElement>();
+  stubNativeDialog();
+
+  it('forwards native props on parts and honors aria-label on the popup (the dialog)', async () => {
+    const panelRef = createRef<HTMLDialogElement>();
     const closeRef = createRef<HTMLButtonElement>();
     const onClick = vi.fn();
     wrap(
       <Drawer.Root defaultOpen>
-        <Drawer.Backdrop data-testid="backdrop" className="my-backdrop" ref={backdropRef}>
-          <Drawer.Popup
-            data-testid="panel"
-            className="my-panel"
-            aria-label="Filters"
-            ref={panelRef}
-            onClick={onClick}
-          >
-            <Drawer.Header data-testid="header" className="my-header">
-              <Drawer.Title data-testid="title" className="my-title">
-                Title
-              </Drawer.Title>
-              <Drawer.Close data-testid="close" className="my-close" ref={closeRef} />
-            </Drawer.Header>
-            <Drawer.Body data-testid="body" className="my-body">
-              body
-            </Drawer.Body>
-          </Drawer.Popup>
-        </Drawer.Backdrop>
+        <Drawer.Popup
+          data-testid="panel"
+          className="my-panel"
+          aria-label="Filters"
+          ref={panelRef}
+          onClick={onClick}
+        >
+          <Drawer.Header data-testid="header" className="my-header">
+            <Drawer.Title data-testid="title" className="my-title">
+              Title
+            </Drawer.Title>
+            <Drawer.Close data-testid="close" className="my-close" ref={closeRef} />
+          </Drawer.Header>
+          <Drawer.Body data-testid="body" className="my-body">
+            body
+          </Drawer.Body>
+        </Drawer.Popup>
       </Drawer.Root>,
     );
-    expect(screen.getByTestId('backdrop').className).toContain('my-backdrop');
-    expect(backdropRef.current).toBe(screen.getByTestId('backdrop'));
+    expect(screen.getByTestId('panel').tagName).toBe('DIALOG');
     expect(screen.getByTestId('panel').className).toContain('my-panel');
     expect(panelRef.current).toBe(screen.getByTestId('panel'));
     expect(screen.getByRole('dialog', { name: 'Filters' })).toBeTruthy();
@@ -264,11 +257,9 @@ describe('Drawer passthrough', () => {
   it('lets Drawer.Title name the dialog when no label is set', () => {
     wrap(
       <Drawer.Root defaultOpen>
-        <Drawer.Backdrop>
-          <Drawer.Popup>
-            <Drawer.Title>Settings</Drawer.Title>
-          </Drawer.Popup>
-        </Drawer.Backdrop>
+        <Drawer.Popup>
+          <Drawer.Title>Settings</Drawer.Title>
+        </Drawer.Popup>
       </Drawer.Root>,
     );
     expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
@@ -530,17 +521,20 @@ describe('CommandPalette passthrough', () => {
 });
 
 describe('MobileNav passthrough', () => {
-  it('forwards native props to the overlay, className to the panel, aria-label to the dialog', () => {
-    const ref = createRef<HTMLDivElement>();
+  stubNativeDialog();
+
+  it('forwards native props, className and ref to the <dialog>, aria-label names it', () => {
+    const ref = createRef<HTMLDialogElement>();
     wrap(
-      <MobileNav open data-testid="overlay" className="my-panel" aria-label="Site nav" ref={ref}>
+      <MobileNav open data-testid="popup" className="my-panel" aria-label="Site nav" ref={ref}>
         <p>content</p>
       </MobileNav>,
     );
-    const overlay = screen.getByTestId('overlay');
-    expect(ref.current).toBe(overlay);
-    const dialog = screen.getByRole('dialog', { name: 'Site nav' });
-    expect(dialog.closest('.my-panel')).not.toBeNull();
+    const popup = screen.getByTestId('popup');
+    expect(popup.tagName).toBe('DIALOG');
+    expect(ref.current).toBe(popup);
+    expect(popup.className).toContain('my-panel');
+    expect(screen.getByRole('dialog', { name: 'Site nav' })).toBe(popup);
   });
 
   it('forwards native props to the toggle button', async () => {

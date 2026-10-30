@@ -30,10 +30,8 @@ describe('initCommandPalette', () => {
         data-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
-          <div data-var-ui-command-palette-panel>
             <input data-var-ui-command-palette-input />
             <div data-var-ui-command-palette-results role="listbox"></div>
-          </div>
         </dialog>
         <script type="application/json" data-var-ui-command-palette-items>
           [
@@ -70,10 +68,8 @@ describe('initCommandPalette', () => {
         data-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
-          <div data-var-ui-command-palette-panel>
             <input data-var-ui-command-palette-input />
             <div data-var-ui-command-palette-results role="listbox"></div>
-          </div>
         </dialog>
         <script type="application/json" data-var-ui-command-palette-items>[]</script>
       </div>
@@ -105,10 +101,8 @@ describe('initCommandPalette', () => {
         data-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
-          <div data-var-ui-command-palette-panel>
             <input data-var-ui-command-palette-input role="combobox" aria-expanded="false" />
             <div data-var-ui-command-palette-results role="listbox"></div>
-          </div>
         </dialog>
         <script type="application/json" data-var-ui-command-palette-items>[]</script>
       </div>

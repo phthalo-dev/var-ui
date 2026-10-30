@@ -4,6 +4,7 @@ import {
   TooltipTrigger as AriaTooltipTrigger,
   type Placement,
 } from 'react-aria-components';
+import { useNativeDialogContainer } from '../internal/nativeDialogShim';
 import { tooltip } from '@var-ui/core/components/tooltip';
 import { useLayer } from '../layers/LayerProvider';
 import {
@@ -90,6 +91,7 @@ function TooltipPopup({
   ...rest
 }: TooltipPopupProps): JSX.Element {
   const { root, portalContainer } = useTooltipContext();
+  const nativeDialog = useNativeDialogContainer();
   const tip = tooltip();
   const { style: layerStyle } = useLayer();
   const positioner = usePositionerVars({
@@ -107,7 +109,7 @@ function TooltipPopup({
       ref={setRef}
       placement={placement}
       style={{ ...layerStyle, ...positioner.style, ...style }}
-      UNSTABLE_portalContainer={portalContainer}
+      UNSTABLE_portalContainer={portalContainer ?? nativeDialog}
     >
       {children}
     </AriaTooltip>

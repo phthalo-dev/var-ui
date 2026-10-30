@@ -42,23 +42,16 @@ export function render(): string {
     mergeProps(d.content),
     `${header}${description}${closeAction}`,
   );
-  const modal = serializeHtmlTag(
-    'div',
+  // A non-modal `open` dialog renders in flow, which is what a static preview needs.
+  const popup = serializeHtmlTag(
+    'dialog',
     {
-      ...mergeProps(d.modal),
-      role: 'dialog',
+      ...mergeProps(d.popup),
+      open: true,
       'aria-labelledby': 'dialog-demo-title',
-      'aria-modal': 'true',
+      style: 'position: relative; inset: auto; margin: 0 auto; min-height: 220px',
     },
     content,
   );
-  const overlay = serializeHtmlTag(
-    'div',
-    {
-      ...mergeProps(d.overlay),
-      style: 'position: relative; inset: auto; min-height: 220px',
-    },
-    modal,
-  );
-  return `<div style="display: grid; gap: 1rem">${trigger}${overlay}</div>`;
+  return `<div style="display: grid; gap: 1rem">${trigger}${popup}</div>`;
 }

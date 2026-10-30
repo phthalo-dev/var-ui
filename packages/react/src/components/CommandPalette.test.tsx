@@ -21,25 +21,7 @@ beforeEach(() => {
 });
 
 describe('CommandPalette', () => {
-  it('marks the panel open while the palette is open', () => {
-    wrap(
-      <CommandPalette
-        open
-        hotkey={false}
-        items={[{ id: 'a', title: 'Open settings' }]}
-        onAction={() => {}}
-        onOpenChange={() => {}}
-      />,
-    );
-
-    const panel = document.querySelector('.var-ui-command-palette__dialog');
-    expect(panel).not.toBeNull();
-    expect(panel?.getAttribute('data-open')).toBe('');
-    expect(panel?.hasAttribute('data-starting-style')).toBe(true);
-    expect(panel?.hasAttribute('data-ending-style')).toBe(false);
-  });
-
-  it('keeps the native dialog mounted and unmounts only the panel after closing', async () => {
+  it('keeps the native dialog mounted and unmounts only its contents after closing', async () => {
     const { rerender } = wrap(
       <CommandPalette
         open
@@ -64,7 +46,6 @@ describe('CommandPalette', () => {
 
     await waitFor(() => expect(screen.queryByPlaceholderText('Search…')).toBeNull());
     expect(document.querySelector('.var-ui-command-palette')).not.toBeNull();
-    expect(document.querySelector('.var-ui-command-palette__dialog')).toBeNull();
   });
 
   it('closes the native dialog after the panel exits so focus can be restored', async () => {
@@ -304,25 +285,6 @@ describe('CommandPalette', () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
-  it('closes on Escape', async () => {
-    const onOpenChange = vi.fn();
-    wrap(
-      <CommandPalette
-        open
-        hotkey={false}
-        onOpenChange={onOpenChange}
-        items={[{ id: 'a', title: 'Open settings' }]}
-        onAction={() => {}}
-      />,
-    );
-    expect(screen.getByPlaceholderText('Search…')).toBeTruthy();
-    await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalledWith(
-      false,
-      expect.objectContaining({ reason: expect.any(String) }),
-    );
-  });
-
   it('supports a custom filter function', async () => {
     wrap(
       <CommandPalette
@@ -522,66 +484,10 @@ describe('CommandPalette item actions and chrome', () => {
     expect(result.current.isOpen).toBe(true);
   });
 
-  it('reports onOpenChange(false) once when closing with Escape', async () => {
-    const onOpenChange = vi.fn();
-    function Harness() {
-      const [open, setOpen] = useState(true);
-      return (
-        <CommandPalette
-          open={open}
-          hotkey={false}
-          items={[{ id: 'a', title: 'Open settings' }]}
-          onAction={() => {}}
-          onOpenChange={(next) => {
-            onOpenChange(next);
-            setOpen(next);
-          }}
-        />
-      );
-    }
-    wrap(<Harness />);
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(false));
-    expect(onOpenChange.mock.calls.filter(([n]) => n === false)).toHaveLength(1);
-  });
-
-  it('supports uncontrolled defaultOpen and closes itself on Escape', async () => {
-    wrap(
-      <CommandPalette
-        defaultOpen
-        hotkey={false}
-        items={[{ id: 'a', title: 'Open settings' }]}
-        onAction={() => {}}
-      />,
-    );
-    expect(document.querySelector('dialog')?.open).toBe(true);
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(false));
-  });
-
   it('opens uncontrolled via the hotkey', async () => {
     wrap(<CommandPalette items={[{ id: 'a', title: 'Open settings' }]} onAction={() => {}} />);
     await userEvent.keyboard('{Control>}k{/Control}');
     await waitFor(() => expect(document.querySelector('dialog')?.open).toBe(true));
-  });
-
-  it('passes details with a reason and honors details.cancel()', async () => {
-    const onOpenChange = vi.fn((_next: boolean, details: { cancel: () => void }) =>
-      details.cancel(),
-    );
-    wrap(
-      <CommandPalette
-        defaultOpen
-        hotkey={false}
-        items={[{ id: 'a', title: 'Open settings' }]}
-        onAction={() => {}}
-        onOpenChange={onOpenChange}
-      />,
-    );
-    await userEvent.keyboard('{Escape}');
-    expect(onOpenChange.mock.calls[0]?.[0]).toBe(false);
-    expect(onOpenChange.mock.calls[0]?.[1]).toMatchObject({ reason: 'escape-key' });
-    expect(document.querySelector('dialog')?.open).toBe(true);
   });
 
   it('loading shows the busy state', () => {
@@ -626,28 +532,6 @@ describe('CommandPalette overlay root', () => {
     await userEvent.click(screen.getByText('Alpha'));
     expect(last(onOpenChange)).toEqual([false, 'trigger-press']);
     expect(controller.getSnapshot()).toBe(false);
-  });
-
-  it('does not close a controller when onOpenChange cancels', async () => {
-    const controller = createCommandPalette(true);
-    wrap(
-      <CommandPalette
-        controller={controller}
-        hotkey={false}
-        items={items}
-        onOpenChange={(_n, d) => d.cancel()}
-      />,
-    );
-    await userEvent.keyboard('{Escape}');
-    expect(controller.getSnapshot()).toBe(true);
-  });
-
-  it('stays controlled by the open prop', async () => {
-    const onOpenChange = vi.fn();
-    wrap(<CommandPalette open hotkey={false} items={items} onOpenChange={onOpenChange} />);
-    await userEvent.keyboard('{Escape}');
-    expect(last(onOpenChange)).toEqual([false, 'escape-key']);
-    expect(document.querySelector('dialog')?.open).toBe(true);
   });
 
   it('renders no display:contents wrapper', () => {

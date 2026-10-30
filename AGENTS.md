@@ -30,6 +30,12 @@ release. Add a tool name to select part of the graph. For example, run
 
 First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design tokens — not new `*.css` files or ad-hoc `@media` queries. Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/react` and `@var-ui/astro`). Register site recipes in the TypeStyles extract entry. See `.cursor/rules/typestyles-first.mdc`.
 
+## Browser tests
+
+Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci` and the pre-push hook). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. Filter with `vp test run --project browser|jsdom`.
+
+One-time setup per machine: `pnpm exec playwright install chromium` (the test run fails with that hint if the browser is missing). CI installs and caches it in the Verify job.
+
 ## CI/CD
 
 All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Everything lives in `.github/workflows/ci.yml`.

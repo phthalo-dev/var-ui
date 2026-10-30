@@ -5,7 +5,7 @@ description: Mobile drawer navigation with MobileNav.Toggle and provider.
 
 # MobileNav
 
-Slide-out mobile navigation drawer built on React Aria Modal — focus trap, Escape, and backdrop dismissal included. Like every overlay it takes `open` / `defaultOpen` / `onOpenChange(open, details)` (`details.reason` is `escape-key`, `outside-press`, `close-press`, `trigger-press` or `imperative`; `details.cancel()` vetoes the change), and it animates out. Or share state through `MobileNavProvider` + `MobileNav.Toggle`.
+Slide-out mobile navigation drawer built on a native modal `<dialog>` (the same primitive as `Drawer`): focus trap, Escape, scroll lock and backdrop dismissal are native. The `<dialog>` is the sliding panel itself, so native props, `className` and `ref` land on it, and there is no portal. Like every overlay it takes `open` / `defaultOpen` / `onOpenChange(open, details)` (`details.reason` is `escape-key`, `outside-press`, `close-press`, `trigger-press` or `imperative`; `details.cancel()` vetoes the change), and it animates out. Or share state through `MobileNavProvider` + `MobileNav.Toggle`.
 
 ## Examples
 
@@ -27,4 +27,4 @@ Wrap the hamburger and drawer in `MobileNavProvider` so `MobileNav.Toggle` and `
 
 ## Accessibility
 
-The panel is a dialog (`label` defaults to `"Navigation"`) with a labeled close control. `MobileNav.Toggle` sets `aria-expanded` from provider or explicit `open`, and defaults to `aria-label="Open navigation"`. Prefer the provider pattern when the toggle lives in top chrome and the drawer is a sibling (as in `AppShell`).
+The panel is a native modal dialog (`label` defaults to `"Navigation"`) with a labeled close control. `MobileNav.Toggle` sets `aria-expanded` from provider or explicit `open`, and defaults to `aria-label="Open navigation"`. Prefer the provider pattern when the toggle lives in top chrome and the drawer is a sibling (as in `AppShell`).

@@ -7,6 +7,7 @@ import { IconProvider } from '../icons';
 import { Alert } from './Alert';
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
+import { stubNativeDialog } from '../test/nativeOverlayStubs';
 import { Dialog } from './Dialog';
 import { IconButton } from './IconButton';
 import { Select } from './Select';
@@ -201,36 +202,33 @@ describe('Select', () => {
 });
 
 describe('Dialog', () => {
+  stubNativeDialog();
   const body = (props: { open?: boolean; dismissable?: boolean; onOpenChange?: () => void }) => (
     <Dialog.Root {...props}>
-      <Dialog.Backdrop>
-        <Dialog.Popup aria-label="Demo">
-          <Dialog.Title>Hi</Dialog.Title>
-        </Dialog.Popup>
-      </Dialog.Backdrop>
+      <Dialog.Popup aria-label="Demo">
+        <Dialog.Title>Hi</Dialog.Title>
+      </Dialog.Popup>
     </Dialog.Root>
   );
 
-  it('open shows the dialog; onOpenChange fires on Escape when dismissable', async () => {
+  // Escape and backdrop behaviour are covered in Dialog.browser.test.tsx.
+  it('open shows the dialog and closes through Close with onOpenChange(false)', async () => {
     const onOpenChange = vi.fn();
-    wrap(body({ open: true, onOpenChange }));
+    wrap(
+      <Dialog.Root open onOpenChange={onOpenChange}>
+        <Dialog.Popup aria-label="Demo">
+          <Dialog.Close />
+        </Dialog.Popup>
+      </Dialog.Root>,
+    );
     expect(await screen.findByRole('dialog')).toBeTruthy();
-    await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(onOpenChange.mock.calls[0][0]).toBe(false);
   });
 
-  it('outside press closes only when dismissable', async () => {
-    const closed = vi.fn();
-    const kept = vi.fn();
-    const { unmount } = wrap(body({ open: true, onOpenChange: closed }));
-    await userEvent.click(document.body);
-    expect(closed).toHaveBeenCalled();
-    unmount();
-    wrap(body({ open: true, dismissable: false, onOpenChange: kept }));
-    await screen.findByRole('dialog');
-    await userEvent.click(document.body);
-    expect(kept).not.toHaveBeenCalled();
+  it('closed by default', () => {
+    wrap(body({}));
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });
 

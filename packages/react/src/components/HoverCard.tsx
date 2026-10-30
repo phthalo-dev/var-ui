@@ -3,9 +3,9 @@ import {
   Dialog as AriaDialog,
   DialogTrigger as AriaDialogTrigger,
   Heading,
-  Popover as AriaPopover,
   type Placement,
 } from 'react-aria-components';
+import { Popover as AriaPopover } from '../internal/nativeDialogShim';
 import { hoverCard } from '@var-ui/core/components/hoverCard';
 import { useLayer } from '../layers/LayerProvider';
 import {

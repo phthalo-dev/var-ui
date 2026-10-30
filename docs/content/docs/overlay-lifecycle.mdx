@@ -22,7 +22,7 @@ import {
 
 Compound overlays already call these. Use the hooks directly only if you are building a custom overlay on React Aria.
 
-Stacking, themed portals, and iOS 26 Safari backdrops are in [Getting started](/docs/getting-started).
+Stacking and themed portals are in [Getting started](/docs/getting-started).
 
 ## State attributes
 
@@ -36,7 +36,7 @@ Spread on the popup (and backdrop, when there is one). Presence is an empty stri
 | `data-ending-style`   | Present while the close transition runs                               |
 | `data-placement`      | RAC placement string on positioned popups (`top`, `bottom start`, …)  |
 
-`data-open` stays on the node through exit so `&[data-open]` selectors keep working (CommandPalette already uses that pattern).
+`data-open` stays on the node through exit so `&[data-open]` selectors keep working. Native `<dialog>` overlays such as CommandPalette use `[open]` instead.
 
 Recipes transition opacity (and a slight scale on dialogs/popovers) from `[data-starting-style]` / `[data-ending-style]`. Reduced motion skips the duration and unmounts immediately.
 
@@ -56,9 +56,37 @@ Recipes transition opacity (and a slight scale on dialogs/popovers) from `[data-
 
 Closing does not remove the DOM until CSS animations on the popup (and backdrop, when wired) finish. `prefers-reduced-motion: reduce` unmounts immediately.
 
+## Native dialogs (Dialog, AlertDialog, Drawer, MobileNav, LayoutPanel overlay)
+
+`Dialog.Popup` is a native `<dialog>` opened with `showModal()`: the platform provides the top layer, the inert page, Escape and focus return. There is no backdrop element and no portal; the backdrop is `::backdrop` of the popup (its colour is `--var-ui-dialog-overlaybackground`). Style enter and exit with `[open]` and `@starting-style` instead of `data-starting-style` / `data-ending-style`:
+
+```css
+.var-ui-dialog__popup {
+  opacity: 0;
+  transition:
+    opacity 150ms,
+    overlay 150ms allow-discrete,
+    display 150ms allow-discrete;
+}
+.var-ui-dialog__popup[open] {
+  opacity: 1;
+}
+@starting-style {
+  .var-ui-dialog__popup[open] {
+    opacity: 0;
+  }
+}
+```
+
+The children stay mounted until the exit transition ends (the popup still gets `data-open` / `data-closed`). Scroll is locked by `html:has(dialog:modal) { overflow: hidden }`. Because the dialog renders in place, a `<button>` inside it submits an ancestor `<form>`, events bubble through its real ancestors, and inheritable properties (font, colour, `text-align`) flow in from them.
+
+`Drawer.Popup`, `MobileNav` and the `LayoutPanel` `responsive="overlay"` panel are the same native `<dialog>`; they slide with `translate` from `data-placement` (`start` | `end` | `bottom`) or `data-side` (`start` | `end`), both following the writing direction.
+
+Reasons: Escape is `escape-key`, a backdrop press (when `dismissable`) is `outside-press`, a `Close` part is `close-press`, the trigger is `trigger-press`, `requestClose()` or a back gesture is `imperative`. `details.cancel()` vetoes any of them. Chromium lets a page cancel Escape once per user activation: after that the dialog closes natively and the root re-opens it when `open` is still `true`.
+
 ## Positioner CSS variables
 
-Set on positioned popups (Popover, Tooltip, HoverCard, Menu). Dialog and Drawer centered overlays use `transform-origin: center`.
+Set on positioned popups (Popover, Tooltip, HoverCard, Menu). Dialog centered overlays use `transform-origin: center`.
 
 | Variable                    | Source                                                |
 | --------------------------- | ----------------------------------------------------- |
@@ -136,6 +164,6 @@ Builds the `details` object with `cancel()` / `isCanceled`. Overlay components w
 
 ## Related
 
-- [Getting started](/docs/getting-started) — `isolation: isolate`, themed `portalContainer`, iOS 26 backdrops
+- [Getting started](/docs/getting-started) — `isolation: isolate`, themed `portalContainer`
 - [CSS variables](/theming/css-variables) — design tokens and component variables
 - [Dialog](/components/dialog), [Popover](/components/popover), [Tooltip](/components/tooltip), [Menu](/components/menu)

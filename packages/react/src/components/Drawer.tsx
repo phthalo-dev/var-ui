@@ -1,33 +1,21 @@
 import {
   Children,
+  useEffect,
+  useId,
   useMemo,
+  useState,
   type ComponentPropsWithRef,
-  type CSSProperties,
   type JSX,
   type ReactNode,
 } from 'react';
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-  Dialog as AriaDialog,
-  DialogTrigger as AriaDialogTrigger,
-  Heading,
-  Modal,
-  ModalOverlay,
-} from 'react-aria-components';
 import { drawer } from '@var-ui/core/components/drawer';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import type { DrawerVariantProps } from '@var-ui/core';
-
-const drawerVars = recipeVars(drawer);
 import { Icon } from '../icons';
-import { useScrollLock } from '../hooks';
-import { useLayer } from '../layers/LayerProvider';
+import { NativeSheetPopup } from '../internal/NativeSheetPopup';
 import {
   composeHandlers,
   createOverlayContext,
-  OverlayCloseContext,
-  OverlayTrigger,
   useMergedRef,
   useOverlayClose,
   useOverlayRoot,
@@ -39,7 +27,7 @@ import {
 } from '../overlays';
 import { mergeProps } from 'typestyles';
 
-const dialogContentStyle: CSSProperties = { display: 'contents' };
+const drawerVars = recipeVars(drawer);
 
 export type DrawerRootProps = DrawerVariantProps & {
   children: ReactNode;
@@ -49,13 +37,8 @@ export type DrawerRootProps = DrawerVariantProps & {
   defaultOpen?: boolean;
   /** Called when the drawer requests to open or close. `details.cancel()` vetoes the change. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /** Whether pressing the backdrop closes the drawer. Escape always closes. @default true */
+  /** Whether pressing the backdrop closes the drawer. Escape is native and always reported. @default true */
   dismissable?: boolean;
-  /**
-   * Element the drawer portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient.
-   */
-  portalContainer?: Element;
   /** Accessible name for the dialog; `Drawer.Popup`'s own `aria-label` wins. */
   'aria-label'?: string;
 };
@@ -63,20 +46,17 @@ export type DrawerRootProps = DrawerVariantProps & {
 /** Alias for docs and consumers referring to the root drawer props. */
 export type DrawerProps = DrawerRootProps;
 
+/** The single child must be a button (or a component that renders one): it receives `onClick`. */
 export type DrawerTriggerProps = OverlayTriggerProps;
 
-export type DrawerBackdropProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
-  children: ReactNode;
-};
-
 /**
- * Native props go to the modal `<div>`; `aria-label` and `aria-labelledby` go to the inner
- * dialog element and take precedence over the `aria-label` set on `Drawer`. When
- * `Drawer.Title` is rendered and no label is given, the title names the dialog.
+ * Props of the native `<dialog>` element (the popup *is* the dialog): `ref`, `className`, `style`,
+ * handlers and `data-*`/`aria-*` attributes all land on it. When `Drawer.Title` is rendered and no
+ * label is given, the title names the dialog.
  */
-export type DrawerPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+export type DrawerPopupProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 'open'> & {
   children: ReactNode;
-  /** Edge the popup slides in from. @default 'end' */
+  /** Edge the popup slides in from; `start` and `end` follow the writing direction. @default 'end' */
   placement?: 'start' | 'end' | 'bottom';
   /** Custom width in px (overrides size width for start/end). */
   width?: number;
@@ -94,10 +74,11 @@ export type DrawerBodyProps = ComponentPropsWithRef<'div'>;
 
 type DrawerContextValue = {
   root: OverlayRoot;
-  portalContainer?: Element;
   dismissable: boolean;
   size: DrawerVariantProps['size'];
   ariaLabel?: string;
+  titleId: string | undefined;
+  setTitleId: (id: string | undefined) => void;
 };
 
 const { Context: DrawerContext, use: useDrawerContext } =
@@ -109,54 +90,40 @@ function DrawerRoot({
   defaultOpen,
   onOpenChange,
   dismissable = true,
-  portalContainer,
   size = 'md',
   'aria-label': ariaLabel,
 }: DrawerRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
-  useScrollLock(root.mounted);
+  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const [titleId, setTitleId] = useState<string | undefined>(undefined);
 
   const context = useMemo<DrawerContextValue>(
-    () => ({ root, portalContainer, dismissable, size, ariaLabel }),
-    [root, portalContainer, dismissable, size, ariaLabel],
+    () => ({ root, dismissable, size, ariaLabel, titleId, setTitleId }),
+    [root, dismissable, size, ariaLabel, titleId],
   );
 
-  return (
-    <DrawerContext.Provider value={context}>
-      <AriaDialogTrigger {...root.rac}>{children}</AriaDialogTrigger>
-    </DrawerContext.Provider>
-  );
+  return <DrawerContext.Provider value={context}>{children}</DrawerContext.Provider>;
 }
 
-function DrawerTrigger(props: DrawerTriggerProps): JSX.Element {
-  return <OverlayTrigger {...props} root={useDrawerContext().root} />;
-}
-
-function DrawerBackdrop({
+function DrawerTrigger({
   children,
   className,
-  style,
+  onClick,
   ref,
-  ...rest
-}: DrawerBackdropProps): JSX.Element {
-  const ctx = useDrawerContext();
-  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setBackdropEl, ref);
-  const styles = drawer({ size: ctx.size });
-  const { style: layerStyle } = useLayer();
-
-  return (
-    <ModalOverlay
-      {...rest}
-      {...mergeProps(styles.overlay, className)}
-      {...ctx.root.presenceAttrs}
-      {...ctx.root.rac}
-      ref={setRef}
-      style={{ ...layerStyle, ...style }}
-      isDismissable={ctx.dismissable}
-      UNSTABLE_portalContainer={ctx.portalContainer}
-    >
-      {children}
-    </ModalOverlay>
+  ...props
+}: DrawerTriggerProps): JSX.Element {
+  const { root } = useDrawerContext();
+  const setRef = useMergedRef<HTMLElement>(ref, root.setTriggerEl);
+  return wireOverlayChild(
+    Children.only(children),
+    {
+      ...props,
+      'aria-haspopup': 'dialog',
+      'aria-expanded': root.open,
+      className,
+      ref: setRef,
+      onClick: composeHandlers(onClick, root.triggerPress),
+    },
+    'press',
   );
 }
 
@@ -173,32 +140,27 @@ function DrawerPopup({
   ...rest
 }: DrawerPopupProps): JSX.Element {
   const ctx = useDrawerContext();
-  const setRef = useMergedRef<HTMLDivElement>(ctx.root.setPopupEl, ref);
   const styles = drawer({ size: ctx.size });
   const popupStyle = styleVars([
     [drawerVars.panelWidth, width != null ? `${width}px` : null],
     [drawerVars.panelHeight, height != null ? `${height}px` : null],
   ]);
+  const name = ariaLabel ?? (ariaLabelledBy ? undefined : ctx.ariaLabel);
 
   return (
-    <Modal
+    <NativeSheetPopup
       {...rest}
-      {...mergeProps(styles.panel, className)}
-      {...ctx.root.presenceAttrs}
-      ref={setRef}
+      {...mergeProps(styles.popup, className)}
+      root={ctx.root}
+      dismissable={ctx.dismissable}
       data-placement={placement}
+      aria-label={name}
+      aria-labelledby={ariaLabelledBy ?? (name ? undefined : ctx.titleId)}
       style={{ ...popupStyle, ...style }}
+      ref={ref}
     >
-      <AriaDialog
-        aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : ctx.ariaLabel)}
-        aria-labelledby={ariaLabelledBy}
-        style={dialogContentStyle}
-      >
-        <OverlayCloseContext.Provider value={ctx.root.close}>
-          {children}
-        </OverlayCloseContext.Provider>
-      </AriaDialog>
-    </Modal>
+      {children}
+    </NativeSheetPopup>
   );
 }
 
@@ -208,14 +170,16 @@ function DrawerHeader({ className, ...rest }: DrawerHeaderProps): JSX.Element {
   return <div {...rest} {...mergeProps(styles.header, className)} />;
 }
 
-function DrawerTitle({ className, children, ...rest }: DrawerTitleProps): JSX.Element {
-  const { size } = useDrawerContext();
+function DrawerTitle({ className, id: idProp, ...rest }: DrawerTitleProps): JSX.Element {
+  const { size, setTitleId } = useDrawerContext();
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
   const styles = drawer({ size });
-  return (
-    <Heading {...rest} slot="title" {...mergeProps(styles.title, className)}>
-      {children}
-    </Heading>
-  );
+  useEffect(() => {
+    setTitleId(id);
+    return () => setTitleId(undefined);
+  }, [id, setTitleId]);
+  return <h2 {...rest} id={id} {...mergeProps(styles.title, className)} />;
 }
 
 function DrawerClose({
@@ -223,6 +187,7 @@ function DrawerClose({
   className,
   ref,
   'aria-label': ariaLabel,
+  onClick,
   ...rest
 }: DrawerCloseProps): JSX.Element {
   const close = useOverlayClose();
@@ -236,24 +201,28 @@ function DrawerClose({
       {
         ...rest,
         ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+        ...(onClick ? { onClick } : null),
         ref,
         className,
       },
-      'press',
+      'none',
       requestClose,
     );
   }
 
   return (
-    <AriaButton
-      {...(rest as AriaButtonProps)}
+    <button
+      type="button"
+      {...rest}
       {...mergeProps(styles.closeButton, className)}
-      aria-label={ariaLabel ?? 'Close'}
-      onPress={composeHandlers((rest as AriaButtonProps).onPress, () => requestClose())}
       ref={ref}
+      aria-label={ariaLabel ?? 'Close'}
+      onClick={composeHandlers(onClick, (event: { nativeEvent: Event }) =>
+        requestClose(event.nativeEvent),
+      )}
     >
       <Icon name="close" size="sm" />
-    </AriaButton>
+    </button>
   );
 }
 
@@ -264,29 +233,28 @@ function DrawerBody({ className, ...rest }: DrawerBodyProps): JSX.Element {
 }
 
 /**
- * Compound slide-in drawer. `Drawer` is Root; compose Trigger, Backdrop, Popup, and chrome parts.
+ * Compound slide-in drawer on the native `<dialog>`. `Drawer` is Root; `Popup` is the `<dialog>`
+ * itself (its `::backdrop` is the overlay, so there is no Backdrop part and no portal). Trigger
+ * merges `onClick` onto its single child, which must be a button.
  *
  * ```tsx
  * <Drawer>
  *   <Drawer.Trigger>
  *     <Button>Settings</Button>
  *   </Drawer.Trigger>
- *   <Drawer.Backdrop>
- *     <Drawer.Popup placement="end" aria-label="Settings">
- *       <Drawer.Header>
- *         <Drawer.Title>Settings</Drawer.Title>
- *         <Drawer.Close />
- *       </Drawer.Header>
- *       <Drawer.Body>Drawer content</Drawer.Body>
- *     </Drawer.Popup>
- *   </Drawer.Backdrop>
+ *   <Drawer.Popup placement="end" aria-label="Settings">
+ *     <Drawer.Header>
+ *       <Drawer.Title>Settings</Drawer.Title>
+ *       <Drawer.Close />
+ *     </Drawer.Header>
+ *     <Drawer.Body>Drawer content</Drawer.Body>
+ *   </Drawer.Popup>
  * </Drawer>
  * ```
  */
 export const Drawer = Object.assign(DrawerRoot, {
   Root: DrawerRoot,
   Trigger: DrawerTrigger,
-  Backdrop: DrawerBackdrop,
   Popup: DrawerPopup,
   Header: DrawerHeader,
   Title: DrawerTitle,

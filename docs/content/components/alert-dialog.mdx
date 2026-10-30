@@ -5,7 +5,7 @@ description: Modal confirmation for important or destructive actions.
 
 # AlertDialog
 
-Modal confirmation for important or destructive actions. `AlertDialog` is the compound Root: a `Dialog` with `role="alertdialog"` and backdrop dismissal off (`AlertDialog.Trigger`, `Backdrop`, `Popup`, `Header`, `Title`, `Description`, `Actions`, `Close`). The cancel/confirm arrangement is a recipe you copy, not a preset: confirm is just your button inside `AlertDialog.Close`, so Cancel and Escape never run it. The trigger child must forward DOM props — there is no `render` prop.
+Modal confirmation for important or destructive actions. `AlertDialog` is the compound Root: a `Dialog` with `role="alertdialog"` and backdrop dismissal off (`AlertDialog.Trigger`, `Popup`, `Header`, `Title`, `Description`, `Actions`, `Close`; the popup is a native `<dialog role="alertdialog">`, so there is no `Backdrop` part). The cancel/confirm arrangement is a recipe you copy, not a preset: confirm is just your button inside `AlertDialog.Close`, so Cancel and Escape never run it. The trigger must be a button — there is no `render` prop.
 
 State attributes, exit animation, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -13,7 +13,7 @@ State attributes, exit animation, and `onOpenChange` details are documented in [
 
 ### Default
 
-Destructive confirms use `tone="danger"` and autofocus Cancel so Enter does not confirm by accident.
+Destructive confirms use `tone="danger"` and autofocus Cancel so Enter does not confirm by accident. `autoFocus` works on a `Button`; on a plain host element use the native `autofocus` attribute (React's `autoFocus` runs before the dialog is shown and does nothing there).
 
 <Demo id="alert-dialog.default" />
 
@@ -29,4 +29,4 @@ Non-destructive confirms use `tone="accent"` and `appearance="filled"`. Change t
 
 ## Accessibility
 
-Renders as an alertdialog with a focus trap. Destructive flows autofocus Cancel so Enter does not immediately confirm. Escape and the cancel button dismiss without calling `onConfirm`. Prefer a clear `title` and short `description` that name the irreversible consequence.
+Renders as a native modal `<dialog role="alertdialog">`; the rest of the page is inert. Destructive flows autofocus Cancel so Enter does not immediately confirm. Escape and the cancel button dismiss without calling `onConfirm`. Prefer a clear `title` and short `description` that name the irreversible consequence.

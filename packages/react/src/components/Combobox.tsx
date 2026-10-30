@@ -17,12 +17,12 @@ import {
   Label,
   ListBox,
   ListBoxItem,
-  Popover,
   Text,
   type ComboBoxProps as RACComboBoxProps,
   type Key,
   type PopoverProps,
 } from 'react-aria-components';
+import { Popover } from '../internal/nativeDialogShim';
 import { combobox } from '@var-ui/core/components/combobox';
 import type { ComboboxVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';

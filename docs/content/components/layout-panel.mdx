@@ -6,7 +6,7 @@ description: Fixed-width side panel for Layout start/end slots.
 # LayoutPanel
 
 Side panel for `Layout` start/end slots. Supports fixed width, `useResizable`
-integration, and responsive `overlay` / `hidden` modes below a breakpoint.
+integration, and responsive `overlay` / `hidden` modes below a breakpoint. `overlay` renders the panel in a native modal `<dialog>` that slides in from `data-side` (the same primitive as `Drawer` and `MobileNav`): native focus trap, Escape, backdrop dismissal and scroll lock, with `open` / `defaultOpen` / `onOpenChange(open, details)`.
 
 ## Examples
 

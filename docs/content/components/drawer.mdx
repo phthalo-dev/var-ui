@@ -5,9 +5,9 @@ description: Slide-over panel for secondary flows.
 
 # Drawer
 
-Slide-over panel for secondary flows (settings, details, filters). Built on React Aria Modal with focus trap, Escape, and backdrop dismissal. `Drawer` is the compound Root (`Drawer.Trigger`, `Drawer.Backdrop`, `Drawer.Popup`, `Drawer.Header`, `Drawer.Title`, `Drawer.Close`, `Drawer.Body`) with `open` / `defaultOpen` / `onOpenChange(open, details)`. `portalContainer` and `dismissable` are Root props. A `Drawer.Trigger` or `Drawer.Close` child must forward DOM props (a `Button` or a host element) — there is no `render` prop.
+Slide-over panel for secondary flows (settings, details, filters). Built on the native `<dialog>`: `showModal()` provides the focus trap, the inert page, Escape and the top layer. `Drawer` is the compound Root (`Drawer.Trigger`, `Drawer.Popup`, `Drawer.Header`, `Drawer.Title`, `Drawer.Close`, `Drawer.Body`) with `open` / `defaultOpen` / `onOpenChange(open, details)`; `dismissable` is a Root prop. `Drawer.Popup` is the `<dialog>` itself: it renders in place (no portal, no `portalContainer`) and its backdrop is `::backdrop` (there is no `Backdrop` part). A `Drawer.Trigger` must be a button (a `Button` or a host `<button>`); a `Drawer.Close` child receives `onClick` — there is no `render` prop.
 
-There is no assembled preset: the recipe below (trigger, backdrop, popup with a header, title, close and body) is the usual arrangement, so copy it and change what you need.
+There is no assembled preset: the recipe below (trigger, popup with a header, title, close and body) is the usual arrangement, so copy it and change what you need.
 
 State attributes, exit animation, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -21,7 +21,7 @@ The recipe: a trigger, then a header with title and close above the body. `place
 
 ### Placement
 
-Set `placement` on `Drawer.Popup` (`start`, `end`, or `bottom`) to match the layout edge that owns the flow.
+Set `placement` on `Drawer.Popup` (`start`, `end`, or `bottom`) to match the layout edge that owns the flow. `start` and `end` are logical: they follow the writing direction, so `start` docks on the right in RTL. The popup slides in with `translate` and `@starting-style`.
 
 <Demo id="drawer.placement" />
 
@@ -31,4 +31,4 @@ Set `placement` on `Drawer.Popup` (`start`, `end`, or `bottom`) to match the lay
 
 ## Accessibility
 
-Focus moves into the popup when opened and returns to the trigger on close. Name the dialog with `aria-label` / `aria-labelledby` on `Drawer.Popup` (or `aria-label` on the Root). The close control defaults to `aria-label="Close"`. Prefer drawers for multi-step or longer secondary UI; use `AlertDialog` for short confirmations.
+Focus moves into the popup when opened and returns to the trigger on close; the page behind it is inert and its scroll is locked. Escape always reports `escape-key`; a backdrop press reports `outside-press` only while `dismissable` is true. Name the dialog with `aria-label` / `aria-labelledby` on `Drawer.Popup` (or `aria-label` on the Root). The close control defaults to `aria-label="Close"`. Prefer drawers for multi-step or longer secondary UI; use `AlertDialog` for short confirmations.

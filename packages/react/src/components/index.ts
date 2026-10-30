@@ -73,7 +73,6 @@ export {
 export {
   Dialog,
   type DialogActionsProps,
-  type DialogBackdropProps,
   type DialogCloseProps,
   type DialogDescriptionProps,
   type DialogHeaderProps,
@@ -86,7 +85,6 @@ export {
 export {
   AlertDialog,
   type AlertDialogActionsProps,
-  type AlertDialogBackdropProps,
   type AlertDialogCloseProps,
   type AlertDialogDescriptionProps,
   type AlertDialogHeaderProps,
@@ -297,7 +295,6 @@ export {
 } from './Combobox';
 export {
   Drawer,
-  type DrawerBackdropProps,
   type DrawerBodyProps,
   type DrawerCloseProps,
   type DrawerHeaderProps,
