@@ -2,6 +2,11 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { borderSide } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { transitionOf } from '../internal/motion';
+import { atForcedColors } from '../theme/conditions';
+
 /** Icon-only rail width in px when the nav is collapsed. */
 export const SIDE_NAV_COLLAPSED_WIDTH = 56;
 
@@ -132,11 +137,9 @@ export const sideNav = typestyles.recipe({
           flexDirection: 'column',
           gap: t.space[2].var,
           padding: t.space[3].var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.border.var,
+          ...borderSide('block-end', vars.border.var),
           backgroundColor: vars.background.var,
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
           '[data-collapsed] &': {
             padding: t.space[2].var,
             borderBottom: 'none',
@@ -174,9 +177,7 @@ export const sideNav = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space[2].var,
           padding: t.space[3].var,
-          borderTopWidth: t.borderWidth.default.var,
-          borderTopStyle: 'solid',
-          borderTopColor: vars.border.var,
+          ...borderSide('block-start', vars.border.var),
           backgroundColor: vars.background.var,
           '[data-collapsed] &': {
             justifyContent: 'center',
@@ -270,7 +271,7 @@ export const sideNav = typestyles.recipe({
           textDecoration: 'none',
           cursor: 'pointer',
           outline: 'none',
-          transition: `background-color ${t.duration.fast.var} ${t.easing.standard.var}, color ${t.duration.fast.var} ${t.easing.standard.var}`,
+          transition: transitionOf(['background-color', 'color'], 'fast'),
           '&:hover:not([data-selected]):not([data-disabled])': {
             backgroundColor: vars.itemHoverBackground.var,
             color: vars.itemColor.var,
@@ -282,6 +283,7 @@ export const sideNav = typestyles.recipe({
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,
             fontWeight: t.fontWeight.medium.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-selected]:hover': {
             backgroundColor: vars.itemSelectedBackground.var,

@@ -2,6 +2,9 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 
 export const checkbox = typestyles.recipe({
   name: 'checkbox',
@@ -38,9 +41,7 @@ export const checkbox = typestyles.recipe({
           width: '18px',
           height: '18px',
           borderRadius: t.radius.sm.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.boxBorder.var,
+          ...border(vars.boxBorder.var),
           backgroundColor: vars.boxBackground.var,
           display: 'inline-flex',
           alignItems: 'center',
@@ -51,6 +52,7 @@ export const checkbox = typestyles.recipe({
           '&[data-selected], &[data-indeterminate]': {
             [vars.boxBackground.name]: t.color.tone.accent.background.var,
             [vars.boxBorder.name]: t.color.tone.accent.background.var,
+            ...atForcedColors(forced.selected),
           },
           ':focus-within > &': {
             ...focusRing,

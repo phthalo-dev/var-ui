@@ -49,6 +49,7 @@ describe('navigation', () => {
       '/theming/themes',
       '/theming/tokens',
       '/theming/css-variables',
+      '/theming/plain-css',
       '/theming/colors',
       '/theming/shadows',
     ]);
@@ -58,6 +59,7 @@ describe('navigation', () => {
       '/theming/themes',
       '/theming/tokens',
       '/theming/css-variables',
+      '/theming/plain-css',
       '/theming/colors',
       '/theming/shadows',
     ]);

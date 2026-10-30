@@ -1,5 +1,6 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
+import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
 
 /**
@@ -33,10 +34,8 @@ export const kbd = typestyles.recipe({
         lineHeight: t.lineHeight.normal.var,
         color: t.color.text.secondary.var,
         backgroundColor: vars.background.var,
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: vars.border.var,
-        borderBottomWidth: '2px',
+        ...border(vars.border.var),
+        borderBlockEndWidth: '2px',
         borderRadius: t.radius.sm.var,
         whiteSpace: 'nowrap',
       },

@@ -1,6 +1,10 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { borderSide } from '../internal/border';
+import { transitionOf } from '../internal/motion';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
@@ -71,14 +75,10 @@ export const tabList = typestyles.recipe({
             flex: '1 1 auto',
           },
           '&[data-has-divider][data-orientation="horizontal"]': {
-            borderBottomWidth: t.borderWidth.default.var,
-            borderBottomStyle: 'solid',
-            borderBottomColor: vars.dividerColor.var,
+            ...borderSide('block-end', vars.dividerColor.var),
           },
           '&[data-has-divider][data-orientation="vertical"]': {
-            borderInlineEndWidth: t.borderWidth.default.var,
-            borderInlineEndStyle: 'solid',
-            borderInlineEndColor: vars.dividerColor.var,
+            ...borderSide('inline-end', vars.dividerColor.var),
           },
         },
         tab: {
@@ -110,7 +110,7 @@ export const tabList = typestyles.recipe({
           },
           '&[data-disabled]': {
             color: vars.tabColor.var,
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
             pointerEvents: 'none',
           },
@@ -124,7 +124,8 @@ export const tabList = typestyles.recipe({
           borderRadius: t.radius.sm.var,
           backgroundColor: vars.indicatorColor.var,
           opacity: 0,
-          transition: `opacity ${t.duration.fast.var} ${t.easing.standard.var}`,
+          transition: transitionOf('opacity', 'fast'),
+          ...atForcedColors(forced.fill),
           '[data-selected] &': {
             opacity: 1,
           },

@@ -2,6 +2,9 @@ import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { controlSize } from '../shared/variantAxes';
 
 /**
@@ -60,12 +63,11 @@ export const colorPicker = typestyles.recipe({
           width: '100%',
           height: vars.panelHeight.var,
           borderRadius: t.radius.md.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           cursor: 'crosshair',
           touchAction: 'none',
           overflow: 'hidden',
+          ...atForcedColors(forced.swatch),
           backgroundColor: vars.hueColor.var,
           backgroundImage:
             'linear-gradient(to right, #fff, transparent), linear-gradient(to top, #000, transparent)',
@@ -80,9 +82,7 @@ export const colorPicker = typestyles.recipe({
           marginInlineStart: `calc(${vars.thumbSize.var} / -2)`,
           marginTop: `calc(${vars.thumbSize.var} / -2)`,
           borderRadius: t.radius.full.var,
-          borderWidth: t.borderWidth.thick.var,
-          borderStyle: 'solid',
-          borderColor: vars.thumbBorder.var,
+          ...border(vars.thumbBorder.var, t.borderWidth.thick.var),
           boxShadow: vars.thumbShadow.var,
           pointerEvents: 'none',
           boxSizing: 'border-box',
@@ -94,6 +94,7 @@ export const colorPicker = typestyles.recipe({
           borderRadius: t.radius.full.var,
           cursor: 'pointer',
           touchAction: 'none',
+          ...atForcedColors(forced.swatch),
           backgroundImage:
             'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)',
         },
@@ -105,9 +106,7 @@ export const colorPicker = typestyles.recipe({
           marginInlineStart: `calc(${vars.thumbSize.var} / -2)`,
           marginTop: `calc(${vars.thumbSize.var} / -2)`,
           borderRadius: t.radius.full.var,
-          borderWidth: t.borderWidth.thick.var,
-          borderStyle: 'solid',
-          borderColor: vars.thumbBorder.var,
+          ...border(vars.thumbBorder.var, t.borderWidth.thick.var),
           boxShadow: vars.thumbShadow.var,
           pointerEvents: 'none',
           boxSizing: 'border-box',
@@ -126,6 +125,7 @@ export const colorPicker = typestyles.recipe({
           backgroundSize: '8px 8px',
           backgroundPosition: '0 0, 4px 4px',
           overflow: 'hidden',
+          ...atForcedColors(forced.swatch),
         },
         alphaGradient: {
           position: 'absolute',
@@ -141,9 +141,7 @@ export const colorPicker = typestyles.recipe({
           marginInlineStart: `calc(${vars.thumbSize.var} / -2)`,
           marginTop: `calc(${vars.thumbSize.var} / -2)`,
           borderRadius: t.radius.full.var,
-          borderWidth: t.borderWidth.thick.var,
-          borderStyle: 'solid',
-          borderColor: vars.thumbBorder.var,
+          ...border(vars.thumbBorder.var, t.borderWidth.thick.var),
           boxShadow: vars.thumbShadow.var,
           pointerEvents: 'none',
           boxSizing: 'border-box',
@@ -158,13 +156,12 @@ export const colorPicker = typestyles.recipe({
           width: vars.swatchSize.var,
           height: vars.swatchSize.var,
           borderRadius: t.radius.sm.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           padding: 0,
           cursor: 'pointer',
           boxSizing: 'border-box',
           backgroundColor: vars.swatchColor.var,
+          ...atForcedColors(forced.swatch),
           '&[data-selected]': {
             outline: `2px solid ${vars.swatchSelectedRing.var}`,
             outlineOffset: '1px',
@@ -208,11 +205,10 @@ export const colorSwatch = typestyles.recipe({
           width: vars.size.var,
           height: vars.size.var,
           borderRadius: t.radius.sm.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           backgroundColor: vars.color.var,
           boxSizing: 'border-box',
+          ...atForcedColors(forced.swatch),
           '&[data-selected]': {
             outline: `2px solid ${vars.selectedRing.var}`,
             outlineOffset: '1px',

@@ -1,5 +1,6 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
+import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
 
 /**
@@ -31,9 +32,7 @@ export const inlineCode = typestyles.recipe({
         fontSize: t.fontSize.xs.var,
         color: t.color.text.secondary.var,
         backgroundColor: vars.background.var,
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: vars.border.var,
+        ...border(vars.border.var),
         borderRadius: t.radius.sm.var,
       },
     };

@@ -8,4 +8,9 @@ export const transitionTokenSchema = {
   surfaceFast: customToken,
   colorShift: customToken,
   controlSurface: customToken,
+  border: customToken,
+  borderShadow: customToken,
+  background: customToken,
+  chrome: customToken,
+  transform: customToken,
 } as const satisfies TokenSchema;

@@ -8,6 +8,7 @@ import {
   toneWithDefault,
 } from '../shared/semanticTone';
 import { controlSize, fillAppearance } from '../shared/variantAxes';
+import { atForcedColors, atReducedMotion } from '../theme/conditions';
 
 const spin = keyframes.create('var-ui-spin', {
   from: { transform: 'rotate(0deg)' },
@@ -51,9 +52,10 @@ export const spinner = typestyles.recipe({
           borderColor: vars.trackColor.var,
           borderTopColor: vars.indicatorColor.var,
           animation: `${spin} 800ms linear infinite`,
-          '@media (prefers-reduced-motion: reduce)': {
-            animationDuration: '2400ms',
-          },
+          // Slower rather than static: a frozen ring would no longer read as "loading".
+          ...atReducedMotion({ animationDuration: '2400ms' }),
+          // Forced colors replaces every border color; keep the arc distinguishable from the track.
+          ...atForcedColors({ borderColor: 'GrayText', borderTopColor: 'Highlight' }),
         },
       },
       variants: {

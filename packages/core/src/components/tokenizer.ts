@@ -1,6 +1,9 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { fieldChrome } from '../internal/fieldChrome';
 
@@ -91,9 +94,7 @@ export const tokenizer = typestyles.recipe({
           flexWrap: 'wrap',
           alignItems: 'center',
           gap: t.space[1].var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.groupBorder.var,
+          ...border(vars.groupBorder.var),
           borderRadius: t.radius.md.var,
           padding: t.space[2].var,
           backgroundColor: vars.groupBackground.var,
@@ -102,7 +103,7 @@ export const tokenizer = typestyles.recipe({
             [vars.groupBorder.name]: t.color.border.focus.var,
           },
           '&[data-disabled]': {
-            opacity: 0.6,
+            opacity: t.opacity.muted.var,
             cursor: 'not-allowed',
           },
         },
@@ -118,6 +119,7 @@ export const tokenizer = typestyles.recipe({
           backgroundColor: vars.tokenBackground.var,
           color: vars.tokenForeground.var,
           fontSize: t.fontSize.sm.var,
+          ...atForcedColors(forced.boundary),
         },
         tokenLabel: {},
         tokenRemoveButton: {
@@ -141,9 +143,7 @@ export const tokenizer = typestyles.recipe({
           color: vars.inputForeground.var,
         },
         popover: {
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.popoverBorder.var,
+          ...border(vars.popoverBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.popoverBackground.var,
           boxShadow: t.shadow.md.var,
@@ -156,6 +156,7 @@ export const tokenizer = typestyles.recipe({
           cursor: 'pointer',
           '&[data-focused]': {
             backgroundColor: vars.itemFocusedBackground.var,
+            ...atForcedColors(forced.selected),
           },
         },
       },

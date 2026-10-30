@@ -1,4 +1,6 @@
 import { designTokens as t } from '../tokens';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from './forcedColors';
 import { focusRing } from './focusRing';
 
 export type FieldChromeColors = {
@@ -90,10 +92,12 @@ export function dropdownPopoverChrome(v: DropdownPopoverVars) {
       outline: 'none',
       '&[data-focused], &[data-hovered]': {
         backgroundColor: v.itemFocusedBackground.var,
+        ...atForcedColors(forced.selected),
       },
       '&[data-selected]': {
         color: v.itemSelectedColor.var,
         fontWeight: t.fontWeight.semibold.var,
+        ...atForcedColors(forced.selected),
       },
     },
   } as const;
@@ -148,6 +152,7 @@ export function dateFieldChrome(colors: DateFieldChromeColors) {
         outline: 'none',
         backgroundColor: t.color.background.subtle.var,
         borderRadius: t.radius.sm.var,
+        ...atForcedColors(forced.selected),
       },
       '&[data-disabled]': {
         opacity: 0.6,
@@ -236,6 +241,7 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
       '&[data-selected] > *': {
         backgroundColor: colors.cellSelectedBackground,
         color: colors.cellSelectedColor,
+        ...atForcedColors(forced.selected),
       },
       '&[data-outside-month]': {
         opacity: 0.4,

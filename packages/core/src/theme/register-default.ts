@@ -9,6 +9,8 @@ type DefaultThemeTokenTree = {
   [K in keyof typeof defaultTokens]: CreateTokenValues;
 };
 
+// TypeStyles' CreateTokenValues rejects SyntaxRef leaves (declared token refs); upstream gap, see
+// audit/detail/typestyles-upstream.md. The cast is confined to these two spots.
 const defaultThemeTokens = defaultTokens as unknown as DefaultThemeTokenTree;
 
 type DefaultThemeComponents = Record<string, DesignThemeComponentPatch<DefaultThemeTokenTree>>;
@@ -55,11 +57,14 @@ function createDefaultThemeSurface(): DefaultThemeSurface {
  * Built-in default theme surface (`theme-var-ui-default`).
  * Fork child themes with `defaultTheme.override({ name, tokens, … })`.
  */
-export let defaultTheme: DefaultThemeSurface = createDefaultThemeSurface();
+export const defaultTheme: DefaultThemeSurface = createDefaultThemeSurface();
 
-/** Re-register the built-in default theme (e.g. after TypeStyles `reset()` in tests). */
+/**
+ * Re-emit the built-in default theme's CSS (e.g. after TypeStyles `reset()` in tests).
+ * `defaultTheme` itself is stable: its class name and `override()` do not depend on the emit.
+ */
 export function registerDefaultTheme(): void {
-  defaultTheme = createDefaultThemeSurface();
+  createDefaultThemeSurface();
 }
 
 export type DefaultTheme = DefaultThemeSurface;

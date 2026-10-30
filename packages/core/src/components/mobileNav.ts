@@ -2,6 +2,8 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { borderSide } from '../internal/border';
+import { transitionOf } from '../internal/motion';
 import { layerZIndex } from './layerVars';
 
 const mobileNavVarDefinitions = {
@@ -90,12 +92,10 @@ export const mobileNav = typestyles.recipe({
           backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           overflowY: 'auto',
-          transition: 'transform 200ms ease',
+          transition: transitionOf('transform', 'slow'),
           '&[data-side="start"]': {
             insetInlineStart: 0,
-            borderInlineEndWidth: t.borderWidth.default.var,
-            borderInlineEndStyle: 'solid',
-            borderInlineEndColor: vars.panelBorder.var,
+            ...borderSide('inline-end', vars.panelBorder.var),
             transform: 'translateX(0)',
             '&:not([data-open])': {
               transform: 'translateX(-100%)',
@@ -107,9 +107,7 @@ export const mobileNav = typestyles.recipe({
           },
           '&[data-side="end"]': {
             insetInlineEnd: 0,
-            borderInlineStartWidth: t.borderWidth.default.var,
-            borderInlineStartStyle: 'solid',
-            borderInlineStartColor: vars.panelBorder.var,
+            ...borderSide('inline-start', vars.panelBorder.var),
             transform: 'translateX(0)',
             '&:not([data-open])': {
               transform: 'translateX(100%)',
@@ -126,9 +124,7 @@ export const mobileNav = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space[3].var,
           padding: t.space[4].var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.panelBorder.var,
+          ...borderSide('block-end', vars.panelBorder.var),
           color: vars.headerColor.var,
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.semibold.var,

@@ -492,4 +492,4 @@ GFM does not have native admonitions. Options:
 
    Style tweaks for `blockquote > p:first-child strong` can be added in your app if you want label colors per keyword.
 
-3. **Raw HTML** — `<div data-alert …>` is not defined; use the `alert()` classes from the design system or the component wrappers above.
+3. **Raw HTML** — bare markup is not styled; use the `alert()` classes from the design system or the component wrappers above.

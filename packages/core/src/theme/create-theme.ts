@@ -2,6 +2,7 @@ import type { CreateTokenValues } from 'typestyles';
 import { registerFontFace } from '../fonts/register-font-face';
 import { typestyles } from '../runtime';
 import { designTokens } from '../tokens';
+import { REDUCED_MOTION_MODE_ID, reducedMotionMode } from './reduced-motion';
 import type { DesignTheme, DesignThemeComponentPatch, DesignThemeCreateConfig } from './types';
 
 type ThemeTokenTree = Record<string, CreateTokenValues>;
@@ -33,7 +34,10 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
     replace: replace ?? true,
     // Defaults use `designTokens.*.var` (SyntaxRef); TypeStyles theme tokens are CreateTokenValues.
     tokens: tokenOverrides,
-    modes,
+    // Every theme zeroes durations under prefers-reduced-motion unless it supplies its own mode.
+    modes: modes?.some((mode) => mode.id === REDUCED_MOTION_MODE_ID)
+      ? modes
+      : [reducedMotionMode, ...(modes ?? [])],
     components,
   } as Parameters<typeof typestyles.tokens.createTheme>[0]);
 

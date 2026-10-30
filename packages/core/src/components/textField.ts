@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { fieldChrome } from '../internal/fieldChrome';
@@ -57,9 +58,7 @@ export const textField = typestyles.recipe({
         description: chrome.description,
         error: chrome.error,
         input: {
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,

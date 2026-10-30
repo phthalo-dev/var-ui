@@ -3,6 +3,8 @@ import { breakpoint, typestyles } from '../runtime';
 import { atDarkMode } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border, borderSide } from '../internal/border';
+import { transitionOf } from '../internal/motion';
 
 /** Mobile prose density — uses TypeStyles breakpoint map from `runtime.ts`. */
 const belowMd = breakpoint('md', 'max');
@@ -151,10 +153,10 @@ export const proseContent = typestyles.recipe({
           },
           '& ul, & ol': {
             marginBottom: t.space[3].var,
-            paddingLeft: t.space[4].var,
+            paddingInlineStart: t.space[4].var,
             [belowMd]: {
               marginBottom: t.space[2].var,
-              paddingLeft: t.space[3].var,
+              paddingInlineStart: t.space[3].var,
             },
           },
           '& li': {
@@ -220,9 +222,7 @@ export const proseContent = typestyles.recipe({
             backgroundColor: vars.preBackground.var,
             padding: t.space[3].var,
             borderRadius: t.radius.md.var,
-            borderWidth: t.borderWidth.default.var,
-            borderStyle: 'solid',
-            borderColor: vars.preBorder.var,
+            ...border(vars.preBorder.var),
             overflow: 'auto',
             marginBottom: t.space[3].var,
             [belowMd]: {
@@ -264,9 +264,7 @@ export const proseContent = typestyles.recipe({
           '& blockquote': {
             margin: `${t.space[5].var} 0`,
             padding: `${t.space[4].var} ${t.space[5].var}`,
-            borderWidth: t.borderWidth.default.var,
-            borderStyle: 'solid',
-            borderColor: vars.blockquoteBorder.var,
+            ...border(vars.blockquoteBorder.var),
             backgroundColor: vars.blockquoteBackground.var,
             boxShadow: t.shadow.sm.var,
             color: vars.foreground.var,
@@ -288,9 +286,7 @@ export const proseContent = typestyles.recipe({
             fontWeight: t.fontWeight.medium.var,
             padding: `2px ${t.space[2].var}`,
             borderRadius: t.radius.sm.var,
-            borderWidth: t.borderWidth.default.var,
-            borderStyle: 'solid',
-            borderColor: t.color.border.strong.var,
+            ...border(t.color.border.strong.var),
             backgroundColor: t.color.background.surface.var,
             boxShadow: `0 1px 0 ${t.color.border.default.var}`,
             whiteSpace: 'nowrap',
@@ -304,9 +300,7 @@ export const proseContent = typestyles.recipe({
             lineHeight: 1.2,
             padding: `2px ${t.space[2].var}`,
             borderRadius: t.radius.full.var,
-            borderWidth: t.borderWidth.default.var,
-            borderStyle: 'solid',
-            borderColor: t.color.border.default.var,
+            ...border(),
             backgroundColor: t.color.background.subtle.var,
             color: t.color.text.primary.var,
             verticalAlign: '0.08em',
@@ -332,12 +326,9 @@ export const proseContent = typestyles.recipe({
             color: `color-mix(in srgb, ${t.color.tone.accent.foreground.var} 75%, ${t.color.text.primary.var})`,
           },
           '& hr': {
-            borderTopWidth: t.borderWidth.default.var,
-            borderTopStyle: 'solid',
-            borderTopColor: t.color.border.default.var,
-            borderRight: 'none',
+            ...borderSide('block-start'),
             borderBottom: 'none',
-            borderLeft: 'none',
+            borderInline: 'none',
             margin: `${t.space[5].var} 0`,
             [belowMd]: {
               margin: `${t.space[4].var} 0`,
@@ -348,22 +339,16 @@ export const proseContent = typestyles.recipe({
             borderCollapse: 'collapse',
             marginBlock: `${t.space[4].var} ${t.space[5].var}`,
             fontSize: t.fontSize.sm.var,
-            borderWidth: t.borderWidth.default.var,
-            borderStyle: 'solid',
-            borderColor: vars.tableBorder.var,
+            ...border(vars.tableBorder.var),
           },
           '& thead': {
             backgroundColor: vars.tableHeaderBackground.var,
-            borderBottomWidth: t.borderWidth.thick.var,
-            borderBottomStyle: 'solid',
-            borderBottomColor: vars.tableBorder.var,
+            ...borderSide('block-end', vars.tableBorder.var, t.borderWidth.thick.var),
           },
           '& th, & td': {
-            textAlign: 'left',
+            textAlign: 'start',
             padding: `${t.space[2].var} ${t.space[3].var}`,
-            borderBottomWidth: t.borderWidth.default.var,
-            borderBottomStyle: 'solid',
-            borderBottomColor: vars.tableCellBorder.var,
+            ...borderSide('block-end', vars.tableCellBorder.var),
             verticalAlign: 'top',
           },
           '& th': {
@@ -382,15 +367,15 @@ export const proseContent = typestyles.recipe({
             paddingTop: t.space[2].var,
             fontSize: t.fontSize.sm.var,
             color: t.color.text.secondary.var,
-            textAlign: 'left',
+            textAlign: 'start',
           },
           '& [data-prose-heading-anchor]': {
-            marginLeft: t.space[2].var,
+            marginInlineStart: t.space[2].var,
             fontWeight: t.fontWeight.medium.var,
             color: t.color.text.secondary.var,
             textDecoration: 'none',
             opacity: 0,
-            transition: `opacity var(--duration-medium) var(--easing-standard), color var(--duration-medium) var(--easing-standard)`,
+            transition: transitionOf(['opacity', 'color']),
           },
           '& [data-prose-heading-anchor]::before': {
             content: '"#"',

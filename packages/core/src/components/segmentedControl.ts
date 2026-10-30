@@ -1,10 +1,10 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
-import { atDarkMode, atReducedMotion } from '../theme/conditions';
-import { duration } from '../tokens/defaults/duration';
-import { easing } from '../tokens/defaults/easing';
+import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { forced } from '../internal/forcedColors';
+import { transitionOf } from '../internal/motion';
 import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize';
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 
@@ -79,6 +79,7 @@ export const segmentedControl = typestyles.recipe({
           border: 'none',
           backgroundColor: vars.trackBackground.var,
           isolation: 'isolate',
+          ...atForcedColors(forced.boundary),
           ...atDarkMode({
             '&::after': {
               boxShadow: 'none',
@@ -96,14 +97,13 @@ export const segmentedControl = typestyles.recipe({
             boxShadow: t.shadow.xs.var,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
-            zIndex: 0,
+            zIndex: t.zIndex.base.var,
             transform: `translateX(${vars.indicatorX.var})`,
-            transition: `transform ${duration.medium} ${easing.emphasized}, width ${duration.medium} ${easing.emphasized}, opacity ${duration.fast} ${easing.standard}`,
-            ...atReducedMotion({ transition: 'none' }),
+            transition: `${transitionOf(['transform', 'width'], 'medium', 'emphasized')}, ${transitionOf('opacity', 'fast')}`,
           },
           '& > *': {
             position: 'relative',
-            zIndex: 1,
+            zIndex: t.zIndex.raised.var,
             flex: '1 1 auto',
             border: 'none',
             borderRadius: t.radius.lg.var,
@@ -111,7 +111,7 @@ export const segmentedControl = typestyles.recipe({
             color: vars.segmentColor.var,
             fontWeight: t.fontWeight.normal.var,
             boxShadow: 'none',
-            transition: `color ${duration.fast} ${easing.standard}, font-weight ${duration.fast} ${easing.standard}`,
+            transition: transitionOf(['color', 'font-weight'], 'fast'),
             '&:hover': {
               backgroundColor: 'transparent',
               borderColor: 'transparent',
@@ -125,6 +125,7 @@ export const segmentedControl = typestyles.recipe({
               backgroundColor: 'transparent',
               borderColor: 'transparent',
               boxShadow: 'none',
+              ...atForcedColors(forced.selected),
               '&:hover': {
                 backgroundColor: 'transparent',
                 borderColor: 'transparent',

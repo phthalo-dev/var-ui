@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { dropdownPopoverChrome, fieldChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -100,12 +101,10 @@ export const combobox = typestyles.recipe({
           gap: t.space[2].var,
           width: '100%',
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.inputBackground.var,
-          transition: 'border-color 140ms ease',
+          transition: t.transition.border.var,
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },

@@ -1,6 +1,9 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { borderSide, border } from '../internal/border';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
@@ -120,9 +123,7 @@ export const topNav = typestyles.recipe({
           paddingBlock: 0,
           paddingInline: t.space[4].var,
           backgroundColor: vars.background.var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.border.var,
+          ...borderSide('block-end', vars.border.var),
           boxShadow: t.shadow.sm.var,
           '&[data-layout="grid"]': {
             display: 'grid',
@@ -200,10 +201,11 @@ export const topNav = typestyles.recipe({
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,
             fontWeight: t.fontWeight.medium.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': {
             color: vars.itemColor.var,
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
             pointerEvents: 'none',
           },
@@ -228,7 +230,7 @@ export const topNav = typestyles.recipe({
             ...focusRing,
           },
           '&[data-disabled]': {
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
             pointerEvents: 'none',
           },
@@ -252,19 +254,17 @@ export const topNav = typestyles.recipe({
         megaPanel: {
           position: 'absolute',
           top: '100%',
-          left: 0,
-          right: 0,
+          insetInlineStart: 0,
+          insetInlineEnd: 0,
           display: 'grid',
           gridTemplateColumns: '1fr auto',
           gap: t.space[6].var,
           paddingBlock: t.space[6].var,
           paddingInline: t.space[6].var,
           backgroundColor: vars.megaPanelBackground.var,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.megaPanelBorder.var,
+          ...borderSide('block-end', vars.megaPanelBorder.var),
           boxShadow: t.shadow.md.var,
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
         },
         megaItems: {
           display: 'grid',
@@ -288,7 +288,7 @@ export const topNav = typestyles.recipe({
             ...focusRing,
           },
           '&[data-disabled]': {
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
             pointerEvents: 'none',
           },
@@ -300,9 +300,7 @@ export const topNav = typestyles.recipe({
           padding: t.space[4].var,
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.featuredCardBackground.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.featuredCardBorder.var,
+          ...border(vars.featuredCardBorder.var),
           minWidth: '16rem',
           textDecoration: 'none',
           color: 'inherit',

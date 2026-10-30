@@ -93,13 +93,13 @@ export const fileInput = typestyles.recipe({
           backgroundColor: vars.dropzoneBackground.var,
           cursor: 'pointer',
           textAlign: 'center',
-          transition: 'background-color 140ms ease, border-color 140ms ease',
+          transition: t.transition.controlSurface.var,
           '&[data-drag-over]': {
             [vars.dropzoneBorder.name]: t.color.tone.accent.foreground.var,
             [vars.dropzoneBackground.name]: t.color.tone.accent.subtleBackground.var,
           },
           '&[data-disabled]': {
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
             cursor: 'not-allowed',
           },
           '&:focus-visible': {

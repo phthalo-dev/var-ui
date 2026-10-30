@@ -25,7 +25,7 @@ describe('icon wire-up', () => {
         </Alert>
       </IconProvider>,
     );
-    expect(container.querySelector('[data-alert-icon]')).toBeNull();
+    expect(container.querySelector('.var-ui-alert__icon')).toBeNull();
   });
 
   it('Select trigger renders the chevronDown glyph', () => {

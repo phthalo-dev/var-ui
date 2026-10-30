@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { fieldChrome } from '../internal/fieldChrome';
 
@@ -47,9 +48,7 @@ export const textAreaField = typestyles.recipe({
           error: vars.errorColor.var,
         }),
         input: {
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
           padding: `${t.space[2].var} ${t.space[3].var}`,
           fontSize: t.fontSize.md.var,

@@ -1,6 +1,7 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { fieldChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
@@ -73,19 +74,17 @@ export const passwordField = typestyles.recipe({
           alignItems: 'center',
           gap: t.space[1].var,
           boxSizing: 'border-box',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.inputBorder.var,
+          ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
-          transition: 'border-color 140ms ease',
+          transition: t.transition.border.var,
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },
           '&:focus-within': focusRing,
           '&[data-disabled]': {
-            opacity: 0.6,
+            opacity: t.opacity.muted.var,
             cursor: 'not-allowed',
           },
         },
@@ -128,7 +127,7 @@ export const passwordField = typestyles.recipe({
           },
           '&:disabled': {
             cursor: 'not-allowed',
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
           },
         },
       },

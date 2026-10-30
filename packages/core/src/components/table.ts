@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { borderSide } from '../internal/border';
 import { density } from '../shared/variantAxes';
 
 const tableDividers = variant.enum(['rows', 'columns', 'grid', 'none'], { default: 'rows' });
@@ -71,35 +72,19 @@ export const table = typestyles.recipe({
   },
   styles: ({ vars }) => {
     const rowDivider = {
-      header: {
-        borderBottomWidth: t.borderWidth.default.var,
-        borderBottomStyle: 'solid',
-        borderBottomColor: vars.borderColor.var,
-      },
-      row: {
-        borderBottomWidth: t.borderWidth.default.var,
-        borderBottomStyle: 'solid',
-        borderBottomColor: vars.borderColor.var,
-      },
-      footer: {
-        borderTopWidth: t.borderWidth.default.var,
-        borderTopStyle: 'solid',
-        borderTopColor: vars.borderColor.var,
-      },
+      header: borderSide('block-end', vars.borderColor.var),
+      row: borderSide('block-end', vars.borderColor.var),
+      footer: borderSide('block-start', vars.borderColor.var),
     };
     const columnDivider = {
       headerCell: {
         '&:not(:last-child)': {
-          borderRightWidth: t.borderWidth.default.var,
-          borderRightStyle: 'solid',
-          borderRightColor: vars.borderColor.var,
+          ...borderSide('inline-end', vars.borderColor.var),
         },
       },
       cell: {
         '&:not(:last-child)': {
-          borderRightWidth: t.borderWidth.default.var,
-          borderRightStyle: 'solid',
-          borderRightColor: vars.borderColor.var,
+          ...borderSide('inline-end', vars.borderColor.var),
         },
       },
     };
@@ -118,7 +103,7 @@ export const table = typestyles.recipe({
         },
         caption: {
           captionSide: 'top',
-          textAlign: 'left',
+          textAlign: 'start',
           padding: `${t.space[2].var} ${vars.cellPaddingX.var}`,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
@@ -128,24 +113,25 @@ export const table = typestyles.recipe({
         headerCell: {
           width: vars.columnWidth.var,
           position: 'relative',
-          textAlign: 'left',
+          textAlign: 'start',
           fontWeight: t.fontWeight.semibold.var,
           fontSize: t.fontSize.sm.var,
           color: vars.headerColor.var,
           backgroundColor: vars.headerBg.var,
           padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
           '&[data-align="center"]': { textAlign: 'center' },
-          '&[data-align="end"]': { textAlign: 'right' },
+          '&[data-align="end"]': { textAlign: 'end' },
         },
         resizeHandle: {
           position: 'absolute',
           top: 0,
-          right: 0,
+          insetInlineEnd: 0,
           bottom: 0,
           display: 'flex',
           alignItems: 'stretch',
           transform: 'translateX(50%)',
-          zIndex: 2,
+          '[dir="rtl"] &': { transform: 'translateX(-50%)' },
+          zIndex: t.zIndex.lifted.var,
         },
         body: {},
         row: {},
@@ -153,7 +139,7 @@ export const table = typestyles.recipe({
           padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
           color: vars.bodyColor.var,
           '&[data-align="center"]': { textAlign: 'center' },
-          '&[data-align="end"]': { textAlign: 'right' },
+          '&[data-align="end"]': { textAlign: 'end' },
         },
         footer: {
           fontWeight: t.fontWeight.medium.var,
@@ -223,7 +209,7 @@ export const table = typestyles.recipe({
             headerCell: {
               position: 'sticky',
               top: 0,
-              zIndex: 1,
+              zIndex: t.zIndex.raised.var,
               backgroundColor: vars.headerBg.var,
             },
           },

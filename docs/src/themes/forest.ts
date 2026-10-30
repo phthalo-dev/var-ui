@@ -33,11 +33,6 @@ const forestFlatShadow = {
   md: forestSpreadShadow(6),
   lg: forestSpreadShadow(8),
   xl: forestSpreadShadow(10),
-  elevation: {
-    low: forestSpreadShadow(2),
-    med: forestSpreadShadow(4),
-    high: forestSpreadShadow(6),
-  },
 } satisfies DesignTokens['shadow'];
 
 const newsreaderNormalFace = {

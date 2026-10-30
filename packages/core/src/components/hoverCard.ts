@@ -1,5 +1,6 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
+import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
 import { overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
@@ -37,9 +38,7 @@ export const hoverCard = typestyles.recipe({
       base: {
         root: {
           ...overlayPresenceStyles({ scale: true }),
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.background.var,
           boxShadow: t.shadow.md.var,

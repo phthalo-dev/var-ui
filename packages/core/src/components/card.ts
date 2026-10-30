@@ -2,6 +2,7 @@ import { atProperty } from 'typestyles';
 import { media, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
 
 export const card = typestyles.recipe({
   name: 'card',
@@ -38,11 +39,9 @@ export const card = typestyles.recipe({
           gap: t.space[2].var,
           padding: t.space[4].var,
           borderRadius: t.radius.md.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           backgroundColor: vars.background.var,
-          transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+          transition: t.transition.borderShadow.var,
         },
         title: {
           margin: 0,

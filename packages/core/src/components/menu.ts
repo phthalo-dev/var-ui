@@ -1,5 +1,8 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { overlayPresenceStyles } from '../shared/overlayMotion';
 import { layerZIndex } from './layerVars';
@@ -84,9 +87,9 @@ export const menu = typestyles.recipe({
       origin: 'top left' | 'top right' | 'bottom left' | 'bottom right',
       edge: {
         top?: string;
-        right?: 0;
+        insetInlineEnd?: 0;
         bottom?: string;
-        left?: 0;
+        insetInlineStart?: 0;
       },
     ) => ({
       position: 'absolute' as const,
@@ -117,9 +120,7 @@ export const menu = typestyles.recipe({
         popover: {
           ...overlayPresenceStyles({ scale: true }),
           ...layerZIndex(t.zIndex.dropdown.var),
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.popoverBorder.var,
+          ...border(vars.popoverBorder.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.popoverBackground.var,
           boxShadow: t.shadow.md.var,
@@ -130,19 +131,19 @@ export const menu = typestyles.recipe({
           // React Aria positions the popover inline and never sets it.
           '&[data-placement="bottom-start"]': anchoredPopover('top left', {
             top: anchorGap,
-            left: 0,
+            insetInlineStart: 0,
           }),
           '&[data-placement="bottom-end"]': anchoredPopover('top right', {
             top: anchorGap,
-            right: 0,
+            insetInlineEnd: 0,
           }),
           '&[data-placement="top-start"]': anchoredPopover('bottom left', {
             bottom: anchorGap,
-            left: 0,
+            insetInlineStart: 0,
           }),
           '&[data-placement="top-end"]': anchoredPopover('bottom right', {
             bottom: anchorGap,
-            right: 0,
+            insetInlineEnd: 0,
           }),
         },
         menu: {
@@ -182,10 +183,12 @@ export const menu = typestyles.recipe({
           outline: 'none',
           '&[data-focused]': {
             backgroundColor: vars.itemFocusedBackground.var,
+            ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': {
             color: vars.itemDisabledForeground.var,
             cursor: 'not-allowed',
+            ...atForcedColors(forced.disabled),
           },
           // Radio-item check reveal (Astro renders the attr; hidden via
           // `visibility` so checked and unchecked rows stay aligned).
@@ -219,11 +222,13 @@ export const menu = typestyles.recipe({
           borderRadius: t.radius.full.var,
           flexShrink: 0,
           boxShadow: `inset 0 0 0 1px ${t.color.border.default.var}`,
+          ...atForcedColors(forced.swatch),
         },
         separator: {
           height: '1px',
           margin: `${t.space[1].var} 0`,
           backgroundColor: vars.separatorColor.var,
+          ...atForcedColors({ backgroundColor: 'CanvasText' }),
         },
         submenuChevron: {
           display: 'inline-flex',

@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants, variant, type VariantOptions } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 
 const accordionPane = variant.enum(['flush', 'bordered'], { default: 'bordered' });
 
@@ -31,9 +32,7 @@ export const accordionGroup = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           borderRadius: t.radius.md.var,
           backgroundColor: vars.background.var,
           overflow: 'hidden',

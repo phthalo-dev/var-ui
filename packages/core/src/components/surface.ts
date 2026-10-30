@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 
 const surfacePadding = variant.enum(['sm', 'md'], { default: 'md' });
 
@@ -27,9 +28,7 @@ export const surface = typestyles.recipe({
     return {
       base: {
         backgroundColor: t.color.background.surface.var,
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: t.color.border.default.var,
+        ...border(),
         borderRadius: t.radius.md.var,
         padding: vars.padding.var,
       },

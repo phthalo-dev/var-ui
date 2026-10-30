@@ -2,6 +2,8 @@ import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
 import { sender } from '../../shared/variantAxes';
+import { forced } from '../../internal/forcedColors';
+import { atForcedColors } from '../../theme/conditions';
 
 const bubbleVariant = variant.enum(['filled', 'ghost'], { default: 'filled' });
 const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
@@ -72,7 +74,7 @@ export const chatMessageBubble = typestyles.recipe({
           },
         },
         variant: {
-          filled: { root: {} },
+          filled: { root: { ...atForcedColors(forced.boundary) } },
           ghost: {
             root: {
               backgroundColor: 'transparent',

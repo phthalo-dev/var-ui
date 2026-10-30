@@ -28,20 +28,17 @@ const hasIcon = Astro.slots.has('icon');
 <div
   {...rest}
   {...mergeProps(a.root, className)}
-  data-alert
-  data-alert-tone={tone}
-  data-alert-appearance={appearance}
 >
   {
     hasIcon ? (
-      <div {...mergeProps(a.icon)} data-alert-icon>
+      <div {...mergeProps(a.icon)}>
         <slot name="icon" />
       </div>
     ) : null
   }
   <div {...mergeProps(a.body)}>
     {title ? <p {...mergeProps(a.title)}>{title}</p> : null}
-    <div {...mergeProps(a.content)} data-alert-content>
+    <div {...mergeProps(a.content)}>
       <slot />
     </div>
     {

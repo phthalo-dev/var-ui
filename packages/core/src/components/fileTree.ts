@@ -1,5 +1,6 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
+import { border, borderSide } from '../internal/border';
 import { designTokens as t } from '../tokens';
 
 export const fileTree = typestyles.recipe({
@@ -47,9 +48,7 @@ export const fileTree = typestyles.recipe({
           margin: `${t.space[3].var} 0`,
           padding: t.space[3].var,
           borderRadius: t.radius.md.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.rootBorder.var,
+          ...border(vars.rootBorder.var),
           backgroundColor: vars.rootBackground.var,
           overflowX: 'auto',
         },
@@ -66,16 +65,14 @@ export const fileTree = typestyles.recipe({
         listNested: {
           listStyle: 'none',
           marginTop: t.space[1].var,
-          marginRight: 0,
+          marginInlineEnd: 0,
           marginBottom: 0,
-          marginLeft: 0,
+          marginInlineStart: 0,
           paddingTop: 0,
-          paddingRight: 0,
+          paddingInlineEnd: 0,
           paddingBottom: 0,
-          paddingLeft: t.space[4].var,
-          borderLeftWidth: t.borderWidth.default.var,
-          borderLeftStyle: 'solid',
-          borderLeftColor: vars.nestedBorder.var,
+          paddingInlineStart: t.space[4].var,
+          ...borderSide('inline-start', vars.nestedBorder.var),
         },
         row: {
           display: 'block',

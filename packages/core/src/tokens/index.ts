@@ -24,7 +24,6 @@ export {
 export { tokens as designTokens } from './declare';
 export { tokenValues } from './preset';
 export { darkSyntaxValues, lightSyntaxValues, type SyntaxFaceValues } from './defaults/color';
-export { shadowElevationValues } from './defaults/shadow';
 export { generateColors } from './generate-colors';
 export {
   createToneFace,

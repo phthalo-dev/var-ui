@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vite-plus/test';
 import { formatCssVarName, getShadowSwatches, groupShadowSwatches } from './shadow-tokens';
 
 describe('shadow-tokens', () => {
-  it('builds swatches for box and elevation shadows', () => {
+  it('builds swatches for the shadow scale', () => {
     const swatches = getShadowSwatches();
-    expect(swatches).toHaveLength(8);
+    expect(swatches).toHaveLength(5);
 
     const md = swatches.find((swatch) => swatch.token === 'shadow.md');
     expect(md).toMatchObject({
@@ -14,11 +14,9 @@ describe('shadow-tokens', () => {
     expect(md?.defaultValue).toContain('2px 4px 4px');
   });
 
-  it('groups swatches by box and elevation', () => {
+  it('groups swatches under box', () => {
     const groups = groupShadowSwatches(getShadowSwatches());
     expect(groups.get('box')).toHaveLength(5);
-    expect(groups.get('elevation')).toHaveLength(3);
-    expect(groups.get('elevation')?.[0]?.token).toBe('shadow.elevation.low');
   });
 
   it('formats css var names for display', () => {

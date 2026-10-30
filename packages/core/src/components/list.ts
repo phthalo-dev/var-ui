@@ -1,5 +1,6 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
+import { borderSide } from '../internal/border';
 import { designTokens as t } from '../tokens';
 import { density } from '../shared/variantAxes';
 
@@ -71,8 +72,11 @@ export const list = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: vars.root.var,
-          '&[data-list-style="disc"]': { listStyle: 'disc', paddingLeft: t.space[5].var },
-          '&[data-list-style="decimal"]': { listStyle: 'decimal', paddingLeft: t.space[5].var },
+          '&[data-list-style="disc"]': { listStyle: 'disc', paddingInlineStart: t.space[5].var },
+          '&[data-list-style="decimal"]': {
+            listStyle: 'decimal',
+            paddingInlineStart: t.space[5].var,
+          },
         },
         header: {
           fontSize: t.fontSize.sm.var,
@@ -92,9 +96,7 @@ export const list = typestyles.recipe({
           '&[data-interactive]:active': { backgroundColor: vars.pressBg.var },
           '&[data-disabled]': { opacity: t.opacity.disabled.var, pointerEvents: 'none' },
           '[data-has-dividers] >&:not(:last-child)': {
-            borderBottomWidth: t.borderWidth.default.var,
-            borderBottomStyle: 'solid',
-            borderBottomColor: vars.dividerColor.var,
+            ...borderSide('block-end', vars.dividerColor.var),
           },
         },
         label: {
@@ -115,12 +117,12 @@ export const list = typestyles.recipe({
           whiteSpace: 'nowrap',
         },
         start: { display: 'flex', flexShrink: 0, alignItems: 'center' },
-        end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginLeft: 'auto' },
+        end: { display: 'flex', flexShrink: 0, alignItems: 'center', marginInlineStart: 'auto' },
         divider: { display: 'none' },
         overlayLink: {
           position: 'absolute',
           inset: 0,
-          zIndex: 1,
+          zIndex: t.zIndex.raised.var,
           margin: 0,
           padding: 0,
           border: 'none',

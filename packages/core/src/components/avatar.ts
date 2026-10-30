@@ -2,6 +2,9 @@ import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { size } from '../shared/variantAxes';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 
 /**
  * Identity avatar: image with initials fallback and an optional status well
@@ -60,13 +63,12 @@ export const avatar = typestyles.recipe({
         },
         status: {
           position: 'absolute',
-          right: '-1px',
+          insetInlineEnd: '-1px',
           bottom: '-1px',
           display: 'inline-flex',
           borderRadius: '50%',
-          borderWidth: t.borderWidth.thick.var,
-          borderStyle: 'solid',
-          borderColor: t.color.background.surface.var,
+          ...border(t.color.background.surface.var, t.borderWidth.thick.var),
+          ...atForcedColors(forced.swatch),
         },
       },
       variants: {
@@ -108,13 +110,13 @@ export const avatarGroup = typestyles.recipe({
       base: {
         root: { display: 'inline-flex', alignItems: 'center' },
         item: {
-          marginLeft: `calc(${t.space[2].var} * -1)`,
+          marginInlineStart: `calc(${t.space[2].var} * -1)`,
           borderRadius: '50%',
           boxShadow: `0 0 0 2px ${vars.ringColor.var}`,
-          '&:first-child': { marginLeft: 0 },
+          '&:first-child': { marginInlineStart: 0 },
         },
         overflow: {
-          marginLeft: `calc(${t.space[2].var} * -1)`,
+          marginInlineStart: `calc(${t.space[2].var} * -1)`,
           display: 'grid',
           placeItems: 'center',
           minWidth: '32px',

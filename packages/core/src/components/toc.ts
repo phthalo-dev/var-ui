@@ -1,15 +1,14 @@
 import { atProperty } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
-import { atReducedMotion } from '../theme/conditions';
-import { duration } from '../tokens/defaults/duration';
-import { easing } from '../tokens/defaults/easing';
-import { transition } from '../tokens/defaults/transition';
+import { atForcedColors } from '../theme/conditions';
+import { forced } from '../internal/forcedColors';
+import { transitionOf } from '../internal/motion';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space[3].var;
 const nestedIndent = t.space[2].var;
-const indicatorTransition = `transform ${duration.medium} ${easing.standard}, height ${duration.fast} ${easing.standard}, opacity ${duration.fast} ${easing.standard}`;
+const indicatorTransition = `${transitionOf('transform')}, ${transitionOf(['height', 'opacity'], 'fast')}`;
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const tocVarDefinitions = {
@@ -85,7 +84,9 @@ export const toc = typestyles.recipe({
         root: {
           position: 'sticky',
           top: vars.stickyTop.var,
-          padding: `${t.space[6].var} ${t.space[5].var} ${t.space[8].var} ${t.space[4].var}`,
+          paddingBlock: `${t.space[6].var} ${t.space[8].var}`,
+          paddingInlineStart: t.space[4].var,
+          paddingInlineEnd: t.space[5].var,
           maxHeight: `calc(100dvh - ${vars.stickyTop.var} - ${vars.stickyMaxHeightOffset.var})`,
           overflow: 'auto',
           [belowXl]: {
@@ -119,6 +120,7 @@ export const toc = typestyles.recipe({
             borderRadius: vars.railRadius.var,
             backgroundColor: vars.railColor.var,
             pointerEvents: 'none',
+            ...atForcedColors({ backgroundColor: 'GrayText' }),
           },
           '&::after': {
             content: '""',
@@ -131,10 +133,10 @@ export const toc = typestyles.recipe({
             backgroundColor: vars.linkSelectedIndicator.var,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
-            zIndex: 1,
+            zIndex: t.zIndex.raised.var,
             transform: `translateY(${vars.indicatorY.var})`,
             transition: indicatorTransition,
-            ...atReducedMotion({ transition: 'none' }),
+            ...atForcedColors(forced.fill),
           },
         },
         item: {
@@ -150,7 +152,7 @@ export const toc = typestyles.recipe({
           fontWeight: t.fontWeight.normal.var,
           color: vars.linkColor.var,
           textDecoration: 'none',
-          transition: transition.colorShift,
+          transition: t.transition.colorShift.var,
           '&:hover': {
             color: vars.linkHoverColor.var,
           },

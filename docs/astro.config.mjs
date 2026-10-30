@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import netlify from '@astrojs/netlify';
 import react from '@astrojs/react';
@@ -6,6 +7,7 @@ import varDocs from '@var-ui/docs';
 import componentDocsPlugin from '@var-ui/docs-components';
 import { defineConfig } from 'astro/config';
 import { writeComponentProps } from './src/lib/extract-component-props.ts';
+import { writeStylingHooks } from './src/lib/extract-styling-hooks.ts';
 import { homepagePreloadPlugin } from './src/lib/homepage-preload-plugin.ts';
 import { rolldownJsxOptionsCompat } from './src/lib/rolldown-jsx-options.ts';
 import { docsThemePresets } from './src/themes/presets.ts';
@@ -48,7 +50,11 @@ export default defineConfig({
     }),
     componentDocsPlugin({
       extractProps: {
-        write: writeComponentProps,
+        // Props and plain-CSS styling hooks (`src/generated/styling`) regenerate together.
+        write: async (outputDir) => {
+          writeComponentProps(outputDir);
+          await writeStylingHooks(path.resolve(outputDir, '../styling'));
+        },
         outputDir: 'src/generated/props',
         watch: ['../packages/react/src'],
       },

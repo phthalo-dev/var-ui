@@ -1,12 +1,12 @@
 ---
 title: Shadows
-description: Box-shadow and elevation tokens in var-ui.
+description: Box-shadow tokens in var-ui.
 wide: true
 ---
 
 # Shadows
 
-var-ui ships layered **box-shadow** tokens and a softer **elevation** scale. Each token stacks
+var-ui ships a single layered **box-shadow** scale (`xs` to `xl`). Each token stacks
 multiple shadows with a consistent top-left light source (vertical offset is 2× horizontal).
 Shadows tint from primary text color via `color-mix`, so they stay legible in both light and
 dark mode without separate dark overrides.
@@ -21,7 +21,7 @@ Import token refs from core:
 import { designTokens } from '@var-ui/core';
 
 designTokens.shadow.md.var; // var(--var-ui-shadow-md)
-designTokens.shadow.elevation.low.var; // var(--var-ui-shadow-elevation-low)
+designTokens.shadow.xs.var; // var(--var-ui-shadow-xs)
 ```
 
 Use them directly as `box-shadow` values in recipes or plain CSS:
@@ -32,7 +32,7 @@ Use them directly as `box-shadow` values in recipes or plain CSS:
 }
 
 .floating-panel {
-  box-shadow: var(--var-ui-shadow-elevation-high);
+  box-shadow: var(--var-ui-shadow-lg);
 }
 ```
 

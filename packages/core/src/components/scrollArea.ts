@@ -7,6 +7,7 @@ import {
 } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { atReducedMotion } from '../theme/conditions';
 
 const scrollFadeIn = keyframes.create('var-ui-scroll-fade-in', {
   from: { opacity: '0' },
@@ -71,10 +72,10 @@ export const scrollArea = typestyles.recipe({
       animationDuration: '1ms',
       animationFillMode: 'both' as const,
       animationTimeline: 'scroll(nearest)',
-      '@media (prefers-reduced-motion: reduce)': {
+      ...atReducedMotion({
         animation: 'none',
         opacity: 0,
-      },
+      }),
     };
     const verticalFadeStart = {
       position: 'sticky' as const,
@@ -85,7 +86,7 @@ export const scrollArea = typestyles.recipe({
       height: vars.fadeSize.var,
       marginBlockEnd: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
-      zIndex: 1,
+      zIndex: t.zIndex.raised.var,
       opacity: 0,
       backgroundImage: `linear-gradient(to bottom, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
@@ -102,7 +103,7 @@ export const scrollArea = typestyles.recipe({
       height: vars.fadeSize.var,
       marginBlockStart: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
-      zIndex: 1,
+      zIndex: t.zIndex.raised.var,
       opacity: 0,
       backgroundImage: `linear-gradient(to top, ${vars.fadeColor.var}, transparent)`,
       ...fadeAnimationBase,
@@ -119,9 +120,12 @@ export const scrollArea = typestyles.recipe({
       minHeight: '100%',
       marginInlineEnd: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
-      zIndex: 1,
+      zIndex: t.zIndex.raised.var,
       opacity: 0,
       backgroundImage: `linear-gradient(to right, ${vars.fadeColor.var}, transparent)`,
+      '[dir="rtl"] &': {
+        backgroundImage: `linear-gradient(to left, ${vars.fadeColor.var}, transparent)`,
+      },
       ...fadeAnimationBase,
       animationName: scrollFadeIn,
       animationTimeline: 'scroll(nearest inline)',
@@ -136,9 +140,12 @@ export const scrollArea = typestyles.recipe({
       minHeight: '100%',
       marginInlineStart: `calc(-1 * ${vars.fadeSize.var})`,
       pointerEvents: 'none' as const,
-      zIndex: 1,
+      zIndex: t.zIndex.raised.var,
       opacity: 0,
       backgroundImage: `linear-gradient(to left, ${vars.fadeColor.var}, transparent)`,
+      '[dir="rtl"] &': {
+        backgroundImage: `linear-gradient(to right, ${vars.fadeColor.var}, transparent)`,
+      },
       ...fadeAnimationBase,
       animationName: scrollFadeOut,
       animationTimeline: 'scroll(nearest inline)',

@@ -1,6 +1,8 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
@@ -78,17 +80,19 @@ export const pagination = typestyles.recipe({
           borderRadius: '50%',
           backgroundColor: vars.dotColor.var,
           cursor: 'pointer',
-          transition: `background-color ${t.duration.fast.var} ${t.easing.standard.var}`,
+          transition: t.transition.surfaceFast.var,
+          ...atForcedColors(forced.track),
           '&:focus-visible': {
             ...focusRing,
           },
           '&:disabled': {
             cursor: 'not-allowed',
-            opacity: 0.5,
+            opacity: t.opacity.disabled.var,
           },
         },
         dotActive: {
           backgroundColor: t.color.tone.accent.background.var,
+          ...atForcedColors(forced.fill),
         },
         pageSizeGroup: {
           display: 'flex',

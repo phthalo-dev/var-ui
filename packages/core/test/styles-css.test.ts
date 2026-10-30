@@ -19,4 +19,15 @@ describe('core styles.css extract', () => {
       expect(css).toContain(needle);
     }
   }, 30_000);
+
+  it('ships the reduced-motion token mode and forced-colors rules', async () => {
+    const css = await runTypestylesBuild({
+      root: coreRoot,
+      modules: ['src/styles.ts'],
+    });
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.theme-var-ui-default\s*\{[^}]*--var-ui-duration-medium:\s*0ms/,
+    );
+    expect(css).toContain('@media (forced-colors: active)');
+  }, 30_000);
 });

@@ -1,5 +1,6 @@
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
@@ -35,9 +36,7 @@ export const thumbnail = typestyles.recipe({
           width: vars.size.var,
           height: vars.size.var,
           borderRadius: t.radius.md.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
         },
         image: {
           width: '100%',
@@ -48,15 +47,13 @@ export const thumbnail = typestyles.recipe({
         dismiss: {
           position: 'absolute',
           top: `calc(${t.space[2].var} * -1)`,
-          right: `calc(${t.space[2].var} * -1)`,
+          insetInlineEnd: `calc(${t.space[2].var} * -1)`,
           display: 'grid',
           placeItems: 'center',
           width: '20px',
           height: '20px',
           borderRadius: '50%',
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.border.var,
+          ...border(vars.border.var),
           backgroundColor: t.color.background.surface.var,
           cursor: 'pointer',
           padding: 0,

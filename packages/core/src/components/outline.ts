@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { borderSide } from '../internal/border';
 
 export const outline = typestyles.recipe({
   name: 'outline',
@@ -17,9 +18,7 @@ export const outline = typestyles.recipe({
       base: {
         root: {
           paddingInlineStart: t.space[2].var,
-          borderInlineStartWidth: t.borderWidth.default.var,
-          borderInlineStartStyle: 'solid',
-          borderInlineStartColor: vars.border.var,
+          ...borderSide('inline-start', vars.border.var),
         },
         title: {
           margin: 0,

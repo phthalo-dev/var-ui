@@ -2,6 +2,7 @@ import { atProperty, variant, type RecipeVariants, type VariantOptions } from 't
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border, borderSide } from '../internal/border';
 
 const collapsibleVariant = variant.enum(['flush', 'bordered', 'accordion'], { default: 'flush' });
 
@@ -82,7 +83,7 @@ export const collapsible = typestyles.recipe({
         triggerIcon: {
           display: 'inline-flex',
           flexShrink: 0,
-          transition: 'transform 0.15s ease',
+          transition: t.transition.transform.var,
         },
         panel: {
           padding: `${t.space[2].var} ${t.space[3].var} ${t.space[3].var}`,
@@ -94,9 +95,7 @@ export const collapsible = typestyles.recipe({
           flush: {},
           bordered: {
             root: {
-              borderWidth: t.borderWidth.default.var,
-              borderStyle: 'solid',
-              borderColor: vars.border.var,
+              ...border(vars.border.var),
               borderRadius: t.radius.md.var,
               backgroundColor: vars.background.var,
             },
@@ -105,11 +104,9 @@ export const collapsible = typestyles.recipe({
             root: {
               borderRadius: 0,
               borderWidth: 0,
-              borderBottomWidth: t.borderWidth.default.var,
-              borderBottomStyle: 'solid',
-              borderBottomColor: vars.border.var,
+              ...borderSide('block-end', vars.border.var),
               '&:last-child': {
-                borderBottomWidth: 0,
+                borderBlockEndWidth: 0,
               },
             },
             trigger: {

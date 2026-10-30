@@ -1,6 +1,8 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
-import { atDarkMode, atReducedMotion } from '../theme/conditions';
+import { border, borderSide } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { layerZIndex } from './layerVars';
 
@@ -165,9 +167,7 @@ export const commandPalette = typestyles.recipe({
           fontFamily: t.fontFamily.body.var,
           backgroundColor: vars.dialogBackground.var,
           borderRadius: t.radius.lg.var,
-          borderWidth: t.borderWidth.default.var,
-          borderStyle: 'solid',
-          borderColor: vars.dialogBorder.var,
+          ...border(vars.dialogBorder.var),
           boxShadow: t.shadow.xl.var,
           overflow: 'hidden',
           opacity: 0,
@@ -178,9 +178,6 @@ export const commandPalette = typestyles.recipe({
           '&[data-starting-style], &[data-ending-style]': {
             opacity: 0,
           },
-          ...atReducedMotion({
-            transition: 'none',
-          }),
           ...atDarkMode({
             boxShadow: 'none',
           }),
@@ -191,9 +188,7 @@ export const commandPalette = typestyles.recipe({
           alignItems: 'center',
           gap: t.space[2].var,
           padding: `${t.space[3].var} ${t.space[4].var}`,
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: vars.inputRowBorder.var,
+          ...borderSide('block-end', vars.inputRowBorder.var),
           '& > :last-child': {
             display: 'flex',
             flex: '1 1 auto',
@@ -259,6 +254,7 @@ export const commandPalette = typestyles.recipe({
         resultLinkActive: {
           backgroundColor: vars.resultSelectedBackground.var,
           color: vars.resultSelectedForeground.var,
+          ...atForcedColors(forced.selected),
         },
         resultIcon: {
           flexShrink: 0,

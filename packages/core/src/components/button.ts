@@ -2,6 +2,10 @@ import { atProperty, type RecipeVariants, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { border } from '../internal/border';
+import { forced } from '../internal/forcedColors';
+import { transitionOf } from '../internal/motion';
+import { atForcedColors } from '../theme/conditions';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 import {
@@ -56,9 +60,7 @@ export const button = typestyles.recipe({
     return {
       base: {
         appearance: 'none',
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: vars.border.var,
+        ...border(vars.border.var),
         borderRadius: t.radius.md.var,
         backgroundColor: vars.background.var,
         // background: `linear-gradient(to bottom, transparent, ${v.border.var}), ${v.background.var}`,
@@ -73,8 +75,7 @@ export const button = typestyles.recipe({
         alignItems: 'center',
         justifyContent: 'center',
         gap: t.space[2].var,
-        transition:
-          'background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 80ms ease',
+        transition: `${t.transition.borderShadow.var}, ${transitionOf('background-color')}, ${transitionOf('transform', 'fast')}`,
         '&:active': {
           transform: 'translateY(1px)',
         },
@@ -82,13 +83,15 @@ export const button = typestyles.recipe({
           ...focusRing,
         },
         '&[disabled]': {
-          opacity: 0.5,
+          opacity: t.opacity.disabled.var,
           cursor: 'not-allowed',
+          ...atForcedColors(forced.disabled),
         },
         // Link-rendered buttons (`href`) have no `disabled` attribute.
         '&[aria-disabled="true"]': {
-          opacity: 0.5,
+          opacity: t.opacity.disabled.var,
           cursor: 'not-allowed',
+          ...atForcedColors(forced.disabled),
         },
       },
       variants: {

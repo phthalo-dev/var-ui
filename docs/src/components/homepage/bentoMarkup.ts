@@ -163,7 +163,7 @@ export function renderStatusFeedbackTileMarkup(): string {
   const alertTitle = serializeHtmlTag('p', mergeProps(a.title), 'Deploy queued');
   const alertContent = serializeHtmlTag(
     'div',
-    { ...mergeProps(a.content), 'data-alert-content': true },
+    mergeProps(a.content),
     'Waiting for the previous build to finish.',
   );
   const alertBody = serializeHtmlTag('div', mergeProps(a.body), `${alertTitle}${alertContent}`);
@@ -171,9 +171,6 @@ export function renderStatusFeedbackTileMarkup(): string {
     'div',
     {
       ...mergeProps(a.root),
-      'data-alert': true,
-      'data-alert-tone': 'info',
-      'data-alert-appearance': 'subtle',
     },
     alertBody,
   );

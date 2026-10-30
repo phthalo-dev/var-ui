@@ -1,6 +1,7 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../../runtime';
 import { designTokens as t } from '../../tokens';
+import { borderSide } from '../../internal/border';
 
 /**
  * Structural shell for a full chat interface: a scrollable message area
@@ -41,9 +42,7 @@ export const chatLayout = typestyles.recipe({
           gap: t.space[2].var,
           padding: t.space[3].var,
           backgroundColor: vars.background.var,
-          borderTopWidth: t.borderWidth.default.var,
-          borderTopStyle: 'solid',
-          borderTopColor: vars.border.var,
+          ...borderSide('block-start', vars.border.var),
         },
       },
     };
