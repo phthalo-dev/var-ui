@@ -14,6 +14,9 @@ import { MultiSelector } from './MultiSelector';
 import { TimeInput } from './TimeInput';
 import { Tokenizer } from './Tokenizer';
 import { Typeahead } from './Typeahead';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 if (typeof globalThis.CSS === 'undefined') {
   // @ts-expect-error -- partial CSS polyfill, only `escape` is needed for these tests.

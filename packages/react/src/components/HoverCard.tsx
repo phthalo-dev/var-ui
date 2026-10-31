@@ -1,21 +1,16 @@
-import { useMemo, type ComponentPropsWithRef, type JSX, type ReactNode } from 'react';
-import {
-  Dialog as AriaDialog,
-  DialogTrigger as AriaDialogTrigger,
-  Heading,
-  type Placement,
-} from 'react-aria-components';
-import { Popover as AriaPopover } from '../internal/nativeDialogShim';
+import { useId, useMemo, type ComponentPropsWithRef, type JSX, type ReactNode } from 'react';
 import { hoverCard } from '@var-ui/core/components/hoverCard';
-import { useLayer } from '../layers/LayerProvider';
+import { findPartId } from '../internal/findPartId';
 import {
   composeHandlers,
   createOverlayContext,
   OverlayTrigger,
+  useAnchor,
   useHoverIntent,
   useMergedRef,
   useOverlayRoot,
-  usePositionerVars,
+  usePopoverElement,
+  type AnchorPlacement,
   type OverlayOpenChangeHandler,
   type OverlayRoot,
   type OverlayTriggerProps,
@@ -28,17 +23,14 @@ export type HoverCardRootProps = {
   openDelay?: number;
   /** Delay before the card closes after the pointer/focus leaves, in milliseconds. @default 300 */
   closeDelay?: number;
+  /** Never show the card (hover and focus are ignored). @default false */
+  disabled?: boolean;
   /** Controlled open state. */
   open?: boolean;
   /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
   /** Called when the card requests to open or close. Reasons: `hover`, `focus`, `escape-key`, `outside-press`, `imperative`. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /**
-   * Element the card portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient.
-   */
-  portalContainer?: Element;
 };
 
 /** Alias for docs and consumers referring to the root hover card props. */
@@ -47,14 +39,13 @@ export type HoverCardProps = HoverCardRootProps;
 export type HoverCardTriggerProps = OverlayTriggerProps;
 
 /**
- * Native props go to the popover `<div>`; `aria-label` and `aria-labelledby` go to the inner
- * dialog element. When `HoverCard.Title` is rendered it names the dialog, otherwise pass
- * `aria-label` / `aria-labelledby`.
+ * Native props go to the popover `<div role="dialog">`. `HoverCard.Title` names it; otherwise
+ * pass `aria-label` / `aria-labelledby`.
  */
-export type HoverCardPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+export type HoverCardPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'popover'> & {
   children: ReactNode;
-  /** Preferred placement relative to the trigger. @default top */
-  placement?: Placement;
+  /** Preferred placement relative to the trigger: `top|bottom|start|end`, optionally `start|center|end` aligned. @default top */
+  placement?: AnchorPlacement;
 };
 
 export type HoverCardTitleProps = ComponentPropsWithRef<'h2'>;
@@ -63,10 +54,9 @@ export type HoverCardContentProps = ComponentPropsWithRef<'div'>;
 
 type HoverCardContextValue = {
   root: OverlayRoot;
-  portalContainer?: Element;
-  scheduleOpen: ReturnType<typeof useHoverIntent>['scheduleOpen'];
-  scheduleClose: ReturnType<typeof useHoverIntent>['scheduleClose'];
-  cancel: ReturnType<typeof useHoverIntent>['cancel'];
+  intent: ReturnType<typeof useHoverIntent>;
+  disabled: boolean;
+  titleId: string;
 };
 
 const { Context: HoverCardContext, use: useHoverCardContext } =
@@ -76,50 +66,45 @@ function HoverCardRoot({
   children,
   openDelay = 700,
   closeDelay = 300,
+  disabled = false,
   open,
   defaultOpen,
   onOpenChange,
-  portalContainer,
 }: HoverCardRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
-  const { scheduleOpen, scheduleClose, cancel } = useHoverIntent(root, { openDelay, closeDelay });
+  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const intent = useHoverIntent(root, { openDelay, closeDelay });
+  const titleId = useId();
   const context = useMemo<HoverCardContextValue>(
-    () => ({ root, portalContainer, scheduleOpen, scheduleClose, cancel }),
-    [root, portalContainer, scheduleOpen, scheduleClose, cancel],
+    () => ({ root, intent, disabled, titleId }),
+    [root, intent, disabled, titleId],
   );
-
-  return (
-    <HoverCardContext.Provider value={context}>
-      <AriaDialogTrigger {...root.rac}>{children}</AriaDialogTrigger>
-    </HoverCardContext.Provider>
-  );
+  return <HoverCardContext.Provider value={context}>{children}</HoverCardContext.Provider>;
 }
 
 function HoverCardTrigger({
-  onMouseEnter,
-  onMouseLeave,
+  onPointerEnter,
+  onPointerLeave,
   onFocus,
   onBlur,
   ...props
 }: HoverCardTriggerProps): JSX.Element {
-  const ctx = useHoverCardContext();
+  const { root, intent, disabled } = useHoverCardContext();
+  const t = intent.triggerProps;
+  const guard =
+    <E,>(own: unknown, ours: (event: E) => void) =>
+    (event: E) => {
+      if (typeof own === 'function') own(event);
+      if (!disabled) ours(event);
+    };
   return (
     <OverlayTrigger
       {...props}
-      root={ctx.root}
-      mode="none"
-      onMouseEnter={composeHandlers(onMouseEnter, (e: unknown) =>
-        ctx.scheduleOpen({ event: e as { nativeEvent?: Event }, reason: 'hover' }),
-      )}
-      onMouseLeave={composeHandlers(onMouseLeave, (e: unknown) =>
-        ctx.scheduleClose({ event: e as { nativeEvent?: Event }, reason: 'hover' }),
-      )}
-      onFocus={composeHandlers(onFocus, (e: unknown) =>
-        ctx.scheduleOpen({ event: e as { nativeEvent?: Event }, reason: 'focus' }),
-      )}
-      onBlur={composeHandlers(onBlur, (e: unknown) =>
-        ctx.scheduleClose({ event: e as { nativeEvent?: Event }, reason: 'focus' }),
-      )}
+      root={root}
+      relation="details"
+      onPointerEnter={guard(onPointerEnter, t.onPointerEnter)}
+      onPointerLeave={guard(onPointerLeave, t.onPointerLeave)}
+      onFocus={guard(onFocus, t.onFocus)}
+      onBlur={guard(onBlur, t.onBlur)}
     />
   );
 }
@@ -127,68 +112,49 @@ function HoverCardTrigger({
 function HoverCardPopup({
   children,
   className,
-  style,
   placement = 'top',
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
-  onMouseEnter,
-  onMouseLeave,
+  onPointerEnter,
+  onPointerLeave,
+  onFocus,
+  onBlur,
   ref,
   ...rest
 }: HoverCardPopupProps): JSX.Element {
-  const { root, portalContainer, scheduleClose, cancel } = useHoverCardContext();
+  const { root, intent, titleId } = useHoverCardContext();
   const hc = hoverCard();
-  const { style: layerStyle } = useLayer();
-  const positioner = usePositionerVars({
-    placement,
-    popupRef: root.popupRef,
-    triggerRef: root.triggerRef,
-  });
-  const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
-  const leave = (e: unknown, reason: 'hover' | 'focus') =>
-    scheduleClose({ event: e as { nativeEvent?: Event }, reason });
+  // `manual`, as for Tooltip: identical behaviour in every engine (no `hint` support in Safari).
+  const pop = usePopoverElement(root, { mode: 'manual' });
+  useAnchor(root.triggerEl, root.popupEl, { placement });
+  const setRef = useMergedRef<HTMLDivElement>(pop.ref, root.setPopupEl, ref);
+  const p = intent.popupProps;
 
   return (
-    <AriaPopover
+    <div
       {...rest}
+      {...pop.props}
       {...mergeProps(hc.root, className)}
-      {...root.presenceAttrs}
-      {...root.rac}
+      role="dialog"
+      aria-label={ariaLabel}
+      aria-labelledby={
+        ariaLabelledBy ?? (ariaLabel ? undefined : findPartId(children, HoverCardTitle, titleId))
+      }
+      onPointerEnter={composeHandlers(onPointerEnter, p.onPointerEnter)}
+      onPointerLeave={composeHandlers(onPointerLeave, p.onPointerLeave)}
+      onFocus={composeHandlers(onFocus, p.onFocus)}
+      onBlur={composeHandlers(onBlur, p.onBlur)}
       ref={setRef}
-      placement={placement}
-      style={{ ...layerStyle, ...positioner.style, ...style }}
-      isNonModal
-      UNSTABLE_portalContainer={portalContainer}
-      onMouseEnter={composeHandlers(onMouseEnter, cancel)}
-      onMouseLeave={composeHandlers(onMouseLeave, (e: unknown) => leave(e, 'hover'))}
     >
-      <AriaDialog aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
-        {/*
-         * `onFocus`/`onBlur` aren't part of RAC's `Dialog`/`Popover` DOM prop allowlist (they're
-         * only exposed on focusable elements), so a plain wrapper div carries the panel's
-         * hover/focus retention logic. `Heading[slot="title"]` still wires up via React context
-         * regardless of this extra nesting.
-         */}
-        <div
-          onMouseEnter={cancel}
-          onMouseLeave={(e) => leave(e, 'hover')}
-          onFocus={cancel}
-          onBlur={(e) => leave(e, 'focus')}
-        >
-          {children}
-        </div>
-      </AriaDialog>
-    </AriaPopover>
+      {pop.mounted ? children : null}
+    </div>
   );
 }
 
-function HoverCardTitle({ className, children, ...rest }: HoverCardTitleProps): JSX.Element {
+function HoverCardTitle({ className, id: idProp, ...rest }: HoverCardTitleProps): JSX.Element {
+  const { titleId } = useHoverCardContext();
   const hc = hoverCard();
-  return (
-    <Heading {...rest} slot="title" {...mergeProps(hc.title, className)}>
-      {children}
-    </Heading>
-  );
+  return <h2 {...rest} id={idProp ?? titleId} {...mergeProps(hc.title, className)} />;
 }
 
 function HoverCardContent({ className, ...rest }: HoverCardContentProps): JSX.Element {

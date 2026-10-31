@@ -1,20 +1,27 @@
-import { useMemo, type ComponentPropsWithRef, type JSX, type ReactNode } from 'react';
 import {
-  Dialog as AriaDialog,
-  DialogTrigger as AriaDialogTrigger,
-  Heading,
-  OverlayArrow,
-  type Placement,
-} from 'react-aria-components';
-import { Popover as AriaPopover } from '../internal/nativeDialogShim';
+  Children,
+  useId,
+  useMemo,
+  type ComponentPropsWithRef,
+  type JSX,
+  type ReactNode,
+} from 'react';
 import { popover } from '@var-ui/core/components/popover';
-import { useLayer } from '../layers/LayerProvider';
+import { Icon } from '../icons';
+import { findPartId } from '../internal/findPartId';
 import {
+  composeHandlers,
   createOverlayContext,
+  OverlayCloseContext,
   OverlayTrigger,
+  useAnchor,
   useMergedRef,
+  useOverlayClose,
   useOverlayRoot,
-  usePositionerVars,
+  usePopoverElement,
+  wireOverlayChild,
+  type AnchorPlacement,
+  type OverlayCloseProps,
   type OverlayOpenChangeHandler,
   type OverlayRoot,
   type OverlayTriggerProps,
@@ -27,114 +34,131 @@ export type PopoverRootProps = {
   open?: boolean;
   /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
-  /** Called when the popover requests to open or close. */
+  /** Called when the popover requests to open or close. `details.cancel()` vetoes the change. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /**
-   * Element the popover portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient.
-   */
-  portalContainer?: Element;
 };
 
 /** Alias for docs and consumers referring to the root popover props. */
 export type PopoverProps = PopoverRootProps;
 
+/** The single child must be a button (or a component that forwards DOM props to one). */
 export type PopoverTriggerProps = OverlayTriggerProps;
 
 /**
- * Native props go to the popover `<div>`; `aria-label` and `aria-labelledby` go to the inner
- * dialog element. When `Popover.Title` is rendered it names the dialog, otherwise pass
- * `aria-label` / `aria-labelledby`.
+ * Props of the popup `<div popover="auto">`: `ref`, `className`, `style`, handlers and
+ * `data-*`/`aria-*` attributes all land on it. When `Popover.Title` is rendered (or an
+ * `aria-label` / `aria-labelledby` is passed) the popup gets `role="dialog"` and that name.
  */
-export type PopoverPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+export type PopoverPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'popover'> & {
   children: ReactNode;
-  /** Preferred placement relative to the trigger. @default bottom */
-  placement?: Placement;
+  /**
+   * Preferred side of the trigger, optionally with an alignment: `top`, `bottom`, `start`, `end`,
+   * `bottom start`, `top end`, ... The popup flips when there is no room. @default bottom
+   */
+  placement?: AnchorPlacement;
+  /** Gap between the trigger and the popup: a number is px, a string any CSS length. */
+  offset?: number | string;
 };
 
 export type PopoverTitleProps = ComponentPropsWithRef<'h2'>;
 
+export type PopoverDescriptionProps = ComponentPropsWithRef<'p'>;
+
 export type PopoverContentProps = ComponentPropsWithRef<'div'>;
 
-export type PopoverArrowProps = Omit<ComponentPropsWithRef<'div'>, 'children'>;
+export type PopoverCloseProps = OverlayCloseProps;
 
 type PopoverContextValue = {
   root: OverlayRoot;
-  portalContainer?: Element;
+  titleId: string;
+  descriptionId: string;
 };
 
 const { Context: PopoverContext, use: usePopoverContext } =
   createOverlayContext<PopoverContextValue>('Popover');
 
-function PopoverRoot({
-  children,
-  open,
-  defaultOpen,
-  onOpenChange,
-  portalContainer,
-}: PopoverRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
+function PopoverRoot({ children, open, defaultOpen, onOpenChange }: PopoverRootProps): JSX.Element {
+  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const titleId = useId();
+  const descriptionId = useId();
   const context = useMemo<PopoverContextValue>(
-    () => ({ root, portalContainer }),
-    [root, portalContainer],
+    () => ({ root, titleId, descriptionId }),
+    [root, titleId, descriptionId],
   );
 
-  return (
-    <PopoverContext.Provider value={context}>
-      <AriaDialogTrigger {...root.rac}>{children}</AriaDialogTrigger>
-    </PopoverContext.Provider>
-  );
+  return <PopoverContext.Provider value={context}>{children}</PopoverContext.Provider>;
 }
 
 function PopoverTrigger(props: PopoverTriggerProps): JSX.Element {
-  return <OverlayTrigger {...props} root={usePopoverContext().root} />;
+  const { root } = usePopoverContext();
+  return (
+    <OverlayTrigger
+      aria-haspopup="dialog"
+      aria-expanded={root.open}
+      {...props}
+      root={root}
+      relation="popovertarget"
+    />
+  );
 }
 
 function PopoverPopup({
   children,
   className,
-  style,
   placement = 'bottom',
+  offset,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
+  'aria-describedby': ariaDescribedBy,
   ref,
   ...rest
 }: PopoverPopupProps): JSX.Element {
-  const { root, portalContainer } = usePopoverContext();
+  const ctx = usePopoverContext();
+  const { root } = ctx;
   const p = popover();
-  const { style: layerStyle } = useLayer();
-  const positioner = usePositionerVars({
-    placement,
-    popupRef: root.popupRef,
-    triggerRef: root.triggerRef,
-  });
-  const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
+  const pop = usePopoverElement(root, { mode: 'auto' });
+  useAnchor(root.triggerEl, root.popupEl, { placement, offset });
+  const setRef = useMergedRef<HTMLElement>(pop.ref, ref);
+  const labelledBy =
+    ariaLabelledBy ?? (ariaLabel ? undefined : findPartId(children, PopoverTitle, ctx.titleId));
+  const named = Boolean(ariaLabel || labelledBy);
 
   return (
-    <AriaPopover
+    <div
       {...rest}
       {...mergeProps(p.root, className)}
-      {...root.presenceAttrs}
-      {...root.rac}
+      {...pop.props}
+      role={named ? 'dialog' : undefined}
+      aria-label={ariaLabel}
+      aria-labelledby={labelledBy}
+      aria-describedby={
+        ariaDescribedBy ?? findPartId(children, PopoverDescription, ctx.descriptionId)
+      }
+      data-open={root.open ? '' : undefined}
+      data-closed={root.open ? undefined : ''}
       ref={setRef}
-      placement={placement}
-      style={{ ...layerStyle, ...positioner.style, ...style }}
-      UNSTABLE_portalContainer={portalContainer}
     >
-      <AriaDialog aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
-        {children}
-      </AriaDialog>
-    </AriaPopover>
+      {pop.mounted ? (
+        <OverlayCloseContext.Provider value={root.close}>{children}</OverlayCloseContext.Provider>
+      ) : null}
+    </div>
   );
 }
 
-function PopoverTitle({ className, children, ...rest }: PopoverTitleProps): JSX.Element {
+function PopoverTitle({ className, id: idProp, ...rest }: PopoverTitleProps): JSX.Element {
+  const { titleId } = usePopoverContext();
   const p = popover();
-  return (
-    <Heading {...rest} slot="title" {...mergeProps(p.title, className)}>
-      {children}
-    </Heading>
-  );
+  return <h2 {...rest} id={idProp ?? titleId} {...mergeProps(p.title, className)} />;
+}
+
+function PopoverDescription({
+  className,
+  id: idProp,
+  ...rest
+}: PopoverDescriptionProps): JSX.Element {
+  const { descriptionId } = usePopoverContext();
+  const p = popover();
+  return <p {...rest} id={idProp ?? descriptionId} {...mergeProps(p.content, className)} />;
 }
 
 function PopoverContent({ className, ...rest }: PopoverContentProps): JSX.Element {
@@ -142,31 +166,60 @@ function PopoverContent({ className, ...rest }: PopoverContentProps): JSX.Elemen
   return <div {...rest} {...mergeProps(p.content, className)} />;
 }
 
-function PopoverArrow({ className, ...rest }: PopoverArrowProps): JSX.Element {
-  const p = popover();
+function PopoverClose({
+  children,
+  className,
+  'aria-label': ariaLabel,
+  onClick,
+  ref,
+  ...rest
+}: PopoverCloseProps): JSX.Element {
+  const close = useOverlayClose();
+  const requestClose = (event: Event | null = null) => close({ reason: 'close-press', event });
+
+  if (children) {
+    return wireOverlayChild(
+      Children.only(children),
+      {
+        ...rest,
+        ...(ariaLabel !== undefined ? { 'aria-label': ariaLabel } : null),
+        ...(onClick ? { onClick } : null),
+        ref,
+        className,
+      },
+      'none',
+      requestClose,
+    );
+  }
+
   return (
-    <OverlayArrow>
-      {({ placement }) => (
-        <div
-          {...rest}
-          {...mergeProps(p.arrow, className)}
-          data-placement={placement ?? undefined}
-        />
+    <button
+      type="button"
+      {...rest}
+      className={className}
+      ref={ref}
+      aria-label={ariaLabel ?? 'Close'}
+      onClick={composeHandlers(onClick, (event: { nativeEvent: Event }) =>
+        requestClose(event.nativeEvent),
       )}
-    </OverlayArrow>
+    >
+      <Icon name="close" size="sm" />
+    </button>
   );
 }
 
 /**
- * Compound popover. `Popover` is Root; compose Trigger, Popup, and chrome parts.
+ * Compound popover on the native `popover` attribute. `Popover` is Root; `Popup` is the
+ * `<div popover="auto">` itself (top layer, light dismiss, no portal). Trigger becomes a
+ * `popovertarget` invoker on its single child, so a click toggles without a double toggle.
+ * Opening does not move focus; put `autofocus` on an element inside to take it.
  *
  * ```tsx
  * <Popover.Root>
  *   <Popover.Trigger>
  *     <Button>Filters</Button>
  *   </Popover.Trigger>
- *   <Popover.Popup placement="bottom">
- *     <Popover.Arrow />
+ *   <Popover.Popup placement="bottom start">
  *     <Popover.Title>Filters</Popover.Title>
  *     <Popover.Content>{children}</Popover.Content>
  *   </Popover.Popup>
@@ -177,7 +230,8 @@ export const Popover = Object.assign(PopoverRoot, {
   Root: PopoverRoot,
   Trigger: PopoverTrigger,
   Popup: PopoverPopup,
+  Close: PopoverClose,
   Title: PopoverTitle,
+  Description: PopoverDescription,
   Content: PopoverContent,
-  Arrow: PopoverArrow,
 });

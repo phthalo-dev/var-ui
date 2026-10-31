@@ -4,6 +4,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { Typeahead, type TypeaheadOption } from './Typeahead';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 const OPTIONS: TypeaheadOption[] = [
   { value: 'apple', label: 'Apple' },

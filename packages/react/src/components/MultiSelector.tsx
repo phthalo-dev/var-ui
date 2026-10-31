@@ -8,8 +8,15 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button as AriaButton, ListBox, ListBoxItem, type Selection } from 'react-aria-components';
-import { Popover } from '../internal/nativeDialogShim';
+import {
+  Button as AriaButton,
+  ListBox,
+  ListBoxItem,
+  OverlayTriggerStateContext,
+  PopoverContext,
+  type Selection,
+} from 'react-aria-components';
+import { NativePopover } from '../internal/NativePopover';
 import { multiSelector } from '@var-ui/core/components/multiSelector';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';
@@ -103,6 +110,20 @@ export function MultiSelector({
   const isPlaceholder = selectedLabels.length === 0;
   const triggerText = isPlaceholder ? placeholder : selectedLabels.join(', ');
 
+  // The button owns the open state (RAC `Popover` is not involved), so provide the two contexts
+  // `NativePopover` reads from a RAC trigger.
+  const overlayState = useMemo(
+    () => ({
+      isOpen,
+      setOpen: setIsOpen,
+      open: () => setIsOpen(true),
+      close: () => setIsOpen(false),
+      toggle: () => setIsOpen((open) => !open),
+    }),
+    [isOpen],
+  );
+  const popoverContext = useMemo(() => ({ triggerRef }), []);
+
   function handleSelectionChange(keys: Selection) {
     if (keys === 'all') {
       onValueChange(options.map((o) => o.value));
@@ -135,7 +156,15 @@ export function MultiSelector({
         }
         isDisabled={disabled}
         aria-labelledby={label ? `${frame.labelId} ${triggerTextId}` : undefined}
-        onPress={() => setIsOpen((open) => !open)}
+        // Opens on press start like RAC `Select`; pressing again while open is closed by
+        // `NativePopover` (a toggle here would close-then-reopen).
+        onPressStart={() => {
+          // `preventFocusOnPress` keeps the native mousedown focus from stealing it back from the
+          // list; focus the trigger first so focus returns to it on close.
+          triggerRef.current?.focus({ preventScroll: true });
+          setIsOpen(true);
+        }}
+        preventFocusOnPress
       >
         <span
           id={triggerTextId}
@@ -148,35 +177,38 @@ export function MultiSelector({
           <Icon name="arrowsUpDown" size="sm" />
         </span>
       </AriaButton>
-      <Popover
-        {...mergeProps(ms.popover)}
-        triggerRef={triggerRef}
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-      >
-        <ListBox
-          {...mergeProps(ms.listbox)}
-          items={options}
-          disabledKeys={disabledKeysOf(options)}
-          selectionMode="multiple"
-          selectedKeys={new Set(value)}
-          onSelectionChange={handleSelectionChange}
-          aria-labelledby={label ? frame.labelId : undefined}
-        >
-          {(option) => (
-            <ListBoxItem id={option.value} textValue={option.label} {...mergeProps(ms.item)}>
-              {({ isSelected }) => (
-                <>
-                  <span {...mergeProps(ms.itemCheckbox)} data-selected={isSelected || undefined}>
-                    {isSelected ? <Icon name="check" size="sm" /> : null}
-                  </span>
-                  <span {...mergeProps(ms.itemLabel)}>{option.label}</span>
-                </>
+      <OverlayTriggerStateContext.Provider value={overlayState}>
+        <PopoverContext.Provider value={popoverContext}>
+          <NativePopover {...mergeProps(ms.popover)}>
+            <ListBox
+              {...mergeProps(ms.listbox)}
+              autoFocus="first"
+              items={options}
+              disabledKeys={disabledKeysOf(options)}
+              selectionMode="multiple"
+              selectedKeys={new Set(value)}
+              onSelectionChange={handleSelectionChange}
+              aria-labelledby={label ? frame.labelId : undefined}
+            >
+              {(option) => (
+                <ListBoxItem id={option.value} textValue={option.label} {...mergeProps(ms.item)}>
+                  {({ isSelected }) => (
+                    <>
+                      <span
+                        {...mergeProps(ms.itemCheckbox)}
+                        data-selected={isSelected || undefined}
+                      >
+                        {isSelected ? <Icon name="check" size="sm" /> : null}
+                      </span>
+                      <span {...mergeProps(ms.itemLabel)}>{option.label}</span>
+                    </>
+                  )}
+                </ListBoxItem>
               )}
-            </ListBoxItem>
-          )}
-        </ListBox>
-      </Popover>
+            </ListBox>
+          </NativePopover>
+        </PopoverContext.Provider>
+      </OverlayTriggerStateContext.Provider>
       {name
         ? value.map((v) => (
             <input key={v} type="hidden" name={name} value={v} disabled={disabled} />

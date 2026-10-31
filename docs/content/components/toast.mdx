@@ -19,7 +19,18 @@ For live notification queues without React, mount a `ToastRegion` and call the i
 
 <PropsTable slug="toast" />
 
+## Top layer and modal dialogs
+
+The region is a native `popover="manual"` element: it is shown while the queue has toasts and
+removed when the queue empties, with no z-index and no portal container option. The top layer
+stacks by insertion order, so when a modal `<dialog>` opens (`[open]` changes) the region
+re-promotes itself (`hidePopover(); showPopover()`) and stays above the backdrop, replaying its fade
+in. Anything outside a modal dialog is inert while it is open, so toasts shown over a modal are
+visible but **not clickable** (dismiss buttons included); their auto-dismiss timers keep running.
+Prefer short, non-interactive toasts while a modal is open.
+
 ## Accessibility
 
 Toasts render in a live region with appropriate status semantics. Dismiss controls
-expose an accessible name and keyboard support via React Aria Components.
+expose an accessible name and keyboard support via React Aria Components. `placement` accepts
+`top-start`, `top-end`, `bottom-start` and `bottom-end` and follows the reading direction.

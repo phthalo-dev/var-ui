@@ -5,6 +5,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { DateTimeInput } from './DateTimeInput';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 function ControlledDateTimeInput() {
   const [value, setValue] = useState<CalendarDateTime>(new CalendarDateTime(2026, 7, 15, 14, 30));

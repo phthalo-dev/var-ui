@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { stubNativeDialog } from '../test/nativeOverlayStubs';
+import { stubNativeDialog, stubNativePopover } from '../test/nativeOverlayStubs';
 import { Button } from './Button';
 import { Dialog, type DialogRootProps } from './Dialog';
 import { Tooltip } from './Tooltip';
@@ -12,6 +12,7 @@ import { Tooltip } from './Tooltip';
 // API-shape tests. Platform behaviour (Escape, backdrop, focus, inert, animation) is covered in
 // Dialog.browser.test.tsx.
 stubNativeDialog();
+stubNativePopover();
 
 function renderDialog(props: Partial<DialogRootProps>) {
   return render(
@@ -94,7 +95,7 @@ describe('Dialog', () => {
     render(
       <IconProvider icons={{}}>
         <Dialog.Root>
-          <Tooltip.Root delay={0}>
+          <Tooltip.Root openDelay={0}>
             <Tooltip.Trigger>
               <Dialog.Trigger>
                 <button type="button">Custom</button>

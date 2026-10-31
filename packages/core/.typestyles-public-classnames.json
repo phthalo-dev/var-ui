@@ -393,7 +393,6 @@
     "pin-input__group",
     "pin-input__label",
     "popover",
-    "popover__arrow",
     "popover__content",
     "popover__title",
     "positioner",
@@ -3705,14 +3704,6 @@
       "kind": "component",
       "namespace": "popover",
       "suffix": "base",
-      "file": "src/components/popover.ts",
-      "line": 16
-    },
-    {
-      "className": "popover__arrow",
-      "kind": "component",
-      "namespace": "popover",
-      "suffix": "arrow",
       "file": "src/components/popover.ts",
       "line": 16
     },

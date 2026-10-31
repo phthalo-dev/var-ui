@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { Button, HStack, Tooltip } from '@var-ui/react';
 
 <HStack gap="md" wrap>
-  <Tooltip delay={200}>
+  <Tooltip openDelay={200}>
     <Tooltip.Trigger>
       <Button>Bottom · 200ms</Button>
     </Tooltip.Trigger>

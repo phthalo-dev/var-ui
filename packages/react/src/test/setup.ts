@@ -1,5 +1,6 @@
 import { afterEach } from 'vite-plus/test';
 import { cleanup } from '@testing-library/react';
+import { stubNativeDialog, stubNativePopover } from './nativeOverlayStubs';
 
 class ResizeObserverStub {
   observe() {}
@@ -20,6 +21,13 @@ if (typeof globalThis.CSS === 'undefined') {
 if (typeof globalThis.CSS.escape !== 'function') {
   globalThis.CSS.escape = (value: string): string =>
     String(value).replace(/[^a-zA-Z0-9_-]/g, (char) => `\\${char}`);
+}
+
+// jsdom has no top layer: stub `<dialog>.showModal()` and the `popover` API for every jsdom test
+// (behaviour that needs the platform lives in `*.browser.test.tsx`).
+if (typeof HTMLDialogElement !== 'undefined') {
+  stubNativeDialog();
+  stubNativePopover();
 }
 
 // RTL auto-cleanup relies on vitest globals; register it explicitly instead.

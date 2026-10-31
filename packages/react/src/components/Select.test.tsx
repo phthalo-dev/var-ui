@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { Select } from './Select';
+
+stubNativePopover();
 
 const OPTIONS = [
   { value: 'apple', label: 'Apple' },
@@ -38,7 +41,7 @@ describe('Select', () => {
     expect(screen.getByRole('button', { name: /Fruit/ }).getAttribute('data-size')).toBe('md');
   });
 
-  it('portals the listbox into document.body by default', async () => {
+  it('renders the listbox in place, inside a native popover (no portal)', async () => {
     const { container } = render(
       <IconProvider icons={{}}>
         <Select label="Fruit" options={OPTIONS} />
@@ -48,27 +51,8 @@ describe('Select', () => {
     await userEvent.click(screen.getByRole('button', { name: /Fruit/ }));
 
     const option = await screen.findByRole('option', { name: 'Apple' });
-    expect(document.body.contains(option)).toBe(true);
-    expect(container.contains(option)).toBe(false);
-  });
-
-  it('portals the listbox into a custom portalContainer when provided', async () => {
-    const container = document.createElement('div');
-    container.setAttribute('data-testid', 'custom-portal');
-    document.body.appendChild(container);
-
-    render(
-      <IconProvider icons={{}}>
-        <Select label="Fruit" options={OPTIONS} portalContainer={container} />
-      </IconProvider>,
-    );
-
-    await userEvent.click(screen.getByRole('button', { name: /Fruit/ }));
-
-    const option = await screen.findByRole('option', { name: 'Apple' });
     expect(container.contains(option)).toBe(true);
-
-    document.body.removeChild(container);
+    expect(option.closest('[popover]')?.getAttribute('popover')).toBe('manual');
   });
 
   it('renders custom item rows from compound parts and updates the trigger on select', async () => {

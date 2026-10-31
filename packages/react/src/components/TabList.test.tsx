@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { TabList } from './TabList';
 
 function wrap(ui: ReactNode) {
@@ -40,6 +41,7 @@ function ControlledTabList({
 }
 
 describe('TabList', () => {
+  stubNativePopover();
   it('renders a nav landmark labeled from `label`', () => {
     wrap(<ControlledTabList />);
     expect(screen.getByRole('navigation', { name: 'Sections' })).toBeTruthy();

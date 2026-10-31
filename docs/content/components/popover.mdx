@@ -5,7 +5,9 @@ description: Click-triggered panel for short interactive content.
 
 # Popover
 
-Click-triggered panel for short interactive content. Unlike `Tooltip` / `HoverCard`, it opens on press and can host actions. `Popover` is the compound Root (`Popover.Trigger`, `Popover.Popup`, `Popover.Title`, `Popover.Content`, `Popover.Arrow`). The trigger child must forward DOM props — there is no `render` prop.
+Click-triggered panel for short interactive content. Unlike `Tooltip` / `HoverCard`, it opens on press and can host actions. `Popover` is the compound Root (`Popover.Trigger`, `Popover.Popup`, `Popover.Close`, `Popover.Title`, `Popover.Description`, `Popover.Content`). The trigger child must forward DOM props (`popovertarget`) — there is no `render` prop.
+
+The popup is a native `<div popover="auto">` rendered in place: it sits in the top layer (so it works inside a modal `<dialog>`), is positioned with CSS anchor positioning and light-dismisses on an outside press or Escape. Pass `placement` (`top`, `bottom`, `start`, `end`, optionally with an alignment such as `bottom end`) and `offset` (px or any CSS length, written to `--var-ui-popup-offset`). There is no arrow part.
 
 State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -13,7 +15,7 @@ State attributes, positioner CSS variables, and `onOpenChange` details are docum
 
 ### Compound parts
 
-Compose Trigger, Popup, and optional Arrow.
+Compose Trigger, Popup, Title and Content.
 
 <Demo id="popover.default" />
 
@@ -35,4 +37,4 @@ Put buttons or links in the body for lightweight confirm or follow-up flows with
 
 ## Accessibility
 
-Built on React Aria `DialogTrigger` / `Popover`. Focus moves into the panel; Escape closes. Keep content focused — for blocking decisions use `AlertDialog` or `Dialog`.
+Built on the native `popover` attribute. The trigger is a `popovertarget` invoker, Escape and outside presses close it, and focus returns to the trigger on close. Opening does not move focus into the panel: put `autofocus` on an element inside it when it should take focus. The popup gets `role="dialog"` and an accessible name only when it has a `Popover.Title` or an `aria-label`. Keep content focused — for blocking decisions use `AlertDialog` or `Dialog`.

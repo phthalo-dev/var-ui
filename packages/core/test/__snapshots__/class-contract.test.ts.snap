@@ -1308,7 +1308,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "popover": {
     "axes": [],
     "slots": {
-      "arrow": "var-ui-popover__arrow",
       "content": "var-ui-popover__content",
       "root": "var-ui-popover",
       "title": "var-ui-popover__title",

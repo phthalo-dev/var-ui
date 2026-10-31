@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
-import { stubNativeDialog } from '../test/nativeOverlayStubs';
+import { stubNativeDialog, stubNativePopover } from '../test/nativeOverlayStubs';
 import { Dialog } from './Dialog';
 import { Drawer } from './Drawer';
 import { Hidden } from './Hidden';
@@ -107,6 +107,7 @@ describe('Dialog passthrough', () => {
 });
 
 describe('Popover passthrough', () => {
+  stubNativePopover();
   it('forwards native props on parts and honors aria-label', () => {
     const popupRef = createRef<HTMLDivElement>();
     const onClick = vi.fn();
@@ -124,7 +125,6 @@ describe('Popover passthrough', () => {
           ref={popupRef}
           onClick={onClick}
         >
-          <Popover.Arrow data-testid="arrow" className="my-arrow" />
           <Popover.Content data-testid="content" className="my-content">
             body
           </Popover.Content>
@@ -158,6 +158,7 @@ describe('Popover passthrough', () => {
 });
 
 describe('Tooltip passthrough', () => {
+  stubNativePopover();
   it('forwards native props and ref on Popup', () => {
     const ref = createRef<HTMLDivElement>();
     wrap(
@@ -178,6 +179,7 @@ describe('Tooltip passthrough', () => {
 });
 
 describe('HoverCard passthrough', () => {
+  stubNativePopover();
   it('forwards native props, supports aria-label and Title naming', () => {
     const ref = createRef<HTMLDivElement>();
     wrap(
@@ -267,6 +269,7 @@ describe('Drawer passthrough', () => {
 });
 
 describe('Menu passthrough and fixes', () => {
+  stubNativePopover();
   async function openMenu(trigger = 'Actions') {
     await userEvent.click(screen.getByRole('button', { name: trigger }));
     return screen.findByRole('menu');
@@ -362,7 +365,7 @@ describe('Menu passthrough and fixes', () => {
     expect(screen.getByRole('menuitem', { name: /Copy/ })).toBeTruthy();
   });
 
-  it('FromSections gets presence attrs, layer z-index, popup passthrough and placement', async () => {
+  it('FromSections gets presence attrs, popup passthrough and placement', async () => {
     const onOpenChange = vi.fn();
     wrap(
       <Menu.FromSections
@@ -379,28 +382,25 @@ describe('Menu passthrough and fixes', () => {
     expect(screen.getAllByRole('menu')).toHaveLength(1);
     const popup = screen.getByTestId('popup');
     expect(popup.className).toContain('my-popup');
-    expect(popup.style.zIndex).not.toBe('');
     expect(popup.getAttribute('data-placement')).toBe('top');
+    expect(popup.getAttribute('popover')).toBe('manual');
     expect(popup.hasAttribute('data-open')).toBe(true);
     expect(screen.getByRole('menu').getAttribute('aria-label')).toBe('Edit actions');
     expect(onOpenChange.mock.calls[0]?.[0]).toBe(true);
     expect(onOpenChange.mock.calls[0]?.[1].reason).toBe('trigger-press');
   });
 
-  it('FromSections portals into portalContainer', async () => {
-    const host = document.createElement('div');
-    host.setAttribute('data-testid', 'host');
-    document.body.appendChild(host);
-    wrap(
+  it('FromSections renders the menu in place, inside the native popover', async () => {
+    const { container } = wrap(
       <Menu.FromSections
         trigger={<button type="button">Actions</button>}
         sections={[{ items: [{ id: 'copy', label: 'Copy' }] }]}
-        portalContainer={host}
+        data-testid="popup"
       />,
     );
     await openMenu();
-    expect(host.querySelector('[role="menu"]')).not.toBeNull();
-    host.remove();
+    expect(container.contains(screen.getByRole('menu'))).toBe(true);
+    expect(screen.getByTestId('popup').contains(screen.getByRole('menu'))).toBe(true);
   });
 
   it('Overflow keeps aria-label and ref on the trigger', async () => {

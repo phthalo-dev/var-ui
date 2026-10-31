@@ -8,7 +8,7 @@ import type {
 } from 'react';
 import { useEffect, useState } from 'react';
 import { DialogTrigger, Pressable } from 'react-aria-components';
-import { Popover as AriaPopover } from '../internal/nativeDialogShim';
+import { NativePopover } from '../internal/NativePopover';
 import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps } from '@var-ui/core';
@@ -67,11 +67,6 @@ export type ColorInputProps = Omit<
     className?: string;
     /** Inline style for the root element. */
     style?: CSSProperties;
-    /**
-     * Element the picker popover portals into instead of `document.body`.
-     * Needed when a subtree renders under a different theme than the page ambient.
-     */
-    portalContainer?: Element;
     /** Ref to the hex `<input>` (not rendered when `appearance="swatch"`). */
     ref?: Ref<HTMLInputElement>;
   };
@@ -101,7 +96,6 @@ export function ColorInput({
   className,
   style,
   name,
-  portalContainer,
   ref,
   id,
   'aria-describedby': userDescribedBy,
@@ -184,11 +178,7 @@ export function ColorInput({
               />
             </button>
           </Pressable>
-          <AriaPopover
-            {...mergeProps(p.root)}
-            style={layerStyle}
-            UNSTABLE_portalContainer={portalContainer}
-          >
+          <NativePopover {...mergeProps(p.root)} style={layerStyle}>
             <div {...mergeProps(p.content)}>
               <ColorPicker
                 value={color}
@@ -198,7 +188,7 @@ export function ColorInput({
                 withAlpha={withAlpha}
               />
             </div>
-          </AriaPopover>
+          </NativePopover>
         </DialogTrigger>
         {isField ? (
           <input

@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ColorInput } from './ColorInput';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 describe('ColorInput', () => {
   it('renders label and hex value', () => {

@@ -2,17 +2,15 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { toast } from '../toast/imperativeToast';
 import { Toast, ToastProvider, ToastQueue, ToastRegion, useToast } from './Toast';
 import { Button } from './Button';
 
+stubNativePopover();
+
 function wrap(ui: React.ReactNode) {
-  return render(
-    <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
-    </IconProvider>,
-  );
+  return render(<IconProvider icons={{}}>{ui}</IconProvider>);
 }
 
 describe('Toast presentational', () => {
@@ -65,6 +63,21 @@ describe('ToastRegion', () => {
       queue.add({ title: 'Standalone' });
     });
     expect(screen.getByText('Standalone')).toBeTruthy();
+  });
+
+  it('is a manual popover, shown while the queue has toasts and gone when it empties', () => {
+    const queue = new ToastQueue();
+    wrap(<ToastRegion queue={queue} />);
+    expect(document.querySelector('[popover]')).toBeNull();
+    let id = '';
+    act(() => {
+      id = queue.add({ title: 'Hello' });
+    });
+    const region = document.querySelector('[popover]') as HTMLElement;
+    expect(region.getAttribute('popover')).toBe('manual');
+    expect(region.hasAttribute('data-popover-open')).toBe(true);
+    act(() => queue.close(id));
+    expect(document.querySelector('[popover]')).toBeNull();
   });
 
   it('updates an existing toast by id', () => {
@@ -145,9 +158,7 @@ describe('toast() without a provider and queue sizing', () => {
     expect(screen.getByText('One')).toBeTruthy();
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
-          <Harness max={5} />
-        </LayerProvider>
+        <Harness max={5} />
       </IconProvider>,
     );
     expect(screen.getByText('One')).toBeTruthy();

@@ -7,18 +7,16 @@ import {
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   Separator,
-  type Placement,
 } from 'react-aria-components';
-import { Popover as AriaPopover } from './nativeDialogShim';
 import { menu } from '@var-ui/core/components/menu';
-import { useLayer } from '../layers/LayerProvider';
+import { NativePopover } from './NativePopover';
 import { toRacProps } from './racProps';
 import {
   createOverlayContext,
   OverlayTrigger,
   useMergedRef,
   useOverlayRoot,
-  usePositionerVars,
+  type AnchorPlacement,
   type OverlayOpenChangeHandler,
   type OverlayRoot,
   type OverlayTriggerProps,
@@ -36,11 +34,6 @@ export type MenuRootProps = {
    * `escape-key`, `outside-press`, `focus` or `imperative`; `details.cancel()` vetoes the change.
    */
   onOpenChange?: OverlayOpenChangeHandler;
-  /**
-   * Element the menu portals into instead of `document.body`. Needed when a subtree renders
-   * under a different theme than the page ambient.
-   */
-  portalContainer?: Element;
 };
 
 /** Alias for docs and consumers referring to the root menu props. */
@@ -54,8 +47,13 @@ export type MenuTriggerProps = OverlayTriggerProps;
  */
 export type MenuPopupProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children: ReactNode;
-  /** Preferred placement relative to the trigger. @default bottom */
-  placement?: Placement;
+  /**
+   * Preferred placement relative to the trigger: `top|bottom|start|end`, optionally with an
+   * alignment (`bottom end`). The popup flips when it does not fit. @default bottom start
+   */
+  placement?: AnchorPlacement;
+  /** Gap between trigger and popup: a number is px, a string any CSS length. */
+  offset?: number | string;
 };
 
 export type MenuItemProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'id'> & {
@@ -78,24 +76,14 @@ export type MenuSectionProps = Omit<ComponentPropsWithRef<'section'>, 'title'> &
 
 type MenuContextValue = {
   root: OverlayRoot;
-  portalContainer?: Element;
 };
 
 const { Context: MenuContext, use: useMenuContext } =
   createOverlayContext<MenuContextValue>('Menu');
 
-function MenuRoot({
-  children,
-  open,
-  defaultOpen,
-  onOpenChange,
-  portalContainer,
-}: MenuRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
-  const context = useMemo<MenuContextValue>(
-    () => ({ root, portalContainer }),
-    [root, portalContainer],
-  );
+function MenuRoot({ children, open, defaultOpen, onOpenChange }: MenuRootProps): JSX.Element {
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange, native: true });
+  const context = useMemo<MenuContextValue>(() => ({ root }), [root]);
 
   return (
     <MenuContext.Provider value={context}>
@@ -111,34 +99,26 @@ function MenuTrigger(props: MenuTriggerProps): JSX.Element {
 function MenuPopup({
   children,
   className,
-  style,
-  placement = 'bottom',
+  placement,
+  offset,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   ref,
   ...rest
 }: MenuPopupProps): JSX.Element {
-  const { root, portalContainer } = useMenuContext();
+  const { root } = useMenuContext();
   const m = menu();
-  const { style: layerStyle } = useLayer();
-  const positioner = usePositionerVars({
-    placement,
-    popupRef: root.popupRef,
-    triggerRef: root.triggerRef,
-  });
   const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
 
+  // The shell is the native `[popover]` element (top layer, anchored by CSS), mounted in place;
+  // RAC's MenuTrigger owns open state, keyboard, typeahead and `aria-haspopup`/`aria-expanded`.
   return (
-    <AriaPopover
+    <NativePopover
       {...rest}
       {...mergeProps(m.popover, className)}
-      {...root.presenceAttrs}
       ref={setRef}
       placement={placement}
-      style={{ ...layerStyle, ...positioner.style, ...style }}
-      UNSTABLE_portalContainer={portalContainer}
-      // Focus or pointer landing on the trigger is not "outside": the trigger toggles the menu itself.
-      shouldCloseOnInteractOutside={(element) => !root.triggerRef.current?.contains(element)}
+      offset={offset}
     >
       <AriaMenu
         {...mergeProps(m.menu)}
@@ -148,7 +128,7 @@ function MenuPopup({
       >
         {children}
       </AriaMenu>
-    </AriaPopover>
+    </NativePopover>
   );
 }
 

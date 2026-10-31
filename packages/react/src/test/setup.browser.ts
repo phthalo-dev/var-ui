@@ -10,7 +10,7 @@ reset.dataset.testReset = '';
 reset.textContent = `
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  dialog, [popover] { margin: 0; }
+  dialog { margin: 0; }
   dialog:modal { margin: auto; }
 `;
 document.head.append(reset);

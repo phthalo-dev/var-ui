@@ -38,7 +38,14 @@ export default defineConfig({
     // the package is importable from Next.js app-router server components.
     banner: { js: "'use client';" },
     deps: {
-      neverBundle: ['react', 'react-dom', 'react-aria-components', '@var-ui/core', 'typestyles'],
+      neverBundle: [
+        'react',
+        'react-dom',
+        'react-aria-components',
+        'react-aria',
+        '@var-ui/core',
+        'typestyles',
+      ],
     },
   },
   test: {

@@ -2,6 +2,9 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import { IconProvider } from '../icons';
 import { Combobox } from './Combobox';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },

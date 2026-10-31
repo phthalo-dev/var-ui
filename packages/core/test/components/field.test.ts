@@ -53,7 +53,7 @@ describe('field recipe', () => {
     expect(css).toContain('.var-ui-combobox__listbox');
     expect(css).toContain('.var-ui-multiSelector__popover');
     expect(css).toContain('.var-ui-multiSelector__listbox');
-    expect(css).toContain('var(--var-ui-zIndex-dropdown)');
+    expect(css).toContain('anchor-size(width)');
   });
 
   it('declares dropdown popover vars on the popover slot for portaled listboxes', () => {

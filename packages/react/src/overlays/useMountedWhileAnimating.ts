@@ -1,5 +1,14 @@
 import { useLayoutEffect, useState, type RefObject } from 'react';
 
+/** Still in the top layer (a close that the browser has not performed yet). */
+function stillShown(el: Element): boolean {
+  try {
+    return el.matches(':popover-open, :modal');
+  } catch {
+    return false; // jsdom: no such selectors
+  }
+}
+
 /** Safety cap on chained animation generations (opacity, then display/overlay, ...). */
 const MAX_PASSES = 4;
 
@@ -21,6 +30,7 @@ const MAX_PASSES = 4;
  */
 export function useMountedWhileAnimating(ref: RefObject<Element | null>, open: boolean): boolean {
   const [mounted, setMounted] = useState(open);
+  const [settle, setSettle] = useState(0);
 
   if (open && !mounted) {
     setMounted(true);
@@ -29,6 +39,12 @@ export function useMountedWhileAnimating(ref: RefObject<Element | null>, open: b
   useLayoutEffect(() => {
     if (open) return undefined;
     const el = ref.current;
+    // `open` flipped inside the browser's own `beforetoggle` (a native close we committed with
+    // `flushSync`): the element is still shown, so its exit has not started. Look again next frame.
+    if (el && stillShown(el)) {
+      const frame = requestAnimationFrame(() => setSettle((n) => n + 1));
+      return () => cancelAnimationFrame(frame);
+    }
     const running = () => (el?.getAnimations?.({ subtree: true }) ?? []).filter(isFiniteRunning);
     if (!el || running().length === 0) {
       setMounted(false);
@@ -47,7 +63,7 @@ export function useMountedWhileAnimating(ref: RefObject<Element | null>, open: b
     return () => {
       cancelled = true;
     };
-  }, [open, ref]);
+  }, [open, ref, settle]);
 
   return mounted;
 }

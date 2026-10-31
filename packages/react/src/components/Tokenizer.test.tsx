@@ -4,6 +4,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { Tokenizer, type TokenizerOption } from './Tokenizer';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 const OPTIONS: TokenizerOption[] = [
   { value: 'apple', label: 'Apple' },
