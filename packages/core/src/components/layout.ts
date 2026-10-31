@@ -253,7 +253,7 @@ export const layoutContent = typestyles.recipe({
 export const layoutPanel = typestyles.recipe({
   name: 'layout-panel',
   layer: 'components',
-  slots: ['panel', 'popup'],
+  slots: ['panel', 'popup', 'body'],
   variants: {
     scrollable: zoneScrollable,
     hasDivider: panelDivider,
@@ -331,16 +331,27 @@ export const layoutPanel = typestyles.recipe({
             ...borderSide('inline-start', vars.border.var),
           },
         },
+        // Scrollport inside the overlay dialog. Overflow stays off the `<dialog>` so a portaled
+        // popup (a child of the dialog) is not clipped.
+        body: {
+          flex: '1 1 auto',
+          minWidth: 0,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+        },
       },
       variants: {
         scrollable: {
           true: {
             panel: { overflow: 'auto' },
-            popup: { overflow: 'auto' },
+            popup: { overflow: 'visible' },
+            body: { overflow: 'auto' },
           },
           false: {
             panel: { overflow: 'visible' },
             popup: { overflow: 'visible' },
+            body: { overflow: 'visible' },
           },
         },
         hasDivider: {

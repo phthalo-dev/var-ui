@@ -224,7 +224,7 @@ export function MobileNav({
         <div style={{ minWidth: 0 }}>{header}</div>
         <MobileNavClose label={closeLabel} />
       </div>
-      {children}
+      <div {...mergeProps(s.body)}>{children}</div>
     </NativeSheetPopup>
   );
 }

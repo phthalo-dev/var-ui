@@ -55,7 +55,9 @@ const hasHeaderSlot = Astro.slots.has('header');
         {...mergeProps(s.closeButton)}
       ></button>
     </div>
-    <slot />
+    <div {...mergeProps(s.body)}>
+      <slot />
+    </div>
   </dialog>
 </div>
 

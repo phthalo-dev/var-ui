@@ -73,6 +73,46 @@ describe('mobileNav', () => {
     const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
 
     provider?.open();
+    popup.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    popup.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(provider?.isOpen).toBe(false);
+  });
+
+  it('does not close when a press starts inside the sheet and ends on the backdrop', () => {
+    const root = mountProvider();
+    initMobileNavProvider(root);
+    initMobileNav(root.querySelector('[data-var-ui-mobile-nav]') as HTMLElement);
+    const provider = getMobileNavProvider(root);
+    const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
+    popup.getBoundingClientRect = () =>
+      ({
+        left: 0,
+        top: 0,
+        right: 100,
+        bottom: 100,
+        width: 100,
+        height: 100,
+        x: 0,
+        y: 0,
+        toJSON() {
+          return {};
+        },
+      }) as DOMRect;
+
+    provider?.open();
+    popup.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 }));
+    popup.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 200, clientY: 10 }));
+    expect(provider?.isOpen).toBe(true);
+  });
+
+  it('finds the provider when the drawer script ran first', () => {
+    const root = mountProvider();
+    initMobileNav(root.querySelector('[data-var-ui-mobile-nav]') as HTMLElement);
+    initMobileNavProvider(root);
+    const provider = getMobileNavProvider(root);
+    const popup = root.querySelector('[data-var-ui-mobile-nav-popup]') as HTMLDialogElement;
+    provider?.open();
+    popup.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
     popup.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(provider?.isOpen).toBe(false);
   });

@@ -591,6 +591,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "axes": [],
     "slots": {
       "empty": "var-ui-command-palette__empty",
+      "frame": "var-ui-command-palette__frame",
       "group": "var-ui-command-palette__group",
       "groupHeading": "var-ui-command-palette__groupHeading",
       "input": "var-ui-command-palette__input",
@@ -1055,6 +1056,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "scrollable",
     ],
     "slots": {
+      "body": "var-ui-layout-panel__body",
       "panel": "var-ui-layout-panel__panel",
       "popup": "var-ui-layout-panel__popup",
     },
@@ -1141,6 +1143,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "mobile-nav": {
     "axes": [],
     "slots": {
+      "body": "var-ui-mobile-nav__body",
       "closeButton": "var-ui-mobile-nav__closeButton",
       "header": "var-ui-mobile-nav__header",
       "headerTitle": "var-ui-mobile-nav__headerTitle",

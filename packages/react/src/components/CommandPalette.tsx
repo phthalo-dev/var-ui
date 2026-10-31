@@ -98,6 +98,7 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
 
 type CommandPaletteSlot =
   | 'root'
+  | 'frame'
   | 'inputRow'
   | 'inputIcon'
   | 'input'
@@ -308,11 +309,13 @@ export function CommandPalette({
       {...rest}
       aria-label={ariaLabel ?? placeholder}
       aria-busy={loading || undefined}
+      data-open={root.open ? '' : undefined}
+      data-closed={root.open ? undefined : ''}
       {...mergeProps(cp.root, className)}
       style={style}
     >
       {dialog.mounted ? (
-        <>
+        <div {...mergeProps(cp.frame)}>
           <Autocomplete inputValue={query} onInputChange={setQuery}>
             <div {...mergeProps(cp.inputRow)}>
               <span {...mergeProps(cp.inputIcon)}>
@@ -343,7 +346,7 @@ export function CommandPalette({
               )}
             </ListBox>
           </Autocomplete>
-        </>
+        </div>
       ) : null}
     </dialog>
   );

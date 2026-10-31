@@ -7,6 +7,7 @@ import type { CommandPaletteItem } from '../scripts/commandPaletteUtils';
 
 type CommandPaletteSlot =
   | 'root'
+  | 'frame'
   | 'inputRow'
   | 'inputIcon'
   | 'input'
@@ -43,6 +44,7 @@ const {
 const indexJson = JSON.stringify(items);
 const cp = (commandPalette as unknown as CommandPaletteRecipeFn)();
 const dialogRecipe = mergeProps(cp.root);
+const frameRecipe = mergeProps(cp.frame);
 const inputRowRecipe = mergeProps(cp.inputRow);
 const inputIconRecipe = mergeProps(cp.inputIcon);
 const inputRecipe = mergeProps(cp.input);
@@ -77,6 +79,7 @@ const emptyClass = (cp.empty).className;
     data-var-ui-command-palette-dialog
     aria-label={ariaLabel}
   >
+    <div {...frameRecipe}>
       <div {...inputRowRecipe}>
         <span {...inputIconRecipe} aria-hidden="true">
           <svg
@@ -113,6 +116,7 @@ const emptyClass = (cp.empty).className;
         role="listbox"
       >
       </div>
+    </div>
   </dialog>
 
   <script is:inline type="application/json" data-var-ui-command-palette-items set:html={indexJson} />

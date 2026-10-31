@@ -1,9 +1,7 @@
 import {
   Children,
-  useEffect,
   useId,
   useMemo,
-  useState,
   type ComponentPropsWithRef,
   type JSX,
   type ReactNode,
@@ -12,6 +10,7 @@ import { drawer } from '@var-ui/core/components/drawer';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import type { DrawerVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
+import { findPartId } from '../internal/findPartId';
 import { NativeSheetPopup } from '../internal/NativeSheetPopup';
 import {
   composeHandlers,
@@ -77,8 +76,8 @@ type DrawerContextValue = {
   dismissable: boolean;
   size: DrawerVariantProps['size'];
   ariaLabel?: string;
-  titleId: string | undefined;
-  setTitleId: (id: string | undefined) => void;
+  /** Id shared with `Drawer.Title` in the same render as the `<dialog>`. */
+  titleId: string;
 };
 
 const { Context: DrawerContext, use: useDrawerContext } =
@@ -94,10 +93,10 @@ function DrawerRoot({
   'aria-label': ariaLabel,
 }: DrawerRootProps): JSX.Element {
   const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
-  const [titleId, setTitleId] = useState<string | undefined>(undefined);
+  const titleId = useId();
 
   const context = useMemo<DrawerContextValue>(
-    () => ({ root, dismissable, size, ariaLabel, titleId, setTitleId }),
+    () => ({ root, dismissable, size, ariaLabel, titleId }),
     [root, dismissable, size, ariaLabel, titleId],
   );
 
@@ -155,7 +154,9 @@ function DrawerPopup({
       dismissable={ctx.dismissable}
       data-placement={placement}
       aria-label={name}
-      aria-labelledby={ariaLabelledBy ?? (name ? undefined : ctx.titleId)}
+      aria-labelledby={
+        ariaLabelledBy ?? (name ? undefined : findPartId(children, DrawerTitle, ctx.titleId))
+      }
       style={{ ...popupStyle, ...style }}
       ref={ref}
     >
@@ -171,14 +172,9 @@ function DrawerHeader({ className, ...rest }: DrawerHeaderProps): JSX.Element {
 }
 
 function DrawerTitle({ className, id: idProp, ...rest }: DrawerTitleProps): JSX.Element {
-  const { size, setTitleId } = useDrawerContext();
-  const generatedId = useId();
-  const id = idProp ?? generatedId;
+  const { size, titleId } = useDrawerContext();
+  const id = idProp ?? titleId;
   const styles = drawer({ size });
-  useEffect(() => {
-    setTitleId(id);
-    return () => setTitleId(undefined);
-  }, [id, setTitleId]);
   return <h2 {...rest} id={id} {...mergeProps(styles.title, className)} />;
 }
 

@@ -477,7 +477,7 @@ export function LayoutPanel({
         aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
         aria-labelledby={ariaLabelledBy}
       >
-        {panelBody}
+        <div {...mergeProps(s.body)}>{panelBody}</div>
       </NativeSheetPopup>
     );
   }

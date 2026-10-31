@@ -65,6 +65,7 @@ export default defineConfig({
           include: [
             'vite-plus/test/browser',
             'react-aria-components',
+            'react-dom',
             'react-dom/client',
             '@testing-library/react',
             'typestyles',

@@ -1,9 +1,7 @@
 import {
   Children,
-  useEffect,
   useId,
   useMemo,
-  useState,
   type ComponentPropsWithRef,
   type JSX,
   type ReactNode,
@@ -11,6 +9,7 @@ import {
 import { dialog } from '@var-ui/core/components/dialog';
 import type { DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
+import { findPartId } from '../internal/findPartId';
 import { NativeDialogContext } from '../internal/nativeDialogShim';
 import {
   composeHandlers,
@@ -71,11 +70,9 @@ export type DialogCloseProps = OverlayCloseProps;
 type DialogContextValue = {
   root: OverlayRoot;
   dismissable: boolean;
-  /** Ids of the mounted `Dialog.Title` / `Dialog.Description`, wired to the dialog's `aria-*`. */
-  titleId: string | undefined;
-  setTitleId: (id: string | undefined) => void;
-  descriptionId: string | undefined;
-  setDescriptionId: (id: string | undefined) => void;
+  /** Ids shared with `Dialog.Title` / `Dialog.Description` in the same render as the `<dialog>`. */
+  titleId: string;
+  descriptionId: string;
 };
 
 const { Context: DialogContext, use: useDialogContext } =
@@ -89,11 +86,11 @@ function DialogRoot({
   dismissable = true,
 }: DialogRootProps): JSX.Element {
   const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
-  const [titleId, setTitleId] = useState<string | undefined>(undefined);
-  const [descriptionId, setDescriptionId] = useState<string | undefined>(undefined);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const context = useMemo<DialogContextValue>(
-    () => ({ root, dismissable, titleId, setTitleId, descriptionId, setDescriptionId }),
+    () => ({ root, dismissable, titleId, descriptionId }),
     [root, dismissable, titleId, descriptionId],
   );
 
@@ -147,8 +144,12 @@ function DialogPopup({
       // `role="dialog"` is implicit; only `alertdialog` needs the attribute.
       role={role === 'alertdialog' ? role : undefined}
       aria-label={ariaLabel}
-      aria-labelledby={ariaLabelledBy ?? (ariaLabel ? undefined : ctx.titleId)}
-      aria-describedby={ariaDescribedBy ?? ctx.descriptionId}
+      aria-labelledby={
+        ariaLabelledBy ?? (ariaLabel ? undefined : findPartId(children, DialogTitle, ctx.titleId))
+      }
+      aria-describedby={
+        ariaDescribedBy ?? findPartId(children, DialogDescription, ctx.descriptionId)
+      }
       data-open={root.open ? '' : undefined}
       data-closed={root.open ? undefined : ''}
       ref={setRef}
@@ -170,14 +171,9 @@ function DialogHeader({ className, ...rest }: DialogHeaderProps): JSX.Element {
 }
 
 function DialogTitle({ className, id: idProp, ...rest }: DialogTitleProps): JSX.Element {
-  const { setTitleId } = useDialogContext();
-  const generatedId = useId();
-  const id = idProp ?? generatedId;
+  const { titleId } = useDialogContext();
+  const id = idProp ?? titleId;
   const d = dialog();
-  useEffect(() => {
-    setTitleId(id);
-    return () => setTitleId(undefined);
-  }, [id, setTitleId]);
   return <h2 {...rest} id={id} {...mergeProps(d.heading, className)} />;
 }
 
@@ -186,14 +182,9 @@ function DialogDescription({
   id: idProp,
   ...rest
 }: DialogDescriptionProps): JSX.Element {
-  const { setDescriptionId } = useDialogContext();
-  const generatedId = useId();
-  const id = idProp ?? generatedId;
+  const { descriptionId } = useDialogContext();
+  const id = idProp ?? descriptionId;
   const d = dialog();
-  useEffect(() => {
-    setDescriptionId(id);
-    return () => setDescriptionId(undefined);
-  }, [id, setDescriptionId]);
   return <p {...rest} id={id} {...mergeProps(d.description, className)} />;
 }
 

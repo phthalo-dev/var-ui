@@ -163,6 +163,7 @@
     "combobox__popover",
     "command-palette",
     "command-palette__empty",
+    "command-palette__frame",
     "command-palette__input",
     "command-palette__inputIcon",
     "command-palette__inputRow",
@@ -302,6 +303,7 @@
     "layout-footer__footerInner",
     "layout-header__header",
     "layout-header__headerInner",
+    "layout-panel__body",
     "layout-panel__panel",
     "layout-panel__popup",
     "layout__inner",
@@ -334,6 +336,7 @@
     "menu__sectionHeader",
     "menu__separator",
     "menu__submenuChevron",
+    "mobile-nav__body",
     "mobile-nav__closeButton",
     "mobile-nav__header",
     "mobile-nav__headerTitle",
@@ -1878,6 +1881,14 @@
       "line": 17
     },
     {
+      "className": "command-palette__frame",
+      "kind": "component",
+      "namespace": "command-palette",
+      "suffix": "frame",
+      "file": "src/components/commandPalette.ts",
+      "line": 18
+    },
+    {
       "className": "command-palette__input",
       "kind": "component",
       "namespace": "command-palette",
@@ -3003,6 +3014,14 @@
       "line": 106
     },
     {
+      "className": "layout-panel__body",
+      "kind": "component",
+      "namespace": "layout-panel",
+      "suffix": "body",
+      "file": "src/components/layout.ts",
+      "line": 253
+    },
+    {
       "className": "layout-panel__popup",
       "kind": "component",
       "namespace": "layout-panel",
@@ -3232,6 +3251,14 @@
       "suffix": "submenuChevron",
       "file": "src/components/menu.ts",
       "line": 13
+    },
+    {
+      "className": "mobile-nav__body",
+      "kind": "component",
+      "namespace": "mobile-nav",
+      "suffix": "body",
+      "file": "src/components/mobileNav.ts",
+      "line": 70
     },
     {
       "className": "mobile-nav__closeButton",

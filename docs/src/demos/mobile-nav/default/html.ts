@@ -18,7 +18,7 @@ export function render(): string {
         open: true,
         style: 'position: relative; inset: auto; margin: 0; height: 160px',
       },
-      'Menu',
+      serializeHtmlTag('div', mergeProps(s.body), 'Menu'),
     ),
   );
 }

@@ -20,6 +20,7 @@ export const commandPalette = typestyles.recipe({
   layer: 'components',
   slots: [
     'root',
+    'frame',
     'inputRow',
     'inputIcon',
     'input',
@@ -149,10 +150,21 @@ export const commandPalette = typestyles.recipe({
           borderRadius: t.radius.lg.var,
           ...border(vars.dialogBorder.var),
           boxShadow: t.shadow.xl.var,
-          overflow: 'hidden',
+          // Visible so a portaled popup (a child of this dialog) is not clipped. `frame` clips
+          // the surface to the radius.
+          overflow: 'visible',
           ...atDarkMode({
             boxShadow: 'none',
           }),
+        },
+        frame: {
+          display: 'flex',
+          flexDirection: 'column',
+          flex: '1 1 auto',
+          minHeight: 0,
+          maxHeight: '100%',
+          overflow: 'hidden',
+          borderRadius: 'inherit',
         },
         inputRow: {
           flexShrink: 0,

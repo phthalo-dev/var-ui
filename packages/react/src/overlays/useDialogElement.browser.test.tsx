@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { StrictMode, useState } from 'react';
 import { userEvent } from 'vite-plus/test/browser';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vite-plus/test';
-import { raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
+import { freezeAt, raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { useDialogElement, type UseDialogElementOptions } from './useDialogElement';
 import { useOverlayRoot } from './useOverlayRoot';
@@ -261,6 +261,31 @@ describe('veto and dedupe', () => {
     expect(dialogEl().matches(':modal')).toBe(true);
   });
 
+  test('an accepted non-cancelable cancel does not re-show the dialog', async () => {
+    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
+    render(<TestDialog defaultOpen onOpenChange={onOpenChange} />);
+    await raf();
+    const dialog = dialogEl();
+    const show = vi.spyOn(dialog, 'showModal');
+    dialog.dispatchEvent(new Event('cancel', { cancelable: false }));
+    await raf();
+    expect(reasons(onOpenChange)).toEqual([[false, 'imperative']]);
+    expect(dialog.open).toBe(false);
+    expect(show).not.toHaveBeenCalled();
+  });
+
+  test('a vetoed non-cancelable cancel re-shows after the browser closes the dialog', async () => {
+    render(<TestDialog defaultOpen onOpenChange={(_open, details) => details.cancel()} />);
+    await raf();
+    const dialog = dialogEl();
+    const show = vi.spyOn(dialog, 'showModal');
+    dialog.dispatchEvent(new Event('cancel', { cancelable: false }));
+    dialog.close();
+    await raf();
+    expect(dialog.matches(':modal')).toBe(true);
+    expect(show).toHaveBeenCalled();
+  });
+
   test('a close that follows our own reported request reports once', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     render(<Controlled onOpenChange={onOpenChange} />);
@@ -342,6 +367,33 @@ describe('exit mounting', () => {
     await raf();
     expect(q('body')).toBeTruthy();
     expect(dialogEl().matches(':modal')).toBe(true);
+  });
+
+  test('child state survives the exit', async () => {
+    function Stateful() {
+      const root = useOverlayRoot({ native: true, defaultOpen: true });
+      const dialog = useDialogElement(root);
+      const [value, setValue] = useState('a');
+      return (
+        <dialog ref={dialog.ref} data-testid="dialog" className="fx">
+          {dialog.mounted ? (
+            <input
+              data-testid="field"
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+          ) : null}
+        </dialog>
+      );
+    }
+    render(<Stateful />);
+    await settled(dialogEl());
+    await userEvent.type(q('field'), 'b');
+    expect((q('field') as HTMLInputElement).value).toBe('ab');
+    // The modal makes the page inert, so close with Escape rather than a control outside it.
+    await userEvent.keyboard('{Escape}');
+    freezeAt(dialogEl(), 0.5);
+    expect((q('field') as HTMLInputElement).value).toBe('ab');
   });
 
   test('without a transition the body unmounts immediately', async () => {

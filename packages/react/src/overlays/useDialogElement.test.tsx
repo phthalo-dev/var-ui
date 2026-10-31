@@ -132,6 +132,30 @@ describe('useDialogElement', () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it('an accepted non-cancelable cancel does not re-show the dialog', async () => {
+    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
+    render(<TestDialog defaultOpen onOpenChange={onOpenChange} />);
+    showModal.mockClear();
+    act(() => void getDialog().dispatchEvent(new Event('cancel', { cancelable: false })));
+    await act(async () => {});
+    expect(reasons(onOpenChange)).toEqual([[false, 'imperative']]);
+    expect(getDialog().open).toBe(false);
+    expect(showModal).not.toHaveBeenCalled();
+  });
+
+  it('a vetoed non-cancelable cancel re-shows after the browser closes the dialog', async () => {
+    render(<TestDialog defaultOpen onOpenChange={(_open, details) => details.cancel()} />);
+    showModal.mockClear();
+    const dialog = getDialog();
+    act(() => {
+      dialog.dispatchEvent(new Event('cancel', { cancelable: false }));
+      dialog.close();
+    });
+    await act(async () => {});
+    expect(dialog.open).toBe(true);
+    expect(showModal).toHaveBeenCalled();
+  });
+
   it('dedupes: two cancels in a row report once', () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     render(<TestDialog defaultOpen onOpenChange={onOpenChange} />);
@@ -180,6 +204,40 @@ describe('useMountedWhileAnimating', () => {
     expect(result.current).toBe(true);
     (animation as { playState: string }).playState = 'finished';
     await act(async () => finish());
+    expect(result.current).toBe(false);
+  });
+
+  it('keeps children mounted on the close render, then drops them when nothing animates', () => {
+    const ref = { current: document.createElement('div') };
+    const seen: boolean[] = [];
+    function Probe({ open }: { open: boolean }) {
+      seen.push(useMountedWhileAnimating(ref, open));
+      return null;
+    }
+    const { rerender } = render(<Probe open />);
+    seen.length = 0;
+    rerender(<Probe open={false} />);
+    expect(seen[0]).toBe(true);
+    expect(seen[seen.length - 1]).toBe(false);
+  });
+
+  it('ignores an infinite descendant animation when deciding the exit is over', async () => {
+    const el = document.createElement('div');
+    const finished = new Promise<Animation>(() => {});
+    el.getAnimations = () =>
+      [
+        {
+          playState: 'running',
+          pending: false,
+          finished,
+          effect: { getComputedTiming: () => ({ iterations: Infinity }) },
+        },
+      ] as unknown as Animation[];
+    const ref = { current: el };
+    const { result, rerender } = renderHook(({ open }) => useMountedWhileAnimating(ref, open), {
+      initialProps: { open: true },
+    });
+    rerender({ open: false });
     expect(result.current).toBe(false);
   });
 

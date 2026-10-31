@@ -5,6 +5,7 @@ import {
   moveCommandPaletteActiveIndex,
   type CommandPaletteItem,
 } from './commandPaletteUtils';
+import { bindBackdropDismiss } from './backdropDismiss';
 
 const ROOT_SELECTOR = '[data-var-ui-command-palette-root]';
 const INITIALIZED_ATTR = 'data-var-ui-command-palette-initialized';
@@ -197,9 +198,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
     syncTriggerState(false);
   });
 
-  dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) setOpen(false);
-  });
+  const unbindBackdrop = bindBackdropDismiss(dialog, () => setOpen(false));
 
   input.addEventListener('input', () => {
     render(input.value);
@@ -243,12 +242,14 @@ export function initCommandPalette(root: HTMLElement): () => void {
     };
     window.addEventListener('keydown', handleHotkey);
     return () => {
+      unbindBackdrop();
       controllers.delete(root);
       window.removeEventListener('keydown', handleHotkey);
     };
   }
 
   return () => {
+    unbindBackdrop();
     controllers.delete(root);
   };
 }

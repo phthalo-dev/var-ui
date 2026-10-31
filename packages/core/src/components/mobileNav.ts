@@ -69,7 +69,7 @@ const mobileNavVarDefinitions = {
 export const mobileNav = typestyles.recipe({
   name: 'mobile-nav',
   layer: 'components',
-  slots: ['popup', 'header', 'headerTitle', 'closeButton', 'toggle'],
+  slots: ['popup', 'header', 'headerTitle', 'body', 'closeButton', 'toggle'],
   vars: mobileNavVarDefinitions,
   styles: ({ vars }) => {
     return {
@@ -88,7 +88,6 @@ export const mobileNav = typestyles.recipe({
           flexDirection: 'column',
           backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
-          overflowY: 'auto',
           '&[data-side="start"]': {
             ...nativeSlideFrom('start'),
             insetInlineStart: 0,
@@ -117,6 +116,13 @@ export const mobileNav = typestyles.recipe({
         headerTitle: {
           minWidth: 0,
           flex: '1 1 auto',
+        },
+        // Scroll the sheet body, not the `<dialog>`. A portaled popup (Select, Menu) is a child
+        // of the dialog; overflow on the dialog clips it.
+        body: {
+          flex: '1 1 auto',
+          minHeight: 0,
+          overflowY: 'auto',
         },
         closeButton: {
           appearance: 'none',

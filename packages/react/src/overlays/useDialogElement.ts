@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, type RefCallback } from 'react';
+import { flushSync } from 'react-dom';
 import type { OverlayOpenChangeReason } from './changeEvent';
 import type { OverlayRoot } from './useOverlayRoot';
 import { useMountedWhileAnimating } from './useMountedWhileAnimating';
@@ -45,6 +46,8 @@ type Gesture = { event: Event; reason: OverlayOpenChangeReason };
  *   - `close` without a request (`<form method="dialog">`, a non-cancelable Escape, `close()` called
  *     by someone else) -> `close-press` after a click inside the dialog, else `imperative`.
  *     If the consumer keeps `open` true, the dialog is re-shown with `showModal()`.
+ *     `setOpen` is committed with `flushSync` before that `close` runs, so an accepted close
+ *     (whose `open` is now false) is not re-shown on the stale pre-render value.
  * - Focus: native. `showModal()` moves focus to `[autofocus]`/the first focusable and `close()`
  *   returns it to the element that was focused before; nothing is written here.
  * - Reasons that start at the trigger (`trigger-press`) come from `root.triggerPress`; prop changes
@@ -103,9 +106,13 @@ export function useDialogElement(
       // Keep the dialog open; `open` decides. (Ignored when the browser made it non-cancelable.)
       event.preventDefault();
       reported = !event.cancelable;
-      latest.current.root.setOpen(false, {
-        reason: stash?.reason ?? 'imperative',
-        event: stash?.event ?? event,
+      // Commit before the browser's non-cancelable close. Otherwise `onClose` still sees the
+      // pre-render `open` and calls `showModal()` on a close the consumer just accepted.
+      flushSync(() => {
+        latest.current.root.setOpen(false, {
+          reason: stash?.reason ?? 'imperative',
+          event: stash?.event ?? event,
+        });
       });
     };
 

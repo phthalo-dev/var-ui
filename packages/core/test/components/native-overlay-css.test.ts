@@ -114,6 +114,19 @@ describe('native dialog-family recipes', () => {
     expect(css).not.toContain('var-ui-mobile-nav__overlay');
   });
 
+  it('scrolls inside the sheet, not on the dialog that portals popovers', () => {
+    mobileNav();
+    layoutPanel();
+    commandPalette();
+    const css = getRegisteredCss();
+    expect(rules(css, '.var-ui-mobile-nav__popup {', 'overflow')).toHaveLength(0);
+    expect(rules(css, '.var-ui-mobile-nav__body {', 'overflow-y: auto')).toHaveLength(1);
+    expect(rules(css, '.var-ui-layout-panel__popup', 'overflow: auto')).toHaveLength(0);
+    expect(rules(css, '.var-ui-layout-panel__body', 'overflow: auto')).not.toHaveLength(0);
+    expect(rules(css, '.var-ui-command-palette {', 'overflow: hidden')).toHaveLength(0);
+    expect(rules(css, '.var-ui-command-palette__frame {', 'overflow: hidden')).toHaveLength(1);
+  });
+
   it('moves dialog padding to the content element so the dialog box is all content', () => {
     dialog();
     const css = getRegisteredCss();

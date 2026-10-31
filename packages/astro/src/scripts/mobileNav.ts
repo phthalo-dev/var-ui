@@ -1,5 +1,6 @@
 import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
 import { svg as menuSvg } from '@var-ui/icons/glyphs/menu';
+import { isBackdropTarget } from './backdropDismiss';
 
 type MobileNavController = {
   isOpen: boolean;
@@ -85,13 +86,13 @@ export function initMobileNavToggle(button: HTMLElement): () => void {
     return () => {};
   }
 
-  const provider = getMobileNavProvider(button);
   button.setAttribute('aria-expanded', 'false');
   if (!button.innerHTML.trim()) {
     button.innerHTML = MENU_ICON;
   }
 
   const handleClick = () => {
+    const provider = getMobileNavProvider(button);
     if (provider) {
       provider.toggle();
       return;
@@ -109,8 +110,6 @@ export function initMobileNav(drawer: HTMLElement): () => void {
     return () => {};
   }
 
-  const providerRoot = drawer.closest('[data-var-ui-mobile-nav-provider]') as HTMLElement | null;
-  const provider = providerRoot ? getMobileNavProvider(drawer) : null;
   const popup = getPopup(drawer);
   const closeButton = drawer.querySelector<HTMLElement>('[data-var-ui-mobile-nav-close]');
 
@@ -118,22 +117,39 @@ export function initMobileNav(drawer: HTMLElement): () => void {
     closeButton.innerHTML = CLOSE_ICON;
   }
 
-  const close = () => provider?.close();
+  // Resolved at event time: the drawer script and `AppShell` both initialize, and whichever
+  // runs first wins `data-var-ui-initialized`.
+  const close = () => getMobileNavProvider(drawer)?.close();
 
-  // A press on the backdrop lands on the `<dialog>` itself (the recipe has no padding on it).
+  let pressedBackdrop = false;
+  let pressedLink = false;
+  const handlePointerDown = (event: PointerEvent) => {
+    if (!popup) return;
+    pressedBackdrop = isBackdropTarget(popup, event);
+    const target = event.target;
+    pressedLink = target instanceof Element && !!target.closest('a[href]');
+  };
+  // Backdrop: pointerdown and click both outside the dialog box. A link closes only when the
+  // press started on that link, so a drag that ends on it does not.
   const handlePopupClick = (event: MouseEvent) => {
-    const target = event.target as HTMLElement | null;
-    if (target === popup || target?.closest('a[href]')) close();
+    const target = event.target;
+    const link = pressedLink && target instanceof Element ? target.closest('a[href]') : null;
+    const backdrop = popup ? pressedBackdrop && isBackdropTarget(popup, event) : false;
+    pressedBackdrop = false;
+    pressedLink = false;
+    if (backdrop || link) close();
   };
   // Native closes (Escape, `requestClose()`) keep the provider's state in sync.
   const handlePopupClose = () => close();
   const handleCloseClick = () => close();
 
+  popup?.addEventListener('pointerdown', handlePointerDown);
   popup?.addEventListener('click', handlePopupClick);
   popup?.addEventListener('close', handlePopupClose);
   closeButton?.addEventListener('click', handleCloseClick);
 
   return () => {
+    popup?.removeEventListener('pointerdown', handlePointerDown);
     popup?.removeEventListener('click', handlePopupClick);
     popup?.removeEventListener('close', handlePopupClose);
     closeButton?.removeEventListener('click', handleCloseClick);
