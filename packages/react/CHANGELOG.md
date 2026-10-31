@@ -1,5 +1,86 @@
 # @var-ui/react
 
+## 0.7.0
+
+### Minor Changes
+
+- [#102](https://github.com/phthalo-dev/var-ui/pull/102) [`44ae60c`](https://github.com/phthalo-dev/var-ui/commit/44ae60c7b9dd62d8a7a65fe8c9ff4809c93b41de) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - API contract, part 1: native passthrough, refs and shared field plumbing.
+  
+  - Components accept and spread their element's native props (`id`, `data-*`, `aria-*`, `style`, handlers) and merge `className`; this covers the display, data, navigation, button, overlay-part and field components in React and the matching Astro components. Overlay triggers and `Close` merge onto their child.
+  - Field components render label/description/error through shared `FieldFrame`/`RacFieldFrame`; `errorMessage` implies invalid, ids are wired into `aria-describedby`. `ref` now points at the native control (`<input>`, `<button>`, …) where one exists; date/time fields use the segmented input, and Slider/PinInput/InputGroup/EditableText the nearest real element.
+  - `Button` takes `href` and renders an anchor. New `Toolbar.astro`. `ResizeHandle.astro` takes `aria-label` instead of `label`.
+  - User-visible default strings are overridable props (Pagination takes a `labels` object). Heading levels are overridable on Accordion, Collapsible, Card, Section and EmptyState.
+  - `Menu.Popup` takes `placement`, `Menu.Item` takes `textValue`, menu presets compose the same root (presence, layer, `portalContainer`), `MenuContent` no longer nests a second menu.
+  - `FileInput` puts dropped files into the native input so `FormData` sees them; `Field` accepts `name` and shows `<Form errors>`; one shared calendar body backs the date fields; `SearchInput` drops the unsupported `variant="command"` type in React; `Toc` drops `hideBelowXl` (the rail already hides below `xl`).
+  - Inline style objects in Accordion, Collapsible, Table, Tree, List, SideNav, TopNav and Layout moved into recipes.
+
+- [#103](https://github.com/phthalo-dev/var-ui/pull/103) [`0980a84`](https://github.com/phthalo-dev/var-ui/commit/0980a84a88292c0e0c7497976082aa73f7a4b8b8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - API contract, part 2: platform vocabulary. Breaking.
+  
+  - **Booleans drop the `is` prefix:** `disabled`, `required`, `readOnly`, `invalid`, `open`/`defaultOpen`, `expanded`/`defaultExpanded`, `collapsed`/`defaultCollapsed`, `dismissable`, `loading`, `selected`, `nested`, `active`, `striped`, `scrollable`, `indeterminate`, `rowHeader`, `streaming`, `reversed`, `labelHidden`, `iconOnly`, `destructive`, `wheelDisabled`, `unavailable`. Checkbox and Switch use `checked` / `defaultChecked` / `indeterminate`. Core recipe axes `isScrollable` and `isStriped` are now `scrollable` and `striped`.
+  - **Events:** `onChange` is always the native DOM event (via `...rest`, or a capture handler on the root for Checkbox, Switch, RadioGroup, CheckboxGroup and Slider); parsed values arrive through `onValueChange` (`onCheckedChange` for Checkbox/Switch, `onSelectedChange` for toggle chips and buttons, `onValueCommit` on Slider). `onPress` is gone: use `onClick`. Select, Tabs, SegmentedControl, Tree selection, Pagination and the date/time fields have no native `onChange`.
+  - **Collections** use `value` / `defaultValue` / `onValueChange` (`string | null` for single, `string[]` with `multiple`/`selectionMode="multiple"`) and `{ value, label, disabled? }` options: Select, Combobox, Typeahead, MultiSelector, Tokenizer, SegmentedControl, ChipGroup, RadioGroup, CheckboxGroup, Tabs, TabList, Tree, Pagination, Accordion. `selectedKey(s)`, `Selection` and `Set` values are gone from the public API; Tree and CollapsibleGroup expansion uses `expanded` / `defaultExpanded` / `onExpandedChange(string[])`.
+  - **Renames:** Alert `variant` -> `tone`; `IconButton name` -> `icon`; `PinInput type` -> `characters`; Button `pending` -> `loading`; NumberInput/Slider/date fields `minValue`/`maxValue` -> `min`/`max`; date `isDateUnavailable` -> `unavailable`; `ResizeHandle onChange` -> `onValueChange`; `CollapsibleGroup allowsMultipleExpanded` -> `multiple`; `MobileNav` context `isOpen` -> `open` (and `open()` -> `show()`).
+  - **New:** `CommandPalette` and `AlertDialog` take `defaultOpen`; `CommandPalette` `onOpenChange(open, details)` with `details.cancel()`; Drawer is uncontrolled when `open` is omitted; `ChatComposerInput` takes a native `onChange`, its `ref` now points at the textarea; chat components pass native props through.
+  - `Pill.astro` is removed (it duplicated `Chip.astro`); `Pill` is a removable `Chip` in React only. `ChipGroup` is single-select unless `multiple`.
+  - A compiler-based test (`publicProps.test.ts`) fails if any exported component prop starts with `is`/`defaultIs` or uses `onPress*`, `selectedKey(s)` or `onSelectionChange`.
+
+- [#105](https://github.com/phthalo-dev/var-ui/pull/105) [`40b24be`](https://github.com/phthalo-dev/var-ui/commit/40b24be346f5e0a92d32c82aa8c86a4a1e00423a) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - CSS-first theming and platform accessibility features.
+  
+  - **Reduced motion at the token level.** The `duration.fast|medium|slow` tokens resolve to `0ms` under `prefers-reduced-motion: reduce` (a theme `mode` added to every `createDesignTheme` theme), and the `transition.*` tokens are built from them, so any recipe that uses duration or transition tokens respects it without per-recipe code. Every hard-coded `140ms`/`0.15s`/`200ms` literal in the recipes is now a token or `transitionOf()`; keyframe animations use `atReducedMotion`; no recipe contains a raw `@media` any more. Unused duration `*-min`/`*-max` tokens are removed. New transition tokens: `border`, `borderShadow`, `background`, `chrome`, `transform`.
+  - **Forced colors and contrast.** New `atForcedColors`, `atMoreContrast`, `when.forcedColors`, `when.moreContrast`. Components that conveyed state or boundaries only through background or box-shadow (checkbox/radio/switch, selected tabs/segments/chips/menu items, progress and slider fills, calendar and date segments, skeleton, spinner, swatches, chat bubbles, dividers, ...) now keep a visible cue in Windows High Contrast.
+  - **RTL.** Physical properties in the recipes became logical (inline/block sides, `text-align: start`, logical radii and insets); the switch thumb, table resize handle, progress indeterminate animation, scroll fades and menu placement edges are mirrored under `[dir="rtl"]`.
+  - **Tokens.** One shadow scale (`xs`-`xl`; `shadow.elevation` is removed); new `zIndex.lifted`; raw z-index integers and opacity literals use tokens; codeBlock diff colours use `tone.success|danger.subtleBackground`; shared `border()` / `borderSide()` helpers replace ~110 longhand borders.
+  - **Stability.** New tests snapshot every recipe's slot class names, component CSS variables and axes, and the `data-*` state hooks the components emit, so renames show up in review. Unused `data-alert-*` attributes are removed.
+  - **Docs.** New "Plain CSS" page under Theming describing the class names, `data-*` hooks, component variables, cascade layers, dark mode, reduced motion, forced colors and RTL; `ROADMAP.md` rewritten to match reality.
+  - `defaultTheme` is a `const` export; the dark-mode condition constants are shared.
+
+- [#101](https://github.com/phthalo-dev/var-ui/pull/101) [`85418a0`](https://github.com/phthalo-dev/var-ui/commit/85418a011d2993d9270ad388e38d0ba02d9c2d07) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - React and Astro components now import recipes from narrow `@var-ui/core/components/*` subpaths instead of the barrel, so importing one component no longer registers every recipe's CSS during extraction. `@var-ui/core` gains `./tokens/declare` and `./icons/iconNames` subpaths (plus existing `./components/*` / `./shared/*` wildcards).
+  
+  Public surface trim (intentional break): `@var-ui/core` root no longer re-exports `style` / `recipe` / `tokens` / `global` / `override` / `breakpoint` / `media` from `runtime` (use `typestyles.*`); `@var-ui/react` no longer exports overlay helpers (`mergeOverlayChild`, `inferOverlayCloseReason`, `OverlayCloseContext`, `useOverlayClose`), `FormErrorsContext`, `useTocSpy`, or `useTreeFocus`.
+  
+  Implementation helpers moved to unpublished `src/internal/` (`controlSize`, `fieldChrome`, `focusRing` in core; `menuContent`, `menuPresets`, `controlSizeContext`, `commandPaletteHotkey`, `commandPaletteController`, `racClassName` in react). Package `exports` are static wildcards; the `generate-subpath-exports` build step is removed. `focusRing` remains available from the `@var-ui/core` root barrel.
+
+- [#107](https://github.com/phthalo-dev/var-ui/pull/107) [`2d821d8`](https://github.com/phthalo-dev/var-ui/commit/2d821d8d18b8138b6725b5cbadfdf05e270d9d37) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Native `<dialog>` overlays (P6 part A). Breaking.
+  
+  - **Dialog, AlertDialog, Drawer, MobileNav, the Layout panel overlay and CommandPalette now render a native `<dialog>` opened with `showModal()`**: native focus trap, inert background, top layer (no z-index), `::backdrop`, native focus return and Escape. react-aria's `Modal`/`ModalOverlay`/`Dialog` are gone from these components.
+  - **API.** `Popup` _is_ the `<dialog>` and accepts its native props; the `Backdrop` parts are removed (style `::backdrop` of the popup); `portalContainer` is removed everywhere (dialogs render in place; theme and token scope follow the DOM; note a `<button>` inside a dialog inside a `<form>` submits that form, and DOM events bubble through real ancestors). `dismissable` stays on Root and now also on MobileNav. Triggers must be button-like. `autoFocus` has no effect inside a native dialog on plain elements: use the native `autofocus` attribute.
+  - **Close reasons from native events:** `escape-key`, `outside-press`, `close-press`, `trigger-press`, `imperative`. `details.cancel()` vetoes opening and click-driven changes; Escape can be vetoed once per user activation (Chromium), after which a controlled `open=true` re-shows the dialog. The `event` on an Escape close is the `keydown`; `details.cancel()` is the veto.
+  - **CSS.** Enter and exit use `@starting-style` with `allow-discrete` transitions; the `::backdrop` fades; scroll lock is a global `html:has(dialog:modal)` rule with `scrollbar-gutter: stable`. Recipes: `dialog`, `drawer`, `mobileNav` and `layoutPanel` have a single `popup` slot (plus `content` padding on dialog), `commandPalette`'s `root` is the dialog, and the `overlay` recipe is deleted. New helpers in `shared/overlayMotion`: `nativeEnterExit`, `nativeSlideFrom`, `nativeBackdrop`, `nativeDialogReset`.
+  - `MobileNav.astro` and the command palette use a native `<dialog>`; their DOM and script hooks changed accordingly.
+  - **Interim:** Select, Combobox, Menu, the date pickers and other react-aria popups render into the open dialog through a small internal shim until the popover migration lands.
+  - **Tests.** Real-Chromium browser tests (`*.browser.test.tsx`, vitest browser mode with Playwright) now run next to the jsdom tests; see AGENTS.md. CI installs Chromium (cached).
+
+- [#104](https://github.com/phthalo-dev/var-ui/pull/104) [`8ebbcad`](https://github.com/phthalo-dev/var-ui/commit/8ebbcadb7ec6aa92801832482ed10398861b57ad) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - API contract, part 3: one shape for every overlay. Breaking.
+  
+  - **Shared root hook.** `useOverlayRoot` (with `OverlayTrigger`, `useHoverIntent`, one cleanup-aware `useMergedRef`, `createOverlayContext`) replaces six near-identical copies of the open-state, close-reason, presence and trigger wiring in Dialog, Popover, Tooltip, HoverCard, Menu, Drawer, MobileNav, CommandPalette, TopNavMegaMenu and the Layout panel. The `display: contents` wrapper divs that existed only to catch keydown are gone; the close `reason` now comes from native listeners (`escape-key`, `outside-press`, `trigger-press`, `close-press`, `focus`, `hover`, `imperative`) and `details.cancel()` vetoes a change. A request equal to the current `open` is dropped, so Escape during an exit animation no longer fires a second `onOpenChange(false)`.
+  - **Uniform API.** Every overlay Root takes `open`, `defaultOpen` and `onOpenChange(open, details)` (now also MobileNav, TopNavMegaMenu, the Layout panel and CommandPalette); `portalContainer` and `dismissable` are Root-only; parts are `Trigger`, `Backdrop`, `Popup`, `Close`, `Title`, `Description` where the concept exists.
+  - **Removed.** `SimpleDialog`, `SimplePopover`, `SimpleTooltip`, and the assembled `AlertDialog`, `HoverCard` and `Drawer` presets (now documented recipes built from the compound parts); `Drawer.Panel` is `Drawer.Popup` and Drawer gains `Trigger`.
+  - **Also.** Menu presets and `Menu.Popup` share the hook (a click on the trigger no longer counts as an outside press); MobileNav and the Layout panel now animate out; one tone-to-icon map and one default toast duration; `toast()` without a provider warns once in development, and changing `maxVisibleToasts` keeps existing toasts; `LoadingOverlay` sets `aria-busy` on its root and makes the covered content `inert` (new `content` slot in the core recipe).
+
+- [#106](https://github.com/phthalo-dev/var-ui/pull/106) [`ab34170`](https://github.com/phthalo-dev/var-ui/commit/ab3417006a8be1f65072c4034c6138f8e13e6bc9) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Remove the duplicate `SimpleGrid` and `VStack` components.
+  
+  - `SimpleGrid` is gone (React component, `simpleGrid` core recipe and `simple-grid` class). Use `<Grid columns={n} gap="...">`; `Grid` `columns` now also accepts `5`, `6` and `8`, and `cols`/`spacing` become `columns`/`gap`.
+  - `VStack` is gone (React and Astro). Use `<Stack>`, which is vertical by default. `HStack` stays.
+  
+  `Grid` columns now use `minmax(0, 1fr)` for every fixed track (previously plain `1fr` for 1-4), so wide content no longer stretches a column.
+
+### Patch Changes
+
+- [#100](https://github.com/phthalo-dev/var-ui/pull/100) [`d0423ba`](https://github.com/phthalo-dev/var-ui/commit/d0423ba02f7918f99b35715166b9a54c6214fa32) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Bug fixes from the component audit:
+  
+  - `className` now reaches the root of `TextField`, `TextAreaField`, `PasswordInput`, `CheckboxGroup` and `RadioGroup` (string or render-prop function); it was overwritten by the recipe class.
+  - `useLayer` no longer sets an inline `z-index: 100` without a `LayerProvider`, so the core dropdown/modal/toast tiers apply; with a provider it sets the layer CSS variable instead of a raw `z-index`.
+  - Ship the `'use client'` directive in every `@var-ui/react` module so the package works from Next.js server components (guarded by `scripts/check-use-client.mjs`).
+  - `Checkbox` renders an indeterminate state; `Form` reports rejected async `onSubmit` (new optional `onError`) and keeps a stable default `errors`.
+  - `Dialog.Description` is wired to `aria-describedby`; `AlertDialog` is no longer dismissed by a backdrop click by default (Escape still closes it).
+  - Keyboard-invoked `ContextMenu` anchors to the target instead of the top-left corner; `CommandPalette` fires `onOpenChange(false)` once and its `mod` hotkey is Meta on Apple platforms, Ctrl elsewhere.
+  - `PinInput`, `MultiSelector`, `Tokenizer` and `FileInput` accept `name` (so `FormData` includes them); description/error text is linked via `aria-describedby` on `PinInput`, `MultiSelector`, `Tokenizer` and `ColorInput`.
+  - `Chip` remove and `FileInput` clear controls are no longer nested inside another button; `Chip` also removes on Backspace/Delete. `ColorPicker` hue/alpha sliders are keyboard operable.
+  - `useResizable` no longer reads `localStorage` during the first render (hydration mismatch), `useMediaQuery` no longer resubscribes every render, and storage access in the provider/color mode is guarded.
+  - `Carousel` exposes carousel/slide ARIA semantics with overridable labels; `Alert` accepts an optional `role`.
+
+- [#98](https://github.com/phthalo-dev/var-ui/pull/98) [`d3514fc`](https://github.com/phthalo-dev/var-ui/commit/d3514fcadca65aa076a9772fcded6f5c8fadacec) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix `Toc` `stickyTop` never applying (the inline style used `--var-ui-toc-sticky-top`, but the recipe variable is `--var-ui-toc-stickytop`). Internal cleanup: route recipe CSS variables through `styleVars`, type the positioner style as `CSSProperties`, and drop unnecessary slot-recipe casts.
+
 ## 0.6.0
 
 ### Minor Changes
