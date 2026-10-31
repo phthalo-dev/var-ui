@@ -1,3 +1,5 @@
+import { userEvent } from 'vite-plus/test/browser';
+
 /** Shared helpers for `*.browser.test.ts(x)` files (real Chromium). */
 
 /** Resolves after two animation frames (layout + style + top-layer promotion settled). */
@@ -44,4 +46,30 @@ export function edgeInfo(el: Element): string {
     probe: viewport(),
     rect: el.getBoundingClientRect().toJSON(),
   });
+}
+
+/**
+ * Click the backdrop of a modal `<dialog>`: waits for its enter animation to settle, then clicks
+ * the middle of the largest free side of the box (always on-screen and outside the dialog).
+ */
+export async function clickBackdrop(dialog: HTMLElement): Promise<void> {
+  await settled(dialog);
+  const rect = dialog.getBoundingClientRect();
+  const view = viewport();
+  const free = {
+    left: rect.left - view.left,
+    right: view.right - rect.right,
+    top: rect.top,
+    bottom: window.innerHeight - rect.bottom,
+  };
+  const side = (Object.keys(free) as Array<keyof typeof free>).sort(
+    (a, b) => free[b] - free[a],
+  )[0]!;
+  const position = {
+    left: { x: -free.left / 2, y: Math.min(40, rect.height / 2) },
+    right: { x: rect.width + free.right / 2, y: Math.min(40, rect.height / 2) },
+    top: { x: Math.min(40, rect.width / 2), y: -free.top / 2 },
+    bottom: { x: Math.min(40, rect.width / 2), y: rect.height + free.bottom / 2 },
+  }[side];
+  await userEvent.click(dialog, { position, force: true });
 }

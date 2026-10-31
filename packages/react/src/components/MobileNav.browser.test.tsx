@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { edgeInfo, raf, settled, viewport } from '../test/browser';
+import { edgeInfo, raf, settled, viewport, clickBackdrop } from '../test/browser';
 import { MobileNav, MobileNavProvider, type MobileNavProps } from './MobileNav';
 
 beforeAll(() => {
@@ -84,7 +84,7 @@ describe('MobileNav on a native dialog', () => {
     const a = vi.fn<OverlayOpenChangeHandler>();
     const first = render(<Nav defaultOpen onOpenChange={a} />);
     await raf();
-    await userEvent.click(dlg(), { position: { x: dlg().offsetWidth + 20, y: 40 }, force: true });
+    await clickBackdrop(dlg());
     await raf();
     expect(reasons(a)).toEqual([[false, 'outside-press']]);
     first.unmount();
@@ -92,7 +92,7 @@ describe('MobileNav on a native dialog', () => {
     const b = vi.fn<OverlayOpenChangeHandler>();
     const second = render(<Nav defaultOpen dismissable={false} onOpenChange={b} />);
     await raf();
-    await userEvent.click(dlg(), { position: { x: dlg().offsetWidth + 20, y: 40 }, force: true });
+    await clickBackdrop(dlg());
     await raf();
     expect(b).not.toHaveBeenCalled();
     expect(modal()).toBe(true);
@@ -102,7 +102,7 @@ describe('MobileNav on a native dialog', () => {
     render(<Nav defaultOpen onOpenChange={c} />);
     await raf();
     await userEvent.keyboard('{Escape}');
-    await userEvent.click(dlg(), { position: { x: dlg().offsetWidth + 20, y: 40 }, force: true });
+    await clickBackdrop(dlg());
     await raf();
     expect(reasons(c)).toEqual([
       [false, 'escape-key'],

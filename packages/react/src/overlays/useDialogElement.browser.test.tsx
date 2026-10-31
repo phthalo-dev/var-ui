@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { StrictMode, useState } from 'react';
 import { userEvent } from 'vite-plus/test/browser';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vite-plus/test';
-import { raf, settled } from '../test/browser';
+import { raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { useDialogElement, type UseDialogElementOptions } from './useDialogElement';
 import { useOverlayRoot } from './useOverlayRoot';
@@ -75,10 +75,7 @@ const reasons = (h: ReturnType<typeof vi.fn<OverlayOpenChangeHandler>>) =>
   h.mock.calls.map(([open, d]) => [open, d.reason]);
 
 /** A point on the backdrop: outside the 200x100 centered dialog box. */
-async function clickBackdrop() {
-  const rect = dialogEl().getBoundingClientRect();
-  await userEvent.click(dialogEl(), { position: { x: -20, y: rect.height / 2 }, force: true });
-}
+const clickBackdrop = () => sharedClickBackdrop(dialogEl());
 
 afterEach(() => {
   document.documentElement.style.overflow = '';

@@ -5,7 +5,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf } from '../test/browser';
+import { raf, clickBackdrop as sharedClickBackdrop } from '../test/browser';
 import { AlertDialog, type AlertDialogRootProps } from './AlertDialog';
 import { Button } from './Button';
 
@@ -54,10 +54,7 @@ function Confirm({
   );
 }
 
-async function clickBackdrop() {
-  const rect = dlg().getBoundingClientRect();
-  await userEvent.click(dlg(), { position: { x: rect.width / 2, y: -10 }, force: true });
-}
+const clickBackdrop = () => sharedClickBackdrop(dlg());
 
 describe('AlertDialog (real Chromium)', () => {
   test('is a native modal dialog with role=alertdialog, labelled and described', async () => {

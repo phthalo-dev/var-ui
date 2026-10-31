@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, test, vi } from 'vite-plus/test';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
 import '../../../core/src/theme/base-styles';
 import { defaultTheme } from '../../../core/src/theme/register-default';
-import { raf, settled } from '../test/browser';
+import { raf, settled, clickBackdrop } from '../test/browser';
 import { CommandPalette } from './CommandPalette';
 import { createCommandPalette } from '../internal/commandPaletteController';
 
@@ -124,7 +124,7 @@ describe('CommandPalette (browser)', () => {
     render(<Controlled onOpenChange={onOpenChange} />);
     await raf();
     const rect = dlg().getBoundingClientRect();
-    await userEvent.click(dlg(), { position: { x: rect.width / 2, y: -20 }, force: true });
+    await clickBackdrop(dlg());
     await settled(dlg());
     expect(closeCalls(onOpenChange)).toHaveLength(1);
     expect(lastReason(onOpenChange)).toBe('outside-press');

@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf, settled } from '../test/browser';
+import { raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
 import { Button } from './Button';
 import { Dialog, type DialogRootProps } from './Dialog';
 import { Select } from './Select';
@@ -83,10 +83,7 @@ function Controlled({
 }
 
 /** A point on the backdrop: just above the centered dialog box. */
-async function clickBackdrop() {
-  const rect = dlg().getBoundingClientRect();
-  await userEvent.click(dlg(), { position: { x: rect.width / 2, y: -10 }, force: true });
-}
+const clickBackdrop = () => sharedClickBackdrop(dlg());
 
 describe('open and close sync', () => {
   test('closed by default (no children mounted); the trigger opens a real modal', async () => {

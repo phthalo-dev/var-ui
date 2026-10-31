@@ -5,7 +5,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { edgeInfo, raf, settled, viewport } from '../test/browser';
+import { edgeInfo, raf, settled, viewport, clickBackdrop } from '../test/browser';
 import { Layout, LayoutContent, LayoutPanel } from './Layout';
 
 beforeAll(() => {
@@ -95,7 +95,7 @@ describe('LayoutPanel overlay mode on a native dialog', () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>((_o, d) => d.cancel());
     render(<Page defaultOpen onOpenChange={onOpenChange} />);
     await raf();
-    await userEvent.click(dlg(), { position: { x: dlg().offsetWidth + 20, y: 40 }, force: true });
+    await clickBackdrop(dlg());
     await raf();
     expect(reasons(onOpenChange)).toEqual([[false, 'outside-press']]);
     expect(modal()).toBe(true);

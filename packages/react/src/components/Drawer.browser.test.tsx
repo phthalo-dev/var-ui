@@ -7,7 +7,13 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { edgeInfo, raf, settled, viewport } from '../test/browser';
+import {
+  edgeInfo,
+  raf,
+  settled,
+  viewport,
+  clickBackdrop as sharedClickBackdrop,
+} from '../test/browser';
 import { Button } from './Button';
 import { Drawer, type DrawerPopupProps, type DrawerRootProps } from './Drawer';
 
@@ -83,9 +89,7 @@ function Controlled({
 }
 
 /** A point on the backdrop: well left of an end drawer, above a start one. */
-async function clickBackdrop() {
-  await userEvent.click(dlg(), { position: { x: -20, y: 40 }, force: true });
-}
+const clickBackdrop = () => sharedClickBackdrop(dlg());
 
 describe('open and close sync', () => {
   test('closed by default; the trigger opens a real modal', async () => {
