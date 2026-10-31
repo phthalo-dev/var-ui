@@ -108,10 +108,11 @@ describe('LayoutPanel overlay mode on a native dialog', () => {
     expect(dlg().contains(document.activeElement)).toBe(true);
     expect(getComputedStyle(document.documentElement).overflow).toBe('hidden');
     await userEvent.keyboard('{Escape}');
-    await new Promise((r) => setTimeout(r, 40));
+    await raf();
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('inside')).toBeTruthy();
-    await new Promise((r) => setTimeout(r, 300));
+    await settled(dlg());
+    await raf();
     expect(q('inside')).toBeNull();
     expect(getComputedStyle(document.documentElement).overflow).not.toBe('hidden');
   });

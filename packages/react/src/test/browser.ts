@@ -73,3 +73,24 @@ export async function clickBackdrop(dialog: HTMLElement): Promise<void> {
   }[side];
   await userEvent.click(dialog, { position, force: true });
 }
+
+/**
+ * Freeze every running animation on `el` (including its ::backdrop) at `fraction` of its
+ * duration. Seeking is deterministic, unlike sleeping a wall-clock time, so these assertions do
+ * not depend on how fast the runner paints.
+ */
+export function freezeAt(el: Element, fraction: number): number {
+  const running = el.getAnimations({ subtree: true });
+  for (const animation of running) {
+    animation.pause();
+    const end = Number(animation.effect?.getComputedTiming().endTime ?? 0);
+    animation.currentTime = end * fraction;
+  }
+  return running.length;
+}
+
+/** Jump every animation on `el` to its end and let the resulting style change land. */
+export async function finishAll(el: Element): Promise<void> {
+  for (const animation of el.getAnimations({ subtree: true })) animation.finish();
+  await raf();
+}

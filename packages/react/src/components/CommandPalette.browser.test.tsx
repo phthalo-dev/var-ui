@@ -182,7 +182,7 @@ describe('CommandPalette (browser)', () => {
     await settled(dlg());
     expect(getComputedStyle(dlg()).opacity).toBe('1');
     rerender(<CommandPalette open={false} hotkey={false} items={items} onOpenChange={() => {}} />);
-    await new Promise((r) => setTimeout(r, 60));
+    await raf();
     // Mid-exit: closed but still rendered with its contents.
     expect(dlg().open).toBe(false);
     expect(getComputedStyle(dlg()).display).not.toBe('none');

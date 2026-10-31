@@ -9,6 +9,7 @@ import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import {
   edgeInfo,
+  freezeAt,
   raf,
   settled,
   viewport,
@@ -266,11 +267,12 @@ describe('slide animation', () => {
     await raf();
     await settled(dlg());
     await userEvent.click(q('close'));
-    await new Promise((r) => setTimeout(r, 40));
+    await raf();
     expect(dlg().open).toBe(false);
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('input')).toBeTruthy();
-    await new Promise((r) => setTimeout(r, 300));
+    await settled(dlg());
+    await raf();
     expect(getComputedStyle(dlg()).display).toBe('none');
     expect(q('input')).toBeNull();
   });
@@ -281,7 +283,8 @@ describe('slide animation', () => {
     await settled(dlg());
     expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     await userEvent.keyboard('{Escape}');
-    await new Promise((r) => setTimeout(r, 60));
+    await raf();
+    expect(freezeAt(dlg(), 0.5)).toBeGreaterThan(0);
     expect(dlg().getBoundingClientRect().left).toBeGreaterThan(
       viewport().right - dlg().offsetWidth,
     );

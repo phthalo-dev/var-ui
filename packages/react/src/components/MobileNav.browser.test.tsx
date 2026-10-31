@@ -128,10 +128,11 @@ describe('MobileNav on a native dialog', () => {
     await raf();
     await settled(dlg());
     rerender(<Nav open={false} />);
-    await new Promise((r) => setTimeout(r, 40));
+    await raf();
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('link')).toBeTruthy();
-    await new Promise((r) => setTimeout(r, 300));
+    await settled(dlg());
+    await raf();
     expect(getComputedStyle(dlg()).display).toBe('none');
     expect(q('link')).toBeNull();
   });
