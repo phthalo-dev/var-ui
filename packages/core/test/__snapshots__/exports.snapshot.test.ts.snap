@@ -201,13 +201,13 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tokens": 16,
     },
     "runtimeByKind": {
-      "function": 134,
+      "function": 133,
       "number": 4,
       "object": 19,
       "string": 4,
     },
-    "runtimeExports": 161,
-    "typeOnlyExports": 116,
+    "runtimeExports": 160,
+    "typeOnlyExports": 115,
   },
   "typeOnlyExports": [
     "AccordionGroupVariant",

@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf, settled, viewport } from '../test/browser';
+import { edgeInfo, raf, settled, viewport } from '../test/browser';
 import { MobileNav, MobileNavProvider, type MobileNavProps } from './MobileNav';
 
 beforeAll(() => {
@@ -141,19 +141,19 @@ describe('MobileNav on a native dialog', () => {
     await raf();
     await settled(dlg());
     expect(dlg().getAttribute('data-side')).toBe('start');
-    expect(dlg().getBoundingClientRect().left).toBeCloseTo(0, 0);
+    expect(dlg().getBoundingClientRect().left, edgeInfo(dlg())).toBeCloseTo(0, 0);
     ltr.unmount();
 
     const rtl = render(<Nav open direction="rtl" />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     rtl.unmount();
 
     render(<Nav open side="end" />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
   });
 });
 

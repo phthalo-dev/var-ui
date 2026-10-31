@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf, settled, viewport } from '../test/browser';
+import { edgeInfo, raf, settled, viewport } from '../test/browser';
 import { Button } from './Button';
 import { Drawer, type DrawerPopupProps, type DrawerRootProps } from './Drawer';
 
@@ -275,7 +275,7 @@ describe('slide animation', () => {
     render(<TestDrawer defaultOpen />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     await userEvent.keyboard('{Escape}');
     await new Promise((r) => setTimeout(r, 60));
     expect(dlg().getBoundingClientRect().left).toBeGreaterThan(
@@ -298,24 +298,24 @@ describe('placement', () => {
     const start = render(<TestDrawer defaultOpen popup={{ placement: 'start' }} />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().left).toBeCloseTo(0, 0);
+    expect(dlg().getBoundingClientRect().left, edgeInfo(dlg())).toBeCloseTo(0, 0);
     start.unmount();
     render(<TestDrawer defaultOpen popup={{ placement: 'end' }} />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
   });
 
   test('RTL: start follows dir and docks right, end docks left', async () => {
     const start = render(<TestDrawer defaultOpen direction="rtl" popup={{ placement: 'start' }} />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     start.unmount();
     render(<TestDrawer defaultOpen direction="rtl" popup={{ placement: 'end' }} />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().left).toBeCloseTo(viewport().left, 0);
+    expect(dlg().getBoundingClientRect().left, edgeInfo(dlg())).toBeCloseTo(viewport().left, 0);
   });
 });
 

@@ -5,7 +5,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf, settled, viewport } from '../test/browser';
+import { edgeInfo, raf, settled, viewport } from '../test/browser';
 import { Layout, LayoutContent, LayoutPanel } from './Layout';
 
 beforeAll(() => {
@@ -121,17 +121,17 @@ describe('LayoutPanel overlay mode on a native dialog', () => {
     await raf();
     await settled(dlg());
     expect(dlg().getAttribute('data-side')).toBe('start');
-    expect(dlg().getBoundingClientRect().left).toBeCloseTo(0, 0);
+    expect(dlg().getBoundingClientRect().left, edgeInfo(dlg())).toBeCloseTo(0, 0);
     a.unmount();
     const b = render(<Page defaultOpen direction="rtl" />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     b.unmount();
     render(<Page defaultOpen side="end" />);
     await raf();
     await settled(dlg());
-    expect(dlg().getBoundingClientRect().right).toBeCloseTo(viewport().right, 0);
+    expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
   });
 
   test("responsive='hidden' is not an overlay: no dialog", async () => {

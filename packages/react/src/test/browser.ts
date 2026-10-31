@@ -15,14 +15,33 @@ export const inTopLayer = (el: Element): boolean =>
   el.matches(':modal') || el.matches(':popover-open');
 
 /**
- * Usable viewport edges for `position: fixed` elements. Fixed boxes sit inside the area that
- * excludes a classic scrollbar (15px on Linux/Windows, 0 with macOS overlay scrollbars), and
- * `scrollbar-gutter: stable` keeps that gutter reserved while a modal dialog locks scroll.
+ * Usable viewport edges for `position: fixed` elements, measured, not computed: an invisible
+ * `position: fixed; inset: 0` probe shares the containing block of a docked dialog, so "flush
+ * with the edge" means "flush with the probe" whatever the scrollbar setup is (classic
+ * scrollbars reserve a gutter on Linux/Windows, macOS overlay scrollbars reserve none, and
+ * `scrollbar-gutter: stable` keeps it while a modal locks scroll).
  */
 export function viewport(): { left: number; right: number } {
+  const probe = document.createElement('div');
+  probe.style.cssText =
+    'position:fixed;inset:0;visibility:hidden;pointer-events:none;margin:0;padding:0;border:0;';
+  document.body.append(probe);
+  const { left, right } = probe.getBoundingClientRect();
+  probe.remove();
+  return { left, right };
+}
+
+/** Diagnostic payload for docking assertions (shown in the failure message, handy on CI). */
+export function edgeInfo(el: Element): string {
   const doc = document.documentElement;
-  const gutter = window.innerWidth - doc.clientWidth;
-  return getComputedStyle(doc).direction === 'rtl'
-    ? { left: gutter, right: window.innerWidth }
-    : { left: 0, right: doc.clientWidth };
+  const cs = getComputedStyle(doc);
+  return JSON.stringify({
+    innerWidth: window.innerWidth,
+    clientWidth: doc.clientWidth,
+    direction: cs.direction,
+    overflow: cs.overflow,
+    scrollbarGutter: cs.scrollbarGutter,
+    probe: viewport(),
+    rect: el.getBoundingClientRect().toJSON(),
+  });
 }
