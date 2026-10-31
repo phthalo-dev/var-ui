@@ -2,7 +2,7 @@ import { createContext, useContext, type Context } from 'react';
 
 /**
  * One context per overlay family: a provider and a hook that throws a named error outside the
- * Root. The value should carry the `useOverlayRoot()` result, `portalContainer` and whatever else
+ * Root. The value should carry the `useOverlayRoot()` result and whatever else
  * the family's parts share (`dismissable`, a description id, ...).
  */
 export function createOverlayContext<T>(name: string): {

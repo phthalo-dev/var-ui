@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { OverlayCloseContext, useDialogElement, useMergedRef, type OverlayRoot } from '../overlays';
-import { NativeDialogContext } from './nativeDialogShim';
 
 export type NativeSheetPopupProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 'open'> & {
   children: ReactNode;
@@ -32,9 +31,7 @@ export function NativeSheetPopup({
       ref={setRef}
     >
       {native.mounted ? (
-        <NativeDialogContext.Provider value={native.element}>
-          <OverlayCloseContext.Provider value={root.close}>{children}</OverlayCloseContext.Provider>
-        </NativeDialogContext.Provider>
+        <OverlayCloseContext.Provider value={root.close}>{children}</OverlayCloseContext.Provider>
       ) : null}
     </dialog>
   );

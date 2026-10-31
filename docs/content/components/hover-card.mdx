@@ -7,7 +7,7 @@ description: Rich preview shown on hover or focus.
 
 Rich preview shown on hover or focus. Unlike `Tooltip`, content may include interactive elements (links). Open/close delays are independent (`openDelay` / `closeDelay`, set on the Root). `HoverCard` is the compound Root (`HoverCard.Trigger`, `HoverCard.Popup`, `HoverCard.Title`, `HoverCard.Content`); there is no assembled preset, so the recipes below are the starting point. `onOpenChange(open, details)` reports `details.reason` of `hover`, `focus`, `escape-key` or `imperative`, and `details.cancel()` vetoes the change. The trigger child must forward DOM props — there is no `render` prop.
 
-State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
+The popup is a native `popover` element positioned with CSS anchor positioning, rendered in place (no portal). It has `role="dialog"` named by `HoverCard.Title`, and the trigger gets `aria-details` while it is open. Reasons also include `outside-press`. State attributes and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
 ## Examples
 

@@ -2,7 +2,7 @@
 
 import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { cx } from '@var-ui/react';
-import { useState, type CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { homeBento } from '@/styles/homeBento';
 import {
   renderBannerTileMarkup,
@@ -35,7 +35,6 @@ export type BentoShowcaseProps = {
 
 export function BentoShowcase({ themeId, framework = 'react', previewStyle }: BentoShowcaseProps) {
   const b = homeBento();
-  const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
   const theme = docsThemePresets.find((entry) => entry.id === themeId) ?? docsThemePresets[0];
   const useReactTiles = framework === 'react';
 
@@ -44,14 +43,12 @@ export function BentoShowcase({ themeId, framework = 'react', previewStyle }: Be
       className={cx(b.showcase.className, theme.className)}
       data-framework={framework}
       data-testid="bento-showcase"
-      ref={setPortalContainer}
       style={{ colorScheme: 'inherit', ...previewStyle }}
     >
       <div className={b.grid.className}>
         {useReactTiles ? (
           <QuickActionsTile
             className={cx(b.tile.className, b.tileSpan2.className, b.tileRowSpan2.className)}
-            portalContainer={portalContainer ?? undefined}
           />
         ) : (
           <MarkupTile

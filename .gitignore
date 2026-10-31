@@ -25,3 +25,4 @@ packages/cli/data/catalog.json
 # Local `npm pack` output
 *.tgz
 __screenshots__
+.vitest-linux/

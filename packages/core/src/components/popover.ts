@@ -1,13 +1,11 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { border } from '../internal/border';
-import { overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
-import { positioner } from './positionerVars';
+import { anchored, popupSurface } from '../shared/anchored';
 
 /**
- * Standalone popover panel chrome (distinct from menu/select popover slots).
+ * Standalone popover panel chrome (distinct from menu/select popover slots). `root` is the
+ * `[popover]` element, anchor-positioned from `data-placement` (see `shared/anchored`).
  *
  * ```ts
  * const p = popover();
@@ -17,7 +15,7 @@ import { positioner } from './positionerVars';
 export const popover = typestyles.recipe({
   name: 'popover',
   layer: 'components',
-  slots: ['root', 'title', 'content', 'arrow'],
+  slots: ['root', 'title', 'content'],
   vars: {
     background: {
       ...atProperty.color,
@@ -36,14 +34,9 @@ export const popover = typestyles.recipe({
     return {
       base: {
         root: {
-          ...overlayPresenceStyles({ scale: true }),
-          ...border(vars.border.var),
-          borderRadius: t.radius.md.var,
-          backgroundColor: vars.background.var,
-          boxShadow: t.shadow.md.var,
-          ...layerZIndex(t.zIndex.dropdown.var),
+          ...anchored(),
+          ...popupSurface({ background: vars.background.var, border: vars.border.var }),
           minWidth: '12rem',
-          maxHeight: positioner.vars.availableHeight.var,
           outline: 'none',
         },
         title: {
@@ -56,24 +49,6 @@ export const popover = typestyles.recipe({
         content: {
           padding: `${t.space[2].var} ${t.space[3].var} ${t.space[3].var}`,
           outline: 'none',
-        },
-        arrow: {
-          width: 8,
-          height: 8,
-          backgroundColor: vars.background.var,
-          transform: 'rotate(45deg)',
-          '&[data-placement="bottom"]': {
-            transform: 'translateY(50%) rotate(45deg)',
-          },
-          '&[data-placement="top"]': {
-            transform: 'translateY(-50%) rotate(45deg)',
-          },
-          '&[data-placement="left"]': {
-            transform: 'translateX(-50%) rotate(45deg)',
-          },
-          '&[data-placement="right"]': {
-            transform: 'translateX(50%) rotate(45deg)',
-          },
         },
       },
     };

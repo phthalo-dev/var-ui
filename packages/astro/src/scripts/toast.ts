@@ -49,6 +49,45 @@ function clearDefaultRegionIfDetached(): void {
   }
 }
 
+const hasPopover = (el: HTMLElement): boolean => typeof el.showPopover === 'function';
+const isOpen = (el: HTMLElement): boolean => {
+  try {
+    return el.matches(':popover-open');
+  } catch {
+    return false;
+  }
+};
+
+// Toast regions are `popover="manual"` and the top layer stacks by insertion order, so a modal
+// <dialog> opened after a region would cover it. One shared observer re-promotes every showing
+// region (`hidePopover(); showPopover()`) when a dialog's `open` attribute is set. The toasts
+// end up above the modal but inert while it is open (a platform limit).
+const regions = new Set<HTMLElement>();
+let observer: MutationObserver | null = null;
+
+function watchDialogs(): void {
+  if (observer || typeof MutationObserver === 'undefined') return;
+  observer = new MutationObserver((records) => {
+    if (!records.some((r) => r.target instanceof HTMLDialogElement && r.target.open)) return;
+    regions.forEach((region) => {
+      if (!region.isConnected) {
+        regions.delete(region);
+      } else if (isOpen(region)) {
+        region.hidePopover();
+        region.showPopover();
+      }
+    });
+  });
+  observer.observe(document, { subtree: true, attributes: true, attributeFilter: ['open'] });
+}
+
+/** Shows the region while it has toasts and hides it when empty. */
+function syncPopover(root: HTMLElement, count: number): void {
+  if (!hasPopover(root) || !root.hasAttribute('popover')) return;
+  if (count > 0 && !isOpen(root)) root.showPopover();
+  else if (count === 0 && isOpen(root)) root.hidePopover();
+}
+
 function createId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -155,7 +194,9 @@ function createToastController(root: HTMLElement): ToastController {
   const queue: ToastEntry[] = [];
 
   function render(): void {
-    root.replaceChildren(...queue.slice(0, maxVisible).map((entry) => entry.el));
+    const visible = queue.slice(0, maxVisible);
+    root.replaceChildren(...visible.map((entry) => entry.el));
+    syncPopover(root, visible.length);
   }
 
   function dismiss(id: string): void {
@@ -216,6 +257,11 @@ export function initToastRegion(root: HTMLElement): ToastController {
   }
 
   root.setAttribute(INITIALIZED_ATTR, '');
+  if (hasPopover(root)) {
+    if (!root.hasAttribute('popover')) root.setAttribute('popover', 'manual');
+    regions.add(root);
+    watchDialogs();
+  }
   const controller = createToastController(root);
   controllers.set(root, controller);
   if (!defaultRegion) {
@@ -261,6 +307,7 @@ function ensureDefaultRegion(): ToastController {
   const region = document.createElement('div');
   region.className = 'var-ui-toast__region';
   region.setAttribute('data-var-ui-toast-region', '');
+  region.setAttribute('popover', 'manual');
   region.setAttribute('data-placement', 'bottom-end');
   region.setAttribute('data-max-visible', '3');
   region.setAttribute('aria-live', 'polite');

@@ -8,6 +8,7 @@ import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
 import { IconButton } from './IconButton';
 import { SegmentedControl } from './SegmentedControl';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { Menu } from './Menu';
 import { NumberInput } from './NumberInput';
 import { Slider } from './Slider';
@@ -73,6 +74,7 @@ describe('SegmentedControl', () => {
 });
 
 describe('Menu.FromSections', () => {
+  stubNativePopover();
   it('opens menu items from the trigger', async () => {
     const user = userEvent.setup();
     const onAction = vi.fn();

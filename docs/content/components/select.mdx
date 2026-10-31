@@ -23,7 +23,7 @@ Pass an `options` array of `{ value, label, disabled? }` objects. Use `placehold
 
 ### Compound parts
 
-Compose parts for custom item content. `textValue` is the string used for typeahead and the default closed trigger. Compose `Select.Value` inside `Select.Trigger` when the closed value should match custom row chrome. Pass `portalContainer` on `Select.Popover` when the list must portal into a themed subtree instead of `document.body`.
+Compose parts for custom item content. `textValue` is the string used for typeahead and the default closed trigger. Compose `Select.Value` inside `Select.Trigger` when the closed value should match custom row chrome. The list renders in place, in the top layer (a native `popover`), so it inherits the theme of its ancestors and works inside a modal `Dialog` without any container prop.
 
 <Demo id="select.parts" />
 

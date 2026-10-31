@@ -36,6 +36,19 @@ Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium 
 
 One-time setup per machine: `pnpm exec playwright install chromium` (the test run fails with that hint if the browser is missing). CI installs and caches it in the Verify job.
 
+## Running CI locally in Docker
+
+`scripts/ci-docker.sh` runs the Verify job in an Ubuntu 24.04 container built from `docker/ci/Dockerfile` (Node from `.nvmrc`, pnpm from `packageManager`, Playwright Chromium with OS deps at the lockfile version). It rsyncs the working tree into a named volume, keeps `node_modules`, `dist` and the pnpm store in named volumes (the host's macOS `node_modules` are never used or written), runs `pnpm install --frozen-lockfile`, then `vp run ci` with `CI=true`. Use it to reproduce Linux-only failures, such as the 15px classic scrollbars and `scrollbar-gutter` that macOS overlay scrollbars hide, which break absolute-pixel geometry assertions in browser tests.
+
+```sh
+scripts/ci-docker.sh                       # the whole CI job
+scripts/ci-docker.sh --browser Menu        # only the browser project (optional file filters), --repeat 2 to run twice
+scripts/ci-docker.sh --shell               # interactive shell;  scripts/ci-docker.sh -- <command>  runs any command
+scripts/ci-docker.sh --no-install | --fresh   # skip install | drop the cached volumes first
+```
+
+Failure screenshots from `--browser` land in `.vitest-linux/` (gitignored). Assert relative geometry (popup rect vs anchor rect vs `viewport()`), not absolute pixels.
+
 ## CI/CD
 
 All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Everything lives in `.github/workflows/ci.yml`.

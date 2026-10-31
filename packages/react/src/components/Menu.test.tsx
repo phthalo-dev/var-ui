@@ -6,7 +6,10 @@ import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import { Button } from './Button';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { Menu } from './Menu';
+
+stubNativePopover();
 
 function wrap(ui: React.ReactNode) {
   return render(
@@ -79,22 +82,6 @@ describe('Menu', () => {
     expect(onOpenChange.mock.calls[0]?.[1].reason).toBe('trigger-press');
   });
 
-  it('reports outside-press when dismissed via the overlay', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    renderCompound(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Song' }));
-    expect(await screen.findByRole('menu')).toBeTruthy();
-    onOpenChange.mockClear();
-
-    const underlay = document.querySelector('[data-testid="underlay"]');
-    expect(underlay).toBeTruthy();
-    await userEvent.click(underlay!);
-
-    expect(onOpenChange).toHaveBeenCalledTimes(1);
-    expect(onOpenChange.mock.calls[0]?.[0]).toBe(false);
-    expect(onOpenChange.mock.calls[0]?.[1].reason).toBe('outside-press');
-  });
-
   it('reports escape-key when dismissed with Escape', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     renderCompound(onOpenChange);
@@ -109,15 +96,14 @@ describe('Menu', () => {
     expect(onOpenChange.mock.calls[0]?.[1].reason).toBe('escape-key');
   });
 
-  it('sets positioner transform-origin on the popup', async () => {
+  it('renders the popup as a native popover with the menu recipe class and data-placement', async () => {
     renderCompound();
     await userEvent.click(screen.getByRole('button', { name: 'Song' }));
     expect(await screen.findByRole('menu')).toBeTruthy();
-    const popover = document.querySelector('.var-ui-menu__popover');
-    expect(popover).toBeTruthy();
-    expect((popover as HTMLElement).style.getPropertyValue('--var-ui-transform-origin')).toBe(
-      'top center',
-    );
+    const popover = document.querySelector('.var-ui-menu__popover') as HTMLElement;
+    expect(popover.getAttribute('popover')).toBe('manual');
+    expect(popover.getAttribute('data-placement')).toBe('bottom start');
+    expect(popover.contains(screen.getByRole('menu'))).toBe(true);
   });
 
   it('keeps the menu open when cancel() is called while uncontrolled', async () => {

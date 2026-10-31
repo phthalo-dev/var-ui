@@ -5,7 +5,9 @@ description: Action menu namespace with compound parts and data presets.
 
 # Menu
 
-Action menu namespace. `Menu` is Root for compound menus; use `Menu.FromSections`, `Menu.ContextMenu`, or `Menu.Overflow` for common presets. `onOpenChange(open, details)` reports `details.reason` (`trigger-press`, `escape-key`, `outside-press`, `focus`, `imperative`); `details.cancel()` vetoes the change, and `portalContainer` is a Root prop. The trigger child must forward DOM props — there is no `render` prop.
+Action menu namespace. `Menu` is Root for compound menus; use `Menu.FromSections`, `Menu.ContextMenu`, or `Menu.Overflow` for common presets. `onOpenChange(open, details)` reports `details.reason` (`trigger-press`, `escape-key`, `outside-press`, `focus`, `imperative`); `details.cancel()` vetoes the change. The trigger child must forward DOM props — there is no `render` prop.
+
+The popup is a native `popover` element rendered in place (top layer, positioned with CSS anchor positioning), so there is no portal and no `portalContainer`. `placement` on `Menu.Popup` takes `top | bottom | start | end`, optionally with an alignment (`bottom end`, `top start`); it flips automatically when it does not fit, and `start`/`end` follow the writing direction. Works inside a modal `Dialog`.
 
 State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
@@ -27,7 +29,7 @@ Pass a `trigger` and `sections` of items (optional section labels, shortcuts, `d
 
 ### Context menu
 
-Wrap a surface and pass `sections`. Right-click (or the platform context-menu gesture) opens the menu at the pointer. The child must be a DOM element `Pressable` can attach a ref to (e.g. a `div`).
+Wrap a surface and pass `sections`. Right-click (or the platform context-menu gesture) opens the menu at the pointer; from the keyboard (Shift+F10 / the context-menu key) it opens at the surface's bottom-start corner. The child must be a DOM element `Pressable` can attach a ref to (e.g. a `div`).
 
 <Demo id="context-menu.default" />
 
@@ -47,4 +49,4 @@ Icon-only overflow menu using the `moreHorizontal` glyph — same `sections` sha
 
 ## Accessibility
 
-Built on React Aria `MenuTrigger` / `Menu`. Arrow keys move between items, Enter/Space activates, Escape closes. Give destructive items clear labels — visual tone is not enough. For `Menu.ContextMenu`, ensure essential actions are also available without right-click for keyboard-only users.
+Built on React Aria `MenuTrigger` / `Menu` inside a native popover. Focus moves to the first item on open and returns to the trigger on close. Arrow keys move between items, Enter/Space activates, Escape closes. Give destructive items clear labels — visual tone is not enough. For `Menu.ContextMenu`, ensure essential actions are also available without right-click for keyboard-only users.

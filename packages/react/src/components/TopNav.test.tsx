@@ -4,7 +4,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { LayerProvider } from '../layers/LayerProvider';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { TopNav } from './TopNav';
+
+stubNativePopover();
 
 function wrap(ui: ReactNode) {
   return render(

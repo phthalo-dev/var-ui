@@ -11,7 +11,7 @@ import {
   TagGroup,
   TagList,
 } from 'react-aria-components';
-import { Popover } from '../internal/nativeDialogShim';
+import { NativePopover } from '../internal/NativePopover';
 import { tokenizer } from '@var-ui/core/components/tokenizer';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';
@@ -184,7 +184,7 @@ export function Tokenizer({
             placeholder={value.length === 0 ? placeholder : ''}
             onKeyDown={handleInputKeyDown}
           />
-          <Popover {...mergeProps(tk.popover)}>
+          <NativePopover {...mergeProps(tk.popover)}>
             <ListBox items={available} disabledKeys={disabledKeysOf(available)}>
               {(option) => (
                 <ListBoxItem id={option.value} textValue={option.label} {...mergeProps(tk.item)}>
@@ -192,7 +192,7 @@ export function Tokenizer({
                 </ListBoxItem>
               )}
             </ListBox>
-          </Popover>
+          </NativePopover>
         </AriaComboBox>
       </Group>
       {name

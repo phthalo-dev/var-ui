@@ -12,7 +12,7 @@ import {
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { placement } from '../shared/variantAxes';
-import { layerZIndex } from './layerVars';
+import { nativeEnterExit } from '../shared/overlayMotion';
 
 /**
  * Toast viewport + toast item chrome.
@@ -45,10 +45,19 @@ export const toast = typestyles.recipe({
   styles: ({ vars }) => {
     return {
       base: {
+        // `popover="manual"` top-layer region (no z-index: the top layer orders by insertion).
+        // `display: flex` is scoped to the open state because an author `display` would beat the
+        // UA `[popover]:not(:popover-open) { display: none }`.
         region: {
           position: 'fixed',
-          ...layerZIndex(t.zIndex.toast.var),
-          display: 'flex',
+          inset: 'auto',
+          margin: 0,
+          border: 'none',
+          background: 'transparent',
+          color: 'inherit',
+          overflow: 'visible',
+          '&:not([popover]), &:popover-open': { display: 'flex' },
+          '&[popover]': nativeEnterExit({ open: ':popover-open' }),
           flexDirection: 'column',
           gap: t.space[2].var,
           padding: t.space[4].var,

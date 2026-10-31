@@ -27,6 +27,8 @@ export {
   type UsePositionerVarsResult,
 } from './usePositionerVars';
 export {
+  HOVER_WARM_UP_WINDOW,
+  resetHoverWarmUp,
   useHoverIntent,
   type HoverIntentRequest,
   type UseHoverIntentOptions,
@@ -46,3 +48,20 @@ export {
   type UseDialogElementOptions,
 } from './useDialogElement';
 export { useMountedWhileAnimating } from './useMountedWhileAnimating';
+export {
+  isPopoverShowing,
+  usePopoverElement,
+  type PopoverElement,
+  type PopoverMode,
+  type UsePopoverElementOptions,
+} from './usePopoverElement';
+export {
+  useAnchor,
+  useVirtualAnchor,
+  type AnchorAlign,
+  type AnchorPlacement,
+  type AnchorResult,
+  type AnchorSide,
+  type UseAnchorOptions,
+  type VirtualAnchor,
+} from './useAnchor';

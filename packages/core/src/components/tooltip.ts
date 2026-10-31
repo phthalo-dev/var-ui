@@ -3,8 +3,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
-import { overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
+import { anchored } from '../shared/anchored';
 
 /**
  * Compact dark-surface tooltip chrome.
@@ -26,7 +25,7 @@ export const tooltip = typestyles.recipe({
     return {
       base: {
         root: {
-          ...overlayPresenceStyles({ scale: true }),
+          ...anchored({ defaultPlacement: 'top', defaultAlign: 'center' }),
           backgroundColor: vars.background.var,
           color: vars.foreground.var,
           fontSize: t.fontSize.sm.var,
@@ -34,7 +33,6 @@ export const tooltip = typestyles.recipe({
           borderRadius: t.radius.sm.var,
           boxShadow: t.shadow.sm.var,
           ...atForcedColors(forced.boundary),
-          ...layerZIndex(t.zIndex.dropdown.var),
           maxWidth: '16rem',
           lineHeight: 1.4,
         },

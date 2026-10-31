@@ -1,7 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
-import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
+import { anchored, popupSurface } from '../shared/anchored';
 import { dateFieldChrome, calendarGridChrome } from '../internal/fieldChrome';
 
 export const dateRangeInput = typestyles.recipe({
@@ -150,10 +150,11 @@ export const dateRangeInput = typestyles.recipe({
           },
         },
         popover: {
-          ...border(vars.popoverBorder.var),
-          borderRadius: t.radius.md.var,
-          backgroundColor: vars.popoverBackground.var,
-          boxShadow: t.shadow.md.var,
+          ...anchored(),
+          ...popupSurface({
+            background: vars.popoverBackground.var,
+            border: vars.popoverBorder.var,
+          }),
           padding: t.space[3].var,
         },
         ...calendarChromeSlots,

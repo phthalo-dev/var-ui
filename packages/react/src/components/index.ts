@@ -113,8 +113,9 @@ export {
 } from './Tooltip';
 export {
   Popover,
-  type PopoverArrowProps,
+  type PopoverCloseProps,
   type PopoverContentProps,
+  type PopoverDescriptionProps,
   type PopoverPopupProps,
   type PopoverProps,
   type PopoverRootProps,

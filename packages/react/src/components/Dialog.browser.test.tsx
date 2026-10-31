@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
+import { finishAll, raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
 import { Button } from './Button';
 import { Dialog, type DialogRootProps } from './Dialog';
 import { Select } from './Select';
@@ -292,7 +292,7 @@ describe('enter and exit animation', () => {
   });
 });
 
-describe('popups inside a dialog (interim NativeDialogContext shim)', () => {
+describe('popups inside a dialog (Select on NativePopover, no shim)', () => {
   test('a Select inside a Dialog opens, is hit-testable and selects with a real click', async () => {
     const onChange = vi.fn();
     render(
@@ -337,6 +337,8 @@ describe('popups inside a dialog (interim NativeDialogContext shim)', () => {
     await raf();
     expect(document.querySelector('[role="listbox"]')).toBeTruthy();
     await userEvent.keyboard('{Escape}');
+    await raf();
+    await finishAll(document.querySelector('[popover]') as HTMLElement);
     await raf();
     expect(document.querySelector('[role="listbox"]')).toBeNull();
     expect(onOpenChange).not.toHaveBeenCalled();

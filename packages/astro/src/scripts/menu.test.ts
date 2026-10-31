@@ -7,6 +7,50 @@ import {
   type MenuActionDetail,
 } from './menu';
 
+/**
+ * jsdom has no popover API. Stub the observable parts: `showPopover` / `hidePopover` /
+ * `togglePopover` (with `beforetoggle` and `toggle` events and an open flag), the invoker click
+ * (`popovertarget` buttons toggle their target) and native Escape light dismiss is NOT stubbed
+ * (the script handles Escape itself). Real focus/anchor/animation behaviour is covered in the
+ * React browser tests and the shared recipe CSS tests.
+ */
+function stubPopover(): void {
+  const open = new WeakSet<Element>();
+  const fire = (el: HTMLElement, state: 'open' | 'closed') => {
+    el.dispatchEvent(Object.assign(new Event('beforetoggle'), { newState: state }));
+    if (state === 'open') open.add(el);
+    else open.delete(el);
+    el.dispatchEvent(Object.assign(new Event('toggle'), { newState: state }));
+  };
+  Object.assign(HTMLElement.prototype, {
+    showPopover(this: HTMLElement) {
+      if (!open.has(this)) fire(this, 'open');
+    },
+    hidePopover(this: HTMLElement) {
+      if (open.has(this)) fire(this, 'closed');
+    },
+    togglePopover(this: HTMLElement) {
+      if (open.has(this)) fire(this, 'closed');
+      else fire(this, 'open');
+    },
+  });
+  document.addEventListener('click', (event) => {
+    const invoker = (event.target as Element | null)?.closest('[popovertarget]');
+    if (!invoker) return;
+    const target = document.getElementById(invoker.getAttribute('popovertarget')!);
+    target?.togglePopover();
+  });
+  const original = Element.prototype.matches;
+  Object.assign(Element.prototype, {
+    matches(this: Element, selector: string) {
+      if (selector === ':popover-open') return open.has(this);
+      return Reflect.apply(original, this, [selector]);
+    },
+  });
+}
+
+stubPopover();
+
 function mountMenu(): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
@@ -17,10 +61,11 @@ function mountMenu(): HTMLElement {
         aria-haspopup="menu"
         aria-expanded="false"
         aria-controls="menu-1"
+        popovertarget="menu-1-popover"
       >
         Actions
       </button>
-      <div data-var-ui-menu-popover data-placement="bottom-start" hidden>
+      <div data-var-ui-menu-popover data-placement="bottom start" id="menu-1-popover" popover="auto">
         <div role="menu" id="menu-1" aria-label="Actions">
           <div role="presentation">File</div>
           <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="new" tabindex="-1">
@@ -61,10 +106,11 @@ function mountRadioMenu(): HTMLElement {
         aria-haspopup="menu"
         aria-expanded="false"
         aria-controls="menu-2"
+        popovertarget="menu-2-popover"
       >
         Theme
       </button>
-      <div data-var-ui-menu-popover data-placement="bottom-end" hidden>
+      <div data-var-ui-menu-popover data-placement="bottom end" id="menu-2-popover" popover="auto">
         <div role="menu" id="menu-2" aria-label="Site theme">
           <button
             type="button"
@@ -102,6 +148,10 @@ function popover(root: HTMLElement): HTMLElement {
   return root.querySelector('[data-var-ui-menu-popover]') as HTMLElement;
 }
 
+function isOpen(root: HTMLElement): boolean {
+  return popover(root).matches(':popover-open');
+}
+
 function item(root: HTMLElement, id: string): HTMLElement {
   return root.querySelector(`[data-item-id="${id}"]`) as HTMLElement;
 }
@@ -121,11 +171,6 @@ function collectActions(root: HTMLElement): Array<string | null> {
 describe('initMenu', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
-    // Deterministic presence frames: run both rAF callbacks synchronously.
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
-      cb(0);
-      return 0;
-    });
   });
 
   it('opens on trigger click and focuses the first item', () => {
@@ -134,11 +179,9 @@ describe('initMenu', () => {
 
     trigger(root).click();
 
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
     expect(trigger(root).getAttribute('aria-expanded')).toBe('true');
     expect(root.hasAttribute('data-open')).toBe(true);
-    expect(popover(root).hasAttribute('data-open')).toBe(true);
-    expect(popover(root).hasAttribute('data-starting-style')).toBe(false);
     expect(document.activeElement).toBe(item(root, 'new'));
   });
 
@@ -149,7 +192,7 @@ describe('initMenu', () => {
     trigger(root).click();
     trigger(root).click();
 
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
     expect(trigger(root).getAttribute('aria-expanded')).toBe('false');
     expect(root.hasAttribute('data-open')).toBe(false);
   });
@@ -159,13 +202,13 @@ describe('initMenu', () => {
     initMenu(root);
 
     keydown(trigger(root), 'ArrowDown');
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
     expect(document.activeElement).toBe(item(root, 'new'));
 
     keydown(root, 'Escape');
 
     keydown(trigger(root), 'ArrowUp');
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
     expect(document.activeElement).toBe(item(root, 'docs'));
   });
 
@@ -215,20 +258,35 @@ describe('initMenu', () => {
 
     keydown(item(root, 'new'), 'Escape');
 
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
     expect(document.activeElement).toBe(trigger(root));
   });
 
-  it('closes on outside pointerdown but not on inside pointerdown', () => {
+  it('follows a platform dismissal (outside click / light dismiss) and returns focus', () => {
     const root = mountMenu();
     initMenu(root);
     trigger(root).click();
+    expect(isOpen(root)).toBe(true);
 
-    trigger(root).dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
-    expect(popover(root).hidden).toBe(false);
+    // The browser's light dismiss hides the popover; the script only mirrors the state.
+    popover(root).hidePopover();
 
-    document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
-    expect(popover(root).hidden).toBe(true);
+    expect(trigger(root).getAttribute('aria-expanded')).toBe('false');
+    expect(root.hasAttribute('data-open')).toBe(false);
+    expect(document.activeElement).toBe(trigger(root));
+  });
+
+  it('wires the trigger to the popover natively (no click handler of its own)', () => {
+    const root = mountMenu();
+    initMenu(root);
+
+    expect(trigger(root).getAttribute('popovertarget')).toBe(popover(root).id);
+    expect(popover(root).getAttribute('popover')).toBe('auto');
+    expect(popover(root).getAttribute('data-placement')).toBe('bottom start');
+    trigger(root).click();
+    expect(isOpen(root)).toBe(true);
+    trigger(root).click();
+    expect(isOpen(root)).toBe(false);
   });
 
   it('closes on Tab without moving focus back to the trigger', () => {
@@ -238,7 +296,7 @@ describe('initMenu', () => {
 
     keydown(item(root, 'new'), 'Tab');
 
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
     expect(document.activeElement).not.toBe(trigger(root));
   });
 
@@ -251,7 +309,7 @@ describe('initMenu', () => {
     item(root, 'open').click();
 
     expect(actions).toEqual(['open']);
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
     expect(document.activeElement).toBe(trigger(root));
   });
 
@@ -264,7 +322,7 @@ describe('initMenu', () => {
     item(root, 'save').click();
 
     expect(actions).toEqual([]);
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
   });
 
   it('still dispatches the action event for link items', () => {
@@ -276,7 +334,7 @@ describe('initMenu', () => {
     item(root, 'docs').click();
 
     expect(actions).toEqual(['docs']);
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
   });
 
   it('activates link items with Space', () => {
@@ -328,7 +386,7 @@ describe('initMenu', () => {
 
     // A single click still toggles exactly once.
     trigger(root).click();
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
   });
 
   it('exposes an imperative controller', () => {
@@ -341,11 +399,11 @@ describe('initMenu', () => {
 
     controller?.open();
     expect(controller?.isOpen).toBe(true);
-    expect(popover(root).hidden).toBe(false);
+    expect(isOpen(root)).toBe(true);
 
     controller?.toggle();
     expect(controller?.isOpen).toBe(false);
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
   });
 
   it('checks the activated radio item and unchecks the rest', () => {
@@ -359,7 +417,7 @@ describe('initMenu', () => {
     expect(item(root, 'default').getAttribute('aria-checked')).toBe('true');
     expect(item(root, 'forest').getAttribute('aria-checked')).toBe('false');
     expect(actions).toEqual(['default']);
-    expect(popover(root).hidden).toBe(true);
+    expect(isOpen(root)).toBe(false);
   });
 
   it('focuses the checked item when opening a single-selection menu', () => {
@@ -386,10 +444,6 @@ describe('initMenu', () => {
 describe('initMenus', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
-      cb(0);
-      return 0;
-    });
   });
 
   it('initializes every menu under the given root', () => {

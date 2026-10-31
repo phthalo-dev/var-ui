@@ -204,6 +204,19 @@ positions on purpose.
 **Container queries.** Nothing in var-ui sets `container-type`, so you can add it to your own
 wrappers and use `@container` in your CSS against any var-ui class.
 
+## Dialogs, popovers and the top layer
+
+Overlays are native elements, so you style them with the platform's own selectors.
+
+- **Dialogs** (`Dialog`, `AlertDialog`, `Drawer`, `MobileNav`, the layout panel, the command palette) are a `<dialog>` opened with `showModal()`. The popup is the `<dialog>` element itself: style it with its `popup` class (`.var-ui-dialog__popup`), its backdrop with `::backdrop`, and its open state with `[open]` or `:modal`. Enter and exit animations are `@starting-style` rules with `transition-behavior: allow-discrete`; override the durations through the `--var-ui-duration-*` tokens.
+- **Popovers** (`Popover`, `Tooltip`, `HoverCard`, `Menu`, and the Select, Combobox and date-picker popups, plus the toast region) are `[popover]` elements: style the open state with `:popover-open`.
+- **No z-index.** The top layer stacks by insertion order and ignores `z-index`, so VarUI sets none. Overlays render in place (no portal), which keeps theme and token scopes working: custom properties inherit from the DOM parent.
+- **Placement** is a `data-placement` attribute on the popup (`top`, `bottom`, `start`, `end`, optionally with `start`, `center` or `end` alignment: `bottom start`). It holds the _requested_ placement; the browser may flip it with `position-try-fallbacks`. The gap to the anchor is `--var-ui-popup-offset`.
+- **Careful with global resets.** The offset is a `margin`. An unlayered reset like `[popover] { margin: 0 }` or `dialog { margin: 0 }` in your own CSS beats it and removes the gap. Put such resets in a cascade layer below `components`, or set `--var-ui-popup-offset` instead.
+- **RTL placement** follows the direction of the `body` (the popup's containing block), not of a wrapping element inside the page: put `dir="rtl"` on `html` or `body` (or use the direction provider), not on a section.
+- **Forms and events.** Because dialogs render in place, a plain `<button>` inside a dialog inside a `<form>` submits that form (give it `type="button"`), and DOM events bubble through the real ancestors.
+- **Toasts above modals.** The toast region is re-promoted above an open modal dialog, but a modal dialog makes everything outside it inert, so toasts shown over one are visible but not clickable.
+
 ## Worked example
 
 One stylesheet, `brand.css`, loaded after `@var-ui/core/styles.css`. Every selector below is a class

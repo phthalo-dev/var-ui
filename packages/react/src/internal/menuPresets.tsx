@@ -1,6 +1,6 @@
-import type { CSSProperties, JSX, MouseEvent, ReactElement, Ref } from 'react';
+import type { JSX, MouseEvent, ReactElement, Ref } from 'react';
 import { useCallback, useState } from 'react';
-import { createOverlayChangeDetails, mergeOverlayChild } from '../overlays';
+import { createOverlayChangeDetails, mergeOverlayChild, useVirtualAnchor } from '../overlays';
 import { IconButton } from '../components/IconButton';
 import { MenuContent, type MenuContentProps } from './menuContent';
 import {
@@ -12,13 +12,10 @@ import {
 } from './menuParts';
 
 /** Root-level props the presets forward to `Menu.Root`. */
-type MenuPresetRootProps = Pick<
-  MenuRootProps,
-  'open' | 'defaultOpen' | 'onOpenChange' | 'portalContainer'
->;
+type MenuPresetRootProps = Pick<MenuRootProps, 'open' | 'defaultOpen' | 'onOpenChange'>;
 
 /** Popup-level props the presets forward to `Menu.Popup` (native props, `placement`, aria-*). */
-type MenuPresetPopupProps = Omit<MenuPopupProps, 'children' | 'portalContainer'>;
+type MenuPresetPopupProps = Omit<MenuPopupProps, 'children'>;
 
 export type MenuFromSectionsProps = MenuPresetRootProps &
   MenuPresetPopupProps &
@@ -34,16 +31,10 @@ export function MenuFromSections({
   open,
   defaultOpen,
   onOpenChange,
-  portalContainer,
   ...popupProps
 }: MenuFromSectionsProps): JSX.Element {
   return (
-    <MenuRoot
-      open={open}
-      defaultOpen={defaultOpen}
-      onOpenChange={onOpenChange}
-      portalContainer={portalContainer}
-    >
+    <MenuRoot open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
       <MenuTrigger>{trigger}</MenuTrigger>
       <MenuPopup {...popupProps}>
         <MenuContent sections={sections} />
@@ -53,31 +44,24 @@ export function MenuFromSections({
 }
 
 export type MenuContextMenuProps = MenuContentProps &
-  Pick<MenuRootProps, 'onOpenChange' | 'portalContainer'> &
+  Pick<MenuRootProps, 'onOpenChange'> &
   MenuPresetPopupProps & {
     /** A single host element (e.g. `<div>`) that receives the context-menu gesture. */
     children: ReactElement<any, string>;
   };
-
-const contextMenuAnchorStyle: CSSProperties = {
-  position: 'fixed',
-  width: 1,
-  height: 1,
-  pointerEvents: 'none',
-  opacity: 0,
-};
 
 /** Right-click menu anchored to the wrapped surface at the pointer. */
 export function MenuContextMenu({
   children,
   sections,
   onOpenChange,
-  portalContainer,
   placement = 'bottom start',
   ...popupProps
 }: MenuContextMenuProps): JSX.Element {
   const [open, setOpen] = useState(false);
-  const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
+  // A 1px fixed element moved to the pointer: it is the RAC trigger, so the popup anchors to it.
+  const point = useVirtualAnchor();
+  const { moveTo } = point;
 
   const handleContextMenu = useCallback(
     (...args: unknown[]) => {
@@ -99,7 +83,7 @@ export function MenuContextMenu({
           y = rect.bottom;
         }
       }
-      setAnchor({ x, y });
+      moveTo(x, y);
       const details = createOverlayChangeDetails({
         reason: 'trigger-press',
         event: event.nativeEvent,
@@ -107,7 +91,7 @@ export function MenuContextMenu({
       onOpenChange?.(true, details);
       if (!details.isCanceled) setOpen(true);
     },
-    [onOpenChange],
+    [onOpenChange, moveTo],
   );
 
   const host = mergeOverlayChild(children, {
@@ -123,18 +107,9 @@ export function MenuContextMenu({
           onOpenChange?.(next, details);
           if (!details.isCanceled) setOpen(next);
         }}
-        portalContainer={portalContainer}
       >
         <MenuTrigger>
-          <span
-            data-context-menu-anchor=""
-            aria-hidden
-            style={{
-              ...contextMenuAnchorStyle,
-              left: anchor?.x ?? 0,
-              top: anchor?.y ?? 0,
-            }}
-          />
+          <span data-context-menu-anchor="" tabIndex={-1} {...point.props} />
         </MenuTrigger>
         <MenuPopup {...popupProps} placement={placement}>
           <MenuContent sections={sections} />
@@ -161,7 +136,6 @@ export function MenuOverflow({
   open,
   defaultOpen,
   onOpenChange,
-  portalContainer,
   ...popupProps
 }: MenuOverflowProps): JSX.Element {
   return (
@@ -171,7 +145,6 @@ export function MenuOverflow({
       open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
-      portalContainer={portalContainer}
       trigger={
         <IconButton
           icon="moreHorizontal"

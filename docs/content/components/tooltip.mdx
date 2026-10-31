@@ -7,7 +7,7 @@ description: Brief hint shown on hover or focus.
 
 Brief hint shown on hover or focus of a single trigger. Prefer tooltips for supplemental labels — not essential instructions. `Tooltip` is the compound Root (`Tooltip.Trigger` / `Tooltip.Popup`). The trigger child must forward DOM props — there is no `render` prop.
 
-State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
+The popup is a native `popover` element positioned with CSS anchor positioning, rendered in place (no portal). State attributes and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
 ## Examples
 
@@ -25,7 +25,7 @@ The usual arrangement: one trigger and one popup.
 
 ### Placement and delay
 
-Set `placement` on `Tooltip.Popup` relative to the trigger and `delay` (ms) on `Tooltip` before open. Default delay is 500ms.
+Set `placement` on `Tooltip.Popup` (`top`, `bottom`, `start`, `end`, optionally with `start`/`center`/`end` alignment, e.g. `bottom start`). Set `openDelay` and `closeDelay` (ms) on `Tooltip`; the default open delay is 500ms. After one tooltip closes, the next opens immediately for about half a second.
 
 <Demo id="tooltip.placement" />
 
@@ -35,4 +35,4 @@ Set `placement` on `Tooltip.Popup` relative to the trigger and `delay` (ms) on `
 
 ## Accessibility
 
-Tooltips appear on hover and keyboard focus. Keep copy short; do not put interactive content in a tooltip (use `HoverCard` or `Popover` instead). The trigger must already have an accessible name — tooltips supplement, they do not replace labels.
+Tooltips appear on hover and keyboard focus (focus-visible only; touch is ignored), stay open while the pointer is over the tooltip, and close on Escape. The popup has `role="tooltip"` and the trigger gets `aria-describedby` while it is open. Pass `disabled` on the Root to suppress it. Keep copy short; do not put interactive content in a tooltip (use `HoverCard` or `Popover` instead). The trigger must already have an accessible name — tooltips supplement, they do not replace labels.

@@ -1,6 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { anchored, popupSurface } from '../shared/anchored';
 import { border } from '../internal/border';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
@@ -143,10 +144,11 @@ export const tokenizer = typestyles.recipe({
           color: vars.inputForeground.var,
         },
         popover: {
-          ...border(vars.popoverBorder.var),
-          borderRadius: t.radius.md.var,
-          backgroundColor: vars.popoverBackground.var,
-          boxShadow: t.shadow.md.var,
+          ...anchored({ matchWidth: 'min' }),
+          ...popupSurface({
+            background: vars.popoverBackground.var,
+            border: vars.popoverBorder.var,
+          }),
           padding: t.space[1].var,
         },
         item: {

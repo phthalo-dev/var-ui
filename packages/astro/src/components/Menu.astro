@@ -24,7 +24,10 @@ interface Props extends ButtonVariantProps, Omit<HTMLAttributes<'div'>, 'class:l
   "aria-label"?: string;
   /** Accessible name for the menu list. Defaults to `triggerLabel` / `aria-label`. */
   menuLabel?: string;
-  /** Where the popover opens relative to the trigger. @default 'bottom-start' */
+  /**
+   * Where the popover opens relative to the trigger: `top | bottom | start | end`, optionally with
+   * an alignment (`bottom end`); it flips when it does not fit. @default 'bottom start'
+   */
   placement?: MenuPlacement;
   /**
    * `single` renders items as `menuitemradio` with a check affordance and
@@ -41,7 +44,7 @@ const {
   triggerLabel,
   "aria-label": ariaLabel,
   menuLabel,
-  placement = "bottom-start",
+  placement = "bottom start",
   selectionMode = "none",
   selectedId,
   tone,
@@ -50,10 +53,18 @@ const {
   layout,
   elevated,
   className,
+  style,
   ...rest
 } = Astro.props;
 
 const menuId = nextMenuId();
+const popoverId = `${menuId}-popover`;
+// Explicit CSS anchor names (React wires the same pair with `useAnchor`).
+const anchorName = `--${menuId}`;
+const popoverStyle =
+  typeof style === "string"
+    ? `position-anchor: ${anchorName}; ${style}`
+    : { "position-anchor": anchorName, ...style };
 const resolvedMenuLabel = menuLabel ?? triggerLabel ?? ariaLabel ?? "Menu";
 
 const m = menu();
@@ -98,6 +109,8 @@ const itemContents = await Promise.all(
     aria-expanded="false"
     aria-controls={menuId}
     aria-label={ariaLabel}
+    popovertarget={popoverId}
+    style={`anchor-name: ${anchorName}`}
     {...triggerRecipe}
   >
     {hasTriggerSlot ? (
@@ -117,7 +130,9 @@ const itemContents = await Promise.all(
     {...rest}
     data-var-ui-menu-popover
     data-placement={placement}
-    hidden
+    id={popoverId}
+    popover="auto"
+    style={popoverStyle}
     {...popoverRecipe}
   >
     <div role="menu" id={menuId} aria-label={resolvedMenuLabel} {...menuRecipe}>

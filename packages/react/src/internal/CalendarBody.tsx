@@ -11,7 +11,7 @@ import {
   Heading,
   RangeCalendar,
 } from 'react-aria-components';
-import { Popover } from './nativeDialogShim';
+import { NativePopover } from './NativePopover';
 import { mergeProps } from 'typestyles';
 import { Icon } from '../icons';
 
@@ -69,7 +69,7 @@ export function CalendarPopover({
   range?: boolean;
 }): JSX.Element {
   return (
-    <Popover {...mergeProps(popover)}>
+    <NativePopover {...mergeProps(popover)}>
       <Dialog>
         {range ? (
           <RangeCalendar>
@@ -81,6 +81,6 @@ export function CalendarPopover({
           </AriaCalendar>
         )}
       </Dialog>
-    </Popover>
+    </NativePopover>
   );
 }

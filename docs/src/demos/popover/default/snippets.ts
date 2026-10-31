@@ -8,7 +8,6 @@ export const snippets = {
     <Button>Open</Button>
   </Popover.Trigger>
   <Popover.Popup>
-    <Popover.Arrow />
     <Popover.Title>Details</Popover.Title>
     <Popover.Content>
       <p>Popover body content.</p>
