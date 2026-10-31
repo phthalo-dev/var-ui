@@ -7,7 +7,8 @@ import type {
   Ref,
 } from 'react';
 import { useEffect, useState } from 'react';
-import { DialogTrigger, Popover as AriaPopover, Pressable } from 'react-aria-components';
+import { DialogTrigger, Pressable } from 'react-aria-components';
+import { Popover as AriaPopover } from '../internal/nativeDialogShim';
 import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps } from '@var-ui/core';

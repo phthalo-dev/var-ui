@@ -5,7 +5,7 @@ description: Searchable command palette for quick actions and navigation.
 
 # CommandPalette
 
-⌘K-style searchable command overlay. Give each item an `onSelect`, or handle everything in a single `onAction(id)`; the palette closes itself afterwards unless `closeOnAction={false}`. You own `open` / `onOpenChange`, or hand the palette a `controller` from `createCommandPalette()` / `useCommandPalette()` to open it from outside React. Items match on `title`, `meta`, and optional `keywords`. The panel uses overlay presence attributes (`data-open`, `data-starting-style`, `data-ending-style`); see [Overlay lifecycle](/docs/overlay-lifecycle). `onOpenChange(open, details)` receives `details.reason` (`escape-key`, `outside-press` for a backdrop click, `trigger-press` for choosing an item, `imperative` for the hotkey) and `details.cancel()` to veto the change; `defaultOpen` starts it open when uncontrolled.
+⌘K-style searchable command overlay. Give each item an `onSelect`, or handle everything in a single `onAction(id)`; the palette closes itself afterwards unless `closeOnAction={false}`. You own `open` / `onOpenChange`, or hand the palette a `controller` from `createCommandPalette()` / `useCommandPalette()` to open it from outside React. Items match on `title`, `meta`, and optional `keywords`. The palette is a native modal `<dialog>` (`showModal()`): it renders in place, sits in the top layer, and enter/exit is pure CSS on the `<dialog>` itself (`[open]`, `@starting-style`), so style it with `.var-ui-command-palette[open]`. Its contents stay mounted until the exit animation ends. Escape and a backdrop click are handled by the platform and reported through `onOpenChange`. `onOpenChange(open, details)` receives `details.reason` (`escape-key`, `outside-press` for a backdrop click, `trigger-press` for choosing an item, `imperative` for the hotkey) and `details.cancel()` to veto the change; `defaultOpen` starts it open when uncontrolled.
 
 ## Examples
 
@@ -39,4 +39,4 @@ Pass `filter={false}` when `items` are already the results for the query, listen
 
 ## Accessibility
 
-When open, focus moves to the search field; arrow keys move through results, Enter activates, Escape closes. Provide clear `title` text — `meta` is secondary. The default hotkey is ⌘K / Ctrl+K (`hotkey`); disable it in embedded demos if it would fight the host page.
+When open, focus moves to the search field and returns to the previously focused element on close (native `<dialog>` behavior); arrow keys move through results, Enter activates, Escape closes. Provide clear `title` text — `meta` is secondary. The default hotkey is ⌘K / Ctrl+K (`hotkey`); disable it in embedded demos if it would fight the host page.

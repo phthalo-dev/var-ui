@@ -40,3 +40,9 @@ export {
   type UseOverlayRootOptions,
 } from './useOverlayRoot';
 export type { OverlayCloseProps, OverlayTriggerProps } from './types';
+export {
+  useDialogElement,
+  type DialogElement,
+  type UseDialogElementOptions,
+} from './useDialogElement';
+export { useMountedWhileAnimating } from './useMountedWhileAnimating';

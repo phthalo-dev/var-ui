@@ -7,7 +7,7 @@ import type { CommandPaletteItem } from '../scripts/commandPaletteUtils';
 
 type CommandPaletteSlot =
   | 'root'
-  | 'dialog'
+  | 'frame'
   | 'inputRow'
   | 'inputIcon'
   | 'input'
@@ -44,7 +44,7 @@ const {
 const indexJson = JSON.stringify(items);
 const cp = (commandPalette as unknown as CommandPaletteRecipeFn)();
 const dialogRecipe = mergeProps(cp.root);
-const panelRecipe = mergeProps(cp.dialog, 'var-ui-command-palette__panel');
+const frameRecipe = mergeProps(cp.frame);
 const inputRowRecipe = mergeProps(cp.inputRow);
 const inputIconRecipe = mergeProps(cp.inputIcon);
 const inputRecipe = mergeProps(cp.input);
@@ -79,7 +79,7 @@ const emptyClass = (cp.empty).className;
     data-var-ui-command-palette-dialog
     aria-label={ariaLabel}
   >
-    <div {...panelRecipe} data-var-ui-command-palette-panel>
+    <div {...frameRecipe}>
       <div {...inputRowRecipe}>
         <span {...inputIconRecipe} aria-hidden="true">
           <svg

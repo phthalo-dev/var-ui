@@ -7,11 +7,11 @@ import {
   Input,
   ListBox,
   ListBoxItem,
-  Popover,
   Tag,
   TagGroup,
   TagList,
 } from 'react-aria-components';
+import { Popover } from '../internal/nativeDialogShim';
 import { tokenizer } from '@var-ui/core/components/tokenizer';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';

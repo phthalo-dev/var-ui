@@ -7,20 +7,18 @@ export const snippets = {
   <Dialog.Trigger>
     <Button>Open dialog</Button>
   </Dialog.Trigger>
-  <Dialog.Backdrop>
-    <Dialog.Popup>
-      <Dialog.Header>
-        <Dialog.Title>Notifications</Dialog.Title>
-        <Dialog.Close />
-      </Dialog.Header>
-      <Dialog.Description>You are all caught up.</Dialog.Description>
-      <Dialog.Actions>
-        <Dialog.Close>
-          <Button>Close</Button>
-        </Dialog.Close>
-      </Dialog.Actions>
-    </Dialog.Popup>
-  </Dialog.Backdrop>
+  <Dialog.Popup>
+    <Dialog.Header>
+      <Dialog.Title>Notifications</Dialog.Title>
+      <Dialog.Close />
+    </Dialog.Header>
+    <Dialog.Description>You are all caught up.</Dialog.Description>
+    <Dialog.Actions>
+      <Dialog.Close>
+        <Button>Close</Button>
+      </Dialog.Close>
+    </Dialog.Actions>
+  </Dialog.Popup>
 </Dialog>`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

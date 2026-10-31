@@ -6,10 +6,10 @@ import {
   type MenuItemProps as AriaMenuItemProps,
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
-  Popover as AriaPopover,
   Separator,
   type Placement,
 } from 'react-aria-components';
+import { Popover as AriaPopover } from './nativeDialogShim';
 import { menu } from '@var-ui/core/components/menu';
 import { useLayer } from '../layers/LayerProvider';
 import { toRacProps } from './racProps';

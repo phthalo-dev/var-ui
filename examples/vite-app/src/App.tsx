@@ -1212,28 +1212,26 @@ function ConfirmDialog({
       <AlertDialog.Trigger>
         <Button>{triggerLabel}</Button>
       </AlertDialog.Trigger>
-      <AlertDialog.Backdrop>
-        <AlertDialog.Popup>
-          <AlertDialog.Header>
-            <AlertDialog.Title>{title}</AlertDialog.Title>
-          </AlertDialog.Header>
-          <AlertDialog.Description>{description}</AlertDialog.Description>
-          <AlertDialog.Actions>
-            <AlertDialog.Close>
-              <Button autoFocus={destructive}>Cancel</Button>
-            </AlertDialog.Close>
-            <AlertDialog.Close>
-              <Button
-                tone={destructive ? 'danger' : 'accent'}
-                appearance="filled"
-                onClick={onConfirm}
-              >
-                {confirmLabel}
-              </Button>
-            </AlertDialog.Close>
-          </AlertDialog.Actions>
-        </AlertDialog.Popup>
-      </AlertDialog.Backdrop>
+      <AlertDialog.Popup>
+        <AlertDialog.Header>
+          <AlertDialog.Title>{title}</AlertDialog.Title>
+        </AlertDialog.Header>
+        <AlertDialog.Description>{description}</AlertDialog.Description>
+        <AlertDialog.Actions>
+          <AlertDialog.Close>
+            <Button autoFocus={destructive}>Cancel</Button>
+          </AlertDialog.Close>
+          <AlertDialog.Close>
+            <Button
+              tone={destructive ? 'danger' : 'accent'}
+              appearance="filled"
+              onClick={onConfirm}
+            >
+              {confirmLabel}
+            </Button>
+          </AlertDialog.Close>
+        </AlertDialog.Actions>
+      </AlertDialog.Popup>
     </AlertDialog>
   );
 }
@@ -1327,17 +1325,15 @@ export function App() {
                     <Dialog.Trigger>
                       <Button>Open dialog</Button>
                     </Dialog.Trigger>
-                    <Dialog.Backdrop>
-                      <Dialog.Popup>
-                        <Dialog.Header>
-                          <Dialog.Title>Icon close button</Dialog.Title>
-                          <Dialog.Close />
-                        </Dialog.Header>
-                        <Dialog.Description>
-                          The dismiss control now uses the registry close glyph.
-                        </Dialog.Description>
-                      </Dialog.Popup>
-                    </Dialog.Backdrop>
+                    <Dialog.Popup>
+                      <Dialog.Header>
+                        <Dialog.Title>Icon close button</Dialog.Title>
+                        <Dialog.Close />
+                      </Dialog.Header>
+                      <Dialog.Description>
+                        The dismiss control now uses the registry close glyph.
+                      </Dialog.Description>
+                    </Dialog.Popup>
                   </Dialog>
                 </HStack>
               </Stack>

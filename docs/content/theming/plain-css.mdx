@@ -241,12 +241,13 @@ or attribute listed in the contract.
 }
 
 /* Dialog */
-.var-ui-dialog__overlay {
+.var-ui-dialog__popup {
+  /* The native <dialog>; its ::backdrop colour comes from this variable. */
   --var-ui-dialog-overlaybackground: rgb(10 20 20 / 0.6);
-}
-.var-ui-dialog__modal {
   --var-ui-dialog-modalborder: transparent;
   border-radius: var(--var-ui-radius-xl);
+}
+.var-ui-dialog__content {
   padding: var(--var-ui-space-6);
 }
 .var-ui-dialog__heading {
@@ -273,15 +274,13 @@ export function Example() {
           Rename
         </Button>
       </Dialog.Trigger>
-      <Dialog.Backdrop>
-        <Dialog.Popup>
-          <Dialog.Title>Rename project</Dialog.Title>
-          <TextField label="Name" size="lg" errorMessage="Name is required" />
-          <Dialog.Actions>
-            <Dialog.Close>Cancel</Dialog.Close>
-          </Dialog.Actions>
-        </Dialog.Popup>
-      </Dialog.Backdrop>
+      <Dialog.Popup>
+        <Dialog.Title>Rename project</Dialog.Title>
+        <TextField label="Name" size="lg" errorMessage="Name is required" />
+        <Dialog.Actions>
+          <Dialog.Close>Cancel</Dialog.Close>
+        </Dialog.Actions>
+      </Dialog.Popup>
     </Dialog>
   );
 }

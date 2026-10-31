@@ -1,17 +1,17 @@
 import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
+import { stubNativeDialog } from '../test/nativeOverlayStubs';
 import { MobileNav, MobileNavProvider } from './MobileNav';
 
+// jsdom has no top layer: API-shape tests only. Escape, backdrop, focus, scroll lock and the
+// slide animation are covered in MobileNav.browser.test.tsx.
+stubNativeDialog();
+
 function wrap(ui: ReactNode) {
-  return render(
-    <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
-    </IconProvider>,
-  );
+  return render(<IconProvider icons={{}}>{ui}</IconProvider>);
 }
 
 describe('MobileNav', () => {
@@ -25,11 +25,9 @@ describe('MobileNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
-          <MobileNav open>
-            <p>Drawer content</p>
-          </MobileNav>
-        </LayerProvider>
+        <MobileNav open>
+          <p>Drawer content</p>
+        </MobileNav>
       </IconProvider>,
     );
     expect(screen.getByText('Drawer content')).toBeTruthy();
@@ -43,38 +41,6 @@ describe('MobileNav', () => {
     );
     expect(screen.getByText('Menu')).toBeTruthy();
     expect(screen.getByText('Dashboard link')).toBeTruthy();
-  });
-
-  it('calls onOpenChange(false) on Escape', async () => {
-    const onOpenChange = vi.fn();
-    wrap(
-      <MobileNav open onOpenChange={onOpenChange}>
-        <p>Drawer content</p>
-      </MobileNav>,
-    );
-    await userEvent.keyboard('{Escape}');
-    expect(onOpenChange).toHaveBeenCalledWith(
-      false,
-      expect.objectContaining({ reason: 'escape-key' }),
-    );
-  });
-
-  it('calls onOpenChange(false) on backdrop click', async () => {
-    const onOpenChange = vi.fn();
-    wrap(
-      <MobileNav open onOpenChange={onOpenChange}>
-        <p>Drawer content</p>
-      </MobileNav>,
-    );
-    const dialog = screen.getByRole('dialog');
-    // The backdrop is the ModalOverlay's own underlay element, an ancestor of the dialog panel.
-    const backdrop = dialog.parentElement?.parentElement;
-    expect(backdrop).toBeTruthy();
-    await userEvent.click(backdrop as Element);
-    expect(onOpenChange).toHaveBeenCalledWith(
-      false,
-      expect.objectContaining({ reason: 'outside-press' }),
-    );
   });
 
   it('calls onOpenChange(false) when the close button is pressed', async () => {
@@ -97,8 +63,8 @@ describe('MobileNav', () => {
         <p>Drawer content</p>
       </MobileNav>,
     );
-    const panel = screen.getByRole('dialog').parentElement;
-    expect(panel?.getAttribute('data-side')).toBe('start');
+    const panel = screen.getByRole('dialog');
+    expect(panel.getAttribute('data-side')).toBe('start');
   });
 
   it('supports the "end" side', () => {
@@ -107,8 +73,8 @@ describe('MobileNav', () => {
         <p>Drawer content</p>
       </MobileNav>,
     );
-    const panel = screen.getByRole('dialog').parentElement;
-    expect(panel?.getAttribute('data-side')).toBe('end');
+    const panel = screen.getByRole('dialog');
+    expect(panel.getAttribute('data-side')).toBe('end');
   });
 
   describe('MobileNav.Toggle', () => {
@@ -168,7 +134,7 @@ describe('MobileNav', () => {
     expect(onClick.mock.calls[0]?.[0]).toHaveProperty('nativeEvent');
   });
 
-  it('MobileNav defaultOpen opens uncontrolled and details.cancel() vetoes a close', async () => {
+  it('MobileNav defaultOpen opens uncontrolled and details.cancel() vetoes a close press', async () => {
     const onOpenChange = vi.fn((_open: boolean, details: { cancel: () => void }) =>
       details.cancel(),
     );
@@ -178,19 +144,19 @@ describe('MobileNav', () => {
       </MobileNav>,
     );
     expect(screen.getByText('Drawer content')).toBeTruthy();
-    await userEvent.keyboard('{Escape}');
+    await userEvent.click(screen.getByRole('button', { name: 'Close navigation' }));
     expect(onOpenChange).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Drawer content')).toBeTruthy();
   });
 
-  it('MobileNav uncontrolled closes itself', async () => {
+  it('MobileNav uncontrolled closes itself from its close button', async () => {
     wrap(
       <MobileNav defaultOpen>
         <p>Drawer content</p>
       </MobileNav>,
     );
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(screen.queryByText('Drawer content')).toBeNull());
+    await userEvent.click(screen.getByRole('button', { name: 'Close navigation' }));
+    expect(document.querySelector('dialog')?.hasAttribute('open')).toBe(false);
   });
 
   it('MobileNavProvider reports trigger-press from the toggle and close-press from the nav', async () => {
@@ -216,12 +182,13 @@ describe('MobileNav', () => {
     expect(onOpenChange).toHaveBeenCalledTimes(2);
   });
 
-  it('renders no display:contents wrapper', () => {
+  it('renders the popup on the mobile-nav recipe class with no wrapper', () => {
     const { container } = wrap(
       <MobileNav open>
         <p>Drawer content</p>
       </MobileNav>,
     );
+    expect(container.querySelector('dialog.var-ui-mobile-nav__popup')).toBeTruthy();
     expect(container.querySelector('[style*="display: contents"]')).toBeNull();
   });
 });

@@ -8,13 +8,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  Button as AriaButton,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  type Selection,
-} from 'react-aria-components';
+import { Button as AriaButton, ListBox, ListBoxItem, type Selection } from 'react-aria-components';
+import { Popover } from '../internal/nativeDialogShim';
 import { multiSelector } from '@var-ui/core/components/multiSelector';
 import { Icon } from '../icons';
 import type { FieldMeta } from './Field';

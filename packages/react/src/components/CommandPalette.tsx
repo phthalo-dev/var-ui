@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { createPortal } from 'react-dom';
 import {
   Autocomplete,
   Header,
@@ -12,10 +11,13 @@ import {
 } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
-import type { CommandPaletteVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { useLayer } from '../layers/LayerProvider';
-import { useMergedRef, useOverlayRoot, type OverlayOpenChangeHandler } from '../overlays';
+import {
+  useDialogElement,
+  useMergedRef,
+  useOverlayRoot,
+  type OverlayOpenChangeHandler,
+} from '../overlays';
 import { cx, mergeProps } from 'typestyles';
 import { Kbd } from './Kbd';
 import type { CommandPaletteController } from '../internal/commandPaletteController';
@@ -49,7 +51,7 @@ export type CommandPaletteItem = {
 
 export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 'open'> & {
   /** Controlled open state. */
-  open?: NonNullable<CommandPaletteVariantProps['open']>;
+  open?: boolean;
   /** Initial open state when uncontrolled. @default false */
   defaultOpen?: boolean;
   /**
@@ -92,17 +94,11 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   loading?: boolean;
   /** Message shown while `loading` and no items are listed. @default 'Loading…' */
   loadingLabel?: string;
-  /**
-   * Element the dialog renders into instead of its React parent. Needed when a subtree renders
-   * under a different theme than the page ambient (the theme's CSS custom properties only
-   * cascade to descendants of the themed element).
-   */
-  portalContainer?: Element;
 };
 
 type CommandPaletteSlot =
   | 'root'
-  | 'dialog'
+  | 'frame'
   | 'inputRow'
   | 'inputIcon'
   | 'input'
@@ -119,9 +115,7 @@ type CommandPaletteSlot =
   | 'resultMeta'
   | 'mark'
   | 'empty';
-type CommandPaletteRecipeFn = (args?: {
-  open?: boolean;
-}) => Record<CommandPaletteSlot, ComponentAttrsResult>;
+type CommandPaletteRecipeFn = () => Record<CommandPaletteSlot, ComponentAttrsResult>;
 // Slot recipe call results are typed `Record<string, ComponentAttrsResult>`, so slot names are lost;
 // drop this cast once https://github.com/phthalo-dev/typestyles/issues/303 ships.
 const commandPaletteSlots = commandPalette as unknown as CommandPaletteRecipeFn;
@@ -208,16 +202,12 @@ export function CommandPalette({
   onQueryChange,
   loading = false,
   loadingLabel = 'Loading…',
-  portalContainer,
   className,
   style,
   'aria-label': ariaLabel,
-  onClick,
-  onCancel,
-  onKeyDownCapture,
   ref,
   ...rest
-}: CommandPaletteProps): JSX.Element | null {
+}: CommandPaletteProps): JSX.Element {
   const [query, setQueryState] = useState('');
   const onQueryChangeRef = useRef(onQueryChange);
   onQueryChangeRef.current = onQueryChange;
@@ -225,16 +215,15 @@ export function CommandPalette({
     setQueryState(next);
     onQueryChangeRef.current?.(next);
   }, []);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const controllerOpen = useSyncExternalStore(
     controller?.subscribe ?? subscribeNever,
     controller?.getSnapshot ?? getFalse,
     getFalse,
   );
-  // Only the open state goes through the shared root: the palette stays a native `<dialog>`, so
-  // the RAC props, trigger/backdrop wiring and `OverlayTrigger` do not apply. A controller makes
-  // the palette controlled and is updated after `onOpenChange` unless it was canceled.
+  // A controller makes the palette controlled; it is updated after `onOpenChange` unless that
+  // was canceled. The `<dialog>` itself is driven by `useDialogElement`.
   const root = useOverlayRoot({
+    native: true,
     open: controller ? controllerOpen : openProp,
     defaultOpen,
     onOpenChange: (next, details) => {
@@ -242,10 +231,9 @@ export function CommandPalette({
       if (!details.isCanceled) controller?.setOpen(next);
     },
   });
-  const { open } = root;
-  const setDialogRef = useMergedRef<HTMLDialogElement>(dialogRef, ref);
-  const cp = commandPaletteSlots({ open });
-  const { style: layerStyle } = useLayer();
+  const dialog = useDialogElement(root);
+  const setDialogRef = useMergedRef<HTMLDialogElement>(dialog.ref, ref);
+  const cp = commandPaletteSlots();
 
   const hotkeyId =
     hotkey === true ? DEFAULT_COMMAND_PALETTE_HOTKEY : hotkey ? [hotkey].flat().join('\0') : '';
@@ -262,29 +250,10 @@ export function CommandPalette({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hotkeyId, root]);
 
+  // Reset once the exit animation is over so the list does not flash while the palette fades.
   useEffect(() => {
-    if (!open) setQuery('');
-  }, [open, setQuery]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (root.mounted) {
-      if (!dialog.open) dialog.showModal();
-    } else if (dialog.open) {
-      dialog.close();
-    }
-  }, [root.mounted]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    // Programmatic close (open flipped to false) also emits `close`; the root drops a request that
-    // matches the current state, so only real closes are reported.
-    const handleClose = (event: Event) => root.close({ event, reason: 'unknown' });
-    dialog.addEventListener('close', handleClose);
-    return () => dialog.removeEventListener('close', handleClose);
-  }, [root]);
+    if (!dialog.mounted) setQuery('');
+  }, [dialog.mounted, setQuery]);
 
   const visibleItems = useMemo(
     () => (filter ? items.filter((item) => filter(item, query)) : items),
@@ -334,38 +303,19 @@ export function CommandPalette({
     </ListBoxItem>
   );
 
-  const palette = (
+  return (
     <dialog
       ref={setDialogRef}
       {...rest}
       aria-label={ariaLabel ?? placeholder}
+      aria-busy={loading || undefined}
+      data-open={root.open ? '' : undefined}
+      data-closed={root.open ? undefined : ''}
       {...mergeProps(cp.root, className)}
-      style={{ ...layerStyle, ...style }}
-      onClick={(event) => {
-        onClick?.(event);
-        if (event.target === event.currentTarget) {
-          root.close({ event: event.nativeEvent, reason: 'outside-press' });
-        }
-      }}
-      onCancel={(event) => {
-        onCancel?.(event);
-        event.preventDefault();
-        root.close({ event: event.nativeEvent, reason: 'escape-key' });
-      }}
-      onKeyDownCapture={(event) => {
-        onKeyDownCapture?.(event);
-        if (event.key !== 'Escape') return;
-        event.preventDefault();
-        root.close({ event: event.nativeEvent, reason: 'escape-key' });
-      }}
+      style={style}
     >
-      {root.mounted ? (
-        <div
-          ref={root.setPopupEl}
-          {...mergeProps(cp.dialog)}
-          {...root.presenceAttrs}
-          aria-busy={loading || undefined}
-        >
+      {dialog.mounted ? (
+        <div {...mergeProps(cp.frame)}>
           <Autocomplete inputValue={query} onInputChange={setQuery}>
             <div {...mergeProps(cp.inputRow)}>
               <span {...mergeProps(cp.inputIcon)}>
@@ -400,6 +350,4 @@ export function CommandPalette({
       ) : null}
     </dialog>
   );
-
-  return portalContainer ? createPortal(palette, portalContainer) : palette;
 }

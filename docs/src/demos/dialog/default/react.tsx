@@ -6,20 +6,18 @@ export default function Preview() {
       <Dialog.Trigger>
         <Button>Open dialog</Button>
       </Dialog.Trigger>
-      <Dialog.Backdrop>
-        <Dialog.Popup>
-          <Dialog.Header>
-            <Dialog.Title>Notifications</Dialog.Title>
-            <Dialog.Close aria-label="Close" />
-          </Dialog.Header>
-          <Dialog.Description>You are all caught up.</Dialog.Description>
-          <Dialog.Actions>
-            <Dialog.Close>
-              <Button>Close</Button>
-            </Dialog.Close>
-          </Dialog.Actions>
-        </Dialog.Popup>
-      </Dialog.Backdrop>
+      <Dialog.Popup>
+        <Dialog.Header>
+          <Dialog.Title>Notifications</Dialog.Title>
+          <Dialog.Close aria-label="Close" />
+        </Dialog.Header>
+        <Dialog.Description>You are all caught up.</Dialog.Description>
+        <Dialog.Actions>
+          <Dialog.Close>
+            <Button>Close</Button>
+          </Dialog.Close>
+        </Dialog.Actions>
+      </Dialog.Popup>
     </Dialog>
   );
 }

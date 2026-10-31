@@ -12,12 +12,12 @@ import {
   Label,
   ListBox,
   ListBoxItem,
-  Popover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
   Text,
   type SelectProps as RACSelectProps,
 } from 'react-aria-components';
+import { Popover } from '../internal/nativeDialogShim';
 import { select } from '@var-ui/core/components/select';
 import type { SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';

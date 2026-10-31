@@ -10,33 +10,33 @@ const closeAction = button({});
 <div style="display: grid; gap: 1rem">
   <button type="button" {...mergeProps(trigger)} disabled>Open dialog</button>
   <!-- No @var-ui/astro Dialog — static core-recipe chrome (open state, non-interactive). -->
-  <div
-    {...mergeProps(d.overlay)}
-    style="position: relative; inset: auto; min-height: 220px"
+  <dialog
+    {...mergeProps(d.popup)}
+    open
+    aria-labelledby="dialog-demo-title"
+    style="position: relative; inset: auto; margin: 0 auto; min-height: 220px"
   >
-    <div {...mergeProps(d.modal)} role="dialog" aria-labelledby="dialog-demo-title" aria-modal="true">
-      <div {...mergeProps(d.content)}>
-        <div {...mergeProps(d.header)}>
-          <h2 id="dialog-demo-title" {...mergeProps(d.heading)}>Icon close button</h2>
-          <button type="button" {...mergeProps(d.closeButton)} aria-label="Close" disabled>
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M6 6l12 12M18 6L6 18"></path>
-            </svg>
-          </button>
-        </div>
-        <p {...mergeProps(d.description)}>The dismiss control now uses the registry close glyph.</p>
-        <button type="button" {...mergeProps(closeAction)} disabled>Close</button>
+    <div {...mergeProps(d.content)}>
+      <div {...mergeProps(d.header)}>
+        <h2 id="dialog-demo-title" {...mergeProps(d.heading)}>Icon close button</h2>
+        <button type="button" {...mergeProps(d.closeButton)} aria-label="Close" disabled>
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
       </div>
+      <p {...mergeProps(d.description)}>The dismiss control now uses the registry close glyph.</p>
+      <button type="button" {...mergeProps(closeAction)} disabled>Close</button>
     </div>
-  </div>
+  </dialog>
 </div>

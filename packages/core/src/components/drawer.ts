@@ -3,18 +3,22 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { borderSide } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
-import { overlayIosAbsoluteBackdrop, overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
+import {
+  nativeBackdrop,
+  nativeDialogReset,
+  nativeEnterExit,
+  nativeSlideFrom,
+} from '../shared/overlayMotion';
 import { controlSize } from '../shared/variantAxes';
 
 /**
- * General-purpose slide-in panel built on RAC Modal. Supports start/end/bottom
+ * General-purpose slide-in panel built on a native `<dialog>`. Supports start/end/bottom
  * placement and sm/md/lg widths. Pair with the React `Drawer` compound component.
  */
 export const drawer = typestyles.recipe({
   name: 'drawer',
   layer: 'components',
-  slots: ['overlay', 'panel', 'header', 'title', 'body', 'closeButton'],
+  slots: ['popup', 'header', 'title', 'body', 'closeButton'],
   variants: { size: controlSize },
   vars: {
     overlayBackground: {
@@ -49,41 +53,43 @@ export const drawer = typestyles.recipe({
   styles: ({ vars }) => {
     return {
       base: {
-        overlay: {
-          ...overlayPresenceStyles(),
-          ...overlayIosAbsoluteBackdrop,
-          position: 'fixed',
-          inset: 0,
-          ...layerZIndex(t.zIndex.modal.var),
-          backgroundColor: vars.overlayBackground.var,
-        },
-        panel: {
-          ...overlayPresenceStyles({ scale: false }),
-          position: 'fixed',
-          display: 'flex',
+        // The native `<dialog>`. Slides in from `data-placement` via `translate`.
+        popup: {
+          ...nativeDialogReset,
+          ...nativeEnterExit({ slide: true, backdrop: true, whenOpen: { display: 'flex' } }),
+          ...nativeBackdrop(vars.overlayBackground.var),
+          margin: 0,
           flexDirection: 'column',
           backgroundColor: vars.panelBackground.var,
           boxShadow: t.shadow.lg.var,
           outline: 'none',
           maxWidth: '100vw',
-          maxHeight: '100vh',
+          maxHeight: '100dvh',
           '&[data-placement="start"]': {
-            top: 0,
-            bottom: 0,
+            ...nativeSlideFrom('start'),
+            insetBlock: 0,
             insetInlineStart: 0,
+            insetInlineEnd: 'auto',
+            height: '100dvh',
             width: `min(${vars.panelWidth.var}, 92vw)`,
             ...borderSide('inline-end', vars.panelBorder.var),
           },
           '&[data-placement="end"]': {
-            top: 0,
-            bottom: 0,
+            ...nativeSlideFrom('end'),
+            insetBlock: 0,
             insetInlineEnd: 0,
+            insetInlineStart: 'auto',
+            height: '100dvh',
             width: `min(${vars.panelWidth.var}, 92vw)`,
             ...borderSide('inline-start', vars.panelBorder.var),
           },
           '&[data-placement="bottom"]': {
+            ...nativeSlideFrom('bottom'),
             insetInline: 0,
-            bottom: 0,
+            insetBlockStart: 'auto',
+            insetBlockEnd: 0,
+            maxWidth: 'none',
+            width: '100%',
             height: `min(${vars.panelHeight.var}, 92vh)`,
             ...borderSide('block-start', vars.panelBorder.var),
             borderStartStartRadius: t.radius.lg.var,
@@ -136,9 +142,9 @@ export const drawer = typestyles.recipe({
       },
       variants: {
         size: {
-          sm: { panel: { [vars.panelWidth.name]: '320px', [vars.panelHeight.name]: '40vh' } },
+          sm: { popup: { [vars.panelWidth.name]: '320px', [vars.panelHeight.name]: '40vh' } },
           md: {},
-          lg: { panel: { [vars.panelWidth.name]: '560px', [vars.panelHeight.name]: '70vh' } },
+          lg: { popup: { [vars.panelWidth.name]: '560px', [vars.panelHeight.name]: '70vh' } },
         },
       },
     };

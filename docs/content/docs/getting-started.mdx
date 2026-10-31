@@ -137,10 +137,6 @@ When `DesignSystemProvider` uses `applyToDocument`, put `isolation: isolate` on 
 
 #### Themed portals
 
-Token CSS variables cascade from the theme class. If an overlay portals to `document.body` and the theme class is on a subtree, pass `portalContainer` pointing at the themed node (or use `applyToDocument`).
-
-#### iOS 26+ Safari backdrops
-
-Dialog and drawer backdrops use `position: absolute` under `@supports (-webkit-touch-callout: none)`. Add `body { position: relative; }` so a scrolled page still covers the visual viewport.
+Token CSS variables cascade from the theme class. `Dialog`, `AlertDialog`, `Drawer` and `MobileNav` render in place (a native `<dialog>` is in the top layer without a portal), so a theme on an ancestor reaches them with no `portalContainer`. Overlays that still portal to `document.body` take a `portalContainer` pointing at the themed node (or use `applyToDocument`).
 
 Overlay `data-*` attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).

@@ -1,5 +1,6 @@
 import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
 import { svg as menuSvg } from '@var-ui/icons/glyphs/menu';
+import { isBackdropTarget } from './backdropDismiss';
 
 type MobileNavController = {
   isOpen: boolean;
@@ -13,33 +14,16 @@ const providers = new WeakMap<HTMLElement, MobileNavController>();
 const MENU_ICON = menuSvg;
 const CLOSE_ICON = closeSvg;
 
-function getFocusableElements(container: HTMLElement): HTMLElement[] {
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
-    ),
-  ).filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true');
-}
-
-function lockScroll(locked: boolean, previousOverflow: { value: string }): void {
-  if (locked) {
-    previousOverflow.value = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return;
-  }
-  document.body.style.overflow = previousOverflow.value;
+function getPopup(root: ParentNode): HTMLDialogElement | null {
+  return root.querySelector<HTMLDialogElement>('[data-var-ui-mobile-nav-popup]');
 }
 
 function syncOpenState(root: HTMLElement, isOpen: boolean): void {
-  root
-    .querySelectorAll('[data-var-ui-mobile-nav-overlay], [data-var-ui-mobile-nav-panel]')
-    .forEach((el) => {
-      if (isOpen) {
-        el.setAttribute('data-open', '');
-      } else {
-        el.removeAttribute('data-open');
-      }
-    });
+  const popup = getPopup(root);
+  if (popup) {
+    if (isOpen) popup.setAttribute('data-open', '');
+    else popup.removeAttribute('data-open');
+  }
 
   root.querySelectorAll('[data-var-ui-mobile-nav-toggle]').forEach((el) => {
     el.setAttribute('aria-expanded', String(isOpen));
@@ -58,13 +42,15 @@ function markInitialized(element: Element): boolean {
   return true;
 }
 
+/**
+ * The provider owns the open state; the native `<dialog>` owns focus trapping, Escape, the
+ * top layer, inertness of the page and scroll locking (a global CSS rule).
+ */
 export function initMobileNavProvider(root: HTMLElement): () => void {
   if (!markInitialized(root)) {
     return () => {};
   }
-  const previousOverflow = { value: '' };
   let isOpen = false;
-  let lastFocused: HTMLElement | null = null;
 
   const controller: MobileNavController = {
     get isOpen() {
@@ -78,61 +64,20 @@ export function initMobileNavProvider(root: HTMLElement): () => void {
   const setOpen = (next: boolean) => {
     if (isOpen === next) return;
     isOpen = next;
+    const popup = getPopup(root);
+    if (popup) {
+      if (next && !popup.open) popup.showModal();
+      else if (!next && popup.open) popup.close();
+    }
     syncOpenState(root, isOpen);
-    lockScroll(isOpen, previousOverflow);
-
-    const panel = root.querySelector<HTMLElement>('[data-var-ui-mobile-nav-panel]');
-    if (isOpen && panel) {
-      lastFocused = document.activeElement as HTMLElement | null;
-      const focusables = getFocusableElements(panel);
-      (focusables[0] ?? panel).focus();
-      return;
-    }
-
-    if (!isOpen && lastFocused) {
-      lastFocused.focus();
-      lastFocused = null;
-    }
   };
 
   providers.set(root, controller);
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (!isOpen || event.key !== 'Escape') return;
-    event.preventDefault();
-    setOpen(false);
-  };
-
-  const handleDocumentKeyDown = (event: KeyboardEvent) => {
-    if (!isOpen || event.key !== 'Tab') return;
-    const panel = root.querySelector<HTMLElement>('[data-var-ui-mobile-nav-panel]');
-    if (!panel) return;
-    const focusables = getFocusableElements(panel);
-    if (focusables.length === 0) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    const active = document.activeElement;
-
-    if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-    if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
-
-  document.addEventListener('keydown', handleKeyDown);
-  document.addEventListener('keydown', handleDocumentKeyDown);
-
   return () => {
     providers.delete(root);
-    document.removeEventListener('keydown', handleKeyDown);
-    document.removeEventListener('keydown', handleDocumentKeyDown);
-    lockScroll(false, previousOverflow);
+    const popup = getPopup(root);
+    if (popup?.open) popup.close();
   };
 }
 
@@ -141,13 +86,13 @@ export function initMobileNavToggle(button: HTMLElement): () => void {
     return () => {};
   }
 
-  const provider = getMobileNavProvider(button);
   button.setAttribute('aria-expanded', 'false');
   if (!button.innerHTML.trim()) {
     button.innerHTML = MENU_ICON;
   }
 
   const handleClick = () => {
+    const provider = getMobileNavProvider(button);
     if (provider) {
       provider.toggle();
       return;
@@ -165,41 +110,49 @@ export function initMobileNav(drawer: HTMLElement): () => void {
     return () => {};
   }
 
-  const providerRoot = drawer.closest('[data-var-ui-mobile-nav-provider]') as HTMLElement | null;
-  const provider = providerRoot ? getMobileNavProvider(drawer) : null;
-  const overlay = drawer.querySelector<HTMLElement>('[data-var-ui-mobile-nav-overlay]');
-  const panel = drawer.querySelector<HTMLElement>('[data-var-ui-mobile-nav-panel]');
+  const popup = getPopup(drawer);
   const closeButton = drawer.querySelector<HTMLElement>('[data-var-ui-mobile-nav-close]');
 
   if (closeButton && !closeButton.innerHTML.trim()) {
     closeButton.innerHTML = CLOSE_ICON;
   }
 
-  const close = () => provider?.close();
+  // Resolved at event time: the drawer script and `AppShell` both initialize, and whichever
+  // runs first wins `data-var-ui-initialized`.
+  const close = () => getMobileNavProvider(drawer)?.close();
 
-  const handleOverlayClick = (event: MouseEvent) => {
-    if (event.target === overlay) {
-      close();
-    }
+  let pressedBackdrop = false;
+  let pressedLink = false;
+  const handlePointerDown = (event: PointerEvent) => {
+    if (!popup) return;
+    pressedBackdrop = isBackdropTarget(popup, event);
+    const target = event.target;
+    pressedLink = target instanceof Element && !!target.closest('a[href]');
   };
-
+  // Backdrop: pointerdown and click both outside the dialog box. A link closes only when the
+  // press started on that link, so a drag that ends on it does not.
+  const handlePopupClick = (event: MouseEvent) => {
+    const target = event.target;
+    const link = pressedLink && target instanceof Element ? target.closest('a[href]') : null;
+    const backdrop = popup ? pressedBackdrop && isBackdropTarget(popup, event) : false;
+    pressedBackdrop = false;
+    pressedLink = false;
+    if (backdrop || link) close();
+  };
+  // Native closes (Escape, `requestClose()`) keep the provider's state in sync.
+  const handlePopupClose = () => close();
   const handleCloseClick = () => close();
 
-  const handlePanelClick = (event: MouseEvent) => {
-    const target = event.target as HTMLElement | null;
-    if (target?.closest('a[href]')) {
-      close();
-    }
-  };
-
-  overlay?.addEventListener('click', handleOverlayClick);
+  popup?.addEventListener('pointerdown', handlePointerDown);
+  popup?.addEventListener('click', handlePopupClick);
+  popup?.addEventListener('close', handlePopupClose);
   closeButton?.addEventListener('click', handleCloseClick);
-  panel?.addEventListener('click', handlePanelClick);
 
   return () => {
-    overlay?.removeEventListener('click', handleOverlayClick);
+    popup?.removeEventListener('pointerdown', handlePointerDown);
+    popup?.removeEventListener('click', handlePopupClick);
+    popup?.removeEventListener('close', handlePopupClose);
     closeButton?.removeEventListener('click', handleCloseClick);
-    panel?.removeEventListener('click', handlePanelClick);
   };
 }
 

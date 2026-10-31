@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef, CSSProperties, JSX, ReactElement, ReactNode } from 'react';
 import { createContext, isValidElement, useContext, useMemo } from 'react';
-import { Dialog as AriaDialog, Modal, ModalOverlay } from 'react-aria-components';
 import {
   layout,
   layoutContent,
@@ -20,9 +19,9 @@ import type {
   LayoutVariantProps,
 } from '@var-ui/core';
 import type { UseResizableResult } from '../hooks';
-import { useMediaQuery, useScrollLock } from '../hooks';
-import { useLayer } from '../layers/LayerProvider';
-import { OverlayCloseContext, useOverlayRoot, type OverlayOpenChangeHandler } from '../overlays';
+import { useMediaQuery } from '../hooks';
+import { NativeSheetPopup } from '../internal/NativeSheetPopup';
+import { useOverlayRoot, type OverlayOpenChangeHandler } from '../overlays';
 import { mergeProps } from 'typestyles';
 import { useDirection } from '../DirectionProvider';
 import { ResizeHandle } from './ResizeHandle';
@@ -342,7 +341,7 @@ export type LayoutPanelResponsive = {
   /** Breakpoint below which `mode` takes over from the normal inline panel. */
   below: LayoutBreakpoint;
   /**
-   * `'overlay'` renders an RAC `Modal`/`ModalOverlay` drawer when open, nothing when closed.
+   * `'overlay'` renders a native modal `<dialog>` drawer; the panel stays out of the page while closed.
    * `'hidden'` renders the plain inline panel when open, nothing when closed (no backdrop/trap).
    */
   mode: 'overlay' | 'hidden';
@@ -394,8 +393,8 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
  * Above `responsive.below` (or when `responsive` is omitted), always renders
  * the plain inline panel — `open`/`defaultOpen`/`onOpenChange` are inert.
  * Below it, `'hidden'` mounts/unmounts the inline panel with `open`, and
- * `'overlay'` swaps it for an RAC `Modal`/`ModalOverlay` drawer (focus trap,
- * Escape, backdrop dismissal, `useScrollLock` — same primitives as `MobileNav`).
+ * `'overlay'` swaps it for a native modal `<dialog>` drawer (focus trap,
+ * Escape, backdrop dismissal and scroll lock are native, as in `MobileNav`).
  */
 export function LayoutPanel({
   width,
@@ -443,11 +442,8 @@ export function LayoutPanel({
   });
   const isOverlayMode = isResponsiveActive && responsive?.mode === 'overlay';
 
-  const root = useOverlayRoot({ open: openProp, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ native: true, open: openProp, defaultOpen, onOpenChange });
   const { open } = root;
-
-  useScrollLock(isOverlayMode && root.mounted);
-  const { style: layerStyle } = useLayer();
 
   if (resizable?.isCollapsed) {
     return null;
@@ -474,31 +470,15 @@ export function LayoutPanel({
 
   if (isOverlayMode) {
     return (
-      <ModalOverlay
-        {...root.rac}
-        isDismissable
-        {...mergeProps(s.overlayBackdrop)}
-        {...root.presenceAttrs}
-        ref={root.setBackdropEl}
-        style={layerStyle}
+      <NativeSheetPopup
+        {...mergeProps(s.popup)}
+        root={root}
+        data-side={dataSide}
+        aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
+        aria-labelledby={ariaLabelledBy}
       >
-        <Modal
-          {...mergeProps(s.overlay)}
-          {...root.presenceAttrs}
-          ref={root.setPopupEl}
-          data-side={dataSide}
-        >
-          <AriaDialog
-            aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
-            aria-labelledby={ariaLabelledBy}
-            {...mergeProps(s.overlayDialog)}
-          >
-            <OverlayCloseContext.Provider value={root.close}>
-              {panelBody}
-            </OverlayCloseContext.Provider>
-          </AriaDialog>
-        </Modal>
-      </ModalOverlay>
+        <div {...mergeProps(s.body)}>{panelBody}</div>
+      </NativeSheetPopup>
     );
   }
 

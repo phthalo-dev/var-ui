@@ -6,17 +6,15 @@ export default function Preview() {
       <Drawer.Trigger>
         <Button>Open drawer</Button>
       </Drawer.Trigger>
-      <Drawer.Backdrop>
-        <Drawer.Popup aria-label="Settings">
-          <Drawer.Header>
-            <Drawer.Title>Settings</Drawer.Title>
-            <Drawer.Close />
-          </Drawer.Header>
-          <Drawer.Body>
-            <p>Drawer body content.</p>
-          </Drawer.Body>
-        </Drawer.Popup>
-      </Drawer.Backdrop>
+      <Drawer.Popup aria-label="Settings">
+        <Drawer.Header>
+          <Drawer.Title>Settings</Drawer.Title>
+          <Drawer.Close />
+        </Drawer.Header>
+        <Drawer.Body>
+          <p>Drawer body content.</p>
+        </Drawer.Body>
+      </Drawer.Popup>
     </Drawer>
   );
 }

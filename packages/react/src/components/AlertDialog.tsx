@@ -2,7 +2,6 @@ import type { JSX } from 'react';
 import {
   Dialog,
   type DialogActionsProps,
-  type DialogBackdropProps,
   type DialogCloseProps,
   type DialogDescriptionProps,
   type DialogHeaderProps,
@@ -16,7 +15,6 @@ export type AlertDialogRootProps = DialogRootProps;
 /** Alias for docs and consumers referring to the root props. */
 export type AlertDialogProps = AlertDialogRootProps;
 export type AlertDialogTriggerProps = DialogTriggerProps;
-export type AlertDialogBackdropProps = DialogBackdropProps;
 export type AlertDialogPopupProps = Omit<DialogPopupProps, 'role'>;
 export type AlertDialogHeaderProps = DialogHeaderProps;
 export type AlertDialogTitleProps = DialogTitleProps;
@@ -42,26 +40,26 @@ function AlertDialogPopup(props: AlertDialogPopupProps): JSX.Element {
  * is Root. The old assembled preset is a recipe (see the AlertDialog docs): it was a fixed
  * arrangement of these parts and could not express async confirm, custom copy or extra actions.
  *
+ * Put `autoFocus` on the Cancel button of a destructive confirmation so the safe choice has focus
+ * when it opens.
+ *
  * ```tsx
  * <AlertDialog>
  *   <AlertDialog.Trigger><Button>Delete</Button></AlertDialog.Trigger>
- *   <AlertDialog.Backdrop>
- *     <AlertDialog.Popup>
- *       <AlertDialog.Header><AlertDialog.Title>Delete item?</AlertDialog.Title></AlertDialog.Header>
- *       <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
- *       <AlertDialog.Actions>
- *         <AlertDialog.Close><Button autoFocus>Cancel</Button></AlertDialog.Close>
- *         <AlertDialog.Close><Button tone="danger" appearance="filled" onClick={remove}>Delete</Button></AlertDialog.Close>
- *       </AlertDialog.Actions>
- *     </AlertDialog.Popup>
- *   </AlertDialog.Backdrop>
+ *   <AlertDialog.Popup>
+ *     <AlertDialog.Header><AlertDialog.Title>Delete item?</AlertDialog.Title></AlertDialog.Header>
+ *     <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+ *     <AlertDialog.Actions>
+ *       <AlertDialog.Close><Button autoFocus>Cancel</Button></AlertDialog.Close>
+ *       <AlertDialog.Close><Button tone="danger" appearance="filled" onClick={remove}>Delete</Button></AlertDialog.Close>
+ *     </AlertDialog.Actions>
+ *   </AlertDialog.Popup>
  * </AlertDialog>
  * ```
  */
 export const AlertDialog = Object.assign(AlertDialogRoot, {
   Root: AlertDialogRoot,
   Trigger: Dialog.Trigger,
-  Backdrop: Dialog.Backdrop,
   Popup: AlertDialogPopup,
   Header: Dialog.Header,
   Title: Dialog.Title,
