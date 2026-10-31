@@ -1,5 +1,5 @@
 import { cloneElement, isValidElement, type ReactElement, type Ref } from 'react';
-import { Focusable, Pressable } from 'react-aria-components';
+import { Pressable } from 'react-aria-components';
 import { cx } from 'typestyles';
 import { mergeRefs } from '../internal/mergeRefs';
 
@@ -54,13 +54,13 @@ export function mergeOverlayChild(child: ReactElement, props: OverlayChildProps)
 }
 
 /**
- * How a wired child registers with react-aria's trigger context: `press` (Pressable, for
- * Dialog/Popover/Menu triggers and Close buttons), `focusable` (Focusable, for Tooltip), or
- * `none` (plain merge). react-aria injects trigger props through context rather than
- * `cloneElement`, so host elements such as `<button>` must be wrapped to register; react-aria
- * components (`Button`) already register themselves.
+ * How a wired child registers with react-aria's trigger context: `press` (Pressable, for Dialog,
+ * Drawer and Menu triggers) or `none` (plain merge, for Close buttons and the native popover
+ * relations). react-aria injects trigger props through context rather than `cloneElement`, so host
+ * elements such as `<button>` must be wrapped to register; react-aria components (`Button`)
+ * already register themselves.
  */
-export type OverlayChildMode = 'press' | 'focusable' | 'none';
+export type OverlayChildMode = 'press' | 'none';
 
 /**
  * `mergeOverlayChild` plus the react-aria registration wrapper for host elements.
@@ -86,5 +86,5 @@ export function wireOverlayChild(
   });
   if (mode === 'none' || !isHost) return merged;
   const element = merged as ReactElement<{ className?: string }, string>;
-  return mode === 'press' ? <Pressable>{element}</Pressable> : <Focusable>{element}</Focusable>;
+  return <Pressable>{element}</Pressable>;
 }

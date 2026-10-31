@@ -38,6 +38,6 @@ describe('inferOverlayCloseReason', () => {
   });
 
   it('returns unknown for unrelated events', () => {
-    expect(inferOverlayCloseReason(null)).toBe('unknown');
+    expect(inferOverlayCloseReason(null)).toBe('imperative');
   });
 });

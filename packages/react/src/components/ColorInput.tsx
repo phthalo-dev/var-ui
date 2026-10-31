@@ -7,13 +7,12 @@ import type {
   Ref,
 } from 'react';
 import { useEffect, useState } from 'react';
-import { DialogTrigger, Pressable } from 'react-aria-components';
-import { NativePopover } from '../internal/NativePopover';
+import { Pressable } from 'react-aria-components';
+import { NativePopover, NativePopoverTrigger } from '../internal/NativePopover';
 import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps } from '@var-ui/core';
 import { isValidHex, normalizeHex } from '../color/convert';
-import { useLayer } from '../layers/LayerProvider';
 import { useColorValue } from '../color';
 import { ColorPicker } from './ColorPicker';
 import type { ColorPickerProps } from './ColorPicker';
@@ -106,7 +105,6 @@ export function ColorInput({
   const cf = colorField({ size: size ?? contextSize ?? 'md', appearance });
   const isField = appearance === 'field';
   const p = popover();
-  const { style: layerStyle } = useLayer();
   const frame = useFieldFrame({
     description,
     errorMessage,
@@ -163,7 +161,7 @@ export function ColorInput({
       style={style}
     >
       <div {...mergeProps(cf.inputWrapper)} data-disabled={disabled || undefined}>
-        <DialogTrigger>
+        <NativePopoverTrigger>
           <Pressable>
             <button
               type="button"
@@ -178,7 +176,7 @@ export function ColorInput({
               />
             </button>
           </Pressable>
-          <NativePopover {...mergeProps(p.root)} style={layerStyle}>
+          <NativePopover {...mergeProps(p.root)}>
             <div {...mergeProps(p.content)}>
               <ColorPicker
                 value={color}
@@ -189,7 +187,7 @@ export function ColorInput({
               />
             </div>
           </NativePopover>
-        </DialogTrigger>
+        </NativePopoverTrigger>
         {isField ? (
           <input
             spellCheck={false}

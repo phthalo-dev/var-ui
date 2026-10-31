@@ -442,7 +442,7 @@ export function LayoutPanel({
   });
   const isOverlayMode = isResponsiveActive && responsive?.mode === 'overlay';
 
-  const root = useOverlayRoot({ native: true, open: openProp, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open: openProp, defaultOpen, onOpenChange });
   const { open } = root;
 
   if (resizable?.isCollapsed) {

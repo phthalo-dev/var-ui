@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
 import { stubNativeDialog, stubNativePopover } from '../test/nativeOverlayStubs';
 import { Dialog } from './Dialog';
@@ -20,7 +19,7 @@ import { Tooltip } from './Tooltip';
 function wrap(ui: ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }

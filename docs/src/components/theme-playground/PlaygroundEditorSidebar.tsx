@@ -1,14 +1,7 @@
 'use client';
 
 import { defaultIcons } from '@var-ui/icons';
-import {
-  DesignSystemProvider,
-  IconProvider,
-  LayerProvider,
-  Select,
-  Tabs,
-  type ColorMode,
-} from '@var-ui/react';
+import { DesignSystemProvider, IconProvider, Select, Tabs, type ColorMode } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { readStoredColorMode } from '@/lib/storedColorMode';
 import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
@@ -74,41 +67,39 @@ export default function PlaygroundEditorSidebar() {
       storageKey={STORAGE_KEY}
     >
       <IconProvider icons={defaultIcons}>
-        <LayerProvider>
-          <div className={s.root.className} data-playground-editor-sidebar>
-            <ControlGroup label="Theme preset">
-              <Select
-                aria-label="Theme preset"
-                options={presetOptions}
-                value={state.presetId}
-                onValueChange={(key) => {
-                  if (key) patchState({ presetId: key as ShowcaseThemeId });
-                }}
-              />
-            </ControlGroup>
-
-            <Tabs
-              // className={(s.editorTabs).className}
-              tabs={[
-                {
-                  value: 'base',
-                  label: 'Base Styles',
-                  content: <ThemePlaygroundBaseStyles state={state} onChange={patchState} />,
-                },
-                {
-                  value: 'components',
-                  label: 'Components',
-                  content: <ThemePlaygroundComponentsTab />,
-                },
-                {
-                  value: 'advanced',
-                  label: 'Advanced',
-                  content: <ThemePlaygroundAdvancedTab />,
-                },
-              ]}
+        <div className={s.root.className} data-playground-editor-sidebar>
+          <ControlGroup label="Theme preset">
+            <Select
+              aria-label="Theme preset"
+              options={presetOptions}
+              value={state.presetId}
+              onValueChange={(key) => {
+                if (key) patchState({ presetId: key as ShowcaseThemeId });
+              }}
             />
-          </div>
-        </LayerProvider>
+          </ControlGroup>
+
+          <Tabs
+            // className={(s.editorTabs).className}
+            tabs={[
+              {
+                value: 'base',
+                label: 'Base Styles',
+                content: <ThemePlaygroundBaseStyles state={state} onChange={patchState} />,
+              },
+              {
+                value: 'components',
+                label: 'Components',
+                content: <ThemePlaygroundComponentsTab />,
+              },
+              {
+                value: 'advanced',
+                label: 'Advanced',
+                content: <ThemePlaygroundAdvancedTab />,
+              },
+            ]}
+          />
+        </div>
       </IconProvider>
     </DesignSystemProvider>
   );

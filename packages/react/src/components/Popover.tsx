@@ -78,7 +78,7 @@ const { Context: PopoverContext, use: usePopoverContext } =
   createOverlayContext<PopoverContextValue>('Popover');
 
 function PopoverRoot({ children, open, defaultOpen, onOpenChange }: PopoverRootProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const titleId = useId();
   const descriptionId = useId();
   const context = useMemo<PopoverContextValue>(

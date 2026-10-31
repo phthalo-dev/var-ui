@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
 import { IconButton } from './IconButton';
@@ -22,7 +21,7 @@ const icons = {
 function wrap(ui: ReactNode) {
   return render(
     <IconProvider icons={icons}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }

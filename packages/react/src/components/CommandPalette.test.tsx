@@ -2,12 +2,11 @@ import { describe, expect, it, vi, beforeEach } from 'vite-plus/test';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState, type ReactElement } from 'react';
-import { LayerProvider } from '../layers/LayerProvider';
 import { CommandPalette } from './CommandPalette';
 import { createCommandPalette, useCommandPalette } from '../internal/commandPaletteController';
 
 function wrap(children: ReactElement) {
-  return render(<LayerProvider>{children}</LayerProvider>);
+  return render(<>{children}</>);
 }
 
 beforeEach(() => {
@@ -33,7 +32,7 @@ describe('CommandPalette', () => {
     );
 
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette
           open={false}
           hotkey={false}
@@ -41,7 +40,7 @@ describe('CommandPalette', () => {
           onAction={() => {}}
           onOpenChange={() => {}}
         />
-      </LayerProvider>,
+      </>,
     );
 
     await waitFor(() => expect(screen.queryByPlaceholderText('Search…')).toBeNull());
@@ -64,7 +63,7 @@ describe('CommandPalette', () => {
     const close = vi.spyOn(dialog as HTMLDialogElement, 'close');
 
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette
           open={false}
           hotkey={false}
@@ -72,7 +71,7 @@ describe('CommandPalette', () => {
           onAction={() => {}}
           onOpenChange={() => {}}
         />
-      </LayerProvider>,
+      </>,
     );
 
     await waitFor(() => expect(close).toHaveBeenCalledOnce());
@@ -229,7 +228,7 @@ describe('CommandPalette', () => {
     expect((screen.getByPlaceholderText('Search…') as HTMLInputElement).value).toBe('sett');
 
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette
           open={false}
           hotkey={false}
@@ -237,10 +236,10 @@ describe('CommandPalette', () => {
           onAction={() => {}}
           onOpenChange={() => {}}
         />
-      </LayerProvider>,
+      </>,
     );
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette
           open
           hotkey={false}
@@ -248,7 +247,7 @@ describe('CommandPalette', () => {
           onAction={() => {}}
           onOpenChange={() => {}}
         />
-      </LayerProvider>,
+      </>,
     );
     expect((screen.getByPlaceholderText('Search…') as HTMLInputElement).value).toBe('');
   });
@@ -316,9 +315,9 @@ describe('CommandPalette', () => {
     await userEvent.type(screen.getByRole('textbox'), 'al');
     expect(onQueryChange).toHaveBeenLastCalledWith('al');
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette open={false} {...props} />
-      </LayerProvider>,
+      </>,
     );
     await waitFor(() => expect(onQueryChange).toHaveBeenLastCalledWith(''));
   });
@@ -430,9 +429,9 @@ describe('CommandPalette item actions and chrome', () => {
     expect(document.querySelector('mark')).toBeNull();
 
     rerender(
-      <LayerProvider>
+      <>
         <CommandPalette open {...base} items={items} highlightMatches />
-      </LayerProvider>,
+      </>,
     );
     expect(document.querySelector('mark')?.textContent).toBe('sett');
   });
