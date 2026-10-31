@@ -1,5 +1,4 @@
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type CSSProperties,
   type JSX,
@@ -17,7 +16,8 @@ import {
   Text,
   type SelectProps as RACSelectProps,
 } from 'react-aria-components';
-import { Popover } from '../internal/nativeDialogShim';
+import { NativePopover } from '../internal/NativePopover';
+import type { AnchorPlacement } from '../overlays';
 import { select } from '@var-ui/core/components/select';
 import type { SelectVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -294,36 +294,19 @@ export type SelectPopoverProps = Omit<
   className?: string;
   style?: CSSProperties;
   /** Side and alignment of the listbox relative to the trigger. @default 'bottom start' */
-  placement?: ComponentProps<typeof Popover>['placement'];
+  placement?: AnchorPlacement;
   /** Gap between trigger and listbox in px. */
   offset?: number;
-  /**
-   * Element the dropdown listbox portals into instead of `document.body`. Needed when a
-   * subtree renders under a different theme than the page ambient (the theme's CSS custom
-   * properties only cascade to descendants of the themed element).
-   */
-  portalContainer?: Element;
   /** Ref to the underlying popover `<div>` element. */
   ref?: Ref<HTMLElement>;
 };
 
-function SelectPopover({
-  children,
-  className,
-  portalContainer,
-  ref,
-  ...props
-}: SelectPopoverProps): JSX.Element {
+function SelectPopover({ children, className, ref, ...props }: SelectPopoverProps): JSX.Element {
   const s = useSelectStyles();
   return (
-    <Popover
-      {...(props as object)}
-      {...mergeProps(s.popover, className)}
-      ref={ref}
-      UNSTABLE_portalContainer={portalContainer}
-    >
+    <NativePopover {...props} {...mergeProps(s.popover, className)} ref={ref}>
       {children}
-    </Popover>
+    </NativePopover>
   );
 }
 
@@ -440,12 +423,6 @@ export type SelectProps = Omit<
     name?: string;
     /** Id of the form the select belongs to. */
     form?: string;
-    /**
-     * Element the dropdown listbox portals into instead of `document.body`. Needed when a
-     * subtree renders under a different theme than the page ambient (the theme's CSS custom
-     * properties only cascade to descendants of the themed element).
-     */
-    portalContainer?: Element;
     /** Classes for the root. */
     className?: string;
     /** Inline style for the root. */
@@ -468,7 +445,6 @@ function Select({
   errorMessage,
   options,
   placeholder = 'Select…',
-  portalContainer,
   className,
   size,
   ref,
@@ -493,7 +469,7 @@ function Select({
       <RacFieldFrame slots={s} label={label} description={description} errorMessage={errorMessage}>
         <SelectTrigger {...(triggerProps as object)} placeholder={placeholder} ref={ref} />
       </RacFieldFrame>
-      <SelectPopover portalContainer={portalContainer}>
+      <SelectPopover>
         <SelectListBox>
           {options.map((option) => (
             <SelectItem

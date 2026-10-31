@@ -44,9 +44,8 @@ describe('extract-styling-hooks', () => {
   });
 
   it('state attributes come from the CSS the library ships, with the slot they apply to', async () => {
-    const popover = (await all()).popover!;
-    const starting = popover.states.find((s) => s.attribute === 'data-starting-style')!;
-    expect(starting.slots.length).toBeGreaterThan(0);
+    const checkbox = (await all()).checkbox!;
+    expect(checkbox.states.find((s) => s.attribute === 'data-selected')?.slots).toContain('box');
     const table = (await all()).table!;
     expect(table.states.find((s) => s.attribute === 'data-align')?.values).toContain('end');
     const tabs = (await all()).tabs!;

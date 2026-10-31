@@ -1,5 +1,5 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   Button as AriaButton,
   Text,
@@ -12,7 +12,9 @@ import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
 import type { ToastVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { useLayer } from '../layers/LayerProvider';
+import { useMergedRef } from '../overlays/useMergedRef';
+import { isPopoverShowing } from '../overlays/usePopoverElement';
+import { keepOnTop } from '../toast/repromote';
 import { toneIcon } from '../internal/toneIcon';
 import {
   DEFAULT_TOAST_DURATION,
@@ -104,19 +106,26 @@ export function ToastRegion({
   placement = 'bottom-end',
   dismissLabel = 'Dismiss',
   className,
-  style,
   ref,
   ...rest
 }: ToastRegionProps): JSX.Element {
-  const { style: layerStyle } = useLayer();
   const region = toastRecipe({ placement });
+  // react-aria mounts the region only while the queue is non-empty, so mounting shows the popover
+  // and unmounting removes it (hidden, out of the top layer). The attribute is set here because
+  // react-aria's region does not forward `popover`.
+  const popoverRef = useCallback((el: HTMLElement | null) => {
+    if (!el) return;
+    el.setAttribute('popover', 'manual');
+    if (!isPopoverShowing(el)) el.showPopover();
+    return keepOnTop(el);
+  }, []);
+  const mergedRef = useMergedRef<HTMLDivElement>(ref, popoverRef);
   return (
     <AriaToastRegion
       {...rest}
       queue={queue}
       {...mergeProps(region.region, className)}
-      ref={ref}
-      style={{ ...layerStyle, ...style }}
+      ref={mergedRef}
     >
       {({ toast: queued }) => {
         const tone = queued.content.tone ?? 'info';

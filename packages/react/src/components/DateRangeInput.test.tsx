@@ -4,6 +4,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { DateRangeInput } from './DateRangeInput';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 const value = {
   start: new CalendarDate(2024, 3, 10),

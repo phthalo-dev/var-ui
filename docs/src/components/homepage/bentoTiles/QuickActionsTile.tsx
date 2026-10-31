@@ -10,10 +10,9 @@ const ROLE_OPTIONS = [
 
 export type QuickActionsTileProps = {
   className?: string;
-  portalContainer?: Element;
 };
 
-export function QuickActionsTile({ className, portalContainer }: QuickActionsTileProps) {
+export function QuickActionsTile({ className }: QuickActionsTileProps) {
   return (
     <div className={className}>
       <Stack gap="md">
@@ -21,7 +20,7 @@ export function QuickActionsTile({ className, portalContainer }: QuickActionsTil
           Invite a teammate
         </Heading>
         <TextField label="Email" placeholder="ada@example.com" />
-        <Select label="Role" options={ROLE_OPTIONS} portalContainer={portalContainer} />
+        <Select label="Role" options={ROLE_OPTIONS} />
         <HStack gap="sm" wrap>
           <Button tone="accent" appearance="filled">
             Send invite

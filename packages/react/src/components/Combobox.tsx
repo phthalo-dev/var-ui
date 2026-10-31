@@ -20,9 +20,9 @@ import {
   Text,
   type ComboBoxProps as RACComboBoxProps,
   type Key,
-  type PopoverProps,
 } from 'react-aria-components';
-import { Popover } from '../internal/nativeDialogShim';
+import { NativePopover } from '../internal/NativePopover';
+import type { AnchorPlacement } from '../overlays/useAnchor';
 import { combobox } from '@var-ui/core/components/combobox';
 import type { ComboboxVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -295,20 +295,14 @@ function ComboboxError({ children, className, ref, ...rest }: ComboboxErrorProps
  * Placement/behaviour props of the popover. Open state is owned by the combobox, and RAC's
  * `is*` state props are not part of the public API.
  */
-export type ComboboxPopoverProps = Omit<
-  PopoverProps,
-  | 'className'
-  | 'isOpen'
-  | 'defaultOpen'
-  | 'onOpenChange'
-  | 'isEntering'
-  | 'isExiting'
-  | 'isKeyboardDismissDisabled'
-  | 'isNonModal'
-> & {
+export type ComboboxPopoverProps = Omit<ComponentPropsWithRef<'div'>, 'className' | 'ref'> & {
   className?: string;
+  /** Side and alignment of the listbox relative to the field. @default 'bottom start' */
+  placement?: AnchorPlacement;
+  /** Gap between field and listbox in px. */
+  offset?: number;
   /** Ref to the underlying `<div>` element. */
-  ref?: Ref<HTMLElement>;
+  ref?: Ref<HTMLDivElement>;
 };
 
 function ComboboxPopover({
@@ -319,9 +313,9 @@ function ComboboxPopover({
 }: ComboboxPopoverProps): JSX.Element {
   const styles = useComboboxStyles();
   return (
-    <Popover {...props} {...mergeProps(styles.popover, className)} ref={ref}>
+    <NativePopover {...props} {...mergeProps(styles.popover, className)} ref={ref}>
       {children}
-    </Popover>
+    </NativePopover>
   );
 }
 

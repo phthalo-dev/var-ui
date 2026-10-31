@@ -2,6 +2,7 @@ import { designTokens as t } from '../tokens';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from './forcedColors';
 import { focusRing } from './focusRing';
+import { anchored, popupMaxHeightVar } from '../shared/anchored';
 
 export type FieldChromeColors = {
   label: string;
@@ -51,8 +52,9 @@ export type DropdownPopoverVars = {
 
 /**
  * Shared popover panel, listbox, and option chrome for Select-like controls.
- * Channel defaults are declared on `popover` so portaled listboxes still resolve
- * component vars outside the field root (same pattern as `menu`).
+ * `popover` is the anchor-positioned `[popover]` element (listbox popups match the trigger width
+ * through `anchor-size(width)`; see `shared/anchored`). Channel defaults are declared on it as well
+ * as on the field root.
  */
 export function dropdownPopoverChrome(v: DropdownPopoverVars) {
   return {
@@ -61,11 +63,7 @@ export function dropdownPopoverChrome(v: DropdownPopoverVars) {
       [v.popoverBackground.name]: t.color.background.surface.var,
       [v.itemFocusedBackground.name]: t.color.background.subtle.var,
       [v.itemSelectedColor.name]: t.color.tone.accent.foreground.var,
-      zIndex: t.zIndex.dropdown.var,
-      boxSizing: 'border-box',
-      width: 'var(--trigger-width)',
-      minWidth: 'var(--trigger-width)',
-      maxHeight: '16rem',
+      ...anchored({ offset: t.space[1].var, maxHeight: '16rem', matchWidth: 'exact' }),
       overflow: 'hidden',
       borderWidth: t.borderWidth.default.var,
       borderStyle: 'solid',
@@ -80,7 +78,7 @@ export function dropdownPopoverChrome(v: DropdownPopoverVars) {
       display: 'flex',
       flexDirection: 'column',
       gap: t.space[1].var,
-      maxHeight: 'calc(16rem - 2 * var(--var-ui-space-1))',
+      maxHeight: `calc(min(var(${popupMaxHeightVar}, 16rem), 100dvh) - 2 * ${t.space[1].var})`,
       overflowY: 'auto',
       outline: 'none',
     },

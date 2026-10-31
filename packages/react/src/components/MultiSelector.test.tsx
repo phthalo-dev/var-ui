@@ -4,6 +4,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { MultiSelector, type MultiSelectorOption } from './MultiSelector';
+import { stubNativePopover } from '../test/nativeOverlayStubs';
+
+stubNativePopover();
 
 // jsdom doesn't implement `CSS.escape`, which react-aria's selection utils call
 // when moving focus within the listbox after a click. Polyfill it for this file.

@@ -1,8 +1,11 @@
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
- * (trigger + popup list) with roving focus, typeahead, and presence animation
- * attrs. Generalizes the interaction model first proven in the docs theme
- * picker; mirrors the React `Menu` behavior without React Aria.
+ * (trigger + popup list) with roving focus and typeahead. The popup is a native
+ * `popover="auto"` element opened by the trigger's `popovertarget` (so it also works
+ * before this script runs), anchored with CSS anchor positioning, and dismissed natively
+ * (outside click, Escape). The script adds what the platform does not: arrow/typeahead
+ * navigation, initial focus, focus return, item activation and the action event. Mirrors
+ * the React `Menu` behavior without React Aria.
  */
 
 /**
@@ -15,8 +18,17 @@ export type MenuActionDetail = {
   id: string | null;
 };
 
-/** Popover placement relative to the trigger (CSS-only, anchored to the root). */
-export type MenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+/**
+ * Popover placement relative to the trigger (CSS anchor positioning, set as `data-placement`):
+ * a side (`top | bottom | start | end`), optionally with an alignment (`bottom end`). The popup
+ * flips when it does not fit; `start`/`end` follow the writing direction.
+ */
+export type MenuPlacement =
+  | 'top'
+  | 'bottom'
+  | 'start'
+  | 'end'
+  | `${'top' | 'bottom' | 'start' | 'end'} ${'start' | 'center' | 'end'}`;
 
 /**
  * `none` mirrors the React `Menu`; `single` renders items as `menuitemradio`
@@ -80,18 +92,8 @@ function attachGlobalListeners(): void {
   if (globalListenersAttached || typeof document === 'undefined') return;
   globalListenersAttached = true;
 
-  document.addEventListener(
-    'pointerdown',
-    (event) => {
-      for (const root of openRoots) {
-        if (event.target instanceof Node && root.contains(event.target)) continue;
-        controllers.get(root)?.close();
-      }
-    },
-    true,
-  );
-
-  // Close overlays before a view-transition swap replaces the DOM.
+  // Close overlays before a view-transition swap replaces the DOM. (Outside clicks and Escape
+  // are the platform's light dismiss.)
   document.addEventListener('astro:before-swap', () => {
     for (const root of openRoots) {
       controllers.get(root)?.close();
@@ -99,24 +101,11 @@ function attachGlobalListeners(): void {
   });
 }
 
-function prefersReducedMotion(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
-  );
-}
-
-function nextFrames(callback: () => void): void {
-  const raf =
-    typeof requestAnimationFrame === 'function'
-      ? requestAnimationFrame
-      : (cb: () => void) => setTimeout(cb, 16);
-  raf(() => raf(callback));
-}
-
 function isDisabled(item: HTMLElement): boolean {
   return item.getAttribute('aria-disabled') === 'true';
 }
+
+type ToggleLike = Event & { newState?: string };
 
 export function initMenu(root: Element): void {
   if (!(root instanceof HTMLElement)) return;
@@ -139,9 +128,20 @@ export function initMenu(root: Element): void {
   const singleSelection = rootEl.dataset.selectionMode === 'single';
 
   let open = false;
-  let generation = 0;
+  /** Which item the next open focuses (`none` for a programmatic open). */
+  let pendingFocus: 'first' | 'last' | 'none' = 'first';
+  /** Whether closing returns focus to the trigger (not after Tab or a link activation). */
+  let returnFocus = true;
   let typeaheadBuffer = '';
   let typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function isOpenNow(): boolean {
+    try {
+      return popover.matches(':popover-open');
+    } catch {
+      return open;
+    }
+  }
 
   function syncCheckedItem(checkedItem: HTMLElement | null): void {
     for (const candidate of items) {
@@ -150,9 +150,10 @@ export function initMenu(root: Element): void {
     }
   }
 
-  function syncOpenState(): void {
-    trigger.setAttribute('aria-expanded', String(open));
-    if (open) {
+  function syncOpenState(next: boolean): void {
+    open = next;
+    trigger.setAttribute('aria-expanded', String(next));
+    if (next) {
       rootEl.setAttribute('data-open', '');
       openRoots.add(rootEl);
     } else {
@@ -165,61 +166,53 @@ export function initMenu(root: Element): void {
     items[index]?.focus();
   }
 
-  function openMenu(focusTarget: 'first' | 'last' | 'none' = 'first'): void {
-    if (open) return;
-    open = true;
-    const gen = ++generation;
-    popover.hidden = false;
-    popover.removeAttribute('data-closed');
-    popover.removeAttribute('data-ending-style');
-    popover.setAttribute('data-open', '');
-    popover.setAttribute('data-starting-style', '');
-    nextFrames(() => {
-      if (gen === generation) popover.removeAttribute('data-starting-style');
-    });
-    syncOpenState();
-    if (focusTarget === 'first') {
+  function focusOnOpen(target: 'first' | 'last' | 'none'): void {
+    if (target === 'first') {
       const checkedIndex = singleSelection
         ? items.findIndex((candidate) => candidate.getAttribute('aria-checked') === 'true')
         : -1;
       focusItemAt(checkedIndex >= 0 ? checkedIndex : 0);
-    } else if (focusTarget === 'last') {
+    } else if (target === 'last') {
       focusItemAt(items.length - 1);
     }
   }
 
-  function closeMenu({ focusTrigger = false } = {}): void {
-    if (!open) return;
-    open = false;
-    const gen = ++generation;
-    syncOpenState();
-
-    const finish = () => {
-      if (gen !== generation) return;
-      popover.hidden = true;
-      popover.removeAttribute('data-open');
-      popover.removeAttribute('data-closed');
-      popover.removeAttribute('data-ending-style');
-    };
-
-    if (prefersReducedMotion()) {
-      finish();
-    } else {
-      popover.setAttribute('data-closed', '');
-      popover.setAttribute('data-ending-style', '');
-      nextFrames(() => {
-        if (gen !== generation) return;
-        const animations = popover.getAnimations?.() ?? [];
-        if (animations.length === 0) {
-          finish();
-        } else {
-          void Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
-        }
-      });
+  function showMenu(focusTarget: 'first' | 'last' | 'none'): void {
+    if (isOpenNow()) {
+      focusOnOpen(focusTarget);
+      return;
     }
-
-    if (focusTrigger) trigger.focus();
+    pendingFocus = focusTarget;
+    popover.showPopover();
   }
+
+  function hideMenu({ restoreFocus = true } = {}): void {
+    if (!isOpenNow()) return;
+    returnFocus = restoreFocus;
+    popover.hidePopover();
+  }
+
+  // State attributes follow the platform's own open/close (invoker click, light dismiss, Escape),
+  // synchronously, before the popup is shown or hidden.
+  popover.addEventListener('beforetoggle', (event) => {
+    syncOpenState((event as ToggleLike).newState === 'open');
+  });
+
+  // After the popup is shown / hidden: focus the first item, or give focus back to the trigger.
+  popover.addEventListener('toggle', (event) => {
+    if ((event as ToggleLike).newState === 'open') {
+      const target = pendingFocus;
+      pendingFocus = 'first';
+      focusOnOpen(target);
+      return;
+    }
+    const restore = returnFocus;
+    returnFocus = true;
+    // Escape/light dismiss restore focus natively only when the popup itself had moved it there
+    // (and Safari does not focus buttons on click): make it deterministic.
+    const active = document.activeElement;
+    if (restore && (active === document.body || popover.contains(active))) trigger.focus();
+  });
 
   function moveFocus(currentIndex: number, delta: number): void {
     const next = (currentIndex + delta + items.length) % items.length;
@@ -245,11 +238,11 @@ export function initMenu(root: Element): void {
 
   const controller: MenuController = {
     get isOpen() {
-      return open;
+      return isOpenNow();
     },
-    open: () => openMenu('none'),
-    close: () => closeMenu(),
-    toggle: () => (open ? closeMenu() : openMenu()),
+    open: () => showMenu('none'),
+    close: () => hideMenu(),
+    toggle: () => (isOpenNow() ? hideMenu() : showMenu('none')),
     select: (id: string) => {
       const match = items.find((candidate) => candidate.getAttribute('data-item-id') === id);
       if (match) syncCheckedItem(match);
@@ -257,29 +250,28 @@ export function initMenu(root: Element): void {
   };
   controllers.set(rootEl, controller);
 
-  trigger.addEventListener('click', () => {
-    if (open) {
-      closeMenu();
-    } else {
-      openMenu('first');
-    }
-  });
+  // Click toggling is the trigger's `popovertarget` (native invoker): no handler here, so there
+  // is no double toggle and the menu opens before this script has run.
 
   trigger.addEventListener('keydown', (event) => {
     if (!(event instanceof KeyboardEvent)) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      openMenu('first');
+      showMenu('first');
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      openMenu('last');
+      showMenu('last');
     }
   });
 
   rootEl.addEventListener('keydown', (event) => {
     if (!(event instanceof KeyboardEvent)) return;
-    if (event.key === 'Escape' && open) {
-      closeMenu({ focusTrigger: true });
+    if (event.key === 'Escape' && isOpenNow()) {
+      // Handled here (not left to the platform's close request) so an enclosing modal dialog does
+      // not also close.
+      event.preventDefault();
+      event.stopPropagation();
+      hideMenu();
     }
   });
 
@@ -308,7 +300,7 @@ export function initMenu(root: Element): void {
         focusItemAt(items.length - 1);
         return;
       case 'Tab':
-        closeMenu();
+        hideMenu({ restoreFocus: false });
         return;
       case ' ':
         // Buttons activate on Space natively; links need a manual click.
@@ -352,7 +344,7 @@ export function initMenu(root: Element): void {
           detail: { id: item.getAttribute('data-item-id') },
         }),
       );
-      closeMenu({ focusTrigger: !isLink });
+      hideMenu({ restoreFocus: !isLink });
     });
   }
 }

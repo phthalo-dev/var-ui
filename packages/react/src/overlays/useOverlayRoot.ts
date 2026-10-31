@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -52,6 +53,11 @@ export type OverlayRacProps = {
 export type OverlayRoot = {
   /** The requested open state (flips immediately on open and close). */
   open: boolean;
+  /**
+   * A stable, unique id for the popup element (`useId`). Native popover shells put it on the
+   * popup so triggers can reference it (`popovertarget`, `aria-describedby`, `aria-details`).
+   */
+  popupId: string;
   /**
    * `true` while the overlay must stay in the tree: `open` plus the exit animation (`open` only
    * with `native`).
@@ -133,6 +139,7 @@ export function useOverlayRoot({
   reducedMotion,
   native = false,
 }: UseOverlayRootOptions = {}): OverlayRoot {
+  const popupId = useId();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
   const open = openProp ?? uncontrolledOpen;
@@ -246,13 +253,16 @@ export function useOverlayRoot({
       const leaving = !outside(from) && outside(to);
       if (leaving && to !== null) stashRef.current = { event, reason: 'focus' };
     };
-    document.addEventListener('keydown', onKeyDown, true);
-    document.addEventListener('pointerdown', onPointerDown, true);
-    document.addEventListener('focusout', onFocusOut, true);
+    // `window`, not `document`: window capture runs before every document capture listener, so the
+    // cause is recorded before another hook's listener (react-aria shells in `NativePopover` close
+    // from their own document listener) requests the change.
+    window.addEventListener('keydown', onKeyDown, true);
+    window.addEventListener('pointerdown', onPointerDown, true);
+    window.addEventListener('focusout', onFocusOut, true);
     return () => {
-      document.removeEventListener('keydown', onKeyDown, true);
-      document.removeEventListener('pointerdown', onPointerDown, true);
-      document.removeEventListener('focusout', onFocusOut, true);
+      window.removeEventListener('keydown', onKeyDown, true);
+      window.removeEventListener('pointerdown', onPointerDown, true);
+      window.removeEventListener('focusout', onFocusOut, true);
     };
   }, [mounted, popupRef, triggerRef]);
 
@@ -264,6 +274,7 @@ export function useOverlayRoot({
   return useMemo<OverlayRoot>(
     () => ({
       open,
+      popupId,
       mounted,
       presenceAttrs: presence.attrs,
       rac,
@@ -280,6 +291,7 @@ export function useOverlayRoot({
     }),
     [
       open,
+      popupId,
       mounted,
       presence.attrs,
       rac,

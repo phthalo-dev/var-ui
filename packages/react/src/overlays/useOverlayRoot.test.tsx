@@ -1,4 +1,4 @@
-import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { IconProvider } from '../icons';
@@ -6,7 +6,7 @@ import { LayerProvider } from '../layers/LayerProvider';
 import { Dialog } from '../components/Dialog';
 import { Popover } from '../components/Popover';
 import { Tooltip } from '../components/Tooltip';
-import { stubNativeDialog } from '../test/nativeOverlayStubs';
+import { stubNativeDialog, stubNativePopover } from '../test/nativeOverlayStubs';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { useOverlayRoot } from './useOverlayRoot';
 
@@ -76,6 +76,7 @@ describe('useOverlayRoot', () => {
 });
 
 describe('overlay roots render no wrapper element', () => {
+  stubNativePopover();
   it('Dialog/Popover/Menu-style roots add no display:contents div', async () => {
     const { container } = wrap(
       <Popover.Root defaultOpen>
@@ -92,86 +93,8 @@ describe('overlay roots render no wrapper element', () => {
 
 describe('details.reason matrix', () => {
   stubNativeDialog();
-  function popover(onOpenChange: OverlayOpenChangeHandler) {
-    return wrap(
-      <>
-        <Popover.Root onOpenChange={onOpenChange}>
-          <Popover.Trigger>
-            <button type="button">Open</button>
-          </Popover.Trigger>
-          <Popover.Popup aria-label="Panel">
-            <button type="button">Inside</button>
-          </Popover.Popup>
-        </Popover.Root>
-        <button type="button">Elsewhere</button>
-      </>,
-    );
-  }
-
-  it('popover: trigger-press opens and closes', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    popover(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    expect(last(onOpenChange)).toEqual([true, 'trigger-press']);
-    await screen.findByRole('dialog');
-    // RAC marks the trigger aria-hidden while the popover is open, hence `hidden`.
-    await userEvent.click(screen.getByRole('button', { name: 'Open', hidden: true }));
-    expect(last(onOpenChange)).toEqual([false, 'trigger-press']);
-  });
-
-  it('popover: keyboard activation of the trigger is trigger-press', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    popover(onOpenChange);
-    await userEvent.tab();
-    await userEvent.keyboard('{Enter}');
-    expect(last(onOpenChange)).toEqual([true, 'trigger-press']);
-  });
-
-  it('popover: outside-press', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    popover(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await screen.findByRole('dialog');
-    onOpenChange.mockClear();
-    await userEvent.click(document.querySelector('[data-testid="underlay"]')!);
-    expect(onOpenChange).toHaveBeenCalledTimes(1);
-    expect(last(onOpenChange)).toEqual([false, 'outside-press']);
-  });
-
-  it('popover: escape-key', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    popover(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await screen.findByRole('dialog');
-    onOpenChange.mockClear();
-    await userEvent.keyboard('{Escape}');
-    expect(last(onOpenChange)).toEqual([false, 'escape-key']);
-  });
-
-  it('popover: focus-out', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
-    popover(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await screen.findByRole('dialog');
-    await userEvent.click(screen.getByRole('button', { name: 'Inside' }));
-    onOpenChange.mockClear();
-    act(() => screen.getByRole('button', { name: 'Elsewhere', hidden: true }).focus());
-    await waitFor(() => expect(onOpenChange).toHaveBeenCalled());
-    expect(last(onOpenChange)).toEqual([false, 'focus']);
-  });
-
-  it('popover: cancel() vetoes outside-press, escape and trigger press', async () => {
-    const onOpenChange = vi.fn<OverlayOpenChangeHandler>((open, details) => {
-      if (!open) details.cancel();
-    });
-    popover(onOpenChange);
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await screen.findByRole('dialog');
-    await userEvent.keyboard('{Escape}');
-    await userEvent.click(document.querySelector('[data-testid="underlay"]')!);
-    expect(onOpenChange.mock.calls.filter(([open]) => !open).length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByRole('dialog')).toBeTruthy();
-  });
+  stubNativePopover();
+  // Popover reasons are covered in a real browser: components/Popover.browser.test.tsx.
 
   it('dialog: close-press from the default Dialog.Close button', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
@@ -191,7 +114,7 @@ describe('details.reason matrix', () => {
   it('tooltip: hover opens, focus opens, Escape closes', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     wrap(
-      <Tooltip.Root delay={0} onOpenChange={onOpenChange}>
+      <Tooltip.Root openDelay={0} onOpenChange={onOpenChange}>
         <Tooltip.Trigger>
           <button type="button">Info</button>
         </Tooltip.Trigger>

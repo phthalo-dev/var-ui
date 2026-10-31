@@ -1,5 +1,6 @@
 import { useLayoutEffect, useState, type CSSProperties, type RefObject } from 'react';
 
+/** @deprecated until PR C: use `AnchorPlacement` from `useAnchor`. */
 // oxlint-disable-next-line typescript/no-redundant-type-constituents -- named sides document the supported placement contract
 export type OverlayPlacement = 'top' | 'bottom' | 'left' | 'right' | string;
 
@@ -102,6 +103,7 @@ function stylesEqual(left: PositionerStyle, right: PositionerStyle): boolean {
   );
 }
 
+/** @deprecated until PR C: native popovers position with CSS anchor positioning (`useAnchor`). */
 export function usePositionerVars({
   placement,
   popupRef,

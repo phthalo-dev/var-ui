@@ -1,9 +1,7 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
-import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
+import { anchored, popupSurface } from '../shared/anchored';
 
 /**
  * Non-modal rich preview card chrome — surface treatment like `popover`, with
@@ -37,12 +35,8 @@ export const hoverCard = typestyles.recipe({
     return {
       base: {
         root: {
-          ...overlayPresenceStyles({ scale: true }),
-          ...border(vars.border.var),
-          borderRadius: t.radius.md.var,
-          backgroundColor: vars.background.var,
-          boxShadow: t.shadow.md.var,
-          ...layerZIndex(t.zIndex.dropdown.var),
+          ...anchored({ defaultPlacement: 'top', defaultAlign: 'center' }),
+          ...popupSurface({ background: vars.background.var, border: vars.border.var }),
           minWidth: '14rem',
           maxWidth: '22rem',
           outline: 'none',

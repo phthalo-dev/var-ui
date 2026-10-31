@@ -30,6 +30,10 @@ const DOCUMENTED_HOOKS = [
 /** Present today, not part of the documented contract (recipe axes, layout flags, script hooks). */
 const UNDOCUMENTED_HOOKS = [
   'data-accordion-id',
+  // react-aria's name for the trigger kind (`MenuTrigger`, `Select`, ...), mirrored on NativePopover's shell.
+  'data-trigger',
+  // jsdom stand-in for `:popover-open` (usePopoverElement reads it only when the selector is unsupported).
+  'data-popover-open',
   'data-accordion-type',
   'data-active',
   'data-alert-action',
@@ -138,8 +142,11 @@ function sourceFiles(dir: string): string[] {
   const files: string[] = [];
   for (const entry of readdirSync(dir)) {
     const path = join(dir, entry);
-    if (statSync(path).isDirectory()) files.push(...sourceFiles(path));
-    else if (/\.(tsx?|astro)$/.test(entry) && !/\.(test|type-test)\./.test(entry)) files.push(path);
+    // `src/test/` holds test infrastructure (the jsdom popover stub's `data-popover-open`).
+    if (statSync(path).isDirectory()) {
+      if (entry !== 'test') files.push(...sourceFiles(path));
+    } else if (/\.(tsx?|astro)$/.test(entry) && !/\.(test|type-test)\./.test(entry))
+      files.push(path);
   }
   return files;
 }

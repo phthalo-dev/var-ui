@@ -1,17 +1,14 @@
 import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
-import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
-import { overlayPresenceStyles } from '../shared/overlayMotion';
-import { layerZIndex } from './layerVars';
-import { positioner } from './positionerVars';
+import { anchored, popupSurface } from '../shared/anchored';
 
 /**
- * Slot recipe with no variants — placement is driven purely by the
- * `data-placement` attribute the Astro wrapper sets on the popover, so it is
- * CSS-only and kept out of the recipe schema.
+ * Slot recipe with no variants. The `popover` slot is the `[popover]` element, anchor-positioned
+ * from its `data-placement` attribute (`bottom`, `top start`, `end center`, ...; see
+ * `shared/anchored`), so placement is CSS-only and kept out of the recipe schema.
  */
 export const menu = typestyles.recipe({
   name: 'menu',
@@ -33,11 +30,7 @@ export const menu = typestyles.recipe({
     'contextAnchor',
   ],
   vars: {
-    /**
-     * Copied onto `popover` as well as the host. React portals that slot
-     * outside `.var-ui-menu`, so a custom property set only on the host stays
-     * at its `@property` initial value (`transparent`).
-     */
+    /** Declared on the `popover` slot (the top-layer element), which owns the menu surface. */
     popoverBackground: {
       ...atProperty.color,
       slots: ['popover'],
@@ -82,31 +75,11 @@ export const menu = typestyles.recipe({
     anchorY: { ...atProperty.length, value: '0px' },
   },
   styles: ({ vars }) => {
-    const anchorGap = `calc(100% + ${t.space[2].var})`;
-    const anchoredPopover = (
-      origin: 'top left' | 'top right' | 'bottom left' | 'bottom right',
-      edge: {
-        top?: string;
-        insetInlineEnd?: 0;
-        bottom?: string;
-        insetInlineStart?: 0;
-      },
-    ) => ({
-      position: 'absolute' as const,
-      ...layerZIndex(t.zIndex.dropdown.var),
-      ...edge,
-      [positioner.vars.transformOrigin.name]: origin,
-    });
     return {
       base: {
-        /**
-         * Anchor wrapper for frameworks without JS overlay positioning (Astro).
-         * React renders `display: contents`-style through react-aria and never
-         * applies this slot.
-         */
+        /** Wrapper around trigger + popup. The popup is positioned by anchor, not by this box. */
         root: {
           display: 'inline-flex',
-          position: 'relative',
         },
         contextAnchor: {
           position: 'fixed',
@@ -118,33 +91,13 @@ export const menu = typestyles.recipe({
           opacity: 0,
         },
         popover: {
-          ...overlayPresenceStyles({ scale: true }),
-          ...layerZIndex(t.zIndex.dropdown.var),
-          ...border(vars.popoverBorder.var),
-          borderRadius: t.radius.md.var,
-          backgroundColor: vars.popoverBackground.var,
-          boxShadow: t.shadow.md.var,
+          ...anchored({ defaultAlign: 'start' }),
+          ...popupSurface({
+            background: vars.popoverBackground.var,
+            border: vars.popoverBorder.var,
+          }),
           padding: t.space[1].var,
           minWidth: '12rem',
-          // CSS-only placement relative to the `root` anchor, keyed off the
-          // `data-placement` attribute the Astro wrapper sets on this element.
-          // React Aria positions the popover inline and never sets it.
-          '&[data-placement="bottom-start"]': anchoredPopover('top left', {
-            top: anchorGap,
-            insetInlineStart: 0,
-          }),
-          '&[data-placement="bottom-end"]': anchoredPopover('top right', {
-            top: anchorGap,
-            insetInlineEnd: 0,
-          }),
-          '&[data-placement="top-start"]': anchoredPopover('bottom left', {
-            bottom: anchorGap,
-            insetInlineStart: 0,
-          }),
-          '&[data-placement="top-end"]': anchoredPopover('bottom right', {
-            bottom: anchorGap,
-            insetInlineEnd: 0,
-          }),
         },
         menu: {
           outline: 'none',

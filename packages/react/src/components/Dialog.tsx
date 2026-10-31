@@ -10,7 +10,6 @@ import { dialog } from '@var-ui/core/components/dialog';
 import type { DialogVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { findPartId } from '../internal/findPartId';
-import { NativeDialogContext } from '../internal/nativeDialogShim';
 import {
   composeHandlers,
   createOverlayContext,
@@ -155,11 +154,9 @@ function DialogPopup({
       ref={setRef}
     >
       {native.mounted ? (
-        <NativeDialogContext.Provider value={native.element}>
-          <OverlayCloseContext.Provider value={root.close}>
-            <div {...mergeProps(d.content)}>{children}</div>
-          </OverlayCloseContext.Provider>
-        </NativeDialogContext.Provider>
+        <OverlayCloseContext.Provider value={root.close}>
+          <div {...mergeProps(d.content)}>{children}</div>
+        </OverlayCloseContext.Provider>
       ) : null}
     </dialog>
   );

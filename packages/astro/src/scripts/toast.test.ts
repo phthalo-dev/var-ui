@@ -91,3 +91,42 @@ describe('toast imperative API', () => {
     expect(region?.querySelector('.var-ui-toast__title')?.textContent).toBe('Auto region');
   });
 });
+
+describe('popover region', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('shows the manual popover while it has toasts and hides it when empty', () => {
+    const open = new WeakSet<HTMLElement>();
+    const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
+    proto.showPopover = function (this: HTMLElement) {
+      open.add(this);
+    };
+    proto.hidePopover = function (this: HTMLElement) {
+      open.delete(this);
+    };
+    const original = Element.prototype.matches;
+    const spy = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (
+      this: Element,
+      sel: string,
+    ) {
+      return sel === ':popover-open'
+        ? open.has(this as HTMLElement)
+        : Reflect.apply(original, this, [sel]);
+    } as typeof Element.prototype.matches);
+    try {
+      const region = mountRegion();
+      expect(region.getAttribute('popover')).toBe('manual');
+      expect(open.has(region)).toBe(false);
+      const id = initToastRegion(region).show({ title: 'Hi', durationMs: 0 });
+      expect(open.has(region)).toBe(true);
+      initToastRegion(region).dismiss(id);
+      expect(open.has(region)).toBe(false);
+    } finally {
+      spy.mockRestore();
+      delete proto.showPopover;
+      delete proto.hidePopover;
+    }
+  });
+});

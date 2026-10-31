@@ -247,7 +247,7 @@ export function TopNavMenu({
           <Icon name="chevronDown" size="sm" />
         </RacLinkOrButton>
       </HoverCard.Trigger>
-      <HoverCard.Popup>
+      <HoverCard.Popup placement="bottom start">
         <HoverCard.Content>
           <div {...mergeProps(s.menuList)}>
             {items.map((item) => {

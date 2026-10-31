@@ -337,7 +337,7 @@ export function SideNavItem({
   const wrappedTrigger = navCollapsed ? (
     <Tooltip.Root>
       <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
-      <Tooltip.Popup placement="right">{label}</Tooltip.Popup>
+      <Tooltip.Popup placement="end">{label}</Tooltip.Popup>
     </Tooltip.Root>
   ) : (
     trigger
