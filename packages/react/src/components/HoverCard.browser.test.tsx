@@ -52,7 +52,8 @@ function Fixture(props: Partial<HoverCardRootProps>) {
               </HoverCard.Content>
             </HoverCard.Popup>
           </HoverCard.Root>
-          <button type="button" data-testid="after">
+          {/* Well clear of the card, whatever the font or scrollbar metrics wrap into. */}
+          <button type="button" data-testid="after" style={{ display: 'block', marginTop: 320 }}>
             after
           </button>
         </div>

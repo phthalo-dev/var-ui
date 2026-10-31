@@ -62,7 +62,10 @@ function Basic({
 }) {
   return (
     <Wrap direction={direction}>
-      <div className="pin" style={{ top, left: direction === 'rtl' ? 400 : undefined }}>
+      <div
+        className="pin"
+        style={{ top, ...(direction === 'rtl' ? { left: 'auto', right: 40 } : {}) }}
+      >
         <Menu.Root onOpenChange={onOpenChange}>
           <Menu.Trigger>
             <button type="button">Song</button>
@@ -496,9 +499,11 @@ describe('Menu.ContextMenu anchoring', () => {
     await settled(popup());
     await userEvent.keyboard('{Escape}');
     await closed();
-    await userEvent.click(surface(), { button: 'right', position: { x: 120, y: 90 } });
+    await userEvent.click(surface(), { button: 'right', position: { x: 60, y: 90 } });
     await settled(popup());
-    expect(Math.round(popup().getBoundingClientRect().left)).toBe(220);
+    // Surface is at 100,100: the pointer is at x 160 (far enough from the first click, and close
+    // enough to the start edge that the menu fits without flipping, with or without a gutter).
+    expect(Math.round(popup().getBoundingClientRect().left)).toBe(160);
   });
 
   test('keyboard invocation (ContextMenu key) anchors to the focused target bottom-start', async () => {

@@ -13,10 +13,13 @@ import { DateRangeInput } from './DateRangeInput';
 import { DateTimeInput } from './DateTimeInput';
 import { Dialog } from './Dialog';
 
+// The range calendar is ~370-380px wide and the vitest viewport 414px minus a 15px classic-scrollbar
+// gutter on Linux, so pin the field near the edge: the popup then fits beside it (a popup wider than
+// the space the anchor leaves does not flip, it is only shifted back into view).
 beforeAll(() => {
   const style = document.createElement('style');
   style.textContent = `:root, :root[class] { --var-ui-duration-slow: 150ms; }
-    .pin { position: fixed; left: 40px; width: 300px; }`;
+    .pin { position: fixed; left: 8px; width: 300px; }`;
   document.head.append(style);
 });
 
@@ -226,7 +229,7 @@ describe.each<Kind>(['date', 'datetime', 'range'])('%s picker on a native popove
   test('RTL: aligns to the right (start) edge of the field', async () => {
     render(
       <Wrap dir="rtl">
-        <div className="pin" style={{ top: 40, left: 'auto', right: 40 }}>
+        <div className="pin" style={{ top: 40, left: 'auto', right: 8 }}>
           <Picker kind={kind} />
         </div>
       </Wrap>,
