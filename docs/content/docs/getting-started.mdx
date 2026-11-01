@@ -93,13 +93,13 @@ Pass `direction` and a real `locale` on `DesignSystemProvider`:
 
 `applyToDocument` syncs `html dir` (and `lang` when `locale` is set) after hydration / on mount. It always writes `dir` for the resolved direction — including default `ltr`. If SSR set `<html dir="rtl">` and the client provider omits `direction`/`locale`, mount will rewrite `dir` to `ltr`. SSR apps that care about first paint should set `<html dir>` (and `lang` if needed) themselves **and** pass matching `direction`/`locale` to the provider.
 
-React Aria overlays (`Popover`, `Menu`, `start` / `end` placement) take direction from **locale**, not from `dir`. `I18nProvider` only accepts `locale`.
+Anchored popups (`Popover`, `Menu`, `Tooltip`, and the field popups) place `start` and `end` with CSS logical values. They follow the document `dir` that `direction` writes — `applyToDocument` sets it on `html`. `locale` formats dates and numbers and configures React Aria; it does not choose the popup side. `I18nProvider` only accepts `locale`.
 
-- Prefer a real RTL locale (`he-IL`, `ar-EG`) so dates, numbers, and overlays agree.
-- `direction="rtl"` with no locale wraps `I18nProvider` with `ar` so placement still flips. That workaround does **not** set `html lang="ar"`.
-- `direction="ltr"` (explicit) with no locale wraps `I18nProvider` with `en-US` so a nested LTR island does not inherit a parent RTL locale for overlay placement.
-- `locale="en-US"` plus `direction="rtl"` keeps English formatting; overlays may **not** flip.
-- If you omit `direction` but pass `locale`, `dir` is derived from RAC `isRTL(locale)`.
+- Prefer a real RTL locale (`he-IL`, `ar-EG`) with `direction="rtl"` so formatting and popup sides agree.
+- `direction="rtl"` with no locale wraps `I18nProvider` with `ar` so React Aria formatting matches the direction. That fallback does **not** set `html lang="ar"`. Popup sides still follow `dir`.
+- `direction="ltr"` (explicit) with no locale wraps `I18nProvider` with `en-US` so a nested LTR island does not inherit a parent RTL locale.
+- `locale="en-US"` plus `direction="rtl"` keeps English formatting. Popup `start` / `end` still follow `dir`.
+- If you omit `direction` but pass `locale`, `dir` is derived from RAC `isRTL(locale)`, and popups follow that `dir`.
 - `useDirection()` returns `{ direction, isRtl }` and defaults to `ltr` when no provider is mounted.
 - Directional icons opt in: `<Icon name="chevronRight" data-mirror={isRtl || undefined} />`.
 

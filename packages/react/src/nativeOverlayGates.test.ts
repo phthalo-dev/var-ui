@@ -70,12 +70,17 @@ const reactFiles = sourceFiles(reactSrc).map((file) => ({
   text: readFileSync(file, 'utf8'),
 }));
 
+/** Strip block and line comments so a commented specifier is still the imported name. */
+function withoutComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:'"\w])\/\/[^\n]*/g, '$1');
+}
+
 /** Names imported or re-exported from 'react-aria-components' (`type` and `as` stripped). */
 function racNames(text: string): string[] {
   const names: string[] = [];
   const statement =
     /\b(?:import|export)\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]react-aria-components['"]/g;
-  for (const match of text.matchAll(statement)) {
+  for (const match of withoutComments(text).matchAll(statement)) {
     for (const part of match[1]!.split(',')) {
       const name = part
         .trim()
@@ -86,6 +91,22 @@ function racNames(text: string): string[] {
     }
   }
   return names;
+}
+
+/**
+ * Namespace and dynamic imports hide which components are used, so they are banned outright.
+ * A named import is the only shape the gate can check specifier by specifier.
+ */
+function racOpaqueImports(text: string): string[] {
+  const source = withoutComments(text);
+  const hits: string[] = [];
+  if (/\bimport\s*\*\s*as\s+\w+\s*from\s*['"]react-aria-components['"]/.test(source)) {
+    hits.push('import *');
+  }
+  if (/\bimport\s*\(\s*['"]react-aria-components['"]\s*\)/.test(source)) {
+    hits.push('import()');
+  }
+  return hits;
 }
 
 describe('native overlay gates (packages/react/src)', () => {
@@ -105,17 +126,28 @@ describe('native overlay gates (packages/react/src)', () => {
   it('imports no react-aria-components overlay component outside the adapter', () => {
     const hits = reactFiles
       .filter((f) => f.rel !== ADAPTER)
-      .flatMap((f) =>
-        racNames(f.text)
+      .flatMap((f) => [
+        ...racNames(f.text)
           .filter((name) => BANNED_RAC_IMPORTS.includes(name))
           .map((name) => `${f.rel}: ${name}`),
-      );
+        ...racOpaqueImports(f.text).map((kind) => `${f.rel}: ${kind}`),
+      ]);
     expect(hits, 'use Dialog/Popover/Tooltip/... from var-ui, or NativePopover').toEqual([]);
   });
 
-  it('racNames understands multi-line, type and aliased imports', () => {
-    const sample = `import {\n  Button,\n  type PopoverProps,\n  Popover as RacPopover,\n} from 'react-aria-components';`;
+  it('the adapter imports only DialogTrigger from the banned overlay components', () => {
+    const adapter = reactFiles.find((f) => f.rel === ADAPTER);
+    expect(adapter, ADAPTER).toBeDefined();
+    const banned = racNames(adapter!.text).filter((name) => BANNED_RAC_IMPORTS.includes(name));
+    expect(banned).toEqual(['DialogTrigger']);
+    expect(racOpaqueImports(adapter!.text)).toEqual([]);
+  });
+
+  it('racNames understands multi-line, type, aliased and commented imports', () => {
+    const sample = `import {\n  Button,\n  type PopoverProps,\n  Popover /* overlay */ as RacPopover,\n} from 'react-aria-components';`;
     expect(racNames(sample)).toEqual(['Button', 'PopoverProps', 'Popover']);
+    expect(racOpaqueImports(`import * as RAC from 'react-aria-components';`)).toEqual(['import *']);
+    expect(racOpaqueImports(`const rac = import('react-aria-components');`)).toEqual(['import()']);
   });
 });
 

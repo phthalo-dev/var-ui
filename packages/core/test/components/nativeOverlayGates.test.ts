@@ -1,9 +1,14 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
 import '../../src/styles';
 import { combobox } from '../../src/components/combobox';
 import { commandPalette } from '../../src/components/commandPalette';
 import { dateInput } from '../../src/components/dateInput';
+import { dateRangeInput } from '../../src/components/dateRangeInput';
+import { dateTimeInput } from '../../src/components/dateTimeInput';
 import { dialog } from '../../src/components/dialog';
 import { drawer } from '../../src/components/drawer';
 import { hoverCard } from '../../src/components/hoverCard';
@@ -46,20 +51,86 @@ const POPUP_SLOT_ONLY = [
   ['multiSelector', multiSelector],
   ['tokenizer', tokenizer],
   ['dateInput', dateInput],
+  ['dateRangeInput', dateRangeInput],
+  ['dateTimeInput', dateTimeInput],
 ] as unknown as ReadonlyArray<readonly [string, () => unknown]>;
 
 const escape = (name: string) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+/**
+ * Rules whose selector matches `selector`, including declarations on later lines of the same block.
+ * A line split would miss `z-index` when the emitter pretty-prints it under the selector.
+ */
+function rulesMatching(css: string, selector: RegExp): string[] {
+  const hits: string[] = [];
+  let depth = 0;
+  let segmentStart = 0;
+  let i = 0;
+  while (i < css.length) {
+    const ch = css[i];
+    if (ch === '{') {
+      const prelude = css.slice(segmentStart, i);
+      let nested = depth + 1;
+      let j = i + 1;
+      while (j < css.length && nested > depth) {
+        if (css[j] === '{') nested++;
+        else if (css[j] === '}') nested--;
+        j++;
+      }
+      if (selector.test(prelude)) {
+        hits.push(css.slice(segmentStart, j));
+        segmentStart = j;
+        i = j;
+        continue;
+      }
+      depth += 1;
+      segmentStart = i + 1;
+      i += 1;
+      continue;
+    }
+    if (ch === '}') {
+      depth = Math.max(0, depth - 1);
+      segmentStart = i + 1;
+    }
+    i += 1;
+  }
+  return hits;
+}
+
+describe('rulesMatching', () => {
+  it('keeps a z-index declared on the line after the selector', () => {
+    const css = '.var-ui-dialog {\n  z-index: 2;\n}\n.var-ui-button { color: red; }';
+    const rules = rulesMatching(css, /\.var-ui-dialog(?![A-Za-z0-9-])/);
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toMatch(/z-index/);
+    expect(rules[0]).not.toMatch(/var-ui-button/);
+  });
+});
+
 describe('overlay recipes emit no z-index (top layer orders by insertion)', () => {
+  it('covers every component recipe that spreads anchored popup styles', () => {
+    const checked = new Set([...WHOLE_RECIPE, ...POPUP_SLOT_ONLY].map(([name]) => name));
+    const dir = join(dirname(fileURLToPath(import.meta.url)), '../../src/components');
+    const missing: string[] = [];
+    for (const entry of readdirSync(dir)) {
+      if (!entry.endsWith('.ts')) continue;
+      const text = readFileSync(join(dir, entry), 'utf8');
+      for (const part of text.split('typestyles.recipe(').slice(1)) {
+        if (!part.includes('anchored(') && !part.includes('dropdownPopoverChrome(')) continue;
+        const name = part.match(/\bname:\s*['"]([^'"]+)['"]/)?.[1];
+        if (!name || !checked.has(name)) missing.push(`${entry}: ${name ?? '(no name)'}`);
+      }
+    }
+    expect(missing, 'add the recipe to WHOLE_RECIPE or POPUP_SLOT_ONLY').toEqual([]);
+  });
+
   it.each(WHOLE_RECIPE)('%s', (name, recipe) => {
     recipe();
     const own = new RegExp(`\\.var-ui-${escape(name)}(?![A-Za-z0-9-])`);
-    const rules = getRegisteredCss()
-      .split('\n')
-      .filter((line) => own.test(line));
+    const rules = rulesMatching(getRegisteredCss(), own);
     expect(rules.length, `${name} emitted no CSS`).toBeGreaterThan(0);
     expect(
-      rules.filter((line) => /z-index/i.test(line)),
+      rules.filter((rule) => /z-index/i.test(rule)),
       name,
     ).toEqual([]);
   });
@@ -67,12 +138,10 @@ describe('overlay recipes emit no z-index (top layer orders by insertion)', () =
   it.each(POPUP_SLOT_ONLY)('%s popup slot', (name, recipe) => {
     recipe();
     const popup = new RegExp(`\\.var-ui-${escape(name)}__popover(?![A-Za-z0-9-])`);
-    const rules = getRegisteredCss()
-      .split('\n')
-      .filter((line) => popup.test(line));
+    const rules = rulesMatching(getRegisteredCss(), popup);
     expect(rules.length, `${name}__popover emitted no CSS`).toBeGreaterThan(0);
     expect(
-      rules.filter((line) => /z-index/i.test(line)),
+      rules.filter((rule) => /z-index/i.test(rule)),
       name,
     ).toEqual([]);
   });

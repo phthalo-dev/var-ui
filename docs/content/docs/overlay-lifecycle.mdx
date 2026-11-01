@@ -113,7 +113,7 @@ Every change has a reason, read from the native signal that caused it:
 | `outside-press` | A press on the dialog backdrop, or outside a popover (light dismiss)                                  |
 | `hover`         | Hover intent opened or closed a Tooltip or HoverCard                                                  |
 | `focus`         | Focus entered or left the trigger or popup                                                            |
-| `imperative`    | Your own code (a `setOpen` call or a controlled `open` prop change), `requestClose()`, a back gesture |
+| `imperative`    | Your own code (`setOpen`, a controlled `open` change), `requestClose()`, a back gesture, or any close with no observed gesture — including a menu item activating |
 
 `cancel()` vetoes the change. For a controlled overlay (you pass `open`), the overlay stays in whatever state `open` says, so ignore the request in the parent instead of calling `cancel()` and then setting state. Chromium lets a page cancel Escape on a modal dialog once per user activation; after that the dialog closes natively and var-ui re-opens it when `open` is still `true`, so the state is right but the focus return and a `close` event happen in between.
 
