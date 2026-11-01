@@ -16,7 +16,6 @@ import {
   type OverlayOpenChangeHandler,
   type OverlayOpenChangeReason,
 } from './changeEvent';
-import { useOverlayPresence, type OverlayPresenceAttrs } from './useOverlayPresence';
 
 export type UseOverlayRootOptions = {
   /** Controlled open state. */
@@ -25,29 +24,12 @@ export type UseOverlayRootOptions = {
   defaultOpen?: boolean;
   /** Called when the overlay requests to open or close. `details.cancel()` vetoes the change. */
   onOpenChange?: OverlayOpenChangeHandler;
-  /** Overrides the `prefers-reduced-motion` sample used by the exit animation wait. */
-  reducedMotion?: boolean;
-  /**
-   * Native shells (`<dialog>` today, `[popover]` in PR B) animate in CSS and mount children with
-   * `useMountedWhileAnimating`: `mounted` is then just `open` and no rAF presence runs. Leave
-   * unset for the react-aria shells that still need `mounted`/`presenceAttrs`/`rac`.
-   * @default false
-   */
-  native?: boolean;
 };
 
 /** Optional explicit cause of a change; wins over anything observed from the DOM. */
 export type OverlayRequestOptions = {
   reason?: OverlayOpenChangeReason;
   event?: Event | null;
-};
-
-/** What a react-aria overlay (`DialogTrigger`, `ModalOverlay`, `Popover`, ...) needs. */
-/** @deprecated until PR B/C. */
-export type OverlayRacProps = {
-  /** `true` from the moment the overlay opens until its exit animation has finished. */
-  isOpen: boolean;
-  onOpenChange: (next: boolean) => void;
 };
 
 export type OverlayRoot = {
@@ -59,23 +41,6 @@ export type OverlayRoot = {
    */
   popupId: string;
   /**
-   * `true` while the overlay must stay in the tree: `open` plus the exit animation (`open` only
-   * with `native`).
-   * @deprecated until PR B/C: native shells use `useMountedWhileAnimating`.
-   */
-  mounted: boolean;
-  /**
-   * `data-open`, `data-closed`, `data-starting-style` and `data-ending-style` for the parts (only
-   * `data-open`/`data-closed` with `native`).
-   * @deprecated until PR B/C: react-aria shells only.
-   */
-  presenceAttrs: OverlayPresenceAttrs;
-  /**
-   * Spread on the react-aria overlay: `isOpen={mounted}` and a details-aware change handler.
-   * @deprecated until PR B/C: react-aria shells only; native shells use `useDialogElement`.
-   */
-  rac: OverlayRacProps;
-  /**
    * Trigger `onClick`/`onPress` handler for native shells: toggles with reason `trigger-press`
    * and the press event (`details.cancel()` vetoes it).
    */
@@ -85,17 +50,21 @@ export type OverlayRoot = {
    * the handler vetoed it with `details.cancel()` or nothing would change.
    */
   setOpen: (next: boolean, options?: OverlayRequestOptions) => boolean;
+  /**
+   * Change handler for react-aria triggers that own the open state (`MenuTrigger`'s
+   * `onOpenChange`): the reason is derived from the observed DOM event, not forced to
+   * `'imperative'`.
+   */
+  onStateChange: (next: boolean) => void;
   /** `setOpen(false, options)`; this is what `OverlayCloseContext` carries. */
   close: (options?: OverlayRequestOptions) => boolean;
   /** Stable callback refs: pass to the element (or merge with `useMergedRef`). */
   setPopupEl: RefCallback<HTMLElement>;
   setTriggerEl: RefCallback<HTMLElement>;
-  /** @deprecated until PR B/C: the backdrop is `::backdrop` of a native `<dialog>`. */
-  setBackdropEl: RefCallback<HTMLElement>;
   /** Elements, as state: they re-render the root when they attach, so layout can read them. */
   popupEl: HTMLElement | null;
   triggerEl: HTMLElement | null;
-  /** Ref objects mirroring the elements, for APIs that want a `RefObject` (`usePositionerVars`). */
+  /** Ref objects mirroring the elements, for APIs that want a `RefObject`. */
   popupRef: MutableRefObject<HTMLElement | null>;
   triggerRef: MutableRefObject<HTMLElement | null>;
 };
@@ -122,22 +91,21 @@ function useElementState() {
 }
 
 /**
- * The shared root of every overlay: controllable `open`, a details-aware `onOpenChange`, exit
- * presence, element tracking, and close-reason derivation.
+ * The shared root of every overlay: controllable `open`, a details-aware `onOpenChange`, element
+ * tracking, and close-reason derivation. Enter and exit are CSS (`@starting-style`), so the root has
+ * no presence state; shells keep children mounted through the exit with `useMountedWhileAnimating`.
  *
  * The reason of a change comes from, in order: an explicit `setOpen(next, {reason})`; the last
  * DOM event the hook observed with native listeners (document `keydown` Escape, `pointerdown`
  * outside the popup and trigger, `focusout` leaving them; on the trigger `pointerdown`, `click`,
  * Enter/Space/Arrow keys, `pointerenter/leave`, `focusin/out`; on the popup `pointerleave`);
- * otherwise `'unknown'`. No wrapper element is needed. The observed event is consumed by the
+ * otherwise `'imperative'`. No wrapper element is needed. The observed event is consumed by the
  * change it caused.
  */
 export function useOverlayRoot({
   open: openProp,
   defaultOpen = false,
   onOpenChange,
-  reducedMotion,
-  native = false,
 }: UseOverlayRootOptions = {}): OverlayRoot {
   const popupId = useId();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
@@ -146,15 +114,6 @@ export function useOverlayRoot({
 
   const [popupEl, popupRef, setPopupEl] = useElementState();
   const [triggerEl, triggerRef, setTriggerEl] = useElementState();
-  const [, backdropRef, setBackdropEl] = useElementState();
-
-  const presence = useOverlayPresence({
-    isOpen: open,
-    reducedMotion,
-    enabled: !native,
-    getAnimatedElements: () => [backdropRef.current, popupRef.current],
-  });
-  const { mounted } = presence;
 
   const latest = useRef({ open, isControlled, onOpenChange });
   useLayoutEffect(() => {
@@ -170,7 +129,7 @@ export function useOverlayRoot({
     const event = options?.event ?? stash?.event ?? null;
     const details: OverlayChangeEventDetails = createOverlayChangeDetails({
       reason:
-        options?.reason ?? stash?.reason ?? (event ? inferOverlayCloseReason(event) : 'unknown'),
+        options?.reason ?? stash?.reason ?? (event ? inferOverlayCloseReason(event) : 'imperative'),
       event,
     });
     handler?.(next, details);
@@ -179,7 +138,7 @@ export function useOverlayRoot({
     return true;
   }, []);
 
-  // Calls from our own code are programmatic unless they say otherwise; react-aria's go through `rac`.
+  // Calls from our own code are programmatic unless they say otherwise; react-aria's go through `onStateChange`.
   const setOpenPublic = useCallback(
     (next: boolean, options?: OverlayRequestOptions) =>
       setOpen(next, { reason: 'imperative', ...options }),
@@ -196,7 +155,7 @@ export function useOverlayRoot({
     },
     [setOpen],
   );
-  const onRacOpenChange = useCallback((next: boolean) => void setOpen(next), [setOpen]);
+  const onStateChange = useCallback((next: boolean) => void setOpen(next), [setOpen]);
 
   // Trigger and popup listeners: native, so they work for react-aria children that drop DOM props.
   useEffect(() => {
@@ -238,7 +197,7 @@ export function useOverlayRoot({
 
   // Document listeners while the overlay is in the tree.
   useEffect(() => {
-    if (!mounted) return;
+    if (!open) return;
     const outside = (target: EventTarget | null) =>
       !contains(popupRef.current, target) && !contains(triggerRef.current, target);
     const onKeyDown = (event: KeyboardEvent) => {
@@ -264,26 +223,18 @@ export function useOverlayRoot({
       window.removeEventListener('pointerdown', onPointerDown, true);
       window.removeEventListener('focusout', onFocusOut, true);
     };
-  }, [mounted, popupRef, triggerRef]);
-
-  const rac = useMemo<OverlayRacProps>(
-    () => ({ isOpen: mounted, onOpenChange: onRacOpenChange }),
-    [mounted, onRacOpenChange],
-  );
+  }, [open, popupRef, triggerRef]);
 
   return useMemo<OverlayRoot>(
     () => ({
       open,
       popupId,
-      mounted,
-      presenceAttrs: presence.attrs,
-      rac,
       triggerPress,
       setOpen: setOpenPublic,
+      onStateChange,
       close,
       setPopupEl,
       setTriggerEl,
-      setBackdropEl,
       popupEl,
       triggerEl,
       popupRef,
@@ -292,15 +243,12 @@ export function useOverlayRoot({
     [
       open,
       popupId,
-      mounted,
-      presence.attrs,
-      rac,
       triggerPress,
       setOpenPublic,
+      onStateChange,
       close,
       setPopupEl,
       setTriggerEl,
-      setBackdropEl,
       popupEl,
       triggerEl,
       popupRef,

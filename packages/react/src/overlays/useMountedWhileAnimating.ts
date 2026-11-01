@@ -17,7 +17,7 @@ const MAX_PASSES = 4;
  * running finite animations or transitions (`getAnimations({ subtree: true })`, which includes the
  * `display`/`overlay` discrete transitions and `::backdrop`). Use it to keep an overlay's children
  * mounted through the CSS exit, and to avoid mounting heavy bodies (or autofocusing react-aria
- * content) while closed. Replaces the rAF-based `useOverlayPresence` for native shells.
+ * content) while closed.
  *
  * The close render keeps the previous mounted value, so children do not unmount and remount at the
  * start of the exit (that reset their state and re-ran `autoFocus`). With no finite animations

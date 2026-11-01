@@ -17,7 +17,7 @@ export type OverlayTriggerPartProps = OverlayTriggerProps & {
    */
   relation?: 'popovertarget' | 'describedby' | 'details';
   /**
-   * react-aria registration of host children: `press` (Dialog, Menu), `focusable`, `none`.
+   * react-aria registration of host children: `press` (Dialog, Drawer, Menu) or `none`.
    * @default `press`, or `none` when a `relation` is given
    */
   mode?: OverlayChildMode;

@@ -71,7 +71,7 @@ function HoverCardRoot({
   defaultOpen,
   onOpenChange,
 }: HoverCardRootProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const intent = useHoverIntent(root, { openDelay, closeDelay });
   const titleId = useId();
   const context = useMemo<HoverCardContextValue>(

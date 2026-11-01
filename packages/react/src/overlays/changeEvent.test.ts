@@ -37,7 +37,8 @@ describe('inferOverlayCloseReason', () => {
     expect(inferOverlayCloseReason(new Event('blur'))).toBe('focus');
   });
 
-  it('returns unknown for unrelated events', () => {
-    expect(inferOverlayCloseReason(null)).toBe('unknown');
+  it('returns imperative when no gesture was observed', () => {
+    expect(inferOverlayCloseReason(null)).toBe('imperative');
+    expect(inferOverlayCloseReason(new Event('wheel'))).toBe('imperative');
   });
 });

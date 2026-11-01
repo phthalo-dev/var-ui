@@ -82,12 +82,14 @@ const { Context: MenuContext, use: useMenuContext } =
   createOverlayContext<MenuContextValue>('Menu');
 
 function MenuRoot({ children, open, defaultOpen, onOpenChange }: MenuRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange, native: true });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const context = useMemo<MenuContextValue>(() => ({ root }), [root]);
 
   return (
     <MenuContext.Provider value={context}>
-      <AriaMenuTrigger {...root.rac}>{children}</AriaMenuTrigger>
+      <AriaMenuTrigger isOpen={root.open} onOpenChange={root.onStateChange}>
+        {children}
+      </AriaMenuTrigger>
     </MenuContext.Provider>
   );
 }

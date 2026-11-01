@@ -33,7 +33,7 @@ type Props = UseDialogElementOptions & {
   onOpenChange?: OverlayOpenChangeHandler;
 };
 function TestDialog({ open, defaultOpen, onOpenChange, dismissable }: Props) {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const dialog = useDialogElement(root, { dismissable });
   return (
     <>

@@ -31,32 +31,20 @@ That file includes every recipe, base HTML styles, and the default theme. Custom
 
 ## Providers
 
-Mount `DesignSystemProvider` with `applyToDocument`, `IconProvider`, and `LayerProvider` at the root:
+Mount `DesignSystemProvider` with `applyToDocument` and `IconProvider` at the root:
 
 ```tsx
 import { defaultIcons } from '@var-ui/icons';
-import { DesignSystemProvider, IconProvider, LayerProvider } from '@var-ui/react';
+import { DesignSystemProvider, IconProvider } from '@var-ui/react';
 
 <DesignSystemProvider applyToDocument>
-  <IconProvider icons={defaultIcons}>
-    <LayerProvider>{children}</LayerProvider>
-  </IconProvider>
+  <IconProvider icons={defaultIcons}>{children}</IconProvider>
 </DesignSystemProvider>;
 ```
 
 Without `@var-ui/icons`, pass `icons={{}}` to `IconProvider`.
 
-`applyToDocument` puts the theme class on `html`. Isolate stacking and cover the visual viewport:
-
-```css
-html {
-  isolation: isolate;
-}
-
-body {
-  position: relative;
-}
-```
+`applyToDocument` puts the theme class on `html`, so the theme reaches every element, including dialogs and popovers.
 
 ## First component
 
@@ -88,10 +76,10 @@ See `examples/astro-app` in the repo for a full **workspace** tree. That example
 ## Next
 
 - [Installation](/docs/installation) — package list, peers, and TypeStyles extract for custom themes
-- [Overlay lifecycle](/docs/overlay-lifecycle) — overlay `data-*` attributes, positioner CSS variables, and `onOpenChange`
+- [Overlay lifecycle](/docs/overlay-lifecycle) — how native dialogs and popovers open and close, their attributes, and `onOpenChange` reasons
 - [Theming](/theming) — tokens, themes, and `createDesignTheme`
 
-## Direction, portals, and stacking
+## Direction and overlays
 
 ### Direction and locale
 
@@ -105,38 +93,22 @@ Pass `direction` and a real `locale` on `DesignSystemProvider`:
 
 `applyToDocument` syncs `html dir` (and `lang` when `locale` is set) after hydration / on mount. It always writes `dir` for the resolved direction — including default `ltr`. If SSR set `<html dir="rtl">` and the client provider omits `direction`/`locale`, mount will rewrite `dir` to `ltr`. SSR apps that care about first paint should set `<html dir>` (and `lang` if needed) themselves **and** pass matching `direction`/`locale` to the provider.
 
-React Aria overlays (`Popover`, `Menu`, `start` / `end` placement) take direction from **locale**, not from `dir`. `I18nProvider` only accepts `locale`.
+Anchored popups (`Popover`, `Menu`, `Tooltip`, and the field popups) place `start` and `end` with CSS logical values. They follow the document `dir` that `direction` writes — `applyToDocument` sets it on `html`. `locale` formats dates and numbers and configures React Aria; it does not choose the popup side. `I18nProvider` only accepts `locale`.
 
-- Prefer a real RTL locale (`he-IL`, `ar-EG`) so dates, numbers, and overlays agree.
-- `direction="rtl"` with no locale wraps `I18nProvider` with `ar` so placement still flips. That workaround does **not** set `html lang="ar"`.
-- `direction="ltr"` (explicit) with no locale wraps `I18nProvider` with `en-US` so a nested LTR island does not inherit a parent RTL locale for overlay placement.
-- `locale="en-US"` plus `direction="rtl"` keeps English formatting; overlays may **not** flip.
-- If you omit `direction` but pass `locale`, `dir` is derived from RAC `isRTL(locale)`.
+- Prefer a real RTL locale (`he-IL`, `ar-EG`) with `direction="rtl"` so formatting and popup sides agree.
+- `direction="rtl"` with no locale wraps `I18nProvider` with `ar` so React Aria formatting matches the direction. That fallback does **not** set `html lang="ar"`. Popup sides still follow `dir`.
+- `direction="ltr"` (explicit) with no locale wraps `I18nProvider` with `en-US` so a nested LTR island does not inherit a parent RTL locale.
+- `locale="en-US"` plus `direction="rtl"` keeps English formatting. Popup `start` / `end` still follow `dir`.
+- If you omit `direction` but pass `locale`, `dir` is derived from RAC `isRTL(locale)`, and popups follow that `dir`.
 - `useDirection()` returns `{ direction, isRtl }` and defaults to `ltr` when no provider is mounted.
 - Directional icons opt in: `<Icon name="chevronRight" data-mirror={isRtl || undefined} />`.
 
 Do not set `dir` on the whole docs site to try this — use a `DirectionProvider` island (see Hidden).
 
-### Portals and stacking
+### Overlays and stacking
 
-Wrap the application in an isolating root so portaled dialogs and popovers stack above page `z-index`:
+Dialogs, drawers, popovers, menus, tooltips and toasts are native `<dialog>` and `[popover]` elements in the browser top layer. They need no portal, no provider and no `z-index`, and they always paint above the page. The top layer orders overlays by when they opened, so the most recently opened one is on top.
 
-```html
-<body>
-  <div class="root">{children}</div>
-</body>
-```
+Because they render in place, a theme class on any ancestor reaches them, and CSS custom properties inherit as usual. There is no `portalContainer` to set. The flip side is that a `<button>` inside a dialog inside a `<form>` submits that form (give it `type="button"`), and DOM events bubble through the dialog's real ancestors; see [Plain CSS](/theming/plain-css).
 
-```css
-.root {
-  isolation: isolate;
-}
-```
-
-When `DesignSystemProvider` uses `applyToDocument`, put `isolation: isolate` on `html` or `body` instead of an extra wrapper.
-
-#### Themed portals
-
-Token CSS variables cascade from the theme class. `Dialog`, `AlertDialog`, `Drawer` and `MobileNav` render in place (a native `<dialog>` is in the top layer without a portal), so a theme on an ancestor reaches them with no `portalContainer`. Overlays that still portal to `document.body` take a `portalContainer` pointing at the themed node (or use `applyToDocument`).
-
-Overlay `data-*` attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
+How overlays open and close, their state attributes, and the `onOpenChange` reasons are documented in [Overlay lifecycle](/docs/overlay-lifecycle).

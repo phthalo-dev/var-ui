@@ -36,7 +36,7 @@ function Anchored({
   top?: number;
   left?: number;
 }) {
-  const root = useOverlayRoot({ native: true, defaultOpen: true });
+  const root = useOverlayRoot({ defaultOpen: true });
   const pop = usePopoverElement(root, { mode: 'manual' });
   const anchor = useAnchor(root.triggerEl, root.popupEl, { placement, offset });
   return (
@@ -182,7 +182,7 @@ describe('positioning with the real engine', () => {
 
 describe('useVirtualAnchor', () => {
   function Context() {
-    const root = useOverlayRoot({ native: true, defaultOpen: true });
+    const root = useOverlayRoot({ defaultOpen: true });
     const pop = usePopoverElement(root, { mode: 'manual' });
     const point = useVirtualAnchor();
     useAnchor(point.element, root.popupEl, { placement: 'bottom' });

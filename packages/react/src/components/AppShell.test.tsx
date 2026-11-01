@@ -3,14 +3,13 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { AppShell, APP_SHELL_MAIN_ID } from './AppShell';
 import { MobileNav, MobileNavToggle } from './MobileNav';
 
 function wrap(ui: ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }

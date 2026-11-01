@@ -96,30 +96,6 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   loadingLabel?: string;
 };
 
-type CommandPaletteSlot =
-  | 'root'
-  | 'frame'
-  | 'inputRow'
-  | 'inputIcon'
-  | 'input'
-  | 'results'
-  | 'group'
-  | 'groupHeading'
-  | 'result'
-  | 'resultLink'
-  | 'resultLinkActive'
-  | 'resultIcon'
-  | 'resultBody'
-  | 'resultShortcut'
-  | 'resultTitle'
-  | 'resultMeta'
-  | 'mark'
-  | 'empty';
-type CommandPaletteRecipeFn = () => Record<CommandPaletteSlot, ComponentAttrsResult>;
-// Slot recipe call results are typed `Record<string, ComponentAttrsResult>`, so slot names are lost;
-// drop this cast once https://github.com/phthalo-dev/typestyles/issues/303 ships.
-const commandPaletteSlots = commandPalette as unknown as CommandPaletteRecipeFn;
-
 function defaultFilter(item: CommandPaletteItem, query: string): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
@@ -223,7 +199,6 @@ export function CommandPalette({
   // A controller makes the palette controlled; it is updated after `onOpenChange` unless that
   // was canceled. The `<dialog>` itself is driven by `useDialogElement`.
   const root = useOverlayRoot({
-    native: true,
     open: controller ? controllerOpen : openProp,
     defaultOpen,
     onOpenChange: (next, details) => {
@@ -233,7 +208,7 @@ export function CommandPalette({
   });
   const dialog = useDialogElement(root);
   const setDialogRef = useMergedRef<HTMLDialogElement>(dialog.ref, ref);
-  const cp = commandPaletteSlots();
+  const cp = commandPalette();
 
   const hotkeyId =
     hotkey === true ? DEFAULT_COMMAND_PALETTE_HOTKEY : hotkey ? [hotkey].flat().join('\0') : '';

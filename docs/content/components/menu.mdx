@@ -9,7 +9,7 @@ Action menu namespace. `Menu` is Root for compound menus; use `Menu.FromSections
 
 The popup is a native `popover` element rendered in place (top layer, positioned with CSS anchor positioning), so there is no portal and no `portalContainer`. `placement` on `Menu.Popup` takes `top | bottom | start | end`, optionally with an alignment (`bottom end`, `top start`); it flips automatically when it does not fit, and `start`/`end` follow the writing direction. Works inside a modal `Dialog`.
 
-State attributes, positioner CSS variables, and `onOpenChange` details are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
+State attributes, anchor positioning variables, and `onOpenChange` reasons are documented in [Overlay lifecycle](/docs/overlay-lifecycle).
 
 ## Examples
 

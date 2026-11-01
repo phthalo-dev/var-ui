@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { Accordion } from './Accordion';
 import { Collapsible } from './Collapsible';
 import { List } from './List';
@@ -24,7 +23,7 @@ import { ChatSendButton } from './chat/ChatSendButton';
 const wrap = (ui: React.ReactElement) =>
   render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 
@@ -108,7 +107,7 @@ describe('SideNav / TopNav items', () => {
     );
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <TopNavMegaMenu
             label="Products"
             open
@@ -118,7 +117,7 @@ describe('SideNav / TopNav items', () => {
               { id: 'b', title: 'Beta', disabled: true },
             ]}
           />
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: /Alpha/ }));
@@ -139,11 +138,11 @@ describe('List', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <List>
             <List.Item label="Ada" onClick={onClick} disabled />
           </List>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.queryByRole('button', { name: 'Ada' })).toBeNull();
@@ -215,11 +214,11 @@ describe('Accordion', () => {
     expect(hidden('Alpha body')).toBe(true);
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <Accordion value={['a']} onValueChange={onValueChange}>
             {items}
           </Accordion>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(hidden('Alpha body')).toBe(false);
@@ -248,11 +247,11 @@ describe('Collapsible', () => {
     expect(hidden('Body')).toBe(true);
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <Collapsible title="More" expanded onExpandedChange={onExpandedChange}>
             <p>Body</p>
           </Collapsible>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(hidden('Body')).toBe(false);
@@ -369,9 +368,9 @@ describe('Pagination', () => {
     expect(onValueChange).toHaveBeenCalledWith(3);
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <Pagination page={1} totalPages={5} onValueChange={onValueChange} disabled />
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect((screen.getByRole('button', { name: /3/ }) as HTMLButtonElement).disabled).toBe(true);
@@ -387,9 +386,9 @@ describe('Chat', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <ChatSendButton streaming disabled onClick={onClick} onStop={onStop} />
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Stop generating' }));
@@ -411,9 +410,9 @@ describe('Chat', () => {
     expect(onValueChange).toHaveBeenCalledWith('h');
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <ChatComposerInput value="" onValueChange={onValueChange} onSubmit={() => {}} disabled />
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect((screen.getByRole('textbox') as HTMLTextAreaElement).disabled).toBe(true);

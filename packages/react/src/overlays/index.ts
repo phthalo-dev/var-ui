@@ -15,18 +15,6 @@ export {
 export { OverlayCloseContext, useOverlayClose, type OverlayClose } from './OverlayCloseContext';
 export { OverlayTrigger, type OverlayTriggerPartProps } from './OverlayTrigger';
 export {
-  type OverlayPresenceAttrs,
-  useOverlayPresence,
-  type UseOverlayPresenceOptions,
-  type UseOverlayPresenceResult,
-} from './useOverlayPresence';
-export {
-  type OverlayPlacement,
-  usePositionerVars,
-  type UsePositionerVarsOptions,
-  type UsePositionerVarsResult,
-} from './usePositionerVars';
-export {
   HOVER_WARM_UP_WINDOW,
   resetHoverWarmUp,
   useHoverIntent,
@@ -36,7 +24,6 @@ export {
 export { useMergedRef } from './useMergedRef';
 export {
   useOverlayRoot,
-  type OverlayRacProps,
   type OverlayRequestOptions,
   type OverlayRoot,
   type UseOverlayRootOptions,

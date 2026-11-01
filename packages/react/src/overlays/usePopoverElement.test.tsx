@@ -17,7 +17,7 @@ type Props = {
   onOpenChange?: OverlayOpenChangeHandler;
 };
 function TestPopover({ mode, open, defaultOpen, onOpenChange }: Props) {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const pop = usePopoverElement(root, { mode });
   useAnchor(root.triggerEl, root.popupEl, { placement: 'top end', offset: 6 });
   return (
