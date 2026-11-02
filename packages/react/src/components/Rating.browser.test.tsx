@@ -76,17 +76,31 @@ describe('Rating (real browser)', () => {
   });
 
   test('hover previews up to the hovered star, then restores', async () => {
+    // Park the pointer off the stars first: a leftover/default cursor on star 1 triggers the
+    // CSS hover-preview rules (`:hover ~ &` → 0%) and makes the resting fill look like 1/5.
     const { container } = render(
       <Wrap>
+        <button type="button" data-testid="away">
+          away
+        </button>
         <Rating defaultValue={4} />
       </Wrap>,
     );
+    const away = container.querySelector<HTMLElement>('[data-testid="away"]')!;
+    await userEvent.hover(away);
     await settled(document.body);
+    expect(items(container).map((el) => el.hasAttribute('data-filled'))).toEqual([
+      true,
+      true,
+      true,
+      true,
+      false,
+    ]);
     expect([0, 1, 2, 3, 4].map((i) => fillShare(container, i))).toEqual([100, 100, 100, 100, 0]);
     await userEvent.hover(items(container)[1]!);
     await settled(document.body);
     expect([0, 1, 2, 3, 4].map((i) => fillShare(container, i))).toEqual([100, 100, 0, 0, 0]);
-    await userEvent.unhover(items(container)[1]!);
+    await userEvent.hover(away);
     await settled(document.body);
     expect([0, 1, 2, 3, 4].map((i) => fillShare(container, i))).toEqual([100, 100, 100, 100, 0]);
   });
@@ -94,9 +108,13 @@ describe('Rating (real browser)', () => {
   test('hover preview follows the DOM order in RTL (stars fill from the inline start)', async () => {
     const { container } = render(
       <Wrap dir="rtl">
+        <button type="button" data-testid="away">
+          away
+        </button>
         <Rating defaultValue={0} />
       </Wrap>,
     );
+    const away = container.querySelector<HTMLElement>('[data-testid="away"]')!;
     const list = items(container);
     // In RTL the first star sits at the right edge.
     expect(list[0]!.getBoundingClientRect().left).toBeGreaterThan(
@@ -105,6 +123,7 @@ describe('Rating (real browser)', () => {
     await userEvent.hover(list[2]!);
     await settled(document.body);
     expect([0, 1, 2, 3, 4].map((i) => fillShare(container, i))).toEqual([100, 100, 100, 0, 0]);
+    await userEvent.hover(away);
   });
 
   test('read-only fractional value clips the next star at the fraction', async () => {
