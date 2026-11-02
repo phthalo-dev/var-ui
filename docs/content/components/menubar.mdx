@@ -1,0 +1,86 @@
+---
+title: Menubar
+description: A horizontal bar of menus, like a desktop application menu.
+---
+
+# Menubar
+
+A horizontal bar of menu triggers (File, Edit, View, Help) like the menu of a desktop application. Each `Menubar.Menu` is a trigger plus a popup that you fill with the same `Menu.Item`, `Menu.Section` and `Menu.Separator` parts as [`Menu`](/components/menu). Use `Menu` for a single action menu opened by a button; use `Menubar` when several related menus sit side by side and people move between them.
+
+```tsx
+<Menubar aria-label="Application">
+  <Menubar.Menu label="File">
+    <Menu.Item id="new" onAction={newFile}>
+      New
+    </Menu.Item>
+    <Menu.Separator />
+    <Menu.Item id="quit" onAction={quit}>
+      Quit
+    </Menu.Item>
+  </Menubar.Menu>
+  <Menubar.Menu label="Edit">...</Menubar.Menu>
+</Menubar>
+```
+
+Only one menu is open at a time. While one is open, hovering another top-level item or pressing Left / Right switches to that menu.
+
+## Examples
+
+### Application menu
+
+Items take `onAction`, `disabled` and `textValue` (typeahead text when the children are not a plain string). Group items with `Menu.Section` (optional `title`) and `Menu.Separator`. Shortcuts are ordinary children: put the label and a `Kbd` in the item.
+
+<Demo id="menubar.default" />
+
+### Disabled items and menus
+
+A disabled item cannot be focused or activated. A disabled `Menubar.Menu` is a disabled trigger: arrow keys skip it.
+
+<Demo id="menubar.disabled" />
+
+### In an app shell header
+
+The bar is an inline-flex row, so it drops into a header or [`TopNav`](/components/top-nav). The `size` prop (or the surrounding control size) sets the density.
+
+<Demo id="menubar.app-shell" />
+
+### Watching a menu open and close
+
+`Menubar.Menu` takes `onOpenChange(open, details)`. `details.reason` is `trigger-press`, `escape-key`, `outside-press`, `focus`, `hover` (the menu opened or closed because the pointer moved to another top-level item) or `imperative` (the menu changed with the arrow keys). `details.cancel()` vetoes the change.
+
+## Props
+
+<PropsTable slug="menubar" />
+
+`Menubar.Menu` takes `label` (the trigger content), `children` (the menu items), `disabled`, `placement`, `offset`, `onOpenChange`, and everything a `<button>` takes (it goes onto the trigger).
+
+## Accessibility
+
+- Pattern: the APG [menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) pattern. The root is `role="menubar"` (name it with `aria-label` or `aria-labelledby`); each top-level trigger is a native `<button type="button">` with `role="menuitem"`, `aria-haspopup="menu"` and `aria-expanded`. The popups are `role="menu"` elements named by their trigger.
+- Focus: the bar is a single Tab stop (roving tabindex, on the last focused item or else the first). Disabled triggers are skipped. The Tab stop is applied on the client, so server markup is plain buttons.
+- Focus return: closing a menu with Escape, or by activating an item, puts focus back on that menu's trigger. After switching menus with the arrow keys it returns to the new trigger.
+- RTL: Left and Right are mirrored (read from the computed `direction`), the first item sits at the inline start, and popups align to the trigger's inline start.
+- Forced colors: the open trigger and the focused menu item are drawn with `Highlight` / `HighlightText`, not only a background tint.
+- Typeahead inside an open menu, and Up / Down / Home / End between items, are react-aria's menu behaviour, shared with `Menu`.
+
+| Key                          | Action                                                                |
+| ---------------------------- | --------------------------------------------------------------------- |
+| Tab / Shift+Tab              | Moves focus into or out of the bar (one Tab stop)                     |
+| Right / Left arrow           | Next / previous top-level item, wrapping (mirrored in RTL)            |
+| Home / End                   | First / last enabled top-level item                                   |
+| Down arrow, Enter, Space     | Opens the menu and focuses its first item                             |
+| Up arrow                     | Opens the menu and focuses its last item                              |
+| Right / Left arrow (in menu) | Closes the menu and opens the next / previous one, first item focused |
+| Down / Up arrow (in menu)    | Next / previous item, skipping disabled ones                          |
+| Home / End (in menu)         | First / last item                                                     |
+| Letters (in menu)            | Typeahead to the next item that starts with them                      |
+| Enter / Space (on an item)   | Runs `onAction`, closes the menu, focuses the trigger                 |
+| Escape                       | Closes the menu and focuses its top-level item                        |
+
+## Limitations
+
+- Submenus are not a public part. react-aria's `SubmenuTrigger` can be composed inside a `Menubar.Menu` as it can inside `Menu` (see [Menu](/components/menu)); the bar leaves Right / Left to the submenu when focus is inside one and when the focused item opens one. It is not covered by Menubar tests, so prefer flat menus for now.
+- Checkbox and radio menu items (`menuitemcheckbox`, `menuitemradio`) are not supported, as in `Menu`.
+- Moving the pointer onto another top-level item while a menu is open switches to it; clicking an item that is already open closes it, as in desktop menu bars.
+- The popups are rendered next to their triggers inside the bar (native popovers in the top layer), so the `role="dialog"` shell react-aria puts around each `role="menu"` is a child of the `role="menubar"` element while open.
+- There is no Astro component: the bar keeps client state (which menu is open).

@@ -30,6 +30,7 @@ export const iconNameList = [
   'colorModeSystem',
   'eye',
   'eyeOff',
+  'star',
 ] as const;
 
 export type IconName = (typeof iconNameList)[number];

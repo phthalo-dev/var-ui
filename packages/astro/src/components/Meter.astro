@@ -1,0 +1,69 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { getMeterTone, meter } from '@var-ui/core/components/meter';
+import type { MeterVariantProps } from '@var-ui/core';
+import { mergeProps } from '../utils';
+
+/**
+ * Scalar measurement within a known range (static). Same DOM and classes as the React `Meter`.
+ * The tone follows the native `<meter>` rules from `low` / `high` / `optimum` unless `tone` is set.
+ */
+type Props = Omit<HTMLAttributes<'div'>, 'children' | 'role'> &
+  MeterVariantProps & {
+    value: number;
+    min?: number;
+    max?: number;
+    low?: number;
+    high?: number;
+    optimum?: number;
+    label?: string;
+    showValueText?: boolean;
+    valueLabel?: string;
+    className?: string;
+  };
+
+const {
+  value,
+  min = 0,
+  max = 100,
+  low,
+  high,
+  optimum,
+  label,
+  showValueText = true,
+  valueLabel,
+  size = 'md',
+  tone,
+  appearance = 'solid',
+  className,
+  ...rest
+} = Astro.props;
+
+const resolvedTone = tone ?? getMeterTone({ value, min, max, low, high, optimum });
+const m = meter({ size, tone: resolvedTone, appearance });
+const clamped = Math.min(max, Math.max(min, value));
+const percentage = max === min ? 0 : ((clamped - min) / (max - min)) * 100;
+const valueText = valueLabel ?? `${Math.round(percentage)}%`;
+---
+<div
+  aria-label={label}
+  {...rest}
+  {...mergeProps(m.root, className)}
+  role="meter"
+  aria-valuemin={min}
+  aria-valuemax={max}
+  aria-valuenow={clamped}
+  aria-valuetext={valueText}
+>
+  {
+    label || showValueText ? (
+      <div {...mergeProps(m.header)}>
+        {label ? <span {...mergeProps(m.label)}>{label}</span> : <span />}
+        {showValueText ? <span {...mergeProps(m.valueText)}>{valueText}</span> : null}
+      </div>
+    ) : null
+  }
+  <div {...mergeProps(m.track)}>
+    <div {...mergeProps(m.fill)} style={{ width: `${percentage}%` }} />
+  </div>
+</div>

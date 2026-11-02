@@ -186,6 +186,14 @@
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
     },
+    "./glyphs/star": {
+      "types": "./dist/glyph-data/star.d.mts",
+      "import": "./dist/glyph-data/star.mjs"
+    },
+    "./star": {
+      "types": "./dist/icons/star.d.mts",
+      "import": "./dist/icons/star.mjs"
+    },
     "./glyphs/stop": {
       "types": "./dist/glyph-data/stop.d.mts",
       "import": "./dist/glyph-data/stop.mjs"

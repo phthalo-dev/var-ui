@@ -71,6 +71,13 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { ToggleButton } from '@var-ui/react';",
   },
   {
+    slug: 'toggle-group',
+    name: 'ToggleGroup',
+    category: 'action',
+    description: 'Grouped toggle buttons where one or several can be pressed.',
+    importLine: "import { ToggleGroup } from '@var-ui/react';",
+  },
+  {
     slug: 'segmented-control',
     name: 'SegmentedControl',
     category: 'action',
@@ -91,6 +98,13 @@ export const componentRegistry: ComponentEntry[] = [
     description:
       'Action menu namespace — compound Trigger/Popup/Item parts plus FromSections, ContextMenu, and Overflow presets.',
     importLine: "import { Menu } from '@var-ui/react';",
+  },
+  {
+    slug: 'menubar',
+    name: 'Menubar',
+    category: 'action',
+    description: 'A horizontal bar of menus, like a desktop application menu (File, Edit, View).',
+    importLine: "import { Menubar } from '@var-ui/react';",
   },
   {
     slug: 'toolbar',
@@ -119,6 +133,13 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'data-input',
     description: 'Boolean toggle with label.',
     importLine: "import { Checkbox } from '@var-ui/react';",
+  },
+  {
+    slug: 'fieldset',
+    name: 'Fieldset',
+    category: 'data-input',
+    description: 'Groups related form controls with a legend, on the native fieldset.',
+    importLine: "import { Fieldset } from '@var-ui/react';",
   },
   {
     slug: 'switch',
@@ -329,6 +350,27 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'feedback',
     description: 'Determinate progress indicator.',
     importLine: "import { ProgressBar } from '@var-ui/react';",
+  },
+  {
+    slug: 'progress-circle',
+    name: 'ProgressCircle',
+    category: 'feedback',
+    description: 'Circular progress indicator, determinate or indeterminate.',
+    importLine: "import { ProgressCircle } from '@var-ui/react';",
+  },
+  {
+    slug: 'meter',
+    name: 'Meter',
+    category: 'feedback',
+    description: 'A measurement within a known range, such as disk usage.',
+    importLine: "import { Meter } from '@var-ui/react';",
+  },
+  {
+    slug: 'rating',
+    name: 'Rating',
+    category: 'data-input',
+    description: 'Star rating input and display, built on a native radio group.',
+    importLine: "import { Rating } from '@var-ui/react';",
   },
   {
     slug: 'toast',

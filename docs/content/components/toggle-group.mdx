@@ -1,0 +1,75 @@
+---
+title: ToggleGroup
+description: Grouped toggle buttons where one or several can be pressed.
+---
+
+# ToggleGroup
+
+A row or column of related toggle buttons where one or several can be pressed: text formatting (bold, italic, underline), alignment, view switches. Compose it from `ToggleGroup.Item`s; each item is a native `<button>` that takes `disabled`, `aria-label`, `title` and event handlers directly.
+
+Reach for a different component when the choice is different:
+
+- Exactly one option must always be chosen, with a sliding indicator: [`SegmentedControl`](/components/segmented-control).
+- A form value with radio semantics (`name`, validation, labels): [`RadioGroup`](/components/radio-group).
+- A single independent on/off button: [`ToggleButton`](/components/toggle-button).
+
+## Examples
+
+### Single
+
+Without `multiple` at most one item is pressed. Pressing the pressed item turns it off, and `onValueChange` receives `null`. Add `required` to keep one item pressed.
+
+<Demo id="toggle-group.single" />
+
+### Multiple
+
+With `multiple`, any number of items can be pressed and `value` / `onValueChange` use `string[]`.
+
+<Demo id="toggle-group.multiple" />
+
+### Icons only
+
+Icon-only items must carry an `aria-label`. Use `required` for a choice that always has a value, like alignment.
+
+<Demo id="toggle-group.icons" />
+
+### Sizes, orientation, tone and appearance
+
+`size`, `tone`, `appearance` (`outline`, `subtle`, `ghost`) and `orientation` use the same names as the recipe axes. A vertical group moves focus with Up and Down.
+
+<Demo id="toggle-group.sizes" />
+
+### In a toolbar
+
+The group works inside a [`Toolbar`](/components/toolbar). Toolbar has no arrow-key handling of its own, so each group keeps its own Tab stop and arrow-key roving; they do not conflict. Give the toolbar a `label` and each group an `aria-label`.
+
+<Demo id="toggle-group.toolbar" />
+
+### Controlled
+
+Drive the pressed items with `value` and `onValueChange`.
+
+<Demo id="toggle-group.controlled" />
+
+## Props
+
+<PropsTable slug="toggle-group" />
+
+`ToggleGroup.Item` takes `value` (required), `disabled` and everything a `<button>` takes. Pressing it calls your `onClick` first; call `event.preventDefault()` there to cancel the toggle.
+
+## Accessibility
+
+- Pattern: the APG [toggle button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) pattern. The root is `role="group"` (name it with `aria-label` or `aria-labelledby`) and every item is a native `<button type="button">` with `aria-pressed`. This is the correct semantics for deselectable single-select and for multi-select. ToggleGroup never uses `role="radiogroup"`, because radios cannot be turned off; use `SegmentedControl` or `RadioGroup` when you want radio behaviour.
+- Focus: roving tabindex (the APG toolbar keyboard model). The group is a single Tab stop, on the pressed item or else the first enabled item. Arrow keys move focus without pressing, and do not wrap. Disabled items are skipped.
+- RTL: Left and Right are mirrored in a right-to-left context (read from the computed `direction`); the connected corners and borders use logical properties.
+- Forced colors: the pressed item is drawn with `Highlight` / `HighlightText`, so the state does not depend on a background color.
+- Static markup: items render as plain buttons with no `tabindex`, so before hydration every item is tabbable and pressed items already carry `aria-pressed` and `data-selected`. The roving Tab stop is applied on the client. There is no Astro component because pressing needs client state.
+- The group is not a form control and submits nothing. Mirror `value` into a hidden `<input>` if you need it in a form.
+
+| Key                | Action                                              |
+| ------------------ | --------------------------------------------------- |
+| Tab / Shift+Tab    | Moves focus into or out of the group (one Tab stop) |
+| Right / Left arrow | Next / previous item (mirrored in RTL), horizontal  |
+| Down / Up arrow    | Next / previous item, vertical                      |
+| Home / End         | First / last enabled item                           |
+| Space / Enter      | Toggles the focused item                            |
