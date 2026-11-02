@@ -1,0 +1,63 @@
+---
+title: ProgressCircle
+description: Circular progress indicator, determinate or indeterminate.
+---
+
+# ProgressCircle
+
+A ring that fills as an operation advances, or spins while the amount of work is unknown. It carries the same `role="progressbar"` semantics as [ProgressBar](/components/progress-bar), in a square footprint.
+
+Use it where a bar will not fit: inside a button or card, in a table cell, on a dashboard tile. To show a measurement that is not a task (disk usage, a score), use [Meter](/components/meter). For a wait with nothing to measure and no label, [Spinner](/components/spinner) is lighter.
+
+## Examples
+
+### Default
+
+`value` runs from `min` (0) to `max` (100), as on the native `<progress>`. `label` is the accessible name; the ring has no visible text of its own.
+
+<Demo id="progress-circle.default" />
+
+### Indeterminate
+
+Leave `value` out (or pass `indeterminate`) when the amount of work is unknown. The ring spins a fixed arc and drops `aria-valuenow`. Under `prefers-reduced-motion` the spin stops and the arc stays visible.
+
+<Demo id="progress-circle.indeterminate" />
+
+### Sizes
+
+`size` is `sm`, `md` (default) or `lg`. The stroke thickness scales with the size, set through `--var-ui-progress-circle-size` and `--var-ui-progress-circle-thickness`.
+
+<Demo id="progress-circle.sizes" />
+
+### With a centered label
+
+`children` render inside the ring. Pass a function to receive the `percentage` (0 to 100) and the formatted `valueText`. The text is presentational: the accessible value is still the progressbar's `aria-valuetext`, so use `valueLabel` for a custom spoken value such as "Step 3 of 4".
+
+<Demo id="progress-circle.center" />
+
+### Tones and appearance
+
+`tone` colors the arc (`accent` by default) and `appearance="subtle"` tints the track from the same color.
+
+<Demo id="progress-circle.tones" />
+
+## Astro
+
+`ProgressCircle` from `@var-ui/astro` renders the same DOM and classes. The default slot is the centered content. It takes the same props except the render-function `children` and `formatOptions`; the percentage is computed once at render.
+
+## Styling hooks
+
+The arc length follows `--var-ui-progress-circle-progress`, a number from 0 to 1 set inline on the ring (`.var-ui-progress-circle__ring`). The ring is an SVG with `pathLength="100"`, so the dash length is the percentage. Slots: `root`, `ring`, `track`, `fill`, `content`.
+
+## Props
+
+<PropsTable slug="progress-circle" />
+
+## Accessibility
+
+- Built on React Aria's `ProgressBar`: `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-valuetext` (a percentage by default; set `formatOptions` or `valueLabel`).
+- Indeterminate rings have no `aria-valuenow`.
+- Give every ring a name with `label`, `aria-label` or `aria-labelledby`. The SVG is `aria-hidden`.
+- Forced colors: the arc uses `Highlight` and the track `GrayText`, so both stay visible.
+- Right-to-left: the ring sweeps counter-clockwise.
+- The ring is not focusable and has no keyboard interaction.

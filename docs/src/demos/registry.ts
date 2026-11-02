@@ -21,6 +21,20 @@ import { snippets as gridDefaultSnippets } from './grid/default/snippets';
 import { snippets as headingDefaultSnippets } from './heading/default/snippets';
 import { snippets as linkDefaultSnippets } from './link/default/snippets';
 import { snippets as progressBarDefaultSnippets } from './progress-bar/default/snippets';
+import { snippets as progressCircleDefaultSnippets } from './progress-circle/default/snippets';
+import { snippets as progressCircleIndeterminateSnippets } from './progress-circle/indeterminate/snippets';
+import { snippets as progressCircleSizesSnippets } from './progress-circle/sizes/snippets';
+import { snippets as progressCircleCenterSnippets } from './progress-circle/center/snippets';
+import { snippets as progressCircleTonesSnippets } from './progress-circle/tones/snippets';
+import { snippets as meterDefaultSnippets } from './meter/default/snippets';
+import { snippets as meterThresholdsSnippets } from './meter/thresholds/snippets';
+import { snippets as meterSizesSnippets } from './meter/sizes/snippets';
+import { snippets as ratingDefaultSnippets } from './rating/default/snippets';
+import { snippets as ratingControlledSnippets } from './rating/controlled/snippets';
+import { snippets as ratingReadOnlySnippets } from './rating/read-only/snippets';
+import { snippets as ratingCustomIconSnippets } from './rating/custom-icon/snippets';
+import { snippets as ratingSizesSnippets } from './rating/sizes/snippets';
+import { snippets as ratingFormSnippets } from './rating/form/snippets';
 import { snippets as sectionDefaultSnippets } from './section/default/snippets';
 import { snippets as spinnerDefaultSnippets } from './spinner/default/snippets';
 import { snippets as stackDefaultSnippets } from './stack/default/snippets';
@@ -139,6 +153,15 @@ import { snippets as contextMenuDefaultSnippets } from './context-menu/default/s
 import { snippets as contextMenuSectionsSnippets } from './context-menu/sections/snippets';
 import { snippets as moreMenuDefaultSnippets } from './more-menu/default/snippets';
 import { snippets as moreMenuOverflowSnippets } from './more-menu/overflow/snippets';
+import { snippets as toggleGroupSingleSnippets } from './toggle-group/single/snippets';
+import { snippets as toggleGroupMultipleSnippets } from './toggle-group/multiple/snippets';
+import { snippets as toggleGroupIconsSnippets } from './toggle-group/icons/snippets';
+import { snippets as toggleGroupSizesSnippets } from './toggle-group/sizes/snippets';
+import { snippets as toggleGroupToolbarSnippets } from './toggle-group/toolbar/snippets';
+import { snippets as toggleGroupControlledSnippets } from './toggle-group/controlled/snippets';
+import { snippets as menubarDefaultSnippets } from './menubar/default/snippets';
+import { snippets as menubarDisabledSnippets } from './menubar/disabled/snippets';
+import { snippets as menubarAppShellSnippets } from './menubar/app-shell/snippets';
 import { snippets as toolbarDefaultSnippets } from './toolbar/default/snippets';
 import { snippets as toolbarSlotsSnippets } from './toolbar/slots/snippets';
 import { snippets as numberInputDefaultSnippets } from './number-input/default/snippets';
@@ -153,6 +176,10 @@ import { snippets as inputGroupDefaultSnippets } from './input-group/default/sni
 import { snippets as inputGroupAddonsSnippets } from './input-group/addons/snippets';
 import { snippets as checkboxGroupDefaultSnippets } from './checkbox-group/default/snippets';
 import { snippets as checkboxGroupDefaultsSnippets } from './checkbox-group/defaults/snippets';
+import { snippets as fieldsetDefaultSnippets } from './fieldset/default/snippets';
+import { snippets as fieldsetDisabledSnippets } from './fieldset/disabled/snippets';
+import { snippets as fieldsetErrorSnippets } from './fieldset/error/snippets';
+import { snippets as fieldsetHorizontalSnippets } from './fieldset/horizontal/snippets';
 import { snippets as calendarDefaultSnippets } from './calendar/default/snippets';
 import { snippets as calendarMinSnippets } from './calendar/min/snippets';
 import { snippets as dateInputDefaultSnippets } from './date-input/default/snippets';
@@ -203,6 +230,20 @@ export const DEMO_IDS = [
   'badge.default',
   'spinner.default',
   'progress-bar.default',
+  'progress-circle.default',
+  'progress-circle.indeterminate',
+  'progress-circle.sizes',
+  'progress-circle.center',
+  'progress-circle.tones',
+  'meter.default',
+  'meter.thresholds',
+  'meter.sizes',
+  'rating.default',
+  'rating.controlled',
+  'rating.read-only',
+  'rating.custom-icon',
+  'rating.sizes',
+  'rating.form',
   'empty-state.default',
   'avatar.default',
   'card.default',
@@ -321,6 +362,15 @@ export const DEMO_IDS = [
   'context-menu.sections',
   'more-menu.default',
   'more-menu.overflow',
+  'toggle-group.single',
+  'toggle-group.multiple',
+  'toggle-group.icons',
+  'toggle-group.sizes',
+  'toggle-group.toolbar',
+  'toggle-group.controlled',
+  'menubar.default',
+  'menubar.disabled',
+  'menubar.app-shell',
   'toolbar.default',
   'toolbar.slots',
   'number-input.default',
@@ -335,6 +385,10 @@ export const DEMO_IDS = [
   'input-group.addons',
   'checkbox-group.default',
   'checkbox-group.defaults',
+  'fieldset.default',
+  'fieldset.disabled',
+  'fieldset.error',
+  'fieldset.horizontal',
   'calendar.default',
   'calendar.min',
   'date-input.default',
@@ -384,6 +438,20 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'badge.default': badgeDefaultSnippets,
   'spinner.default': spinnerDefaultSnippets,
   'progress-bar.default': progressBarDefaultSnippets,
+  'progress-circle.default': progressCircleDefaultSnippets,
+  'progress-circle.indeterminate': progressCircleIndeterminateSnippets,
+  'progress-circle.sizes': progressCircleSizesSnippets,
+  'progress-circle.center': progressCircleCenterSnippets,
+  'progress-circle.tones': progressCircleTonesSnippets,
+  'meter.default': meterDefaultSnippets,
+  'meter.thresholds': meterThresholdsSnippets,
+  'meter.sizes': meterSizesSnippets,
+  'rating.default': ratingDefaultSnippets,
+  'rating.controlled': ratingControlledSnippets,
+  'rating.read-only': ratingReadOnlySnippets,
+  'rating.custom-icon': ratingCustomIconSnippets,
+  'rating.sizes': ratingSizesSnippets,
+  'rating.form': ratingFormSnippets,
   'empty-state.default': emptyStateDefaultSnippets,
   'avatar.default': avatarDefaultSnippets,
   'card.default': cardDefaultSnippets,
@@ -502,6 +570,15 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'context-menu.sections': contextMenuSectionsSnippets,
   'more-menu.default': moreMenuDefaultSnippets,
   'more-menu.overflow': moreMenuOverflowSnippets,
+  'toggle-group.single': toggleGroupSingleSnippets,
+  'toggle-group.multiple': toggleGroupMultipleSnippets,
+  'toggle-group.icons': toggleGroupIconsSnippets,
+  'toggle-group.sizes': toggleGroupSizesSnippets,
+  'toggle-group.toolbar': toggleGroupToolbarSnippets,
+  'toggle-group.controlled': toggleGroupControlledSnippets,
+  'menubar.default': menubarDefaultSnippets,
+  'menubar.disabled': menubarDisabledSnippets,
+  'menubar.app-shell': menubarAppShellSnippets,
   'toolbar.default': toolbarDefaultSnippets,
   'toolbar.slots': toolbarSlotsSnippets,
   'number-input.default': numberInputDefaultSnippets,
@@ -516,6 +593,10 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'input-group.addons': inputGroupAddonsSnippets,
   'checkbox-group.default': checkboxGroupDefaultSnippets,
   'checkbox-group.defaults': checkboxGroupDefaultsSnippets,
+  'fieldset.default': fieldsetDefaultSnippets,
+  'fieldset.disabled': fieldsetDisabledSnippets,
+  'fieldset.error': fieldsetErrorSnippets,
+  'fieldset.horizontal': fieldsetHorizontalSnippets,
   'calendar.default': calendarDefaultSnippets,
   'calendar.min': calendarMinSnippets,
   'date-input.default': dateInputDefaultSnippets,
@@ -565,6 +646,20 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'badge.default': () => import('./badge/default/react'),
   'spinner.default': () => import('./spinner/default/react'),
   'progress-bar.default': () => import('./progress-bar/default/react'),
+  'progress-circle.default': () => import('./progress-circle/default/react'),
+  'progress-circle.indeterminate': () => import('./progress-circle/indeterminate/react'),
+  'progress-circle.sizes': () => import('./progress-circle/sizes/react'),
+  'progress-circle.center': () => import('./progress-circle/center/react'),
+  'progress-circle.tones': () => import('./progress-circle/tones/react'),
+  'meter.default': () => import('./meter/default/react'),
+  'meter.thresholds': () => import('./meter/thresholds/react'),
+  'meter.sizes': () => import('./meter/sizes/react'),
+  'rating.default': () => import('./rating/default/react'),
+  'rating.controlled': () => import('./rating/controlled/react'),
+  'rating.read-only': () => import('./rating/read-only/react'),
+  'rating.custom-icon': () => import('./rating/custom-icon/react'),
+  'rating.sizes': () => import('./rating/sizes/react'),
+  'rating.form': () => import('./rating/form/react'),
   'empty-state.default': () => import('./empty-state/default/react'),
   'avatar.default': () => import('./avatar/default/react'),
   'card.default': () => import('./card/default/react'),
@@ -683,6 +778,15 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'context-menu.sections': () => import('./context-menu/sections/react'),
   'more-menu.default': () => import('./more-menu/default/react'),
   'more-menu.overflow': () => import('./more-menu/overflow/react'),
+  'toggle-group.single': () => import('./toggle-group/single/react'),
+  'toggle-group.multiple': () => import('./toggle-group/multiple/react'),
+  'toggle-group.icons': () => import('./toggle-group/icons/react'),
+  'toggle-group.sizes': () => import('./toggle-group/sizes/react'),
+  'toggle-group.toolbar': () => import('./toggle-group/toolbar/react'),
+  'toggle-group.controlled': () => import('./toggle-group/controlled/react'),
+  'menubar.default': () => import('./menubar/default/react'),
+  'menubar.disabled': () => import('./menubar/disabled/react'),
+  'menubar.app-shell': () => import('./menubar/app-shell/react'),
   'toolbar.default': () => import('./toolbar/default/react'),
   'toolbar.slots': () => import('./toolbar/slots/react'),
   'number-input.default': () => import('./number-input/default/react'),
@@ -697,6 +801,10 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'input-group.addons': () => import('./input-group/addons/react'),
   'checkbox-group.default': () => import('./checkbox-group/default/react'),
   'checkbox-group.defaults': () => import('./checkbox-group/defaults/react'),
+  'fieldset.default': () => import('./fieldset/default/react'),
+  'fieldset.disabled': () => import('./fieldset/disabled/react'),
+  'fieldset.error': () => import('./fieldset/error/react'),
+  'fieldset.horizontal': () => import('./fieldset/horizontal/react'),
   'calendar.default': () => import('./calendar/default/react'),
   'calendar.min': () => import('./calendar/min/react'),
   'date-input.default': () => import('./date-input/default/react'),
@@ -833,6 +941,76 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'progress-bar.default',
     snippets: demoSnippets['progress-bar.default'],
     react: reactDemoLoaders['progress-bar.default'],
+  },
+  'progress-circle.default': {
+    id: 'progress-circle.default',
+    snippets: demoSnippets['progress-circle.default'],
+    react: reactDemoLoaders['progress-circle.default'],
+  },
+  'progress-circle.indeterminate': {
+    id: 'progress-circle.indeterminate',
+    snippets: demoSnippets['progress-circle.indeterminate'],
+    react: reactDemoLoaders['progress-circle.indeterminate'],
+  },
+  'progress-circle.sizes': {
+    id: 'progress-circle.sizes',
+    snippets: demoSnippets['progress-circle.sizes'],
+    react: reactDemoLoaders['progress-circle.sizes'],
+  },
+  'progress-circle.center': {
+    id: 'progress-circle.center',
+    snippets: demoSnippets['progress-circle.center'],
+    react: reactDemoLoaders['progress-circle.center'],
+  },
+  'progress-circle.tones': {
+    id: 'progress-circle.tones',
+    snippets: demoSnippets['progress-circle.tones'],
+    react: reactDemoLoaders['progress-circle.tones'],
+  },
+  'meter.default': {
+    id: 'meter.default',
+    snippets: demoSnippets['meter.default'],
+    react: reactDemoLoaders['meter.default'],
+  },
+  'meter.thresholds': {
+    id: 'meter.thresholds',
+    snippets: demoSnippets['meter.thresholds'],
+    react: reactDemoLoaders['meter.thresholds'],
+  },
+  'meter.sizes': {
+    id: 'meter.sizes',
+    snippets: demoSnippets['meter.sizes'],
+    react: reactDemoLoaders['meter.sizes'],
+  },
+  'rating.default': {
+    id: 'rating.default',
+    snippets: demoSnippets['rating.default'],
+    react: reactDemoLoaders['rating.default'],
+  },
+  'rating.controlled': {
+    id: 'rating.controlled',
+    snippets: demoSnippets['rating.controlled'],
+    react: reactDemoLoaders['rating.controlled'],
+  },
+  'rating.read-only': {
+    id: 'rating.read-only',
+    snippets: demoSnippets['rating.read-only'],
+    react: reactDemoLoaders['rating.read-only'],
+  },
+  'rating.custom-icon': {
+    id: 'rating.custom-icon',
+    snippets: demoSnippets['rating.custom-icon'],
+    react: reactDemoLoaders['rating.custom-icon'],
+  },
+  'rating.sizes': {
+    id: 'rating.sizes',
+    snippets: demoSnippets['rating.sizes'],
+    react: reactDemoLoaders['rating.sizes'],
+  },
+  'rating.form': {
+    id: 'rating.form',
+    snippets: demoSnippets['rating.form'],
+    react: reactDemoLoaders['rating.form'],
   },
   'empty-state.default': {
     id: 'empty-state.default',
@@ -1424,6 +1602,51 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     snippets: demoSnippets['more-menu.overflow'],
     react: reactDemoLoaders['more-menu.overflow'],
   },
+  'toggle-group.single': {
+    id: 'toggle-group.single',
+    snippets: demoSnippets['toggle-group.single'],
+    react: reactDemoLoaders['toggle-group.single'],
+  },
+  'toggle-group.multiple': {
+    id: 'toggle-group.multiple',
+    snippets: demoSnippets['toggle-group.multiple'],
+    react: reactDemoLoaders['toggle-group.multiple'],
+  },
+  'toggle-group.icons': {
+    id: 'toggle-group.icons',
+    snippets: demoSnippets['toggle-group.icons'],
+    react: reactDemoLoaders['toggle-group.icons'],
+  },
+  'toggle-group.sizes': {
+    id: 'toggle-group.sizes',
+    snippets: demoSnippets['toggle-group.sizes'],
+    react: reactDemoLoaders['toggle-group.sizes'],
+  },
+  'toggle-group.toolbar': {
+    id: 'toggle-group.toolbar',
+    snippets: demoSnippets['toggle-group.toolbar'],
+    react: reactDemoLoaders['toggle-group.toolbar'],
+  },
+  'toggle-group.controlled': {
+    id: 'toggle-group.controlled',
+    snippets: demoSnippets['toggle-group.controlled'],
+    react: reactDemoLoaders['toggle-group.controlled'],
+  },
+  'menubar.default': {
+    id: 'menubar.default',
+    snippets: demoSnippets['menubar.default'],
+    react: reactDemoLoaders['menubar.default'],
+  },
+  'menubar.disabled': {
+    id: 'menubar.disabled',
+    snippets: demoSnippets['menubar.disabled'],
+    react: reactDemoLoaders['menubar.disabled'],
+  },
+  'menubar.app-shell': {
+    id: 'menubar.app-shell',
+    snippets: demoSnippets['menubar.app-shell'],
+    react: reactDemoLoaders['menubar.app-shell'],
+  },
   'toolbar.default': {
     id: 'toolbar.default',
     snippets: demoSnippets['toolbar.default'],
@@ -1493,6 +1716,26 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'checkbox-group.defaults',
     snippets: demoSnippets['checkbox-group.defaults'],
     react: reactDemoLoaders['checkbox-group.defaults'],
+  },
+  'fieldset.default': {
+    id: 'fieldset.default',
+    snippets: demoSnippets['fieldset.default'],
+    react: reactDemoLoaders['fieldset.default'],
+  },
+  'fieldset.disabled': {
+    id: 'fieldset.disabled',
+    snippets: demoSnippets['fieldset.disabled'],
+    react: reactDemoLoaders['fieldset.disabled'],
+  },
+  'fieldset.error': {
+    id: 'fieldset.error',
+    snippets: demoSnippets['fieldset.error'],
+    react: reactDemoLoaders['fieldset.error'],
+  },
+  'fieldset.horizontal': {
+    id: 'fieldset.horizontal',
+    snippets: demoSnippets['fieldset.horizontal'],
+    react: reactDemoLoaders['fieldset.horizontal'],
   },
   'calendar.default': {
     id: 'calendar.default',

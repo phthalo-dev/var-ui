@@ -122,6 +122,13 @@ const UNDOCUMENTED_HOOKS = [
   'data-table',
   'data-timeline',
   'data-timeline-item',
+  // Menubar root / trigger markers (roving-focus queries) and the roving Tab stop marker.
+  'data-menubar',
+  'data-menubar-trigger',
+  'data-roving-stop',
+  // ToggleGroup root / item markers: roving-focus queries and CSS scoping.
+  'data-toggle-group',
+  'data-toggle-group-item',
   'data-toast-id',
   'data-toc-link',
   'data-tone',

@@ -1,0 +1,54 @@
+---
+title: Meter
+description: A measurement within a known range, such as disk usage.
+---
+
+# Meter
+
+A bar showing a scalar value inside a known range: disk usage, battery level, a password strength score. It is not [progress](/components/progress-bar): nothing is advancing toward completion, and the color says whether the value is good, not how far along it is.
+
+It follows the HTML `<meter>` vocabulary: `value`, `min`, `max`, `low`, `high` and `optimum`.
+
+## Examples
+
+### Default
+
+`min` is 0 and `max` is 100. `label` is the visible label and the accessible name; the formatted value sits beside it (hide it with `showValueText={false}`).
+
+<Demo id="meter.default" />
+
+### Thresholds
+
+`low` and `high` split the range into three regions, and `optimum` says which one is best. The tone is derived the way browsers do for `<meter>`: a value in the optimum region is `success`, in the neighbouring region `warning`, and on the far side `danger`. With `optimum` high, as in the password strength example, the scale is reversed. Set `tone` to override the derived tone, and `valueLabel` to replace the value text.
+
+<Demo id="meter.thresholds" />
+
+### Sizes
+
+`size` sets the track height: `sm`, `md` (default) or `lg`. `appearance="subtle"` softens the fill.
+
+<Demo id="meter.sizes" />
+
+## Meter or ProgressBar
+
+| Use                                     | Component                                     |
+| --------------------------------------- | --------------------------------------------- |
+| An operation advances to completion     | [ProgressBar](/components/progress-bar)       |
+| The same, in a ring                     | [ProgressCircle](/components/progress-circle) |
+| A reading in a range, no task in flight | Meter                                         |
+
+## Astro
+
+`Meter` from `@var-ui/astro` renders the same DOM, classes and derived tone. It outputs `role="meter"`; the React component adds `progressbar` as a fallback (`meter progressbar`, React Aria's choice) for assistive technology that does not know `meter`.
+
+## Props
+
+<PropsTable slug="meter" />
+
+## Accessibility
+
+- A `div` with `role="meter"` and `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-valuetext`, built on React Aria's `Meter`. The native `<meter>` element is not used: its fill can only be styled through engine-specific pseudo-elements that differ between browsers.
+- `aria-valuenow` is clamped to the range. ARIA has no `low`, `high` or `optimum`, so the good/bad judgement is visual: pair it with a `valueLabel` such as "Almost full" or "Strong" when the state matters.
+- The tone is also available as `data-tone` for your own styling.
+- Forced colors: the track gets a border and the fill uses `Highlight`, so the proportion stays readable.
+- The meter is not focusable and has no keyboard interaction.

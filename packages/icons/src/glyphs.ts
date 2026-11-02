@@ -31,6 +31,7 @@ import {
   svg as moreHorizontalSvg,
 } from './glyph-data/moreHorizontal';
 import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
+import { innerHtml as starInner, svg as starSvg } from './glyph-data/star';
 import { innerHtml as stopInner, svg as stopSvg } from './glyph-data/stop';
 import { innerHtml as successInner, svg as successSvg } from './glyph-data/success';
 import { innerHtml as warningInner, svg as warningSvg } from './glyph-data/warning';
@@ -58,6 +59,7 @@ export const defaultGlyphInnerHtml = {
   menu: menuInner,
   moreHorizontal: moreHorizontalInner,
   search: searchInner,
+  star: starInner,
   stop: stopInner,
   success: successInner,
   warning: warningInner,
@@ -88,6 +90,7 @@ export const defaultIconSvgs = {
   menu: menuSvg,
   moreHorizontal: moreHorizontalSvg,
   search: searchSvg,
+  star: starSvg,
   stop: stopSvg,
   success: successSvg,
   warning: warningSvg,

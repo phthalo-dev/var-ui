@@ -1,0 +1,86 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { rating } from '@var-ui/core/components/rating';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import type { RatingVariantProps } from '@var-ui/core';
+import { svg as starSvg } from '@var-ui/icons/glyphs/star';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
+import { mergeProps } from '../utils';
+
+type Props = Omit<HTMLAttributes<'div'>, 'children'> &
+  RatingVariantProps & {
+    /** Rating to show, `0` = none. Fractions (e.g. `3.5`) render a partly filled item. */
+    value?: number;
+    /** Number of items. @default 5 */
+    max?: number;
+    /** Visible label above the rating. */
+    label?: string;
+    /** Accessible name of the display. @default (value, max) => `${value} out of ${max}` */
+    getValueLabel?: (value: number, max: number) => string;
+    className?: string;
+  };
+
+const ratingVars = recipeVars(rating);
+const {
+  value = 0,
+  max = 5,
+  size = 'md',
+  tone,
+  label,
+  getValueLabel = (v: number, m: number) => `${v} out of ${m}`,
+  className,
+  id,
+  style,
+  ...rest
+} = Astro.props;
+
+const p = rating({ size, tone });
+const count = Math.max(1, Math.floor(max));
+const current = Math.min(count, Math.max(0, value));
+const whole = Math.floor(current);
+const groupId = id ? `${id}-group` : `var-ui-rating-${crypto.randomUUID().slice(0, 8)}`;
+const labelId = `${groupId}-label`;
+const items = Array.from({ length: count }, (_, i) => {
+  const n = i + 1;
+  const fraction = n === whole + 1 ? current - whole : 0;
+  return {
+    n,
+    filled: n <= whole,
+    style: fraction > 0 ? styleVars([[ratingVars.fill, `${Math.round(fraction * 100)}%`]]) : undefined,
+  };
+});
+---
+<div
+  {...rest}
+  {...mergeProps(p.root, className)}
+  id={id}
+  style={style}
+  data-readonly=""
+>
+  {label ? <span {...mergeProps(p.label)} id={labelId}>{label}</span> : null}
+  <div
+    {...mergeProps(p.group)}
+    id={groupId}
+    role="img"
+    aria-label={getValueLabel(current, count)}
+    aria-labelledby={label ? `${labelId} ${groupId}` : undefined}
+    data-readonly=""
+  >
+    {
+      items.map((item) => (
+        <span
+          {...mergeProps(p.item)}
+          data-readonly=""
+          data-filled={item.filled ? '' : undefined}
+          style={mergeInlineStyle(item.style, undefined)}
+          aria-hidden="true"
+        >
+          <span {...mergeProps(p.empty)} set:html={starSvg} />
+          <span {...mergeProps(p.fill)}>
+            <span {...mergeProps(p.icon)} set:html={starSvg} />
+          </span>
+        </span>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,67 @@
+---
+title: Rating
+description: Star rating input and display, built on a native radio group.
+---
+
+# Rating
+
+Star (or custom icon) rating. An input rating is a real radio group: `max` native `<input type="radio">` elements share a `name`, the inputs are visually hidden and their labels draw the icons. Keyboard, form submission, `required` and `disabled` are the browser's own. Use `readOnly` to display a score, including fractions such as `3.5`.
+
+## Examples
+
+### Default
+
+Seed the rating with `defaultValue` (`0` means no rating). Hovering previews the rating up to the hovered star with CSS only.
+
+<Demo id="rating.default" />
+
+### Controlled
+
+Drive the rating with `value` and `onValueChange`. `clearable` lets a click on the current value reset it to `0`.
+
+<Demo id="rating.controlled" />
+
+### Read-only with a fractional value
+
+`readOnly` renders a non-interactive `role="img"` with an accessible name such as "3.5 out of 5". Fractions are only supported here: the next star is clipped at the fraction through the recipe's `fill` custom property.
+
+<Demo id="rating.read-only" />
+
+### Custom icon
+
+`icon` and `emptyIcon` take any node, or a semantic icon name from the `IconProvider` registry (the default is `star`).
+
+<Demo id="rating.custom-icon" />
+
+### Sizes
+
+`size` is the shared control size (`sm`, `md`, `lg`) and falls back to the surrounding control size. `tone` colors the filled icons.
+
+<Demo id="rating.sizes" />
+
+### In a form
+
+With a `name` the checked number is posted like any radio group. `required` blocks submission until a star is picked. Without a `name` the rating still works as a group but posts nothing.
+
+<Demo id="rating.form" />
+
+## Props
+
+<PropsTable slug="rating" />
+
+## Accessibility
+
+The input rating is a `role="radiogroup"` of native radios, so assistive technology announces each star as "n of max" (override with `getItemLabel`). Name the group with `label` or `aria-label`. `description` and `errorMessage` are wired into `aria-describedby`; `errorMessage` implies `aria-invalid`. The focus ring appears on the star of the focused radio.
+
+Filled and empty icons differ by fill, not only color, so they stay distinguishable in forced-colors mode. Transitions follow the reduced-motion tokens.
+
+The read-only display is not focusable: it is a single image named by `getValueLabel` (default "3 out of 5") and keeps its visible `label`. With a `name` it still posts its value through a hidden input. Astro has a `Rating` for this read-only display (`value`, `max`, `size`, `tone`, `label`).
+
+## Keyboard
+
+| Key                        | Behavior                                                                   |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `Tab` / `Shift+Tab`        | Enters and leaves the group once, landing on the checked star (or first).  |
+| `ArrowRight` / `ArrowDown` | Selects the next star (the one visually after it; mirrored in RTL).        |
+| `ArrowLeft` / `ArrowUp`    | Selects the previous star.                                                 |
+| `Space`                    | Selects the focused star; with `clearable`, clears it when already chosen. |

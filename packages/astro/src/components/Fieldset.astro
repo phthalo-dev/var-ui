@@ -1,0 +1,85 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { fieldset } from '@var-ui/core/components/fieldset';
+import type { FieldsetVariantProps } from '@var-ui/core';
+import { mergeProps } from '../utils';
+
+/**
+ * Native `<fieldset>` grouping. Slots: default (controls), `legend`, `description`, `error`.
+ * The `legend` / `description` / `errorMessage` props are string shorthands for those slots.
+ * `disabled` disables every descendant control natively.
+ */
+type Props = Omit<HTMLAttributes<'fieldset'>, 'children'> &
+  Pick<FieldsetVariantProps, 'gap' | 'orientation'> & {
+    legend?: string;
+    legendHidden?: boolean;
+    description?: string;
+    errorMessage?: string;
+    invalid?: boolean;
+    disabled?: boolean;
+    className?: string;
+  };
+
+const {
+  legend,
+  legendHidden = false,
+  description,
+  errorMessage,
+  invalid,
+  disabled,
+  orientation = 'vertical',
+  gap,
+  className,
+  id,
+  'aria-describedby': describedBy,
+  ...rest
+} = Astro.props;
+
+const hasLegend = Boolean(legend) || Astro.slots.has('legend');
+const hasDescription = Boolean(description) || Astro.slots.has('description');
+const hasError = Boolean(errorMessage) || Astro.slots.has('error');
+const isInvalid = invalid ?? hasError;
+const baseId = id ?? `fieldset-${Math.random().toString(36).slice(2, 9)}`;
+const descriptionId = `${baseId}-description`;
+const errorId = `${baseId}-error`;
+const ids =
+  [describedBy, hasDescription ? descriptionId : null, hasError ? errorId : null]
+    .filter(Boolean)
+    .join(' ') || undefined;
+const p = fieldset({ orientation, gap, legendHidden });
+---
+<fieldset
+  {...rest}
+  {...mergeProps(p.root, className)}
+  id={id}
+  aria-describedby={ids}
+  disabled={disabled}
+  data-disabled={disabled ? '' : undefined}
+  data-invalid={isInvalid ? '' : undefined}
+>
+  {
+    hasLegend ? (
+      <legend {...mergeProps(p.legend)}>
+        {legend}
+        <slot name="legend" />
+      </legend>
+    ) : null
+  }
+  {
+    hasDescription ? (
+      <p {...mergeProps(p.description)} id={descriptionId}>
+        {description}
+        <slot name="description" />
+      </p>
+    ) : null
+  }
+  <div {...mergeProps(p.content)}><slot /></div>
+  {
+    hasError ? (
+      <p {...mergeProps(p.error)} id={errorId}>
+        {errorMessage}
+        <slot name="error" />
+      </p>
+    ) : null
+  }
+</fieldset>

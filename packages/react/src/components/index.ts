@@ -144,6 +144,13 @@ export {
   type FieldProps,
   type FieldRootProps,
 } from './Field';
+export {
+  Fieldset,
+  type FieldsetDescriptionProps,
+  type FieldsetErrorProps,
+  type FieldsetLegendProps,
+  type FieldsetProps,
+} from './Fieldset';
 export { Form, type FormProps } from './Form';
 export { AspectRatio, type AspectRatioProps } from './AspectRatio';
 export { Center, type CenterProps } from './Center';
@@ -250,6 +257,9 @@ export { Skeleton, type SkeletonProps } from './Skeleton';
 export { StatusDot, type StatusDotProps } from './StatusDot';
 export { Steps, type StepsProps } from './Steps';
 export { ProgressBar, type ProgressBarProps } from './ProgressBar';
+export { ProgressCircle, type ProgressCircleProps } from './ProgressCircle';
+export { Meter, type MeterProps } from './Meter';
+export { Rating, type RatingProps } from './Rating';
 export { Spinner, type SpinnerProps } from './Spinner';
 export { Heading, Text, type HeadingProps, type TextProps } from './Typography';
 export {
@@ -268,7 +278,9 @@ export {
   type ToastShowInput,
   type UseToastReturn,
 } from './Toast';
+export { Menubar, type MenubarMenuProps, type MenubarProps } from './Menubar';
 export { Toolbar, type ToolbarProps } from './Toolbar';
+export { ToggleGroup, type ToggleGroupItemProps, type ToggleGroupProps } from './ToggleGroup';
 export { SearchInput, type SearchInputProps } from './SearchInput';
 export { FileInput, type FileInputProps } from './FileInput';
 export { FileTrigger, type FileTriggerProps } from './FileTrigger';

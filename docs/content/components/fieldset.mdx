@@ -1,0 +1,76 @@
+---
+title: Fieldset
+description: Groups related form controls with a legend, on the native fieldset.
+---
+
+# Fieldset
+
+Groups related form controls under one label. It renders a real `<fieldset>` with a `<legend>`, so the group is announced by name and the browser does the rest: a `disabled` fieldset disables every form control inside it, with no per-control prop.
+
+Use it for sets of related checkboxes or radios, an address block, or any cluster of fields that share a heading. For a single control, use that control's own `label`.
+
+## Examples
+
+### Default
+
+`legend` is the shorthand for the legend text and `description` adds help text beneath it.
+
+<Demo id="fieldset.default" />
+
+### Disabled
+
+`disabled` is the native attribute. Every `input`, `select`, `textarea` and `button` inside is disabled and leaves the Tab order, including controls rendered by other var-ui components. The fieldset itself is dimmed through `:disabled` (also available as `data-disabled`).
+
+<Demo id="fieldset.disabled" />
+
+### With error
+
+`errorMessage` renders the message after the controls and marks the group invalid (`data-invalid`). Pass `invalid` to force the state either way.
+
+<Demo id="fieldset.error" />
+
+### Horizontal
+
+`orientation="horizontal"` lays the controls in a wrapping row. `gap` takes `none`, `xs`, `sm`, `md`, `lg` or `xl`.
+
+<Demo id="fieldset.horizontal" />
+
+### Compound parts
+
+For a custom legend node, use the parts as children. They can appear in any order: `Fieldset.Legend` is always rendered first, `Fieldset.Description` after it, and `Fieldset.Error` after the controls. Top-level Fragments are flattened, so wrapping parts in `<>…</>` still works.
+
+```tsx
+<Fieldset>
+  <Fieldset.Legend>
+    Shipping <Badge>Required</Badge>
+  </Fieldset.Legend>
+  <Fieldset.Description>Where should we send it?</Fieldset.Description>
+  <TextField label="Street" />
+  <Fieldset.Error>Enter a street</Fieldset.Error>
+</Fieldset>
+```
+
+Set `legendHidden` to hide the legend visually while keeping it as the group's accessible name.
+
+In Astro, use the `legend`, `description` and `error` slots (or the string props) of `Fieldset` from `@var-ui/astro`.
+
+## Props
+
+<PropsTable slug="fieldset" />
+
+## Accessibility
+
+- The group name comes from the `<legend>`, the first child of the `<fieldset>` (role `group`).
+- `description` and `errorMessage` get ids and are referenced from the fieldset's `aria-describedby`, after any `aria-describedby` you pass.
+- `aria-invalid` is not supported on the `group` role, so the invalid state is carried by the error text and the `data-invalid` styling hook rather than an ARIA attribute.
+- `disabled` is native: descendant controls are disabled and skipped by Tab. Controls inside do not get a `data-disabled` hook from this; style them through `:disabled`.
+- `form` and `name` pass through to the fieldset.
+
+## Keyboard
+
+The fieldset itself is not focusable and adds no key handling. Focus moves between the controls inside it as usual.
+
+| Key             | Action                                                         |
+| --------------- | -------------------------------------------------------------- |
+| `Tab`           | Moves to the next enabled control, skipping disabled fieldsets |
+| `Shift` + `Tab` | Moves to the previous enabled control                          |

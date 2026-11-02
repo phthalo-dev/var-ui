@@ -22,6 +22,20 @@ import GridDefault from './grid/default/react';
 import HeadingDefault from './heading/default/react';
 import LinkDefault from './link/default/react';
 import ProgressBarDefault from './progress-bar/default/react';
+import ProgressCircleDefault from './progress-circle/default/react';
+import ProgressCircleIndeterminate from './progress-circle/indeterminate/react';
+import ProgressCircleSizes from './progress-circle/sizes/react';
+import ProgressCircleCenter from './progress-circle/center/react';
+import ProgressCircleTones from './progress-circle/tones/react';
+import MeterDefault from './meter/default/react';
+import MeterThresholds from './meter/thresholds/react';
+import MeterSizes from './meter/sizes/react';
+import RatingDefault from './rating/default/react';
+import RatingControlled from './rating/controlled/react';
+import RatingReadOnly from './rating/read-only/react';
+import RatingCustomIcon from './rating/custom-icon/react';
+import RatingSizes from './rating/sizes/react';
+import RatingForm from './rating/form/react';
 import SectionDefault from './section/default/react';
 import SpinnerDefault from './spinner/default/react';
 import StackDefault from './stack/default/react';
@@ -140,6 +154,15 @@ import ContextMenuDefault from './context-menu/default/react';
 import ContextMenuSections from './context-menu/sections/react';
 import MoreMenuDefault from './more-menu/default/react';
 import MoreMenuOverflow from './more-menu/overflow/react';
+import ToggleGroupSingle from './toggle-group/single/react';
+import ToggleGroupMultiple from './toggle-group/multiple/react';
+import ToggleGroupIcons from './toggle-group/icons/react';
+import ToggleGroupSizes from './toggle-group/sizes/react';
+import ToggleGroupToolbar from './toggle-group/toolbar/react';
+import ToggleGroupControlled from './toggle-group/controlled/react';
+import MenubarDefault from './menubar/default/react';
+import MenubarDisabled from './menubar/disabled/react';
+import MenubarAppShell from './menubar/app-shell/react';
 import ToolbarDefault from './toolbar/default/react';
 import ToolbarSlots from './toolbar/slots/react';
 import NumberInputDefault from './number-input/default/react';
@@ -154,6 +177,10 @@ import InputGroupDefault from './input-group/default/react';
 import InputGroupAddons from './input-group/addons/react';
 import CheckboxGroupDefault from './checkbox-group/default/react';
 import CheckboxGroupDefaults from './checkbox-group/defaults/react';
+import FieldsetDefault from './fieldset/default/react';
+import FieldsetDisabled from './fieldset/disabled/react';
+import FieldsetError from './fieldset/error/react';
+import FieldsetHorizontal from './fieldset/horizontal/react';
 import CalendarDefault from './calendar/default/react';
 import CalendarMin from './calendar/min/react';
 import DateInputDefault from './date-input/default/react';
@@ -203,6 +230,20 @@ export const reactDemoMap = {
   'badge.default': BadgeDefault,
   'spinner.default': SpinnerDefault,
   'progress-bar.default': ProgressBarDefault,
+  'progress-circle.default': ProgressCircleDefault,
+  'progress-circle.indeterminate': ProgressCircleIndeterminate,
+  'progress-circle.sizes': ProgressCircleSizes,
+  'progress-circle.center': ProgressCircleCenter,
+  'progress-circle.tones': ProgressCircleTones,
+  'meter.default': MeterDefault,
+  'meter.thresholds': MeterThresholds,
+  'meter.sizes': MeterSizes,
+  'rating.default': RatingDefault,
+  'rating.controlled': RatingControlled,
+  'rating.read-only': RatingReadOnly,
+  'rating.custom-icon': RatingCustomIcon,
+  'rating.sizes': RatingSizes,
+  'rating.form': RatingForm,
   'empty-state.default': EmptyStateDefault,
   'avatar.default': AvatarDefault,
   'card.default': CardDefault,
@@ -321,6 +362,15 @@ export const reactDemoMap = {
   'context-menu.sections': ContextMenuSections,
   'more-menu.default': MoreMenuDefault,
   'more-menu.overflow': MoreMenuOverflow,
+  'toggle-group.single': ToggleGroupSingle,
+  'toggle-group.multiple': ToggleGroupMultiple,
+  'toggle-group.icons': ToggleGroupIcons,
+  'toggle-group.sizes': ToggleGroupSizes,
+  'toggle-group.toolbar': ToggleGroupToolbar,
+  'toggle-group.controlled': ToggleGroupControlled,
+  'menubar.default': MenubarDefault,
+  'menubar.disabled': MenubarDisabled,
+  'menubar.app-shell': MenubarAppShell,
   'toolbar.default': ToolbarDefault,
   'toolbar.slots': ToolbarSlots,
   'number-input.default': NumberInputDefault,
@@ -335,6 +385,10 @@ export const reactDemoMap = {
   'input-group.addons': InputGroupAddons,
   'checkbox-group.default': CheckboxGroupDefault,
   'checkbox-group.defaults': CheckboxGroupDefaults,
+  'fieldset.default': FieldsetDefault,
+  'fieldset.disabled': FieldsetDisabled,
+  'fieldset.error': FieldsetError,
+  'fieldset.horizontal': FieldsetHorizontal,
   'calendar.default': CalendarDefault,
   'calendar.min': CalendarMin,
   'date-input.default': DateInputDefault,

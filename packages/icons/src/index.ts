@@ -19,6 +19,7 @@ export { info } from './icons/info';
 export { menu } from './icons/menu';
 export { moreHorizontal } from './icons/moreHorizontal';
 export { search } from './icons/search';
+export { star } from './icons/star';
 export { stop } from './icons/stop';
 export { success } from './icons/success';
 export { warning } from './icons/warning';

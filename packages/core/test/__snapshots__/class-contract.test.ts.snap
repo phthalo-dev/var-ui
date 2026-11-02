@@ -845,6 +845,28 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-field-labelcolor",
     ],
   },
+  "fieldset": {
+    "axes": [
+      "data-gap",
+      "data-orientation",
+      "gap",
+      "legendHidden",
+      "orientation",
+    ],
+    "slots": {
+      "content": "var-ui-fieldset__content",
+      "description": "var-ui-fieldset__description",
+      "error": "var-ui-fieldset__error",
+      "legend": "var-ui-fieldset__legend",
+      "root": "var-ui-fieldset",
+    },
+    "vars": [
+      "--var-ui-fieldset-descriptioncolor",
+      "--var-ui-fieldset-errorcolor",
+      "--var-ui-fieldset-gap",
+      "--var-ui-fieldset-legendcolor",
+    ],
+  },
   "file-input": {
     "axes": [],
     "slots": {
@@ -1131,6 +1153,44 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-menu-separatorcolor",
     ],
   },
+  "menubar": {
+    "axes": [
+      "data-size",
+      "size",
+    ],
+    "slots": {
+      "root": "var-ui-menubar",
+      "trigger": "var-ui-menubar__trigger",
+    },
+    "vars": [
+      "--var-ui-menubar-foreground",
+      "--var-ui-menubar-hoverbackground",
+      "--var-ui-menubar-openbackground",
+    ],
+  },
+  "meter": {
+    "axes": [
+      "appearance",
+      "data-appearance",
+      "data-size",
+      "data-tone",
+      "size",
+      "tone",
+    ],
+    "slots": {
+      "fill": "var-ui-meter__fill",
+      "header": "var-ui-meter__header",
+      "label": "var-ui-meter__label",
+      "root": "var-ui-meter",
+      "track": "var-ui-meter__track",
+      "valueText": "var-ui-meter__valueText",
+    },
+    "vars": [
+      "--var-ui-meter-fillcolor",
+      "--var-ui-meter-trackcolor",
+      "--var-ui-meter-tracksize",
+    ],
+  },
   "mobile-nav": {
     "axes": [],
     "slots": {
@@ -1331,6 +1391,31 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-progress-bar-trackcolor",
     ],
   },
+  "progress-circle": {
+    "axes": [
+      "appearance",
+      "data-appearance",
+      "data-size",
+      "data-tone",
+      "indeterminate",
+      "size",
+      "tone",
+    ],
+    "slots": {
+      "content": "var-ui-progress-circle__content",
+      "fill": "var-ui-progress-circle__fill",
+      "ring": "var-ui-progress-circle__ring",
+      "root": "var-ui-progress-circle",
+      "track": "var-ui-progress-circle__track",
+    },
+    "vars": [
+      "--var-ui-progress-circle-fillcolor",
+      "--var-ui-progress-circle-progress",
+      "--var-ui-progress-circle-size",
+      "--var-ui-progress-circle-thickness",
+      "--var-ui-progress-circle-trackcolor",
+    ],
+  },
   "radio": {
     "axes": [],
     "slots": {
@@ -1344,6 +1429,35 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-radio-controlborder",
       "--var-ui-radio-grouplabelcolor",
       "--var-ui-radio-indicatorbackground",
+    ],
+  },
+  "rating": {
+    "axes": [
+      "data-size",
+      "data-tone",
+      "size",
+      "tone",
+    ],
+    "slots": {
+      "description": "var-ui-rating__description",
+      "empty": "var-ui-rating__empty",
+      "error": "var-ui-rating__error",
+      "fill": "var-ui-rating__fill",
+      "group": "var-ui-rating__group",
+      "icon": "var-ui-rating__icon",
+      "input": "var-ui-rating__input",
+      "item": "var-ui-rating__item",
+      "label": "var-ui-rating__label",
+      "root": "var-ui-rating",
+    },
+    "vars": [
+      "--var-ui-rating-descriptioncolor",
+      "--var-ui-rating-emptycolor",
+      "--var-ui-rating-errorcolor",
+      "--var-ui-rating-fill",
+      "--var-ui-rating-filledcolor",
+      "--var-ui-rating-itemsize",
+      "--var-ui-rating-labelcolor",
     ],
   },
   "resize-handle": {
@@ -1901,6 +2015,30 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-toggle-button-foreground",
       "--var-ui-toggle-button-selectedbackground",
       "--var-ui-toggle-button-selectedforeground",
+    ],
+  },
+  "toggle-group": {
+    "axes": [
+      "appearance",
+      "data-appearance",
+      "data-orientation",
+      "data-size",
+      "data-tone",
+      "orientation",
+      "size",
+      "tone",
+    ],
+    "slots": {
+      "item": "var-ui-toggle-group__item",
+      "root": "var-ui-toggle-group",
+    },
+    "vars": [
+      "--var-ui-toggle-group-background",
+      "--var-ui-toggle-group-border",
+      "--var-ui-toggle-group-foreground",
+      "--var-ui-toggle-group-pressedbackground",
+      "--var-ui-toggle-group-pressedborder",
+      "--var-ui-toggle-group-pressedforeground",
     ],
   },
   "tokenizer": {
