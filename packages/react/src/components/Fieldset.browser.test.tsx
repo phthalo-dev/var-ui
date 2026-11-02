@@ -68,7 +68,7 @@ describe('Fieldset (browser)', () => {
       </Wrap>,
     );
     const el = document.querySelector<HTMLElement>('fieldset')!;
-    expect(getComputedStyle(el).opacity).toBe('0.6');
+    expect(getComputedStyle(el).opacity).toBe('0.5');
     expect(getComputedStyle(el).borderTopWidth).toBe('0px');
   });
 
