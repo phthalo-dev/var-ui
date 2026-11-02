@@ -92,7 +92,7 @@ function DrawerRoot({
   size = 'md',
   'aria-label': ariaLabel,
 }: DrawerRootProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const titleId = useId();
 
   const context = useMemo<DrawerContextValue>(

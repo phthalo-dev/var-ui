@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { AppShell } from './AppShell';
 import { ButtonGroup } from './ButtonGroup';
 import { ColorModeToggle } from './ColorModeToggle';
@@ -28,7 +27,7 @@ function wrap(ui: ReactNode) {
   return render(
     <DesignSystemProvider defaultColorMode="light">
       <IconProvider icons={{}}>
-        <LayerProvider>{ui}</LayerProvider>
+        <>{ui}</>
       </IconProvider>
     </DesignSystemProvider>,
   );

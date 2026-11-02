@@ -5,8 +5,7 @@ export type OverlayOpenChangeReason =
   | 'outside-press'
   | 'imperative'
   | 'hover'
-  | 'focus'
-  | 'unknown';
+  | 'focus';
 
 export type OverlayChangeEventDetails = {
   reason: OverlayOpenChangeReason;
@@ -33,7 +32,7 @@ export function createOverlayChangeDetails(init: {
 }
 
 export function inferOverlayCloseReason(event: Event | null): OverlayOpenChangeReason {
-  if (!event) return 'unknown';
+  if (!event) return 'imperative';
   if (event.type === 'keydown' && 'key' in event && event.key === 'Escape') {
     return 'escape-key';
   }
@@ -64,5 +63,5 @@ export function inferOverlayCloseReason(event: Event | null): OverlayOpenChangeR
   ) {
     return 'focus';
   }
-  return 'unknown';
+  return 'imperative';
 }

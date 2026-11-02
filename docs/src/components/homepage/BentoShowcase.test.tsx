@@ -1,6 +1,6 @@
 import { forestTheme } from '@/themes';
 import { defaultIcons } from '@var-ui/icons';
-import { DesignSystemProvider, IconProvider, LayerProvider } from '@var-ui/react';
+import { DesignSystemProvider, IconProvider } from '@var-ui/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { render, screen } from '@testing-library/react';
 import { BentoShowcase } from './BentoShowcase';
@@ -12,9 +12,9 @@ function renderShowcase(
   return render(
     <DesignSystemProvider defaultColorMode={defaultColorMode}>
       <IconProvider icons={defaultIcons}>
-        <LayerProvider>
+        <>
           <BentoShowcase themeId={themeId} />
-        </LayerProvider>
+        </>
       </IconProvider>
     </DesignSystemProvider>,
   );
@@ -44,9 +44,9 @@ describe('BentoShowcase', () => {
     render(
       <DesignSystemProvider defaultColorMode="light">
         <IconProvider icons={defaultIcons}>
-          <LayerProvider>
+          <>
             <BentoShowcase framework="html" themeId="default" />
-          </LayerProvider>
+          </>
         </IconProvider>
       </DesignSystemProvider>,
     );

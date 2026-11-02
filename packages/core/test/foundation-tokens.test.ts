@@ -31,11 +31,12 @@ describe('motion tokens', () => {
 });
 
 describe('stacking and shadow scales', () => {
-  it('zIndex has ordered local and layered tiers', () => {
+  it('zIndex has ordered in-flow tiers and no top-layer overlay tiers', () => {
     const z = tokenValues.zIndex;
-    expect([z.base, z.raised, z.lifted, z.sticky, z.dropdown, z.overlay, z.toast, z.modal]).toEqual(
-      [0, 1, 2, 10, 100, 400, 500, 1000],
-    );
+    expect([z.base, z.raised, z.lifted, z.sticky, z.overlay, z.max]).toEqual([
+      0, 1, 2, 10, 400, 9999,
+    ]);
+    expect(Object.keys(z)).toEqual(['base', 'raised', 'lifted', 'sticky', 'overlay', 'max']);
   });
 
   it('there is a single shadow scale', () => {

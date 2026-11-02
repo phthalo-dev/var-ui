@@ -88,6 +88,13 @@ import { useMergedRef } from '../overlays/useMergedRef';
 import { useOverlayRoot } from '../overlays/useOverlayRoot';
 import { usePopoverElement } from '../overlays/usePopoverElement';
 
+/**
+ * RAC's `DialogTrigger`, re-exported so this adapter stays the only file that imports a RAC overlay
+ * component (see `nativeOverlayGates.test.ts`). It owns the open state and provides the contexts
+ * `NativePopover` reads, for popups whose trigger is not a RAC `Select`/`ComboBox`/`MenuTrigger`.
+ */
+export { DialogTrigger as NativePopoverTrigger } from 'react-aria-components';
+
 export type NativePopoverProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children?: ReactNode;
   /**
@@ -182,7 +189,6 @@ function NativePopoverShell({
   // RAC state is the source of truth; the root mirrors it (controlled) so the shared popover hook
   // can drive `showPopover()`, anchor and outside press.
   const root = useOverlayRoot({
-    native: true,
     open: state.isOpen,
     onOpenChange: (next) => state.setOpen(next),
   });

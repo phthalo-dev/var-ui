@@ -50,7 +50,6 @@ import {
   InputGroupInput,
   InputGroupText,
   Kbd,
-  LayerProvider,
   DescriptionList,
   List,
   MobileNav,
@@ -1301,63 +1300,61 @@ export function App() {
     <DesignSystemProvider applyToDocument defaultColorMode="light" customTheme={activeTheme}>
       <IconProvider icons={defaultIcons}>
         <ToastProvider>
-          <LayerProvider>
-            <Stack gap="xl" style={{ padding: '2rem', maxWidth: '56rem', margin: '0 auto' }}>
-              <Stack gap="sm">
-                <Heading level={1} size="display">
-                  var-ui
-                </Heading>
-                <Text tone="secondary">
-                  Component showcase. Switch to <strong>Acme</strong> to preview V7 typed theming
-                  and V8 mode/condition overrides — custom brand tokens, pill buttons with glow, and
-                  uppercase primary labels — via
-                  <code> createDesignTheme({'{ tokens, components }'})</code>.
+          <Stack gap="xl" style={{ padding: '2rem', maxWidth: '56rem', margin: '0 auto' }}>
+            <Stack gap="sm">
+              <Heading level={1} size="display">
+                var-ui
+              </Heading>
+              <Text tone="secondary">
+                Component showcase. Switch to <strong>Acme</strong> to preview V7 typed theming and
+                V8 mode/condition overrides — custom brand tokens, pill buttons with glow, and
+                uppercase primary labels — via
+                <code> createDesignTheme({'{ tokens, components }'})</code>.
+              </Text>
+              <Stack gap="xs">
+                <Text as="span" size="sm" tone="secondary">
+                  Theme palette
                 </Text>
-                <Stack gap="xs">
-                  <Text as="span" size="sm" tone="secondary">
-                    Theme palette
-                  </Text>
-                  <PaletteSwitcher selected={palette} onSelect={setPalette} />
-                </Stack>
-                <HStack gap="sm">
-                  <ColorModeToggle includeSystem />
-                  <Dialog>
-                    <Dialog.Trigger>
-                      <Button>Open dialog</Button>
-                    </Dialog.Trigger>
-                    <Dialog.Popup>
-                      <Dialog.Header>
-                        <Dialog.Title>Icon close button</Dialog.Title>
-                        <Dialog.Close />
-                      </Dialog.Header>
-                      <Dialog.Description>
-                        The dismiss control now uses the registry close glyph.
-                      </Dialog.Description>
-                    </Dialog.Popup>
-                  </Dialog>
-                </HStack>
+                <PaletteSwitcher selected={palette} onSelect={setPalette} />
               </Stack>
-
-              <FeedbackSection />
-              <ContentSection />
-              <LayoutSection />
-              <ContainerSection />
-              <FormsSection />
-              <NavigationSection />
-              <DataDisplaySection />
-              <AdminShellSection />
-              <DatesSection />
-              <OverlaysSection />
-              <ChatSection />
-
-              <Section {...{ [COLOR_MODE_ATTRIBUTE]: 'dark' }} title="Dark section">
-                <Text>This section pins dark color mode while the page stays light.</Text>
-                <Alert tone="info" appearance="subtle" title="Pinned dark chrome">
-                  Mark subtrees with <code>{COLOR_MODE_ATTRIBUTE}=&quot;dark&quot;</code>.
-                </Alert>
-              </Section>
+              <HStack gap="sm">
+                <ColorModeToggle includeSystem />
+                <Dialog>
+                  <Dialog.Trigger>
+                    <Button>Open dialog</Button>
+                  </Dialog.Trigger>
+                  <Dialog.Popup>
+                    <Dialog.Header>
+                      <Dialog.Title>Icon close button</Dialog.Title>
+                      <Dialog.Close />
+                    </Dialog.Header>
+                    <Dialog.Description>
+                      The dismiss control now uses the registry close glyph.
+                    </Dialog.Description>
+                  </Dialog.Popup>
+                </Dialog>
+              </HStack>
             </Stack>
-          </LayerProvider>
+
+            <FeedbackSection />
+            <ContentSection />
+            <LayoutSection />
+            <ContainerSection />
+            <FormsSection />
+            <NavigationSection />
+            <DataDisplaySection />
+            <AdminShellSection />
+            <DatesSection />
+            <OverlaysSection />
+            <ChatSection />
+
+            <Section {...{ [COLOR_MODE_ATTRIBUTE]: 'dark' }} title="Dark section">
+              <Text>This section pins dark color mode while the page stays light.</Text>
+              <Alert tone="info" appearance="subtle" title="Pinned dark chrome">
+                Mark subtrees with <code>{COLOR_MODE_ATTRIBUTE}=&quot;dark&quot;</code>.
+              </Alert>
+            </Section>
+          </Stack>
         </ToastProvider>
       </IconProvider>
     </DesignSystemProvider>

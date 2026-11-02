@@ -296,7 +296,6 @@
     "input-group__label",
     "input-group__text",
     "kbd",
-    "layer-stack",
     "layout",
     "layout-content__content",
     "layout-footer__footer",
@@ -395,7 +394,6 @@
     "popover",
     "popover__content",
     "popover__title",
-    "positioner",
     "progress-bar",
     "progress-bar__fill",
     "progress-bar__header",
@@ -2933,14 +2931,6 @@
       "line": 12
     },
     {
-      "className": "layer-stack",
-      "kind": "component",
-      "namespace": "layer-stack",
-      "suffix": "base",
-      "file": "src/components/layerVars.ts",
-      "line": 13
-    },
-    {
       "className": "layout",
       "kind": "component",
       "namespace": "layout",
@@ -3721,14 +3711,6 @@
       "namespace": "popover",
       "suffix": "title",
       "file": "src/components/popover.ts",
-      "line": 16
-    },
-    {
-      "className": "positioner",
-      "kind": "component",
-      "namespace": "positioner",
-      "suffix": "base",
-      "file": "src/components/positionerVars.ts",
       "line": 16
     },
     {

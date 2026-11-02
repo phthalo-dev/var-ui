@@ -4,13 +4,12 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DirectionProvider } from '../DirectionProvider';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { SideNav, type SideNavCollapseHandle } from './SideNav';
 
 function wrap(ui: ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }
@@ -22,9 +21,9 @@ describe('SideNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <SideNav label="Primary">content</SideNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeTruthy();
@@ -88,20 +87,20 @@ describe('SideNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <SideNav>content</SideNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.queryByRole('separator')).toBeNull();
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <SideNav resizable collapsible>
             content
           </SideNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.getByRole('separator')).toBeTruthy();
@@ -160,9 +159,9 @@ describe('SideNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <SideNav collapsible={{ collapsed: true, onCollapsedChange }}>content</SideNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.getByRole('navigation').getAttribute('data-collapsed')).toBe('');

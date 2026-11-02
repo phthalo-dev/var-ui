@@ -38,7 +38,7 @@ function Tip({
   onOpenChange?: OverlayOpenChangeHandler;
   warmUp?: boolean;
 }) {
-  const root = useOverlayRoot({ native: true, onOpenChange });
+  const root = useOverlayRoot({ onOpenChange });
   const pop = usePopoverElement(root, { mode: 'hint' });
   const intent = useHoverIntent(root, { openDelay, closeDelay, warmUp });
   return (

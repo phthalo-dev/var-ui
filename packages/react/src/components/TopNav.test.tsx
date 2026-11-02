@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { stubNativePopover } from '../test/nativeOverlayStubs';
 import { TopNav } from './TopNav';
 
@@ -12,7 +11,7 @@ stubNativePopover();
 function wrap(ui: ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }
@@ -24,9 +23,9 @@ describe('TopNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <TopNav label="Primary">content</TopNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeTruthy();
@@ -68,9 +67,9 @@ describe('TopNav', () => {
 
     rerender(
       <IconProvider icons={{}}>
-        <LayerProvider>
+        <>
           <TopNav centerContent={<span>Search</span>}>content</TopNav>
-        </LayerProvider>
+        </>
       </IconProvider>,
     );
     expect(screen.getByRole('navigation').getAttribute('data-layout')).toBe('grid');

@@ -119,12 +119,11 @@ for your own UI, or `<Icon>{node}</Icon>` for one-off custom glyphs.
 | **Feedback**        | `Alert`, `Banner`, `Spinner`, `ProgressBar`                                                           |
 | **Overlay & nav**   | `Dialog`, `Tabs`                                                                                      |
 | **Icons**           | `Icon`, `IconProvider`, `useIcons` (+ optional `@var-ui/icons` glyph package)                         |
-| **Layers**          | `LayerProvider`, `useLayer` — z-index coordination for floating UI                                    |
-| **Hooks**           | `useMediaQuery`, `useScrollLock`                                                                      |
+| **Hooks**           | `useMediaQuery`, `useCopy`, `useResizable`                                                            |
 | **Theming**         | `DesignSystemProvider`, `useColorMode`, `ColorModeToggle`, `DirectionProvider`                        |
 
 Core-only recipes without wrappers (use the class helpers from `@var-ui/core`):
-`skeleton`, `statusDot`, `kbd`, `overlay`, plus everything in the core README's
+`skeleton`, `statusDot`, `kbd`, plus everything in the core README's
 inventory.
 
 Document globals (reset, base HTML styles, `color-scheme`) ship with `@var-ui/core/styles`
@@ -136,8 +135,7 @@ or `@var-ui/core/styles.css`.
 src/
   components/     # React Aria–based UI
   icons/          # IconProvider, useIcons, Icon, empty fallback
-  layers/         # LayerProvider / useLayer z-index coordination
-  hooks/                    # useMediaQuery, useScrollLock, …
+  hooks/          # useMediaQuery, useCopy, …
   colorMode.tsx             # useColorMode, getColorModeInitScript
   DesignSystemProvider.tsx  # DesignSystemProvider
   DirectionProvider.tsx     # DirectionProvider

@@ -10,7 +10,10 @@ type DefaultThemeTokenTree = {
 };
 
 // TypeStyles' CreateTokenValues rejects SyntaxRef leaves (declared token refs); upstream gap, see
-// audit/detail/typestyles-upstream.md. The cast is confined to these two spots.
+// audit/detail/typestyles-upstream.md. Re-checked on typestyles 0.34.0 (which fixes slot recipe
+// result keys, #305, but not this): removing either cast still fails with TS2322 on
+// `defaultTokens` (`toString` vs the CreateTokenNode index signature) and TS2345 on
+// `Theme<DefaultThemeTokenTree>`. The casts are confined to this file.
 const defaultThemeTokens = defaultTokens as unknown as DefaultThemeTokenTree;
 
 type DefaultThemeComponents = Record<string, DesignThemeComponentPatch<DefaultThemeTokenTree>>;

@@ -84,7 +84,7 @@ function DialogRoot({
   onOpenChange,
   dismissable = true,
 }: DialogRootProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const titleId = useId();
   const descriptionId = useId();
 

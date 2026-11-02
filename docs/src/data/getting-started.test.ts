@@ -21,7 +21,10 @@ describe('getting-started copy', () => {
     expect(gettingStarted).not.toContain('typestyles-entry.ts');
     expect(gettingStarted).toContain('DesignSystemProvider');
     expect(gettingStarted).toContain('IconProvider');
-    expect(gettingStarted).toContain('LayerProvider');
+    expect(gettingStarted).not.toContain('LayerProvider');
+    expect(gettingStarted).toContain('follow the document `dir`');
+    expect(gettingStarted).not.toContain('take direction from **locale**');
+    expect(gettingStarted).not.toContain('overlays may **not** flip');
     expect(gettingStarted).toContain('<Button>');
     expect(gettingStarted).not.toContain('follow-up pass');
   });

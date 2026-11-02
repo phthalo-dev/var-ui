@@ -53,7 +53,7 @@ export function MobileNavProvider({
   defaultOpen = false,
   onOpenChange,
 }: MobileNavProviderProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open: openProp, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open: openProp, defaultOpen, onOpenChange });
   const { open, setOpen } = root;
 
   const value = useMemo<MobileNavContextValue>(
@@ -199,7 +199,6 @@ export function MobileNav({
 }: MobileNavProps): JSX.Element {
   const context = useMobileNav();
   const root = useOverlayRoot({
-    native: true,
     open: openProp ?? context?.open,
     defaultOpen,
     onOpenChange: onOpenChangeProp ?? context?.onOpenChange,

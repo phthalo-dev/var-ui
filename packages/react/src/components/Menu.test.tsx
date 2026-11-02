@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import { Button } from './Button';
 import { stubNativePopover } from '../test/nativeOverlayStubs';
@@ -14,7 +13,7 @@ stubNativePopover();
 function wrap(ui: React.ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }

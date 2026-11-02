@@ -5,9 +5,6 @@ export const zIndexTokenSchema = {
   raised: atProperty.integer,
   lifted: atProperty.integer,
   sticky: atProperty.integer,
-  dropdown: atProperty.integer,
   overlay: atProperty.integer,
-  toast: atProperty.integer,
-  modal: atProperty.integer,
   max: atProperty.integer,
 } as const satisfies TokenSchema;

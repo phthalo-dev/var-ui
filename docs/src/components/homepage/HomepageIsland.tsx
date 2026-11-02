@@ -1,5 +1,5 @@
 import { defaultIcons } from '@var-ui/icons';
-import { DesignSystemProvider, IconProvider, LayerProvider, type ColorMode } from '@var-ui/react';
+import { DesignSystemProvider, IconProvider, type ColorMode } from '@var-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { readStoredColorMode } from '@/lib/storedColorMode';
@@ -73,10 +73,10 @@ export default function HomepageIsland({ framework: initialFramework }: Homepage
       storageKey={STORAGE_KEY}
     >
       <IconProvider icons={defaultIcons}>
-        <LayerProvider>
+        <>
           <ThemeShowcaseSwitcher onSelect={setShowcaseThemeId} selected={showcaseThemeId} />
           <BentoShowcase framework={framework} themeId={showcaseThemeId} />
-        </LayerProvider>
+        </>
       </IconProvider>
     </DesignSystemProvider>
   );

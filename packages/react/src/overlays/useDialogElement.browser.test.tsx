@@ -28,7 +28,7 @@ type Props = UseDialogElementOptions & {
 };
 
 function TestDialog({ open, defaultOpen, onOpenChange, dismissable, fx = false }: Props) {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   const dialog = useDialogElement(root, { dismissable });
   return (
     <>
@@ -310,7 +310,7 @@ describe('focus and scroll lock', () => {
 
   test('autofocus child gets initial focus', async () => {
     function Auto() {
-      const root = useOverlayRoot({ native: true, defaultOpen: true });
+      const root = useOverlayRoot({ defaultOpen: true });
       const dialog = useDialogElement(root);
       return (
         <dialog ref={dialog.ref}>
@@ -371,7 +371,7 @@ describe('exit mounting', () => {
 
   test('child state survives the exit', async () => {
     function Stateful() {
-      const root = useOverlayRoot({ native: true, defaultOpen: true });
+      const root = useOverlayRoot({ defaultOpen: true });
       const dialog = useDialogElement(root);
       const [value, setValue] = useState('a');
       return (

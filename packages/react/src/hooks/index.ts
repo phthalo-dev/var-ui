@@ -1,5 +1,4 @@
 export { useMediaQuery } from './useMediaQuery';
-export { useScrollLock } from './useScrollLock';
 export { useCopy, type UseCopyOptions, type UseCopyResult } from './useCopy';
 export {
   useResizable,

@@ -983,15 +983,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-kbd-border",
     ],
   },
-  "layer-stack": {
-    "axes": [],
-    "slots": {
-      "base": "var-ui-layer-stack",
-    },
-    "vars": [
-      "--var-ui-layer-stack-zindex",
-    ],
-  },
   "layout": {
     "axes": [
       "data-height",
@@ -1316,18 +1307,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-popover-background",
       "--var-ui-popover-border",
       "--var-ui-popover-titleforeground",
-    ],
-  },
-  "positioner": {
-    "axes": [],
-    "slots": {
-      "base": "var-ui-positioner",
-    },
-    "vars": [
-      "--var-ui-positioner-anchorwidth",
-      "--var-ui-positioner-availableheight",
-      "--var-ui-positioner-availablewidth",
-      "--var-ui-positioner-transformorigin",
     ],
   },
   "progress-bar": {

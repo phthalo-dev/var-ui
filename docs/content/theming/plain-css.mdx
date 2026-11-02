@@ -51,8 +51,9 @@ react-aria-components in React, so they appear on the elements it controls.
 | `data-pressed`                                                    | Pointer or key press in progress           |
 | `data-orientation`, `data-placement`                              | Layout of the component or popup           |
 
-Overlay parts also get `data-open`, `data-closed`, `data-starting-style` and `data-ending-style`
-for enter and exit animation. Native `:hover`, `:focus-visible`, `[disabled]` and
+Overlay popups also get `data-open` and `data-closed`, which mirror the requested state. Enter and
+exit animation is CSS (`@starting-style` under `[open]` or `:popover-open`), so there are no
+`data-starting-style` or `data-ending-style` attributes. Native `:hover`, `:focus-visible`, `[disabled]` and
 `[aria-disabled="true"]` are used by the recipes too, and a link-rendered Button has no `disabled`
 attribute, only `aria-disabled`.
 
@@ -210,7 +211,8 @@ Overlays are native elements, so you style them with the platform's own selector
 
 - **Dialogs** (`Dialog`, `AlertDialog`, `Drawer`, `MobileNav`, the layout panel, the command palette) are a `<dialog>` opened with `showModal()`. The popup is the `<dialog>` element itself: style it with its `popup` class (`.var-ui-dialog__popup`), its backdrop with `::backdrop`, and its open state with `[open]` or `:modal`. Enter and exit animations are `@starting-style` rules with `transition-behavior: allow-discrete`; override the durations through the `--var-ui-duration-*` tokens.
 - **Popovers** (`Popover`, `Tooltip`, `HoverCard`, `Menu`, and the Select, Combobox and date-picker popups, plus the toast region) are `[popover]` elements: style the open state with `:popover-open`.
-- **No z-index.** The top layer stacks by insertion order and ignores `z-index`, so VarUI sets none. Overlays render in place (no portal), which keeps theme and token scopes working: custom properties inherit from the DOM parent.
+- **Scroll lock** is one global rule, `html:has(dialog:modal) { overflow: hidden }` with `html { scrollbar-gutter: stable }`, so there is no hook to call and nothing to clean up. Override it in your own CSS if a page needs to keep scrolling behind a modal.
+- **No z-index.** The top layer stacks by insertion order and ignores `z-index`, so VarUI sets none on overlays (the `zIndex` token scale is only for in-flow lifts such as sticky headers). Overlays render in place (no portal), which keeps theme and token scopes working: custom properties inherit from the DOM parent.
 - **Placement** is a `data-placement` attribute on the popup (`top`, `bottom`, `start`, `end`, optionally with `start`, `center` or `end` alignment: `bottom start`). It holds the _requested_ placement; the browser may flip it with `position-try-fallbacks`. The gap to the anchor is `--var-ui-popup-offset`.
 - **Careful with global resets.** The offset is a `margin`. An unlayered reset like `[popover] { margin: 0 }` or `dialog { margin: 0 }` in your own CSS beats it and removes the gap. Put such resets in a cascade layer below `components`, or set `--var-ui-popup-offset` instead.
 - **RTL placement** follows the direction of the `body` (the popup's containing block), not of a wrapping element inside the page: put `dir="rtl"` on `html` or `body` (or use the direction provider), not on a section.

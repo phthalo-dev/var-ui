@@ -114,7 +114,7 @@ defaultTheme.override({
   name: 'acme',
   tokens: {
     size: { control: { md: '36px' } },
-    zIndex: { toast: 600 },
+    zIndex: { sticky: 20 },
     color: {
       background: {
         popover: {

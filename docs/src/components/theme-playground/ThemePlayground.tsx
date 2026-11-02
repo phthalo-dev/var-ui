@@ -6,7 +6,6 @@ import {
   Button,
   DesignSystemProvider,
   IconProvider,
-  LayerProvider,
   SegmentedControl,
   type ColorMode,
 } from '@var-ui/react';
@@ -81,48 +80,45 @@ export default function ThemePlayground({ framework: initialFramework }: ThemePl
       storageKey={STORAGE_KEY}
     >
       <IconProvider icons={defaultIcons}>
-        <LayerProvider>
-          <div className={s.root.className} data-theme-playground>
-            <div className={s.workspace.className}>
-              <div className={s.preview.className}>
-                <div className={s.toolbar.className}>
-                  <SegmentedControl
-                    aria-label="Preview viewport"
-                    options={VIEWPORT_OPTIONS}
-                    value={state.viewport}
-                    onValueChange={(next) => {
-                      if (next) patchState({ viewport: next as ThemePlaygroundViewport });
-                    }}
+        <div className={s.root.className} data-theme-playground>
+          <div className={s.workspace.className}>
+            <div className={s.preview.className}>
+              <div className={s.toolbar.className}>
+                <SegmentedControl
+                  aria-label="Preview viewport"
+                  options={VIEWPORT_OPTIONS}
+                  value={state.viewport}
+                  onValueChange={(next) => {
+                    if (next) patchState({ viewport: next as ThemePlaygroundViewport });
+                  }}
+                />
+                <Button appearance="outline" size="sm" onClick={handleExport}>
+                  Export
+                </Button>
+              </div>
+              <div className={s.previewInner.className}>
+                <div
+                  className={cx(
+                    (state.viewport === 'mobile' ? s.previewFrameMobile : s.previewFrame).className,
+                  )}
+                >
+                  <BentoShowcase
+                    framework={framework}
+                    themeId={state.presetId}
+                    previewStyle={previewStyle}
                   />
-                  <Button appearance="outline" size="sm" onClick={handleExport}>
-                    Export
-                  </Button>
-                </div>
-                <div className={s.previewInner.className}>
-                  <div
-                    className={cx(
-                      (state.viewport === 'mobile' ? s.previewFrameMobile : s.previewFrame)
-                        .className,
-                    )}
-                  >
-                    <BentoShowcase
-                      framework={framework}
-                      themeId={state.presetId}
-                      previewStyle={previewStyle}
-                    />
-                  </div>
                 </div>
               </div>
             </div>
-            <div className={s.code.className}>
-              <HighlightedCodeBlock
-                code={codeOutput.code}
-                language={codeOutput.language}
-                filename={codeOutput.filename}
-              />
-            </div>
           </div>
-        </LayerProvider>
+          <div className={s.code.className}>
+            <HighlightedCodeBlock
+              code={codeOutput.code}
+              language={codeOutput.language}
+              filename={codeOutput.filename}
+            />
+          </div>
+        </div>
       </IconProvider>
     </DesignSystemProvider>
   );

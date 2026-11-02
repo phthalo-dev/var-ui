@@ -6,7 +6,6 @@
 Bug fixes from the component audit:
 
 - `className` now reaches the root of `TextField`, `TextAreaField`, `PasswordInput`, `CheckboxGroup` and `RadioGroup` (string or render-prop function); it was overwritten by the recipe class.
-- `useLayer` no longer sets an inline `z-index: 100` without a `LayerProvider`, so the core dropdown/modal/toast tiers apply; with a provider it sets the layer CSS variable instead of a raw `z-index`.
 - Ship the `'use client'` directive in every `@var-ui/react` module so the package works from Next.js server components (guarded by `scripts/check-use-client.mjs`).
 - `Checkbox` renders an indeterminate state; `Form` reports rejected async `onSubmit` (new optional `onError`) and keeps a stable default `errors`.
 - `Dialog.Description` is wired to `aria-describedby`; `AlertDialog` is no longer dismissed by a backdrop click by default (Escape still closes it).

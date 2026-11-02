@@ -1,64 +1,41 @@
 ---
 title: Overlay lifecycle
-description: State attributes, exit animation, positioner CSS variables, and onOpenChange details for floating overlays.
+description: How Dialog, Drawer, Popover, Tooltip, HoverCard, Menu and the select popups open and close on native dialog and popover elements, which attributes they expose, and the onOpenChange close reasons.
 ---
 
 # Overlay lifecycle
 
-Dialog, Popover, Tooltip, HoverCard, Menu, Drawer, AlertDialog, and CommandPalette share a **lifecycle contract** so you can style enter/exit in CSS and distinguish why an overlay opened or closed.
+Dialog, AlertDialog, Drawer, MobileNav, CommandPalette, Popover, Tooltip, HoverCard, Menu and the Select, Combobox and date-picker popups are **native top-layer elements**. Modal overlays are a `<dialog>` opened with `showModal()`. Everything anchored to a trigger is a `[popover]` element placed with CSS anchor positioning. The browser provides the top layer, the inert page behind a modal, Escape, focus return and light dismiss; var-ui adds the recipes, the `onOpenChange` contract and the reasons below.
 
-These `data-*` attributes and `--var-ui-*` variables are public API (same semver rules as class names). Recipes already animate from them; you can target the same hooks in your own CSS.
+The attributes, selectors and variables on this page are public API (same semver rules as class names). The recipes use exactly these hooks, so you can target them in your own CSS.
 
-Helpers live on `@var-ui/react`:
+## The two lifecycles
 
-```ts
-import {
-  useOverlayPresence,
-  usePositionerVars,
-  createOverlayChangeDetails,
-  type OverlayOpenChangeHandler,
-} from '@var-ui/react';
-```
+|             | Modal overlays                                                                  | Anchored overlays                                                                                        |
+| ----------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Components  | Dialog, AlertDialog, Drawer, MobileNav, LayoutPanel (`overlay`), CommandPalette | Popover, Tooltip, HoverCard, Menu, Select, Combobox, MultiSelector, Tokenizer, date pickers, ToastRegion |
+| Element     | `<dialog>`, the popup itself                                                    | `<div popover>`                                                                                          |
+| Opened with | `showModal()`                                                                   | `showPopover()` (and the `popovertarget` invoker where a plain button opens it)                          |
+| Open state  | `[open]` and `:modal`                                                           | `:popover-open`                                                                                          |
+| Backdrop    | `::backdrop` of the popup (colour: `--var-ui-dialog-overlaybackground`)         | none                                                                                                     |
+| Dismissal   | Escape, backdrop press                                                          | Escape, outside press (light dismiss), focus leaving for hover overlays                                  |
+| Position    | centred, or slid in from `data-placement` / `data-side`                         | anchored to the trigger (`position-anchor`, `data-placement`)                                            |
 
-Compound overlays already call these. Use the hooks directly only if you are building a custom overlay on React Aria.
-
-Stacking and themed portals are in [Getting started](/docs/getting-started).
+There is no portal, no layer provider and no `z-index`: popups render in place in the DOM and the top layer orders them by insertion. Themes and token scopes still reach them because custom properties inherit from the DOM parent. See [Plain CSS](/theming/plain-css) for what rendering in place means for forms and events.
 
 ## State attributes
 
-Spread on the popup (and backdrop, when there is one). Presence is an empty string when set, omitted when not.
+| Attribute        | Meaning                                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `data-open`      | On the popup while the overlay is requested open                                                                 |
+| `data-closed`    | On the popup while it is requested closed (children stay mounted until the exit transition has finished)         |
+| `data-placement` | Requested placement on anchored popups (`top`, `bottom start`, `end`, ...) or drawers (`start`, `end`, `bottom`) |
 
-| Attribute             | Meaning                                                               |
-| --------------------- | --------------------------------------------------------------------- |
-| `data-open`           | Present while open, including during the exit animation until unmount |
-| `data-closed`         | Present during the closing phase                                      |
-| `data-starting-style` | Present for two animation frames after open (the enter “from” state)  |
-| `data-ending-style`   | Present while the close transition runs                               |
-| `data-placement`      | RAC placement string on positioned popups (`top`, `bottom start`, …)  |
+`data-open` and `data-closed` mirror the **requested** state; they are written from state, not for animation. Animate from the native selectors instead (`[open]`, `:popover-open`).
 
-`data-open` stays on the node through exit so `&[data-open]` selectors keep working. Native `<dialog>` overlays such as CommandPalette use `[open]` instead.
+## Enter and exit
 
-Recipes transition opacity (and a slight scale on dialogs/popovers) from `[data-starting-style]` / `[data-ending-style]`. Reduced motion skips the duration and unmounts immediately.
-
-```css
-.var-ui-popover[data-starting-style],
-.var-ui-popover[data-ending-style] {
-  opacity: 0;
-}
-
-.var-ui-popover {
-  max-height: min(24rem, var(--var-ui-available-height));
-  transform-origin: var(--var-ui-transform-origin, center);
-}
-```
-
-### Exit before unmount
-
-Closing does not remove the DOM until CSS animations on the popup (and backdrop, when wired) finish. `prefers-reduced-motion: reduce` unmounts immediately.
-
-## Native dialogs (Dialog, AlertDialog, Drawer, MobileNav, LayoutPanel overlay)
-
-`Dialog.Popup` is a native `<dialog>` opened with `showModal()`: the platform provides the top layer, the inert page, Escape and focus return. There is no backdrop element and no portal; the backdrop is `::backdrop` of the popup (its colour is `--var-ui-dialog-overlaybackground`). Style enter and exit with `[open]` and `@starting-style` instead of `data-starting-style` / `data-ending-style`:
+Enter and exit are plain CSS: the closed look is the base rule, the open look sits under the native open selector, and `@starting-style` provides the "from" state of the enter. The transition list includes `overlay` and `display` with `allow-discrete`, so the element stays rendered in the top layer while it animates out after `close()` or `hidePopover()`.
 
 ```css
 .var-ui-dialog__popup {
@@ -68,9 +45,11 @@ Closing does not remove the DOM until CSS animations on the popup (and backdrop,
     overlay 150ms allow-discrete,
     display 150ms allow-discrete;
 }
+
 .var-ui-dialog__popup[open] {
   opacity: 1;
 }
+
 @starting-style {
   .var-ui-dialog__popup[open] {
     opacity: 0;
@@ -78,28 +57,29 @@ Closing does not remove the DOM until CSS animations on the popup (and backdrop,
 }
 ```
 
-The children stay mounted until the exit transition ends (the popup still gets `data-open` / `data-closed`). Scroll is locked by `html:has(dialog:modal) { overflow: hidden }`. Because the dialog renders in place, a `<button>` inside it submits an ancestor `<form>`, events bubble through its real ancestors, and inheritable properties (font, colour, `text-align`) flow in from them.
+Anchored popups use the same shape with `:popover-open`. Durations and easings are the `--var-ui-duration-*` and `--var-ui-easing-*` tokens, so changing a token changes every overlay. `prefers-reduced-motion: reduce` sets `transition: none`, so the popup appears and disappears at once.
 
-`Drawer.Popup`, `MobileNav` and the `LayoutPanel` `responsive="overlay"` panel are the same native `<dialog>`; they slide with `translate` from `data-placement` (`start` | `end` | `bottom`) or `data-side` (`start` | `end`), both following the writing direction.
+React keeps the popup's children mounted until the exit has finished (it waits for the element's running animations), then unmounts them, so heavy bodies are not mounted while closed. Astro renders the markup once and the platform does the rest.
 
-Reasons: Escape is `escape-key`, a backdrop press (when `dismissable`) is `outside-press`, a `Close` part is `close-press`, the trigger is `trigger-press`, `requestClose()` or a back gesture is `imperative`. `details.cancel()` vetoes any of them. Chromium lets a page cancel Escape once per user activation: after that the dialog closes natively and the root re-opens it when `open` is still `true`.
+### Scroll lock
 
-## Positioner CSS variables
+A global rule locks page scroll while any modal dialog is open: `html:has(dialog:modal) { overflow: hidden }`, with `html { scrollbar-gutter: stable }` so the page does not shift. Dialog popups also set `overscroll-behavior: contain`. There is no hook to call. Select, Menu and other popovers do not lock scroll.
 
-Set on positioned popups (Popover, Tooltip, HoverCard, Menu). Dialog centered overlays use `transform-origin: center`.
+## Anchor positioning
 
-| Variable                    | Source                                                |
-| --------------------------- | ----------------------------------------------------- |
-| `--var-ui-available-height` | Viewport space remaining from the trigger             |
-| `--var-ui-available-width`  | Remaining inline size from the trigger                |
-| `--var-ui-transform-origin` | Opposite the placement side (`top` → `bottom center`) |
-| `--var-ui-anchor-width`     | Trigger width, when the overlay has a trigger ref     |
+Anchored popups name their trigger with `anchor-name` and place themselves with `position-anchor`, `position-area` and `position-try-fallbacks`, so the browser flips them near the viewport edge. These custom properties tune them:
 
-Prefix is `--var-ui-` to match tokens. Values are `${px}px` strings.
+| Variable                    | Meaning                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| `--var-ui-popup-offset`     | Gap between the trigger and the popup (falls back to `space-2`) |
+| `--var-ui-popup-max-height` | Maximum height (falls back to the viewport minus a margin)      |
+| `--var-ui-popup-max-width`  | Maximum width (falls back to the viewport minus a margin)       |
+
+`data-placement` holds the _requested_ placement; the browser may flip it. Select, Combobox and MultiSelector popups match the trigger width with `anchor-size(width)`.
 
 ## Change event details
 
-Compound Dialog, Popover, Tooltip, HoverCard, Menu, Drawer, and AlertDialog call:
+Compound Dialog, AlertDialog, Drawer, Popover, Tooltip, HoverCard, Menu and CommandPalette call:
 
 ```ts
 onOpenChange?: (open: boolean, details: OverlayChangeEventDetails) => void;
@@ -113,8 +93,7 @@ type OverlayOpenChangeReason =
   | 'outside-press'
   | 'imperative'
   | 'hover'
-  | 'focus'
-  | 'unknown';
+  | 'focus';
 
 type OverlayChangeEventDetails = {
   reason: OverlayOpenChangeReason;
@@ -124,9 +103,19 @@ type OverlayChangeEventDetails = {
 };
 ```
 
-Reasons you can rely on: `escape-key`, `outside-press`, `trigger-press`, `close-press` (a `Close` part), `focus` (focus left the popup), `imperative` (your own code, e.g. a `setOpen` call), plus `hover` for hover overlays. Anything else is `unknown`. Roots derive the reason from native events, so they add no wrapper element to the DOM.
+Every change has a reason, read from the native signal that caused it:
 
-`cancel()` blocks the open-state update **when the overlay is uncontrolled**. If you pass `open`, `cancel()` is a no-op — ignore `open` in the parent instead.
+| Reason          | Cause                                                                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trigger-press` | The trigger was pressed (including a `popovertarget` invoker)                                                                                                     |
+| `close-press`   | A `Close` part, or `<form method="dialog">`, was activated inside the popup                                                                                       |
+| `escape-key`    | Escape                                                                                                                                                            |
+| `outside-press` | A press on the dialog backdrop, or outside a popover (light dismiss)                                                                                              |
+| `hover`         | Hover intent opened or closed a Tooltip or HoverCard                                                                                                              |
+| `focus`         | Focus entered or left the trigger or popup                                                                                                                        |
+| `imperative`    | Your own code (`setOpen`, a controlled `open` change), `requestClose()`, a back gesture, or any close with no observed gesture — including a menu item activating |
+
+`cancel()` vetoes the change. For a controlled overlay (you pass `open`), the overlay stays in whatever state `open` says, so ignore the request in the parent instead of calling `cancel()` and then setting state. Chromium lets a page cancel Escape on a modal dialog once per user activation; after that the dialog closes natively and var-ui re-opens it when `open` is still `true`, so the state is right but the focus return and a `close` event happen in between.
 
 ```tsx
 <Dialog.Root
@@ -142,28 +131,15 @@ Reasons you can rely on: `escape-key`, `outside-press`, `trigger-press`, `close-
 </Dialog.Root>
 ```
 
-CommandPalette still uses `onOpenChange?: (open: boolean) => void`. It does spread presence attributes on the panel.
+`createOverlayChangeDetails({ reason, event })` builds a `details` object with `cancel()` / `isCanceled`, for code that wraps an overlay and forwards its changes.
 
-## Helpers
+## Focus
 
-### `useOverlayPresence({ isOpen, reducedMotion?, getAnimatedElements })`
-
-Returns `{ mounted, attrs }`. Drive `isOpen` from the requested open state. Keep React Aria’s `isOpen={presence.mounted}` so the node (and `getAnimations()`) exist through exit. Pass popup and backdrop elements to `getAnimatedElements`.
-
-### `usePositionerVars({ placement, popupRef, triggerRef? })`
-
-Returns `{ style }` with the variables above. Merge onto the popup root with `useLayer().style` when you also use `LayerProvider`.
-
-### `useOverlayRoot({ open, defaultOpen, onOpenChange })`
-
-The shared root hook behind every overlay: controlled/uncontrolled `open`, details-aware `onOpenChange`, presence, element tracking and reason derivation. See the source in `packages/react/src/overlays/useOverlayRoot.ts`.
-
-### `createOverlayChangeDetails({ reason, event })`
-
-Builds the `details` object with `cancel()` / `isCanceled`. Overlay components wrap RAC’s boolean `onOpenChange` with this.
+Focus is native. `showModal()` moves focus to the first `autofocus` or focusable descendant and returns it to the previously focused element on close. Popovers do not move focus on open (add `autofocus` inside to opt in) and return it on hide. Select, Combobox and Menu popups are driven by React Aria, which handles their roving focus.
 
 ## Related
 
-- [Getting started](/docs/getting-started) — `isolation: isolate` and how themed overlays render in place
-- [CSS variables](/theming/css-variables) — design tokens and component variables
+- [Getting started](/docs/getting-started): providers, direction and how themed overlays render in place
+- [Plain CSS](/theming/plain-css): styling overlays with native selectors, and the form and event caveats of rendering in place
+- [CSS variables](/theming/css-variables): design tokens and component variables
 - [Dialog](/components/dialog), [Popover](/components/popover), [Tooltip](/components/tooltip), [Menu](/components/menu)

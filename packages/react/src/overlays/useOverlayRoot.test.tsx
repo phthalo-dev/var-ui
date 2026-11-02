@@ -2,7 +2,6 @@ import { act, render, renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { IconProvider } from '../icons';
-import { LayerProvider } from '../layers/LayerProvider';
 import { Dialog } from '../components/Dialog';
 import { Popover } from '../components/Popover';
 import { Tooltip } from '../components/Tooltip';
@@ -13,7 +12,7 @@ import { useOverlayRoot } from './useOverlayRoot';
 function wrap(ui: React.ReactNode) {
   return render(
     <IconProvider icons={{}}>
-      <LayerProvider>{ui}</LayerProvider>
+      <>{ui}</>
     </IconProvider>,
   );
 }

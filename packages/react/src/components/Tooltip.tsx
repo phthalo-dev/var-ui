@@ -62,7 +62,7 @@ function TooltipRoot({
   defaultOpen,
   onOpenChange,
 }: TooltipRootProps): JSX.Element {
-  const root = useOverlayRoot({ native: true, open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
   // Hover intent: delays, focus-visible, touch ignored, Escape (WCAG 1.4.13), and a warm-up window
   // shared by every tooltip.
   const intent = useHoverIntent(root, { openDelay, closeDelay, warmUp: true });
