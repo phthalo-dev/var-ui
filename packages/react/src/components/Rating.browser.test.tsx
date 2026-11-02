@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vite-plus/test';
 import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
-import { raf, settled } from '../test/browser';
+import { settled } from '../test/browser';
 import { Rating } from './Rating';
 
 function Wrap({ children, dir }: { children: React.ReactNode; dir?: 'rtl' }) {
@@ -190,6 +190,27 @@ describe('Rating (real browser)', () => {
     expect(radios(container).some((r) => r.checked)).toBe(false);
     await userEvent.click(items(container)[1]!);
     expect(container.querySelector('output')?.textContent).toBe('2');
+  });
+
+  test('clearable: Space on the checked star clears it', async () => {
+    function Controlled() {
+      const [v, setV] = useState(3);
+      return (
+        <>
+          <Rating clearable value={v} onValueChange={setV} />
+          <output>{v}</output>
+        </>
+      );
+    }
+    const { container } = render(
+      <Wrap>
+        <Controlled />
+      </Wrap>,
+    );
+    radios(container)[2]!.focus();
+    await userEvent.keyboard(' ');
+    expect(container.querySelector('output')?.textContent).toBe('0');
+    expect(radios(container).some((r) => r.checked)).toBe(false);
   });
 
   test('disabled stars are not tabbable and ignore clicks', async () => {

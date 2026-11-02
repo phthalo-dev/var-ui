@@ -91,6 +91,21 @@ describe('Fieldset', () => {
     expect(group.lastElementChild?.textContent).toBe('Nope');
   });
 
+  it('flattens Fragments so compound parts still resolve', () => {
+    render(
+      <Fieldset>
+        <>
+          <Fieldset.Legend>Wrapped</Fieldset.Legend>
+          <Fieldset.Description>About</Fieldset.Description>
+          <input aria-label="A" />
+        </>
+      </Fieldset>,
+    );
+    const group = screen.getByRole('group', { name: 'Wrapped' });
+    expect(group.firstElementChild?.tagName).toBe('LEGEND');
+    expect(group.getAttribute('aria-describedby')?.split(' ')).toHaveLength(1);
+  });
+
   it('applies layout axes and hidden legend as recipe hooks', () => {
     render(
       <Fieldset legend="L" legendHidden orientation="horizontal" gap="lg" data-testid="fs">

@@ -37,7 +37,7 @@ Use it for sets of related checkboxes or radios, an address block, or any cluste
 
 ### Compound parts
 
-For a custom legend node, use the parts as children. They can appear in any order: `Fieldset.Legend` is always rendered first, `Fieldset.Description` after it, and `Fieldset.Error` after the controls.
+For a custom legend node, use the parts as children. They can appear in any order: `Fieldset.Legend` is always rendered first, `Fieldset.Description` after it, and `Fieldset.Error` after the controls. Top-level Fragments are flattened, so wrapping parts in `<>…</>` still works.
 
 ```tsx
 <Fieldset>

@@ -5,6 +5,7 @@ import {
   type ComponentPropsWithRef,
   type CSSProperties,
   type JSX,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -114,8 +115,8 @@ export type RatingProps = Omit<
   'aria-label'?: string;
   'aria-labelledby'?: string;
   'aria-describedby'?: string;
-  /** Ref to the first radio `<input>` (to the group element when `readOnly`). */
-  ref?: Ref<HTMLInputElement>;
+  /** Ref to the first radio `<input>`, or to the `role="img"` group when `readOnly`. */
+  ref?: Ref<HTMLInputElement | HTMLDivElement>;
 };
 
 function resolveGlyph(
@@ -248,6 +249,7 @@ export function Rating({
           aria-labelledby={label ? `${frame.labelId} ${frame.controlId}` : ariaLabelledBy}
           aria-describedby={frame.controlProps['aria-describedby']}
           data-readonly=""
+          ref={ref as Ref<HTMLDivElement>}
         >
           {Array.from({ length: count }, (_, i) => {
             const g = glyphs(i + 1);
@@ -309,7 +311,7 @@ export function Rating({
               <input
                 {...rest}
                 {...mergeProps(p.input)}
-                ref={n === 1 ? ref : undefined}
+                ref={n === 1 ? (ref as Ref<HTMLInputElement>) : undefined}
                 type="radio"
                 name={groupName}
                 // Without a `name` the radios still group natively, but must not post a generated field.
@@ -326,6 +328,14 @@ export function Rating({
                 onClick={(event: MouseEvent<HTMLInputElement>) => {
                   rest.onClick?.(event);
                   if (clearable && n === current && !event.defaultPrevented) commit(0);
+                }}
+                onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+                  rest.onKeyDown?.(event);
+                  // Radios do not uncheck on Space; clearable treats Space like a second click.
+                  if (clearable && n === current && event.key === ' ' && !event.defaultPrevented) {
+                    event.preventDefault();
+                    commit(0);
+                  }
                 }}
               />
               {g.node}

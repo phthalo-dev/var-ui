@@ -80,6 +80,7 @@ describe('ToggleGroup', () => {
   it('single + required: the pressed item stays pressed', () => {
     const onValueChange = vi.fn();
     render(<Basic required defaultValue="bold" onValueChange={onValueChange} />);
+    expect(screen.getByRole('group', { name: 'Style' }).hasAttribute('data-required')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Bold' }));
     expect(pressed('Bold')).toBe(true);
     expect(onValueChange).not.toHaveBeenCalled();

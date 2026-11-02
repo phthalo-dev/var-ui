@@ -193,6 +193,7 @@ export function ToggleGroup(props: ToggleGroupProps): JSX.Element {
         {...rest}
         role="group"
         data-toggle-group=""
+        data-required={required ? '' : undefined}
         {...mergeProps(g.root, className)}
         ref={setRoot}
         onKeyDown={handleKeyDown}

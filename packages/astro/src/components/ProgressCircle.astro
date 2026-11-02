@@ -35,7 +35,8 @@ const {
   ...rest
 } = Astro.props;
 
-const isIndeterminate = indeterminate ?? value === undefined;
+// Missing `value` is always indeterminate; `indeterminate={false}` cannot invent a number.
+const isIndeterminate = Boolean(indeterminate) || value === undefined;
 const p = progressCircle({ size, tone, appearance, indeterminate: isIndeterminate });
 const clamped = Math.min(max, Math.max(min, value ?? min));
 const fraction = max === min ? 0 : (clamped - min) / (max - min);

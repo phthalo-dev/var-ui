@@ -126,6 +126,11 @@ export const toggleGroup = typestyles.recipe({
           },
           item: {
             borderRadius: t.radius.md.var,
+            // Reset connected-strip margins from the orientation variants.
+            '&:not(:first-child)': {
+              marginInlineStart: 0,
+              marginBlockStart: 0,
+            },
             '&:hover:not([disabled])': {
               backgroundColor: t.color.background.subtle.var,
             },
@@ -140,6 +145,7 @@ export const toggleGroup = typestyles.recipe({
       orientation: {
         horizontal: {
           root: { flexDirection: 'row' },
+          // outline/subtle share a connected strip; ghost resets these margins.
           item: {
             '&:not(:first-child)': { marginInlineStart: '-1px' },
             '&:first-child': {

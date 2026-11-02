@@ -58,7 +58,8 @@ export function ProgressCircle({
   ref,
   ...rest
 }: ProgressCircleProps): JSX.Element {
-  const isIndeterminate = indeterminate ?? value === undefined;
+  // Missing `value` is always indeterminate; `indeterminate={false}` cannot invent a number.
+  const isIndeterminate = Boolean(indeterminate) || value === undefined;
   const p = progressCircle({ size, tone, appearance, indeterminate: isIndeterminate });
   return (
     <AriaProgressBar

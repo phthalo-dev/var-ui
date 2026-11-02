@@ -33,7 +33,7 @@ describe('Rating (input)', () => {
   });
 
   it('points ref at the first radio', () => {
-    const ref = createRef<HTMLInputElement>();
+    const ref = createRef<HTMLInputElement | HTMLDivElement>();
     render(<Rating ref={ref} />);
     expect(ref.current).toBe(radios()[0]);
   });
@@ -159,6 +159,12 @@ describe('Rating (readOnly)', () => {
     render(<Rating readOnly value={3} />);
     expect(screen.queryAllByRole('radio')).toHaveLength(0);
     expect(screen.getByRole('img', { name: '3 out of 5' })).toBeTruthy();
+  });
+
+  it('points ref at the role="img" group', () => {
+    const ref = createRef<HTMLInputElement | HTMLDivElement>();
+    render(<Rating readOnly value={3} ref={ref} />);
+    expect(ref.current).toBe(screen.getByRole('img', { name: '3 out of 5' }));
   });
 
   it('overrides the accessible name and keeps the visible label', () => {

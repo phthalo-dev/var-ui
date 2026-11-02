@@ -1,6 +1,8 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { forced } from '../internal/forcedColors';
+import { atForcedColors } from '../theme/conditions';
 import { gap, orientation } from '../shared/variantAxes';
 
 /**
@@ -44,8 +46,9 @@ export const fieldset = typestyles.recipe({
         padding: 0,
         border: 0,
         '&:disabled, &[data-disabled]': {
-          opacity: 0.6,
+          opacity: t.opacity.disabled.var,
           cursor: 'not-allowed',
+          ...atForcedColors(forced.disabled),
         },
       },
       legend: {

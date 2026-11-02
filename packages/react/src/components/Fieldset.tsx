@@ -1,6 +1,7 @@
 import {
   Children,
   createContext,
+  Fragment,
   isValidElement,
   use,
   type ComponentPropsWithRef,
@@ -87,6 +88,19 @@ function isPart(node: ReactNode, part: unknown): node is ReactElement {
   return isValidElement(node) && node.type === part;
 }
 
+/** Flatten top-level Fragments so compound parts wrapped in `<>…</>` still resolve. */
+function flattenChildren(children: ReactNode): ReactNode[] {
+  const out: ReactNode[] = [];
+  Children.forEach(children, (child) => {
+    if (isValidElement(child) && child.type === Fragment) {
+      out.push(...flattenChildren((child.props as { children?: ReactNode }).children));
+    } else {
+      out.push(child);
+    }
+  });
+  return out;
+}
+
 /**
  * Groups related form controls in a native `<fieldset>` with a `<legend>`. A `disabled` fieldset
  * disables all the form controls inside it natively (no per-control prop needed).
@@ -116,12 +130,12 @@ function FieldsetRoot({
   let descriptionPart: ReactNode = null;
   let errorPart: ReactNode = null;
   const controls: ReactNode[] = [];
-  Children.forEach(children, (child) => {
+  for (const child of flattenChildren(children)) {
     if (isPart(child, FieldsetLegend)) legendPart = child;
     else if (isPart(child, FieldsetDescription)) descriptionPart = child;
     else if (isPart(child, FieldsetError)) errorPart = child;
     else controls.push(child);
-  });
+  }
 
   const frame = useFieldFrame({
     description: description || descriptionPart,

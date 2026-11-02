@@ -18,6 +18,9 @@ describe('ProgressCircle', () => {
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBeNull();
     rerender(<ProgressCircle label="Loading" value={30} indeterminate />);
     expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBeNull();
+    // `indeterminate={false}` cannot invent a value when none was passed.
+    rerender(<ProgressCircle label="Loading" indeterminate={false} />);
+    expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBeNull();
   });
 
   it('honours min, max, valueLabel and formatOptions', () => {
