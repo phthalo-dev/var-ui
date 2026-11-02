@@ -286,7 +286,7 @@ function ComboboxError({ children, className, ref, ...rest }: ComboboxErrorProps
   const styles = useComboboxStyles();
   return (
     <FieldError {...(rest as object)} {...mergeProps(styles.error, className)} ref={ref}>
-      {children ?? ''}
+      {children}
     </FieldError>
   );
 }

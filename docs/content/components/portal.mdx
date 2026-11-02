@@ -1,0 +1,50 @@
+---
+title: Portal
+description: Renders children into document.body or another container.
+---
+
+# Portal
+
+Renders its children into `document.body`, or into a `container` you pass, instead of where `Portal` sits in the tree. React context, state and events still flow through it as if the content were in place.
+
+## You probably do not need it
+
+Overlays in var-ui (Dialog, AlertDialog, Drawer, Popover, Tooltip, HoverCard, Menu, Select, Combobox, Toast and the rest) render in place and use the browser's **top layer** (`<dialog>` and `[popover]`). The top layer already draws above everything, ignores ancestor `overflow` and `transform`, and needs no `z-index`, so there is nothing to portal. See [Overlay lifecycle](/docs/overlay-lifecycle).
+
+Reach for `Portal` for the rare non-overlay case: moving an element out of an ancestor that clips or transforms it, or rendering into a container owned by something else (a third-party widget, an iframe's document body).
+
+## Examples
+
+### Default
+
+With no `container` the content is a child of `document.body`.
+
+<Demo id="portal.default" />
+
+### Container
+
+`container` takes an element or a ref to one. Refs are read after mount, so the target can be rendered by the same component.
+
+<Demo id="portal.container" />
+
+## Server rendering
+
+`Portal` renders nothing on the server and during the first client render, then mounts its content in an effect. That keeps hydration identical to the server HTML, but it means:
+
+- the content is not in the server-rendered HTML (do not portal anything that needs to be indexed or visible before JavaScript);
+- the content appears one commit after the surrounding component mounts.
+
+`Portal` is React-only: there is no Astro peer because there is no client state to portal.
+
+## Related
+
+- Closing a portaled panel on outside clicks: pass its ref to [`useClickOutside`](/docs/hooks#useclickoutside) together with the trigger's.
+- Hiding something with CSS only: [Hidden](/components/hidden).
+
+## Props
+
+<PropsTable slug="portal" />
+
+## Accessibility
+
+`Portal` moves DOM, not meaning. Because the content ends up elsewhere in the document, reading order and landmarks follow the new position: keep related controls adjacent in the DOM or connect them with `aria-controls` / `aria-describedby`, and manage focus yourself if the portaled content is interactive.

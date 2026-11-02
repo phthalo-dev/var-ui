@@ -1,0 +1,88 @@
+---
+title: Splitter
+description: Resizable split panels separated by draggable, keyboard-operable dividers.
+---
+
+# Splitter
+
+Two or more panels separated by dividers the user can drag or move with the keyboard, side by side or stacked. It follows the APG [window splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern and is built on `ResizeHandle` for the divider, so pointer capture, arrow keys and `Home`/`End` behave exactly like the resizable sidebars in `Layout`.
+
+Sizes are **percentages of the combined panel space** (the container minus the dividers), one per panel, summing to 100. They are never pixels, so the same `defaultSizes` work at any width and on the server. Resizing writes one CSS custom property per panel (`flex: <size> 1 0%`); panels clip or scroll their content (`min-width: 0`, `overflow: auto`) instead of forcing themselves open.
+
+Give the `Splitter` a size along its main axis (a `height` for `vertical`, a width from its parent for `horizontal`); the panels share what it has.
+
+## Examples
+
+### Two panes
+
+`defaultSizes` seeds the split (uncontrolled), `minSizes` / `maxSizes` clamp each panel. Double-click a divider to reset its two neighbours to `defaultSizes`.
+
+<Demo id="splitter.two-pane" />
+
+### Three panes
+
+Each divider moves only the two panels next to it; the others keep their size.
+
+<Demo id="splitter.three-pane" />
+
+### Vertical
+
+`orientation="vertical"` stacks the panels and uses `ArrowDown` / `ArrowUp`.
+
+<Demo id="splitter.vertical" />
+
+### Collapsible sidebar
+
+Mark a panel `collapsible` (or pass `collapsible` to `Splitter`, as `true` or one flag per panel). `Enter` on the divider collapses the panel to zero and restores its previous size. Dragging a collapsible panel below half its minimum, or arrowing below it, collapses it too. This demo is controlled with `sizes` and `onSizesChange`.
+
+<Demo id="splitter.collapsible" />
+
+### Persisted
+
+`autoSaveId` saves the sizes in `localStorage` (`var-ui-resizable:<id>`, the same prefix as `useResizable`). The first render always uses `defaultSizes` so server and client markup match; the saved sizes are applied right after mount.
+
+<Demo id="splitter.persisted" />
+
+### Nested
+
+Splitters nest: put a `Splitter` inside a panel (give it `height: '100%'`).
+
+<Demo id="splitter.nested" />
+
+## Customising a divider
+
+Dividers are rendered between consecutive panels automatically. To label or style one, place a `Splitter.Handle` between the two panels; it renders nothing itself, and its props (`className`, `style`, `aria-label`, `id`, `ref`, handlers) are applied to that divider:
+
+```tsx
+<Splitter>
+  <Splitter.Panel>Files</Splitter.Panel>
+  <Splitter.Handle aria-label="Resize file tree" />
+  <Splitter.Panel>Editor</Splitter.Panel>
+</Splitter>
+```
+
+Panels and handles must be direct children (not wrapped in a fragment or component). The default divider name is "Resize panels"; override it with `handleLabel`.
+
+## Props
+
+<PropsTable slug="splitter" />
+
+`onChange` is the native `change` event of the root `<div>`: it only fires for form controls inside the panels, bubbling up. Use `onSizesChange` for sizes.
+
+## Accessibility
+
+Each divider is `role="separator"` with `tabindex="0"`, `aria-orientation` (a `vertical` separator for side-by-side panels, per the APG), `aria-valuenow` (the size of the panel before it, in percent), `aria-valuemin` / `aria-valuemax` (the limits implied by both neighbours), and `aria-controls` pointing at that panel's id. Give panels an `aria-label` or heading when they are landmarks.
+
+Pointer drags use pointer capture, so they keep tracking outside the divider, and the hit area extends well past the 1px line for touch. In a right-to-left context the horizontal arrows and drag direction are mirrored. The divider is drawn with `CanvasText` in forced-colors mode and shows the standard focus ring.
+
+## Keyboard
+
+| Key                        | Behavior                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------ |
+| `Tab` / `Shift+Tab`        | Moves focus to the next / previous divider.                                                |
+| `ArrowRight` / `ArrowLeft` | Horizontal: grows / shrinks the panel before the divider by `step` (mirrored in RTL).      |
+| `ArrowDown` / `ArrowUp`    | Vertical: grows / shrinks the panel before the divider by `step`.                          |
+| `Shift` + arrow            | Same, by `largeStep`.                                                                      |
+| `Home` / `End`             | Smallest / largest size allowed by both neighbours (`Home` collapses a collapsible panel). |
+| `Enter`                    | Collapses or restores a collapsible neighbour.                                             |
+| Double-click               | Resets the two neighbours to their `defaultSizes` ratio.                                   |

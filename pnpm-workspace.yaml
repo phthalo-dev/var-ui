@@ -21,6 +21,9 @@ catalog:
   astro: ^5.14.0
   playwright: 1.61.1
   '@vitest/browser-playwright': 5.0.5
+  react-hook-form: ^7.60.0
+  zod: ^4.0.0
+  '@hookform/resolvers': ^5.0.0
 catalogMode: prefer
 linkWorkspacePackages: true
 onlyBuiltDependencies:

@@ -13,6 +13,7 @@ import { switchStyles } from '@var-ui/core/components/switch';
 import { mergeProps } from 'typestyles';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps } from '../internal/racProps';
+import { useNativeChecked } from '../internal/useNativeChecked';
 
 export type SwitchProps = Omit<
   ComponentPropsWithRef<'input'>,
@@ -73,14 +74,16 @@ export function Switch({
   ...rest
 }: SwitchProps): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
+  const selection = useNativeChecked(inputRef, checked, defaultChecked, onCheckedChange);
   // RAC's `inputRef` only takes an object ref; this also serves callback refs.
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
   const sw = switchStyles();
-  const racProps = toRacProps({ checked, defaultChecked, onCheckedChange, disabled, readOnly });
+  const racProps = toRacProps({ disabled, readOnly });
   return (
     <AriaSwitch
       {...(rest as RACSwitchProps)}
       {...racProps}
+      {...selection}
       {...mergeProps(sw.root, className)}
       style={style}
       inputRef={inputRef}

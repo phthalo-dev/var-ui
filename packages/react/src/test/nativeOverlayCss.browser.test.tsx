@@ -2,7 +2,7 @@ import { afterEach, beforeAll, expect, test } from 'vite-plus/test';
 import { dialog } from '@var-ui/core/components/dialog';
 import { drawer } from '@var-ui/core/components/drawer';
 import '../../../core/src/theme/base-styles';
-import { edgeInfo, finishAll, freezeAt, raf, viewport } from './browser';
+import { animating, edgeInfo, finishAll, freezeAt, holdMotion, raf, viewport } from './browser';
 
 // The core recipes style a native <dialog> directly: enter/exit is pure CSS (@starting-style plus
 // discrete `display`/`overlay` transitions) and the ::backdrop fades through an inherited
@@ -33,6 +33,7 @@ function mount(html: string) {
 }
 
 test('dialog popup animates in and out and keeps the top layer while exiting; backdrop fades', async () => {
+  holdMotion();
   const d = dialog();
   const el = mount(
     `<dialog class="${d.popup.className}"><div class="${d.content.className}">Hello</div></dialog>`,
@@ -40,7 +41,7 @@ test('dialog popup animates in and out and keeps the top layer while exiting; ba
   expect(getComputedStyle(el).display).toBe('none');
 
   el.showModal();
-  await raf();
+  await animating(el);
   expect(freezeAt(el, 1 / 3)).toBeGreaterThan(0); // the enter is a real running transition
   const midOpacity = Number(getComputedStyle(el).opacity);
   const midBackdrop = backdropAlpha(el);
@@ -57,7 +58,7 @@ test('dialog popup animates in and out and keeps the top layer while exiting; ba
   expect(getComputedStyle(el).overscrollBehaviorY).toBe('contain');
 
   el.close();
-  await raf();
+  await animating(el);
   expect(freezeAt(el, 1 / 3)).toBeGreaterThan(0); // exit in progress: closed attribute-wise, still rendered
   expect(el.open).toBe(false);
   expect(el.matches(':modal')).toBe(false);
@@ -75,10 +76,11 @@ test('dialog popup animates in and out and keeps the top layer while exiting; ba
 });
 
 test('drawer popup slides in from its placement edge via translate', async () => {
+  holdMotion();
   const s = drawer();
   const el = mount(`<dialog class="${s.popup.className}" data-placement="end">Drawer</dialog>`);
   el.showModal();
-  await raf();
+  await animating(el);
   expect(freezeAt(el, 0.3)).toBeGreaterThan(0);
   expect(getComputedStyle(el).translate).not.toBe('none'); // still travelling from 100% 0
   await finishAll(el);
@@ -86,7 +88,7 @@ test('drawer popup slides in from its placement edge via translate', async () =>
   const rect = el.getBoundingClientRect();
   expect(Math.round(rect.right), edgeInfo(el)).toBe(viewport().right); // docked to the inline end edge
   el.close();
-  await raf();
+  await animating(el);
   expect(freezeAt(el, 0.5)).toBeGreaterThan(0);
   expect(getComputedStyle(el).translate).not.toBe('none');
   await finishAll(el);

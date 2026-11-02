@@ -519,7 +519,6 @@ function Field({
   children,
   ...rest
 }: FieldProps): JSX.Element {
-  const serverError = useContext(FormErrorsContext)[name ?? ''];
   const control = isSingleHostElement(children) ? (
     <FieldControl>
       {cloneElement(children as ReactElement<ControlChildProps>, {
@@ -534,7 +533,7 @@ function Field({
       {label ? <FieldLabel>{label}</FieldLabel> : null}
       {control}
       {description ? <FieldDescription>{description}</FieldDescription> : null}
-      {errorMessage || serverError ? <FieldError>{errorMessage}</FieldError> : null}
+      <FieldError>{errorMessage}</FieldError>
     </FieldRoot>
   );
 }

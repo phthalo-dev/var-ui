@@ -8,12 +8,15 @@ import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
 import {
+  animating,
+  clickBackdrop as sharedClickBackdrop,
   edgeInfo,
+  finishAll,
   freezeAt,
+  holdMotion,
   raf,
   settled,
   viewport,
-  clickBackdrop as sharedClickBackdrop,
 } from '../test/browser';
 import { Button } from './Button';
 import { Drawer, type DrawerPopupProps, type DrawerRootProps } from './Drawer';
@@ -263,24 +266,29 @@ describe('focus, inertness, scroll lock', () => {
 
 describe('slide animation', () => {
   test('the element stays rendered and children mounted until the exit ends', async () => {
+    holdMotion();
     render(<TestDrawer defaultOpen />);
     await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await userEvent.click(q('close'));
     await raf();
     expect(dlg().open).toBe(false);
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('input')).toBeTruthy();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await raf();
     expect(getComputedStyle(dlg()).display).toBe('none');
     expect(q('input')).toBeNull();
   });
 
   test('the drawer slides: translated off its edge mid-exit, at rest when open', async () => {
+    holdMotion();
     render(<TestDrawer defaultOpen />);
     await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     expect(dlg().getBoundingClientRect().right, edgeInfo(dlg())).toBeCloseTo(viewport().right, 0);
     await userEvent.keyboard('{Escape}');
     await raf();

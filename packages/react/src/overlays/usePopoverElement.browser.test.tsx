@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { StrictMode, useState, type ReactNode } from 'react';
 import { userEvent } from 'vite-plus/test/browser';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vite-plus/test';
-import { finishAll, raf } from '../test/browser';
+import { animating, finishAll, holdMotion, raf } from '../test/browser';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { OverlayTrigger } from './OverlayTrigger';
 import { isPopoverShowing, usePopoverElement, type PopoverMode } from './usePopoverElement';
@@ -13,7 +13,7 @@ beforeAll(() => {
   style.textContent = `
     [popover].t{position:fixed;inset:auto;top:200px;left:20px;width:160px;height:80px;padding:4px;
       border:1px solid #888;background:#fff;overflow:visible}
-    [popover].t.fx{opacity:0;transition:opacity 120ms,overlay 120ms allow-discrete,display 120ms allow-discrete}
+    [popover].t.fx{opacity:0;transition:opacity var(--test-fx-duration,120ms),overlay var(--test-fx-duration,120ms) allow-discrete,display var(--test-fx-duration,120ms) allow-discrete}
     [popover].t.fx:popover-open{opacity:1}
     @starting-style{[popover].t.fx:popover-open{opacity:0}}
     [popover].t.inner{top:220px;left:40px;width:100px;height:40px}
@@ -176,17 +176,59 @@ describe('open sync', () => {
   });
 
   test('children stay mounted through the CSS exit and unmount when it ends', async () => {
+    holdMotion();
     render(<TestPopover defaultOpen fx />);
-    await raf();
+    await animating(pop());
     await finishAll(pop());
     await userEvent.click(q('trigger-a'));
-    await raf();
+    await animating(pop());
     expect(showing()).toBe(false);
     expect(q('body-a')).toBeTruthy(); // exiting
     await finishAll(pop());
     await raf();
     expect(q('body-a')).toBeNull();
   });
+
+  test.each([
+    ['controlled', false],
+    ['uncontrolled', true],
+  ])(
+    'reopening while the exit runs always reopens, and a stale exit never closes it (%s)',
+    async (_name, uncontrolled) => {
+      holdMotion();
+      const ui = (open: boolean) =>
+        uncontrolled ? (
+          <TestPopover defaultOpen fx mode="manual" key="u" />
+        ) : (
+          <TestPopover open={open} fx mode="manual" />
+        );
+      const { rerender } = render(ui(true));
+      await animating(pop());
+      await finishAll(pop());
+      for (let i = 0; i < 50; i++) {
+        if (uncontrolled) {
+          // Toggle through the invoker-less path: close with the body's button, reopen by trigger.
+          await userEvent.click(q('close-a'));
+        } else {
+          rerender(ui(false));
+        }
+        await animating(pop()); // the exit is running (popover already hidden natively)
+        expect(showing(), `closed ${i}`).toBe(false);
+        expect(q('body-a'), `exiting ${i}`).toBeTruthy();
+        if (uncontrolled) {
+          q('trigger-a').click();
+        } else {
+          rerender(ui(true));
+        }
+        expect(showing(), `reopened ${i}`).toBe(true);
+        // Let the cancelled exit's promises and toggle events run: none may undo the reopen.
+        await finishAll(pop());
+        await raf();
+        expect(showing(), `still open ${i}`).toBe(true);
+        expect(q('body-a'), `body ${i}`).toBeTruthy();
+      }
+    },
+  );
 });
 
 describe('reasons (auto)', () => {

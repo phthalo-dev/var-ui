@@ -6,6 +6,7 @@ import { RacFieldFrame, racInvalid } from './FieldFrame';
 import type { BaseTextFieldProps, RacTextFieldReplacedKeys } from './TextField';
 import { mergeRacClassName } from '../internal/racClassName';
 import { splitRacFieldProps } from '../internal/racFieldProps';
+import { uncontrolledDomRender } from '../internal/uncontrolledDom';
 
 export type TextAreaFieldProps = Omit<ComponentPropsWithRef<'textarea'>, RacTextFieldReplacedKeys> &
   BaseTextFieldProps;
@@ -37,7 +38,17 @@ export function TextAreaField({
         description={description}
         errorMessage={errorMessage}
       >
-        <TextArea {...textAreaProps} {...mergeProps(field.input)} />
+        <TextArea
+          {...textAreaProps}
+          {...mergeProps(field.input)}
+          render={
+            uncontrolledDomRender(
+              'textarea',
+              props.value !== undefined,
+              props.defaultValue,
+            ) as never
+          }
+        />
       </RacFieldFrame>
     </AriaTextField>
   );

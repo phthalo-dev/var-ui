@@ -10,6 +10,7 @@ import { mergeProps } from 'typestyles';
 import { mergeRacClassName } from '../internal/racClassName';
 import { useControlSize } from '../internal/controlSizeContext';
 import { splitRacFieldProps } from '../internal/racFieldProps';
+import { uncontrolledDomRender } from '../internal/uncontrolledDom';
 
 export type PasswordInputProps = Omit<
   ComponentPropsWithRef<'input'>,
@@ -61,7 +62,14 @@ export function PasswordInput({
     >
       <RacFieldFrame slots={pf} label={label} description={description} errorMessage={errorMessage}>
         <div {...mergeProps(pf.inputWrapper)} data-disabled={isDisabled || undefined}>
-          <Input {...inputProps} {...mergeProps(pf.input)} type={visible ? 'text' : 'password'} />
+          <Input
+            {...inputProps}
+            {...mergeProps(pf.input)}
+            type={visible ? 'text' : 'password'}
+            render={
+              uncontrolledDomRender('input', props.value !== undefined, props.defaultValue) as never
+            }
+          />
           <button
             type="button"
             {...mergeProps(pf.visibilityToggle)}

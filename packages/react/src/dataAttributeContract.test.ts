@@ -129,6 +129,8 @@ const UNDOCUMENTED_HOOKS = [
   // ToggleGroup root / item markers: roving-focus queries and CSS scoping.
   'data-toggle-group',
   'data-toggle-group-item',
+  // Splitter panel marker: the splitter measures its direct panels to convert drag pixels to percent.
+  'data-splitter-panel',
   'data-toast-id',
   'data-toc-link',
   'data-tone',

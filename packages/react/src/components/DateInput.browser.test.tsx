@@ -7,7 +7,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { finishAll, raf, settled } from '../test/browser';
+import { animating, finishAll, holdMotion, raf, settled } from '../test/browser';
 import { DateInput } from './DateInput';
 import { DateRangeInput } from './DateRangeInput';
 import { DateTimeInput } from './DateTimeInput';
@@ -242,15 +242,17 @@ describe.each<Kind>(['date', 'datetime', 'range'])('%s picker on a native popove
   });
 
   test('exit keeps the calendar mounted until the animation ends', async () => {
+    holdMotion();
     render(
       <Wrap>
         <Picker kind={kind} />
       </Wrap>,
     );
     await userEvent.click(trigger());
-    await settled(popup());
+    await animating(popup());
+    await finishAll(popup());
     await userEvent.keyboard('{Escape}');
-    await raf();
+    await animating(popup());
     expect(isOpen()).toBe(false);
     expect(grid()).toBeTruthy();
     await finishAll(popup());

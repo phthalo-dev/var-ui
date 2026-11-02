@@ -499,6 +499,13 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { LayoutPanel } from '@var-ui/react';",
   },
   {
+    slug: 'splitter',
+    name: 'Splitter',
+    category: 'layout',
+    description: 'Resizable split panels with draggable, keyboard-operable dividers.',
+    importLine: "import { Splitter } from '@var-ui/react';",
+  },
+  {
     slug: 'stack',
     name: 'Stack',
     category: 'layout',
@@ -532,6 +539,20 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'layout',
     description: 'SSR-safe responsive show/hide via CSS media queries.',
     importLine: "import { Hidden } from '@var-ui/react';",
+  },
+  {
+    slug: 'visually-hidden',
+    name: 'VisuallyHidden',
+    category: 'layout',
+    description: 'Text that is hidden visually but still read by screen readers.',
+    importLine: "import { VisuallyHidden } from '@var-ui/react';",
+  },
+  {
+    slug: 'portal',
+    name: 'Portal',
+    category: 'layout',
+    description: 'Renders children into document.body or another container.',
+    importLine: "import { Portal } from '@var-ui/react';",
   },
   {
     slug: 'aspect-ratio',

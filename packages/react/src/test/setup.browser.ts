@@ -1,5 +1,6 @@
 import { afterEach } from 'vite-plus/test';
 import { cleanup } from '@testing-library/react';
+import { parkPointer, releaseMotion } from './browser';
 
 // Real browser: React's `act` environment must be off, RTL's wrappers handle flushing.
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = false;
@@ -15,7 +16,11 @@ reset.textContent = `
 `;
 document.head.append(reset);
 
-afterEach(() => {
+// The document is shared by every test in a file: remove what the last one left (open popovers and
+// dialogs leave the top layer with their elements), the held motion and the pointer position.
+afterEach(async () => {
   cleanup();
   document.body.innerHTML = '';
+  releaseMotion();
+  await parkPointer();
 });

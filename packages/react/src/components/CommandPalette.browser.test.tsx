@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, test, vi } from 'vite-plus/test';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
 import '../../../core/src/theme/base-styles';
 import { defaultTheme } from '../../../core/src/theme/register-default';
-import { raf, settled, clickBackdrop } from '../test/browser';
+import { animating, clickBackdrop, finishAll, holdMotion, raf, settled } from '../test/browser';
 import { CommandPalette } from './CommandPalette';
 import { createCommandPalette } from '../internal/commandPaletteController';
 
@@ -176,10 +176,12 @@ describe('CommandPalette (browser)', () => {
   });
 
   test('keeps the element through the exit animation, then unmounts the contents', async () => {
+    holdMotion();
     const { rerender } = render(
       <CommandPalette open hotkey={false} items={items} onOpenChange={() => {}} />,
     );
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     expect(getComputedStyle(dlg()).opacity).toBe('1');
     rerender(<CommandPalette open={false} hotkey={false} items={items} onOpenChange={() => {}} />);
     await raf();
@@ -187,7 +189,8 @@ describe('CommandPalette (browser)', () => {
     expect(dlg().open).toBe(false);
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(input()).toBeTruthy();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await raf();
     expect(document.querySelector('input')).toBeNull();
     expect(getComputedStyle(dlg()).display).toBe('none');

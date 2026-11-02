@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { visuallyHidden } from '@var-ui/core/components/visuallyHidden';
+import { mergeProps } from '../utils';
+
+interface Props extends HTMLAttributes<'span'> {
+  className?: string;
+}
+
+const { className, ...rest } = Astro.props;
+---
+<span {...rest} {...mergeProps(visuallyHidden(), className)}><slot /></span>

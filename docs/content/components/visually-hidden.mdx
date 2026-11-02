@@ -1,0 +1,46 @@
+---
+title: VisuallyHidden
+description: Text that is hidden visually but still read by screen readers.
+---
+
+# VisuallyHidden
+
+A `<span>` that takes no visible space but stays in the accessibility tree and in find-in-page. Use it for text a sighted user does not need: the name of an icon-only control, a status message for a live region, a heading that only exists for navigation by assistive technology.
+
+It is not `display: none`, `visibility: hidden` or the HTML `hidden` attribute: those remove the content from the accessibility tree as well. For responsive show/hide use [Hidden](/components/hidden).
+
+## Examples
+
+### Icon button label
+
+The visible glyph is `aria-hidden`; the hidden text becomes the accessible name.
+
+<Demo id="visually-hidden.default" />
+
+### Live region
+
+Pass any native attribute through: `role="status"` makes the message announce when its text changes, with nothing shown on screen.
+
+<Demo id="visually-hidden.live-region" />
+
+## When not to use it
+
+- If a control can take an `aria-label`, prefer that for a single static name. `VisuallyHidden` is for text that is part of the content, can be translated with the rest of it, or changes.
+- Do not hide focusable content: a keyboard user would land on something they cannot see.
+- To show the text on focus (a skip link) use a real link and style it; `VisuallyHidden` has no focus state.
+
+## Astro
+
+`VisuallyHidden` from `@var-ui/astro` renders the same `<span>` and class. `Spinner` uses it for its label in both packages.
+
+## Props
+
+<PropsTable slug="visually-hidden" />
+
+All native `<span>` attributes are passed through, and `ref` is the span.
+
+## Accessibility
+
+- Rendered with the `visually-hidden` recipe: `position: absolute`, a 1px clipped box, `overflow: hidden`, `white-space: nowrap`. The text is still in the accessibility tree, selectable by assistive technology, and found by browser search.
+- `white-space: nowrap` keeps long text from wrapping inside the 1px box, which some screen readers would read word by word.
+- The text should be written for a listener, in the page language.

@@ -1,3 +1,4 @@
+import { expect, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 
 /** Shared helpers for `*.browser.test.ts(x)` files (real Chromium). */
@@ -93,4 +94,65 @@ export function freezeAt(el: Element, fraction: number): number {
 export async function finishAll(el: Element): Promise<void> {
   for (const animation of el.getAnimations({ subtree: true })) animation.finish();
   await raf();
+}
+
+let held: HTMLStyleElement | null = null;
+
+/**
+ * Stretch the `slow` motion duration (every native enter/exit transition; also `--test-fx-duration`,
+ * which the hook tests' stand-in `.fx` rules use) to ten minutes for the
+ * rest of the test, so an assertion made while an animation is "in progress" can never race the
+ * wall clock: a loaded runner can spend more than the real 150ms between two awaits, and then the
+ * animation is already over. Skip it forward with {@link finishAll} (or {@link freezeAt}) instead
+ * of waiting it out, and never call {@link settled} while held (it would wait ten minutes).
+ * Released by `releaseMotion()`, which `setup.browser.ts` runs after every test.
+ */
+export function holdMotion(): void {
+  if (held?.isConnected) return;
+  held = document.createElement('style');
+  held.dataset.testHoldMotion = '';
+  held.textContent =
+    ':root, :root[class] { --var-ui-duration-slow: 600000ms !important; --test-fx-duration: 600000ms !important; }';
+  document.head.append(held);
+}
+
+/** Undo {@link holdMotion}. */
+export function releaseMotion(): void {
+  held?.remove();
+  held = null;
+}
+
+/**
+ * Resolves once `el` has a running finite animation (an enter or exit transition has started),
+ * polling per frame up to `timeout`. The platform does not promise that a transition exists after
+ * a fixed number of frames, so wait for the condition instead of for a frame count.
+ */
+export async function animating(el: Element, timeout = 3000): Promise<void> {
+  await vi.waitFor(
+    () => {
+      expect(
+        el
+          .getAnimations({ subtree: true })
+          .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity).length,
+        'a running enter/exit animation',
+      ).toBeGreaterThan(0);
+    },
+    { timeout, interval: 16 },
+  );
+}
+
+/**
+ * Hover and focus leak between tests in one file (the document is shared and the real pointer stays
+ * where the last test left it): park the pointer in the top-left corner.
+ */
+export async function parkPointer(): Promise<void> {
+  const probe = document.createElement('div');
+  probe.style.cssText =
+    'position:fixed;left:0;top:0;width:2px;height:2px;pointer-events:none;visibility:hidden;';
+  document.body.append(probe);
+  try {
+    await userEvent.hover(probe, { force: true });
+  } finally {
+    probe.remove();
+  }
 }

@@ -1,0 +1,418 @@
+---
+title: Forms
+description: Build forms with native validation, the Form component, react-hook-form and Zod, server errors and async submit, with the accessibility wiring and the Astro story.
+---
+
+# Forms
+
+Every VarUI field is a thin layer over a native control, so the platform does the work first: constraint validation, `FormData`, `name`, `required`, `:invalid`, `form.reset()`. This guide covers three levels, from least to most JavaScript.
+
+1. **Native validation with `Form`**: `required`, `type`, `pattern`, a server `errors` map and an async `onSubmit`. No form library.
+2. **react-hook-form**: `register()` on the text fields, `Checkbox` and `Switch`, `Controller` on everything else.
+3. **Zod** through `zodResolver`, on top of either react-hook-form pattern.
+
+[Astro](#astro) has no client state, so it stays on level 1 with plain `<form method="post">`.
+
+Every snippet below is copied from `packages/react/src/test/formsGuide.tsx` and exercised by `forms.integration.test.tsx` and `forms.integration.browser.test.tsx`; a test fails when this page and that file drift apart. `react-hook-form`, `zod` and `@hookform/resolvers` are **not** dependencies of `@var-ui/react`: install them in your app.
+
+## The contract the form libraries rely on
+
+| Prop           | Where it lands                                                                                                                                                                                 |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`         | The native control, so it is submitted with `FormData`. Components with several inputs (`MultiSelector`, `Tokenizer`, `PinInput`, `Rating`) submit hidden inputs under one name.               |
+| `ref`          | The native control (the `<input>`, the trigger `<button>`). For containers (date fields, groups) it is the container: see [focus the first invalid control](#focus-the-first-invalid-control). |
+| `onChange`     | The native `change`/`input` event, where the component renders one `<input>`. Parsed values arrive in `onValueChange` instead.                                                                 |
+| `onBlur`       | The native `blur` of the control (or of the group), which is what "touched" means.                                                                                                             |
+| `errorMessage` | Renders the message, sets `aria-invalid` and adds it to `aria-describedby`. `invalid` alone only sets the state.                                                                               |
+| `required`     | Native constraint validation, or `aria-required` where there is no single native control.                                                                                                      |
+
+## Native validation and Form
+
+`Form` is a `<form>` that runs the browser's constraint validation on submit. When something is invalid it blocks `onSubmit` and moves focus to the first invalid control, so the screen reader reads its label, value and error. When the form is valid, `onSubmit` receives the event and a `FormData`.
+
+```tsx
+import { Button, Checkbox, Form, TextField } from '@var-ui/react';
+
+function NewsletterForm({ onSubscribe }: { onSubscribe: (data: FormData) => void }) {
+  return (
+    <Form onSubmit={(_event, data) => onSubscribe(data)}>
+      <TextField
+        name="email"
+        type="email"
+        label="Email"
+        description="We never share it."
+        required
+      />
+      <Checkbox name="terms" required>
+        I accept the terms
+      </Checkbox>
+      <Button type="submit">Subscribe</Button>
+    </Form>
+  );
+}
+```
+
+The messages shown are the browser's own (`validationMessage`), wired to the field. Pass `errorMessage` to replace one with your copy, and `validationBehavior="aria"` to validate on the fly instead.
+
+Plain `<input>` elements work too: wrap them in `Field`, which wires the label, the description and the native message.
+
+```tsx
+import { Button, Field, Form } from '@var-ui/react';
+
+function UsernameForm({ onSave }: { onSave: (data: FormData) => void }) {
+  return (
+    <Form onSubmit={(_event, data) => onSave(data)}>
+      <Field name="username" label="Username" description="Letters and digits only.">
+        <input name="username" pattern="[a-z0-9]+" required />
+      </Field>
+      <Button type="submit">Save</Button>
+    </Form>
+  );
+}
+```
+
+## Server errors and async submit
+
+`onSubmit` may be async. A rejected promise goes to `onError` (or to `reportError`), so it never becomes an unhandled rejection. `errors` is a map keyed by field `name`: a truthy entry blocks the next submit and focuses that control, so clear it when the user edits the field (the app owns that; `Form` does not). `Field` shows the entry by itself; the VarUI fields take it through `errorMessage`.
+
+For the pending state keep your own flag and pass it to `Button loading`: the button announces the busy state with `data-pending` and ignores presses, so a double click cannot submit twice.
+
+This is the [live demo on the Form page](/components/form#server-errors-and-pending). The code:
+
+```tsx
+import { useState } from 'react';
+import { Button, Form, TextField } from '@var-ui/react';
+
+type SignUpResult = { errors?: Record<string, string> };
+
+function SignUpForm({ signUp }: { signUp: (data: FormData) => Promise<SignUpResult> }) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [pending, setPending] = useState(false);
+
+  async function onSubmit(_event: unknown, data: FormData) {
+    setPending(true);
+    try {
+      const result = await signUp(data);
+      setErrors(result.errors ?? {});
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <Form
+      errors={errors}
+      onSubmit={onSubmit}
+      onError={() => setErrors({ form: 'Something went wrong. Try again.' })}
+    >
+      <TextField
+        name="email"
+        type="email"
+        label="Email"
+        required
+        errorMessage={errors.email}
+        onChange={() => setErrors(({ email: _cleared, ...rest }) => rest)}
+      />
+      {errors.form ? <p role="alert">{errors.form}</p> : null}
+      <Button type="submit" loading={pending}>
+        Create account
+      </Button>
+    </Form>
+  );
+}
+```
+
+## react-hook-form
+
+### register()
+
+`register(name)` returns `{ name, ref, onChange, onBlur }`. It works directly on the components that render **one** native control and keep the DOM as their source of truth when uncontrolled:
+
+| Component                                               | Value in `handleSubmit`      | Notes                                                                 |
+| ------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------- |
+| `TextField`, `TextAreaField`, `PasswordInput`           | `string`                     | `defaultValues`, `setValue()` and `reset()` update the input.         |
+| `Checkbox`, `Switch`                                    | `boolean`                    | `defaultValues`, `setValue()` and `reset()` update the visible state. |
+| a native `<input>`, `<select>`, `<textarea>` in `Field` | what RHF reads from the node | Standard react-hook-form behaviour.                                   |
+
+`errors.<name>?.message` goes to `errorMessage`. `Checkbox` and `Switch` have no message slot, so link the message yourself with `aria-describedby`.
+
+```tsx
+import { Button, Checkbox, Switch, TextAreaField, TextField } from '@var-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const profileSchema = z.object({
+  name: z.string().min(2, 'Enter at least 2 characters'),
+  bio: z.string().max(20, 'Keep it under 20 characters'),
+  newsletter: z.boolean(),
+  terms: z.boolean().refine((accepted) => accepted, 'You must accept the terms'),
+});
+type ProfileValues = z.infer<typeof profileSchema>;
+
+function ProfileForm({ onSave }: { onSave: (values: ProfileValues) => void }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProfileValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: { name: '', bio: '', newsletter: false, terms: false },
+  });
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSave)}>
+      <TextField label="Name" {...register('name')} errorMessage={errors.name?.message} />
+      <TextAreaField label="Bio" {...register('bio')} errorMessage={errors.bio?.message} />
+      <Switch {...register('newsletter')}>Send me the newsletter</Switch>
+      <Checkbox
+        {...register('terms')}
+        invalid={Boolean(errors.terms)}
+        aria-describedby={errors.terms ? 'terms-error' : undefined}
+      >
+        I accept the terms
+      </Checkbox>
+      {errors.terms ? (
+        <p id="terms-error" role="alert">
+          {errors.terms.message}
+        </p>
+      ) : null}
+      <Button type="submit">Save</Button>
+    </form>
+  );
+}
+```
+
+Use `noValidate` when Zod owns validation, otherwise the browser may block the submit before react-hook-form runs. `formState.isDirty` and `touchedFields` work: the typing and the blur reach react-hook-form through the native events.
+
+### Controller
+
+Everything else is a composite control: several inputs, no `change` event for the value (a `Slider` moves by keyboard and pointer without one), a formatted text (`NumberInput`), or no `<input>` at all (`Select`, the date fields, `ToggleGroup`). react-hook-form's `register()` reads and writes one native node, so it cannot carry these. Use `Controller` (or `useController`) with the parsed `value` and `onValueChange`; `field.onBlur` goes to `onBlur`.
+
+| Component                         | `value` / `onValueChange`                       | `ref`                                                              |
+| --------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------ |
+| `Select`                          | `string \| null`                                | `ref={field.ref}` (the trigger button)                             |
+| `MultiSelector`                   | `string[]`                                      | `ref={field.ref}` (the trigger button)                             |
+| `Tokenizer`                       | `string[]`                                      | `ref={field.ref}` (the search input)                               |
+| `Combobox`                        | `string \| null` on `Combobox.Root`             | `ref={field.ref}` on `Combobox.Input`; `onBlur` on `Combobox.Root` |
+| `RadioGroup`                      | `string \| null`                                | container: [`focusFirst`](#focus-the-first-invalid-control)        |
+| `CheckboxGroup`                   | `string[]`                                      | container: `focusFirst`                                            |
+| `Slider`                          | `number`                                        | `ref={field.ref}` (the thumb input)                                |
+| `NumberInput`                     | `number` (`NaN` when empty)                     | `ref={field.ref}` (the text input)                                 |
+| `PinInput`                        | `string`                                        | `ref={field.ref}` (the first cell)                                 |
+| `FileInput`                       | `File \| File[] \| null`                        | none: the `ref` is the hidden file input, so leave it off          |
+| `DateInput`, `DateTimeInput`      | `DateValue \| null`                             | container: `focusFirst`                                            |
+| `TimeInput`                       | `TimeValue \| null`                             | container: `focusFirst`                                            |
+| `ColorInput`                      | `string` (hex)                                  | `ref={field.ref}` (the hex input)                                  |
+| `Rating`                          | `number` (`0` = none)                           | `ref={field.ref}` (the first star)                                 |
+| `ToggleGroup`, `SegmentedControl` | `string \| null`, or `string[]` with `multiple` | container: `focusFirst`                                            |
+
+`setValue()` and `reset()` update all of them, and `touchedFields` follows `onBlur`.
+
+```tsx
+import { Button, NumberInput, Select } from '@var-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const orderSchema = z.object({
+  size: z.string().min(1, 'Choose a size'),
+  quantity: z.number({ error: 'Enter a quantity' }).min(1, 'Order at least one'),
+});
+type OrderValues = z.infer<typeof orderSchema>;
+
+function OrderForm({ onOrder }: { onOrder: (values: OrderValues) => void }) {
+  const { control, handleSubmit } = useForm<OrderValues>({
+    resolver: zodResolver(orderSchema),
+    defaultValues: { size: '', quantity: 1 },
+  });
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onOrder)}>
+      <Controller
+        control={control}
+        name="size"
+        render={({ field, fieldState }) => (
+          <Select
+            label="Size"
+            options={[
+              { value: 's', label: 'Small' },
+              { value: 'm', label: 'Medium' },
+              { value: 'l', label: 'Large' },
+            ]}
+            name={field.name}
+            ref={field.ref}
+            value={field.value || null}
+            onValueChange={(value) => field.onChange(value ?? '')}
+            onBlur={field.onBlur}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="quantity"
+        render={({ field, fieldState }) => (
+          <NumberInput
+            label="Quantity"
+            min={0}
+            name={field.name}
+            ref={field.ref}
+            value={field.value}
+            onValueChange={field.onChange}
+            onBlur={field.onBlur}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+      <Button type="submit">Order</Button>
+    </form>
+  );
+}
+```
+
+`Select` takes `null` for "nothing selected" while the schema wants a string, hence the `value ?? ''` mapping at the edge. Keep that conversion in the `Controller`, not in the schema.
+
+### Zod with zodResolver
+
+`zodResolver(schema)` turns Zod issues into react-hook-form errors, so each field shows its issue through `errorMessage` (see the two snippets above). Remember the three edges where a UI value is not yet a schema value: an empty `Select` (`null`), an empty `NumberInput` (`NaN`), and a `Checkbox` that must be `true` (use `z.boolean().refine(...)`, which keeps `false` as a valid default).
+
+### Server errors
+
+Run react-hook-form inside `Form` when you want async handling and the same focus behaviour. `handleSubmit(fn)` is a valid `onSubmit`, and `setError` maps a server response to a field:
+
+```tsx
+import { Button, Form, TextField } from '@var-ui/react';
+import { useForm } from 'react-hook-form';
+
+type InviteValues = { email: string };
+
+function InviteForm({ invite }: { invite: (values: InviteValues) => Promise<{ email?: string }> }) {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<InviteValues>({ defaultValues: { email: '' } });
+
+  return (
+    <Form
+      onSubmit={handleSubmit(async (values) => {
+        const result = await invite(values);
+        if (result.email) setError('email', { type: 'server', message: result.email });
+      })}
+    >
+      <TextField
+        type="email"
+        label="Email"
+        {...register('email', { required: 'Enter an email' })}
+        errorMessage={errors.email?.message}
+      />
+      <Button type="submit" loading={isSubmitting}>
+        Invite
+      </Button>
+    </Form>
+  );
+}
+```
+
+Skip the `required` attribute here: react-hook-form owns the rule, and `Form`'s native check would run first.
+
+## Focus the first invalid control
+
+On a failed submit, `Form` focuses the first `[aria-invalid="true"]` or `:invalid` control, and react-hook-form calls `focus()` on the `ref` it registered. Where the `ref` is the control itself this just works. Where the `ref` is a container (date fields, groups, `RadioGroup`), wrap it so the first control inside is focused:
+
+```tsx
+import type { RefCallBack } from 'react-hook-form';
+
+/**
+ * `field.ref` for controls whose `ref` is a container (date fields, groups): when validation
+ * fails, react-hook-form focuses the first control inside it.
+ */
+function focusFirst(ref: RefCallBack) {
+  return (element: HTMLElement | null) =>
+    ref(
+      element && {
+        focus: () =>
+          element
+            .querySelector<HTMLElement>('input:not([type="hidden"]), button, [role="spinbutton"]')
+            ?.focus(),
+      },
+    );
+}
+```
+
+```tsx
+import { DateInput } from '@var-ui/react';
+import { Controller, type Control } from 'react-hook-form';
+import type { CalendarDate } from '@internationalized/date';
+
+function BirthdayField({ control }: { control: Control<{ birthday: CalendarDate | null }> }) {
+  return (
+    <Controller
+      control={control}
+      name="birthday"
+      rules={{ required: 'Enter your birthday' }}
+      render={({ field, fieldState }) => (
+        <DateInput
+          label="Birthday"
+          ref={focusFirst(field.ref)}
+          value={field.value}
+          onValueChange={field.onChange}
+          onBlur={field.onBlur}
+          errorMessage={fieldState.error?.message}
+        />
+      )}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- **Errors are described, not only coloured.** `errorMessage` sets `aria-invalid="true"` on the control and appends the message id to `aria-describedby` (after the description), so the label, value and error are read together when the control takes focus. The same wiring is on every field, and `Fieldset` for a group.
+- **Focus goes to the error.** Moving focus on submit is what announces the problem; both `Form` and react-hook-form do it. Do not also render a live region with the same text.
+- **Name what you cannot wire.** `Checkbox` and `Switch` take `aria-describedby` and `invalid`; give the message an `id` (the `register` snippet does).
+- **Pending is state, not only a spinner.** `Button loading` sets `data-pending` and ignores presses; keep the label visible.
+
+## Astro
+
+`@var-ui/astro` has no client state, no `Form` and no field components that validate: use the platform. A plain `<form method="post">` with native `required` and `type` validates in the browser, and the server re-renders the page with the errors. The markup is what the React `TextField` renders (the `textField` recipe slots: `root`, `label`, `input`, `description`, `error`), so the page looks the same and the hooks (`data-invalid`, class names) are shared.
+
+```astro
+---
+import { Button } from '@var-ui/astro';
+import { textField } from '@var-ui/core/components/textField';
+import { mergeProps } from 'typestyles';
+
+const t = textField({ size: 'md' });
+let error: string | undefined;
+
+if (Astro.request.method === 'POST') {
+  const data = await Astro.request.formData();
+  const email = String(data.get('email') ?? '');
+  if (!email.includes('@')) error = 'Enter a valid email';
+  else return Astro.redirect('/thanks');
+}
+---
+
+<form method="post">
+  <div {...mergeProps(t.root)}>
+    <label {...mergeProps(t.label)} for="email">Email</label>
+    <input
+      {...mergeProps(t.input)}
+      id="email"
+      name="email"
+      type="email"
+      required
+      aria-invalid={error ? 'true' : undefined}
+      aria-describedby={error ? 'email-error' : 'email-hint'}
+    />
+    {error ? null : <p {...mergeProps(t.description)} id="email-hint">We never share it.</p>}
+    {error ? <p {...mergeProps(t.error)} id="email-error">{error}</p> : null}
+  </div>
+  <Button type="submit">Subscribe</Button>
+</form>
+```
+
+For a group of controls, `Fieldset` renders the native `<fieldset>`/`<legend>` with the same description and error wiring. Reach for the React package, with an island, only when you need `Form`, pending state or client-side Zod.

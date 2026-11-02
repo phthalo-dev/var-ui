@@ -2,7 +2,7 @@ import { afterEach, beforeAll, expect, test } from 'vite-plus/test';
 import { popover } from '@var-ui/core/components/popover';
 import { select } from '@var-ui/core/components/select';
 import '../../../core/src/theme/base-styles';
-import { finishAll, freezeAt, raf } from './browser';
+import { animating, finishAll, freezeAt, holdMotion, raf } from './browser';
 
 // The core recipes position a `[popover]` element against its anchor in pure CSS (position-area,
 // position-try-fallbacks, anchor-size). JS only names the anchor: `anchor-name` on the trigger and
@@ -156,6 +156,7 @@ test('top placement sits above the trigger', async () => {
 });
 
 test('enter and exit animate and the element stays rendered until the exit ends', async () => {
+  holdMotion();
   const m = mount({
     popupClass: popover().root.className,
     triggerStyle: 'top:100px;left:120px;width:100px',
@@ -164,7 +165,7 @@ test('enter and exit animate and the element stays rendered until the exit ends'
   expect(getComputedStyle(popup).display).toBe('none');
 
   popup.showPopover();
-  await raf();
+  await animating(popup);
   expect(freezeAt(popup, 1 / 3)).toBeGreaterThan(0);
   const mid = Number(getComputedStyle(popup).opacity);
   expect(mid).toBeGreaterThan(0);

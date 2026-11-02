@@ -1,0 +1,298 @@
+---
+title: Hooks
+description: Reference for the public React hooks in @var-ui/react, from small utilities like useDisclosure and useHotkeys to headless table state.
+---
+
+# Hooks
+
+Everything on this page is exported from `@var-ui/react`. Hooks are plain React: no provider is needed unless noted, they are safe to render on the server, and they work under `StrictMode`. Names follow the platform and the component props they pair with (`open`, `value`, `onChange`), so most of them plug straight into a component.
+
+| Group                           | Hooks                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [State](#state)                 | `useDisclosure`, `useControllableState`                                                                                                    |
+| [Timing](#timing)               | `useDebouncedValue`, `useDebouncedCallback`                                                                                                |
+| [Events](#events)               | `useClickOutside`, `useHotkeys`                                                                                                            |
+| [Browser](#browser)             | `useMediaQuery`, `useCopy`, `useHeadroom`                                                                                                  |
+| [Layout](#layout)               | `useResizable`, `useOverflow`                                                                                                              |
+| [Tables](#tables)               | `useTableSort`, `useTableFilter`, `useTablePagination`, `useTableSelection`, `useColumnResize`                                             |
+| [Context hooks](#context-hooks) | `useColorMode`, `useDirection`, `useToast`, `useIcons`, `useCommandPalette`, `useMobileNav`, `useLayoutSlots`, `useLayoutArea`, `useChat*` |
+
+## State
+
+### useDisclosure
+
+```ts
+function useDisclosure(initial?: boolean): {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  show: () => void;
+  hide: () => void;
+  toggle: () => void;
+};
+```
+
+Boolean open/closed state. The result is named after the `open` prop and `setOpen` has the shape of `onOpenChange`, so an overlay takes it directly. All callbacks are stable.
+
+```tsx
+import { Button, Dialog, useDisclosure } from '@var-ui/react';
+
+function EditProject() {
+  const d = useDisclosure();
+  return (
+    <>
+      <Button onClick={d.show}>Edit</Button>
+      <Dialog open={d.open} onOpenChange={d.setOpen} title="Edit project">
+        ...
+      </Dialog>
+    </>
+  );
+}
+```
+
+`onOpenChange` receives `(open, details)`; `setOpen` ignores the second argument. If you need the close reason, write your own handler instead.
+
+### useControllableState
+
+```ts
+function useControllableState<T>(options: {
+  value?: T;
+  defaultValue: T;
+  onChange?: (value: T) => void;
+}): readonly [T, (next: T | ((current: T) => T)) => void];
+```
+
+The controlled/uncontrolled pattern for building your own `value` / `defaultValue` / `onChange` components. While `value` is not `undefined` the hook stores nothing and only reports changes; otherwise it keeps the state itself. `onChange` fires in both modes, only when the value actually changes. The setter is stable and takes an updater.
+
+```tsx
+function Counter(props: { value?: number; defaultValue?: number; onChange?: (n: number) => void }) {
+  const [value, setValue] = useControllableState({
+    value: props.value,
+    defaultValue: props.defaultValue ?? 0,
+    onChange: props.onChange,
+  });
+  return <Button onClick={() => setValue((n) => n + 1)}>{value}</Button>;
+}
+```
+
+Function values are not supported (they are read as updaters). The overlay components use their own root hook because their change handler also receives a close reason and can veto the change.
+
+## Timing
+
+### useDebouncedValue
+
+```ts
+function useDebouncedValue<T>(value: T, delayMs: number, options?: { leading?: boolean }): T;
+```
+
+A copy of `value` that updates once it has stopped changing for `delayMs`. With `leading: true` the first change after a quiet period applies immediately and the trailing update still follows. Pending updates are cleared on unmount.
+
+```tsx
+const [query, setQuery] = useState('');
+const debounced = useDebouncedValue(query, 300);
+useEffect(() => {
+  void search(debounced);
+}, [debounced]);
+```
+
+### useDebouncedCallback
+
+```ts
+function useDebouncedCallback<Args extends unknown[]>(
+  fn: (...args: Args) => void,
+  delayMs: number,
+): ((...args: Args) => void) & { cancel: () => void; flush: () => void };
+```
+
+`fn` runs `delayMs` after the last call, with the last arguments. The returned function is stable, always calls the latest `fn`, and is cancelled on unmount. `cancel()` drops the pending call; `flush()` runs it now (and does nothing if none is pending), which is what you want on blur or before navigating away.
+
+```tsx
+const save = useDebouncedCallback((text: string) => api.save(text), 500);
+
+<TextAreaField label="Notes" onChange={(e) => save(e.target.value)} onBlur={save.flush} />;
+```
+
+## Events
+
+### useClickOutside
+
+```ts
+function useClickOutside(
+  refs: RefObject<Element | null> | RefObject<Element | null>[],
+  handler: (event: Event) => void,
+  options?: {
+    events?: ('pointerdown' | 'mousedown' | 'touchstart' | 'click' | 'focusin')[];
+    enabled?: boolean;
+  },
+): void;
+```
+
+Calls `handler` when a pointer event starts outside every element in `refs`. It listens on the document in the capture phase (default event `pointerdown`), so it still fires if something calls `stopPropagation()`, and it ignores events whose path goes through any of the refs.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null);
+useClickOutside(ref, () => setEditing(false), { enabled: editing });
+
+return <div ref={ref}>...</div>;
+```
+
+How it interacts with the platform:
+
+- **Native top layer.** A `<dialog>` or `[popover]` rendered inside the ref is still its DOM descendant, so clicks in it (and on a modal dialog's `::backdrop`, which belongs to the dialog element) count as inside.
+- **Portaled content.** Something rendered with [`Portal`](/components/portal) into another container is not a descendant. Pass its ref too: `useClickOutside([panelRef, portaledRef], close)`.
+- **Overlays.** `Popover`, `Menu` and the other overlays handle light dismiss themselves and report it through `onOpenChange` with a reason. Use `useClickOutside` for your own panels, not to close those.
+
+### useHotkeys
+
+```ts
+function useHotkeys(
+  bindings: Record<string, (event: KeyboardEvent) => void>,
+  options?: {
+    target?: RefObject<EventTarget | null> | EventTarget | null; // default: window
+    event?: 'keydown' | 'keyup';
+    ignoreInputs?: boolean; // default true
+    preventDefault?: boolean; // default true
+    ignoreRepeat?: boolean; // default true
+    enabled?: boolean;
+  },
+): void;
+```
+
+Keyboard shortcuts. A combo is modifiers and a key joined with `+`:
+
+| Combo           | Meaning                                                                  |
+| --------------- | ------------------------------------------------------------------------ |
+| `mod+k`         | Command on Apple platforms, Ctrl elsewhere                               |
+| `ctrl+shift+p`  | Modifiers must match exactly (`ctrl+p` does not fire for `ctrl+shift+p`) |
+| `escape`, `esc` | Named keys use `event.key` (`enter`, `arrowdown`, `/`, ...)              |
+| `alt+space`     | `space` and `plus` are aliases for ` ` and `+`                           |
+
+Modifier names: `mod`, `meta` / `cmd`, `ctrl` / `control`, `alt` / `option`, `shift`. The key is compared with `event.key`, so symbols follow the user's keyboard layout (`shift+/` is a different key on other layouts).
+
+```tsx
+const palette = useDisclosure();
+const searchRef = useRef<HTMLInputElement>(null);
+
+useHotkeys({
+  'mod+k': palette.toggle,
+  '/': () => searchRef.current?.focus(),
+});
+```
+
+By default events from text inputs, textareas, selects and contenteditable elements are ignored so bare keys like `/` do not fire while typing. Pass `ignoreInputs: false` for shortcuts that should work everywhere (`CommandPalette` does this for its own hotkey). Handlers may change on every render; the listener is only re-attached when the set of combos changes.
+
+## Browser
+
+### useMediaQuery
+
+```ts
+function useMediaQuery(query: string): boolean;
+```
+
+Subscribes to a media query. It returns `false` on the server and during hydration, then the real value, so the first client render matches the server HTML.
+
+```tsx
+const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
+```
+
+### useCopy
+
+```ts
+function useCopy(options?: { timeout?: number }): {
+  copied: boolean;
+  error: Error | null;
+  copy: (value: string) => Promise<void>;
+  reset: () => void;
+};
+```
+
+Clipboard state machine behind `CopyButton`. `copied` flips back to `false` after `timeout` ms (default 2000). A failure (no clipboard permission, insecure context) sets `error` instead of throwing.
+
+```tsx
+const { copied, copy } = useCopy();
+<Button onClick={() => copy(token)}>{copied ? 'Copied' : 'Copy token'}</Button>;
+```
+
+### useHeadroom
+
+```ts
+function useHeadroom(options?: { fixedAt?: number; target?: RefObject<HTMLElement | null> }): {
+  pinned: boolean;
+};
+```
+
+Hides chrome while scrolling down and reveals it when scrolling up. `fixedAt` is the scroll offset before it can unpin; `target` is the scroll container (default: `window`; pass the `AppShell` main landmark when the shell scrolls internally). Pair with [`AppShell`](/components/app-shell) `headerHidden={!pinned}`.
+
+## Layout
+
+### useResizable
+
+```ts
+function useResizable(config?: ResizableConfig): UseResizableResult;
+```
+
+Width state for a resizable region, designed to feed a [`ResizeHandle`](/components/resize-handle). `ResizableConfig` has `defaultWidth` (260), `minWidth` (180), `maxWidth` (480), `autoSaveId` (persists to `localStorage` under `var-ui-resizable:<id>`), `onWidthChange`, `collapsible` and `collapsedSize`. The result has `width`, `isCollapsed`, `collapse()`, `expand()`, `setCollapsed()`, `resize(width)` and `handleProps` to spread on the handle.
+
+```tsx
+const nav = useResizable({ autoSaveId: 'nav', collapsible: true });
+
+<aside style={{ width: nav.isCollapsed ? 0 : nav.width }}>...</aside>
+<ResizeHandle aria-label="Resize navigation" {...nav.handleProps} />
+```
+
+For two panes that share one container, use [`Splitter`](/components/splitter).
+
+### useOverflow
+
+```ts
+function useOverflow<T>(
+  items: T[],
+  options?: { maxVisible?: number; gapPx?: number; enabled?: boolean },
+): {
+  containerRef: RefObject<HTMLElement | null>;
+  measureRef: RefObject<HTMLElement | null>;
+  visibleItems: T[];
+  hiddenItems: T[];
+};
+```
+
+Measures how many items fit in a row. Bind `containerRef` to the visible row and `measureRef` to a hidden, out-of-flow copy that renders every item plus the overflow indicator; the hook reserves room for the indicator as soon as any item would be hidden and re-measures on resize. It is what [`OverflowList`](/components/overflow-list) uses; reach for the hook for custom layouts.
+
+## Tables
+
+The table hooks are headless: they hold state and derive arrays, with no DOM. Each is uncontrolled by default and controlled when you pass the value and its change handler. They compose, in this order: filter, sort, paginate. See [`Table`](/components/table).
+
+```tsx
+const { filteredData, query, onQueryChange } = useTableFilter({ data: rows });
+const { sortedData, sortDescriptor, onSortChange } = useTableSort({
+  data: filteredData,
+  defaultSort: { column: 'name', direction: 'ascending' },
+});
+const { pageData, page, totalPages, setPage } = useTablePagination({
+  data: sortedData,
+  pageSize: 20,
+});
+```
+
+| Hook                 | Options                                                                                                             | Returns                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `useTableSort`       | `data`, `defaultSort`, `sortDescriptor`, `onSortChange`, `getSortValue(row, column)`                                | `sortedData`, `sortDescriptor`, `onSortChange`. Nullish values sort last.                        |
+| `useTableFilter`     | `data`, `query`, `defaultQuery`, `onQueryChange`, `searchKeys`, `filterFn(row, query)`                              | `filteredData`, `query`, `onQueryChange`. Default match is a case-insensitive substring.         |
+| `useTablePagination` | `data`, `pageSize`, `page` (1-based), `defaultPage`, `onPageChange`                                                 | `pageData`, `page`, `pageSize`, `totalPages`, `setPage`. The page is clamped to the valid range. |
+| `useTableSelection`  | `data`, `getRowId`, `mode` (`'single'` or `'multiple'`), `selectedKeys`, `defaultSelectedKeys`, `onSelectionChange` | `selectedKeys` (a `Set`), `isSelected`, `toggle`, `selectAll`, `clear`, `onSelectionChange`      |
+| `useColumnResize`    | `columns`, `defaultWidths` (CSS lengths), `minWidth` (80), `autoSaveId`, `widths`, `onWidthsChange`                 | `columnWidths`, `getColumnProps(key)`, `getResizeHandleProps(key)`                               |
+
+## Context hooks
+
+These read state from a provider or component and belong to the component they are documented with.
+
+| Hook                                               | Returns                                                                         | See                                              |
+| -------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `useColorMode()`                                   | The color mode (`'light'`, `'dark'`, `'system'`), the resolved mode and setters | [ColorModeToggle](/components/color-mode-toggle) |
+| `useDirection()`                                   | `{ direction, isRtl }`; defaults to `ltr` outside a `DirectionProvider`         | [Getting started](/docs/getting-started)         |
+| `useToast()`                                       | Queue functions for toasts; throws outside a `ToastProvider`                    | [Toast](/components/toast)                       |
+| `useIcons()`                                       | The merged icon registry from the nearest `IconProvider`                        | [Getting started](/docs/getting-started)         |
+| `createCommandPalette()` / `useCommandPalette()`   | A controller (and reactive `isOpen`) for `<CommandPalette controller>`          | [CommandPalette](/components/command-palette)    |
+| `useMobileNav()`                                   | The nearest `MobileNavProvider` open state, or `null`                           | [MobileNav](/components/mobile-nav)              |
+| `useLayoutSlots()` / `useLayoutArea()`             | Slot presence and the zone that rendered a subtree inside a `Layout`            | [Layout](/components/layout)                     |
+| `useChatListContext()` / `useChatMessageContext()` | Density and sender set by `ChatMessageList` / `ChatMessage`, or `null`          | [ChatMessageList](/components/chat-message-list) |
+| `useChatStreamScroll()` / `useChatNewMessages()`   | Lock-to-bottom auto-scroll for streaming content, and a "new messages" flag     | [ChatLayout](/components/chat-layout)            |

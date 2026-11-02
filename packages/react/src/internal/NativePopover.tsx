@@ -203,6 +203,7 @@ function NativePopoverShell({
   const latestState = useRef(state);
   latestState.current = state;
   const openAtDown = useRef(false);
+  const downPointer = useRef({ id: 1, type: 'mouse' });
   const pop = usePopoverElement(root, { mode: 'manual', escape: false });
   useAnchor(root.triggerEl, root.popupEl, {
     placement: toAnchorPlacement(placement),
@@ -256,6 +257,7 @@ function NativePopoverShell({
       target instanceof Element && !!triggerRef?.current?.contains(target);
     const onDown = (event: PointerEvent) => {
       openAtDown.current = inTrigger(event.target);
+      downPointer.current = { id: event.pointerId, type: event.pointerType };
     };
     const onClick = (event: MouseEvent) => {
       const target = event.target as Element | null;
@@ -267,6 +269,17 @@ function NativePopoverShell({
         // a plain `Button` with `onPress`) would otherwise reopen right after this close.
         event.stopPropagation();
         latestState.current.close();
+        // react-aria ends a press from the React `click` we just swallowed. Without that, the
+        // trigger keeps `isPressed` until its 80ms fallback timer and ignores a `pointerdown` in
+        // between (a quick press right after closing would not reopen). Cancel the press instead:
+        // no `onPress`, so nothing reopens, and the next press starts clean.
+        target?.dispatchEvent(
+          new PointerEvent('pointercancel', {
+            bubbles: true,
+            pointerId: downPointer.current.id,
+            pointerType: downPointer.current.type,
+          }),
+        );
       }
     };
     document.addEventListener('pointerdown', onDown, true);

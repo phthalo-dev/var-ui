@@ -241,7 +241,9 @@ export function RacFieldFrame({
           {description}
         </Text>
       ) : null}
-      <AriaFieldError {...mergeProps(slots.error ?? '')}>{errorMessage ?? ''}</AriaFieldError>
+      <AriaFieldError {...mergeProps(slots.error ?? '')}>
+        {errorMessage || undefined}
+      </AriaFieldError>
     </>
   );
 }

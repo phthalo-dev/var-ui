@@ -17,6 +17,12 @@ Submit with empty required fields to see native messages and focus on the first 
 
 <Demo id="form.default" />
 
+### Server errors and pending
+
+An async `onSubmit` with a server `errors` map and a pending button. Enter `taken@example.com` to see the server error.
+
+<Demo id="form.server-errors" />
+
 ## Server errors
 
 Pass an `errors` map keyed by field `name`. A truthy entry blocks submit until the app clears it.
@@ -26,6 +32,10 @@ Pass an `errors` map keyed by field `name`. A truthy entry blocks submit until t
   <TextField name="email" label="Email" />
 </Form>
 ```
+
+## Using with react-hook-form
+
+`Form` also wraps a react-hook-form `handleSubmit(fn)` and its `setError` for server errors; `register()` works on the text fields, `Checkbox` and `Switch`, and `Controller` covers `Select`, the date fields and the other composite controls. See the [Forms guide](/docs/forms) for the table, Zod with `zodResolver`, and verified examples.
 
 ## Props
 

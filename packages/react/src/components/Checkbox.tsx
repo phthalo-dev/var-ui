@@ -16,6 +16,7 @@ import { checkbox } from '@var-ui/core/components/checkbox';
 import { mergeProps } from 'typestyles';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps } from '../internal/racProps';
+import { useNativeChecked } from '../internal/useNativeChecked';
 
 export type CheckboxProps = Omit<
   ComponentPropsWithRef<'input'>,
@@ -85,14 +86,12 @@ export function Checkbox({
   ...rest
 }: CheckboxProps): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
+  const selection = useNativeChecked(inputRef, checked, defaultChecked, onCheckedChange);
   // RAC's `inputRef` only takes an object ref; this also serves callback refs.
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
   const cb = checkbox();
   const racProps = toRacProps({
-    checked,
-    defaultChecked,
     indeterminate,
-    onCheckedChange,
     disabled,
     readOnly,
     required,
@@ -102,6 +101,7 @@ export function Checkbox({
     <AriaCheckbox
       {...(rest as RACCheckboxProps)}
       {...racProps}
+      {...selection}
       {...mergeProps(cb.root, className)}
       style={style}
       inputRef={inputRef}

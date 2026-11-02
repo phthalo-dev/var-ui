@@ -261,6 +261,16 @@ export { ProgressCircle, type ProgressCircleProps } from './ProgressCircle';
 export { Meter, type MeterProps } from './Meter';
 export { Rating, type RatingProps } from './Rating';
 export { Spinner, type SpinnerProps } from './Spinner';
+export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden';
+export { Portal, type PortalProps } from './Portal';
+export {
+  Splitter,
+  SplitterHandle,
+  SplitterPanel,
+  type SplitterHandleProps,
+  type SplitterPanelProps,
+  type SplitterProps,
+} from './Splitter';
 export { Heading, Text, type HeadingProps, type TextProps } from './Typography';
 export {
   Toast,

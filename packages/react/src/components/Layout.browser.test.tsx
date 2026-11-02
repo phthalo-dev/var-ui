@@ -5,7 +5,16 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { edgeInfo, raf, settled, viewport, clickBackdrop } from '../test/browser';
+import {
+  animating,
+  clickBackdrop,
+  edgeInfo,
+  finishAll,
+  holdMotion,
+  raf,
+  settled,
+  viewport,
+} from '../test/browser';
 import { Layout, LayoutContent, LayoutPanel } from './Layout';
 
 beforeAll(() => {
@@ -102,16 +111,19 @@ describe('LayoutPanel overlay mode on a native dialog', () => {
   });
 
   test('focus moves in; scroll is locked while open; exit keeps the element until it ends', async () => {
+    holdMotion();
     render(<Page defaultOpen />);
     await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     expect(dlg().contains(document.activeElement)).toBe(true);
     expect(getComputedStyle(document.documentElement).overflow).toBe('hidden');
     await userEvent.keyboard('{Escape}');
     await raf();
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('inside')).toBeTruthy();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await raf();
     expect(q('inside')).toBeNull();
     expect(getComputedStyle(document.documentElement).overflow).not.toBe('hidden');

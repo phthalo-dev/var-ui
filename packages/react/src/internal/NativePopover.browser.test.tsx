@@ -17,7 +17,7 @@ import {
 } from 'react-aria-components';
 import { userEvent } from 'vite-plus/test/browser';
 import { beforeAll, describe, expect, test, vi } from 'vite-plus/test';
-import { finishAll, raf, settled } from '../test/browser';
+import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
 import { NativePopover, toAnchorPlacement } from './NativePopover';
 
 // Bare positioning (no design system): the contract under test is the adapter, not the recipe.
@@ -195,15 +195,18 @@ describe('shell contract (Select)', () => {
   });
 
   test('children mount only while open and through the exit', async () => {
+    holdMotion();
     render(<FruitSelect />);
     expect(popup().childElementCount).toBe(0);
     await userEvent.click(trigger());
-    await raf();
+    await animating(popup());
     expect(item('Apple')).toBeTruthy();
+    await finishAll(popup());
     await userEvent.keyboard('{Escape}');
-    await raf();
+    await animating(popup());
     expect(isOpen()).toBe(false);
     expect(item('Apple')).toBeTruthy(); // still exiting
+    expect(freezeAt(popup(), 0.5)).toBeGreaterThan(0);
     expect(Number(getComputedStyle(popup()).opacity)).toBeLessThan(1);
     await finishAll(popup());
     await raf();

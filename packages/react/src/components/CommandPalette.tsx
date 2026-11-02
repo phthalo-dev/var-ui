@@ -21,7 +21,8 @@ import {
 import { cx, mergeProps } from 'typestyles';
 import { Kbd } from './Kbd';
 import type { CommandPaletteController } from '../internal/commandPaletteController';
-import { DEFAULT_COMMAND_PALETTE_HOTKEY, matchesHotkey } from '../internal/commandPaletteHotkey';
+import { DEFAULT_COMMAND_PALETTE_HOTKEY } from '../internal/commandPaletteHotkey';
+import { useHotkeys, type HotkeyHandler } from '../hooks/useHotkeys';
 
 export type CommandPaletteItem = {
   /** Unique item identifier passed to `onAction`. */
@@ -212,18 +213,16 @@ export function CommandPalette({
 
   const hotkeyId =
     hotkey === true ? DEFAULT_COMMAND_PALETTE_HOTKEY : hotkey ? [hotkey].flat().join('\0') : '';
-  useEffect(() => {
-    if (!hotkeyId) return undefined;
-    const combos = hotkeyId.split('\0');
-    function handleKeyDown(event: KeyboardEvent) {
-      if (combos.some((combo) => matchesHotkey(event, combo))) {
-        event.preventDefault();
-        root.setOpen(!root.open, { event, reason: 'imperative' });
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hotkeyId, root]);
+  const toggleOnHotkey: HotkeyHandler = (event) => {
+    root.setOpen(!root.open, { event, reason: 'imperative' });
+  };
+  useHotkeys(
+    Object.fromEntries(
+      hotkeyId ? hotkeyId.split('\0').map((combo) => [combo, toggleOnHotkey]) : [],
+    ),
+    // The palette opens from anywhere, including text fields, and toggles on held keys as before.
+    { ignoreInputs: false, ignoreRepeat: false },
+  );
 
   // Reset once the exit animation is over so the list does not flash while the palette fades.
   useEffect(() => {

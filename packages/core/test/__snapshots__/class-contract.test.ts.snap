@@ -1675,6 +1675,20 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-spinner-trackcolor",
     ],
   },
+  "splitter": {
+    "axes": [
+      "data-orientation",
+      "orientation",
+    ],
+    "slots": {
+      "handle": "var-ui-splitter__handle",
+      "panel": "var-ui-splitter__panel",
+      "root": "var-ui-splitter",
+    },
+    "vars": [
+      "--var-ui-splitter-size",
+    ],
+  },
   "stack": {
     "axes": [
       "align",

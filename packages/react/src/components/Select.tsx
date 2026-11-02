@@ -84,6 +84,10 @@ type SelectStateProps = {
   defaultOpen?: boolean;
   /** Called when the listbox opens or closes. */
   onOpenChange?: (open: boolean) => void;
+  /** Called when focus leaves the select (what form libraries use for "touched"). */
+  onBlur?: RACSelectProps<object>['onBlur'];
+  /** Called when the select receives focus. */
+  onFocus?: RACSelectProps<object>['onFocus'];
   /** Custom validation of the selected value(s); return a message to mark it invalid. */
   validate?: (value: string | string[] | null) => string | string[] | true | null | undefined;
   /** `native` uses browser constraint validation; `aria` validates on the fly. @default native */
@@ -281,7 +285,7 @@ function SelectError({ children, className, ref, ...rest }: SelectErrorProps): J
   const s = useSelectStyles();
   return (
     <FieldError {...(rest as object)} {...mergeProps(s.error, className)} ref={ref}>
-      {children ?? ''}
+      {children}
     </FieldError>
   );
 }
