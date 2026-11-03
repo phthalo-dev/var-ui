@@ -16,9 +16,10 @@ import { splitter } from '@var-ui/core/components/splitter';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from 'typestyles';
 import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect';
+import { useMergedRef } from '../overlays/useMergedRef';
 import { ResizeHandle, type ResizeHandleProps } from './ResizeHandle';
 
-const STORAGE_KEY_PREFIX = 'var-ui-resizable:';
+const STORAGE_KEY_PREFIX = 'var-ui-splitter:';
 const splitterVars = recipeVars(splitter);
 
 type PanelContextValue = { id: string; size: number; collapsed: boolean };
@@ -102,7 +103,7 @@ export type SplitterProps = Omit<ComponentPropsWithRef<'div'>, 'defaultValue'> &
   /** Panels that may collapse to zero: `true` for all, or one flag per panel. @default false */
   collapsible?: boolean | boolean[];
   /**
-   * Persist sizes in `localStorage` (`var-ui-resizable:<id>`). The first render always uses
+   * Persist sizes in `localStorage` (`var-ui-splitter:<id>`). The first render always uses
    * `defaultSizes`; stored sizes are applied right after mount.
    */
   autoSaveId?: string;
@@ -193,6 +194,7 @@ function SplitterRoot({
   const s = splitter({ orientation });
   const baseId = useId();
   const rootEl = useRef<HTMLDivElement | null>(null);
+  const rootRef = useMergedRef(rootEl, ref);
   const dragging = useRef(false);
   const lastExpanded = useRef<Record<number, number>>({});
   const horizontal = orientation === 'horizontal';
@@ -359,7 +361,11 @@ function SplitterRoot({
       onCollapse: a.collapsible || b.collapsible ? () => toggleCollapse(i) : undefined,
       onPointerDown: (event: ReactPointerEvent<HTMLDivElement>) => {
         onPointerDown?.(event);
-        if (!event.defaultPrevented) dragging.current = true;
+        // ResizeHandle ignores a non-primary button after this callback. Match that, or a
+        // right-click leaves `dragging` set and the next key uses the drag collapse threshold.
+        if (event.defaultPrevented) return;
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        dragging.current = true;
       },
       onPointerUp: (event: ReactPointerEvent<HTMLDivElement>) => {
         dragging.current = false;
@@ -381,16 +387,7 @@ function SplitterRoot({
   });
 
   return (
-    <div
-      {...rest}
-      {...mergeProps(s.root, className)}
-      ref={(node) => {
-        rootEl.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
-      }}
-      data-orientation={orientation}
-    >
+    <div {...rest} {...mergeProps(s.root, className)} ref={rootRef} data-orientation={orientation}>
       {body}
     </div>
   );

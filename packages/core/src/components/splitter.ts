@@ -41,9 +41,11 @@ export const splitter = typestyles.recipe({
           '&[data-collapsed]': { overflow: 'hidden' },
         },
         handle: {
-          // Wider than the 1px line so a finger or coarse pointer can grab it.
-          '&[data-orientation="horizontal"]::before': { insetInline: '-8px' },
-          '&[data-orientation="vertical"]::before': { insetBlock: '-8px' },
+          // Wider than the 1px line so a finger or coarse pointer can grab it. Both classes:
+          // the resize-handle rule is the same specificity, so source order would otherwise
+          // put the 4px inset back on top.
+          '.var-ui-resize-handle&[data-orientation="horizontal"]::before': { insetInline: '-8px' },
+          '.var-ui-resize-handle&[data-orientation="vertical"]::before': { insetBlock: '-8px' },
         },
       },
       variants: {

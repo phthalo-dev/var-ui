@@ -45,4 +45,18 @@ describe('useControllableState', () => {
     expect(result.current[0]).toBe(2);
     expect(result.current[1]).toBe(setValue);
   });
+
+  it('compounds updaters while controlled', () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useControllableState({ value: 5, defaultValue: 0, onChange }),
+    );
+    act(() => {
+      result.current[1]((n) => n + 1);
+      result.current[1]((n) => n + 1);
+    });
+    expect(onChange).toHaveBeenNthCalledWith(1, 6);
+    expect(onChange).toHaveBeenNthCalledWith(2, 7);
+    expect(result.current[0]).toBe(5);
+  });
 });

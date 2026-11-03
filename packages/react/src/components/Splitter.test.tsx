@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import { createRef, useCallback, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { Splitter } from './Splitter';
 
@@ -204,7 +204,7 @@ describe('Splitter', () => {
     );
     const first = render(tree);
     fireEvent.keyDown(separators()[0]!, { key: 'ArrowRight' });
-    expect(JSON.parse(window.localStorage.getItem('var-ui-resizable:t')!)).toEqual([55, 45]);
+    expect(JSON.parse(window.localStorage.getItem('var-ui-splitter:t')!)).toEqual([55, 45]);
     first.unmount();
     render(tree);
     act(() => {});
@@ -212,7 +212,7 @@ describe('Splitter', () => {
   });
 
   it('ignores corrupt stored sizes', () => {
-    window.localStorage.setItem('var-ui-resizable:bad', '{nope');
+    window.localStorage.setItem('var-ui-splitter:bad', '{nope');
     render(
       <Splitter autoSaveId="bad" defaultSizes={[40, 60]}>
         <Splitter.Panel>A</Splitter.Panel>
@@ -220,6 +220,26 @@ describe('Splitter', () => {
       </Splitter>,
     );
     expect(separators()[0]!.getAttribute('aria-valuenow')).toBe('40');
+  });
+
+  it('does not detach its ref when a resize re-renders', () => {
+    const calls: Array<HTMLDivElement | null> = [];
+    function Demo() {
+      const [sizes, setSizes] = useState([50, 50]);
+      const setRef = useCallback((node: HTMLDivElement | null) => {
+        calls.push(node);
+      }, []);
+      return (
+        <Splitter ref={setRef} sizes={sizes} onSizesChange={setSizes}>
+          <Splitter.Panel>A</Splitter.Panel>
+          <Splitter.Panel>B</Splitter.Panel>
+        </Splitter>
+      );
+    }
+    render(<Demo />);
+    fireEvent.keyDown(separators()[0]!, { key: 'ArrowRight' });
+    expect(calls.filter((node) => node === null)).toHaveLength(0);
+    expect(calls.filter(Boolean)).toHaveLength(1);
   });
 
   it('falls back to an equal split when defaultSizes does not match the panels', () => {

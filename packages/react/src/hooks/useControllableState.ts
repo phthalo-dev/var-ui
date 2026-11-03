@@ -47,11 +47,10 @@ export function useControllableState<T>({
     const state = latest.current;
     const resolved = typeof next === 'function' ? (next as (current: T) => T)(state.current) : next;
     if (Object.is(resolved, state.current)) return;
-    if (!state.controlled) {
-      // Updated eagerly so two calls in one event compound before the re-render.
-      state.current = resolved;
-      setInner(resolved);
-    }
+    // Eager in both modes so two updater calls in one event compound. The next render
+    // copies the controlled prop back over this, so a parent that ignores the change wins.
+    state.current = resolved;
+    if (!state.controlled) setInner(resolved);
     state.onChange?.(resolved);
   }, []);
 

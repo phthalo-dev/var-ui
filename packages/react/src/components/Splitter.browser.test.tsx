@@ -338,6 +338,47 @@ describe('Splitter (real browser)', () => {
     expect(now(seps(container)[0]!)).toBe(15);
   });
 
+  test('a right-click does not leave the next arrow on the drag threshold', async () => {
+    const { container } = render(
+      <Wrap>
+        <Splitter
+          defaultSizes={[22, 78]}
+          minSizes={[20, 0]}
+          collapsible={[true, false]}
+          style={{ height: '100%' }}
+        >
+          <Splitter.Panel>A</Splitter.Panel>
+          <Splitter.Panel>B</Splitter.Panel>
+        </Splitter>
+      </Wrap>,
+    );
+    const handle = seps(container)[0]!;
+    handle.focus();
+    handle.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        button: 2,
+        buttons: 2,
+        pointerType: 'mouse',
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await userEvent.keyboard('{ArrowLeft}');
+    // Step 5 from 22 crosses minSize 20. Keyboard collapse goes to 0; a stuck drag would stop at 20.
+    expect(now(handle)).toBe(0);
+  });
+
+  test('the touch target extends 8px past the line', async () => {
+    const { container } = render(
+      <Wrap>
+        <TwoPane />
+      </Wrap>,
+    );
+    const before = getComputedStyle(seps(container)[0]!, '::before');
+    expect(before.left).toBe('-8px');
+    expect(before.right).toBe('-8px');
+  });
+
   test('the divider is focusable and shows a focus ring', async () => {
     const { container } = render(
       <Wrap>

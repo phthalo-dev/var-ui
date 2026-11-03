@@ -1,4 +1,5 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 type ParsedHotkey = {
   key: string;
@@ -94,7 +95,7 @@ export type UseHotkeysOptions = {
    */
   ignoreRepeat?: boolean;
   /**
-   * Turn all bindings off.
+   * When false, no bindings fire.
    * @default true
    */
   enabled?: boolean;
@@ -138,15 +139,25 @@ export function useHotkeys(
   // Re-attach only when the set of combos changes, not on every new handler object.
   const combosKey = Object.keys(bindings).join('\0');
 
-  useEffect(() => {
-    if (!enabled || !combosKey) return undefined;
-    const node: EventTarget | null | undefined =
+  // A ref's node appears after commit, and a later mount does not change the ref object, so
+  // resolve it in a layout effect (it runs every commit) and subscribe to that node.
+  const [node, setNode] = useState<EventTarget | null>(null);
+  useIsomorphicLayoutEffect(() => {
+    if (!enabled) {
+      setNode(null);
+      return;
+    }
+    const next: EventTarget | null =
       target === undefined
         ? window
         : target && 'current' in target
           ? target.current
           : (target as EventTarget | null);
-    if (!node) return undefined;
+    setNode((current) => (current === next ? current : next));
+  });
+
+  useEffect(() => {
+    if (!enabled || !combosKey || !node) return undefined;
     const combos = combosKey.split('\0');
 
     function listener(e: Event) {
@@ -162,5 +173,5 @@ export function useHotkeys(
     }
     node.addEventListener(event, listener);
     return () => node.removeEventListener(event, listener);
-  }, [combosKey, enabled, event, ignoreInputs, ignoreRepeat, preventDefault, target]);
+  }, [combosKey, enabled, event, ignoreInputs, ignoreRepeat, preventDefault, node]);
 }

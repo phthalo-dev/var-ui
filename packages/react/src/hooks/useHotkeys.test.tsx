@@ -1,4 +1,4 @@
-import { StrictMode, useRef } from 'react';
+import { StrictMode, useRef, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { fireEvent, render, renderHook } from '@testing-library/react';
 import { matchesHotkey, useHotkeys } from './useHotkeys';
@@ -98,6 +98,27 @@ describe('useHotkeys', () => {
     const { getByTestId } = render(<Fixture />);
     fireEvent.keyDown(document.body, { key: 'x' });
     expect(handler).not.toHaveBeenCalled();
+    fireEvent.keyDown(getByTestId('scope'), { key: 'x' });
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('attaches when a ref target mounts later', () => {
+    const handler = vi.fn();
+    function Fixture() {
+      const ref = useRef<HTMLDivElement>(null);
+      const [show, setShow] = useState(false);
+      useHotkeys({ x: handler }, { target: ref });
+      return (
+        <>
+          <button type="button" onClick={() => setShow(true)}>
+            show
+          </button>
+          {show ? <div ref={ref} data-testid="scope" tabIndex={-1} /> : null}
+        </>
+      );
+    }
+    const { getByRole, getByTestId } = render(<Fixture />);
+    fireEvent.click(getByRole('button', { name: 'show' }));
     fireEvent.keyDown(getByTestId('scope'), { key: 'x' });
     expect(handler).toHaveBeenCalledTimes(1);
   });
