@@ -247,20 +247,19 @@ describe('inside a modal dialog and nesting', () => {
     );
     await settled(q('dialog'));
     await userEvent.click(q('trigger'));
+    await expect.poll(() => shown(q('popup'))).toBe(true);
     await raf();
-    expect(shown(q('popup'))).toBe(true);
     const rect = q('inner').getBoundingClientRect();
     expect(document.elementFromPoint(rect.x + 2, rect.y + 2)).toBe(q('inner'));
     await userEvent.click(q('inner'));
+    await expect.poll(() => document.activeElement).toBe(q('inner'));
     await userEvent.keyboard('{Escape}');
-    await raf();
-    expect(shown(q('popup'))).toBe(false);
+    await expect.poll(() => shown(q('popup'))).toBe(false);
     expect((q('dialog') as HTMLDialogElement).open).toBe(true);
     expect(dialogChange).not.toHaveBeenCalled();
     expect(reasons(popChange).slice(-1)[0]).toEqual([false, 'escape-key']);
     await userEvent.keyboard('{Escape}');
-    await raf();
-    expect(dialogChange).toHaveBeenCalled();
+    await expect.poll(() => dialogChange.mock.calls.length).toBeGreaterThan(0);
   });
 
   test('two nested popovers: opening/closing the child does not dismiss the parent', async () => {

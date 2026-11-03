@@ -6,6 +6,7 @@ import {
   MenuRoot,
   MenuSection,
   MenuSeparator,
+  MenuSubmenu,
   MenuTrigger,
 } from '../internal/menuParts';
 
@@ -16,6 +17,7 @@ export type {
   MenuRootProps,
   MenuSectionProps,
   MenuSeparatorProps,
+  MenuSubmenuProps,
   MenuTriggerProps,
 } from '../internal/menuParts';
 export type {
@@ -41,6 +43,11 @@ export type {
  *   </Menu.Popup>
  * </Menu>
  *
+ * // Nested menu (also inside Menubar.Menu)
+ * <Menu.Submenu label="Share">
+ *   <Menu.Item id="link">Copy link</Menu.Item>
+ * </Menu.Submenu>
+ *
  * // Data preset
  * <Menu.FromSections trigger={<Button>Actions</Button>} sections={[...]} />
  *
@@ -58,6 +65,7 @@ export const Menu = Object.assign(MenuRoot, {
   Item: MenuItem,
   Separator: MenuSeparator,
   Section: MenuSection,
+  Submenu: MenuSubmenu,
   Content: MenuContent,
   FromSections: MenuFromSections,
   ContextMenu: MenuContextMenu,

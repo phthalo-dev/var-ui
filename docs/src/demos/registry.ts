@@ -160,6 +160,7 @@ import { snippets as colorModeToggleAppearanceSnippets } from './color-mode-togg
 import { snippets as dropdownMenuDefaultSnippets } from './dropdown-menu/default/snippets';
 import { snippets as dropdownMenuSectionsSnippets } from './dropdown-menu/sections/snippets';
 import { snippets as menuDefaultSnippets } from './menu/default/snippets';
+import { snippets as menuSubmenuSnippets } from './menu/submenu/snippets';
 import { snippets as contextMenuDefaultSnippets } from './context-menu/default/snippets';
 import { snippets as contextMenuSectionsSnippets } from './context-menu/sections/snippets';
 import { snippets as moreMenuDefaultSnippets } from './more-menu/default/snippets';
@@ -173,6 +174,7 @@ import { snippets as toggleGroupControlledSnippets } from './toggle-group/contro
 import { snippets as menubarDefaultSnippets } from './menubar/default/snippets';
 import { snippets as menubarDisabledSnippets } from './menubar/disabled/snippets';
 import { snippets as menubarAppShellSnippets } from './menubar/app-shell/snippets';
+import { snippets as menubarSubmenuSnippets } from './menubar/submenu/snippets';
 import { snippets as toolbarDefaultSnippets } from './toolbar/default/snippets';
 import { snippets as toolbarSlotsSnippets } from './toolbar/slots/snippets';
 import { snippets as numberInputDefaultSnippets } from './number-input/default/snippets';
@@ -380,6 +382,7 @@ export const DEMO_IDS = [
   'dropdown-menu.default',
   'dropdown-menu.sections',
   'menu.default',
+  'menu.submenu',
   'context-menu.default',
   'context-menu.sections',
   'more-menu.default',
@@ -393,6 +396,7 @@ export const DEMO_IDS = [
   'menubar.default',
   'menubar.disabled',
   'menubar.app-shell',
+  'menubar.submenu',
   'toolbar.default',
   'toolbar.slots',
   'number-input.default',
@@ -599,6 +603,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'dropdown-menu.default': dropdownMenuDefaultSnippets,
   'dropdown-menu.sections': dropdownMenuSectionsSnippets,
   'menu.default': menuDefaultSnippets,
+  'menu.submenu': menuSubmenuSnippets,
   'context-menu.default': contextMenuDefaultSnippets,
   'context-menu.sections': contextMenuSectionsSnippets,
   'more-menu.default': moreMenuDefaultSnippets,
@@ -612,6 +617,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'menubar.default': menubarDefaultSnippets,
   'menubar.disabled': menubarDisabledSnippets,
   'menubar.app-shell': menubarAppShellSnippets,
+  'menubar.submenu': menubarSubmenuSnippets,
   'toolbar.default': toolbarDefaultSnippets,
   'toolbar.slots': toolbarSlotsSnippets,
   'number-input.default': numberInputDefaultSnippets,
@@ -818,6 +824,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'dropdown-menu.default': () => import('./dropdown-menu/default/react'),
   'dropdown-menu.sections': () => import('./dropdown-menu/sections/react'),
   'menu.default': () => import('./menu/default/react'),
+  'menu.submenu': () => import('./menu/submenu/react'),
   'context-menu.default': () => import('./context-menu/default/react'),
   'context-menu.sections': () => import('./context-menu/sections/react'),
   'more-menu.default': () => import('./more-menu/default/react'),
@@ -831,6 +838,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'menubar.default': () => import('./menubar/default/react'),
   'menubar.disabled': () => import('./menubar/disabled/react'),
   'menubar.app-shell': () => import('./menubar/app-shell/react'),
+  'menubar.submenu': () => import('./menubar/submenu/react'),
   'toolbar.default': () => import('./toolbar/default/react'),
   'toolbar.slots': () => import('./toolbar/slots/react'),
   'number-input.default': () => import('./number-input/default/react'),
@@ -1681,6 +1689,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     snippets: demoSnippets['menu.default'],
     react: reactDemoLoaders['menu.default'],
   },
+  'menu.submenu': {
+    id: 'menu.submenu',
+    snippets: demoSnippets['menu.submenu'],
+    react: reactDemoLoaders['menu.submenu'],
+  },
   'context-menu.default': {
     id: 'context-menu.default',
     snippets: demoSnippets['context-menu.default'],
@@ -1745,6 +1758,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'menubar.app-shell',
     snippets: demoSnippets['menubar.app-shell'],
     react: reactDemoLoaders['menubar.app-shell'],
+  },
+  'menubar.submenu': {
+    id: 'menubar.submenu',
+    snippets: demoSnippets['menubar.submenu'],
+    react: reactDemoLoaders['menubar.submenu'],
   },
   'toolbar.default': {
     id: 'toolbar.default',

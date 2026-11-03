@@ -465,7 +465,7 @@ function Select({
   }
   return (
     <SelectRoot
-      {...(rootProps as unknown as SelectRootProps)}
+      {...(rootProps as SelectRootProps)}
       className={className}
       size={resolvedSize}
       invalid={racInvalid(props.invalid, errorMessage)}

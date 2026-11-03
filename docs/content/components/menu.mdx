@@ -19,9 +19,17 @@ Compose `Menu.Trigger`, `Menu.Popup`, `Menu.Item`, `Menu.Section`, and `Menu.Sep
 
 <Demo id="menu.default" />
 
+### Submenus
+
+`Menu.Submenu` nests a menu inside `Menu.Popup`. It takes a `label`, an optional `icon` (a registry name or a node) and `disabled`, plus the same children as the popup: `Menu.Item`, `Menu.Section`, `Menu.Separator` and further `Menu.Submenu`s, to any depth. Native props (`className`, `data-*`, `aria-*`) go on the trigger item.
+
+The child menu opens beside its item (to the inline end, mirrored in RTL) with its first item level with the trigger. Hovering the item opens it after a short delay; ArrowRight, Enter and Space open it with the first item focused (ArrowLeft in RTL). ArrowLeft and Escape close only that submenu and put focus back on its trigger item; the parent menu stays open while the pointer or focus is inside the submenu. Choosing an item runs its `onAction` once and closes every open menu. There is no safe-triangle: the pointer must stay on the item or cross directly into the submenu.
+
+<Demo id="menu.submenu" />
+
 ### From sections
 
-Pass a `trigger` and `sections` of items (optional section labels, shortcuts, `danger`, `disabled`).
+Pass a `trigger` and `sections` of items (optional section labels, shortcuts, `danger`, `disabled`). An item with an `items` array of child items opens them as a submenu (the same applies to `Menu.ContextMenu`, `Menu.Overflow` and `Menu.Content`); `shortcut`, `danger` and `onAction` are ignored on such an item.
 
 <Demo id="dropdown-menu.default" />
 
@@ -49,4 +57,14 @@ Icon-only overflow menu using the `moreHorizontal` glyph — same `sections` sha
 
 ## Accessibility
 
-Built on React Aria `MenuTrigger` / `Menu` inside a native popover. Focus moves to the first item on open and returns to the trigger on close. Arrow keys move between items, Enter/Space activates, Escape closes. Give destructive items clear labels — visual tone is not enough. For `Menu.ContextMenu`, ensure essential actions are also available without right-click for keyboard-only users.
+Built on React Aria `MenuTrigger` / `Menu` inside a native popover. Focus moves to the first item on open and returns to the trigger on close. Arrow keys move between items, Enter/Space activates, Escape closes. A submenu trigger item has `aria-haspopup` and `aria-expanded`, and its child menu is named by it.
+
+| Key                                     | Action                                                    |
+| --------------------------------------- | --------------------------------------------------------- |
+| Right arrow (Left in RTL), Enter, Space | On a submenu trigger: opens it and focuses its first item |
+| Left arrow (Right in RTL), Escape       | In a submenu: closes it and focuses its trigger item      |
+| Escape                                  | In the top-level menu: closes it                          |
+| Down / Up arrow                         | Next / previous enabled item                              |
+| Enter / Space (on an item)              | Runs `onAction` and closes every open menu                |
+
+The Astro `Menu.astro` has no submenus; use the React component when you need them. Give destructive items clear labels — visual tone is not enough. For `Menu.ContextMenu`, ensure essential actions are also available without right-click for keyboard-only users.

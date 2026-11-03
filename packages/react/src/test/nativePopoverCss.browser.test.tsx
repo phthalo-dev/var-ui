@@ -2,7 +2,7 @@ import { afterEach, beforeAll, expect, test } from 'vite-plus/test';
 import { popover } from '@var-ui/core/components/popover';
 import { select } from '@var-ui/core/components/select';
 import '../../../core/src/theme/base-styles';
-import { animating, finishAll, freezeAt, holdMotion, raf } from './browser';
+import { animating, edgeInfo, finishAll, freezeAt, holdMotion, raf, viewport } from './browser';
 
 // The core recipes position a `[popover]` element against its anchor in pure CSS (position-area,
 // position-try-fallbacks, anchor-size). JS only names the anchor: `anchor-name` on the trigger and
@@ -187,3 +187,23 @@ test('enter and exit animate and the element stays rendered until the exit ends'
   await finishAll(popup);
   expect(getComputedStyle(popup).display).toBe('none');
 });
+
+// `100vw` includes a classic scrollbar's gutter (15px on Linux/Windows; `scrollbar-gutter: stable`
+// from the base styles keeps it reserved), so a cap against it lets a very wide popup run under
+// the scrollbar. The cap must be the usable viewport, which is what `position: fixed` insets use.
+for (const dir of ['ltr', 'rtl'] as const) {
+  test(`an oversized popup stays inside the usable viewport (${dir})`, async () => {
+    document.documentElement.setAttribute('dir', dir);
+    const m = mount({
+      popupClass: popover().root.className,
+      placement: 'bottom center',
+      triggerStyle: 'top:100px;left:50%;width:100px',
+      popupStyle: '--var-ui-popup-max-width: 99999px; width: 99999px;',
+    });
+    const pop = await open(m);
+    const view = viewport();
+    const info = edgeInfo(m.popup);
+    expect(pop.right, info).toBeLessThanOrEqual(view.right + 0.5);
+    expect(pop.left, info).toBeGreaterThanOrEqual(view.left - 0.5);
+  });
+}

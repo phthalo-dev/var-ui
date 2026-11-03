@@ -24,8 +24,10 @@ export const menu = typestyles.recipe({
     'itemLabel',
     'itemShortcut',
     'itemCheck',
+    'itemIcon',
     'itemSwatch',
     'separator',
+    'submenuPopover',
     'submenuChevron',
     'contextAnchor',
   ],
@@ -138,6 +140,11 @@ export const menu = typestyles.recipe({
             backgroundColor: vars.itemFocusedBackground.var,
             ...atForcedColors(forced.selected),
           },
+          // A submenu trigger keeps the focused look while its submenu is open.
+          '&[data-open]': {
+            backgroundColor: vars.itemFocusedBackground.var,
+            ...atForcedColors(forced.selected),
+          },
           '&[data-disabled]': {
             color: vars.itemDisabledForeground.var,
             cursor: 'not-allowed',
@@ -168,6 +175,10 @@ export const menu = typestyles.recipe({
           width: t.size.icon.md.var,
           flexShrink: 0,
         },
+        itemIcon: {
+          display: 'inline-flex',
+          flexShrink: 0,
+        },
         itemSwatch: {
           display: 'block',
           width: t.size.icon.sm.var,
@@ -183,10 +194,21 @@ export const menu = typestyles.recipe({
           backgroundColor: vars.separatorColor.var,
           ...atForcedColors({ backgroundColor: 'CanvasText' }),
         },
+        /**
+         * Extra class on a submenu's `[popover]` (next to `popover`). The submenu sits beside its
+         * trigger item (`end start`); the block-axis shift equals the popup padding so its first
+         * item lines up with the trigger item. `translate` leaves the enter/exit `transform` alone.
+         */
+        submenuPopover: {
+          translate: `0 calc(-1 * ${t.space[1].var})`,
+        },
+        /** Trailing indicator of a submenu trigger item; flips in right-to-left. */
         submenuChevron: {
           display: 'inline-flex',
+          flexShrink: 0,
           marginInlineStart: 'auto',
-          color: vars.sectionHeaderForeground.var,
+          color: 'inherit',
+          '[dir="rtl"] &': { transform: 'scaleX(-1)' },
         },
       },
     };

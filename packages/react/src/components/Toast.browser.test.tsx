@@ -6,7 +6,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { raf, settled } from '../test/browser';
+import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
 import { toast } from '../toast/imperativeToast';
 import { Dialog } from './Dialog';
 import { ToastProvider, ToastQueue, ToastRegion } from './Toast';
@@ -51,8 +51,7 @@ describe('Toast region (native popover)', () => {
     expect(shown()).toBe(true);
     expect(getComputedStyle(region()!).zIndex).toBe('auto');
     act(() => toast.dismiss(id));
-    await raf();
-    expect(region()).toBeNull();
+    await expect.poll(region).toBeNull();
   });
 
   test('auto-dismisses after durationMs', async () => {
@@ -88,7 +87,7 @@ describe('Toast region (native popover)', () => {
     expect(region()!.querySelectorAll('button[aria-label="Dismiss"]')).toHaveLength(2);
     act(() => toast.dismissAll());
     await raf();
-    expect(region()).toBeNull();
+    await expect.poll(region).toBeNull();
   });
 
   test.each([
@@ -179,5 +178,102 @@ describe('Toast above modal dialogs', () => {
     expect(shown()).toBe(true);
     expect(states).toEqual(['closed', 'open']);
     act(() => toast.dismissAll());
+  });
+});
+
+describe('Toast region exit', () => {
+  test('dismissing the last toast animates out, then removes the region', async () => {
+    holdMotion();
+    render(<Shell>{null}</Shell>);
+    let id = '';
+    act(() => {
+      id = toast.show({ title: 'Last', durationMs: 0 });
+    });
+    await raf();
+    const el = region()!;
+    await finishAll(el);
+    act(() => toast.dismiss(id));
+    await animating(el);
+    // Still mounted, no longer open, and fading rather than gone.
+    expect(region()).toBe(el);
+    expect(shown()).toBe(false);
+    expect(text('Last')).toBeTruthy();
+    expect(el.inert).toBe(true);
+    freezeAt(el, 0.5);
+    expect(Number(getComputedStyle(el).opacity)).toBeLessThan(1);
+    expect(region()).toBe(el);
+    await finishAll(el);
+    await expect.poll(region).toBeNull();
+  });
+
+  test('dismissing while the region is still entering reverses into the exit', async () => {
+    holdMotion();
+    render(<Shell>{null}</Shell>);
+    let id = '';
+    act(() => {
+      toast.show({ title: 'Other', durationMs: 0 });
+      id = toast.show({ title: 'Entering', durationMs: 0 });
+    });
+    await raf();
+    const el = region()!;
+    await animating(el);
+    freezeAt(el, 0.3);
+    act(() => toast.dismiss(id));
+    await raf();
+    // Another toast remains: the region stays open and the dismissed toast is gone.
+    expect(region()).toBe(el);
+    expect(shown()).toBe(true);
+    expect(text('Entering')).toBeUndefined();
+    expect(text('Other')).toBeTruthy();
+    const other = [...document.querySelectorAll('button[aria-label="Dismiss"]')];
+    expect(other).toHaveLength(1);
+    act(() => toast.dismissAll());
+  });
+
+  test('dismissing the only toast mid-enter still finishes the exit before unmounting', async () => {
+    holdMotion();
+    render(<Shell>{null}</Shell>);
+    let id = '';
+    act(() => {
+      id = toast.show({ title: 'Quick', durationMs: 0 });
+    });
+    await raf();
+    const el = region()!;
+    await animating(el);
+    freezeAt(el, 0.4);
+    act(() => toast.dismiss(id));
+    await animating(el);
+    expect(region()).toBe(el);
+    expect(shown()).toBe(false);
+    await finishAll(el);
+    await expect.poll(region).toBeNull();
+  });
+
+  test('a toast arriving during the last toast exit cancels the removal', async () => {
+    holdMotion();
+    render(<Shell>{null}</Shell>);
+    let id = '';
+    act(() => {
+      id = toast.show({ title: 'Going', durationMs: 0 });
+    });
+    await raf();
+    const el = region()!;
+    await finishAll(el);
+    act(() => toast.dismiss(id));
+    await animating(el);
+    expect(shown()).toBe(false);
+    act(() => {
+      toast.show({ title: 'Back', durationMs: 0 });
+    });
+    await raf();
+    expect(region()).toBe(el);
+    expect(shown()).toBe(true);
+    expect(el.inert).toBe(false);
+    expect(text('Back')).toBeTruthy();
+    expect(text('Going')).toBeUndefined();
+    await finishAll(el);
+    await raf();
+    expect(region()).toBe(el);
+    expect(shown()).toBe(true);
   });
 });

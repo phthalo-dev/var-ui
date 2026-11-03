@@ -129,4 +129,53 @@ describe('popover region', () => {
       delete proto.hidePopover;
     }
   });
+
+  it('keeps the last toast until the exit animation finishes, and a new toast cancels the removal', async () => {
+    const region = mountRegion();
+    region.setAttribute('popover', 'manual');
+    let open = false;
+    region.showPopover = () => {
+      open = true;
+    };
+    region.hidePopover = () => {
+      open = false;
+    };
+    const realMatches = region.matches.bind(region);
+    Object.defineProperty(region, 'matches', {
+      configurable: true,
+      value: (selector: string) => (selector === ':popover-open' ? open : realMatches(selector)),
+    });
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+    let animating = true;
+    region.getAnimations = () =>
+      animating
+        ? ([{ finished, effect: { getComputedTiming: () => ({ iterations: 1 }) } }] as never)
+        : [];
+
+    const controller = initToastRegion(region);
+    const id = controller.show({ title: 'Last', durationMs: 0 });
+    expect(open).toBe(true);
+    controller.dismiss(id);
+    expect(open).toBe(false);
+    expect(region.querySelector('.var-ui-toast__item')).toBeTruthy();
+    expect(region.inert).toBe(true);
+
+    finish();
+    animating = false;
+    await finished;
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(region.querySelector('.var-ui-toast__item')).toBeNull();
+    expect(region.inert).toBe(false);
+
+    // A toast arriving mid-exit keeps the region.
+    animating = true;
+    const second = controller.show({ title: 'Second', durationMs: 0 });
+    controller.dismiss(second);
+    controller.show({ title: 'Third', durationMs: 0 });
+    expect(open).toBe(true);
+    expect(region.inert).toBe(false);
+    expect(region.querySelectorAll('.var-ui-toast__item')).toHaveLength(1);
+  });
 });

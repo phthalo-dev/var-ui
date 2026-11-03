@@ -44,6 +44,12 @@ The bar is an inline-flex row, so it drops into a header or [`TopNav`](/componen
 
 <Demo id="menubar.app-shell" />
 
+### Submenus
+
+Put `Menu.Submenu` inside a `Menubar.Menu` like in [Menu](/components/menu). Left and Right are shared between the bar and the submenus: inside a submenu, the key that closes it (Left, Right in RTL) closes only that submenu; on a submenu trigger item, the key that opens it opens it; on any other item Left and Right move to the previous or next top-level menu.
+
+<Demo id="menubar.submenu" />
+
 ### Watching a menu open and close
 
 `Menubar.Menu` takes `onOpenChange(open, details)`. `details.reason` is `trigger-press`, `escape-key`, `outside-press`, `focus`, `hover` (the menu opened or closed because the pointer moved to another top-level item) or `imperative` (the menu changed with the arrow keys). `details.cancel()` vetoes the change.
@@ -63,23 +69,25 @@ The bar is an inline-flex row, so it drops into a header or [`TopNav`](/componen
 - Forced colors: the open trigger and the focused menu item are drawn with `Highlight` / `HighlightText`, not only a background tint.
 - Typeahead inside an open menu, and Up / Down / Home / End between items, are react-aria's menu behaviour, shared with `Menu`.
 
-| Key                          | Action                                                                |
-| ---------------------------- | --------------------------------------------------------------------- |
-| Tab / Shift+Tab              | Moves focus into or out of the bar (one Tab stop)                     |
-| Right / Left arrow           | Next / previous top-level item, wrapping (mirrored in RTL)            |
-| Home / End                   | First / last enabled top-level item                                   |
-| Down arrow, Enter, Space     | Opens the menu and focuses its first item                             |
-| Up arrow                     | Opens the menu and focuses its last item                              |
-| Right / Left arrow (in menu) | Closes the menu and opens the next / previous one, first item focused |
-| Down / Up arrow (in menu)    | Next / previous item, skipping disabled ones                          |
-| Home / End (in menu)         | First / last item                                                     |
-| Letters (in menu)            | Typeahead to the next item that starts with them                      |
-| Enter / Space (on an item)   | Runs `onAction`, closes the menu, focuses the trigger                 |
-| Escape                       | Closes the menu and focuses its top-level item                        |
+| Key                                                | Action                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------------- |
+| Tab / Shift+Tab                                    | Moves focus into or out of the bar (one Tab stop)                     |
+| Right / Left arrow                                 | Next / previous top-level item, wrapping (mirrored in RTL)            |
+| Home / End                                         | First / last enabled top-level item                                   |
+| Down arrow, Enter, Space                           | Opens the menu and focuses its first item                             |
+| Up arrow                                           | Opens the menu and focuses its last item                              |
+| Right / Left arrow (in menu)                       | Closes the menu and opens the next / previous one, first item focused |
+| Right arrow (on a submenu item)                    | Opens its submenu, first item focused (Left in RTL)                   |
+| Left arrow (in a submenu)                          | Closes the submenu and focuses its trigger item (Right in RTL)        |
+| Right / Left arrow (in a submenu, on a plain item) | Moves to the next / previous top-level menu                           |
+| Down / Up arrow (in menu)                          | Next / previous item, skipping disabled ones                          |
+| Home / End (in menu)                               | First / last item                                                     |
+| Letters (in menu)                                  | Typeahead to the next item that starts with them                      |
+| Enter / Space (on an item)                         | Runs `onAction`, closes the menu, focuses the trigger                 |
+| Escape                                             | Closes the menu and focuses its top-level item                        |
 
 ## Limitations
 
-- Submenus are not a public part. react-aria's `SubmenuTrigger` can be composed inside a `Menubar.Menu` as it can inside `Menu` (see [Menu](/components/menu)); the bar leaves Right / Left to the submenu when focus is inside one and when the focused item opens one. It is not covered by Menubar tests, so prefer flat menus for now.
 - Checkbox and radio menu items (`menuitemcheckbox`, `menuitemradio`) are not supported, as in `Menu`.
 - Moving the pointer onto another top-level item while a menu is open switches to it; clicking an item that is already open closes it, as in desktop menu bars.
 - The popups are rendered next to their triggers inside the bar (native popovers in the top layer), so the `role="dialog"` shell react-aria puts around each `role="menu"` is a child of the `role="menubar"` element while open.

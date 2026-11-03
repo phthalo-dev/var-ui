@@ -7,9 +7,11 @@ afterEach(() => {
 });
 
 describe('@var-ui/core/styles', () => {
+  // The first import of the whole styles graph (every recipe plus the theme) is a cold transform:
+  // it takes ~15s in a CPU-limited container running the full CI in parallel.
   it('loads without throwing', async () => {
     await expect(import('../src/styles')).resolves.toBeDefined();
-  });
+  }, 60_000);
 
   it('registers the default theme surface when the extraction entry loads', async () => {
     reset();

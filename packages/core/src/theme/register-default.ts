@@ -1,20 +1,17 @@
-import type { CreateTokenValues, Theme, ThemeOverrideInput } from 'typestyles';
+import type { Theme, ThemeOverrideInput } from 'typestyles';
 import { defaultTokens } from '../tokens/preset';
 import type { DesignThemeTokenValues } from '../tokens/types';
 import { createDesignTheme } from './create-theme';
+import type { ThemeTokensOf } from './token-tree';
 import type { DesignTheme, DesignThemeComponentPatch } from './types';
 import { DEFAULT_THEME_NAME } from './constants';
 
-type DefaultThemeTokenTree = {
-  [K in keyof typeof defaultTokens]: CreateTokenValues;
-};
+type DefaultThemeTokenTree = ThemeTokensOf<typeof defaultTokens>;
 
-// TypeStyles' CreateTokenValues rejects SyntaxRef leaves (declared token refs); upstream gap, see
-// audit/detail/typestyles-upstream.md. Re-checked on typestyles 0.34.0 (which fixes slot recipe
-// result keys, #305, but not this): removing either cast still fails with TS2322 on
-// `defaultTokens` (`toString` vs the CreateTokenNode index signature) and TS2345 on
-// `Theme<DefaultThemeTokenTree>`. The casts are confined to this file.
-const defaultThemeTokens = defaultTokens as unknown as DefaultThemeTokenTree;
+// TypeStyles' CreateTokenValues has no SyntaxRef leaf, so the declared-ref tree is typed through
+// ThemeTokensOf (refs stringified) instead of being cast. The `override` input is still narrowed
+// with `as` below: Var UI patches allow partial `{ light }` / `{ dark }` mode leaves.
+const defaultThemeTokens = defaultTokens;
 
 type DefaultThemeComponents = Record<string, DesignThemeComponentPatch<DefaultThemeTokenTree>>;
 
@@ -52,7 +49,7 @@ function createDefaultThemeSurface(): DefaultThemeSurface {
     createDesignTheme({
       name: DEFAULT_THEME_NAME,
       tokens: defaultThemeTokens,
-    }) as unknown as Theme<DefaultThemeTokenTree>,
+    }),
   );
 }
 
