@@ -105,6 +105,9 @@ export function Slider({
       render={
         racRenderWithExtras('div', {
           ...pickRacDroppedDomProps(props),
+          // RAC drops focus handlers from the root; they bubble from the thumb input.
+          ...(props.onFocus ? { onFocus: props.onFocus } : {}),
+          ...(props.onBlur ? { onBlur: props.onBlur } : {}),
           ...(onChange ? { onChangeCapture: onChange } : {}),
         }) as never
       }

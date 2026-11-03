@@ -34,6 +34,10 @@ Do not pass `label` on TextField inside `Field.Root` — use Field parts around 
 
 `invalid` is controlled when passed. If omitted, it is derived from native validity, `Field.Error` content, or a matching `Form` `errors` entry. `Field.Error` `forceMount` only keeps the error slot in the layout; it does not mark the field invalid.
 
+## Using with react-hook-form
+
+`Field` is for native `<input>` elements. The VarUI fields (`TextField`, `Select`, ...) carry their own `label`, `description` and `errorMessage`: with react-hook-form, pass `errors.<name>?.message` as `errorMessage` and spread `register()` (text fields, `Checkbox`, `Switch`) or use `Controller` (the rest). See the [Forms guide](/docs/forms).
+
 ## Props
 
 <PropsTable slug="field" />

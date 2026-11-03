@@ -25,6 +25,8 @@ describe('navigation', () => {
       '/docs/getting-started',
       '/docs/installation',
       '/docs/overlay-lifecycle',
+      '/docs/hooks',
+      '/docs/forms',
     ]);
     const flatItems = componentSidebarSections.flatMap((section) => section.items);
     const expectedItems = componentRegistry.map((entry) => ({

@@ -19,6 +19,8 @@ export const docsSidebarSections: readonly SidebarSection[] = [
       { text: 'Getting started', link: '/docs/getting-started' },
       { text: 'Installation', link: '/docs/installation' },
       { text: 'Overlay lifecycle', link: '/docs/overlay-lifecycle' },
+      { text: 'Hooks', link: '/docs/hooks' },
+      { text: 'Forms', link: '/docs/forms' },
     ],
   },
 ];

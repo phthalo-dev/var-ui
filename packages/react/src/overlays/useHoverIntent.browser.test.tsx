@@ -86,7 +86,6 @@ describe('hover and focus', () => {
       />,
     );
     await userEvent.hover(q('t-a'));
-    expect(showing('a')).toBe(false);
     await vi.waitFor(() => expect(showing('a')).toBe(true));
     expect(q('t-a').getAttribute('aria-describedby')).toBe(q('p-a').id);
     await userEvent.unhover(q('t-a'));
@@ -149,20 +148,53 @@ describe('hover and focus', () => {
 });
 
 describe('warm-up', () => {
-  test('a second tooltip opens with no delay right after another closed; a cold one waits', async () => {
-    render(
-      <>
-        <Tip id="a" top={100} openDelay={400} closeDelay={10} />
-        <Tip id="b" top={300} openDelay={400} closeDelay={10} />
-      </>,
-    );
-    await userEvent.hover(q('t-a'));
-    expect(showing('a')).toBe(false); // cold: the full delay applies
-    await vi.waitFor(() => expect(showing('a')).toBe(true), { timeout: 2000 });
-    await userEvent.hover(q('t-b'));
-    // a is still open or just closed: b opens synchronously with the pointer, no 400ms wait.
-    await raf();
-    expect(showing('b')).toBe(true);
+  test('a cold tooltip waits its full delay', async () => {
+    // Timestamps from inside the page, not an assertion on state after an await: a loaded runner
+    // can spend more than the delay in a single `userEvent.hover` round trip.
+    let enteredAt = Number.NaN;
+    let openedAt = Number.NaN;
+    const onEnter = () => {
+      if (Number.isNaN(enteredAt)) enteredAt = performance.now();
+    };
+    document.addEventListener('pointerover', onEnter, true);
+    try {
+      render(
+        <Tip
+          id="a"
+          top={100}
+          openDelay={300}
+          closeDelay={10}
+          onOpenChange={(open) => {
+            if (open) openedAt = performance.now();
+          }}
+        />,
+      );
+      await userEvent.hover(q('t-a'));
+      await vi.waitFor(() => expect(showing('a')).toBe(true), { timeout: 5000 });
+      expect(openedAt - enteredAt).toBeGreaterThanOrEqual(295);
+    } finally {
+      document.removeEventListener('pointerover', onEnter, true);
+    }
+  });
+
+  test('a second tooltip opens with no delay right after another closed', async () => {
+    // Open delays the test could never wait out (`waitFor` gives up in 2s) and a frozen clock for
+    // the 500ms window: the second one opens only if the warm-up skipped its delay.
+    const frozen = vi.spyOn(performance, 'now').mockReturnValue(performance.now());
+    try {
+      render(
+        <>
+          <Tip id="a" top={100} openDelay={20} closeDelay={10} />
+          <Tip id="b" top={300} openDelay={60_000} closeDelay={10} />
+        </>,
+      );
+      await userEvent.hover(q('t-a'));
+      await vi.waitFor(() => expect(showing('a')).toBe(true), { timeout: 2000 });
+      await userEvent.hover(q('t-b'));
+      await vi.waitFor(() => expect(showing('b')).toBe(true), { timeout: 2000 });
+    } finally {
+      frozen.mockRestore();
+    }
   });
 });
 

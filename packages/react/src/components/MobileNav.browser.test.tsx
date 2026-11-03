@@ -7,7 +7,16 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { edgeInfo, raf, settled, viewport, clickBackdrop } from '../test/browser';
+import {
+  animating,
+  clickBackdrop,
+  edgeInfo,
+  finishAll,
+  holdMotion,
+  raf,
+  settled,
+  viewport,
+} from '../test/browser';
 import { MobileNav, MobileNavProvider, type MobileNavProps } from './MobileNav';
 
 beforeAll(() => {
@@ -124,14 +133,17 @@ describe('MobileNav on a native dialog', () => {
   });
 
   test('exit keeps the element and its children until the slide ends', async () => {
+    holdMotion();
     const { rerender } = render(<Nav open />);
     await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     rerender(<Nav open={false} />);
     await raf();
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('link')).toBeTruthy();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await raf();
     expect(getComputedStyle(dlg()).display).toBe('none');
     expect(q('link')).toBeNull();

@@ -76,6 +76,7 @@ export * from './sideNav';
 export * from './skeleton';
 export * from './slider';
 export * from './spinner';
+export * from './splitter';
 export * from './stack';
 export * from './styleVars';
 export * from './statusDot';

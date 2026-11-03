@@ -126,17 +126,21 @@ describe('Tooltip (real browser)', () => {
   });
 
   test('warm-up: a second tooltip opens with no delay right after the first closed', async () => {
-    render(<Fixture openDelay={600} closeDelay={0} />);
-    // Open the first by controlled-ish path: hover with long delay would be slow, so open via focus
-    // of the *other* tooltip (delay 20), close it, then hover the first within the warm window.
-    await userEvent.hover(q('trigger2'));
-    await until(() => showing('tip2'));
-    await userEvent.unhover(q('trigger2'));
-    await until(() => !showing('tip2'));
-    const started = performance.now();
-    await userEvent.hover(q('trigger'));
-    await until(showing);
-    expect(performance.now() - started).toBeLessThan(500);
+    // The warm window (500ms) is wall clock, and a loaded runner can spend longer than that between
+    // two awaits: freeze the hook's clock so "right after" is exact, and give the tooltip an open
+    // delay it could never wait out (`until` times out in 2s): it opens only if the warm-up skipped it.
+    const frozen = vi.spyOn(performance, 'now').mockReturnValue(performance.now());
+    try {
+      render(<Fixture openDelay={60_000} closeDelay={0} />);
+      await userEvent.hover(q('trigger2'));
+      await until(() => showing('tip2'));
+      await userEvent.unhover(q('trigger2'));
+      await until(() => !showing('tip2'));
+      await userEvent.hover(q('trigger'));
+      await until(showing);
+    } finally {
+      frozen.mockRestore();
+    }
   });
 
   test('touch pointers do not open it', async () => {

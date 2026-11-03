@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { spinner } from '@var-ui/core/components/spinner';
-import { visuallyHidden } from '@var-ui/core/components/visuallyHidden';
+import VisuallyHidden from './VisuallyHidden.astro';
 import type { SpinnerVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
@@ -18,5 +18,5 @@ const s = spinner({ size, tone, appearance });
 ---
 <span role="status" {...rest} {...mergeProps(s.root, className)}>
   <span {...mergeProps(s.indicator)} aria-hidden="true" />
-  <span {...mergeProps(visuallyHidden())}>{label}</span>
+  <VisuallyHidden>{label}</VisuallyHidden>
 </span>

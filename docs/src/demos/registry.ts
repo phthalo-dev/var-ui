@@ -29,12 +29,22 @@ import { snippets as progressCircleTonesSnippets } from './progress-circle/tones
 import { snippets as meterDefaultSnippets } from './meter/default/snippets';
 import { snippets as meterThresholdsSnippets } from './meter/thresholds/snippets';
 import { snippets as meterSizesSnippets } from './meter/sizes/snippets';
+import { snippets as visuallyHiddenDefaultSnippets } from './visually-hidden/default/snippets';
+import { snippets as visuallyHiddenLiveRegionSnippets } from './visually-hidden/live-region/snippets';
+import { snippets as portalDefaultSnippets } from './portal/default/snippets';
+import { snippets as portalContainerSnippets } from './portal/container/snippets';
 import { snippets as ratingDefaultSnippets } from './rating/default/snippets';
 import { snippets as ratingControlledSnippets } from './rating/controlled/snippets';
 import { snippets as ratingReadOnlySnippets } from './rating/read-only/snippets';
 import { snippets as ratingCustomIconSnippets } from './rating/custom-icon/snippets';
 import { snippets as ratingSizesSnippets } from './rating/sizes/snippets';
 import { snippets as ratingFormSnippets } from './rating/form/snippets';
+import { snippets as splitterTwoPaneSnippets } from './splitter/two-pane/snippets';
+import { snippets as splitterThreePaneSnippets } from './splitter/three-pane/snippets';
+import { snippets as splitterVerticalSnippets } from './splitter/vertical/snippets';
+import { snippets as splitterCollapsibleSnippets } from './splitter/collapsible/snippets';
+import { snippets as splitterPersistedSnippets } from './splitter/persisted/snippets';
+import { snippets as splitterNestedSnippets } from './splitter/nested/snippets';
 import { snippets as sectionDefaultSnippets } from './section/default/snippets';
 import { snippets as spinnerDefaultSnippets } from './spinner/default/snippets';
 import { snippets as stackDefaultSnippets } from './stack/default/snippets';
@@ -45,6 +55,7 @@ import { snippets as timestampDefaultSnippets } from './timestamp/default/snippe
 import { snippets as fieldDefaultSnippets } from './field/default/snippets';
 import { snippets as fieldPartsSnippets } from './field/parts/snippets';
 import { snippets as formDefaultSnippets } from './form/default/snippets';
+import { snippets as formServerErrorsSnippets } from './form/server-errors/snippets';
 import { snippets as textFieldDefaultSnippets } from './text-field/default/snippets';
 import { snippets as textAreaFieldDefaultSnippets } from './text-area-field/default/snippets';
 import { snippets as checkboxDefaultSnippets } from './checkbox/default/snippets';
@@ -238,12 +249,22 @@ export const DEMO_IDS = [
   'meter.default',
   'meter.thresholds',
   'meter.sizes',
+  'visually-hidden.default',
+  'visually-hidden.live-region',
+  'portal.default',
+  'portal.container',
   'rating.default',
   'rating.controlled',
   'rating.read-only',
   'rating.custom-icon',
   'rating.sizes',
   'rating.form',
+  'splitter.two-pane',
+  'splitter.three-pane',
+  'splitter.vertical',
+  'splitter.collapsible',
+  'splitter.persisted',
+  'splitter.nested',
   'empty-state.default',
   'avatar.default',
   'card.default',
@@ -254,6 +275,7 @@ export const DEMO_IDS = [
   'field.default',
   'field.parts',
   'form.default',
+  'form.server-errors',
   'text-field.default',
   'text-area-field.default',
   'checkbox.default',
@@ -446,12 +468,22 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'meter.default': meterDefaultSnippets,
   'meter.thresholds': meterThresholdsSnippets,
   'meter.sizes': meterSizesSnippets,
+  'visually-hidden.default': visuallyHiddenDefaultSnippets,
+  'visually-hidden.live-region': visuallyHiddenLiveRegionSnippets,
+  'portal.default': portalDefaultSnippets,
+  'portal.container': portalContainerSnippets,
   'rating.default': ratingDefaultSnippets,
   'rating.controlled': ratingControlledSnippets,
   'rating.read-only': ratingReadOnlySnippets,
   'rating.custom-icon': ratingCustomIconSnippets,
   'rating.sizes': ratingSizesSnippets,
   'rating.form': ratingFormSnippets,
+  'splitter.two-pane': splitterTwoPaneSnippets,
+  'splitter.three-pane': splitterThreePaneSnippets,
+  'splitter.vertical': splitterVerticalSnippets,
+  'splitter.collapsible': splitterCollapsibleSnippets,
+  'splitter.persisted': splitterPersistedSnippets,
+  'splitter.nested': splitterNestedSnippets,
   'empty-state.default': emptyStateDefaultSnippets,
   'avatar.default': avatarDefaultSnippets,
   'card.default': cardDefaultSnippets,
@@ -462,6 +494,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'field.default': fieldDefaultSnippets,
   'field.parts': fieldPartsSnippets,
   'form.default': formDefaultSnippets,
+  'form.server-errors': formServerErrorsSnippets,
   'text-field.default': textFieldDefaultSnippets,
   'text-area-field.default': textAreaFieldDefaultSnippets,
   'checkbox.default': checkboxDefaultSnippets,
@@ -654,12 +687,22 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'meter.default': () => import('./meter/default/react'),
   'meter.thresholds': () => import('./meter/thresholds/react'),
   'meter.sizes': () => import('./meter/sizes/react'),
+  'visually-hidden.default': () => import('./visually-hidden/default/react'),
+  'visually-hidden.live-region': () => import('./visually-hidden/live-region/react'),
+  'portal.default': () => import('./portal/default/react'),
+  'portal.container': () => import('./portal/container/react'),
   'rating.default': () => import('./rating/default/react'),
   'rating.controlled': () => import('./rating/controlled/react'),
   'rating.read-only': () => import('./rating/read-only/react'),
   'rating.custom-icon': () => import('./rating/custom-icon/react'),
   'rating.sizes': () => import('./rating/sizes/react'),
   'rating.form': () => import('./rating/form/react'),
+  'splitter.two-pane': () => import('./splitter/two-pane/react'),
+  'splitter.three-pane': () => import('./splitter/three-pane/react'),
+  'splitter.vertical': () => import('./splitter/vertical/react'),
+  'splitter.collapsible': () => import('./splitter/collapsible/react'),
+  'splitter.persisted': () => import('./splitter/persisted/react'),
+  'splitter.nested': () => import('./splitter/nested/react'),
   'empty-state.default': () => import('./empty-state/default/react'),
   'avatar.default': () => import('./avatar/default/react'),
   'card.default': () => import('./card/default/react'),
@@ -670,6 +713,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'field.default': () => import('./field/default/react'),
   'field.parts': () => import('./field/parts/react'),
   'form.default': () => import('./form/default/react'),
+  'form.server-errors': () => import('./form/server-errors/react'),
   'text-field.default': () => import('./text-field/default/react'),
   'text-area-field.default': () => import('./text-area-field/default/react'),
   'checkbox.default': () => import('./checkbox/default/react'),
@@ -982,6 +1026,26 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     snippets: demoSnippets['meter.sizes'],
     react: reactDemoLoaders['meter.sizes'],
   },
+  'visually-hidden.default': {
+    id: 'visually-hidden.default',
+    snippets: demoSnippets['visually-hidden.default'],
+    react: reactDemoLoaders['visually-hidden.default'],
+  },
+  'visually-hidden.live-region': {
+    id: 'visually-hidden.live-region',
+    snippets: demoSnippets['visually-hidden.live-region'],
+    react: reactDemoLoaders['visually-hidden.live-region'],
+  },
+  'portal.default': {
+    id: 'portal.default',
+    snippets: demoSnippets['portal.default'],
+    react: reactDemoLoaders['portal.default'],
+  },
+  'portal.container': {
+    id: 'portal.container',
+    snippets: demoSnippets['portal.container'],
+    react: reactDemoLoaders['portal.container'],
+  },
   'rating.default': {
     id: 'rating.default',
     snippets: demoSnippets['rating.default'],
@@ -1011,6 +1075,36 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'rating.form',
     snippets: demoSnippets['rating.form'],
     react: reactDemoLoaders['rating.form'],
+  },
+  'splitter.two-pane': {
+    id: 'splitter.two-pane',
+    snippets: demoSnippets['splitter.two-pane'],
+    react: reactDemoLoaders['splitter.two-pane'],
+  },
+  'splitter.three-pane': {
+    id: 'splitter.three-pane',
+    snippets: demoSnippets['splitter.three-pane'],
+    react: reactDemoLoaders['splitter.three-pane'],
+  },
+  'splitter.vertical': {
+    id: 'splitter.vertical',
+    snippets: demoSnippets['splitter.vertical'],
+    react: reactDemoLoaders['splitter.vertical'],
+  },
+  'splitter.collapsible': {
+    id: 'splitter.collapsible',
+    snippets: demoSnippets['splitter.collapsible'],
+    react: reactDemoLoaders['splitter.collapsible'],
+  },
+  'splitter.persisted': {
+    id: 'splitter.persisted',
+    snippets: demoSnippets['splitter.persisted'],
+    react: reactDemoLoaders['splitter.persisted'],
+  },
+  'splitter.nested': {
+    id: 'splitter.nested',
+    snippets: demoSnippets['splitter.nested'],
+    react: reactDemoLoaders['splitter.nested'],
   },
   'empty-state.default': {
     id: 'empty-state.default',
@@ -1061,6 +1155,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'form.default',
     snippets: demoSnippets['form.default'],
     react: reactDemoLoaders['form.default'],
+  },
+  'form.server-errors': {
+    id: 'form.server-errors',
+    snippets: demoSnippets['form.server-errors'],
+    react: reactDemoLoaders['form.server-errors'],
   },
   'text-field.default': {
     id: 'text-field.default',

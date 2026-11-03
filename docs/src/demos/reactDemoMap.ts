@@ -30,12 +30,22 @@ import ProgressCircleTones from './progress-circle/tones/react';
 import MeterDefault from './meter/default/react';
 import MeterThresholds from './meter/thresholds/react';
 import MeterSizes from './meter/sizes/react';
+import VisuallyHiddenDefault from './visually-hidden/default/react';
+import VisuallyHiddenLiveRegion from './visually-hidden/live-region/react';
+import PortalDefault from './portal/default/react';
+import PortalContainer from './portal/container/react';
 import RatingDefault from './rating/default/react';
 import RatingControlled from './rating/controlled/react';
 import RatingReadOnly from './rating/read-only/react';
 import RatingCustomIcon from './rating/custom-icon/react';
 import RatingSizes from './rating/sizes/react';
 import RatingForm from './rating/form/react';
+import SplitterTwoPane from './splitter/two-pane/react';
+import SplitterThreePane from './splitter/three-pane/react';
+import SplitterVertical from './splitter/vertical/react';
+import SplitterCollapsible from './splitter/collapsible/react';
+import SplitterPersisted from './splitter/persisted/react';
+import SplitterNested from './splitter/nested/react';
 import SectionDefault from './section/default/react';
 import SpinnerDefault from './spinner/default/react';
 import StackDefault from './stack/default/react';
@@ -46,6 +56,7 @@ import TimestampDefault from './timestamp/default/react';
 import FieldDefault from './field/default/react';
 import FieldParts from './field/parts/react';
 import FormDefault from './form/default/react';
+import FormServerErrors from './form/server-errors/react';
 import TextFieldDefault from './text-field/default/react';
 import TextAreaFieldDefault from './text-area-field/default/react';
 import CheckboxDefault from './checkbox/default/react';
@@ -238,12 +249,22 @@ export const reactDemoMap = {
   'meter.default': MeterDefault,
   'meter.thresholds': MeterThresholds,
   'meter.sizes': MeterSizes,
+  'visually-hidden.default': VisuallyHiddenDefault,
+  'visually-hidden.live-region': VisuallyHiddenLiveRegion,
+  'portal.default': PortalDefault,
+  'portal.container': PortalContainer,
   'rating.default': RatingDefault,
   'rating.controlled': RatingControlled,
   'rating.read-only': RatingReadOnly,
   'rating.custom-icon': RatingCustomIcon,
   'rating.sizes': RatingSizes,
   'rating.form': RatingForm,
+  'splitter.two-pane': SplitterTwoPane,
+  'splitter.three-pane': SplitterThreePane,
+  'splitter.vertical': SplitterVertical,
+  'splitter.collapsible': SplitterCollapsible,
+  'splitter.persisted': SplitterPersisted,
+  'splitter.nested': SplitterNested,
   'empty-state.default': EmptyStateDefault,
   'avatar.default': AvatarDefault,
   'card.default': CardDefault,
@@ -254,6 +275,7 @@ export const reactDemoMap = {
   'field.default': FieldDefault,
   'field.parts': FieldParts,
   'form.default': FormDefault,
+  'form.server-errors': FormServerErrors,
   'text-field.default': TextFieldDefault,
   'text-area-field.default': TextAreaFieldDefault,
   'checkbox.default': CheckboxDefault,

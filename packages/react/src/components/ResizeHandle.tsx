@@ -26,12 +26,27 @@ export type ResizeHandleProps = Omit<ComponentPropsWithRef<'div'>, 'onChange' | 
    */
   reversed?: boolean;
   'aria-label'?: string;
+  /** Keyboard step in `value` units (arrow keys). @default 10 */
+  step?: number;
+  /** Keyboard step with Shift held. @default 50 */
+  largeStep?: number;
+  /**
+   * How many `value` units one pixel of pointer travel is worth. Pass a function to read it
+   * lazily (at the start of each drag). Use it when `value` is not in pixels, e.g. a percentage.
+   * @default 1
+   */
+  unitsPerPixel?: number | (() => number);
 };
 
 const ARROW_STEP = 10;
 const ARROW_STEP_LARGE = 50;
 
-type DragState = { pointerId: number; startPos: number; startValue: number };
+type DragState = {
+  pointerId: number;
+  startPos: number;
+  startValue: number;
+  unitsPerPixel: number;
+};
 
 /**
  * Accessible drag/keyboard separator for single-region resize. Bind to
@@ -52,6 +67,10 @@ export function ResizeHandle({
   collapsed = false,
   reversed = false,
   'aria-label': ariaLabel,
+  'aria-orientation': ariaOrientation,
+  step = ARROW_STEP,
+  largeStep = ARROW_STEP_LARGE,
+  unitsPerPixel = 1,
   className,
   onPointerDown,
   onPointerMove,
@@ -81,6 +100,7 @@ export function ResizeHandle({
       pointerId: event.pointerId,
       startPos: isHorizontal ? event.clientX : event.clientY,
       startValue: value,
+      unitsPerPixel: typeof unitsPerPixel === 'function' ? unitsPerPixel() : unitsPerPixel,
     };
     try {
       event.currentTarget.setPointerCapture(event.pointerId);
@@ -94,7 +114,9 @@ export function ResizeHandle({
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const pos = isHorizontal ? event.clientX : event.clientY;
-    onValueChange(clamp(drag.startValue + (reversed ? -1 : 1) * (pos - drag.startPos)));
+    onValueChange(
+      clamp(drag.startValue + (reversed ? -1 : 1) * (pos - drag.startPos) * drag.unitsPerPixel),
+    );
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>): void => {
@@ -116,15 +138,15 @@ export function ResizeHandle({
     const backwardKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
     const increaseKey = reversed ? backwardKey : forwardKey;
     const decreaseKey = reversed ? forwardKey : backwardKey;
-    const step = event.shiftKey ? ARROW_STEP_LARGE : ARROW_STEP;
+    const delta = event.shiftKey ? largeStep : step;
     switch (event.key) {
       case increaseKey:
         event.preventDefault();
-        onValueChange(clamp(value + step));
+        onValueChange(clamp(value + delta));
         break;
       case decreaseKey:
         event.preventDefault();
-        onValueChange(clamp(value - step));
+        onValueChange(clamp(value - delta));
         break;
       case 'Home':
         event.preventDefault();
@@ -150,7 +172,7 @@ export function ResizeHandle({
       {...rest}
       ref={ref}
       role="separator"
-      aria-orientation={direction}
+      aria-orientation={ariaOrientation ?? direction}
       aria-valuenow={value}
       aria-valuemin={minValue}
       aria-valuemax={maxValue}

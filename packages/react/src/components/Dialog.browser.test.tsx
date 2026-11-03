@@ -7,7 +7,14 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import type { OverlayOpenChangeHandler } from '../overlays';
-import { finishAll, raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
+import {
+  animating,
+  clickBackdrop as sharedClickBackdrop,
+  finishAll,
+  holdMotion,
+  raf,
+  settled,
+} from '../test/browser';
 import { Button } from './Button';
 import { Dialog, type DialogRootProps } from './Dialog';
 import { Select } from './Select';
@@ -268,27 +275,38 @@ describe('focus, inertness, scroll lock', () => {
 
 describe('enter and exit animation', () => {
   test('children stay mounted and the element stays rendered until the exit ends', async () => {
+    holdMotion();
     render(<TestDialog defaultOpen />);
     await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await userEvent.click(q('close'));
     await raf();
     expect(dlg().open).toBe(false);
     expect(getComputedStyle(dlg()).display).not.toBe('none');
     expect(q('input')).toBeTruthy(); // still mounted mid-exit
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await raf();
     expect(getComputedStyle(dlg()).display).toBe('none');
     expect(q('input')).toBeNull(); // unmounted after the exit
   });
 
   test('reopening during the exit keeps the content', async () => {
+    holdMotion();
     render(<TestDialog defaultOpen />);
-    await raf();
-    await settled(dlg());
+    await animating(dlg());
+    await finishAll(dlg());
     await userEvent.keyboard('{Escape}');
+    await animating(dlg());
+    expect(dlg().open).toBe(false);
+    expect(q('input')).toBeTruthy();
+    await userEvent.click(q('trigger')); // the exit is still running
+    expect(dlg().open).toBe(true);
+    await finishAll(dlg());
     await raf();
     expect(q('input')).toBeTruthy();
+    expect(dlg().matches(':modal')).toBe(true);
   });
 });
 

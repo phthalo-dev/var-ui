@@ -12,6 +12,7 @@ import { mergeProps } from 'typestyles';
 import { mergeRacClassName } from '../internal/racClassName';
 import { useControlSize } from '../internal/controlSizeContext';
 import { splitRacFieldProps } from '../internal/racFieldProps';
+import { uncontrolledDomRender } from '../internal/uncontrolledDom';
 
 /**
  * Value, state and validation props shared by the text-like fields. VarUI names; the
@@ -85,7 +86,13 @@ export function TextField({
       style={style}
     >
       <RacFieldFrame slots={tf} label={label} description={description} errorMessage={errorMessage}>
-        <Input {...inputProps} {...mergeProps(tf.input)} />
+        <Input
+          {...inputProps}
+          {...mergeProps(tf.input)}
+          render={
+            uncontrolledDomRender('input', props.value !== undefined, props.defaultValue) as never
+          }
+        />
       </RacFieldFrame>
     </AriaTextField>
   );

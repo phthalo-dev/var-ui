@@ -6,7 +6,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { finishAll, freezeAt, raf, settled } from '../test/browser';
+import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
 import { Dialog } from './Dialog';
 import { Select } from './Select';
 
@@ -218,11 +218,12 @@ describe('Select on a native popover', () => {
   });
 
   test('enter and exit animate; the list stays mounted until the exit ends', async () => {
+    holdMotion();
     render(<Basic />);
     await userEvent.click(trigger());
     await raf();
-    expect(popup().getAnimations({ subtree: true }).length).toBeGreaterThan(0);
-    await settled(popup());
+    await animating(popup());
+    await finishAll(popup());
     expect(Number(getComputedStyle(popup()).opacity)).toBe(1);
 
     await userEvent.keyboard('{Escape}');

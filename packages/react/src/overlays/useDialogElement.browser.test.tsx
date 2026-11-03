@@ -2,7 +2,15 @@ import { render } from '@testing-library/react';
 import { StrictMode, useState } from 'react';
 import { userEvent } from 'vite-plus/test/browser';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vite-plus/test';
-import { freezeAt, raf, settled, clickBackdrop as sharedClickBackdrop } from '../test/browser';
+import {
+  animating,
+  clickBackdrop as sharedClickBackdrop,
+  finishAll,
+  freezeAt,
+  holdMotion,
+  raf,
+  settled,
+} from '../test/browser';
 import type { OverlayOpenChangeHandler } from './changeEvent';
 import { useDialogElement, type UseDialogElementOptions } from './useDialogElement';
 import { useOverlayRoot } from './useOverlayRoot';
@@ -12,7 +20,7 @@ beforeAll(() => {
   const style = document.createElement('style');
   style.textContent = `
     html:has(dialog:modal){overflow:hidden}
-    dialog.fx{padding:0;opacity:0;transition:opacity 120ms,overlay 120ms allow-discrete,display 120ms allow-discrete}
+    dialog.fx{padding:0;opacity:0;transition:opacity var(--test-fx-duration,120ms),overlay var(--test-fx-duration,120ms) allow-discrete,display var(--test-fx-duration,120ms) allow-discrete}
     dialog.fx[open]{opacity:1}
     @starting-style{dialog.fx[open]{opacity:0}}
     dialog.nofx{padding:0}
@@ -347,29 +355,55 @@ describe('focus and scroll lock', () => {
 
 describe('exit mounting', () => {
   test('children stay mounted through the exit transition, then unmount', async () => {
+    holdMotion();
     const { rerender } = render(<TestDialog fx open />);
-    await settled(dialogEl());
+    await animating(dialogEl());
+    await finishAll(dialogEl());
     expect(q('body')).toBeTruthy();
     rerender(<TestDialog fx open={false} />);
     // Right after close the dialog is not :modal anymore, but still displayed and animating.
     expect(dialogEl().open).toBe(false);
     expect(q('body')).toBeTruthy();
-    expect(dialogEl().getAnimations({ subtree: true }).length).toBeGreaterThan(0);
+    await animating(dialogEl());
+    expect(q('body')).toBeTruthy();
+    await finishAll(dialogEl());
     await vi.waitFor(() => expect(q('body')).toBeNull(), { timeout: 2000 });
   });
 
   test('reopening during the exit keeps the body mounted', async () => {
+    holdMotion();
     const { rerender } = render(<TestDialog fx open />);
-    await settled(dialogEl());
+    await animating(dialogEl());
+    await finishAll(dialogEl());
     rerender(<TestDialog fx open={false} />);
     rerender(<TestDialog fx open />);
-    await settled(dialogEl());
-    await raf();
+    await finishAll(dialogEl());
     expect(q('body')).toBeTruthy();
     expect(dialogEl().matches(':modal')).toBe(true);
   });
 
+  test('reopening while the exit runs always reopens, and the stale exit never unmounts it', async () => {
+    holdMotion();
+    const { rerender } = render(<TestDialog fx open />);
+    await animating(dialogEl());
+    await finishAll(dialogEl());
+    for (let i = 0; i < 50; i++) {
+      rerender(<TestDialog fx open={false} />);
+      await animating(dialogEl()); // the exit is really running
+      expect(q('body'), `close ${i}`).toBeTruthy();
+      rerender(<TestDialog fx open />);
+      expect(dialogEl().matches(':modal'), `reopen ${i}`).toBe(true);
+      // The first exit's `finished` promise settles when it is cancelled by the reopen: that must
+      // not unmount the body of the newer open.
+      await finishAll(dialogEl());
+      await raf();
+      expect(q('body'), `after reopen ${i}`).toBeTruthy();
+      expect(dialogEl().matches(':modal'), `modal ${i}`).toBe(true);
+    }
+  });
+
   test('child state survives the exit', async () => {
+    holdMotion();
     function Stateful() {
       const root = useOverlayRoot({ defaultOpen: true });
       const dialog = useDialogElement(root);
@@ -387,12 +421,14 @@ describe('exit mounting', () => {
       );
     }
     render(<Stateful />);
-    await settled(dialogEl());
+    await animating(dialogEl());
+    await finishAll(dialogEl());
     await userEvent.type(q('field'), 'b');
     expect((q('field') as HTMLInputElement).value).toBe('ab');
     // The modal makes the page inert, so close with Escape rather than a control outside it.
     await userEvent.keyboard('{Escape}');
-    freezeAt(dialogEl(), 0.5);
+    await animating(dialogEl());
+    expect(freezeAt(dialogEl(), 0.5)).toBeGreaterThan(0);
     expect((q('field') as HTMLInputElement).value).toBe('ab');
   });
 

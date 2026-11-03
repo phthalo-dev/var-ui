@@ -1,8 +1,8 @@
 import type { ComponentPropsWithRef, JSX } from 'react';
 import { spinner } from '@var-ui/core/components/spinner';
-import { visuallyHidden } from '@var-ui/core/components/visuallyHidden';
 import type { SpinnerVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
+import { VisuallyHidden } from './VisuallyHidden';
 
 export type SpinnerProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
   SpinnerVariantProps & {
@@ -24,7 +24,7 @@ export function Spinner({
   return (
     <span role="status" {...rest} {...mergeProps(s.root, className)} ref={ref}>
       <span {...mergeProps(s.indicator)} aria-hidden="true" />
-      <span {...mergeProps(visuallyHidden())}>{label}</span>
+      <VisuallyHidden>{label}</VisuallyHidden>
     </span>
   );
 }

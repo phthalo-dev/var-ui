@@ -6,7 +6,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { finishAll, raf, settled } from '../test/browser';
+import { animating, finishAll, holdMotion, raf, settled } from '../test/browser';
 import { Combobox } from './Combobox';
 import { Dialog } from './Dialog';
 
@@ -241,6 +241,7 @@ describe('Combobox on a native popover', () => {
   });
 
   test('exit keeps the list mounted until the animation ends', async () => {
+    holdMotion();
     render(
       <Wrap>
         <Box />
@@ -248,9 +249,10 @@ describe('Combobox on a native popover', () => {
     );
     await userEvent.click(input());
     await userEvent.keyboard('a');
-    await settled(popup());
+    await animating(popup());
+    await finishAll(popup());
     await userEvent.keyboard('{Escape}');
-    await raf();
+    await animating(popup());
     expect(isOpen()).toBe(false);
     expect(listbox()).toBeTruthy();
     await finishAll(popup());
