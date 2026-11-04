@@ -8,7 +8,7 @@ import { mapTone, semanticTone, tone, type SemanticToneKey } from '../shared/sem
 
 const pulse = keyframes.create('var-ui-status-pulse', {
   from: { boxShadow: '0 0 0 0 color-mix(in srgb, currentColor 45%, transparent)' },
-  to: { boxShadow: '0 0 0 6px color-mix(in srgb, currentColor 0%, transparent)' },
+  to: { boxShadow: '0 0 0 0.375rem color-mix(in srgb, currentColor 0%, transparent)' },
 });
 
 const statusDotAppearance = variant.enum(['filled', 'outline', 'subtle'], { default: 'filled' });
@@ -30,7 +30,7 @@ export const statusDot = typestyles.recipe({
     pulse: variant.boolean({ default: false }),
   },
   vars: {
-    size: { ...atProperty.length, value: '8px' },
+    size: { ...atProperty.length, value: '0.5rem' },
   },
   styles: ({ vars }) => {
     return {

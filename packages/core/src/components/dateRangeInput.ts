@@ -125,7 +125,7 @@ export const dateRangeInput = typestyles.recipe({
         ...fieldChromeSlots,
         root: {
           ...fieldChromeSlots.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         separator: {
           color: vars.descriptionColor.var,
@@ -136,8 +136,8 @@ export const dateRangeInput = typestyles.recipe({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          width: '1.75rem',
-          height: '1.75rem',
+          width: t.size.control.sm.var,
+          height: t.size.control.sm.var,
           borderRadius: t.radius.sm.var,
           color: vars.navButtonColor.var,
           cursor: 'pointer',

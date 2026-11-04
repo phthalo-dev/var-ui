@@ -6,7 +6,7 @@ export function render(): string {
   const s = scrollArea({ orientation: 'vertical', fade: 'none' });
   return serializeHtmlTag(
     'div',
-    { ...mergeProps(s.root), style: 'height: 120px; width: 240px;' },
+    { ...mergeProps(s.root), style: 'height: 7.5rem; width: 15rem;' },
     serializeHtmlTag(
       'div',
       mergeProps(s.viewport),

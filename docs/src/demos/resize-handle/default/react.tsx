@@ -7,12 +7,12 @@ export default function Preview() {
     <div
       style={{
         display: 'flex',
-        height: 80,
-        width: 320,
-        border: '1px solid var(--var-ui-color-border-subtle)',
+        height: '5rem',
+        width: '20rem',
+        border: '0.0625rem solid var(--var-ui-color-border-subtle)',
       }}
     >
-      <div style={{ width, overflow: 'hidden', padding: 8 }}>Sidebar ({width}px)</div>
+      <div style={{ width, overflow: 'hidden', padding: '0.5rem' }}>Sidebar ({width}px)</div>
       <ResizeHandle
         value={width}
         minValue={120}
@@ -20,7 +20,7 @@ export default function Preview() {
         onValueChange={setWidth}
         aria-label="Resize sidebar"
       />
-      <div style={{ flex: 1, padding: 8 }}>Main</div>
+      <div style={{ flex: 1, padding: '0.5rem' }}>Main</div>
     </div>
   );
 }

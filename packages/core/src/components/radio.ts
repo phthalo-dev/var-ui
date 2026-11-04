@@ -38,8 +38,8 @@ export const radio = typestyles.recipe({
           cursor: 'pointer',
         },
         control: {
-          width: '18px',
-          height: '18px',
+          width: t.size.indicator.box.var,
+          height: t.size.indicator.box.var,
           borderRadius: t.radius.full.var,
           ...border(vars.controlBorder.var),
           display: 'inline-flex',
@@ -47,8 +47,8 @@ export const radio = typestyles.recipe({
           justifyContent: 'center',
           '&::before': {
             content: '""',
-            width: '8px',
-            height: '8px',
+            width: t.size.indicator.dot.var,
+            height: t.size.indicator.dot.var,
             borderRadius: t.radius.full.var,
             backgroundColor: vars.indicatorBackground.var,
             transition: t.transition.background.var,

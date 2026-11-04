@@ -26,7 +26,7 @@ export function LayoutTabsTile({ className }: LayoutTabsTileProps) {
               value: 'center',
               label: 'Center',
               content: (
-                <Center style={{ height: '80px' }}>
+                <Center style={{ height: '5rem' }}>
                   <Text tone="secondary">Centered content</Text>
                 </Center>
               ),

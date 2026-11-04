@@ -77,7 +77,7 @@ export const fieldset = typestyles.recipe({
     },
     variants: {
       gap: {
-        none: { root: { [vars.gap.name]: '0px' } },
+        none: { root: { [vars.gap.name]: '0rem' } },
         xs: { root: { [vars.gap.name]: t.space[1].var } },
         sm: { root: { [vars.gap.name]: t.space[2].var } },
         md: { root: { [vars.gap.name]: t.space[3].var } },
@@ -92,9 +92,9 @@ export const fieldset = typestyles.recipe({
         true: {
           legend: {
             position: 'absolute',
-            width: '1px',
-            height: '1px',
-            margin: '-1px',
+            width: '0.0625rem',
+            height: '0.0625rem',
+            margin: '-0.0625rem',
             padding: 0,
             overflow: 'hidden',
             clip: 'rect(0 0 0 0)',

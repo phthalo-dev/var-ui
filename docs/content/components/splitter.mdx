@@ -73,7 +73,7 @@ Panels and handles must be direct children (not wrapped in a fragment or compone
 
 Each divider is `role="separator"` with `tabindex="0"`, `aria-orientation` (a `vertical` separator for side-by-side panels, per the APG), `aria-valuenow` (the size of the panel before it, in percent), `aria-valuemin` / `aria-valuemax` (the limits implied by both neighbours), and `aria-controls` pointing at that panel's id. Give panels an `aria-label` or heading when they are landmarks.
 
-Pointer drags use pointer capture, so they keep tracking outside the divider, and the hit area extends well past the 1px line for touch. In a right-to-left context the horizontal arrows and drag direction are mirrored. The divider is drawn with `CanvasText` in forced-colors mode and shows the standard focus ring.
+Pointer drags use pointer capture, so they keep tracking outside the divider, and the hit area extends well past the visible line for touch. In a right-to-left context the horizontal arrows and drag direction are mirrored. The divider is drawn with `CanvasText` in forced-colors mode and shows the standard focus ring.
 
 ## Keyboard
 

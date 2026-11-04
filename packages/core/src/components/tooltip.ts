@@ -33,7 +33,7 @@ export const tooltip = typestyles.recipe({
           borderRadius: t.radius.sm.var,
           boxShadow: t.shadow.sm.var,
           ...atForcedColors(forced.boundary),
-          maxWidth: '16rem',
+          maxWidth: t.size.panel.sm.var,
           lineHeight: 1.4,
         },
       },

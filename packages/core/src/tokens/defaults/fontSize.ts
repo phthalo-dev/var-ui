@@ -9,11 +9,13 @@ const fontSizeScale = generateGeometricScale({
   steps: [...FONT_SIZE_STEPS],
 });
 
-function zipPx<T extends string>(names: readonly T[], values: number[]): Record<T, `${number}px`> {
-  return Object.fromEntries(names.map((name, index) => [name, `${values[index]}px`])) as Record<
-    T,
-    `${number}px`
-  >;
+function zipRem<T extends string>(
+  names: readonly T[],
+  values: number[],
+): Record<T, `${number}rem`> {
+  return Object.fromEntries(
+    names.map((name, index) => [name, `${(values[index] ?? 0) / 16}rem`]),
+  ) as Record<T, `${number}rem`>;
 }
 
-export const fontSize = zipPx(FONT_SIZE_NAMES, fontSizeScale) satisfies DesignTokens['fontSize'];
+export const fontSize = zipRem(FONT_SIZE_NAMES, fontSizeScale) satisfies DesignTokens['fontSize'];

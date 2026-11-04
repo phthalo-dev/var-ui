@@ -2,7 +2,7 @@ import { TopNav } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <div style={{ position: 'relative', minHeight: 80 }}>
+    <div style={{ position: 'relative', minHeight: '5rem' }}>
       <TopNav heading={<TopNav.Heading heading="Acme" />}>
         <TopNav.Item label="Home" href="/" selected />
         <TopNav.Item label="Docs" href="/docs" />

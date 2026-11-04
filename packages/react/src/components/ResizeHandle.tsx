@@ -6,37 +6,36 @@ import {
   type KeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
-import { resizeHandle } from '@var-ui/core/components/resizeHandle';
+import { resizeHandle, type ResizeHandleVariantProps } from '@var-ui/core/components/resizeHandle';
 import { mergeProps } from 'typestyles';
 
-export type ResizeHandleProps = Omit<ComponentPropsWithRef<'div'>, 'onChange' | 'children'> & {
-  /** @default 'horizontal' */
-  direction?: 'horizontal' | 'vertical';
-  value: number;
-  minValue: number;
-  maxValue: number;
-  /** Fires with the next (clamped) size while dragging or using the keyboard. */
-  onValueChange: (next: number) => void;
-  /** Fired on double-click/Enter — bind to `useResizable().collapse`/`toggle`. */
-  onCollapse?: () => void;
-  collapsed?: boolean;
-  /**
-   * Flips drag and arrow-key direction, for a handle on the leading edge of an
-   * end-side region (dragging toward the start edge grows it). @default false
-   */
-  reversed?: boolean;
-  'aria-label'?: string;
-  /** Keyboard step in `value` units (arrow keys). @default 10 */
-  step?: number;
-  /** Keyboard step with Shift held. @default 50 */
-  largeStep?: number;
-  /**
-   * How many `value` units one pixel of pointer travel is worth. Pass a function to read it
-   * lazily (at the start of each drag). Use it when `value` is not in pixels, e.g. a percentage.
-   * @default 1
-   */
-  unitsPerPixel?: number | (() => number);
-};
+export type ResizeHandleProps = Omit<ComponentPropsWithRef<'div'>, 'onChange' | 'children'> &
+  ResizeHandleVariantProps & {
+    value: number;
+    minValue: number;
+    maxValue: number;
+    /** Fires with the next (clamped) size while dragging or using the keyboard. */
+    onValueChange: (next: number) => void;
+    /** Fired on double-click/Enter — bind to `useResizable().collapse`/`toggle`. */
+    onCollapse?: () => void;
+    collapsed?: boolean;
+    /**
+     * Flips drag and arrow-key direction, for a handle on the leading edge of an
+     * end-side region (dragging toward the start edge grows it). @default false
+     */
+    reversed?: boolean;
+    'aria-label'?: string;
+    /** Keyboard step in `value` units (arrow keys). @default 10 */
+    step?: number;
+    /** Keyboard step with Shift held. @default 50 */
+    largeStep?: number;
+    /**
+     * How many `value` units one pixel of pointer travel is worth. Pass a function to read it
+     * lazily (at the start of each drag). Use it when `value` is not in pixels, e.g. a percentage.
+     * @default 1
+     */
+    unitsPerPixel?: number | (() => number);
+  };
 
 const ARROW_STEP = 10;
 const ARROW_STEP_LARGE = 50;
@@ -58,7 +57,7 @@ type DragState = {
  * 1px, but the grab target extends a few px past it on both sides.
  */
 export function ResizeHandle({
-  direction = 'horizontal',
+  orientation = 'horizontal',
   value,
   minValue,
   maxValue,
@@ -81,9 +80,9 @@ export function ResizeHandle({
   ref,
   ...rest
 }: ResizeHandleProps): JSX.Element {
-  const s = resizeHandle();
+  const s = resizeHandle({ orientation });
   const dragState = useRef<DragState | null>(null);
-  const isHorizontal = direction === 'horizontal';
+  const isHorizontal = orientation === 'horizontal';
 
   const clamp = useCallback(
     (next: number) => Math.min(Math.max(next, minValue), maxValue),
@@ -172,13 +171,12 @@ export function ResizeHandle({
       {...rest}
       ref={ref}
       role="separator"
-      aria-orientation={ariaOrientation ?? direction}
+      aria-orientation={ariaOrientation ?? orientation}
       aria-valuenow={value}
       aria-valuemin={minValue}
       aria-valuemax={maxValue}
       aria-label={ariaLabel}
       tabIndex={0}
-      data-orientation={direction}
       data-collapsed={collapsed ? '' : undefined}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}

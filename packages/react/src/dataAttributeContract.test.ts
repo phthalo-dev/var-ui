@@ -42,7 +42,6 @@ const UNDOCUMENTED_HOOKS = [
   'data-aside',
   'data-aside-collapsed',
   'data-auto',
-  'data-avatar-status',
   'data-banner',
   'data-carousel-item',
   'data-carousel-viewport',

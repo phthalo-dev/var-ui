@@ -22,13 +22,13 @@ describe('forced-colors and contrast helpers', () => {
   it('forced fragments use system colors only', () => {
     const values = Object.values(forced).flatMap((fragment) => Object.values(fragment));
     const systemOrToken =
-      /^(Canvas|CanvasText|Highlight|HighlightText|GrayText|none|solid|2px|var\()/;
+      /^(Canvas|CanvasText|Highlight|HighlightText|GrayText|none|solid|0.125rem|var\()/;
     for (const value of values) expect(String(value)).toMatch(systemOrToken);
     expect(forced.swatch).toEqual({ forcedColorAdjust: 'none' });
   });
 
   it('focusRing stays an outline, which forced-colors mode keeps (box-shadow is dropped)', () => {
-    expect(focusRing.outline).toMatch(/^2px solid /);
+    expect(focusRing.outline).toMatch(/^0.125rem solid /);
     expect(Object.keys(focusRing)).toEqual(['outline', 'outlineOffset']);
   });
 });

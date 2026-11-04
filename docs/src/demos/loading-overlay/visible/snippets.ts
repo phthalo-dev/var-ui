@@ -4,7 +4,7 @@ export const snippets = {
   react: `import { LoadingOverlay } from '@var-ui/react';
 
 <LoadingOverlay visible label="Saving changes">
-  <div style={{ width: 280, minHeight: 120, padding: 16 }}>
+  <div style={{ width: '17.5rem', minHeight: '7.5rem', padding: '1rem' }}>
     <strong>Account settings</strong>
     <p>Display name, email, and notification preferences.</p>
   </div>

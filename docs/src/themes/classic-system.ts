@@ -23,13 +23,13 @@ export const classicSystemThemeTokens = {
     mono: 'Monaco, "Courier New", ui-monospace, monospace',
   },
   fontSize: {
-    xs: '10px',
-    sm: '12px',
-    md: '13px',
-    lg: '15px',
-    xl: '18px',
-    '2xl': '22px',
-    '3xl': '28px',
+    xs: '0.625rem',
+    sm: '0.75rem',
+    md: '0.8125rem',
+    lg: '0.9375rem',
+    xl: '1.125rem',
+    '2xl': '1.375rem',
+    '3xl': '1.75rem',
   },
   fontWeight: {
     normal: '400',
@@ -43,19 +43,19 @@ export const classicSystemThemeTokens = {
     md: '0',
     lg: '0',
     xl: '0',
-    full: '999px',
+    full: '62.4375rem',
   },
   borderWidth: {
-    thin: '2px',
-    default: '2px',
-    thick: '4px',
+    thin: '0.125rem',
+    default: '0.125rem',
+    thick: '0.25rem',
   },
   shadow: {
-    xs: `-1px 1px 0 0 ${t.color.border.default.var}`,
-    sm: `-1px 1px 0 0 ${t.color.border.default.var}`,
-    md: `-2px 2px 0 0 ${t.color.border.default.var}`,
-    lg: `-3px 3px 0 0 ${t.color.border.default.var}`,
-    xl: `-4px 4px 0 0 ${t.color.border.default.var}`,
+    xs: `-0.0625rem 0.0625rem 0 0 ${t.color.border.default.var}`,
+    sm: `-0.0625rem 0.0625rem 0 0 ${t.color.border.default.var}`,
+    md: `-0.125rem 0.125rem 0 0 ${t.color.border.default.var}`,
+    lg: `-0.1875rem 0.1875rem 0 0 ${t.color.border.default.var}`,
+    xl: `-0.25rem 0.25rem 0 0 ${t.color.border.default.var}`,
   },
   duration: {
     fast: '80ms',
@@ -244,7 +244,7 @@ export const classicSystemTheme = defaultTheme.override({
   components: {
     tabs: {
       vars: {
-        railRadius: '0px',
+        railRadius: '0rem',
       },
     },
     'segmented-control': {
@@ -266,12 +266,12 @@ export const classicSystemTheme = defaultTheme.override({
     },
     toc: {
       vars: {
-        railRadius: '0px',
+        railRadius: '0rem',
       },
     },
     button: {
       styles: ({ tokens: v }) => {
-        const brutalistLift = '4px';
+        const brutalistLift = '0.25rem';
 
         return {
           base: {

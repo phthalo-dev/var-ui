@@ -53,7 +53,7 @@ export const timeInput = typestyles.recipe({
     });
     return {
       base: {
-        root: { ...chrome.root, minWidth: '160px' },
+        root: { ...chrome.root, minWidth: t.size.field.minWidthCompact.var },
         label: chrome.label,
         description: chrome.description,
         error: chrome.error,

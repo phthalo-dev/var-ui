@@ -135,15 +135,15 @@ export const commandPalette = typestyles.recipe({
           }),
           '&::backdrop': {
             ...nativeBackdrop(vars.backdropBackground.var)['&::backdrop'],
-            '@supports (backdrop-filter: blur(1px))': {
-              backdropFilter: 'blur(10px)',
+            '@supports (backdrop-filter: blur(0.0625rem))': {
+              backdropFilter: 'blur(0.625rem)',
             },
           },
-          marginBlock: 'max(12vh, 72px) auto',
+          marginBlock: 'max(12vh, 4.5rem) auto',
           marginInline: 'auto',
-          width: `min(560px, calc(100% - 2 * ${t.space[4].var}))`,
+          width: `min(${t.size.panel['2xl'].var}, calc(100% - 2 * ${t.space[4].var}))`,
           maxWidth: 'none',
-          maxHeight: 'min(72vh, 640px)',
+          maxHeight: 'min(72vh, 40rem)',
           flexDirection: 'column',
           fontFamily: t.fontFamily.body.var,
           backgroundColor: vars.dialogBackground.var,

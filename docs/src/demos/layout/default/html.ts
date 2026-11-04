@@ -26,7 +26,7 @@ export function render(): string {
   const pStart = layoutPanel({ hasDivider: true });
   const start = serializeHtmlTag(
     'div',
-    { ...mergeProps(pStart.panel), 'data-side': 'start', style: 'width:180px' },
+    { ...mergeProps(pStart.panel), 'data-side': 'start', style: 'width:11.25rem' },
     'Nav',
   );
   const content = serializeHtmlTag(
@@ -40,7 +40,7 @@ export function render(): string {
     {
       ...mergeProps(pEnd.panel),
       'data-side': 'end',
-      style: 'width:240px',
+      style: 'width:15rem',
       role: 'complementary',
       'aria-label': 'Details',
     },

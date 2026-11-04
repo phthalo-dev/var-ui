@@ -23,11 +23,11 @@ export function neoBrutalistShadowOffsetDark(hue: number): string {
 
 export function neoBrutalistShadowValues(shadowColor: string) {
   return {
-    xs: `1px 1px 0 0 ${shadowColor}`,
-    sm: `2px 2px 0 0 ${shadowColor}`,
-    md: `3px 3px 0 0 ${shadowColor}`,
-    lg: `4px 4px 0 0 ${shadowColor}`,
-    xl: `5px 5px 0 0 ${shadowColor}`,
+    xs: `0.0625rem 0.0625rem 0 0 ${shadowColor}`,
+    sm: `0.125rem 0.125rem 0 0 ${shadowColor}`,
+    md: `0.1875rem 0.1875rem 0 0 ${shadowColor}`,
+    lg: `0.25rem 0.25rem 0 0 ${shadowColor}`,
+    xl: `0.3125rem 0.3125rem 0 0 ${shadowColor}`,
   } as const;
 }
 

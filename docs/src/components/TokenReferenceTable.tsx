@@ -24,12 +24,12 @@ const COLUMN_KEYS = [
 ] as const;
 
 const DEFAULT_WIDTHS: Record<string, string> = {
-  namespace: '120px',
-  kind: '96px',
-  tokenPath: '280px',
-  cssVar: '280px',
-  defaultValue: '200px',
-  preview: '120px',
+  namespace: '7.5rem',
+  kind: '6rem',
+  tokenPath: '17.5rem',
+  cssVar: '17.5rem',
+  defaultValue: '12.5rem',
+  preview: '7.5rem',
 };
 
 const SEARCH_KEYS = ['namespace', 'kind', 'tokenPath', 'cssVar', 'defaultValue'] as const;
@@ -44,7 +44,7 @@ const previewSwatchStyle: CSSProperties = {
   width: '1.5rem',
   height: '1.5rem',
   borderRadius: 'var(--var-ui-radius-sm)',
-  border: '1px solid var(--var-ui-color-border-default)',
+  border: '0.0625rem solid var(--var-ui-color-border-default)',
   verticalAlign: 'middle',
 };
 

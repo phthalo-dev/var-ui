@@ -5,9 +5,9 @@ export const snippets = {
 
 <div
   style={{
-    height: 260,
-    border: '1px solid var(--var-ui-color-border-subtle)',
-    borderRadius: 8,
+    height: '16.25rem',
+    border: '0.0625rem solid var(--var-ui-color-border-subtle)',
+    borderRadius: '0.5rem',
     overflow: 'hidden',
   }}
 >

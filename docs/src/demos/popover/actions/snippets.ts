@@ -11,7 +11,7 @@ export const snippets = {
     <Popover.Title>Share link</Popover.Title>
     <Popover.Content>
       <p>Anyone with the link can view this draft.</p>
-      <HStack gap="sm" style={{ marginTop: 12 }}>
+      <HStack gap="sm" style={{ marginTop: '0.75rem' }}>
         <Button tone="accent" appearance="filled" size="sm">
           Copy link
         </Button>

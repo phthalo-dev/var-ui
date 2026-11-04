@@ -9,5 +9,5 @@ import { Spinner } from '@var-ui/astro';
 ---
 
 <Spinner label="Loading results" />`,
-  html: `<span role="status"><span data-size="md" data-tone="accent" class="var-ui-spinner" aria-hidden="true"></span><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Loading results</span></span>`,
+  html: `<span role="status"><span data-size="md" data-tone="accent" class="var-ui-spinner" aria-hidden="true"></span><span style="position:absolute;width:0.0625rem;height:0.0625rem;padding:0;margin:-0.0625rem;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Loading results</span></span>`,
 } satisfies DemoSnippets;

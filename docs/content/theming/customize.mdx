@@ -34,8 +34,8 @@ export const acme = createDesignTheme({
     // Custom namespaces — string leaves are mode-invariant; { light, dark } follow color mode
     brand: {
       glow: {
-        light: '0 0 0 3px oklch(90% 0.08 290)',
-        dark: '0 0 16px oklch(70% 0.18 290)',
+        light: '0 0 0 0.1875rem oklch(90% 0.08 290)',
+        dark: '0 0 1rem oklch(70% 0.18 290)',
       },
     },
   },
@@ -55,7 +55,7 @@ export const acme = createDesignTheme({
   components: {
     button: ({ tokens: t }) => ({
       base: {
-        borderRadius: '999px',
+        borderRadius: '62.4375rem',
         boxShadow: t.brand.glow,
         '&:hover': { boxShadow: 'none' },
       },
@@ -75,7 +75,7 @@ export const acme = createDesignTheme({
       ],
     }),
     badge: {
-      base: { borderRadius: '999px' },
+      base: { borderRadius: '62.4375rem' },
     },
   },
 });
@@ -171,7 +171,7 @@ directly:
 import { styles, button } from '@var-ui/core';
 
 // App-global restyle — no theme class prefix
-styles.override(button, { base: { borderRadius: '999px' } }, { layer: 'overrides' });
+styles.override(button, { base: { borderRadius: '62.4375rem' } }, { layer: 'overrides' });
 
 // Theme-scoped (same mechanism as `components` on createDesignTheme)
 styles.override(

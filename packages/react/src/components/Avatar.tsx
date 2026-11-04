@@ -1,9 +1,9 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { Children, useState } from 'react';
 import { avatar, avatarGroup } from '@var-ui/core/components/avatar';
-import { statusDot } from '@var-ui/core/components/statusDot';
 import type { AvatarVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
+import { StatusDot } from './StatusDot';
 
 export type AvatarProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
   AvatarVariantProps & {
@@ -64,11 +64,7 @@ export function Avatar({
           {name ? initialsOf(name) : '?'}
         </span>
       )}
-      {status ? (
-        <span {...mergeProps(a.status)} data-avatar-status>
-          <span {...mergeProps(statusDot({ tone: status }))} />
-        </span>
-      ) : null}
+      {status ? <StatusDot tone={status} className={a.status.className} /> : null}
     </span>
   );
 }

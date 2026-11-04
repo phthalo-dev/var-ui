@@ -77,7 +77,7 @@ export const button = typestyles.recipe({
         gap: t.space[2].var,
         transition: `${t.transition.borderShadow.var}, ${transitionOf('background-color')}, ${transitionOf('transform', 'fast')}`,
         '&:active': {
-          transform: 'translateY(1px)',
+          transform: 'translateY(0.0625rem)',
         },
         '&:focus-visible': {
           ...focusRing,

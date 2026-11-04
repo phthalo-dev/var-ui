@@ -36,7 +36,7 @@ export const popover = typestyles.recipe({
         root: {
           ...anchored(),
           ...popupSurface({ background: vars.background.var, border: vars.border.var }),
-          minWidth: '12rem',
+          minWidth: t.size.panel.xs.var,
           outline: 'none',
         },
         title: {

@@ -9,7 +9,7 @@ export function render(): string {
     {
       type: 'checkbox',
       role: 'switch',
-      style: 'position:absolute;width:1px;height:1px;opacity:0',
+      style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0',
     },
     '',
   );

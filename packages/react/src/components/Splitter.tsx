@@ -347,7 +347,7 @@ function SplitterRoot({
       'aria-label': handleLabel,
       ...handleRest,
       ref: handleRef,
-      direction: orientation,
+      orientation,
       'aria-orientation': horizontal ? 'vertical' : 'horizontal',
       'aria-controls': panelId(i),
       value: round(sizes[i]!),

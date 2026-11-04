@@ -1,9 +1,9 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { avatar } from '@var-ui/core/components/avatar';
-import { statusDot } from '@var-ui/core/components/statusDot';
 import type { AvatarVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
+import StatusDot from './StatusDot.astro';
 
 interface Props extends Omit<HTMLAttributes<'span'>, 'children'>, AvatarVariantProps {
   src?: string;
@@ -59,9 +59,7 @@ const showImage = Boolean(src);
   }
   {
     status ? (
-      <span {...mergeProps(a.status)} data-avatar-status>
-        <span {...mergeProps(statusDot({ tone: status }))} />
-      </span>
+      <StatusDot tone={status} className={a.status} />
     ) : null
   }
 </span>

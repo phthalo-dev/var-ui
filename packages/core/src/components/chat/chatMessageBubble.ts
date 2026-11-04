@@ -47,7 +47,7 @@ export const chatMessageBubble = typestyles.recipe({
         root: {
           display: 'inline-flex',
           flexDirection: 'column',
-          maxWidth: 'min(80%, 480px)',
+          maxWidth: `min(80%, ${t.size.panel.xl.var})`,
           padding: `${t.space[3].var} ${t.space[4].var}`,
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.senderBackground.var,

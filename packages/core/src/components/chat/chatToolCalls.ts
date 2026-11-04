@@ -48,7 +48,7 @@ export const chatToolCalls = typestyles.recipe({
         display: 'flex',
         alignItems: 'center',
         gap: t.space[1].var,
-        minHeight: '24px',
+        minHeight: '1.5rem',
         cursor: 'pointer',
         userSelect: 'none',
         background: 'none',

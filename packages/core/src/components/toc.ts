@@ -38,11 +38,11 @@ const tocVarDefinitions = {
   },
   indicatorY: {
     ...atProperty.length,
-    value: '0px',
+    value: '0rem',
   },
   indicatorHeight: {
     ...atProperty.length,
-    value: '0px',
+    value: '0rem',
   },
   indicatorOpacity: {
     ...atProperty.number,
@@ -107,8 +107,8 @@ export const toc = typestyles.recipe({
           listStyle: 'none',
           display: 'flex',
           flexDirection: 'column',
-          [vars.indicatorY.name]: '0px',
-          [vars.indicatorHeight.name]: '0px',
+          [vars.indicatorY.name]: '0rem',
+          [vars.indicatorHeight.name]: '0rem',
           [vars.indicatorOpacity.name]: '0',
           '&::before': {
             content: '""',

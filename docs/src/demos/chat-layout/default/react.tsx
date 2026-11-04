@@ -20,7 +20,7 @@ export default function Preview() {
   }
 
   return (
-    <div style={{ height: '280px' }}>
+    <div style={{ height: '17.5rem' }}>
       <ChatLayout
         composer={
           <ChatComposer actions={<ChatSendButton onClick={() => send(value)} />}>

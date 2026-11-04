@@ -39,8 +39,8 @@ export const emptyState = typestyles.recipe({
         icon: {
           display: 'grid',
           placeItems: 'center',
-          width: '48px',
-          height: '48px',
+          width: t.size.media.sm.var,
+          height: t.size.media.sm.var,
           borderRadius: '50%',
           color: vars.iconColor.var,
           backgroundColor: vars.iconBackground.var,

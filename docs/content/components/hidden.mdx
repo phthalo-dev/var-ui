@@ -7,7 +7,7 @@ description: SSR-safe responsive show/hide via CSS media queries.
 
 Hides children with `display: none` inside breakpoint media queries. Markup stays in the HTML (no `useMediaQuery` / conditional render), so SSR and hydration match.
 
-`hide` is mobile-first and-up. Keys are `base` (0px) plus TypeStyles `sm` / `md` / `lg` / `xl`. Default at `base` is visible. When shown, the wrapper uses `display: contents`.
+`hide` is mobile-first and-up. Keys are `base` (no minimum width) plus TypeStyles `sm` / `md` / `lg` / `xl`. Default at `base` is visible. When shown, the wrapper uses `display: contents`.
 
 ## Examples
 

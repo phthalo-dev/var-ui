@@ -8,7 +8,7 @@ export function render(): string {
     {
       ...mergeProps(skeleton({ shape: 'text' })),
       'aria-hidden': true,
-      style: 'width: 120px; height: 16px;',
+      style: 'width: 7.5rem; height: 1rem;',
     },
     '',
   );

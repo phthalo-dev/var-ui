@@ -1461,13 +1461,17 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "resize-handle": {
-    "axes": [],
+    "axes": [
+      "data-orientation",
+      "orientation",
+    ],
     "slots": {
       "pill": "var-ui-resize-handle__pill",
       "root": "var-ui-resize-handle",
     },
     "vars": [
       "--var-ui-resize-handle-focusring",
+      "--var-ui-resize-handle-hitoutset",
       "--var-ui-resize-handle-linecolor",
       "--var-ui-resize-handle-pillcolor",
     ],

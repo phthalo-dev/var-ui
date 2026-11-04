@@ -131,7 +131,7 @@ export function useColumnResize(options: UseColumnResizeOptions): UseColumnResiz
       const nextWidth = nextKey != null ? (resolvedWidths[nextKey] ?? minWidth) : minWidth;
 
       return {
-        direction: 'horizontal',
+        orientation: 'horizontal',
         value: current,
         minValue: minWidth,
         maxValue: nextKey != null ? current + nextWidth - minWidth : current + minWidth,

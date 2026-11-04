@@ -16,7 +16,7 @@ export function render(): string {
         'data-side': 'start',
         'aria-label': 'Navigation',
         open: true,
-        style: 'position: relative; inset: auto; margin: 0; height: 160px',
+        style: 'position: relative; inset: auto; margin: 0; height: 10rem',
       },
       serializeHtmlTag('div', mergeProps(s.body), 'Menu'),
     ),

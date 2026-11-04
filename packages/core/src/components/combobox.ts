@@ -90,7 +90,7 @@ export const combobox = typestyles.recipe({
       base: {
         root: {
           ...chrome.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         label: chrome.label,
         description: chrome.description,

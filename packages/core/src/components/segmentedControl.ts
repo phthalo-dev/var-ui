@@ -61,8 +61,8 @@ export const segmentedControl = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.primary.var,
     },
-    indicatorX: { ...atProperty.length, value: '0px' },
-    indicatorWidth: { ...atProperty.length, value: '0px' },
+    indicatorX: { ...atProperty.length, value: '0rem' },
+    indicatorWidth: { ...atProperty.length, value: '0rem' },
     indicatorOpacity: { ...atProperty.number, value: '0' },
   },
   styles: ({ vars }) => {

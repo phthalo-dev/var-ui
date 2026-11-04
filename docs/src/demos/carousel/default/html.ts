@@ -29,7 +29,7 @@ export function render(): string {
       ...mergeProps(s.viewport),
       'data-carousel-viewport': true,
       tabindex: '0',
-      style: 'grid-auto-columns: 220px',
+      style: 'grid-auto-columns: 13.75rem',
     },
     items,
   );

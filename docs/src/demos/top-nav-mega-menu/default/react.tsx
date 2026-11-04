@@ -2,7 +2,7 @@ import { TopNav } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <div style={{ position: 'relative', minHeight: 120 }}>
+    <div style={{ position: 'relative', minHeight: '7.5rem' }}>
       <TopNav>
         <TopNav.MegaMenu
           label="Solutions"

@@ -19,7 +19,7 @@ export const buttonGroup = typestyles.recipe({
           position: 'relative',
         },
         '& > * + *': {
-          marginInlineStart: '-1px',
+          marginInlineStart: '-0.0625rem',
         },
         '& > *:first-child': {
           borderStartStartRadius: t.radius.md.var,

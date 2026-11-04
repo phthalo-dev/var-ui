@@ -1,5 +1,5 @@
 import { avatar, statusDot } from '@var-ui/core';
-import { mergeProps } from '../../../lib/mergeProps';
+import { combine, mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
@@ -9,10 +9,6 @@ export function render(): string {
     { ...mergeProps(a.initials), role: 'img', 'aria-label': 'Ada Lovelace' },
     'AL',
   );
-  const status = serializeHtmlTag(
-    'span',
-    { ...mergeProps(a.status), 'data-avatar-status': true },
-    serializeHtmlTag('span', mergeProps(statusDot({ tone: 'success' })), ''),
-  );
+  const status = serializeHtmlTag('span', combine(statusDot({ tone: 'success' }), a.status), '');
   return serializeHtmlTag('span', mergeProps(a.root), `${initials}${status}`);
 }

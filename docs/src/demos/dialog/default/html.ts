@@ -49,7 +49,7 @@ export function render(): string {
       ...mergeProps(d.popup),
       open: true,
       'aria-labelledby': 'dialog-demo-title',
-      style: 'position: relative; inset: auto; margin: 0 auto; min-height: 220px',
+      style: 'position: relative; inset: auto; margin: 0 auto; min-height: 13.75rem',
     },
     content,
   );

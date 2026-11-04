@@ -61,7 +61,7 @@ export const overflowList = typestyles.recipe({
       },
       variants: {
         gap: {
-          none: { root: { [vars.gap.name]: '0px' } },
+          none: { root: { [vars.gap.name]: '0rem' } },
           xs: { root: { [vars.gap.name]: t.space[1].var } },
           sm: { root: { [vars.gap.name]: t.space[2].var } },
           md: { root: { [vars.gap.name]: t.space[3].var } },

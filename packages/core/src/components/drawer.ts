@@ -35,7 +35,7 @@ export const drawer = typestyles.recipe({
     },
     panelWidth: {
       ...atProperty.length,
-      value: '400px',
+      value: t.size.panel.lg.var,
     },
     panelHeight: {
       ...atProperty.length,
@@ -142,9 +142,16 @@ export const drawer = typestyles.recipe({
       },
       variants: {
         size: {
-          sm: { popup: { [vars.panelWidth.name]: '320px', [vars.panelHeight.name]: '40vh' } },
+          sm: {
+            popup: { [vars.panelWidth.name]: t.size.panel.md.var, [vars.panelHeight.name]: '40vh' },
+          },
           md: {},
-          lg: { popup: { [vars.panelWidth.name]: '560px', [vars.panelHeight.name]: '70vh' } },
+          lg: {
+            popup: {
+              [vars.panelWidth.name]: t.size.panel['2xl'].var,
+              [vars.panelHeight.name]: '70vh',
+            },
+          },
         },
       },
     };

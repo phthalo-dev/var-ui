@@ -64,7 +64,7 @@ export const homeBento = typestyles.recipe({
         display: 'inline-block',
         width: '0.75rem',
         height: '0.75rem',
-        borderRadius: '999px',
+        borderRadius: '62.4375rem',
         borderWidth: t.borderWidth.default.var,
         borderStyle: 'solid',
         borderColor: t.color.border.default.var,

@@ -79,13 +79,13 @@ const win95PrimitiveValues = {
     mono: '"Lucida Console", "Courier New", ui-monospace, monospace',
   },
   fontSize: {
-    xs: '11px',
-    sm: '12px',
-    md: '13px',
-    lg: '15px',
-    xl: '18px',
-    '2xl': '22px',
-    '3xl': '26px',
+    xs: '0.6875rem',
+    sm: '0.75rem',
+    md: '0.8125rem',
+    lg: '0.9375rem',
+    xl: '1.125rem',
+    '2xl': '1.375rem',
+    '3xl': '1.625rem',
   },
   fontWeight: {
     normal: '400',
@@ -102,9 +102,9 @@ const win95PrimitiveValues = {
     full: '0',
   },
   borderWidth: {
-    thin: '1px',
-    default: '2px',
-    thick: '2px',
+    thin: '0.0625rem',
+    default: '0.125rem',
+    thick: '0.125rem',
   },
   duration: {
     fast: '0ms',
@@ -178,24 +178,24 @@ export const windows95ThemeTokens = {
   },
   shadow: {
     xs: {
-      light: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
-      dark: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
+      light: 'inset 0.0625rem 0.0625rem 0 #FFFFFF, inset -0.0625rem -0.0625rem 0 #404040',
+      dark: 'inset 0.0625rem 0.0625rem 0 #808080, inset -0.0625rem -0.0625rem 0 #000000',
     },
     sm: {
-      light: 'inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 #404040',
-      dark: 'inset 1px 1px 0 #808080, inset -1px -1px 0 #000000',
+      light: 'inset 0.0625rem 0.0625rem 0 #FFFFFF, inset -0.0625rem -0.0625rem 0 #404040',
+      dark: 'inset 0.0625rem 0.0625rem 0 #808080, inset -0.0625rem -0.0625rem 0 #000000',
     },
     md: {
-      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+      light: 'inset 0.125rem 0.125rem 0 #FFFFFF, inset -0.125rem -0.125rem 0 #404040',
+      dark: 'inset 0.125rem 0.125rem 0 #808080, inset -0.125rem -0.125rem 0 #000000',
     },
     lg: {
-      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+      light: 'inset 0.125rem 0.125rem 0 #FFFFFF, inset -0.125rem -0.125rem 0 #404040',
+      dark: 'inset 0.125rem 0.125rem 0 #808080, inset -0.125rem -0.125rem 0 #000000',
     },
     xl: {
-      light: 'inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #404040',
-      dark: 'inset 2px 2px 0 #808080, inset -2px -2px 0 #000000',
+      light: 'inset 0.125rem 0.125rem 0 #FFFFFF, inset -0.125rem -0.125rem 0 #404040',
+      dark: 'inset 0.125rem 0.125rem 0 #808080, inset -0.125rem -0.125rem 0 #000000',
     },
   },
 } satisfies DesignThemeTokenValues;

@@ -56,7 +56,7 @@ export const appShell = typestyles.recipe({
     },
     contentPadding: {
       ...atProperty.length,
-      value: '0px',
+      value: '0rem',
     },
     asideWidth: {
       ...atProperty.length,
@@ -80,10 +80,10 @@ export const appShell = typestyles.recipe({
         },
         skipLink: {
           position: 'absolute',
-          width: '1px',
-          height: '1px',
+          width: '0.0625rem',
+          height: '0.0625rem',
           padding: 0,
-          margin: '-1px',
+          margin: '-0.0625rem',
           overflow: 'hidden',
           clip: 'rect(0, 0, 0, 0)',
           whiteSpace: 'nowrap',
@@ -308,7 +308,7 @@ export const appShell = typestyles.recipe({
           },
         },
         contentPadding: {
-          '0': { root: { [vars.contentPadding.name]: '0px' } },
+          '0': { root: { [vars.contentPadding.name]: '0rem' } },
           '1': { root: { [vars.contentPadding.name]: t.space[1].var } },
           '2': { root: { [vars.contentPadding.name]: t.space[2].var } },
           '3': { root: { [vars.contentPadding.name]: t.space[3].var } },

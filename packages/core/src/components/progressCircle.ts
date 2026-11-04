@@ -35,9 +35,9 @@ export const progressCircle = typestyles.recipe({
   },
   vars: {
     progress: { ...atProperty.number, value: '0' },
-    size: { ...atProperty.length, value: '40px' },
-    // Stroke width in the ring's 100-unit viewBox (a ratio of the size, so it scales with it).
-    thickness: { ...atProperty.length, value: '10px' },
+    size: { ...atProperty.length, value: t.size.control.lg.var },
+    // Stroke width in the ring's 100-unit viewBox (unitless user units, so it scales with the size).
+    thickness: { ...atProperty.number, value: '10' },
     fillColor: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
     trackColor: { ...atProperty.color, value: t.color.border.default.var },
   },
@@ -90,10 +90,10 @@ export const progressCircle = typestyles.recipe({
     },
     variants: {
       size: {
-        sm: { root: { [vars.size.name]: '24px', [vars.thickness.name]: '14px' } },
-        md: { root: { [vars.size.name]: '40px', [vars.thickness.name]: '10px' } },
+        sm: { root: { [vars.size.name]: t.size.control.sm.var, [vars.thickness.name]: '14' } },
+        md: { root: { [vars.size.name]: t.size.control.lg.var, [vars.thickness.name]: '10' } },
         lg: {
-          root: { [vars.size.name]: '64px', [vars.thickness.name]: '8px' },
+          root: { [vars.size.name]: t.size.media.md.var, [vars.thickness.name]: '8' },
           content: { fontSize: t.fontSize.md.var },
         },
       },

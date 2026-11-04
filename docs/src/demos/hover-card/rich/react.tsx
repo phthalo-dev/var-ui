@@ -13,7 +13,7 @@ export default function Preview() {
             Mathematician and early computing pioneer. Worked with Charles Babbage on the Analytical
             Engine.
           </Text>
-          <p style={{ marginTop: 8 }}>
+          <p style={{ marginTop: '0.5rem' }}>
             <Link href="/u/ada">View profile</Link>
           </p>
         </HoverCard.Content>

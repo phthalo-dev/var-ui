@@ -60,7 +60,7 @@ export const alert = typestyles.recipe({
         icon: {
           flexShrink: 0,
           display: 'inline-flex',
-          marginTop: '2px',
+          marginTop: '0.125rem',
           fontSize: t.fontSize.lg.var,
           lineHeight: 1,
         },
@@ -87,7 +87,7 @@ export const alert = typestyles.recipe({
           fontWeight: t.fontWeight.medium.var,
           color: 'inherit',
           textDecoration: 'underline',
-          textUnderlineOffset: '2px',
+          textUnderlineOffset: '0.125rem',
           '&:hover': {
             textDecoration: 'none',
           },

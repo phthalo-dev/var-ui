@@ -90,7 +90,7 @@ export const timeline = typestyles.recipe({
           flexDirection: 'column',
           gap: t.space[1].var,
           minWidth: 0,
-          paddingTop: '2px',
+          paddingTop: '0.125rem',
         },
         title: {
           margin: 0,
