@@ -22,6 +22,11 @@ function zipRem<T extends string>(
 export const radius = {
   none: '0',
   ...zipRem(RADIUS_NAMES, radiusScale),
+  /**
+   * Large enough to render any element as a pill (≈10k px at the default root
+   * size). Docs themes use a smaller magnitude (measured against their own
+   * design scale); any sufficiently large value is fine.
+   */
   full: '624rem',
   navItem: tokens.radius.md.var,
 } satisfies DesignTokens['radius'];
