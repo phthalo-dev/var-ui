@@ -1,5 +1,11 @@
 # @var-ui/icons
 
+## 0.3.0
+
+### Minor Changes
+
+- [#110](https://github.com/phthalo-dev/var-ui/pull/110) [`86493c6`](https://github.com/phthalo-dev/var-ui/commit/86493c63d7cd9fe251948710341d8aedabace6d1) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add `Rating`: a star (or custom icon) rating built on a native radio group, so arrow keys, Home/End, Tab, `name`/`form`/`required`/`disabled` and form submission come from the browser. Props: `value`/`defaultValue`/`onValueChange`, native `onChange`, `max`, `readOnly` (a `role="img"` display that also accepts fractional values such as `3.5`), `clearable`, `size`, `tone`, `icon`/`emptyIcon`, `getItemLabel`, `getValueLabel`, and `label`/`description`/`errorMessage`. Hover preview is pure CSS and mirrors in RTL. New core `rating` recipe, a read-only `Rating.astro`, and a `star` glyph (`star` joins the semantic icon names).
+
 ## 0.2.2
 
 ### Patch Changes
