@@ -31,11 +31,11 @@ const tabsVarDefinitions = {
   },
   indicatorX: {
     ...atProperty.length,
-    value: '0px',
+    value: '0rem',
   },
   indicatorWidth: {
     ...atProperty.length,
-    value: '0px',
+    value: '0rem',
   },
   indicatorOpacity: {
     ...atProperty.number,
@@ -73,8 +73,8 @@ export const tabs = typestyles.recipe({
           position: 'relative',
           display: 'inline-flex',
           gap: t.space[1].var,
-          [vars.indicatorX.name]: '0px',
-          [vars.indicatorWidth.name]: '0px',
+          [vars.indicatorX.name]: '0rem',
+          [vars.indicatorWidth.name]: '0rem',
           [vars.indicatorOpacity.name]: '0',
           '&::before': {
             content: '""',

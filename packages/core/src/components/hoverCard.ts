@@ -37,8 +37,8 @@ export const hoverCard = typestyles.recipe({
         root: {
           ...anchored({ defaultPlacement: 'top', defaultAlign: 'center' }),
           ...popupSurface({ background: vars.background.var, border: vars.border.var }),
-          minWidth: '14rem',
-          maxWidth: '22rem',
+          minWidth: t.size.panel.xs.var,
+          maxWidth: t.size.panel.md.var,
           outline: 'none',
         },
         title: {

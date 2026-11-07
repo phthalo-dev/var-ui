@@ -2,6 +2,9 @@ import { atProperty, type TokenSchema } from 'typestyles';
 
 /** Shared face for every chromatic semantic tone. */
 export const toneFaceTokenSchema = {
+  /**
+   * The background of the tone
+   */
   background: atProperty.color,
   foreground: atProperty.color,
   subtleBackground: atProperty.color,

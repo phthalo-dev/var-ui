@@ -61,11 +61,11 @@ export const meter = typestyles.recipe({
   vars: {
     trackColor: { ...atProperty.color, value: t.color.background.subtle.var },
     fillColor: { ...atProperty.color, value: t.color.tone.success.foreground.var },
-    trackSize: { ...atProperty.length, value: '8px' },
+    trackSize: { ...atProperty.length, value: '0.5rem' },
   },
   styles: ({ vars }) => ({
     base: {
-      root: { display: 'grid', gap: t.space[1].var, minWidth: '160px' },
+      root: { display: 'grid', gap: t.space[1].var, minWidth: t.size.field.minWidthCompact.var },
       header: { display: 'flex', justifyContent: 'space-between', gap: t.space[3].var },
       label: { fontSize: t.fontSize.sm.var, fontWeight: t.fontWeight.medium.var },
       valueText: { fontSize: t.fontSize.sm.var, color: t.color.text.secondary.var },
@@ -86,9 +86,9 @@ export const meter = typestyles.recipe({
     },
     variants: {
       size: {
-        sm: { root: { [vars.trackSize.name]: '4px' } },
-        md: { root: { [vars.trackSize.name]: '8px' } },
-        lg: { root: { [vars.trackSize.name]: '12px' } },
+        sm: { root: { [vars.trackSize.name]: '0.25rem' } },
+        md: { root: { [vars.trackSize.name]: '0.5rem' } },
+        lg: { root: { [vars.trackSize.name]: '0.75rem' } },
       },
       tone: mapTone((key) => ({
         root: {

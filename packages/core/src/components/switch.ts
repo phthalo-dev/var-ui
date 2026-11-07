@@ -5,6 +5,12 @@ import { focusRing } from '../internal/focusRing';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 
+const { box, trackWidth, trackHeight } = t.size.indicator;
+/** Gap between the track edge and the thumb. */
+const thumbInset = `calc((${trackHeight.var} - ${box.var}) / 2)`;
+/** The thumb travels the track width minus its own diameter and both insets, i.e. width minus height. */
+const thumbTravel = `calc(${trackWidth.var} - ${trackHeight.var})`;
+
 export const switchStyles = typestyles.recipe({
   name: 'switch',
   layer: 'components',
@@ -30,9 +36,9 @@ export const switchStyles = typestyles.recipe({
         },
         track: {
           position: 'relative',
-          width: '40px',
+          width: trackWidth.var,
           flexShrink: 0,
-          height: '24px',
+          height: trackHeight.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.trackBackground.var,
           transition: t.transition.background.var,
@@ -47,18 +53,20 @@ export const switchStyles = typestyles.recipe({
         },
         thumb: {
           position: 'absolute',
-          top: '3px',
-          insetInlineStart: '3px',
-          width: '18px',
-          height: '18px',
+          top: thumbInset,
+          insetInlineStart: thumbInset,
+          width: box.var,
+          height: box.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.thumbBackground.var,
           transition: t.transition.transform.var,
           // Forced colors: the thumb is the only cue for state, so it contrasts with the track.
           ...atForcedColors({ backgroundColor: 'CanvasText' }),
           '&[data-selected]': {
-            transform: 'translateX(16px)',
-            '[dir="rtl"] &': { transform: 'translateX(-16px)' },
+            transform: `translateX(${thumbTravel})`,
+            '[dir="rtl"] &': {
+              transform: `translateX(calc(-1 * ${thumbTravel}))`,
+            },
             ...atForcedColors(forced.mark),
           },
         },

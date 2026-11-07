@@ -2,13 +2,10 @@ import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { size } from '../shared/variantAxes';
-import { border } from '../internal/border';
-import { forced } from '../internal/forcedColors';
-import { atForcedColors } from '../theme/conditions';
 
 /**
- * Identity avatar: image with initials fallback and an optional status well
- * (bottom-right, sized for a `statusDot`).
+ * Identity avatar: image with initials fallback and an optional `statusDot`
+ * positioned on the bottom-right rim via the `status` slot.
  *
  * ```tsx
  * const a = avatar({ size: 'lg' });
@@ -21,7 +18,7 @@ export const avatar = typestyles.recipe({
   slots: ['root', 'image', 'initials', 'status'],
   variants: { size },
   vars: {
-    size: { ...atProperty.length, value: '32px' },
+    size: { ...atProperty.length, value: t.size.control.md.var },
     background: {
       ...atProperty.color,
       value: t.color.tone.accent.subtleBackground.var,
@@ -63,21 +60,17 @@ export const avatar = typestyles.recipe({
         },
         status: {
           position: 'absolute',
-          insetInlineEnd: '-1px',
-          bottom: '-1px',
-          display: 'inline-flex',
-          borderRadius: '50%',
-          ...border(t.color.background.surface.var, t.borderWidth.thick.var),
-          ...atForcedColors(forced.swatch),
+          insetInlineEnd: '-0.0625rem',
+          bottom: '-0.0625rem',
         },
       },
       variants: {
         size: {
-          xs: { root: { [vars.size.name]: '20px' } },
-          sm: { root: { [vars.size.name]: '24px' } },
-          md: { root: { [vars.size.name]: '32px' } },
-          lg: { root: { [vars.size.name]: '40px' } },
-          xl: { root: { [vars.size.name]: '56px' } },
+          xs: { root: { [vars.size.name]: t.size.control.xs.var } },
+          sm: { root: { [vars.size.name]: t.size.control.sm.var } },
+          md: { root: { [vars.size.name]: t.size.control.md.var } },
+          lg: { root: { [vars.size.name]: t.size.control.lg.var } },
+          xl: { root: { [vars.size.name]: t.size.control.xl.var } },
         },
       },
     };
@@ -112,19 +105,19 @@ export const avatarGroup = typestyles.recipe({
         item: {
           marginInlineStart: `calc(${t.space[2].var} * -1)`,
           borderRadius: '50%',
-          boxShadow: `0 0 0 2px ${vars.ringColor.var}`,
+          boxShadow: `0 0 0 0.125rem ${vars.ringColor.var}`,
           '&:first-child': { marginInlineStart: 0 },
         },
         overflow: {
           marginInlineStart: `calc(${t.space[2].var} * -1)`,
           display: 'grid',
           placeItems: 'center',
-          minWidth: '32px',
-          height: '32px',
+          minWidth: t.size.control.md.var,
+          height: t.size.control.md.var,
           padding: `0 ${t.space[1].var}`,
           borderRadius: '50%',
           backgroundColor: t.color.background.subtle.var,
-          boxShadow: `0 0 0 2px ${vars.ringColor.var}`,
+          boxShadow: `0 0 0 0.125rem ${vars.ringColor.var}`,
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.semibold.var,
           color: t.color.text.secondary.var,

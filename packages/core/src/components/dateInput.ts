@@ -123,7 +123,7 @@ export const dateInput = typestyles.recipe({
       base: {
         root: {
           ...field.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         label: field.label,
         description: field.description,
@@ -152,7 +152,7 @@ export const dateInput = typestyles.recipe({
             border: vars.popoverBorder.var,
           }),
           padding: t.space[3].var,
-          width: '280px',
+          width: t.size.panel.sm.var,
         },
         calendarHeader: grid.calendarHeader,
         calendarHeading: grid.calendarHeading,

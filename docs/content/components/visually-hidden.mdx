@@ -41,6 +41,6 @@ All native `<span>` attributes are passed through, and `ref` is the span.
 
 ## Accessibility
 
-- Rendered with the `visually-hidden` recipe: `position: absolute`, a 1px clipped box, `overflow: hidden`, `white-space: nowrap`. The text is still in the accessibility tree, selectable by assistive technology, and found by browser search.
-- `white-space: nowrap` keeps long text from wrapping inside the 1px box, which some screen readers would read word by word.
+- Rendered with the `visually-hidden` recipe: `position: absolute`, a `0.0625rem` clipped box, `overflow: hidden`, `white-space: nowrap`. The text is still in the accessibility tree, selectable by assistive technology, and found by browser search.
+- `white-space: nowrap` keeps long text from wrapping inside that box, which some screen readers would read word by word.
 - The text should be written for a listener, in the page language.

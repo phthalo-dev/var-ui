@@ -15,7 +15,7 @@ function renderOption(value: string, label: string): string {
       type: 'radio',
       name: 'plan',
       value,
-      style: 'position:absolute;width:1px;height:1px;opacity:0',
+      style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0',
     },
     '',
   );

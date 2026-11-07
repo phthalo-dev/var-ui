@@ -54,7 +54,7 @@ export const chatComposer = typestyles.recipe({
           background: 'transparent',
           fontFamily: 'inherit',
           fontSize: t.fontSize.md.var,
-          lineHeight: '22px',
+          lineHeight: '1.375rem',
           color: t.color.text.primary.var,
           padding: t.space[1].var,
           '&::placeholder': { color: t.color.text.secondary.var },

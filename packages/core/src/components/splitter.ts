@@ -1,5 +1,6 @@
 import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
+import { resizeHandle } from './resizeHandle';
 import { orientation } from '../shared/variantAxes';
 
 /**
@@ -41,11 +42,9 @@ export const splitter = typestyles.recipe({
           '&[data-collapsed]': { overflow: 'hidden' },
         },
         handle: {
-          // Wider than the 1px line so a finger or coarse pointer can grab it. Both classes:
-          // the resize-handle rule is the same specificity, so source order would otherwise
-          // put the 4px inset back on top.
-          '.var-ui-resize-handle&[data-orientation="horizontal"]::before': { insetInline: '-8px' },
-          '.var-ui-resize-handle&[data-orientation="vertical"]::before': { insetBlock: '-8px' },
+          // Wider than the 1px line so a finger or coarse pointer can grab it. A var, not a
+          // selector override, so cascade order and specificity don't matter.
+          [resizeHandle.vars.hitOutset.name]: '0.5rem',
         },
       },
       variants: {

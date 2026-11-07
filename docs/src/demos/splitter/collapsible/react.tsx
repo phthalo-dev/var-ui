@@ -6,12 +6,14 @@ export default function Preview() {
 
   return (
     <div style={{ display: 'grid', gap: '0.5rem' }}>
-      <Splitter sizes={sizes} onSizesChange={setSizes} style={{ height: 200 }}>
+      <Splitter sizes={sizes} onSizesChange={setSizes} style={{ height: '12.5rem' }}>
         <Splitter.Panel collapsible minSize={15}>
-          <div style={{ padding: 12 }}>Sidebar. Press Enter on the divider to collapse it.</div>
+          <div style={{ padding: '0.75rem' }}>
+            Sidebar. Press Enter on the divider to collapse it.
+          </div>
         </Splitter.Panel>
         <Splitter.Panel>
-          <div style={{ padding: 12 }}>Content</div>
+          <div style={{ padding: '0.75rem' }}>Content</div>
         </Splitter.Panel>
       </Splitter>
       <span>Sidebar: {sizes[0]}%</span>

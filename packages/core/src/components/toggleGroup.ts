@@ -147,7 +147,7 @@ export const toggleGroup = typestyles.recipe({
           root: { flexDirection: 'row' },
           // outline/subtle share a connected strip; ghost resets these margins.
           item: {
-            '&:not(:first-child)': { marginInlineStart: '-1px' },
+            '&:not(:first-child)': { marginInlineStart: '-0.0625rem' },
             '&:first-child': {
               borderStartStartRadius: t.radius.md.var,
               borderEndStartRadius: t.radius.md.var,
@@ -161,7 +161,7 @@ export const toggleGroup = typestyles.recipe({
         vertical: {
           root: { flexDirection: 'column' },
           item: {
-            '&:not(:first-child)': { marginBlockStart: '-1px' },
+            '&:not(:first-child)': { marginBlockStart: '-0.0625rem' },
             '&:first-child': {
               borderStartStartRadius: t.radius.md.var,
               borderStartEndRadius: t.radius.md.var,

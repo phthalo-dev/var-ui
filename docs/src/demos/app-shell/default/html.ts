@@ -8,7 +8,7 @@ export function render(): string {
     'div',
     {
       style:
-        'height: 220px; border: 1px solid var(--var-ui-color-border-subtle); border-radius: 8px; overflow: hidden;',
+        'height: 13.75rem; border: 0.0625rem solid var(--var-ui-color-border-subtle); border-radius: 0.5rem; overflow: hidden;',
     },
     serializeHtmlTag(
       'div',

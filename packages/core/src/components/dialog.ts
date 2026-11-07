@@ -39,7 +39,7 @@ export const dialog = typestyles.recipe({
           ...nativeDialogReset,
           ...nativeEnterExit({ scale: true, backdrop: true }),
           ...nativeBackdrop(vars.overlayBackground.var),
-          width: `min(480px, calc(100% - 2 * ${t.space[4].var}))`,
+          width: `min(${t.size.panel.xl.var}, calc(100% - 2 * ${t.space[4].var}))`,
           maxWidth: 'none',
           margin: 'auto',
           backgroundColor: vars.modalBackground.var,
@@ -59,7 +59,7 @@ export const dialog = typestyles.recipe({
           gap: t.space[3].var,
         },
         heading: {
-          fontSize: '18px',
+          fontSize: t.fontSize.lg.var,
           fontWeight: t.fontWeight.semibold.var,
           margin: 0,
         },

@@ -8,7 +8,7 @@ export default function Preview() {
       <Portal container={hostRef}>
         <Text>Rendered into the box below</Text>
       </Portal>
-      <div ref={hostRef} style={{ border: '1px dashed currentColor', padding: 8 }} />
+      <div ref={hostRef} style={{ border: '0.0625rem dashed currentColor', padding: '0.5rem' }} />
     </Stack>
   );
 }

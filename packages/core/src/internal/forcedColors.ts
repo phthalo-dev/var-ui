@@ -47,7 +47,7 @@ export const forced = {
   /** Focus for controls that hide the native outline and signal focus with a border or shadow. */
   focus: {
     outline: `${t.borderWidth.thick.var} solid Highlight`,
-    outlineOffset: '2px',
+    outlineOffset: '0.125rem',
   },
   /** Disabled text and edges. */
   disabled: {

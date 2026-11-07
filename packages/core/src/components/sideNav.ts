@@ -303,8 +303,8 @@ export const sideNav = typestyles.recipe({
           },
           '[data-collapsed] &': {
             justifyContent: 'center',
-            width: '2rem',
-            minWidth: '2rem',
+            width: t.size.control.md.var,
+            minWidth: t.size.control.md.var,
             padding: t.space[2].var,
           },
           '[data-collapsed] &:not(:has(svg, img))': {
@@ -341,8 +341,8 @@ export const sideNav = typestyles.recipe({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          width: '2rem',
-          height: '2rem',
+          width: t.size.control.md.var,
+          height: t.size.control.md.var,
           borderRadius: t.radius.navItem.var,
           border: 'none',
           backgroundColor: 'transparent',

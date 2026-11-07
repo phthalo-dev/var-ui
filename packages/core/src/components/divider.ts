@@ -32,8 +32,8 @@ export const divider = typestyles.recipe({
       },
       variants: {
         orientation: {
-          horizontal: { width: '100%', height: '1px' },
-          vertical: { width: '1px', height: 'auto', alignSelf: 'stretch' },
+          horizontal: { width: '100%', height: '0.0625rem' },
+          vertical: { width: '0.0625rem', height: 'auto', alignSelf: 'stretch' },
         },
       },
     };

@@ -6,14 +6,14 @@ export default function Preview() {
       <div
         style={{
           position: 'relative',
-          height: 200,
-          border: '1px solid var(--var-ui-color-border-subtle)',
-          borderRadius: 8,
+          height: '12.5rem',
+          border: '0.0625rem solid var(--var-ui-color-border-subtle)',
+          borderRadius: '0.5rem',
           overflow: 'hidden',
-          padding: 12,
+          padding: '0.75rem',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <MobileNav.Toggle />
           <Text size="sm">Provider + toggle</Text>
         </div>

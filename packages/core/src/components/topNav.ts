@@ -239,7 +239,7 @@ export const topNav = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           gap: `calc(${t.space[1].var} / 2)`,
-          minWidth: '14rem',
+          minWidth: t.size.panel.xs.var,
         },
         richBody: {
           display: 'flex',
@@ -301,7 +301,7 @@ export const topNav = typestyles.recipe({
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.featuredCardBackground.var,
           ...border(vars.featuredCardBorder.var),
-          minWidth: '16rem',
+          minWidth: t.size.panel.sm.var,
           textDecoration: 'none',
           color: 'inherit',
         },

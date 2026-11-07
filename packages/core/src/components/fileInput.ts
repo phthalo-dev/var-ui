@@ -71,7 +71,7 @@ export const fileInput = typestyles.recipe({
         ...chrome,
         root: {
           ...chrome.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         frame: {
           position: 'relative',
@@ -120,8 +120,8 @@ export const fileInput = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '24px',
-          height: '24px',
+          width: t.size.icon.lg.var,
+          height: t.size.icon.lg.var,
           color: vars.iconColor.var,
         },
         clearButton: {
@@ -147,9 +147,9 @@ export const fileInput = typestyles.recipe({
         },
         hiddenInput: {
           position: 'absolute',
-          width: '1px',
-          height: '1px',
-          margin: '-1px',
+          width: '0.0625rem',
+          height: '0.0625rem',
+          margin: '-0.0625rem',
           padding: 0,
           border: 0,
           overflow: 'hidden',

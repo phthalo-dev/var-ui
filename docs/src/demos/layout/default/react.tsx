@@ -11,19 +11,31 @@ export default function Preview() {
   const [selectedId, setSelectedId] = useState<string | null>('alpha');
   const { end } = useResizable({
     regions: {
-      end: { defaultWidth: 280, minWidth: 220, maxWidth: 400, autoSaveId: 'layout-demo' },
+      end: {
+        defaultWidth: 280,
+        minWidth: 220,
+        maxWidth: 400,
+        autoSaveId: 'layout-demo',
+      },
     },
   });
   const selected = ITEMS.find((item) => item.id === selectedId);
 
   return (
-    <div style={{ minHeight: 240 }}>
+    <div style={{ minHeight: '15rem' }}>
       <Layout
         height="auto"
         padding={0}
         content={
           <LayoutContent padding={0}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 12 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                padding: '0.75rem',
+              }}
+            >
               {ITEMS.map((item) => (
                 <Button
                   key={item.id}
@@ -47,7 +59,7 @@ export default function Preview() {
               role="complementary"
               padding={0}
             >
-              <div style={{ padding: 12 }}>
+              <div style={{ padding: '0.75rem' }}>
                 <Text size="sm">Selected: {selected.label}</Text>
               </div>
             </LayoutPanel>

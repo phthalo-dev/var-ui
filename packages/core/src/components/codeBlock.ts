@@ -206,7 +206,7 @@ export const codeBlock = typestyles.recipe({
           ...border(vars.border.var),
           backgroundColor: vars.background.var,
           borderRadius: t.radius.md.var,
-          padding: `2px ${t.space[2].var}`,
+          padding: `0.125rem ${t.space[2].var}`,
           boxShadow: t.shadow.sm.var,
         },
         feedbackSuccess: {
@@ -247,7 +247,7 @@ export const codeBlock = typestyles.recipe({
         },
         lines: {
           display: 'grid',
-          gap: '2px',
+          gap: '0.125rem',
         },
         line: {
           display: 'grid',
@@ -288,7 +288,7 @@ export const codeBlock = typestyles.recipe({
               gap: t.space[1].var,
               borderRadius: t.radius.md.var,
               ...border(vars.border.var),
-              padding: '2px 8px',
+              padding: '0.125rem 0.5rem',
               backgroundColor: vars.backgroundInline.var,
             },
           },

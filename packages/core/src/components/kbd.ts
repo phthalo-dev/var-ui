@@ -27,7 +27,7 @@ export const kbd = typestyles.recipe({
     return {
       base: {
         display: 'inline-block',
-        padding: `1px ${t.space[1].var}`,
+        padding: `0.0625rem ${t.space[1].var}`,
         fontFamily: t.fontFamily.mono.var,
         fontSize: t.fontSize.xs.var,
         fontWeight: t.fontWeight.medium.var,
@@ -35,7 +35,7 @@ export const kbd = typestyles.recipe({
         color: t.color.text.secondary.var,
         backgroundColor: vars.background.var,
         ...border(vars.border.var),
-        borderBlockEndWidth: '2px',
+        borderBlockEndWidth: '0.125rem',
         borderRadius: t.radius.sm.var,
         whiteSpace: 'nowrap',
       },

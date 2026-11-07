@@ -125,7 +125,7 @@ export const chip = typestyles.recipe({
           color: 'inherit',
           cursor: 'pointer',
           borderRadius: t.radius.full.var,
-          padding: '2px',
+          padding: '0.125rem',
           marginInlineEnd: `calc(${t.space[1].var} * -0.5)`,
           '&[data-overlay]': {
             position: 'absolute',

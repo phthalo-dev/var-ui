@@ -12,7 +12,7 @@ export type CarouselStripTileProps = {
 export function CarouselStripTile({ className }: CarouselStripTileProps) {
   return (
     <div className={className}>
-      <Carousel itemWidth="180px" label="Product tour">
+      <Carousel itemWidth="11.25rem" label="Product tour">
         {SLIDES.map((slide) => (
           <Card key={slide} title={slide}>
             <Stack gap="xs">

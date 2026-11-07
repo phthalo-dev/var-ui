@@ -6,7 +6,7 @@ export function render(): string {
   const cb = checkbox();
   const input = serializeHtmlTag(
     'input',
-    { type: 'checkbox', style: 'position:absolute;width:1px;height:1px;opacity:0' },
+    { type: 'checkbox', style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0' },
     '',
   );
   const box = serializeHtmlTag('span', mergeProps(cb.box), '');

@@ -15,7 +15,7 @@ describe('Avatar', () => {
 
   it('shows a status dot when status is set', () => {
     const { container } = render(<Avatar name="Ada" status="success" />);
-    expect(container.querySelector('[data-avatar-status]')).toBeTruthy();
+    expect(container.querySelector('.var-ui-status-dot')).toBeTruthy();
   });
 });
 

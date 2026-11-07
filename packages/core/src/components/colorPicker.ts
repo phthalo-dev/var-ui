@@ -56,7 +56,7 @@ export const colorPicker = typestyles.recipe({
           display: 'grid',
           gap: t.space[3].var,
           width: '100%',
-          minWidth: '220px',
+          minWidth: t.size.field.minWidth.var,
         },
         saturation: {
           position: 'relative',
@@ -122,8 +122,8 @@ export const colorPicker = typestyles.recipe({
           touchAction: 'none',
           backgroundColor: vars.checkerLight.var,
           backgroundImage: `linear-gradient(45deg, ${vars.checkerDark.var} 25%, transparent 25%, transparent 75%, ${vars.checkerDark.var} 75%, ${vars.checkerDark.var}), linear-gradient(45deg, ${vars.checkerDark.var} 25%, transparent 25%, transparent 75%, ${vars.checkerDark.var} 75%, ${vars.checkerDark.var})`,
-          backgroundSize: '8px 8px',
-          backgroundPosition: '0 0, 4px 4px',
+          backgroundSize: '0.5rem 0.5rem',
+          backgroundPosition: '0 0, 0.25rem 0.25rem',
           overflow: 'hidden',
           ...atForcedColors(forced.swatch),
         },
@@ -163,8 +163,8 @@ export const colorPicker = typestyles.recipe({
           backgroundColor: vars.swatchColor.var,
           ...atForcedColors(forced.swatch),
           '&[data-selected]': {
-            outline: `2px solid ${vars.swatchSelectedRing.var}`,
-            outlineOffset: '1px',
+            outline: `0.125rem solid ${vars.swatchSelectedRing.var}`,
+            outlineOffset: '0.0625rem',
           },
           '&:focus-visible': {
             ...focusRing,
@@ -210,8 +210,8 @@ export const colorSwatch = typestyles.recipe({
           boxSizing: 'border-box',
           ...atForcedColors(forced.swatch),
           '&[data-selected]': {
-            outline: `2px solid ${vars.selectedRing.var}`,
-            outlineOffset: '1px',
+            outline: `0.125rem solid ${vars.selectedRing.var}`,
+            outlineOffset: '0.0625rem',
           },
         },
       },

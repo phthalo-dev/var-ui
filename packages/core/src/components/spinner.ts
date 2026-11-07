@@ -36,7 +36,7 @@ export const spinner = typestyles.recipe({
       ...atProperty.color,
       value: t.color.border.default.var,
     },
-    size: { ...atProperty.length, value: '20px' },
+    size: { ...atProperty.length, value: t.size.icon.lg.var },
   },
   styles: ({ vars }) => {
     return {
@@ -60,9 +60,9 @@ export const spinner = typestyles.recipe({
       },
       variants: {
         size: {
-          sm: { indicator: { [vars.size.name]: '14px' } },
-          md: { indicator: { [vars.size.name]: '20px' } },
-          lg: { indicator: { [vars.size.name]: '32px', borderWidth: '3px' } },
+          sm: { indicator: { [vars.size.name]: t.size.icon.sm.var } },
+          md: { indicator: { [vars.size.name]: t.size.icon.lg.var } },
+          lg: { indicator: { [vars.size.name]: t.size.control.md.var, borderWidth: '0.1875rem' } },
         },
         tone: mapTone((key) => ({
           indicator: {

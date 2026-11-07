@@ -222,15 +222,15 @@ export const forestThemeTokens = {
   },
   borderWidth: {
     thin: '0',
-    default: '2px',
-    thick: '4px',
+    default: '0.125rem',
+    thick: '0.25rem',
   },
   shadow: forestFlatShadow,
   radius: {
-    sm: '4px',
-    md: '8px',
-    lg: '16px',
-    xl: '32px',
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '1rem',
+    xl: '2rem',
   },
 } satisfies DesignThemeTokenValues;
 

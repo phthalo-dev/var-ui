@@ -2,7 +2,7 @@ import { Menu, Menubar } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <div style={{ minHeight: 200 }}>
+    <div style={{ minHeight: '12.5rem' }}>
       <Menubar aria-label="Editor">
         <Menubar.Menu label="File">
           <Menu.Item id="new">New</Menu.Item>

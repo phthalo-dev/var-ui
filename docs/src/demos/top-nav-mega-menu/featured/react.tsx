@@ -2,7 +2,7 @@ import { Button, TopNav } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <div style={{ position: 'relative', minHeight: 160 }}>
+    <div style={{ position: 'relative', minHeight: '10rem' }}>
       <TopNav heading={<TopNav.Heading heading="Acme" />}>
         <TopNav.MegaMenu
           label="Solutions"

@@ -87,13 +87,13 @@ const aiGlowPrimitiveValues = {
     display: '"Fraunces", Georgia, serif',
   },
   fontSize: {
-    xs: '11px',
-    sm: '13px',
-    md: '15px',
-    lg: '17px',
-    xl: '22px',
-    '2xl': '28px',
-    '3xl': '36px',
+    xs: '0.6875rem',
+    sm: '0.8125rem',
+    md: '0.9375rem',
+    lg: '1.0625rem',
+    xl: '1.375rem',
+    '2xl': '1.75rem',
+    '3xl': '2.25rem',
   },
   fontWeight: {
     normal: '400',
@@ -103,16 +103,16 @@ const aiGlowPrimitiveValues = {
   },
   radius: {
     none: '0',
-    sm: '3px',
-    md: '4px',
-    lg: '6px',
-    xl: '8px',
-    full: '999px',
+    sm: '0.1875rem',
+    md: '0.25rem',
+    lg: '0.375rem',
+    xl: '0.5rem',
+    full: '62.4375rem',
   },
   borderWidth: {
-    thin: '1px',
-    default: '1px',
-    thick: '1px',
+    thin: '0.0625rem',
+    default: '0.0625rem',
+    thick: '0.0625rem',
   },
   duration: {
     fast: '120ms',
@@ -192,27 +192,27 @@ export const aiGlowThemeTokens = {
   },
   shadow: {
     xs: {
-      light: '0 4px 14px color-mix(in oklch, #0EA5E9 12%, transparent)',
-      dark: '0 4px 18px color-mix(in oklch, #67E8F9 18%, transparent)',
+      light: '0 0.25rem 0.875rem color-mix(in oklch, #0EA5E9 12%, transparent)',
+      dark: '0 0.25rem 1.125rem color-mix(in oklch, #67E8F9 18%, transparent)',
     },
     sm: {
-      light: '0 8px 24px color-mix(in oklch, #DB2777 12%, transparent)',
-      dark: '0 8px 30px color-mix(in oklch, #F0ABFC 18%, transparent)',
+      light: '0 0.5rem 1.5rem color-mix(in oklch, #DB2777 12%, transparent)',
+      dark: '0 0.5rem 1.875rem color-mix(in oklch, #F0ABFC 18%, transparent)',
     },
     md: {
       light:
-        '0 16px 48px color-mix(in oklch, #0EA5E9 16%, transparent), 0 4px 24px color-mix(in oklch, #F59E0B 10%, transparent)',
-      dark: '0 18px 56px color-mix(in oklch, #67E8F9 22%, transparent), 0 6px 32px color-mix(in oklch, #FDE68A 12%, transparent)',
+        '0 1rem 3rem color-mix(in oklch, #0EA5E9 16%, transparent), 0 0.25rem 1.5rem color-mix(in oklch, #F59E0B 10%, transparent)',
+      dark: '0 1.125rem 3.5rem color-mix(in oklch, #67E8F9 22%, transparent), 0 0.375rem 2rem color-mix(in oklch, #FDE68A 12%, transparent)',
     },
     lg: {
       light:
-        '0 24px 72px color-mix(in oklch, #DB2777 18%, transparent), 0 8px 42px color-mix(in oklch, #10B981 12%, transparent)',
-      dark: '0 28px 84px color-mix(in oklch, #F0ABFC 22%, transparent), 0 10px 50px color-mix(in oklch, #6EE7B7 16%, transparent)',
+        '0 1.5rem 4.5rem color-mix(in oklch, #DB2777 18%, transparent), 0 0.5rem 2.625rem color-mix(in oklch, #10B981 12%, transparent)',
+      dark: '0 1.75rem 5.25rem color-mix(in oklch, #F0ABFC 22%, transparent), 0 0.625rem 3.125rem color-mix(in oklch, #6EE7B7 16%, transparent)',
     },
     xl: {
       light:
-        '0 32px 96px color-mix(in oklch, #0EA5E9 18%, transparent), 0 12px 56px color-mix(in oklch, #F59E0B 14%, transparent)',
-      dark: '0 36px 110px color-mix(in oklch, #67E8F9 22%, transparent), 0 16px 64px color-mix(in oklch, #FDE68A 18%, transparent)',
+        '0 2rem 6rem color-mix(in oklch, #0EA5E9 18%, transparent), 0 0.75rem 3.5rem color-mix(in oklch, #F59E0B 14%, transparent)',
+      dark: '0 2.25rem 6.875rem color-mix(in oklch, #67E8F9 22%, transparent), 0 1rem 4rem color-mix(in oklch, #FDE68A 18%, transparent)',
     },
   },
 } satisfies DesignThemeTokenValues;

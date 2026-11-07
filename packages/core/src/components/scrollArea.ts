@@ -64,7 +64,7 @@ export const scrollArea = typestyles.recipe({
     orientation: scrollAreaOrientation,
   },
   vars: {
-    fadeSize: { ...atProperty.length, value: '24px' },
+    fadeSize: { ...atProperty.length, value: '1.5rem' },
     fadeColor: { ...atProperty.color, value: t.color.background.surface.var },
   },
   styles: ({ vars }) => {
@@ -92,7 +92,7 @@ export const scrollArea = typestyles.recipe({
       ...fadeAnimationBase,
       animationName: scrollFadeIn,
       animationTimeline: 'scroll(nearest block)',
-      animationRange: `1px ${vars.fadeSize.var}`,
+      animationRange: `0.0625rem ${vars.fadeSize.var}`,
     };
     const verticalFadeEnd = {
       position: 'sticky' as const,
@@ -129,7 +129,7 @@ export const scrollArea = typestyles.recipe({
       ...fadeAnimationBase,
       animationName: scrollFadeIn,
       animationTimeline: 'scroll(nearest inline)',
-      animationRange: `1px ${vars.fadeSize.var}`,
+      animationRange: `0.0625rem ${vars.fadeSize.var}`,
     };
     const horizontalFadeEnd = {
       position: 'sticky' as const,
@@ -160,7 +160,7 @@ export const scrollArea = typestyles.recipe({
           minHeight: 0,
           minWidth: 0,
           overflow: 'hidden',
-          [vars.fadeSize.name]: '24px',
+          [vars.fadeSize.name]: '1.5rem',
           '@supports not (animation-timeline: scroll())': {
             [`& .var-ui-scroll-area__fadeTop,
               & .var-ui-scroll-area__fadeBottom,

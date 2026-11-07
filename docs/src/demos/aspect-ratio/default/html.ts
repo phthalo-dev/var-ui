@@ -8,7 +8,7 @@ export function render(): string {
     {
       ...mergeProps(aspectRatio()),
       style:
-        'background: var(--color-surface-muted); max-width: 320px; aspect-ratio: 1.7777777777777777',
+        'background: var(--color-surface-muted); max-width: 20rem; aspect-ratio: 1.7777777777777777',
     },
     '',
   );

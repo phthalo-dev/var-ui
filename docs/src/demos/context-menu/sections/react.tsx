@@ -23,10 +23,10 @@ export default function Preview() {
     >
       <div
         style={{
-          padding: 32,
-          minWidth: 220,
-          border: '1px solid var(--var-ui-color-border-subtle)',
-          borderRadius: 8,
+          padding: '2rem',
+          minWidth: '13.75rem',
+          border: '0.0625rem solid var(--var-ui-color-border-subtle)',
+          borderRadius: '0.5rem',
           background: 'var(--var-ui-color-surface-raised)',
         }}
       >

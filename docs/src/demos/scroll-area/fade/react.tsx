@@ -2,7 +2,7 @@ import { ScrollArea } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <ScrollArea fade="vertical" style={{ height: 120, width: 240 }}>
+    <ScrollArea fade="vertical" style={{ height: '7.5rem', width: '15rem' }}>
       <p>Line 1</p>
       <p>Line 2</p>
       <p>Line 3</p>

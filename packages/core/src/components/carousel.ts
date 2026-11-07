@@ -16,7 +16,7 @@ import { border } from '../internal/border';
  * ```
  */
 const carouselVarDefinitions = {
-  itemWidth: { ...atProperty.length, value: '280px' },
+  itemWidth: { ...atProperty.length, value: t.size.panel.sm.var },
   controlBackground: {
     ...atProperty.color,
     value: t.color.background.surface.var,
@@ -57,8 +57,8 @@ export const carousel = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '32px',
-          height: '32px',
+          width: t.size.control.md.var,
+          height: t.size.control.md.var,
           borderRadius: t.radius.md.var,
           ...border(vars.controlBorder.var),
           backgroundColor: vars.controlBackground.var,

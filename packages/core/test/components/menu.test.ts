@@ -42,8 +42,8 @@ describe('menu recipe', () => {
       expect(popover).toContain(declaration);
     }
 
-    expect(host).toContain(`${menu.vars.anchorX.name}: 0px`);
-    expect(host).toContain(`${menu.vars.anchorY.name}: 0px`);
+    expect(host).toContain(`${menu.vars.anchorX.name}: 0rem`);
+    expect(host).toContain(`${menu.vars.anchorY.name}: 0rem`);
     expect(popover).not.toContain(menu.vars.anchorX.name);
     expect(popover).not.toContain(menu.vars.anchorY.name);
   });

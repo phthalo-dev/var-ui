@@ -7,7 +7,7 @@ export default function Preview() {
   const [color, setColor] = useState('#228be6');
 
   return (
-    <div style={{ display: 'grid', gap: 12, width: 260 }}>
+    <div style={{ display: 'grid', gap: '0.75rem', width: '16.25rem' }}>
       <ColorPicker value={color} onValueChange={setColor} swatches={[]} />
       <HStack gap="sm">
         {presets.map((preset) => (

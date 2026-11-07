@@ -4,10 +4,10 @@ export default function Preview() {
   return (
     <div
       style={{
-        height: 200,
-        width: 220,
-        border: '1px solid var(--var-ui-color-border-subtle)',
-        borderRadius: 8,
+        height: '12.5rem',
+        width: '13.75rem',
+        border: '0.0625rem solid var(--var-ui-color-border-subtle)',
+        borderRadius: '0.5rem',
         overflow: 'hidden',
       }}
     >

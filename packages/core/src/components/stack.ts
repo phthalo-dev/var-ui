@@ -43,7 +43,7 @@ export const stack = typestyles.recipe({
           row: { flexDirection: 'row' },
         },
         gap: {
-          none: { [vars.gap.name]: '0px' },
+          none: { [vars.gap.name]: '0rem' },
           xs: { [vars.gap.name]: t.space[1].var },
           sm: { [vars.gap.name]: t.space[2].var },
           md: { [vars.gap.name]: t.space[3].var },

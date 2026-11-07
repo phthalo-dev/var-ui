@@ -55,7 +55,7 @@ describe('useResizable', () => {
       useResizable({ defaultWidth: 260, minWidth: 180, maxWidth: 480 }),
     );
     expect(result.current.handleProps).toMatchObject({
-      direction: 'horizontal',
+      orientation: 'horizontal',
       value: 260,
       minValue: 180,
       maxValue: 480,

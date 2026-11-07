@@ -10,16 +10,23 @@ const radiusScale = generateLinearScale({
   steps: [...RADIUS_STEPS],
 });
 
-function zipPx<T extends string>(names: readonly T[], values: number[]): Record<T, `${number}px`> {
-  return Object.fromEntries(names.map((name, index) => [name, `${values[index]}px`])) as Record<
-    T,
-    `${number}px`
-  >;
+function zipRem<T extends string>(
+  names: readonly T[],
+  values: number[],
+): Record<T, `${number}rem`> {
+  return Object.fromEntries(
+    names.map((name, index) => [name, `${(values[index] ?? 0) / 16}rem`]),
+  ) as Record<T, `${number}rem`>;
 }
 
 export const radius = {
   none: '0',
-  ...zipPx(RADIUS_NAMES, radiusScale),
-  full: '9999px',
+  ...zipRem(RADIUS_NAMES, radiusScale),
+  /**
+   * Large enough to render any element as a pill (≈10k px at the default root
+   * size). Docs themes use a smaller magnitude (measured against their own
+   * design scale); any sufficiently large value is fine.
+   */
+  full: '624rem',
   navItem: tokens.radius.md.var,
 } satisfies DesignTokens['radius'];

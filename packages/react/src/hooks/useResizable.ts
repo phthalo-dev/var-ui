@@ -32,7 +32,7 @@ export type UseResizableResult = {
   resize: (width: number) => void;
   /** Bind to `ResizeHandle`. */
   handleProps: {
-    direction: 'horizontal';
+    orientation: 'horizontal';
     value: number;
     minValue: number;
     maxValue: number;
@@ -126,7 +126,7 @@ function useResizableRegion(
 
   const handleProps = useMemo(
     () => ({
-      direction: 'horizontal' as const,
+      orientation: 'horizontal' as const,
       value: width,
       minValue: minWidth,
       maxValue: maxWidth,

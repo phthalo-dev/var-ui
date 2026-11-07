@@ -54,7 +54,7 @@ export const textAreaField = typestyles.recipe({
           fontSize: t.fontSize.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
-          minHeight: '88px',
+          minHeight: '5.5rem',
           resize: 'vertical',
           '&:focus': {
             ...focusRing,

@@ -2,7 +2,7 @@ import { Icon, List } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <div style={{ width: 300 }}>
+    <div style={{ width: '18.75rem' }}>
       <List header="Shortcuts" hasDividers>
         <List.Item
           label="Search"

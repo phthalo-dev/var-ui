@@ -38,15 +38,15 @@ export const checkbox = typestyles.recipe({
           cursor: 'pointer',
         },
         box: {
-          width: '18px',
-          height: '18px',
+          width: t.size.indicator.box.var,
+          height: t.size.indicator.box.var,
           borderRadius: t.radius.sm.var,
           ...border(vars.boxBorder.var),
           backgroundColor: vars.boxBackground.var,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '12px',
+          fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
           color: vars.boxForeground.var,
           '&[data-selected], &[data-indeterminate]': {

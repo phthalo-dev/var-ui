@@ -11,7 +11,7 @@ function Row({ label, shortcut }: { label: string; shortcut: string }) {
 
 export default function Preview() {
   return (
-    <div style={{ minHeight: 220 }}>
+    <div style={{ minHeight: '13.75rem' }}>
       <Menubar aria-label="Application">
         <Menubar.Menu label="File">
           <Menu.Item id="new" textValue="New file">

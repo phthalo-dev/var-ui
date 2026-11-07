@@ -212,7 +212,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "string": 4,
     },
     "runtimeExports": 165,
-    "typeOnlyExports": 123,
+    "typeOnlyExports": 124,
   },
   "typeOnlyExports": [
     "AccordionGroupVariant",
@@ -303,6 +303,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "ProgressBarVariantProps",
     "ProgressCircleVariantProps",
     "RatingVariantProps",
+    "ResizeHandleVariantProps",
     "ScrollAreaVariantProps",
     "SearchInputVariantProps",
     "SegmentedControlVariantProps",

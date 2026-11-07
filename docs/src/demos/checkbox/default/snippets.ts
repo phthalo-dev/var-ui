@@ -16,5 +16,5 @@ const cb = checkbox();
   <span class:list={[cb.box]}></span>
   <span class:list={[cb.label]}>Accept terms</span>
 </label>`,
-  html: `<label class="var-ui-checkbox"><input type="checkbox" style="position:absolute;width:1px;height:1px;opacity:0"></input><span class="var-ui-checkbox__box"></span><span class="var-ui-checkbox__label">Accept terms</span></label>`,
+  html: `<label class="var-ui-checkbox"><input type="checkbox" style="position:absolute;width:0.0625rem;height:0.0625rem;opacity:0"></input><span class="var-ui-checkbox__box"></span><span class="var-ui-checkbox__label">Accept terms</span></label>`,
 } satisfies DemoSnippets;

@@ -75,7 +75,7 @@ export const colorField = typestyles.recipe({
       base: {
         root: {
           ...chrome.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         label: chrome.label,
         description: chrome.description,
@@ -121,8 +121,8 @@ export const colorField = typestyles.recipe({
         },
         swatchPreview: {
           display: 'block',
-          width: '1.75rem',
-          height: '1.75rem',
+          width: t.size.control.sm.var,
+          height: t.size.control.sm.var,
           borderRadius: t.radius.sm.var,
           ...border(vars.swatchBorder.var),
           backgroundColor: vars.swatchColor.var,
@@ -183,10 +183,6 @@ export const colorField = typestyles.recipe({
               '&:focus-within': {
                 outline: 'none',
               },
-            },
-            swatchPreview: {
-              width: '1.5rem',
-              height: '1.5rem',
             },
           },
         },

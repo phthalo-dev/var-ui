@@ -21,7 +21,7 @@ export const thumbnail = typestyles.recipe({
     size: controlSize,
   },
   vars: {
-    size: { ...atProperty.length, value: '64px' },
+    size: { ...atProperty.length, value: t.size.media.md.var },
     border: {
       ...atProperty.color,
       value: t.color.border.default.var,
@@ -50,8 +50,8 @@ export const thumbnail = typestyles.recipe({
           insetInlineEnd: `calc(${t.space[2].var} * -1)`,
           display: 'grid',
           placeItems: 'center',
-          width: '20px',
-          height: '20px',
+          width: '1.25rem',
+          height: '1.25rem',
           borderRadius: '50%',
           ...border(vars.border.var),
           backgroundColor: t.color.background.surface.var,
@@ -65,9 +65,9 @@ export const thumbnail = typestyles.recipe({
       },
       variants: {
         size: {
-          sm: { root: { [vars.size.name]: '48px' } },
-          md: { root: { [vars.size.name]: '64px' } },
-          lg: { root: { [vars.size.name]: '96px' } },
+          sm: { root: { [vars.size.name]: t.size.media.sm.var } },
+          md: { root: { [vars.size.name]: t.size.media.md.var } },
+          lg: { root: { [vars.size.name]: t.size.media.lg.var } },
         },
       },
     };

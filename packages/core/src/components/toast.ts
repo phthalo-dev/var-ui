@@ -62,7 +62,7 @@ export const toast = typestyles.recipe({
           gap: t.space[2].var,
           padding: t.space[4].var,
           pointerEvents: 'none',
-          maxWidth: 'min(24rem, calc(100vw - 2rem))',
+          maxWidth: 'min(${t.size.panel.lg.var}, calc(100vw - 2rem))',
         },
         item: {
           pointerEvents: 'auto',
@@ -82,7 +82,7 @@ export const toast = typestyles.recipe({
         icon: {
           flexShrink: 0,
           display: 'inline-flex',
-          marginTop: '2px',
+          marginTop: '0.125rem',
           color: vars.semantic.var,
         },
         body: {

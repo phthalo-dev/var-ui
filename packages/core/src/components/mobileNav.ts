@@ -25,7 +25,7 @@ const mobileNavVarDefinitions = {
   },
   panelWidth: {
     ...atProperty.length,
-    value: '320px',
+    value: t.size.panel.md.var,
   },
   headerColor: {
     ...atProperty.color,

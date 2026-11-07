@@ -15,7 +15,7 @@ const labels = [
 
 export default function Preview() {
   return (
-    <div style={{ width: 220 }}>
+    <div style={{ width: '13.75rem' }}>
       <OverflowList fillParent renderOverflow={(hidden) => <span>+{hidden.length}</span>}>
         {labels.map((label) => (
           <OverflowList.Item key={label}>{label}</OverflowList.Item>

@@ -88,5 +88,5 @@ export function render(): string {
   const composer = serializeHtmlTag('div', mergeProps(c.root), `${inputRow}${actions}`);
   const dock = serializeHtmlTag('div', mergeProps(l.dock), composer);
   const root = serializeHtmlTag('div', mergeProps(l.root), `${messageArea}${dock}`);
-  return `<div style="height: 280px">${root}</div>`;
+  return `<div style="height: 17.5rem">${root}</div>`;
 }

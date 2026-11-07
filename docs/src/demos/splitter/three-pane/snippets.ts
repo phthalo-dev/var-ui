@@ -5,15 +5,15 @@ export const snippets = {
 
 export default function Preview() {
   return (
-    <Splitter defaultSizes={[20, 50, 30]} minSizes={[10, 20, 10]} style={{ height: 200 }}>
+    <Splitter defaultSizes={[20, 50, 30]} minSizes={[10, 20, 10]} style={{ height: '12.5rem' }}>
       <Splitter.Panel>
-        <div style={{ padding: 12 }}>Navigation</div>
+        <div style={{ padding: '0.75rem' }}>Navigation</div>
       </Splitter.Panel>
       <Splitter.Panel>
-        <div style={{ padding: 12 }}>Editor</div>
+        <div style={{ padding: '0.75rem' }}>Editor</div>
       </Splitter.Panel>
       <Splitter.Panel>
-        <div style={{ padding: 12 }}>Inspector</div>
+        <div style={{ padding: '0.75rem' }}>Inspector</div>
       </Splitter.Panel>
     </Splitter>
   );

@@ -62,7 +62,7 @@ export const searchInput = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space[2].var,
-          minWidth: 'min(220px, 100%)',
+          minWidth: `min(${t.size.field.minWidth.var}, 100%)`,
           maxWidth: '100%',
           boxSizing: 'border-box',
           ...border(vars.border.var),

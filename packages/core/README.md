@@ -93,19 +93,19 @@ registers them on package load.
 
 ### Token namespaces (expanded)
 
-| Namespace                    | Keys (indicative)                 | Notes                                                                                                                |
-| ---------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `palette`                    | 39 families × 10 steps            | Fixed primitive ramp                                                                                                 |
-| `space`                      | `0`–`20` (non-contiguous)         | Layout spacing                                                                                                       |
-| `size.control` / `size.icon` | `sm`, `md`, `lg`                  | Control heights + icon box                                                                                           |
-| `breakpoint`                 | `sm`–`xl`                         | Mode-invariant media-query widths                                                                                    |
-| `zIndex`                     | `base` … `max`                    | Stacking scale                                                                                                       |
-| `opacity`                    | `disabled`, `muted`               | Shared opacity semantics                                                                                             |
-| `letterSpacing`              | `tight`, `normal`, `wide`, `caps` | Typography rhythm                                                                                                    |
-| `color.*`                    | semantic UI colors                | Full tree via `tokens.declare`; defaults use mode-aware `{ light, dark }` leaves → CSS `light-dark()`                |
-| `color.code`                 | syntax-highlighting palette       | Semantic groups for app-owned highlighter wiring; aliases `lightSyntaxValues` / `darkSyntaxValues` for theme authors |
-| `shadow.elevation`           | `low`, `med`, `high`              | Soft elevation (alongside brutalist `shadow.xs`–`xl`)                                                                |
-| `stroke`                     | `default`, `strong`               | Border shorthand (fixed)                                                                                             |
+| Namespace          | Keys (indicative)                                                | Notes                                                                                                                |
+| ------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `palette`          | 39 families × 10 steps                                           | Fixed primitive ramp                                                                                                 |
+| `space`            | `0`–`20` (non-contiguous)                                        | Layout spacing                                                                                                       |
+| `size`             | `control`, `icon`, `field`, `panel`, `indicator`, `media`, `nav` | Control heights, icon box, field min-widths, panel widths, checkbox/switch geometry, square media (all `rem`)        |
+| `breakpoint`       | `sm`–`xl`                                                        | Mode-invariant media-query widths                                                                                    |
+| `zIndex`           | `base` … `max`                                                   | Stacking scale                                                                                                       |
+| `opacity`          | `disabled`, `muted`                                              | Shared opacity semantics                                                                                             |
+| `letterSpacing`    | `tight`, `normal`, `wide`, `caps`                                | Typography rhythm                                                                                                    |
+| `color.*`          | semantic UI colors                                               | Full tree via `tokens.declare`; defaults use mode-aware `{ light, dark }` leaves → CSS `light-dark()`                |
+| `color.code`       | syntax-highlighting palette                                      | Semantic groups for app-owned highlighter wiring; aliases `lightSyntaxValues` / `darkSyntaxValues` for theme authors |
+| `shadow.elevation` | `low`, `med`, `high`                                             | Soft elevation (alongside brutalist `shadow.xs`–`xl`)                                                                |
+| `stroke`           | `default`, `strong`                                              | Border shorthand (fixed)                                                                                             |
 
 Theme overrides example (child theme via `.override()`):
 

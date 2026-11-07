@@ -127,7 +127,7 @@ describe('ResizeHandle', () => {
     const onChange = vi.fn();
     render(
       <ResizeHandle
-        direction="vertical"
+        orientation="vertical"
         value={260}
         minValue={180}
         maxValue={480}

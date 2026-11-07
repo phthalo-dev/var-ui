@@ -96,8 +96,8 @@ export function registerBaseStyles(): void {
       a: {
         color: t.color.link.default.var,
         textDecoration: 'underline',
-        textDecorationThickness: '1px',
-        textUnderlineOffset: '2px',
+        textDecorationThickness: '0.0625rem',
+        textUnderlineOffset: '0.125rem',
         fontWeight: t.fontWeight.medium.var,
         transition: t.transition.colorShift.var,
       },

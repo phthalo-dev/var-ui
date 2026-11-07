@@ -245,7 +245,7 @@ export function renderSettingsFormTileMarkup(): string {
   const switchInput = serializeVoidTag('input', {
     type: 'checkbox',
     role: 'switch',
-    style: 'position:absolute;width:1px;height:1px;opacity:0',
+    style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0',
   });
   const switchThumb = serializeHtmlTag('span', mergeProps(sw.thumb), '');
   const switchTrack = serializeHtmlTag('span', mergeProps(sw.track), switchThumb);
@@ -259,7 +259,7 @@ export function renderSettingsFormTileMarkup(): string {
   const cb = checkbox();
   const checkboxInput = serializeVoidTag('input', {
     type: 'checkbox',
-    style: 'position:absolute;width:1px;height:1px;opacity:0',
+    style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0',
   });
   const checkboxBox = serializeHtmlTag('span', mergeProps(cb.box), '');
   const checkboxLabel = serializeHtmlTag('span', mergeProps(cb.label), 'Push notifications');
@@ -285,7 +285,7 @@ export function renderSettingsFormTileMarkup(): string {
         type: 'radio',
         name: 'bento-frequency',
         value: option.value,
-        style: 'position:absolute;width:1px;height:1px;opacity:0',
+        style: 'position:absolute;width:0.0625rem;height:0.0625rem;opacity:0',
       });
       const control = serializeHtmlTag('span', mergeProps(r.control), '');
       const labelEl = serializeHtmlTag('span', mergeProps(r.label), option.label);
@@ -530,7 +530,7 @@ export function renderCarouselStripTileMarkup(): string {
       ...mergeProps(s.viewport),
       'data-carousel-viewport': true,
       tabindex: '0',
-      style: 'grid-auto-columns: 180px',
+      style: 'grid-auto-columns: 11.25rem',
     },
     items,
   );
@@ -573,7 +573,7 @@ export function renderLayoutTabsTileMarkup(): string {
     'div',
     {
       ...mergeProps(center({ inline: false })),
-      style: 'height: 80px',
+      style: 'height: 5rem',
     },
     serializeHtmlTag('p', mergeProps(textBlock({ tone: 'secondary' })), 'Centered content'),
   );

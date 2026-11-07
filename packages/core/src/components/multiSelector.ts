@@ -90,7 +90,7 @@ export const multiSelector = typestyles.recipe({
       base: {
         root: {
           ...chrome.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
         label: chrome.label,
         description: chrome.description,
@@ -146,8 +146,8 @@ export const multiSelector = typestyles.recipe({
           gap: t.space[2].var,
         },
         itemCheckbox: {
-          width: '1rem',
-          height: '1rem',
+          width: t.size.icon.md.var,
+          height: t.size.icon.md.var,
           borderRadius: t.radius.sm.var,
           ...border(vars.itemCheckboxBorder.var),
           display: 'inline-flex',

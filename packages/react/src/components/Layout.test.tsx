@@ -35,7 +35,7 @@ function fakeResizable(width: number): UseResizableResult {
     expand: () => {},
     resize: () => {},
     handleProps: {
-      direction: 'horizontal',
+      orientation: 'horizontal',
       value: width,
       minValue: 0,
       maxValue: 999,

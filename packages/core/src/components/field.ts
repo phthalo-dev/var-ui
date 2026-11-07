@@ -45,7 +45,7 @@ export const field = typestyles.recipe({
         ...chrome,
         root: {
           ...chrome.root,
-          minWidth: '240px',
+          minWidth: t.size.field.minWidth.var,
         },
       },
     };

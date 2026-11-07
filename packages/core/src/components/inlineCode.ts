@@ -27,7 +27,7 @@ export const inlineCode = typestyles.recipe({
     return {
       base: {
         display: 'inline',
-        padding: `1px ${t.space[1].var}`,
+        padding: `0.0625rem ${t.space[1].var}`,
         fontFamily: t.fontFamily.mono.var,
         fontSize: t.fontSize.xs.var,
         color: t.color.text.secondary.var,

@@ -18,5 +18,5 @@ const sw = switchStyles();
   </span>
   <span class:list={[sw.label]}>Enable notifications</span>
 </label>`,
-  html: `<label class="var-ui-switch"><input type="checkbox" role="switch" style="position:absolute;width:1px;height:1px;opacity:0"></input><span class="var-ui-switch__track"><span class="var-ui-switch__thumb"></span></span><span class="var-ui-switch__label">Enable notifications</span></label>`,
+  html: `<label class="var-ui-switch"><input type="checkbox" role="switch" style="position:absolute;width:0.0625rem;height:0.0625rem;opacity:0"></input><span class="var-ui-switch__track"><span class="var-ui-switch__thumb"></span></span><span class="var-ui-switch__label">Enable notifications</span></label>`,
 } satisfies DemoSnippets;

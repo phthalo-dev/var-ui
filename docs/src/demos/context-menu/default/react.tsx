@@ -14,9 +14,9 @@ export default function Preview() {
     >
       <div
         style={{
-          padding: 24,
-          border: '1px dashed var(--var-ui-color-border-subtle)',
-          borderRadius: 8,
+          padding: '1.5rem',
+          border: '0.0625rem dashed var(--var-ui-color-border-subtle)',
+          borderRadius: '0.5rem',
         }}
       >
         Right-click me

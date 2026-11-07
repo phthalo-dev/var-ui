@@ -3,10 +3,10 @@ import type { DemoSnippets } from '../../types';
 export const snippets = {
   react: `import { ResizeHandle } from '@var-ui/react';
 
-<div style={{ display: 'flex', flexDirection: 'column', height: 200 }}>
+<div style={{ display: 'flex', flexDirection: 'column', height: '12.5rem' }}>
   <div style={{ height }}>Top</div>
   <ResizeHandle
-    direction="vertical"
+    orientation="vertical"
     value={height}
     minValue={60}
     maxValue={160}
