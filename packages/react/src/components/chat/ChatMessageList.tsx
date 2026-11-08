@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatMessageList } from '@var-ui/core/components/chat/chatMessageList';
-import type { ChatMessageListVariantProps } from '@var-ui/core';
+import type { Density } from '@var-ui/core';
 import { ChatListContext } from './ChatContext';
 import { mergeProps } from 'typestyles';
 
@@ -20,7 +20,7 @@ export type ChatMessageListProps = Omit<
    */
   streaming?: boolean;
   /** Visual density — flows to child messages via context. @default balanced */
-  density?: NonNullable<ChatMessageListVariantProps['density']>;
+  density?: Density;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Ref to the underlying root `<div>` element. */

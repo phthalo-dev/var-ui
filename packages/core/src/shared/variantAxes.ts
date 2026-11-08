@@ -35,11 +35,17 @@ export const density = variant.enum(['compact', 'balanced', 'spacious'], {
   default: 'balanced',
 });
 
+export type Density = VariantOptions<typeof density>;
+
 /** Spacing scale axis for layout primitives (stack, grid, overflow-list). */
 export const gap = variant.enum(['none', 'xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
 
+export type Gap = VariantOptions<typeof gap>;
+
 /** Horizontal / vertical flow axis for dividers, toolbars, and separators. */
 export const orientation = variant.enum(['horizontal', 'vertical'], { default: 'horizontal' });
+
+export type Orientation = VariantOptions<typeof orientation>;
 
 /**
  * Solid / subtle fill weight for progress-style indicators
@@ -51,6 +57,8 @@ export type FillAppearance = VariantOptions<typeof fillAppearance>;
 
 /** Chat message author axis (`chat-message`, `chat-message-bubble`). */
 export const sender = variant.enum(['user', 'assistant'], { default: 'assistant' });
+
+export type Sender = VariantOptions<typeof sender>;
 
 /** Anchored overlay placement axis for `data-placement`-positioned popovers. */
 export const placement = variant.enum(['top-start', 'top-end', 'bottom-start', 'bottom-end'], {

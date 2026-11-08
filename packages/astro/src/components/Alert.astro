@@ -1,12 +1,12 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { alert } from '@var-ui/core/components/alert';
-import type { AlertVariantProps } from '@var-ui/core';
+import type { SurfaceAppearance, Tone } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'title'> & {
-  tone: NonNullable<AlertVariantProps['tone']>;
-  appearance?: NonNullable<AlertVariantProps['appearance']>;
+  tone: Tone;
+  appearance?: SurfaceAppearance;
   title?: string;
   action?: { href: string; label: string };
   className?: string;

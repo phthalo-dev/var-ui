@@ -20,7 +20,7 @@ import {
   useState,
 } from 'react';
 import { tree as treeStyles } from '@var-ui/core/components/tree';
-import type { TreeVariantProps } from '@var-ui/core';
+import type { Density } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { Icon } from '../icons';
 import { useTreeFocus, type TreeFocusItem } from '../hooks/useTreeFocus';
@@ -66,7 +66,7 @@ export type TreeProps = Omit<
 > & {
   items?: TreeItemData[];
   children?: ReactNode;
-  density?: NonNullable<TreeVariantProps['density']>;
+  density?: Density;
   /** Controlled expanded item ids. */
   expanded?: string[];
   /** Initial expanded item ids when uncontrolled. */

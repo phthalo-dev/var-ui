@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, JSX, ReactNode, Ref } from 'react';
 import { chatSystemMessage } from '@var-ui/core/components/chat/chatSystemMessage';
-import type { ChatSystemMessageVariantProps } from '@var-ui/core';
+import type { Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ChatSystemMessageProps = Omit<
@@ -8,7 +8,7 @@ export type ChatSystemMessageProps = Omit<
   'children' | 'className' | 'ref'
 > & {
   /** Semantic tone. @default neutral */
-  tone?: NonNullable<ChatSystemMessageVariantProps['tone']>;
+  tone?: Tone;
   /** Optional leading icon — pass an `<Icon name="…" />`. */
   icon?: ReactNode;
   /** Message text. */

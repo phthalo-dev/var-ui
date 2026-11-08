@@ -1,12 +1,12 @@
 import type { ButtonHTMLAttributes, JSX, Ref } from 'react';
 import { colorSwatch } from '@var-ui/core/components/colorPicker';
-import type { ColorSwatchVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ColorSwatchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   /** CSS color shown in the swatch. */
   color: string;
-  size?: NonNullable<ColorSwatchVariantProps['size']>;
+  size?: ControlSize;
   /** Highlights the swatch as the active selection. */
   selected?: boolean;
   /** Ref to the underlying `<button>` element. */

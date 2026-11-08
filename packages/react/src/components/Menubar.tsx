@@ -22,7 +22,7 @@ import {
 } from 'react';
 import { RootMenuTriggerStateContext } from 'react-aria-components';
 import { menubar } from '@var-ui/core/components/menubar';
-import type { MenubarVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { useControlSize } from '../internal/controlSizeContext';
 import { mergeRefs } from '../internal/mergeRefs';
@@ -43,7 +43,7 @@ export type MenubarProps = Omit<
   /** The `Menubar.Menu`s. */
   children?: ReactNode;
   /** Control density. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<MenubarVariantProps['size']>;
+  size?: ControlSize;
   className?: string;
   style?: CSSProperties;
   /** Ref to the `role="menubar"` element. Name it with `aria-label` or `aria-labelledby`. */

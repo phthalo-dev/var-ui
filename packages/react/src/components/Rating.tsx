@@ -13,7 +13,7 @@ import {
 import { rating } from '@var-ui/core/components/rating';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { iconNameList, type IconName } from '@var-ui/core/icons/iconNames';
-import type { RatingVariantProps } from '@var-ui/core';
+import type { ControlSize, Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { emptyFallback } from '../icons/emptyFallback';
 import { useIcons } from '../icons/IconProvider';
@@ -89,9 +89,9 @@ export type RatingProps = Omit<
   /** Clicking (or pressing Space on) the current value clears the rating to `0`. */
   clearable?: boolean;
   /** Item density. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<RatingVariantProps['size']>;
+  size?: ControlSize;
   /** Color of the filled items. @default 'accent' */
-  tone?: NonNullable<RatingVariantProps['tone']>;
+  tone?: Tone;
   /** Filled glyph: a semantic icon name from the `IconProvider` registry or any node. @default 'star' */
   icon?: IconName | ReactNode;
   /** Empty glyph, same forms as `icon`. @default the `icon` */

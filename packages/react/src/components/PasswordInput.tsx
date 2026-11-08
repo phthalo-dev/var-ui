@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef, JSX } from 'react';
 import { useState } from 'react';
 import { Input, TextField as AriaTextField } from 'react-aria-components';
 import { passwordField } from '@var-ui/core/components/passwordField';
-import type { PasswordFieldVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { Icon } from '../icons';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import type { BaseTextFieldProps, RacTextFieldReplacedKeys } from './TextField';
@@ -18,7 +18,7 @@ export type PasswordInputProps = Omit<
 > &
   BaseTextFieldProps & {
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: NonNullable<PasswordFieldVariantProps['size']>;
+    size?: ControlSize;
     /**
      * Accessible name of the visibility toggle while the password is hidden.
      * @default 'Show password'

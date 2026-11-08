@@ -1,6 +1,6 @@
 import type { ChangeEvent, ComponentPropsWithRef, CSSProperties, JSX } from 'react';
 import { searchInput } from '@var-ui/core/components/searchInput';
-import type { SearchInputVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 import { useControlSize } from '../internal/controlSizeContext';
@@ -10,7 +10,7 @@ export type SearchInputProps = Omit<
   'size' | 'type' | 'className' | 'style'
 > & {
   /** Control density. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<SearchInputVariantProps['size']>;
+  size?: ControlSize;
   /** Called with the new text on every change. The native `onChange` event also reaches the `<input>`. */
   onValueChange?: (value: string) => void;
   /** Placeholder, also the default accessible name. @default 'Search…' */

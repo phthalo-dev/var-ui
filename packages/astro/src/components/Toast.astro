@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
-import type { Tone, ToastVariantProps } from '@var-ui/core';
+import type { Tone } from '@var-ui/core';
 import { svg as errorSvg } from '@var-ui/icons/glyphs/error';
 import { svg as infoSvg } from '@var-ui/icons/glyphs/info';
 import { svg as successSvg } from '@var-ui/icons/glyphs/success';
@@ -9,7 +9,7 @@ import { svg as warningSvg } from '@var-ui/icons/glyphs/warning';
 import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'title'> & {
-  tone?: NonNullable<ToastVariantProps['tone']>;
+  tone?: Tone;
   title: string;
   description?: string;
   className?: string;

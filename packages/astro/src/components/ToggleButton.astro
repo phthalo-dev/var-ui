@@ -1,13 +1,13 @@
 ---
 import { toggleButton } from '@var-ui/core/components/toggleButton';
-import type { ToggleButtonVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from "../utils";
 
 type Props = Omit<HTMLAttributes<'button'>, 'class:list'> & {
   /** Initial pressed state. */
   pressed?: boolean;
-  size?: NonNullable<ToggleButtonVariantProps['size']>;
+  size?: ControlSize;
   className?: string;
 };
 

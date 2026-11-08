@@ -11,7 +11,7 @@ import { Pressable } from 'react-aria-components';
 import { NativePopover, NativePopoverTrigger } from '../internal/NativePopover';
 import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
-import type { ColorFieldVariantProps } from '@var-ui/core';
+import type { ColorFieldVariantProps, ControlSize } from '@var-ui/core';
 import { isValidHex, normalizeHex } from '../color/convert';
 import { useColorValue } from '../color';
 import { ColorPicker } from './ColorPicker';
@@ -44,7 +44,7 @@ export type ColorInputProps = Omit<
     /** Called with the hex color whenever it changes (typing a valid hex or picking). The native `onChange` also reaches the hex `<input>`. */
     onValueChange?: (value: string) => void;
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: NonNullable<ColorFieldVariantProps['size']>;
+    size?: ControlSize;
     /**
      * `field` shows the hex input beside the swatch. `swatch` renders only the
      * swatch button and picker.

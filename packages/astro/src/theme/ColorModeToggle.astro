@@ -2,7 +2,7 @@
 import { icon } from '@var-ui/core/components/icon';
 import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
-import type { SegmentedControlVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { svg as colorModeDark } from '@var-ui/icons/glyphs/colorModeDark';
 import { svg as colorModeLight } from '@var-ui/icons/glyphs/colorModeLight';
 import { svg as colorModeSystem } from '@var-ui/icons/glyphs/colorModeSystem';
@@ -14,7 +14,7 @@ type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   includeSystem?: boolean;
   appearance?: ColorModeToggleAppearance;
-  size?: NonNullable<SegmentedControlVariantProps['size']>;
+  size?: ControlSize;
   className?: string;
   "aria-label"?: string;
   storageKey?: string;

@@ -12,7 +12,7 @@ import {
 import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { tabList } from '@var-ui/core/components/tabList';
-import type { ControlSize, IconName, TabListVariantProps } from '@var-ui/core';
+import type { ControlSize, IconName } from '@var-ui/core';
 import { Icon } from '../icons';
 import { Menu } from './Menu';
 import { mergeProps } from 'typestyles';
@@ -208,7 +208,7 @@ export type TabListProps = Omit<
   /** Fires with the value of the tab (or menu option) the user selected. */
   onValueChange?: (value: string) => void;
   /** @default 'md' */
-  size?: NonNullable<TabListVariantProps['size']>;
+  size?: ControlSize;
   /** `hug` sizes tabs to content; `fill` stretches tabs/menu evenly across the width. @default 'hug' */
   layout?: 'hug' | 'fill';
   /** Border on the side opposite the indicator (bottom for horizontal, inline-end for vertical). @default false */

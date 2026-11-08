@@ -1,16 +1,16 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { toolbar } from '@var-ui/core/components/toolbar';
-import type { ToolbarVariantProps } from '@var-ui/core';
+import type { ControlSize, Orientation } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'role'> & {
   /** Accessible label for the toolbar (required; applied as aria-label). */
   label: string;
   /** Control density. @default md */
-  size?: NonNullable<ToolbarVariantProps['size']>;
+  size?: ControlSize;
   /** Layout axis. @default horizontal */
-  orientation?: NonNullable<ToolbarVariantProps['orientation']>;
+  orientation?: Orientation;
   className?: string;
 };
 

@@ -110,5 +110,14 @@ export type {
   ToneAppearance,
   SurfaceAppearance,
 } from '../shared/semanticTone';
-export { placement, type ControlSize, type FillAppearance, type Size } from '../shared/variantAxes';
+export {
+  placement,
+  type ControlSize,
+  type Density,
+  type FillAppearance,
+  type Gap,
+  type Orientation,
+  type Sender,
+  type Size,
+} from '../shared/variantAxes';
 export type { TocHeading } from './toc/spy';
