@@ -1,13 +1,13 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
 import { grid } from '@var-ui/core/components/grid';
-import type { GridVariantProps } from '@var-ui/core';
+import type { Gap, GridVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type GridProps = HTMLAttributes<HTMLDivElement> & {
   /** `auto` packs minmax(240px, 1fr) tracks; numbers give fixed equal tracks. @default auto */
   columns?: 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 8;
   /** Gap between grid items. @default md */
-  gap?: NonNullable<GridVariantProps['gap']>;
+  gap?: Gap;
   /** Ref to the underlying `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };

@@ -8,7 +8,7 @@ import {
 } from 'react-aria-components';
 import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
-import type { SegmentedControlVariantProps, ToggleButtonVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { observeSegmentedControlIndicator } from '@var-ui/core/components/indicators/segmented-control';
 import { mergeProps } from 'typestyles';
 import { mergeRefs } from '../internal/mergeRefs';
@@ -44,7 +44,7 @@ export type SegmentedControlProps = Omit<
   className?: string;
   style?: CSSProperties;
   /** Control density. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<SegmentedControlVariantProps['size']>;
+  size?: ControlSize;
   /**
    * Ref to the `role="group"` element. A segmented control has no single native control, so
    * this is the nearest real element; each segment is a toggle button.
@@ -138,7 +138,7 @@ export type ToggleButtonProps = Omit<
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   style?: CSSProperties;
-  size?: NonNullable<ToggleButtonVariantProps['size']>;
+  size?: ControlSize;
   /** Ref to the underlying `<button>` element. */
   ref?: Ref<HTMLButtonElement>;
 };

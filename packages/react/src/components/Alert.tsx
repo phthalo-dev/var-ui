@@ -1,6 +1,6 @@
 import type { AriaRole, ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { alert } from '@var-ui/core/components/alert';
-import type { AlertVariantProps } from '@var-ui/core';
+import type { SurfaceAppearance, Tone } from '@var-ui/core';
 import { toneIcon } from '../internal/toneIcon';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -9,9 +9,9 @@ export type { SurfaceAppearance as AlertAppearance } from '@var-ui/core';
 
 export type AlertProps = Omit<ComponentPropsWithRef<'div'>, 'title' | 'children' | 'role'> & {
   /** Semantic tone that drives color and the default icon. */
-  tone: NonNullable<AlertVariantProps['tone']>;
+  tone: Tone;
   /** Surface treatment. @default subtle */
-  appearance?: NonNullable<AlertVariantProps['appearance']>;
+  appearance?: SurfaceAppearance;
   /** Optional bold headline above the body content. */
   title?: string;
   /** Optional text link rendered below the message body. */

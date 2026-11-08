@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef, JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { button } from '@var-ui/core/components/button';
 import { pagination } from '@var-ui/core/components/pagination';
-import type { PaginationVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { IconButton } from './IconButton';
 import { Select } from './Select';
@@ -61,7 +61,7 @@ export type PaginationProps = Omit<ComponentPropsWithRef<'nav'>, 'onChange' | 'c
   /** Page buttons shown on each side of the current page (`pages` variant only). @default 1 */
   siblingCount?: number;
   /** @default 'md' */
-  size?: NonNullable<PaginationVariantProps['size']>;
+  size?: ControlSize;
   /** @default false */
   disabled?: boolean;
   /** Accessible name for the nav landmark. @default 'Pagination' */

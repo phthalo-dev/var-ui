@@ -5,7 +5,7 @@ import {
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
 import { textField } from '@var-ui/core/components/textField';
-import type { TextFieldVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { mergeProps } from 'typestyles';
@@ -58,7 +58,7 @@ export type RacTextFieldReplacedKeys =
 export type TextFieldProps = Omit<ComponentPropsWithRef<'input'>, RacTextFieldReplacedKeys> &
   BaseTextFieldProps & {
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: NonNullable<TextFieldVariantProps['size']>;
+    size?: ControlSize;
   };
 
 /**

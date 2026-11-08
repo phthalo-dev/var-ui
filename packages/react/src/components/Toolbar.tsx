@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { toolbar } from '@var-ui/core/components/toolbar';
-import type { ToolbarVariantProps } from '@var-ui/core';
+import type { ControlSize, Orientation } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ToolbarProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role'> & {
@@ -13,9 +13,9 @@ export type ToolbarProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role
   /** Accessible label for the toolbar (required — applied as aria-label). */
   label: string;
   /** Control density. @default md */
-  size?: NonNullable<ToolbarVariantProps['size']>;
+  size?: ControlSize;
   /** Layout axis. @default horizontal */
-  orientation?: NonNullable<ToolbarVariantProps['orientation']>;
+  orientation?: Orientation;
 };
 
 /**

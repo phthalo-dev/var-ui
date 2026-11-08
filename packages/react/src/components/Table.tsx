@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles } from '@var-ui/core/components/table';
-import type { TableVariantProps } from '@var-ui/core';
+import type { Density, TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 import type { SortDescriptor, SortDirection } from '../hooks/useTableSort';
@@ -25,7 +25,7 @@ export type TableProps<T extends Record<string, unknown> = Record<string, unknow
   ComponentPropsWithRef<'table'>,
   'children' | 'ref'
 > & {
-  density?: NonNullable<TableVariantProps['density']>;
+  density?: Density;
   dividers?: NonNullable<TableVariantProps['dividers']>;
   striped?: NonNullable<TableVariantProps['striped']>;
   hasHover?: NonNullable<TableVariantProps['hasHover']>;

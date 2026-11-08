@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, JSX, MouseEvent, ReactNode, Ref } from 'react';
 import { createContext, useContext, useId } from 'react';
 import { list as listStyles } from '@var-ui/core/components/list';
-import type { ListVariantProps } from '@var-ui/core';
+import type { Density, ListVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type ListItemData = {
@@ -15,7 +15,7 @@ export type ListItemData = {
 };
 
 export type ListProps = Omit<ComponentPropsWithRef<'ul'>, 'children' | 'ref'> & {
-  density?: NonNullable<ListVariantProps['density']>;
+  density?: Density;
   listStyle?: NonNullable<ListVariantProps['listStyle']>;
   hasDividers?: NonNullable<ListVariantProps['hasDividers']>;
   header?: ReactNode;

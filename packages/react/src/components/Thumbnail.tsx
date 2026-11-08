@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, JSX } from 'react';
 import { Button as AriaButton } from 'react-aria-components';
 import { thumbnail } from '@var-ui/core/components/thumbnail';
-import type { ThumbnailVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
@@ -11,7 +11,7 @@ export type ThumbnailProps = Omit<ComponentPropsWithRef<'span'>, 'children'> & {
   /** Accessible description of the image. */
   alt: string;
   /** Tile dimensions. @default md */
-  size?: NonNullable<ThumbnailVariantProps['size']>;
+  size?: ControlSize;
   /** When provided, renders a remove button that calls this handler on press. */
   onDismiss?: () => void;
   /** Accessible label for the remove button. @default Remove */

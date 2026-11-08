@@ -19,7 +19,7 @@ import {
 import { NativePopover } from '../internal/NativePopover';
 import type { AnchorPlacement } from '../overlays';
 import { select } from '@var-ui/core/components/select';
-import type { SelectVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { Icon } from '../icons';
 import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import type { FieldMeta } from './Field';
@@ -102,7 +102,7 @@ export type SelectRootProps = SelectStateProps &
     /** Inline style for the root element. */
     style?: CSSProperties;
     /** Control density. @default md */
-    size?: NonNullable<SelectVariantProps['size']>;
+    size?: ControlSize;
     /** Name submitted with a form. */
     name?: string;
     /** Id of the form the select belongs to. */
@@ -432,7 +432,7 @@ export type SelectProps = Omit<
     /** Inline style for the root. */
     style?: CSSProperties;
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: NonNullable<SelectVariantProps['size']>;
+    size?: ControlSize;
     /** Ref to the trigger `<button>` element. */
     ref?: Ref<HTMLButtonElement>;
   };

@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { drawer } from '@var-ui/core/components/drawer';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
-import type { DrawerVariantProps } from '@var-ui/core';
+import type { ControlSize, DrawerVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { findPartId } from '../internal/findPartId';
 import { NativeSheetPopup } from '../internal/NativeSheetPopup';
@@ -74,7 +74,7 @@ export type DrawerBodyProps = ComponentPropsWithRef<'div'>;
 type DrawerContextValue = {
   root: OverlayRoot;
   dismissable: boolean;
-  size: DrawerVariantProps['size'];
+  size: ControlSize;
   ariaLabel?: string;
   /** Id shared with `Drawer.Title` in the same render as the `<dialog>`. */
   titleId: string;

@@ -7,7 +7,7 @@ import {
   type NumberFieldProps as RACNumberFieldProps,
 } from 'react-aria-components';
 import { numberInput } from '@var-ui/core/components/numberInput';
-import type { NumberInputVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
@@ -92,7 +92,7 @@ export type NumberInputProps = Omit<
     /** Inline style for the root element. */
     style?: RACNumberFieldProps['style'];
     /** Control density. Falls back to the surrounding control size, then `md`. */
-    size?: NonNullable<NumberInputVariantProps['size']>;
+    size?: ControlSize;
     /**
      * Accessible name of the decrement button.
      * @default 'Decrease'

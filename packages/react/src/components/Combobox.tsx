@@ -24,7 +24,7 @@ import {
 import { NativePopover } from '../internal/NativePopover';
 import type { AnchorPlacement } from '../overlays/useAnchor';
 import { combobox } from '@var-ui/core/components/combobox';
-import type { ComboboxVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { Icon } from '../icons';
 import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
@@ -108,7 +108,7 @@ export type ComboboxRootProps = {
   className?: string;
   style?: CSSProperties;
   /** Control density. @default md */
-  size?: NonNullable<ComboboxVariantProps['size']>;
+  size?: ControlSize;
   /** Ref to the underlying `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };

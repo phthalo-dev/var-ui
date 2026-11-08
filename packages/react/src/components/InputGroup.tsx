@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { inputGroup } from '@var-ui/core/components/inputGroup';
-import type { InputGroupVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { ControlSizeContext, useControlSize } from '../internal/controlSizeContext';
 import { mergeProps } from 'typestyles';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
@@ -26,7 +26,7 @@ export type InputGroupProps = Omit<
   /** Plain `<input>`s (see `InputGroupInput`) and `InputGroupText` addons. */
   children: ReactNode;
   /** Control density inherited by `InputGroupInput` and `InputGroupText`. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<InputGroupVariantProps['size']>;
+  size?: ControlSize;
   /** Ref to the `role="group"` element that wraps the inputs. */
   ref?: Ref<HTMLDivElement>;
 };

@@ -1,11 +1,11 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
 import { divider } from '@var-ui/core/components/divider';
-import type { DividerVariantProps } from '@var-ui/core';
+import type { Orientation } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type DividerProps = HTMLAttributes<HTMLHRElement> & {
   /** Layout direction of the separator line. @default horizontal */
-  orientation?: NonNullable<DividerVariantProps['orientation']>;
+  orientation?: Orientation;
   /** Ref to the underlying `<hr>` element. */
   ref?: Ref<HTMLHRElement>;
 };

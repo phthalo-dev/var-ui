@@ -9,16 +9,14 @@ import type {
 import { Children, createContext, useCallback, useContext, useMemo } from 'react';
 import { overflowList as overflowListStyles } from '@var-ui/core/components/overflowList';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
-import type { OverflowListVariantProps } from '@var-ui/core';
+import type { Gap, OverflowListVariantProps } from '@var-ui/core';
 
 const overflowListVars = recipeVars(overflowListStyles);
 import { mergeProps } from 'typestyles';
 import { useOverflow } from '../hooks/useOverflow';
 
-type OverflowGapToken = NonNullable<OverflowListVariantProps['gap']>;
-
 /** Mirrors the `space` primitive steps backing each named gap variant in the `overflowList` recipe. */
-const GAP_PX: Record<OverflowGapToken, number> = {
+const GAP_PX: Record<Gap, number> = {
   none: 0,
   xs: 4,
   sm: 8,
@@ -39,7 +37,7 @@ export type OverflowListProps<T = unknown> = Omit<
   /** Hard cap applied in addition to measure-to-fit. */
   maxVisible?: number;
   fillParent?: NonNullable<OverflowListVariantProps['fillParent']>;
-  gap?: NonNullable<OverflowListVariantProps['gap']> | number;
+  gap?: Gap | number;
   /** Ref to the visible root `<div>` element. */
   ref?: Ref<HTMLDivElement>;
 };

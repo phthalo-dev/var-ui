@@ -1,10 +1,10 @@
 ---
 import { divider } from '@var-ui/core/components/divider';
-import type { DividerVariantProps } from '@var-ui/core';
+import type { Orientation } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
 type Props = {
-  orientation?: NonNullable<DividerVariantProps['orientation']>;
+  orientation?: Orientation;
   className?: string;
 };
 

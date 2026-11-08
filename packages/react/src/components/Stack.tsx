@@ -1,13 +1,13 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
 import { stack } from '@var-ui/core/components/stack';
-import type { StackVariantProps } from '@var-ui/core';
+import type { Gap, StackVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
 export type StackProps = HTMLAttributes<HTMLDivElement> & {
   /** Flex direction. @default column */
   direction?: NonNullable<StackVariantProps['direction']>;
   /** Spacing between children. @default md */
-  gap?: NonNullable<StackVariantProps['gap']>;
+  gap?: Gap;
   /** Cross-axis alignment. @default stretch */
   align?: NonNullable<StackVariantProps['align']>;
   /** Main-axis distribution. @default start */

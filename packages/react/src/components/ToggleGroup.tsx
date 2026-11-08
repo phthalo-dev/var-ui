@@ -10,7 +10,7 @@ import type {
 } from 'react';
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { toggleGroup } from '@var-ui/core/components/toggleGroup';
-import type { ToggleGroupVariantProps } from '@var-ui/core';
+import type { ControlSize, Orientation, ToggleGroupVariantProps, Tone } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { useControlSize } from '../internal/controlSizeContext';
 import { mergeRefs } from '../internal/mergeRefs';
@@ -31,11 +31,11 @@ type ToggleGroupBaseProps = Omit<
    */
   required?: boolean;
   /** Layout axis. Vertical groups move focus with Up/Down instead of Left/Right. @default horizontal */
-  orientation?: NonNullable<ToggleGroupVariantProps['orientation']>;
+  orientation?: Orientation;
   /** Control density. Falls back to the surrounding control size, then `md`. */
-  size?: NonNullable<ToggleGroupVariantProps['size']>;
+  size?: ControlSize;
   /** Color of the pressed items. @default accent */
-  tone?: NonNullable<ToggleGroupVariantProps['tone']>;
+  tone?: Tone;
   /** Resting look: `outline` and `subtle` connect the items, `ghost` spaces them. @default outline */
   appearance?: NonNullable<ToggleGroupVariantProps['appearance']>;
   className?: string;

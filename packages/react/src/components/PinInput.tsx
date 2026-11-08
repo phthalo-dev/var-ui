@@ -9,7 +9,7 @@ import type {
 } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { pinInput } from '@var-ui/core/components/pinInput';
-import type { PinInputVariantProps } from '@var-ui/core';
+import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import type { FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
@@ -41,7 +41,7 @@ export type PinInputProps = Omit<
     onComplete?: (value: string) => void;
     /** Accepted characters. @default 'numeric' */
     characters?: PinInputCharacters;
-    size?: NonNullable<PinInputVariantProps['size']>;
+    size?: ControlSize;
     /** Marks the cells invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
     /** Disables every cell. */
