@@ -2,10 +2,9 @@ import type { CreateTokenValues } from 'typestyles';
 import { registerFontFace } from '../fonts/register-font-face';
 import { typestyles } from '../runtime';
 import { designTokens } from '../tokens';
+import type { ThemeTokenTree, ThemeTokensOf } from './token-tree';
 import { REDUCED_MOTION_MODE_ID, reducedMotionMode } from './reduced-motion';
 import type { DesignTheme, DesignThemeComponentPatch, DesignThemeCreateConfig } from './types';
-
-type ThemeTokenTree = Record<string, CreateTokenValues>;
 
 type DesignThemeComponents<T extends Record<string, unknown>> = Record<
   string,
@@ -22,7 +21,7 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
     tokens?: T;
     components?: DesignThemeComponents<T>;
   },
-): DesignTheme<T & ThemeTokenTree> {
+): DesignTheme<ThemeTokensOf<T>> {
   const { fonts, name, tokens: tokenOverrides, modes, components, replace } = config;
 
   for (const face of fonts ?? []) {
@@ -43,8 +42,8 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
 
   return {
     ...surface,
-    tokens: (surface.tokens ?? designTokens) as DesignTheme<T & ThemeTokenTree>['tokens'],
-  } as DesignTheme<T & ThemeTokenTree>;
+    tokens: (surface.tokens ?? designTokens) as DesignTheme<ThemeTokensOf<T>>['tokens'],
+  } as DesignTheme<ThemeTokensOf<T>>;
 }
 
 /**

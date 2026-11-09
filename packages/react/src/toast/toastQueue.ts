@@ -32,3 +32,16 @@ export class ToastQueue extends UNSTABLE_ToastQueue<ToastContentData> {
     return true;
   }
 }
+
+/**
+ * A static, timer-free queue holding `toasts` as visible. Rendered by `ToastRegion` for the
+ * duration of the exit transition after the live queue has emptied.
+ */
+export function frozenToastQueue(toasts: ToastQueue['visibleToasts']): ToastQueue {
+  const frozen = new ToastQueue();
+  const internal = frozen as unknown as QueueInternals & { visibleToasts: unknown };
+  const copy = toasts.map((toast) => ({ ...toast, timer: undefined }));
+  internal.queue = copy as unknown as QueueItem[];
+  internal.visibleToasts = copy;
+  return frozen;
+}

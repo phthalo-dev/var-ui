@@ -56,7 +56,7 @@ export type MenubarMenuProps = Omit<
 > & {
   /** The trigger's content: the menu's name (`File`, `Edit`...). */
   label: ReactNode;
-  /** The menu's `Menu.Item`, `Menu.Section` and `Menu.Separator` children. */
+  /** The menu's `Menu.Item`, `Menu.Section`, `Menu.Separator` and `Menu.Submenu` children. */
   children: ReactNode;
   /** Disables this menu's trigger: it is skipped by arrow-key navigation. */
   disabled?: boolean;
@@ -223,8 +223,7 @@ export function Menubar(props: MenubarProps): JSX.Element {
   };
 
   // Left/Right inside an open menu: the adjacent menu opens with its first item focused. Capture
-  // phase, so react-aria's menu does not also handle the key. Submenu levels (their shell sits
-  // inside the parent shell) and items that open a submenu keep react-aria's behavior.
+  // phase, so react-aria's menu does not also handle the key.
   const handleKeyDownCapture = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDownCapture?.(event);
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
@@ -232,8 +231,11 @@ export function Menubar(props: MenubarProps): JSX.Element {
     const root = event.currentTarget;
     const target = event.target as HTMLElement;
     const shell = target.closest('[popover]');
-    if (!shell || !root.contains(shell) || shell.parentElement?.closest('[popover]')) return;
+    if (!shell || !root.contains(shell)) return;
     const delta = arrowDelta(event.key, 'horizontal', isRtl(root));
+    // Submenus (their shell sits inside the parent shell): the key that closes one, and the key
+    // that opens one on a submenu trigger item, are react-aria's. Anything else moves the bar.
+    if (delta === -1 && shell.parentElement?.closest('[popover]')) return;
     if (delta === 1 && target.closest('[role="menuitem"]')?.hasAttribute('aria-haspopup')) return;
     const from = activeRef.current ? entries.get(activeRef.current)?.triggerEl : null;
     if (!from || delta === 0) return;

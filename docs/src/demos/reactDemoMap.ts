@@ -161,6 +161,7 @@ import ColorModeToggleAppearance from './color-mode-toggle/appearance/react';
 import DropdownMenuDefault from './dropdown-menu/default/react';
 import DropdownMenuSections from './dropdown-menu/sections/react';
 import MenuDefault from './menu/default/react';
+import MenuSubmenu from './menu/submenu/react';
 import ContextMenuDefault from './context-menu/default/react';
 import ContextMenuSections from './context-menu/sections/react';
 import MoreMenuDefault from './more-menu/default/react';
@@ -174,6 +175,7 @@ import ToggleGroupControlled from './toggle-group/controlled/react';
 import MenubarDefault from './menubar/default/react';
 import MenubarDisabled from './menubar/disabled/react';
 import MenubarAppShell from './menubar/app-shell/react';
+import MenubarSubmenu from './menubar/submenu/react';
 import ToolbarDefault from './toolbar/default/react';
 import ToolbarSlots from './toolbar/slots/react';
 import NumberInputDefault from './number-input/default/react';
@@ -380,6 +382,7 @@ export const reactDemoMap = {
   'dropdown-menu.default': DropdownMenuDefault,
   'dropdown-menu.sections': DropdownMenuSections,
   'menu.default': MenuDefault,
+  'menu.submenu': MenuSubmenu,
   'context-menu.default': ContextMenuDefault,
   'context-menu.sections': ContextMenuSections,
   'more-menu.default': MoreMenuDefault,
@@ -393,6 +396,7 @@ export const reactDemoMap = {
   'menubar.default': MenubarDefault,
   'menubar.disabled': MenubarDisabled,
   'menubar.app-shell': MenubarAppShell,
+  'menubar.submenu': MenubarSubmenu,
   'toolbar.default': ToolbarDefault,
   'toolbar.slots': ToolbarSlots,
   'number-input.default': NumberInputDefault,

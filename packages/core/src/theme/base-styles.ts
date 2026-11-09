@@ -4,6 +4,7 @@ import { focusRing } from '../internal/focusRing';
 import { atReducedMotion } from './conditions';
 import { COLOR_MODE_ATTRIBUTE } from './constants';
 import { global } from '../runtime';
+import { viewportAnchor } from '../shared/anchored';
 
 const resetLayer = 'reset';
 const baseLayer = 'base';
@@ -40,6 +41,8 @@ export function registerBaseStyles(): void {
         scrollBehavior: 'smooth',
         // Reserve the scrollbar's space so locking scroll (below) does not shift the layout.
         scrollbarGutter: 'stable',
+        // Names the usable viewport for popup width caps (see `viewportAnchor`).
+        anchorName: viewportAnchor,
         ...atReducedMotion({ scrollBehavior: 'auto' }),
       },
       // Scroll lock for native modal dialogs: pure CSS, no JS scroll-lock hook.

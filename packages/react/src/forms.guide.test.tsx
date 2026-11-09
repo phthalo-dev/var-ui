@@ -75,7 +75,8 @@ describe('forms guide', () => {
         }
       }
     }
-  });
+    // The first import of the whole package in a cold worker can exceed the 5s default.
+  }, 30_000);
 
   it('links the live demo, which the Form page embeds', () => {
     const formPage = read('../../../docs/content/components/form.mdx');

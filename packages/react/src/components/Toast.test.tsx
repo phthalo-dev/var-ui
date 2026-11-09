@@ -39,7 +39,7 @@ describe('useToast', () => {
     function Trigger() {
       const toast = useToast();
       return (
-        <Button onClick={() => toast.add({ tone: 'info', title: 'Hello', durationMs: 50 })}>
+        <Button onClick={() => toast.add({ tone: 'info', title: 'Hello', durationMs: 600 })}>
           Notify
         </Button>
       );
@@ -50,8 +50,9 @@ describe('useToast', () => {
       </ToastProvider>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Notify' }));
-    expect(screen.getByText('Hello')).toBeTruthy();
-    await waitFor(() => expect(screen.queryByText('Hello')).toBeNull());
+    // Wait for it to appear (a short duration races the click on a loaded CPU), then for the timer.
+    expect(await screen.findByText('Hello')).toBeTruthy();
+    await waitFor(() => expect(screen.queryByText('Hello')).toBeNull(), { timeout: 5000 });
   });
 });
 

@@ -1,5 +1,15 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import {
   Button as AriaButton,
   Text,
@@ -13,6 +23,7 @@ import { toast as toastRecipe } from '@var-ui/core/components/toast';
 import type { ToastVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useMergedRef } from '../overlays/useMergedRef';
+import { useMountedWhileAnimating } from '../overlays/useMountedWhileAnimating';
 import { isPopoverShowing } from '../overlays/usePopoverElement';
 import { keepOnTop } from '../toast/repromote';
 import { toneIcon } from '../internal/toneIcon';
@@ -21,7 +32,7 @@ import {
   registerToastQueue,
   unregisterToastQueue,
 } from '../toast/imperativeToast';
-import { ToastQueue } from '../toast/toastQueue';
+import { frozenToastQueue, ToastQueue } from '../toast/toastQueue';
 import type { ToastContentData } from '../toast/types';
 import { mergeProps } from 'typestyles';
 
@@ -110,21 +121,52 @@ export function ToastRegion({
   ...rest
 }: ToastRegionProps): JSX.Element {
   const region = toastRecipe({ placement });
-  // react-aria mounts the region only while the queue is non-empty, so mounting shows the popover
-  // and unmounting removes it (hidden, out of the top layer). The attribute is set here because
-  // react-aria's region does not forward `popover`.
+  const elRef = useRef<HTMLDivElement | null>(null);
+
+  // react-aria mounts its region only while the queue is non-empty, which would remove the last
+  // toast with no exit. So the region stays mounted (rendering a frozen copy of the toasts that
+  // just left) until the popover's CSS exit has finished: `open` follows the live queue, the
+  // popover is shown/hidden with it, and `useMountedWhileAnimating` unmounts afterwards.
+  const visible = useSyncExternalStore(
+    queue.subscribe.bind(queue),
+    () => queue.visibleToasts,
+    () => queue.visibleToasts,
+  );
+  const open = visible.length > 0;
+  const lastVisible = useRef(visible);
+  if (open) lastVisible.current = visible;
+  const leaving = useMemo(
+    () => (open ? null : frozenToastQueue(lastVisible.current)),
+    [open, queue],
+  );
+
+  // The attribute is set here because react-aria's region does not forward `popover`. Mounting
+  // shows the popover (first paint runs the enter transition).
   const popoverRef = useCallback((el: HTMLElement | null) => {
     if (!el) return;
     el.setAttribute('popover', 'manual');
     if (!isPopoverShowing(el)) el.showPopover();
     return keepOnTop(el);
   }, []);
-  const mergedRef = useMergedRef<HTMLDivElement>(ref, popoverRef);
+  const mergedRef = useMergedRef<HTMLDivElement>(ref, popoverRef, elRef);
+
+  // Must run before `useMountedWhileAnimating`'s effect: hiding starts the exit it then waits for;
+  // showing again (a toast arrived mid-exit) reverses it.
+  useLayoutEffect(() => {
+    const el = elRef.current;
+    if (!el) return;
+    if (open && !isPopoverShowing(el)) el.showPopover();
+    else if (!open && isPopoverShowing(el)) el.hidePopover();
+  }, [open]);
+  const mounted = useMountedWhileAnimating(elRef, open);
+  if (!mounted && !open) return <></>;
+
   return (
     <AriaToastRegion
       {...rest}
-      queue={queue}
+      queue={leaving ?? queue}
       {...mergeProps(region.region, className)}
+      inert={open ? undefined : true}
       ref={mergedRef}
     >
       {({ toast: queued }) => {

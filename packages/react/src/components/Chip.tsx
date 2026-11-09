@@ -169,7 +169,7 @@ function ChipToggle({
       data-interactive
       data-removable={onRemove ? true : undefined}
       onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
-        onKeyDown?.(event as unknown as KeyboardEvent<HTMLSpanElement>);
+        onKeyDown?.(event as KeyboardEvent<HTMLSpanElement>);
         if (onRemove && (event.key === 'Backspace' || event.key === 'Delete')) {
           event.preventDefault();
           onRemove();

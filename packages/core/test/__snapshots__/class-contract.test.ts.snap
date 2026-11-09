@@ -1129,6 +1129,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "item": "var-ui-menu__item",
       "itemCheck": "var-ui-menu__itemCheck",
       "itemDanger": "var-ui-menu__itemDanger",
+      "itemIcon": "var-ui-menu__itemIcon",
       "itemLabel": "var-ui-menu__itemLabel",
       "itemShortcut": "var-ui-menu__itemShortcut",
       "itemSwatch": "var-ui-menu__itemSwatch",
@@ -1139,6 +1140,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "sectionHeader": "var-ui-menu__sectionHeader",
       "separator": "var-ui-menu__separator",
       "submenuChevron": "var-ui-menu__submenuChevron",
+      "submenuPopover": "var-ui-menu__submenuPopover",
     },
     "vars": [
       "--var-ui-menu-anchorx",

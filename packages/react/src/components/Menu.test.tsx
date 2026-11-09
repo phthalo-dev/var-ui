@@ -301,3 +301,70 @@ describe('Menu', () => {
     expect(container.querySelector('[style*="display: contents"]')).toBeNull();
   });
 });
+
+describe('Menu.Submenu (API shape)', () => {
+  function renderSubmenu(onAction = vi.fn()) {
+    return wrap(
+      <Menu.Root defaultOpen>
+        <Menu.Trigger>
+          <button type="button">File</button>
+        </Menu.Trigger>
+        <Menu.Popup aria-label="File">
+          <Menu.Submenu
+            label="Share"
+            icon="star"
+            className="mine"
+            data-testid="share"
+            disabled={false}
+          >
+            <Menu.Item id="link" onAction={onAction}>
+              Copy link
+            </Menu.Item>
+          </Menu.Submenu>
+          <Menu.Submenu label="Locked" disabled>
+            <Menu.Item id="x">X</Menu.Item>
+          </Menu.Submenu>
+        </Menu.Popup>
+      </Menu.Root>,
+    );
+  }
+
+  it('renders a menu item with aria-haspopup, collapsed, a chevron and native passthrough', () => {
+    renderSubmenu();
+    const trigger = screen.getByTestId('share');
+    expect(trigger.getAttribute('role')).toBe('menuitem');
+    expect(trigger.hasAttribute('aria-haspopup')).toBe(true);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(trigger.classList.contains('mine')).toBe(true);
+    expect(trigger.textContent).toContain('Share');
+    expect(trigger.querySelector('[class*="submenuChevron"]')).not.toBeNull();
+    expect(screen.queryByText('Copy link')).toBeNull();
+  });
+
+  it('opens on ArrowRight and exposes the child menu', async () => {
+    const user = userEvent.setup();
+    renderSubmenu();
+    await user.keyboard('{ArrowDown}{ArrowRight}');
+    await waitFor(() => expect(screen.queryByText('Copy link')).not.toBeNull());
+    expect(screen.getByTestId('share').getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('marks a disabled submenu trigger', () => {
+    renderSubmenu();
+    expect(
+      screen.getByText('Locked').closest('[role="menuitem"]')!.getAttribute('aria-disabled'),
+    ).toBe('true');
+  });
+
+  it('presets render `items` as a submenu', () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<button type="button">Go</button>}
+        defaultOpen
+        sections={[{ items: [{ id: 's', label: 'Share', items: [{ id: 'l', label: 'Link' }] }] }]}
+      />,
+    );
+    const item = screen.getByText('Share').closest('[role="menuitem"]')!;
+    expect(item.hasAttribute('aria-haspopup')).toBe(true);
+  });
+});

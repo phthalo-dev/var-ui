@@ -37,6 +37,16 @@ export const popupMaxHeightVar = '--var-ui-popup-max-height';
 /** Custom property: cap on the popup width (default is the viewport minus a space token). */
 export const popupMaxWidthVar = '--var-ui-popup-max-width';
 
+/**
+ * Anchor name that `registerBaseStyles` gives the root element. The root box spans the usable
+ * viewport (the layout viewport without a classic scrollbar's gutter), so `anchor-size()` against
+ * it is the viewport width that `100vw` is not: `100vw` includes the 15px scrollbar gutter on
+ * Linux/Windows. Percentages are not an option (inside a `position-area` cell they clamp to the
+ * cell and defeat `flip-*`). Falls back to `100vw` where the root is not named (no base styles).
+ */
+export const viewportAnchor = '--var-ui-viewport';
+const usableViewportWidth = `anchor-size(${viewportAnchor} width, 100vw)`;
+
 const isBlockSide = (side: PopupSide) => side === 'top' || side === 'bottom';
 
 /** `position-area` for a placement. Logical values, so start/end mirror in RTL with no JS. */
@@ -135,7 +145,7 @@ export function anchored(options: AnchoredOptions = {}) {
   // so `flip-block` would never trigger.
   const viewportGutter = `2 * ${t.space.md.var}`;
   const maxHeight = `min(var(${popupMaxHeightVar}, ${options.maxHeight ?? `calc(100dvh - ${viewportGutter})`}), 100dvh)`;
-  const maxWidth = `min(var(${popupMaxWidthVar}, ${options.maxWidth ?? `calc(100vw - ${viewportGutter})`}), 100vw)`;
+  const maxWidth = `min(var(${popupMaxWidthVar}, ${options.maxWidth ?? `calc(${usableViewportWidth} - ${viewportGutter})`}), ${usableViewportWidth})`;
 
   const placements: Record<string, unknown> = {};
   for (const s of SIDES) {

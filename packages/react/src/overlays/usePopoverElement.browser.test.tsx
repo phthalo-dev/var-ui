@@ -189,12 +189,15 @@ describe('open sync', () => {
     expect(q('body-a')).toBeNull();
   });
 
-  test.each([
-    ['controlled', false],
-    ['uncontrolled', true],
-  ])(
-    'reopening while the exit runs always reopens, and a stale exit never closes it (%s)',
-    async (_name, uncontrolled) => {
+  // 5 independent cases of 10 iterations per mode (50 in total): one 50-iteration test waits on
+  // real animations and can exceed the test timeout on a loaded CPU.
+  test.each(
+    (['controlled', 'uncontrolled'] as const).flatMap((mode) =>
+      [1, 2, 3, 4, 5].map((batch) => [mode, batch, mode === 'uncontrolled'] as const),
+    ),
+  )(
+    'reopening while the exit runs always reopens, and a stale exit never closes it (%s, batch %i)',
+    async (_name, _batch, uncontrolled) => {
       holdMotion();
       const ui = (open: boolean) =>
         uncontrolled ? (
@@ -205,7 +208,7 @@ describe('open sync', () => {
       const { rerender } = render(ui(true));
       await animating(pop());
       await finishAll(pop());
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 10; i++) {
         if (uncontrolled) {
           // Toggle through the invoker-less path: close with the body's button, reopen by trigger.
           await userEvent.click(q('close-a'));

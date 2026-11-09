@@ -129,7 +129,7 @@ export function NumberInput({
   const [{ min, max, ...rootProps }, inputProps] = splitRacFieldProps(props, NUMBER_ROOT_KEYS);
   return (
     <AriaNumberField
-      {...(rootProps as unknown as Partial<RACNumberFieldProps>)}
+      {...(rootProps as Partial<RACNumberFieldProps>)}
       minValue={min as number | undefined}
       maxValue={max as number | undefined}
       isInvalid={racInvalid(rootProps.isInvalid, errorMessage)}

@@ -385,29 +385,36 @@ describe('Menu on a native popover', () => {
     expect(getComputedStyle(popup()).display).toBe('none');
   });
 
-  test('pressing the open trigger and pressing it again at once always reopens (x30)', async () => {
-    // react-aria ends a press from the React `click`; the shell swallows that click to close the
-    // menu, so without a pointercancel the trigger ignored the next pointerdown for ~80ms.
-    holdMotion();
-    render(<Basic />);
-    for (let i = 0; i < 30; i++) {
-      await userEvent.click(trigger()); // open
-      await animating(popup());
-      await finishAll(popup());
-      expect(isOpen(), `open ${i}`).toBe(true);
-      await userEvent.click(trigger()); // close: the exit now runs
-      await animating(popup());
-      expect(isOpen(), `closed ${i}`).toBe(false);
-      await userEvent.click(trigger()); // reopen straight away, mid-exit
-      expect(isOpen(), `reopened ${i}`).toBe(true);
-      expect(trigger().getAttribute('aria-expanded')).toBe('true');
-      await finishAll(popup());
-      await userEvent.keyboard('{Escape}');
-      await animating(popup());
-      await finishAll(popup());
-      await vi.waitFor(() => expect(menuEl()).toBeNull());
-    }
-  }, 60000);
+  // 6 independent batches of 5 (30 in total): each gets its own time budget, so a loaded CPU cannot
+  // starve the last iterations of one long test (Playwright derives click timeouts from the
+  // remaining test time).
+  test.each([1, 2, 3, 4, 5, 6])(
+    'pressing the open trigger and pressing it again at once always reopens (batch %i of 6)',
+    async () => {
+      // react-aria ends a press from the React `click`; the shell swallows that click to close the
+      // menu, so without a pointercancel the trigger ignored the next pointerdown for ~80ms.
+      holdMotion();
+      render(<Basic />);
+      for (let i = 0; i < 5; i++) {
+        await userEvent.click(trigger()); // open
+        await animating(popup());
+        await finishAll(popup());
+        expect(isOpen(), `open ${i}`).toBe(true);
+        await userEvent.click(trigger()); // close: the exit now runs
+        await animating(popup());
+        expect(isOpen(), `closed ${i}`).toBe(false);
+        await userEvent.click(trigger()); // reopen straight away, mid-exit
+        expect(isOpen(), `reopened ${i}`).toBe(true);
+        expect(trigger().getAttribute('aria-expanded')).toBe('true');
+        await finishAll(popup());
+        await userEvent.keyboard('{Escape}');
+        await animating(popup());
+        await finishAll(popup());
+        await vi.waitFor(() => expect(menuEl()).toBeNull());
+      }
+    },
+    30000,
+  );
 
   test('passes native props and ref through to the popover element', async () => {
     const ref = { current: null as HTMLDivElement | null };

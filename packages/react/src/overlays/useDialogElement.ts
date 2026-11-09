@@ -30,6 +30,28 @@ const GESTURE_WINDOW = 500;
 
 type Gesture = { event: Event; reason: OverlayOpenChangeReason };
 
+/** An Escape keydown, with the nested overlays that were open when it arrived. */
+type EscapeGesture = Gesture & { nested: Element[] };
+
+/** Popovers and dialogs rendered inside `element` that are open right now. */
+function openNested(element: HTMLElement): Element[] {
+  try {
+    return Array.from(element.querySelectorAll('[popover]:popover-open, dialog[open]'));
+  } catch {
+    return [];
+  }
+}
+
+/** Still open (a `dialog[open]` or a showing popover)? */
+function isOpenOverlay(el: Element): boolean {
+  if (!el.isConnected) return false;
+  try {
+    return el.matches('[popover]:popover-open, dialog[open]');
+  } catch {
+    return true;
+  }
+}
+
 /**
  * Drives a native modal `<dialog>` from an overlay root.
  *
@@ -80,7 +102,7 @@ export function useDialogElement(
 
   useEffect(() => {
     if (!element) return undefined;
-    let escape: Gesture | null = null;
+    let escape: EscapeGesture | null = null;
     let click: Gesture | null = null;
     let pressedBackdrop = false;
     // A non-cancelable `cancel` already reported its request; its `close` must not report again.
@@ -91,7 +113,9 @@ export function useDialogElement(
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') escape = { event, reason: 'escape-key' };
+      if (event.key === 'Escape') {
+        escape = { event, reason: 'escape-key', nested: openNested(element) };
+      }
     };
     const onDocumentClick = (event: MouseEvent) => {
       if (event.target instanceof Node && element.contains(event.target)) {
@@ -106,6 +130,12 @@ export function useDialogElement(
       // Keep the dialog open; `open` decides. (Ignored when the browser made it non-cancelable.)
       event.preventDefault();
       reported = !event.cancelable;
+      // The Escape already closed a nested popover/dialog: Chromium puts a close watcher that was
+      // created without a user activation (a popover opened by a timer, a controlled `open`, or
+      // `showPopover()` outside an input event) in the group of the previous one, so ONE Escape
+      // closes both and fires this `cancel` after the nested overlay's hide. The key belonged to
+      // the nested overlay: keep this dialog open and report nothing.
+      if (stash && stash.nested.some((el) => !isOpenOverlay(el))) return;
       // Commit before the browser's non-cancelable close. Otherwise `onClose` still sees the
       // pre-render `open` and calls `showModal()` on a close the consumer just accepted.
       flushSync(() => {

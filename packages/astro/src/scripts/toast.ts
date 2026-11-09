@@ -81,11 +81,54 @@ function watchDialogs(): void {
   observer.observe(document, { subtree: true, attributes: true, attributeFilter: ['open'] });
 }
 
-/** Shows the region while it has toasts and hides it when empty. */
+/**
+ * Shows the region while it has toasts. When it empties, the popover is hidden (which starts the
+ * CSS exit) but the old toasts stay in the DOM, inert, until the exit animations finish.
+ */
 function syncPopover(root: HTMLElement, count: number): void {
   if (!hasPopover(root) || !root.hasAttribute('popover')) return;
   if (count > 0 && !isOpen(root)) root.showPopover();
   else if (count === 0 && isOpen(root)) root.hidePopover();
+}
+
+const exits = new WeakMap<HTMLElement, number>();
+
+function runningAnimations(root: HTMLElement): Animation[] {
+  if (typeof root.getAnimations !== 'function') return [];
+  return root
+    .getAnimations({ subtree: true })
+    .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity);
+}
+
+/** Cancels a pending exit (a toast arrived, or the exit finished). */
+function cancelExit(root: HTMLElement): void {
+  exits.set(root, (exits.get(root) ?? 0) + 1);
+  root.inert = false;
+}
+
+/**
+ * Empties the region once its exit has finished. Resolves synchronously when nothing animates
+ * (no popover, reduced motion, jsdom). A later render cancels it.
+ */
+function finishExit(root: HTMLElement): void {
+  cancelExit(root);
+  const token = exits.get(root)!;
+  if (!hasPopover(root) || !root.hasAttribute('popover') || runningAnimations(root).length === 0) {
+    root.replaceChildren();
+    return;
+  }
+  root.inert = true;
+  void (async () => {
+    for (let pass = 0; pass < 4; pass++) {
+      const animations = runningAnimations(root);
+      if (animations.length === 0) break;
+      await Promise.allSettled(animations.map((a) => a.finished));
+      if (exits.get(root) !== token) return;
+    }
+    if (exits.get(root) !== token) return;
+    root.inert = false;
+    root.replaceChildren();
+  })();
 }
 
 function createId(): string {
@@ -195,6 +238,13 @@ function createToastController(root: HTMLElement): ToastController {
 
   function render(): void {
     const visible = queue.slice(0, maxVisible);
+    if (visible.length === 0) {
+      // Hide first so the exit transition starts, then drop the old toasts once it is done.
+      syncPopover(root, 0);
+      finishExit(root);
+      return;
+    }
+    cancelExit(root);
     root.replaceChildren(...visible.map((entry) => entry.el));
     syncPopover(root, visible.length);
   }
