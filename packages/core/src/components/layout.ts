@@ -19,7 +19,7 @@ export { layoutContentWidthAssignment, layoutShellPaddingAssignments } from './l
 
 const layoutHeight = variant.enum(['fill', 'auto'], { default: 'fill' });
 const zoneScrollable = variant.boolean({ default: true });
-const zonePadding = variant.enum(['inherit', '0'], { default: 'inherit' });
+const zonePadding = variant.enum(['inherit', 'none'], { default: 'inherit' });
 const panelDivider = variant.boolean({ default: false });
 const panelResizeHandle = variant.boolean({ default: false });
 
@@ -59,10 +59,10 @@ export const layout = typestyles.recipe({
           flexDirection: 'column',
           minWidth: 0,
           minHeight: 0,
-          [vars.padding.outer.x.name]: t.space[4].var,
-          [vars.padding.outer.y.name]: t.space[4].var,
-          [vars.padding.inner.x.name]: t.space[4].var,
-          [vars.padding.inner.y.name]: t.space[4].var,
+          [vars.padding.outer.x.name]: t.space.md.var,
+          [vars.padding.outer.y.name]: t.space.md.var,
+          [vars.padding.inner.x.name]: t.space.md.var,
+          [vars.padding.inner.y.name]: t.space.md.var,
         },
         outer: {
           marginInlineStart: 'calc(-1 * var(--container-padding-inline-start, 0rem))',
@@ -236,7 +236,7 @@ export const layoutContent = typestyles.recipe({
         },
         padding: {
           inherit: {},
-          '0': {
+          none: {
             content: { padding: 0 },
           },
         },
@@ -389,7 +389,7 @@ export const layoutPanel = typestyles.recipe({
         },
         padding: {
           inherit: {},
-          '0': {
+          none: {
             panel: { padding: 0 },
           },
         },

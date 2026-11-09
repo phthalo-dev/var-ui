@@ -29,7 +29,7 @@ export const tooltip = typestyles.recipe({
           backgroundColor: vars.background.var,
           color: vars.foreground.var,
           fontSize: t.fontSize.sm.var,
-          padding: `${t.space[1].var} ${t.space[2].var}`,
+          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
           borderRadius: t.radius.sm.var,
           boxShadow: t.shadow.sm.var,
           ...atForcedColors(forced.boundary),

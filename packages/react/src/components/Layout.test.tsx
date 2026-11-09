@@ -163,9 +163,9 @@ describe('Layout', () => {
   });
 
   it('sets shell padding CSS vars when padding prop is provided', () => {
-    const { container } = render(<Layout padding={2} content={<div>Main</div>} />);
+    const { container } = render(<Layout padding="xs" content={<div>Main</div>} />);
     const root = container.firstElementChild as HTMLElement;
-    const expected = layoutShellPaddingAssignments(2);
+    const expected = layoutShellPaddingAssignments('xs');
     for (const [name, value] of Object.entries(expected)) {
       expect(root.style.getPropertyValue(name)).toBe(value);
     }
@@ -174,7 +174,7 @@ describe('Layout', () => {
   it('does not set shell padding inline when padding is omitted', () => {
     const { container } = render(<Layout content={<div>Main</div>} />);
     const root = container.firstElementChild as HTMLElement;
-    for (const name of Object.keys(layoutShellPaddingAssignments(2))) {
+    for (const name of Object.keys(layoutShellPaddingAssignments('xs'))) {
       expect(root.style.getPropertyValue(name)).toBe('');
     }
   });

@@ -192,9 +192,9 @@ function LayoutSection() {
       <div style={{ minHeight: 280, display: 'flex', flexDirection: 'column' }}>
         <Layout
           height="fill"
-          padding={0}
+          padding="none"
           content={
-            <LayoutContent padding={0}>
+            <LayoutContent padding="none">
               <Stack gap="sm" style={{ padding: 12 }}>
                 {items.map((item) => (
                   <Button
@@ -222,7 +222,7 @@ function LayoutSection() {
                   onOpenChange={(open) => {
                     if (!open) setSelectedId(null);
                   }}
-                  padding={0}
+                  padding="none"
                 >
                   <Stack gap="sm" style={{ padding: 12 }}>
                     <Heading level={4}>{selected.label}</Heading>
@@ -718,7 +718,7 @@ function AdminShellDemo() {
       <AppShell
         height="auto"
         variant="surface"
-        contentPadding={5}
+        contentPadding="lg"
         topNav={
           <TopNav
             heading={<TopNav.Heading heading="Acme Admin" icon="search" />}

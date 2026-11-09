@@ -29,7 +29,7 @@ export const timeline = typestyles.recipe({
     semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
     solidBg: { ...atProperty.color, value: t.color.tone.accent.background.var },
     solidFg: { ...atProperty.color, value: t.color.tone.accent.foregroundOnBackground.var },
-    bulletSize: { ...atProperty.length, value: t.space[3].var },
+    bulletSize: { ...atProperty.length, value: t.space.sm.var },
     lineWidth: { ...atProperty.length, value: t.borderWidth.default.var },
   },
   styles: ({ vars }) => {
@@ -44,15 +44,15 @@ export const timeline = typestyles.recipe({
           position: 'relative',
           display: 'grid',
           gridTemplateColumns: `${vars.bulletSize.var} minmax(0, 1fr)`,
-          columnGap: t.space[3].var,
-          paddingBottom: t.space[4].var,
+          columnGap: t.space.sm.var,
+          paddingBottom: t.space.md.var,
           '&:last-child': {
             paddingBottom: 0,
           },
           '&:not(:last-child)::before': {
             content: '""',
             position: 'absolute',
-            top: `calc(${vars.bulletSize.var} + ${t.space[1].var})`,
+            top: `calc(${vars.bulletSize.var} + ${t.space.xxs.var})`,
             bottom: 0,
             insetInlineStart: `calc((${vars.bulletSize.var} - ${vars.lineWidth.var}) / 2)`,
             width: vars.lineWidth.var,
@@ -88,7 +88,7 @@ export const timeline = typestyles.recipe({
         body: {
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           minWidth: 0,
           paddingTop: '0.125rem',
         },
@@ -116,13 +116,13 @@ export const timeline = typestyles.recipe({
         size: {
           sm: {
             item: {
-              [vars.bulletSize.name]: t.space[2].var,
+              [vars.bulletSize.name]: t.space.xs.var,
             },
           },
           md: {},
           lg: {
             item: {
-              [vars.bulletSize.name]: t.space[4].var,
+              [vars.bulletSize.name]: t.space.md.var,
             },
           },
         },

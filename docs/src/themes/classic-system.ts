@@ -28,8 +28,8 @@ export const classicSystemThemeTokens = {
     md: '0.8125rem',
     lg: '0.9375rem',
     xl: '1.125rem',
-    '2xl': '1.375rem',
-    '3xl': '1.75rem',
+    xxl: '1.375rem',
+    xxxl: '1.75rem',
   },
   fontWeight: {
     normal: '400',

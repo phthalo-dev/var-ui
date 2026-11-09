@@ -21,7 +21,7 @@ Var UI styles first-party UI with TypeStyles recipes, not new `*.css` files.
 export const foo = typestyles.recipe('docs-foo', () => ({
   slots: ['root'],
   root: {
-    gap: t.space[3].var,
+    gap: t.space.sm.var,
     [breakpoint('md', 'max')]: { display: 'none' },
   },
 }), { layer: 'components' });

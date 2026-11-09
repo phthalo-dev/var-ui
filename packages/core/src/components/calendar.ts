@@ -59,7 +59,7 @@ export const calendar = typestyles.recipe({
     });
     return {
       base: {
-        root: { display: 'grid', gap: t.space[2].var, width: 'fit-content' },
+        root: { display: 'grid', gap: t.space.xs.var, width: 'fit-content' },
         header: grid.calendarHeader,
         heading: grid.calendarHeading,
         navButton: grid.calendarNavButton,

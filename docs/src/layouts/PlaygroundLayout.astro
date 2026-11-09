@@ -51,7 +51,7 @@ const nav = docsTopNav();
     <ClientRouter />
   </head>
   <body class={cx('docs-body', 'docs-body--playground', hljsScopeClass)}>
-    <AppShell variant="wash" height="fill" contentPadding={0} mobileBreakpoint="md">
+    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <TopNav slot="topNav" className={(nav.root).className}>
         <TopNavHeading slot="heading" heading="Var UI" headingHref="/" />
         {
@@ -98,7 +98,7 @@ const nav = docsTopNav();
         </div>
       </MobileNav>
 
-      <Layout height="fill" padding={0} className="docs-playground-layout">
+      <Layout height="fill" padding="none" className="docs-playground-layout">
         <LayoutContent label="Playground">
           <div class:list={['docs-playground-content', bleed && 'docs-playground-content--bleed']}>
             <slot />
@@ -142,7 +142,7 @@ const nav = docsTopNav();
   .docs-playground-content {
     height: 100%;
     min-height: 0;
-    padding: var(--var-ui-space-6);
+    padding: var(--var-ui-space-xl);
     box-sizing: border-box;
   }
 

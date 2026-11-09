@@ -25,7 +25,7 @@ export const sizeTokenSchema = {
     md: atProperty.length,
     lg: atProperty.length,
     xl: atProperty.length,
-    '2xl': atProperty.length,
+    xxl: atProperty.length,
   },
   /** Checkbox / radio / switch geometry. */
   indicator: {

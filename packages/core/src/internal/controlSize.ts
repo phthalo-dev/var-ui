@@ -14,22 +14,22 @@ export const controlSizeMetrics: Record<ControlSize, ControlSizeMetrics> = {
   sm: {
     height: t.size.control.sm.var,
     fontSize: t.fontSize.sm.var,
-    paddingInline: t.space[3].var,
-    gap: t.space[1].var,
+    paddingInline: t.space.sm.var,
+    gap: t.space.xxs.var,
     iconSize: t.size.icon.sm.var,
   },
   md: {
     height: t.size.control.md.var,
     fontSize: t.fontSize.md.var,
-    paddingInline: t.space[4].var,
-    gap: t.space[2].var,
+    paddingInline: t.space.md.var,
+    gap: t.space.xs.var,
     iconSize: t.size.icon.md.var,
   },
   lg: {
     height: t.size.control.lg.var,
     fontSize: t.fontSize.lg.var,
-    paddingInline: t.space[5].var,
-    gap: t.space[2].var,
+    paddingInline: t.space.lg.var,
+    gap: t.space.xs.var,
     iconSize: t.size.icon.lg.var,
   },
 };
@@ -40,9 +40,9 @@ type ControlSurfaceOptions = {
 };
 
 const compactPaddingInline: Record<ControlSize, string> = {
-  sm: t.space[2].var,
-  md: t.space[3].var,
-  lg: t.space[4].var,
+  sm: t.space.xs.var,
+  md: t.space.sm.var,
+  lg: t.space.md.var,
 };
 
 /** Fixed-height surface styles for buttons, inputs, and select triggers. */

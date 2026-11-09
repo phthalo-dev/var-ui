@@ -41,9 +41,9 @@ export const chatMessageList = typestyles.recipe({
     },
     variants: {
       density: {
-        compact: { inner: { gap: t.space[2].var, padding: t.space[2].var } },
-        balanced: { inner: { gap: t.space[4].var, padding: t.space[4].var } },
-        spacious: { inner: { gap: t.space[6].var, padding: t.space[6].var } },
+        compact: { inner: { gap: t.space.xs.var, padding: t.space.xs.var } },
+        balanced: { inner: { gap: t.space.md.var, padding: t.space.md.var } },
+        spacious: { inner: { gap: t.space.xl.var, padding: t.space.xl.var } },
       },
     },
   }),

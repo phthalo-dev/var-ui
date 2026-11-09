@@ -94,11 +94,11 @@ export type AnchoredOptions = {
   defaultPlacement?: PopupSide;
   /** Align used when `data-placement` is a side only, and by the default placement. Default `start`. */
   defaultAlign?: PopupAlign;
-  /** Fallback for `--var-ui-popup-offset`. Default `space[2]`. */
+  /** Fallback for `--var-ui-popup-offset`. Default `space.xs`. */
   offset?: string;
-  /** Fallback for `--var-ui-popup-max-height`. Default: viewport minus `2 * space[4]`. */
+  /** Fallback for `--var-ui-popup-max-height`. Default: viewport minus `2 * space.md`. */
   maxHeight?: string;
-  /** Fallback for `--var-ui-popup-max-width`. Default: viewport minus `2 * space[4]`. */
+  /** Fallback for `--var-ui-popup-max-width`. Default: viewport minus `2 * space.md`. */
   maxWidth?: string;
   /** Size to the trigger: `exact` sets `width`, `min` only `min-width` (see {@link anchoredMatchWidth}). */
   matchWidth?: 'exact' | 'min';
@@ -130,10 +130,10 @@ export function anchoredMatchWidth(mode: 'exact' | 'min' = 'exact') {
 export function anchored(options: AnchoredOptions = {}) {
   const side = options.defaultPlacement ?? 'bottom';
   const defaultAlign = options.defaultAlign ?? 'start';
-  const offset = `var(${popupOffsetVar}, ${options.offset ?? t.space[2].var})`;
+  const offset = `var(${popupOffsetVar}, ${options.offset ?? t.space.xs.var})`;
   // Caps are tokens, NOT `max-height: 100%`: a clamp to the position-area cell never overflows,
   // so `flip-block` would never trigger.
-  const viewportGutter = `2 * ${t.space[4].var}`;
+  const viewportGutter = `2 * ${t.space.md.var}`;
   const maxHeight = `min(var(${popupMaxHeightVar}, ${options.maxHeight ?? `calc(100dvh - ${viewportGutter})`}), 100dvh)`;
   const maxWidth = `min(var(${popupMaxWidthVar}, ${options.maxWidth ?? `calc(100vw - ${viewportGutter})`}), 100vw)`;
 

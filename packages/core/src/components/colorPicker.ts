@@ -54,7 +54,7 @@ export const colorPicker = typestyles.recipe({
       base: {
         root: {
           display: 'grid',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
           width: '100%',
           minWidth: t.size.field.minWidth.var,
         },
@@ -150,7 +150,7 @@ export const colorPicker = typestyles.recipe({
         },
         swatches: {
           display: 'grid',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         swatch: {
           width: vars.swatchSize.var,

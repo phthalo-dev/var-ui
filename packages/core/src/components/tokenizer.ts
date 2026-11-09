@@ -94,10 +94,10 @@ export const tokenizer = typestyles.recipe({
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           ...border(vars.groupBorder.var),
           borderRadius: t.radius.md.var,
-          padding: t.space[2].var,
+          padding: t.space.xs.var,
           backgroundColor: vars.groupBackground.var,
           '&[data-focus-within]': {
             ...focusRing,
@@ -114,8 +114,8 @@ export const tokenizer = typestyles.recipe({
         token: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
-          padding: `${t.space[1].var} ${t.space[2].var}`,
+          gap: t.space.xxs.var,
+          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.tokenBackground.var,
           color: vars.tokenForeground.var,
@@ -149,11 +149,11 @@ export const tokenizer = typestyles.recipe({
             background: vars.popoverBackground.var,
             border: vars.popoverBorder.var,
           }),
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
         },
         item: {
           fontSize: t.fontSize.md.var,
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           borderRadius: t.radius.sm.var,
           cursor: 'pointer',
           '&[data-focused]': {

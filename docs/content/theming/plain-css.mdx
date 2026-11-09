@@ -121,7 +121,7 @@ state you want (`:hover`, `[data-appearance='filled']`) if it should only apply 
 
 ## Tokens as CSS custom properties
 
-Tokens are `--var-ui-<group>-<name>`: `--var-ui-space-4`, `--var-ui-radius-md`,
+Tokens are `--var-ui-<group>-<name>`: `--var-ui-space-md`, `--var-ui-radius-md`,
 `--var-ui-color-background-surface`, `--var-ui-color-border-focus`, `--var-ui-shadow-md`,
 `--var-ui-duration-medium`. See [CSS variables](/theming/css-variables) and
 [Design tokens](/theming/tokens) for the groups.
@@ -136,7 +136,7 @@ your CSS overrides them on any element, and the override applies to everything i
 
 .billing-page {
   --var-ui-color-border-focus: rebeccapurple;
-  --var-ui-space-3: 0.5rem;
+  --var-ui-space-sm: 0.5rem;
 }
 ```
 
@@ -263,14 +263,14 @@ or attribute listed in the contract.
   border-radius: var(--var-ui-radius-xl);
 }
 .var-ui-dialog__content {
-  padding: var(--var-ui-space-6);
+  padding: var(--var-ui-space-xl);
 }
 .var-ui-dialog__heading {
   font-size: var(--var-ui-fontSize-xl);
 }
 .var-ui-dialog__actions {
   justify-content: flex-end;
-  gap: var(--var-ui-space-3);
+  gap: var(--var-ui-space-sm);
 }
 ```
 

@@ -36,8 +36,8 @@ export const card = typestyles.recipe({
         root: {
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space[2].var,
-          padding: t.space[4].var,
+          gap: t.space.xs.var,
+          padding: t.space.md.var,
           borderRadius: t.radius.md.var,
           ...border(vars.border.var),
           backgroundColor: vars.background.var,
@@ -58,7 +58,7 @@ export const card = typestyles.recipe({
         },
         grid: {
           display: 'grid',
-          gap: t.space[4].var,
+          gap: t.space.md.var,
           gridTemplateColumns: '1fr',
           ...media('sm', 'min', {
             gridTemplateColumns: 'repeat(2, 1fr)',
@@ -91,7 +91,7 @@ export const card = typestyles.recipe({
         },
         linkHint: {
           marginTop: 'auto',
-          paddingTop: t.space[2].var,
+          paddingTop: t.space.xs.var,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           color: vars.bodyColor.var,

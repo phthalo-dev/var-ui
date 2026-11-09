@@ -39,7 +39,7 @@ export const dialog = typestyles.recipe({
           ...nativeDialogReset,
           ...nativeEnterExit({ scale: true, backdrop: true }),
           ...nativeBackdrop(vars.overlayBackground.var),
-          width: `min(${t.size.panel.xl.var}, calc(100% - 2 * ${t.space[4].var}))`,
+          width: `min(${t.size.panel.xl.var}, calc(100% - 2 * ${t.space.md.var}))`,
           maxWidth: 'none',
           margin: 'auto',
           backgroundColor: vars.modalBackground.var,
@@ -48,15 +48,15 @@ export const dialog = typestyles.recipe({
           boxShadow: t.shadow.md.var,
         },
         content: {
-          padding: t.space[4].var,
+          padding: t.space.md.var,
           display: 'grid',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
         },
         header: {
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
         },
         heading: {
           fontSize: t.fontSize.lg.var,
@@ -70,8 +70,8 @@ export const dialog = typestyles.recipe({
           color: t.color.text.secondary.var,
           cursor: 'pointer',
           display: 'inline-flex',
-          padding: t.space[1].var,
-          marginInlineEnd: `calc(${t.space[1].var} * -1)`,
+          padding: t.space.xxs.var,
+          marginInlineEnd: `calc(${t.space.xxs.var} * -1)`,
           borderRadius: t.radius.sm.var,
           '&:hover': {
             backgroundColor: t.color.background.subtle.var,
@@ -89,8 +89,8 @@ export const dialog = typestyles.recipe({
         actions: {
           display: 'flex',
           justifyContent: 'flex-end',
-          gap: t.space[2].var,
-          marginTop: t.space[2].var,
+          gap: t.space.xs.var,
+          marginTop: t.space.xs.var,
         },
       },
       variants: {

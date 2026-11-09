@@ -8,13 +8,13 @@ const toolsCluster = {
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'nowrap',
-  gap: t.space[3].var,
+  gap: t.space.sm.var,
   minWidth: 0,
   [belowXl]: {
-    gap: t.space[2].var,
+    gap: t.space.xs.var,
   },
   [belowSm]: {
-    gap: t.space[1].var,
+    gap: t.space.xxs.var,
   },
 } as const;
 
@@ -40,7 +40,7 @@ export const docsTopNav = typestyles.recipe({
         },
         '& [data-var-ui-top-nav-start] a, & [data-var-ui-top-nav-start] button': {
           [belowXl]: {
-            paddingInline: t.space[2].var,
+            paddingInline: t.space.xs.var,
           },
         },
         '& [data-var-ui-mobile-nav-toggle]': {
@@ -65,9 +65,9 @@ export const docsTopNav = typestyles.recipe({
         ...toolsCluster,
         flexShrink: 0,
         [belowSm]: {
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           '& [role="group"] button': {
-            paddingInline: t.space[1].var,
+            paddingInline: t.space.xxs.var,
           },
         },
       },
@@ -79,8 +79,8 @@ export const docsTopNav = typestyles.recipe({
       mobileNavBody: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[2].var,
-        padding: t.space[3].var,
+        gap: t.space.xs.var,
+        padding: t.space.sm.var,
       },
     },
   }),

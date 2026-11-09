@@ -93,7 +93,7 @@ export const numberInput = typestyles.recipe({
             border: 'none',
             backgroundColor: vars.stepperBackground.var,
             color: vars.stepperForeground.var,
-            padding: `${t.space[1].var} ${t.space[2].var}`,
+            padding: `${t.space.xxs.var} ${t.space.xs.var}`,
             cursor: 'pointer',
             fontSize: t.fontSize.sm.var,
             lineHeight: 1,

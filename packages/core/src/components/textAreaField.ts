@@ -50,7 +50,7 @@ export const textAreaField = typestyles.recipe({
         input: {
           ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           fontSize: t.fontSize.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,

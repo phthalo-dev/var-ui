@@ -38,10 +38,10 @@ export const heading = typestyles.recipe({
           xs: { fontSize: t.fontSize.md.var },
           sm: { fontSize: t.fontSize.lg.var },
           md: { fontSize: t.fontSize.xl.var },
-          lg: { fontSize: t.fontSize['2xl'].var },
-          xl: { fontSize: t.fontSize['3xl'].var },
+          lg: { fontSize: t.fontSize.xxl.var },
+          xl: { fontSize: t.fontSize.xxxl.var },
           display: {
-            fontSize: t.fontSize['3xl'].var,
+            fontSize: t.fontSize.xxxl.var,
             fontFamily: t.fontFamily.display.var,
             letterSpacing: '-0.02em',
           },

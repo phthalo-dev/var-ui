@@ -124,7 +124,7 @@ export const inputGroup = typestyles.recipe({
         text: {
           display: 'flex',
           alignItems: 'center',
-          paddingInline: t.space[2].var,
+          paddingInline: t.space.xs.var,
           backgroundColor: vars.textBackground.var,
           color: vars.textForeground.var,
           ...border(vars.inputBorder.var),

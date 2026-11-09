@@ -151,7 +151,7 @@ export const dateTimeInput = typestyles.recipe({
             background: vars.popoverBackground.var,
             border: vars.popoverBorder.var,
           }),
-          padding: t.space[3].var,
+          padding: t.space.sm.var,
           width: t.size.panel.sm.var,
         },
         calendarHeader: grid.calendarHeader,

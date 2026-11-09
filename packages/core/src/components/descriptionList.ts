@@ -33,7 +33,7 @@ export const descriptionList = typestyles.recipe({
   vars: {
     termColor: { ...atProperty.color, value: t.color.text.secondary.var },
     detailsColor: { ...atProperty.color, value: t.color.text.primary.var },
-    gap: { ...atProperty.length, value: t.space[4].var },
+    gap: { ...atProperty.length, value: t.space.md.var },
     termWidth: { ...atProperty.length, value: '8rem' },
     columns: { ...atProperty.integer, value: '2' },
   },
@@ -54,7 +54,7 @@ export const descriptionList = typestyles.recipe({
         },
         item: {
           display: 'grid',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           minWidth: 0,
         },
         term: {

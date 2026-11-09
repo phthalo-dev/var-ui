@@ -52,8 +52,8 @@ catalogs:
       specifier: ^6.0.0
       version: 6.0.3
     typestyles:
-      specifier: ^0.34.0
-      version: 0.34.0
+      specifier: ^0.35.1
+      version: 0.35.1
     vite:
       specifier: npm:@voidzero-dev/vite-plus-core@1.3.0
       version: 1.3.0
@@ -151,7 +151,7 @@ importers:
         version: 6.0.0
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.9
@@ -216,7 +216,7 @@ importers:
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
 
   examples/astro-docs:
     dependencies:
@@ -250,7 +250,7 @@ importers:
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
 
   examples/bundle-fixtures/button-only:
     dependencies:
@@ -281,7 +281,7 @@ importers:
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite-plus:
         specifier: 'catalog:'
         version: 1.3.0(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/browser-playwright@5.0.5)(@vitest/ui@5.0.5(vitest@5.0.5))(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(playwright@1.61.1)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -318,7 +318,7 @@ importers:
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite-plus:
         specifier: 'catalog:'
         version: 1.3.0(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/browser-playwright@5.0.5)(@vitest/ui@5.0.5(vitest@5.0.5))(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(playwright@1.61.1)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -352,7 +352,7 @@ importers:
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite-plus:
         specifier: 'catalog:'
         version: 1.3.0(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/browser-playwright@5.0.5)(@vitest/ui@5.0.5(vitest@5.0.5))(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(playwright@1.61.1)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -392,7 +392,7 @@ importers:
         version: 5.2.0(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite-plus:
         specifier: 'catalog:'
         version: 1.3.0(@opentelemetry/api@1.9.0)(@types/node@24.13.2)(@vitest/browser-playwright@5.0.5)(@vitest/ui@5.0.5(vitest@5.0.5))(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(playwright@1.61.1)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)
@@ -401,7 +401,7 @@ importers:
     dependencies:
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.9
@@ -444,7 +444,7 @@ importers:
     dependencies:
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
     devDependencies:
       '@typestyles/build-runner':
         specifier: 'catalog:'
@@ -500,7 +500,7 @@ importers:
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite:
         specifier: 'catalog:'
         version: '@voidzero-dev/vite-plus-core@1.3.0(@types/node@24.13.2)(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -540,7 +540,7 @@ importers:
         version: 6.0.3
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
       vite:
         specifier: 'catalog:'
         version: '@voidzero-dev/vite-plus-core@1.3.0(@types/node@24.13.2)(@volar/typescript@2.4.28)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)'
@@ -576,7 +576,7 @@ importers:
         version: 3.50.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typestyles:
         specifier: 'catalog:'
-        version: 0.34.0
+        version: 0.35.1
     devDependencies:
       '@hookform/resolvers':
         specifier: 'catalog:'
@@ -6303,8 +6303,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typestyles@0.34.0:
-    resolution: {integrity: sha512-ld5F2MoWOXIE39nZvR80/2l1ekobbavRbmyy7MSh1u3jPab0lgRUJSLx0RlVdmKjF/rWfQ3WZUs957Kq4dZ4RA==}
+  typestyles@0.35.1:
+    resolution: {integrity: sha512-MqUaqCTbYIQhp0n/8kyAU/E0bJYLllGtPJ3R/cBNQCeBnc7WNzYCYilRt3jM30+torMQ9oJjdcSW75pAe5t2zw==}
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
@@ -13551,7 +13551,7 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typestyles@0.34.0:
+  typestyles@0.35.1:
     dependencies:
       csstype: 3.2.3
 

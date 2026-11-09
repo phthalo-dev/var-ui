@@ -8,7 +8,7 @@ import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'content'> & {
   height?: NonNullable<LayoutVariantProps['height']>;
-  /** Sets shell CSS vars on the root. Omit for recipe default (`space[4]`). */
+  /** Sets shell CSS vars on the root. Omit for recipe default (`space.md`). */
   padding?: LayoutPadding;
   /** Constrains header/footer inner wrappers via shell CSS vars. */
   contentWidth?: number;

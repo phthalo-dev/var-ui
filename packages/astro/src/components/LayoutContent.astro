@@ -15,7 +15,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
 function toZonePaddingVariant(
   padding: LayoutPadding | undefined,
 ): NonNullable<LayoutContentVariantProps['padding']> {
-  return padding === 0 ? '0' : 'inherit';
+  return padding === 'none' ? 'none' : 'inherit';
 }
 
 const { padding, scrollable = true, role, label, className, ...rest } = Astro.props;

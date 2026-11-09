@@ -107,9 +107,9 @@ const SPACING_MULTIPLIER: Record<Exclude<ThemePlaygroundSpacingPreset, 'default'
   gigantic: 1.5,
 };
 
-const FONT_SIZE_STEPS = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const;
+const FONT_SIZE_STEPS = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'] as const;
 
-const SPACE_STEPS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 20] as const;
+const SPACE_STEPS = ['none', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl', 'xxxxl'] as const;
 
 function spaceStepToPx(value: (typeof tokenValues.space)[(typeof SPACE_STEPS)[number]]): number {
   if (typeof value === 'number') return value;

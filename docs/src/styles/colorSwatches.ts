@@ -27,13 +27,13 @@ export const colorSwatchesStyles = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[8].var,
+        gap: t.space.xxxl.var,
         marginBlock: '1.5rem',
       },
       section: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
       },
       sectionTitle: {
         margin: 0,
@@ -51,10 +51,10 @@ export const colorSwatchesStyles = typestyles.recipe({
         display: 'grid',
         gridTemplateColumns: '5.5rem 1fr',
         alignItems: 'center',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
         ...typestyles.media('sm', 'max', {
           gridTemplateColumns: '1fr',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
         }),
       },
       paletteFamilyName: {
@@ -66,7 +66,7 @@ export const colorSwatchesStyles = typestyles.recipe({
       paletteRamp: {
         display: 'grid',
         gridTemplateColumns: 'repeat(10, minmax(0, 1fr))',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
         ...typestyles.media('md', 'max', {
           gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
         }),
@@ -78,7 +78,7 @@ export const colorSwatchesStyles = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
       },
       paletteStep: {
         aspectRatio: '1',
@@ -88,7 +88,7 @@ export const colorSwatchesStyles = typestyles.recipe({
       semanticGroup: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       semanticGroupTitle: {
         margin: 0,
@@ -100,7 +100,7 @@ export const colorSwatchesStyles = typestyles.recipe({
       semanticGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       semanticCard: {
         display: 'flex',
@@ -121,8 +121,8 @@ export const colorSwatchesStyles = typestyles.recipe({
       semanticMeta: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
-        padding: t.space[2].var,
+        gap: t.space.xxs.var,
+        padding: t.space.xs.var,
       },
       semanticToken: {
         fontSize: t.fontSize.xs.var,

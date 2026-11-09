@@ -2,7 +2,7 @@ import { getRegisteredCss } from 'typestyles';
 import { designTokens, tokenValues } from '@var-ui/core';
 
 export type CssVariableEntry = {
-  /** Dot path for design tokens (e.g. `space.4`, `color.tone.accent.foreground`). */
+  /** Dot path for design tokens (e.g. `space.md`, `color.tone.accent.foreground`). */
   tokenPath: string;
   cssVar: string;
   defaultValue?: string;

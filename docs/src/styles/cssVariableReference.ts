@@ -22,13 +22,13 @@ export const cssVariableReferenceStyles = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[8].var,
+        gap: t.space.xxxl.var,
         marginBlock: '1.5rem',
       },
       section: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[4].var,
+        gap: t.space.md.var,
       },
       sectionTitle: {
         margin: 0,
@@ -45,7 +45,7 @@ export const cssVariableReferenceStyles = typestyles.recipe({
       group: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       groupTitle: {
         margin: 0,
@@ -54,7 +54,7 @@ export const cssVariableReferenceStyles = typestyles.recipe({
         color: t.color.text.primary.var,
         display: 'flex',
         alignItems: 'baseline',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       groupCount: {
         fontSize: t.fontSize.sm.var,
@@ -74,7 +74,7 @@ export const cssVariableReferenceStyles = typestyles.recipe({
         fontSize: t.fontSize.sm.var,
         lineHeight: t.lineHeight.normal.var,
         '& th, & td': {
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           textAlign: 'left',
           verticalAlign: 'top',
           borderBottomWidth: t.borderWidth.default.var,

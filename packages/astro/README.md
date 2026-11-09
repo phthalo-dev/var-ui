@@ -173,7 +173,7 @@ import {
   Heading,
 } from '@var-ui/astro';
 ---
-<Layout padding={4}>
+<Layout padding="md">
   <LayoutHeader slot="header" hasDivider>
     <Heading level={3}>Explorer</Heading>
   </LayoutHeader>

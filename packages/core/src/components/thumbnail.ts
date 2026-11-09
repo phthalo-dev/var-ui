@@ -46,8 +46,8 @@ export const thumbnail = typestyles.recipe({
         },
         dismiss: {
           position: 'absolute',
-          top: `calc(${t.space[2].var} * -1)`,
-          insetInlineEnd: `calc(${t.space[2].var} * -1)`,
+          top: `calc(${t.space.xs.var} * -1)`,
+          insetInlineEnd: `calc(${t.space.xs.var} * -1)`,
           display: 'grid',
           placeItems: 'center',
           width: '1.25rem',

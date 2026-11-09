@@ -28,7 +28,7 @@ export const themePlaygroundStyles = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
         height: '100%',
         minHeight: 0,
       },
@@ -51,8 +51,8 @@ export const themePlaygroundStyles = typestyles.recipe({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        gap: t.space[2].var,
-        padding: t.space[3].var,
+        gap: t.space.xs.var,
+        padding: t.space.sm.var,
         borderBottomWidth: t.borderWidth.default.var,
         borderBottomStyle: 'solid',
         borderBottomColor: t.color.border.default.var,
@@ -60,7 +60,7 @@ export const themePlaygroundStyles = typestyles.recipe({
       previewInner: {
         flex: 1,
         minHeight: 0,
-        padding: t.space[4].var,
+        padding: t.space.md.var,
         overflow: 'auto',
       },
       previewFrame: {
@@ -74,7 +74,7 @@ export const themePlaygroundStyles = typestyles.recipe({
       controlGroup: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       controlLabel: {
         fontSize: t.fontSize.sm.var,
@@ -84,23 +84,23 @@ export const themePlaygroundStyles = typestyles.recipe({
       controlTabs: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
         minHeight: 0,
       },
       baseStyles: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[4].var,
+        gap: t.space.md.var,
       },
       colorList: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       colorField: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
       },
       colorFieldLabel: {
         fontSize: t.fontSize.xs.var,
@@ -109,7 +109,7 @@ export const themePlaygroundStyles = typestyles.recipe({
       colorRow: {
         display: 'flex',
         alignItems: 'center',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       colorSwatch: {
         width: '1.5rem',

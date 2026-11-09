@@ -34,7 +34,7 @@ export const checkbox = typestyles.recipe({
         root: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           cursor: 'pointer',
         },
         box: {
@@ -63,7 +63,7 @@ export const checkbox = typestyles.recipe({
         },
         group: {
           display: 'grid',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         groupLabel: {
           fontSize: t.fontSize.md.var,

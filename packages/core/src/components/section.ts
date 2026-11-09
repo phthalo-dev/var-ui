@@ -25,8 +25,8 @@ export const section = typestyles.recipe({
       base: {
         root: {
           display: 'grid',
-          gap: t.space[3].var,
-          padding: t.space[4].var,
+          gap: t.space.sm.var,
+          padding: t.space.md.var,
           ...border(vars.border.var),
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,

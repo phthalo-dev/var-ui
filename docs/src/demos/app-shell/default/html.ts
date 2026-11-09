@@ -3,7 +3,7 @@ import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
-  const s = appShell({ height: 'fill', variant: 'elevated', contentPadding: '0' });
+  const s = appShell({ height: 'fill', variant: 'elevated', contentPadding: 'none' });
   return serializeHtmlTag(
     'div',
     {

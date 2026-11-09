@@ -116,7 +116,7 @@ const defaultContent = docsPageContent();
     <slot name="head" />
   </head>
   <body class={cx('docs-body', bodyClassName)}>
-    <AppShell variant="wash" height="fill" contentPadding={0} mobileBreakpoint="md">
+    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <TopNav slot="topNav" className={cx(nav.root)}>
         <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} />
         {
@@ -178,8 +178,8 @@ const defaultContent = docsPageContent();
 
       {
         sidebarSections ? (
-          <Layout height="fill" padding={0} className={cx(page.siteLayout)}>
-            <LayoutPanel slot="start" side="start" width={280} hasDivider padding={0} scrollable={false}>
+          <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
+            <LayoutPanel slot="start" side="start" width={280} hasDivider padding="none" scrollable={false}>
               <SideNav label="Section navigation" collapsible>
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
               </SideNav>
@@ -214,7 +214,7 @@ const defaultContent = docsPageContent();
             </LayoutContent>
           </Layout>
         ) : (
-          <Layout height="fill" padding={showTocPanel ? 0 : 6} className={cx(page.siteLayout)}>
+          <Layout height="fill" padding={showTocPanel ? 'none' : 'xl'} className={cx(page.siteLayout)}>
             <LayoutContent label="Main content">
               {
                 showTocPanel ? (

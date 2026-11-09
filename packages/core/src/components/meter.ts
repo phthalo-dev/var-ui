@@ -65,8 +65,8 @@ export const meter = typestyles.recipe({
   },
   styles: ({ vars }) => ({
     base: {
-      root: { display: 'grid', gap: t.space[1].var, minWidth: t.size.field.minWidthCompact.var },
-      header: { display: 'flex', justifyContent: 'space-between', gap: t.space[3].var },
+      root: { display: 'grid', gap: t.space.xxs.var, minWidth: t.size.field.minWidthCompact.var },
+      header: { display: 'flex', justifyContent: 'space-between', gap: t.space.sm.var },
       label: { fontSize: t.fontSize.sm.var, fontWeight: t.fontWeight.medium.var },
       valueText: { fontSize: t.fontSize.sm.var, color: t.color.text.secondary.var },
       track: {

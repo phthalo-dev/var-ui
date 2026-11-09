@@ -30,7 +30,7 @@ import { ResizeHandle } from './ResizeHandle';
 function toZonePaddingVariant(
   padding: LayoutPadding | undefined,
 ): NonNullable<LayoutContentVariantProps['padding']> {
-  return padding === 0 ? '0' : 'inherit';
+  return padding === 'none' ? 'none' : 'inherit';
 }
 
 function toCssSize(value: number | string | undefined): string | undefined {
@@ -97,7 +97,7 @@ export type LayoutProps = Omit<ComponentPropsWithRef<'div'>, 'content'> & {
   height?: NonNullable<LayoutVariantProps['height']>;
   /** Constrains header/content/footer inner wrappers via `margin-inline: auto`. */
   contentWidth?: number;
-  /** Outer/inner spacing step for all zones — sets shell CSS vars on the root. Omit for recipe default (`space[4]`). */
+  /** Outer/inner spacing step for all zones — sets shell CSS vars on the root. Omit for recipe default (`space.md`). */
   padding?: LayoutPadding;
   /** Divider default inherited by `LayoutHeader`/`LayoutFooter` when they don't set `hasDivider`. @default false */
   defaultHasDividers?: boolean;
@@ -111,8 +111,8 @@ export type LayoutProps = Omit<ComponentPropsWithRef<'div'>, 'content'> & {
  * ```tsx
  * <Layout
  *   header={<LayoutHeader>Toolbar</LayoutHeader>}
- *   content={<LayoutContent padding={0}><Table /></LayoutContent>}
- *   end={<LayoutPanel hasDivider padding={0}>Inspector</LayoutPanel>}
+ *   content={<LayoutContent padding="none"><Table /></LayoutContent>}
+ *   end={<LayoutPanel hasDivider padding="none">Inspector</LayoutPanel>}
  * />
  * ```
  */

@@ -260,7 +260,7 @@ export const forestTheme = defaultTheme.override({
         base: {
           root: {
             borderBottomWidth: 0,
-            margin: tokens.space[2].var,
+            margin: tokens.space.xs.var,
             borderRadius: tokens.radius.lg.var,
           },
         },
@@ -273,7 +273,7 @@ export const forestTheme = defaultTheme.override({
       styles: ({ tokens }) => ({
         base: {
           root: {
-            margin: tokens.space[2].var,
+            margin: tokens.space.xs.var,
             borderRadius: tokens.radius.lg.var,
             overflow: 'hidden',
           },

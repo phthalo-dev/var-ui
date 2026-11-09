@@ -148,7 +148,7 @@ export default function TokenReferenceTable({ rows }: TokenReferenceTableProps):
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--var-ui-space-4)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--var-ui-space-md)' }}>
       <Toolbar
         label="Token reference filters"
         startContent={

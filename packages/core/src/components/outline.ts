@@ -17,12 +17,12 @@ export const outline = typestyles.recipe({
     return {
       base: {
         root: {
-          paddingInlineStart: t.space[2].var,
+          paddingInlineStart: t.space.xs.var,
           ...borderSide('inline-start', vars.border.var),
         },
         title: {
           margin: 0,
-          marginBottom: t.space[2].var,
+          marginBottom: t.space.xs.var,
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.semibold.var,
           letterSpacing: '0.04em',
@@ -35,7 +35,7 @@ export const outline = typestyles.recipe({
           padding: 0,
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         link: {
           display: 'block',
@@ -54,7 +54,7 @@ export const outline = typestyles.recipe({
           textDecoration: 'none',
         },
         linkNested: {
-          paddingInlineStart: t.space[3].var,
+          paddingInlineStart: t.space.sm.var,
         },
       },
     };

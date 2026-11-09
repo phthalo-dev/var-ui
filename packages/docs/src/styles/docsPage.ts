@@ -27,11 +27,11 @@ export const docsPage = typestyles.recipe({
       pageBody: {
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1fr) 13.75rem',
-        gap: t.space[10].var,
+        gap: t.space.xxl.var,
         alignItems: 'start',
-        paddingInline: t.space[10].var,
-        paddingBlock: t.space[10].var,
-        paddingBottom: t.space[8].var,
+        paddingInline: t.space.xxl.var,
+        paddingBlock: t.space.xxl.var,
+        paddingBottom: t.space.xxxl.var,
         boxSizing: 'border-box',
         minHeight: '100%',
         [belowLg]: {
@@ -48,7 +48,7 @@ export const docsPage = typestyles.recipe({
       content: {
         maxWidth: '60rem',
         margin: '0 auto',
-        paddingBottom: t.space[8].var,
+        paddingBottom: t.space.xxxl.var,
       },
       toc: {
         position: 'sticky',
@@ -69,8 +69,8 @@ export const docsPage = typestyles.recipe({
           content: {
             maxWidth: 'none',
             margin: 0,
-            paddingInline: t.space[10].var,
-            paddingBlock: t.space[10].var,
+            paddingInline: t.space.xxl.var,
+            paddingBlock: t.space.xxl.var,
           },
         },
       },

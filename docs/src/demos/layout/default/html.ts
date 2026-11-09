@@ -53,7 +53,7 @@ export function render(): string {
     'div',
     {
       ...mergeProps(shell.root),
-      style: styleFromAssignments(layoutShellPaddingAssignments(0)),
+      style: styleFromAssignments(layoutShellPaddingAssignments('none')),
       'data-has-header': '',
       'data-has-start': '',
       'data-has-end': '',

@@ -67,7 +67,7 @@ export const pinInput = typestyles.recipe({
         group: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           width: 'fit-content',
           '&[data-disabled]': {
             opacity: t.opacity.muted.var,

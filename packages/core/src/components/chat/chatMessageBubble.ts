@@ -48,7 +48,7 @@ export const chatMessageBubble = typestyles.recipe({
           display: 'inline-flex',
           flexDirection: 'column',
           maxWidth: `min(80%, ${t.size.panel.xl.var})`,
-          padding: `${t.space[3].var} ${t.space[4].var}`,
+          padding: `${t.space.sm.var} ${t.space.md.var}`,
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.senderBackground.var,
           color: vars.senderText.var,
@@ -79,7 +79,7 @@ export const chatMessageBubble = typestyles.recipe({
             root: {
               backgroundColor: 'transparent',
               color: t.color.text.primary.var,
-              padding: `${t.space[1].var} 0`,
+              padding: `${t.space.xxs.var} 0`,
             },
           },
         },

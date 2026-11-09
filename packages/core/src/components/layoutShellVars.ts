@@ -1,9 +1,9 @@
 import { atProperty, type ComponentVarRefTree } from 'typestyles';
 import { designTokens as t } from '../tokens';
 
-export type LayoutPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8;
+export type LayoutPadding = 'none' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxxl';
 
-const shellPadding = t.space[4].var;
+const shellPadding = t.space.md.var;
 
 /**
  * Nested shell var definitions for the `layout` recipe family. Paths flatten to

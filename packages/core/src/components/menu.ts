@@ -96,7 +96,7 @@ export const menu = typestyles.recipe({
             background: vars.popoverBackground.var,
             border: vars.popoverBorder.var,
           }),
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
           minWidth: t.size.panel.xs.var,
         },
         menu: {
@@ -105,13 +105,13 @@ export const menu = typestyles.recipe({
         section: {
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         sectionHeader: {
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
           color: vars.sectionHeaderForeground.var,
-          padding: `${t.space[1].var} ${t.space[3].var}`,
+          padding: `${t.space.xxs.var} ${t.space.sm.var}`,
         },
         item: {
           // Reset UA button/link chrome so the slot works on <button>/<a>
@@ -127,9 +127,9 @@ export const menu = typestyles.recipe({
           textDecoration: 'none',
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           fontSize: t.fontSize.md.var,
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           borderRadius: t.radius.sm.var,
           cursor: 'pointer',
           color: vars.itemForeground.var,
@@ -179,7 +179,7 @@ export const menu = typestyles.recipe({
         },
         separator: {
           height: '0.0625rem',
-          margin: `${t.space[1].var} 0`,
+          margin: `${t.space.xxs.var} 0`,
           backgroundColor: vars.separatorColor.var,
           ...atForcedColors({ backgroundColor: 'CanvasText' }),
         },

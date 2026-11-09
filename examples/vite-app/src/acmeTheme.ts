@@ -88,7 +88,7 @@ export const acmeTheme = createDesignTheme({
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'top right',
             backgroundSize: '40% 40%',
-            padding: t.space[4].var,
+            padding: t.space.md.var,
           },
         },
       }),

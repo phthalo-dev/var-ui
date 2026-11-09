@@ -31,7 +31,7 @@ export const switchStyles = typestyles.recipe({
         root: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           cursor: 'pointer',
         },
         track: {

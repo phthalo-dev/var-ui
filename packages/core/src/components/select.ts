@@ -95,7 +95,7 @@ export const select = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           width: '100%',
           textAlign: 'start',
           boxSizing: 'border-box',

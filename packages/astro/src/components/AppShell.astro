@@ -23,7 +23,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
 const {
   height = 'fill',
   variant = 'elevated',
-  contentPadding = 0,
+  contentPadding = 'none',
   mobileBreakpoint = 'md',
   disabled = false,
   layout = 'default',
@@ -39,7 +39,7 @@ const {
 const s = appShell({
   height,
   variant,
-  contentPadding: `${contentPadding}` as `${AppShellContentPadding}`,
+  contentPadding,
 });
 const hasAside = Astro.slots.has('aside');
 const hasSideNav = Astro.slots.has('sideNav');
