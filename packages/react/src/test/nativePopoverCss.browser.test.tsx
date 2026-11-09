@@ -12,7 +12,7 @@ beforeAll(() => {
   tokens.textContent = `:root {
     --var-ui-duration-slow: 300ms;
     --var-ui-easing-emphasized: linear;
-    --var-ui-space-1: 4px; --var-ui-space-2: 8px; --var-ui-space-3: 12px; --var-ui-space-4: 16px;
+    --var-ui-space-xxs: 4px; --var-ui-space-xs: 8px; --var-ui-space-sm: 12px; --var-ui-space-md: 16px;
     --var-ui-borderWidth-default: 1px;
     --var-ui-radius-md: 6px;
     --var-ui-shadow-md: none;
@@ -68,7 +68,7 @@ test('popover=auto opens below its trigger, offset by the default space token', 
   });
   const pop = await open(m);
   const trg = m.trigger.getBoundingClientRect();
-  near(pop.top, trg.bottom + 8); // --var-ui-space-2
+  near(pop.top, trg.bottom + 8); // --var-ui-space-xs
   near(pop.left, trg.left); // `bottom` = start-aligned
   expect(getComputedStyle(m.popup).position).toBe('fixed');
 });
@@ -92,7 +92,7 @@ test('a listbox popup matches the trigger width through anchor-size', async () =
   });
   const pop = await open(m);
   near(pop.width, 237);
-  near(pop.top, m.trigger.getBoundingClientRect().bottom + 4); // select uses space-1
+  near(pop.top, m.trigger.getBoundingClientRect().bottom + 4); // select uses space-xxs
 });
 
 test('the offset custom property moves the popup', async () => {

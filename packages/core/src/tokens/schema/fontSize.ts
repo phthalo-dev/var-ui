@@ -6,6 +6,6 @@ export const fontSizeTokenSchema = {
   md: atProperty.lengthPercentage,
   lg: atProperty.lengthPercentage,
   xl: atProperty.lengthPercentage,
-  '2xl': atProperty.lengthPercentage,
-  '3xl': atProperty.lengthPercentage,
+  xxl: atProperty.lengthPercentage,
+  xxxl: atProperty.lengthPercentage,
 } as const satisfies TokenSchema;

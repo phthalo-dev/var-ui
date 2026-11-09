@@ -129,7 +129,7 @@ export const dateRangeInput = typestyles.recipe({
         },
         separator: {
           color: vars.descriptionColor.var,
-          padding: `0 ${t.space[1].var}`,
+          padding: `0 ${t.space.xxs.var}`,
         },
         trigger: {
           display: 'inline-flex',
@@ -155,7 +155,7 @@ export const dateRangeInput = typestyles.recipe({
             background: vars.popoverBackground.var,
             border: vars.popoverBorder.var,
           }),
-          padding: t.space[3].var,
+          padding: t.space.sm.var,
         },
         ...calendarChromeSlots,
       },

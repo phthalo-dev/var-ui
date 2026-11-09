@@ -90,7 +90,7 @@ describe('anchored recipes', () => {
     expect(rules(css, sel('end center'), 'position-area: inline-end')).toHaveLength(1);
     const [top] = rules(css, sel('top start'));
     expect(top).toContain('margin: 0');
-    expect(top).toContain('margin-block-end: var(--var-ui-popup-offset, var(--var-ui-space-2))');
+    expect(top).toContain('margin-block-end: var(--var-ui-popup-offset, var(--var-ui-space-xs))');
     expect(top).toContain('transform-origin: bottom left');
     expect(
       rules(css, `[dir="rtl"] .var-ui-popover[data-placement="top start"] {`, 'bottom right'),

@@ -36,8 +36,8 @@ export const copyButton = typestyles.recipe({
         button: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
-          padding: `${t.space[1].var} ${t.space[2].var}`,
+          gap: t.space.xxs.var,
+          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
           borderRadius: t.radius.sm.var,
           border: 'none',
           backgroundColor: 'transparent',

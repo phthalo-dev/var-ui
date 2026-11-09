@@ -16,8 +16,8 @@ const { end } = useResizable({
 
 <Layout
   height="auto"
-  padding={0}
-  content={<LayoutContent padding={0}>{/* list */}</LayoutContent>}
+  padding="none"
+  content={<LayoutContent padding="none">{/* list */}</LayoutContent>}
   end={
     <LayoutPanel resizable={end} hasResizeHandle label="Details" role="complementary">
       Inspector
@@ -28,7 +28,7 @@ const { end } = useResizable({
 import { Layout, LayoutContent, LayoutPanel } from '@var-ui/astro';
 ---
 
-<Layout height="auto" padding={0}>
+<Layout height="auto" padding="none">
   <LayoutPanel slot="start" side="start" width={180} hasDivider>Nav</LayoutPanel>
   <LayoutContent>Main</LayoutContent>
   <LayoutPanel slot="end" side="end" width={240} hasDivider>Inspector</LayoutPanel>

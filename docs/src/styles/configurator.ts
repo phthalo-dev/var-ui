@@ -27,7 +27,7 @@ export const configuratorStyles = typestyles.recipe({
         marginBlock: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       workspace: {
         display: 'grid',
@@ -48,7 +48,7 @@ export const configuratorStyles = typestyles.recipe({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '12rem',
-        padding: t.space[6].var,
+        padding: t.space.xl.var,
         borderRightWidth: t.borderWidth.default.var,
         borderRightStyle: 'solid',
         borderRightColor: t.color.border.default.var,
@@ -68,15 +68,15 @@ export const configuratorStyles = typestyles.recipe({
       controls: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[4].var,
-        padding: t.space[4].var,
+        gap: t.space.md.var,
+        padding: t.space.md.var,
         minWidth: 0,
         backgroundColor: t.color.background.surface.var,
       },
       controlGroup: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       controlLabel: {
         fontSize: t.fontSize.sm.var,
@@ -86,17 +86,17 @@ export const configuratorStyles = typestyles.recipe({
       toneGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       appearanceGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       sizeGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       toneSwatch: {
         position: 'relative',
@@ -150,8 +150,8 @@ export const configuratorStyles = typestyles.recipe({
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.medium.var,
         cursor: 'pointer',
-        paddingInline: t.space[2].var,
-        paddingBlock: t.space[1].var,
+        paddingInline: t.space.xs.var,
+        paddingBlock: t.space.xxs.var,
         '&:hover': {
           borderColor: t.color.border.strong.var,
           backgroundColor: t.color.background.elevated.var,
@@ -172,8 +172,8 @@ export const configuratorStyles = typestyles.recipe({
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.semibold.var,
         cursor: 'pointer',
-        paddingInline: t.space[2].var,
-        paddingBlock: t.space[1].var,
+        paddingInline: t.space.xs.var,
+        paddingBlock: t.space.xxs.var,
         '&:focus-visible': {
           ...focusRing,
         },

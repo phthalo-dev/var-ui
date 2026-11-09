@@ -9,15 +9,15 @@ import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 
 const segmentedSegmentPaddingInline: Record<ControlSize, string> = {
-  sm: t.space[3].var,
-  md: t.space[4].var,
-  lg: t.space[4].var,
+  sm: t.space.sm.var,
+  md: t.space.md.var,
+  lg: t.space.md.var,
 };
 
 /** Track + segment metrics for segmented controls (icon-friendly square segments). */
 function segmentedControlSize(size: ControlSize) {
   const height = controlSizeMetrics[size].height;
-  const trackPadding = t.space[1].var;
+  const trackPadding = t.space.xxs.var;
   return {
     root: {
       boxSizing: 'border-box' as const,
@@ -73,7 +73,7 @@ export const segmentedControl = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'stretch',
           boxSizing: 'border-box',
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
           gap: 0,
           borderRadius: t.radius.lg.var,
           border: 'none',
@@ -88,8 +88,8 @@ export const segmentedControl = typestyles.recipe({
           '&::after': {
             content: '""',
             position: 'absolute',
-            top: t.space[1].var,
-            bottom: t.space[1].var,
+            top: t.space.xxs.var,
+            bottom: t.space.xxs.var,
             insetInlineStart: 0,
             width: vars.indicatorWidth.var,
             borderRadius: t.radius.lg.var,

@@ -66,12 +66,12 @@ export const chip = typestyles.recipe({
         root: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           maxWidth: '100%',
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           lineHeight: 1,
-          padding: `${t.space[1].var} ${t.space[2].var}`,
+          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
           borderRadius: t.radius.full.var,
           ...border(vars.borderColor.var),
           backgroundColor: vars.backgroundColor.var,
@@ -88,7 +88,7 @@ export const chip = typestyles.recipe({
           },
           '&[data-removable]': {
             // Room for the sibling remove button overlaid on the trailing edge.
-            paddingInlineEnd: `calc(${t.space[2].var} + ${t.space[1].var} + 1.25rem)`,
+            paddingInlineEnd: `calc(${t.space.xs.var} + ${t.space.xxs.var} + 1.25rem)`,
           },
           '&[data-selected]': {
             [vars.borderColor.name]: vars.solidBg.var,
@@ -126,10 +126,10 @@ export const chip = typestyles.recipe({
           cursor: 'pointer',
           borderRadius: t.radius.full.var,
           padding: '0.125rem',
-          marginInlineEnd: `calc(${t.space[1].var} * -0.5)`,
+          marginInlineEnd: `calc(${t.space.xxs.var} * -0.5)`,
           '&[data-overlay]': {
             position: 'absolute',
-            insetInlineEnd: t.space[2].var,
+            insetInlineEnd: t.space.xs.var,
             insetBlockStart: '50%',
             transform: 'translateY(-50%)',
             marginInlineEnd: 0,

@@ -9,18 +9,18 @@ export const playgroundSidebarStyles = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[4].var,
-        padding: t.space[4].var,
+        gap: t.space.md.var,
+        padding: t.space.md.var,
       },
       navLinks: {
         display: 'flex',
         flexWrap: 'wrap',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       controlGroup: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       controlLabel: {
         fontSize: t.fontSize.xs.var,
@@ -32,7 +32,7 @@ export const playgroundSidebarStyles = typestyles.recipe({
       editorTabs: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
     },
   }),

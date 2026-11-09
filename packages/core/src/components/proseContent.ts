@@ -77,16 +77,16 @@ export const proseContent = typestyles.recipe({
           '& h1': {
             fontFamily: t.fontFamily.display.var,
             fontStyle: 'italic',
-            fontSize: t.fontSize['3xl'].var,
+            fontSize: t.fontSize.xxxl.var,
             fontWeight: t.fontWeight.bold.var,
             letterSpacing: t.letterSpacing.tight.var,
             lineHeight: 1.25,
             marginTop: 0,
-            marginBottom: t.space[3].var,
+            marginBottom: t.space.sm.var,
             color: t.color.text.primary.var,
             [belowMd]: {
-              fontSize: t.fontSize['2xl'].var,
-              marginBottom: t.space[2].var,
+              fontSize: t.fontSize.xxl.var,
+              marginBottom: t.space.xs.var,
             },
           },
           /**
@@ -96,23 +96,23 @@ export const proseContent = typestyles.recipe({
           '& h2': {
             fontFamily: t.fontFamily.display.var,
             fontStyle: 'italic',
-            fontSize: t.fontSize['2xl'].var,
+            fontSize: t.fontSize.xxl.var,
             fontWeight: t.fontWeight.bold.var,
             letterSpacing: t.letterSpacing.tight.var,
             lineHeight: 1.25,
-            marginTop: t.space[8].var,
-            marginBottom: t.space[3].var,
-            paddingTop: t.space[5].var,
+            marginTop: t.space.xxxl.var,
+            marginBottom: t.space.sm.var,
+            paddingTop: t.space.lg.var,
             borderTop: t.stroke.strong.var,
             color: t.color.text.primary.var,
             [belowMd]: {
               fontSize: t.fontSize['xl'].var,
-              marginTop: t.space[6].var,
-              paddingTop: t.space[4].var,
+              marginTop: t.space.xl.var,
+              paddingTop: t.space.md.var,
             },
           },
           '& > h2:first-of-type, & > h2:first-child': {
-            marginTop: t.space[4].var,
+            marginTop: t.space.md.var,
             paddingTop: 0,
             borderTop: 'none',
           },
@@ -124,43 +124,43 @@ export const proseContent = typestyles.recipe({
             fontSize: t.fontSize['lg'].var,
             fontWeight: t.fontWeight.semibold.var,
             lineHeight: 1.35,
-            marginTop: t.space[5].var,
-            marginBottom: t.space[2].var,
+            marginTop: t.space.lg.var,
+            marginBottom: t.space.xs.var,
             color: t.color.text.primary.var,
             [belowMd]: {
-              marginTop: t.space[4].var,
+              marginTop: t.space.md.var,
             },
           },
           '& h4, & h5, & h6': {
             fontFamily: t.fontFamily.display.var,
             fontSize: t.fontSize.md.var,
             fontWeight: t.fontWeight.semibold.var,
-            marginTop: t.space[4].var,
-            marginBottom: t.space[1].var,
+            marginTop: t.space.md.var,
+            marginBottom: t.space.xxs.var,
             color: t.color.text.primary.var,
             [belowMd]: {
-              marginTop: t.space[3].var,
+              marginTop: t.space.sm.var,
             },
           },
           '& h2, & h3, & h4, & h5, & h6': {
             position: 'relative',
           },
           '& p': {
-            marginBottom: t.space[4].var,
+            marginBottom: t.space.md.var,
             [belowMd]: {
-              marginBottom: t.space[3].var,
+              marginBottom: t.space.sm.var,
             },
           },
           '& ul, & ol': {
-            marginBottom: t.space[3].var,
-            paddingInlineStart: t.space[4].var,
+            marginBottom: t.space.sm.var,
+            paddingInlineStart: t.space.md.var,
             [belowMd]: {
-              marginBottom: t.space[2].var,
-              paddingInlineStart: t.space[3].var,
+              marginBottom: t.space.xs.var,
+              paddingInlineStart: t.space.sm.var,
             },
           },
           '& li': {
-            marginBottom: t.space[1].var,
+            marginBottom: t.space.xxs.var,
           },
           /**
            * Links carry an always-on tinted underline so they're distinguishable from inline `code`
@@ -193,7 +193,7 @@ export const proseContent = typestyles.recipe({
             fontWeight: t.fontWeight.medium.var,
             color: t.color.link.hover.var,
             backgroundColor: vars.inlineCodeBackground.var,
-            padding: `0.0625rem ${t.space[1].var}`,
+            padding: `0.0625rem ${t.space.xxs.var}`,
             borderRadius: t.radius.sm.var,
             whiteSpace: 'nowrap',
           },
@@ -220,14 +220,14 @@ export const proseContent = typestyles.recipe({
             fontSize: t.fontSize.sm.var,
             lineHeight: 1.6,
             backgroundColor: vars.preBackground.var,
-            padding: t.space[3].var,
+            padding: t.space.sm.var,
             borderRadius: t.radius.md.var,
             ...border(vars.preBorder.var),
             overflow: 'auto',
-            marginBottom: t.space[3].var,
+            marginBottom: t.space.sm.var,
             [belowMd]: {
-              padding: t.space[2].var,
-              marginBottom: t.space[2].var,
+              padding: t.space.xs.var,
+              marginBottom: t.space.xs.var,
             },
           },
           '& pre code': {
@@ -246,13 +246,13 @@ export const proseContent = typestyles.recipe({
            * blocks sit adjacent — consecutive examples should read as a pair, not two islands.
            */
           '& [data-codeblock]': {
-            marginBlock: t.space[5].var,
+            marginBlock: t.space.lg.var,
             [belowMd]: {
-              marginBlock: t.space[4].var,
+              marginBlock: t.space.md.var,
             },
           },
           '& [data-codeblock] + [data-codeblock]': {
-            marginTop: t.space[3].var,
+            marginTop: t.space.sm.var,
           },
           '& [data-codeblock]:first-child': {
             marginTop: 0,
@@ -262,20 +262,20 @@ export const proseContent = typestyles.recipe({
           },
           /** Brutalist callout — full ink border + hard shadow offset, no side stripe. */
           '& blockquote': {
-            margin: `${t.space[5].var} 0`,
-            padding: `${t.space[4].var} ${t.space[5].var}`,
+            margin: `${t.space.lg.var} 0`,
+            padding: `${t.space.md.var} ${t.space.lg.var}`,
             ...border(vars.blockquoteBorder.var),
             backgroundColor: vars.blockquoteBackground.var,
             boxShadow: t.shadow.sm.var,
             color: vars.foreground.var,
             fontStyle: 'normal',
             [belowMd]: {
-              margin: `${t.space[4].var} 0`,
-              padding: `${t.space[3].var} ${t.space[4].var}`,
+              margin: `${t.space.md.var} 0`,
+              padding: `${t.space.sm.var} ${t.space.md.var}`,
             },
           },
           '& blockquote p': {
-            marginBottom: t.space[2].var,
+            marginBottom: t.space.xs.var,
           },
           '& blockquote p:last-child': {
             marginBottom: 0,
@@ -284,7 +284,7 @@ export const proseContent = typestyles.recipe({
             fontFamily: t.fontFamily.mono.var,
             fontSize: t.fontSize.sm.var,
             fontWeight: t.fontWeight.medium.var,
-            padding: `0.125rem ${t.space[2].var}`,
+            padding: `0.125rem ${t.space.xs.var}`,
             borderRadius: t.radius.sm.var,
             ...border(t.color.border.strong.var),
             backgroundColor: t.color.background.surface.var,
@@ -298,7 +298,7 @@ export const proseContent = typestyles.recipe({
             fontSize: t.fontSize.sm.var,
             fontWeight: t.fontWeight.medium.var,
             lineHeight: 1.2,
-            padding: `0.125rem ${t.space[2].var}`,
+            padding: `0.125rem ${t.space.xs.var}`,
             borderRadius: t.radius.full.var,
             ...border(),
             backgroundColor: t.color.background.subtle.var,
@@ -329,15 +329,15 @@ export const proseContent = typestyles.recipe({
             ...borderSide('block-start'),
             borderBottom: 'none',
             borderInline: 'none',
-            margin: `${t.space[5].var} 0`,
+            margin: `${t.space.lg.var} 0`,
             [belowMd]: {
-              margin: `${t.space[4].var} 0`,
+              margin: `${t.space.md.var} 0`,
             },
           },
           '& table': {
             width: '100%',
             borderCollapse: 'collapse',
-            marginBlock: `${t.space[4].var} ${t.space[5].var}`,
+            marginBlock: `${t.space.md.var} ${t.space.lg.var}`,
             fontSize: t.fontSize.sm.var,
             ...border(vars.tableBorder.var),
           },
@@ -347,7 +347,7 @@ export const proseContent = typestyles.recipe({
           },
           '& th, & td': {
             textAlign: 'start',
-            padding: `${t.space[2].var} ${t.space[3].var}`,
+            padding: `${t.space.xs.var} ${t.space.sm.var}`,
             ...borderSide('block-end', vars.tableCellBorder.var),
             verticalAlign: 'top',
           },
@@ -364,13 +364,13 @@ export const proseContent = typestyles.recipe({
           },
           '& caption': {
             captionSide: 'bottom',
-            paddingTop: t.space[2].var,
+            paddingTop: t.space.xs.var,
             fontSize: t.fontSize.sm.var,
             color: t.color.text.secondary.var,
             textAlign: 'start',
           },
           '& [data-prose-heading-anchor]': {
-            marginInlineStart: t.space[2].var,
+            marginInlineStart: t.space.xs.var,
             fontWeight: t.fontWeight.medium.var,
             color: t.color.text.secondary.var,
             textDecoration: 'none',
@@ -393,7 +393,7 @@ export const proseContent = typestyles.recipe({
         /** Scroll container for wide GFM tables (wrap HTML manually). */
         tableWrap: {
           overflowX: 'auto',
-          marginBottom: t.space[3].var,
+          marginBottom: t.space.sm.var,
           WebkitOverflowScrolling: 'touch',
         },
         /** Applied with `data-prose-heading-anchor`; visual rules live on `root`. */

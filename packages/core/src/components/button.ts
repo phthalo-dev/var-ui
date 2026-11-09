@@ -74,7 +74,7 @@ export const button = typestyles.recipe({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
         transition: `${t.transition.borderShadow.var}, ${transitionOf('background-color')}, ${transitionOf('transform', 'fast')}`,
         '&:active': {
           transform: 'translateY(0.0625rem)',

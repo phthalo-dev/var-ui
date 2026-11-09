@@ -42,13 +42,13 @@ export const pagination = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: t.space[4].var,
+          gap: t.space.md.var,
           flexWrap: 'wrap',
         },
         controls: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         ellipsis: {
           display: 'inline-flex',
@@ -70,11 +70,11 @@ export const pagination = typestyles.recipe({
         dotsContainer: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         dot: {
-          width: t.space[2].var,
-          height: t.space[2].var,
+          width: t.space.xs.var,
+          height: t.space.xs.var,
           borderWidth: 0,
           padding: 0,
           borderRadius: '50%',
@@ -97,7 +97,7 @@ export const pagination = typestyles.recipe({
         pageSizeGroup: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           fontSize: t.fontSize.sm.var,
           color: vars.textColor.var,
         },
@@ -106,12 +106,12 @@ export const pagination = typestyles.recipe({
         size: {
           sm: {
             ellipsis: { minWidth: '1.5rem', height: '1.5rem', fontSize: t.fontSize.xs.var },
-            dot: { width: t.space[1].var, height: t.space[1].var },
+            dot: { width: t.space.xxs.var, height: t.space.xxs.var },
           },
           md: {},
           lg: {
             ellipsis: { minWidth: '2.5rem', height: '2.5rem', fontSize: t.fontSize.md.var },
-            dot: { width: t.space[2].var, height: t.space[2].var },
+            dot: { width: t.space.xs.var, height: t.space.xs.var },
           },
         },
       },

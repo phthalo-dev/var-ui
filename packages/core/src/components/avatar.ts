@@ -103,18 +103,18 @@ export const avatarGroup = typestyles.recipe({
       base: {
         root: { display: 'inline-flex', alignItems: 'center' },
         item: {
-          marginInlineStart: `calc(${t.space[2].var} * -1)`,
+          marginInlineStart: `calc(${t.space.xs.var} * -1)`,
           borderRadius: '50%',
           boxShadow: `0 0 0 0.125rem ${vars.ringColor.var}`,
           '&:first-child': { marginInlineStart: 0 },
         },
         overflow: {
-          marginInlineStart: `calc(${t.space[2].var} * -1)`,
+          marginInlineStart: `calc(${t.space.xs.var} * -1)`,
           display: 'grid',
           placeItems: 'center',
           minWidth: t.size.control.md.var,
           height: t.size.control.md.var,
-          padding: `0 ${t.space[1].var}`,
+          padding: `0 ${t.space.xxs.var}`,
           borderRadius: '50%',
           backgroundColor: t.color.background.subtle.var,
           boxShadow: `0 0 0 0.125rem ${vars.ringColor.var}`,

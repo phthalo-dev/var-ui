@@ -12,7 +12,7 @@ export default function Preview() {
     >
       <AppShell
         layout="alt"
-        contentPadding={3}
+        contentPadding="sm"
         topNav={
           <TopNav heading={<TopNav.Heading heading="Acme" />}>
             <TopNav.Item label="Home" href="/" selected />

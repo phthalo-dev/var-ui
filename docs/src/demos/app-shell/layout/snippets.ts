@@ -5,7 +5,7 @@ export const snippets = {
 
 <AppShell
   layout="alt"
-  contentPadding={3}
+  contentPadding="sm"
   topNav={<TopNav heading={<TopNav.Heading heading="Acme" />}>…</TopNav>}
   sideNav={<SideNav header={<SideNav.Heading heading="Workspace" />}>…</SideNav>}
 >

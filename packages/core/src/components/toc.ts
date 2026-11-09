@@ -6,19 +6,19 @@ import { transitionOf } from '../internal/motion';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 const belowXl = breakpoint('xl', 'max');
-const listIndent = t.space[3].var;
-const nestedIndent = t.space[2].var;
+const listIndent = t.space.sm.var;
+const nestedIndent = t.space.xs.var;
 const indicatorTransition = `${transitionOf('transform')}, ${transitionOf(['height', 'opacity'], 'fast')}`;
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const tocVarDefinitions = {
   stickyTop: {
     ...atProperty.length,
-    value: t.space[5].var,
+    value: t.space.lg.var,
   },
   stickyMaxHeightOffset: {
     ...atProperty.length,
-    value: t.space[6].var,
+    value: t.space.xl.var,
   },
   titleColor: {
     ...atProperty.color,
@@ -84,9 +84,9 @@ export const toc = typestyles.recipe({
         root: {
           position: 'sticky',
           top: vars.stickyTop.var,
-          paddingBlock: `${t.space[6].var} ${t.space[8].var}`,
-          paddingInlineStart: t.space[4].var,
-          paddingInlineEnd: t.space[5].var,
+          paddingBlock: `${t.space.xl.var} ${t.space.xxxl.var}`,
+          paddingInlineStart: t.space.md.var,
+          paddingInlineEnd: t.space.lg.var,
           maxHeight: `calc(100dvh - ${vars.stickyTop.var} - ${vars.stickyMaxHeightOffset.var})`,
           overflow: 'auto',
           [belowXl]: {
@@ -94,7 +94,7 @@ export const toc = typestyles.recipe({
           },
         },
         title: {
-          margin: `0 0 ${t.space[4].var}`,
+          margin: `0 0 ${t.space.md.var}`,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           color: vars.titleColor.var,
@@ -146,7 +146,7 @@ export const toc = typestyles.recipe({
         },
         link: {
           display: 'block',
-          paddingBlock: t.space[1].var,
+          paddingBlock: t.space.xxs.var,
           fontSize: t.fontSize.sm.var,
           lineHeight: t.lineHeight.normal.var,
           fontWeight: t.fontWeight.normal.var,

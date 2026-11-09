@@ -68,7 +68,7 @@ export const rating = typestyles.recipe({
         group: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           width: 'fit-content',
           margin: 0,
           padding: 0,

@@ -33,8 +33,8 @@ export const emptyState = typestyles.recipe({
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          gap: t.space[2].var,
-          padding: `${t.space[8].var} ${t.space[4].var}`,
+          gap: t.space.xs.var,
+          padding: `${t.space.xxxl.var} ${t.space.md.var}`,
         },
         icon: {
           display: 'grid',
@@ -44,7 +44,7 @@ export const emptyState = typestyles.recipe({
           borderRadius: '50%',
           color: vars.iconColor.var,
           backgroundColor: vars.iconBackground.var,
-          marginBottom: t.space[1].var,
+          marginBottom: t.space.xxs.var,
         },
         title: {
           margin: 0,
@@ -58,7 +58,7 @@ export const emptyState = typestyles.recipe({
           maxWidth: '40ch',
         },
         action: {
-          marginTop: t.space[2].var,
+          marginTop: t.space.xs.var,
         },
       },
     };

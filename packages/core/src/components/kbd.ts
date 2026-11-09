@@ -27,7 +27,7 @@ export const kbd = typestyles.recipe({
     return {
       base: {
         display: 'inline-block',
-        padding: `0.0625rem ${t.space[1].var}`,
+        padding: `0.0625rem ${t.space.xxs.var}`,
         fontFamily: t.fontFamily.mono.var,
         fontSize: t.fontSize.xs.var,
         fontWeight: t.fontWeight.medium.var,

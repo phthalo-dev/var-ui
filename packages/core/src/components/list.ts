@@ -59,8 +59,8 @@ export const list = typestyles.recipe({
       value: t.color.background.elevated.var,
     },
     dividerColor: { ...atProperty.color, value: t.color.border.default.var },
-    itemPaddingY: { ...atProperty.length, value: t.space[2].var },
-    itemPaddingX: { ...atProperty.length, value: t.space[3].var },
+    itemPaddingY: { ...atProperty.length, value: t.space.xs.var },
+    itemPaddingX: { ...atProperty.length, value: t.space.sm.var },
   },
   styles: ({ vars }) => {
     return {
@@ -72,22 +72,22 @@ export const list = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: vars.root.var,
-          '&[data-list-style="disc"]': { listStyle: 'disc', paddingInlineStart: t.space[5].var },
+          '&[data-list-style="disc"]': { listStyle: 'disc', paddingInlineStart: t.space.lg.var },
           '&[data-list-style="decimal"]': {
             listStyle: 'decimal',
-            paddingInlineStart: t.space[5].var,
+            paddingInlineStart: t.space.lg.var,
           },
         },
         header: {
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
           color: vars.labelColor.var,
-          padding: `${t.space[2].var} ${vars.itemPaddingX.var}`,
+          padding: `${t.space.xs.var} ${vars.itemPaddingX.var}`,
         },
         item: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
           position: 'relative',
           padding: `${vars.itemPaddingY.var} ${vars.itemPaddingX.var}`,
           color: vars.labelColor.var,
@@ -135,15 +135,15 @@ export const list = typestyles.recipe({
         density: {
           compact: {
             item: {
-              [vars.itemPaddingY.name]: t.space[1].var,
-              [vars.itemPaddingX.name]: t.space[2].var,
+              [vars.itemPaddingY.name]: t.space.xxs.var,
+              [vars.itemPaddingX.name]: t.space.xs.var,
             },
           },
           balanced: {},
           spacious: {
             item: {
-              [vars.itemPaddingY.name]: t.space[3].var,
-              [vars.itemPaddingX.name]: t.space[4].var,
+              [vars.itemPaddingY.name]: t.space.sm.var,
+              [vars.itemPaddingX.name]: t.space.md.var,
             },
           },
         },

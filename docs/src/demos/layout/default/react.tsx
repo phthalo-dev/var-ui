@@ -25,9 +25,9 @@ export default function Preview() {
     <div style={{ minHeight: '15rem' }}>
       <Layout
         height="auto"
-        padding={0}
+        padding="none"
         content={
-          <LayoutContent padding={0}>
+          <LayoutContent padding="none">
             <div
               style={{
                 display: 'flex',
@@ -57,7 +57,7 @@ export default function Preview() {
               resizeHandleLabel="Resize inspector"
               label="Details"
               role="complementary"
-              padding={0}
+              padding="none"
             >
               <div style={{ padding: '0.75rem' }}>
                 <Text size="sm">Selected: {selected.label}</Text>

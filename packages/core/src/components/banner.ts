@@ -38,9 +38,9 @@ export const banner = typestyles.recipe({
         root: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
           width: '100%',
-          padding: `${t.space[3].var} ${t.space[4].var}`,
+          padding: `${t.space.sm.var} ${t.space.md.var}`,
           fontSize: t.fontSize.md.var,
           lineHeight: 1.5,
         },
@@ -54,7 +54,7 @@ export const banner = typestyles.recipe({
           minWidth: 0,
           display: 'flex',
           flexWrap: 'wrap',
-          columnGap: t.space[2].var,
+          columnGap: t.space.xs.var,
         },
         title: {
           fontWeight: t.fontWeight.semibold.var,
@@ -62,7 +62,7 @@ export const banner = typestyles.recipe({
         },
         actions: {
           display: 'flex',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           flexShrink: 0,
         },
         dismiss: {
@@ -72,7 +72,7 @@ export const banner = typestyles.recipe({
           color: 'inherit',
           cursor: 'pointer',
           display: 'inline-flex',
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
           borderRadius: t.radius.sm.var,
           '&:hover': { backgroundColor: appearanceSurface(vars, 'subtle').backgroundColor },
           '&:focus-visible': {

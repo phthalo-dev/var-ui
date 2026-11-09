@@ -46,10 +46,10 @@ export const hoverCard = typestyles.recipe({
           fontWeight: t.fontWeight.semibold.var,
           color: vars.titleForeground.var,
           margin: 0,
-          padding: `${t.space[4].var} ${t.space[4].var} ${t.space[3].var}`,
+          padding: `${t.space.md.var} ${t.space.md.var} ${t.space.sm.var}`,
         },
         content: {
-          padding: `${t.space[3].var} ${t.space[4].var} ${t.space[4].var}`,
+          padding: `${t.space.sm.var} ${t.space.md.var} ${t.space.md.var}`,
           outline: 'none',
         },
       },

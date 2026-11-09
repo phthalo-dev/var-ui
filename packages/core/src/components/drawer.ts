@@ -100,8 +100,8 @@ export const drawer = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: t.space[3].var,
-          padding: t.space[4].var,
+          gap: t.space.sm.var,
+          padding: t.space.md.var,
           ...borderSide('block-end', vars.panelBorder.var),
           color: vars.headerColor.var,
           flexShrink: 0,
@@ -116,7 +116,7 @@ export const drawer = typestyles.recipe({
           flex: 1,
           minHeight: 0,
           overflowY: 'auto',
-          padding: t.space[4].var,
+          padding: t.space.md.var,
         },
         closeButton: {
           appearance: 'none',
@@ -127,8 +127,8 @@ export const drawer = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: t.space[1].var,
-          marginInlineEnd: `calc(${t.space[1].var} * -1)`,
+          padding: t.space.xxs.var,
+          marginInlineEnd: `calc(${t.space.xxs.var} * -1)`,
           borderRadius: t.radius.sm.var,
           flexShrink: 0,
           '&:hover': {
@@ -148,7 +148,7 @@ export const drawer = typestyles.recipe({
           md: {},
           lg: {
             popup: {
-              [vars.panelWidth.name]: t.size.panel['2xl'].var,
+              [vars.panelWidth.name]: t.size.panel.xxl.var,
               [vars.panelHeight.name]: '70vh',
             },
           },

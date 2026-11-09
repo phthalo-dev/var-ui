@@ -86,8 +86,8 @@ const newWavePrimitiveValues = {
     md: '0.9375rem',
     lg: '1.125rem',
     xl: '1.5rem',
-    '2xl': '1.875rem',
-    '3xl': '2.375rem',
+    xxl: '1.875rem',
+    xxxl: '2.375rem',
   },
   fontWeight: {
     normal: '500',

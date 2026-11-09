@@ -67,12 +67,12 @@ export const tabs = typestyles.recipe({
       base: {
         root: {
           display: 'grid',
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
         },
         list: {
           position: 'relative',
           display: 'inline-flex',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           [vars.indicatorX.name]: '0rem',
           [vars.indicatorWidth.name]: '0rem',
           [vars.indicatorOpacity.name]: '0',
@@ -107,7 +107,7 @@ export const tabs = typestyles.recipe({
         tab: {
           border: 'none',
           backgroundColor: 'transparent',
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           color: vars.tabColor.var,
           cursor: 'pointer',
           fontSize: t.fontSize.md.var,
@@ -117,7 +117,7 @@ export const tabs = typestyles.recipe({
           },
         },
         panel: {
-          padding: t.space[3].var,
+          padding: t.space.sm.var,
         },
       },
     };

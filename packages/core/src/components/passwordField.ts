@@ -72,7 +72,7 @@ export const passwordField = typestyles.recipe({
         inputWrapper: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           boxSizing: 'border-box',
           ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
@@ -113,7 +113,7 @@ export const passwordField = typestyles.recipe({
           flexShrink: 0,
           border: 'none',
           margin: 0,
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
           borderRadius: t.radius.sm.var,
           backgroundColor: 'transparent',
           color: vars.toggleColor.var,

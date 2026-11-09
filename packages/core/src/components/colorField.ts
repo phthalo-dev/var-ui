@@ -83,7 +83,7 @@ export const colorField = typestyles.recipe({
         inputWrapper: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           boxSizing: 'border-box',
           ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,

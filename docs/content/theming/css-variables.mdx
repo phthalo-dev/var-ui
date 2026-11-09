@@ -5,7 +5,7 @@ description: Theme and style var-ui with CSS custom properties — design tokens
 
 # CSS variables
 
-var-ui themes are CSS custom properties. **Design tokens** (`--var-ui-space-4`,
+var-ui themes are CSS custom properties. **Design tokens** (`--var-ui-space-md`,
 `--var-ui-color-accent-default`) are the global vocabulary recipes and layouts share.
 **Component variables** (`--var-ui-button-background`) are scoped to a single recipe
 and inherit through nested theme boundaries.
@@ -26,7 +26,7 @@ Reference tokens in your CSS:
 
 ```css
 .marketing-hero {
-  padding: var(--var-ui-space-8);
+  padding: var(--var-ui-space-xxxl);
   background: var(--var-ui-color-background-subtle);
   color: var(--var-ui-color-text-primary);
   border-radius: var(--var-ui-radius-lg);
@@ -52,7 +52,7 @@ Typed refs mirror the same names in TypeScript:
 ```ts
 import { designTokens } from '@var-ui/core';
 
-designTokens.space[8].var; // var(--var-ui-space-8)
+designTokens.space.xxxl.var; // var(--var-ui-space-xxxl)
 designTokens.color.tone.accent.foreground.var; // var(--var-ui-color-tone-accent-foreground)
 ```
 

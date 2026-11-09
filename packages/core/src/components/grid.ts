@@ -24,7 +24,7 @@ export const grid = typestyles.recipe({
     gap,
   },
   vars: {
-    gap: { ...atProperty.length, value: t.space[4].var },
+    gap: { ...atProperty.length, value: t.space.md.var },
     minColumnWidth: { ...atProperty.length, value: t.size.field.minWidth.var },
   },
   styles: ({ vars }) => {
@@ -47,11 +47,11 @@ export const grid = typestyles.recipe({
         },
         gap: {
           none: { [vars.gap.name]: '0rem' },
-          xs: { [vars.gap.name]: t.space[1].var },
-          sm: { [vars.gap.name]: t.space[2].var },
-          md: { [vars.gap.name]: t.space[4].var },
-          lg: { [vars.gap.name]: t.space[5].var },
-          xl: { [vars.gap.name]: t.space[8].var },
+          xs: { [vars.gap.name]: t.space.xxs.var },
+          sm: { [vars.gap.name]: t.space.xs.var },
+          md: { [vars.gap.name]: t.space.md.var },
+          lg: { [vars.gap.name]: t.space.lg.var },
+          xl: { [vars.gap.name]: t.space.xxxl.var },
         },
       },
     };

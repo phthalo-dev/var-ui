@@ -41,7 +41,7 @@ const sliderVarDefinitions = {
   },
   trackHeight: {
     ...atProperty.length,
-    value: t.space[1].var,
+    value: t.space.xxs.var,
   },
   thumbSize: {
     ...atProperty.length,
@@ -76,14 +76,14 @@ export const slider = typestyles.recipe({
       base: {
         root: {
           ...chrome.root,
-          minWidth: `calc(15 * ${t.space[4].var})`,
+          minWidth: `calc(15 * ${t.space.md.var})`,
         },
         label: {
           ...chrome.label,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
         },
         description: chrome.description,
         error: chrome.error,

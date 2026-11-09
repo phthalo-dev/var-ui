@@ -120,7 +120,7 @@ export const toggleGroup = typestyles.recipe({
         },
         ghost: {
           root: {
-            gap: t.space[1].var,
+            gap: t.space.xxs.var,
             [vars.background.name]: 'transparent',
             [vars.border.name]: 'transparent',
           },

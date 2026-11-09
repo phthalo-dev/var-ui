@@ -11,14 +11,12 @@ const appShellHeight = variant.enum(['fill', 'auto', 'stretch'], { default: 'fil
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
   default: 'wash',
 });
-const appShellContentPaddingValues = ['0', '1', '2', '3', '4', '5', '6', '8'] as const;
-const appShellContentPadding = variant.enum(appShellContentPaddingValues, { default: '0' });
-
-/** Turns the numeric-string axis options into the public numeric space steps. */
-type NumericSteps<S extends string> = S extends `${infer Step extends number}` ? Step : never;
+const appShellContentPadding = variant.enum(['none', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxxl'], {
+  default: 'none',
+});
 
 /** `appShell` `contentPadding` variant — design-token space steps. */
-export type AppShellContentPadding = NumericSteps<VariantOptions<typeof appShellContentPadding>>;
+export type AppShellContentPadding = VariantOptions<typeof appShellContentPadding>;
 
 /**
  * Application chrome shell: optional banner, top nav, side nav, main, and
@@ -30,7 +28,7 @@ export type AppShellContentPadding = NumericSteps<VariantOptions<typeof appShell
  * `sideNavWidth`) — override via variants or theme `components.appShell`.
  *
  * ```tsx
- * const s = appShell({ height: 'fill', variant: 'surface', contentPadding: '0' });
+ * const s = appShell({ height: 'fill', variant: 'surface', contentPadding: 'none' });
  * <div className={s.root} data-mobile={isMobile || undefined} data-aside={hasAside ? '' : undefined}>
  *   …
  * </div>
@@ -90,13 +88,13 @@ export const appShell = typestyles.recipe({
           border: 0,
           '&:focus-visible': {
             position: 'fixed',
-            top: t.space[2].var,
-            insetInlineStart: t.space[2].var,
+            top: t.space.xs.var,
+            insetInlineStart: t.space.xs.var,
             zIndex: t.zIndex.max.var,
             width: 'auto',
             height: 'auto',
             margin: 0,
-            padding: `${t.space[2].var} ${t.space[3].var}`,
+            padding: `${t.space.xs.var} ${t.space.sm.var}`,
             overflow: 'visible',
             clip: 'auto',
             whiteSpace: 'normal',
@@ -308,14 +306,14 @@ export const appShell = typestyles.recipe({
           },
         },
         contentPadding: {
-          '0': { root: { [vars.contentPadding.name]: '0rem' } },
-          '1': { root: { [vars.contentPadding.name]: t.space[1].var } },
-          '2': { root: { [vars.contentPadding.name]: t.space[2].var } },
-          '3': { root: { [vars.contentPadding.name]: t.space[3].var } },
-          '4': { root: { [vars.contentPadding.name]: t.space[4].var } },
-          '5': { root: { [vars.contentPadding.name]: t.space[5].var } },
-          '6': { root: { [vars.contentPadding.name]: t.space[6].var } },
-          '8': { root: { [vars.contentPadding.name]: t.space[8].var } },
+          none: { root: { [vars.contentPadding.name]: '0rem' } },
+          xxs: { root: { [vars.contentPadding.name]: t.space.xxs.var } },
+          xs: { root: { [vars.contentPadding.name]: t.space.xs.var } },
+          sm: { root: { [vars.contentPadding.name]: t.space.sm.var } },
+          md: { root: { [vars.contentPadding.name]: t.space.md.var } },
+          lg: { root: { [vars.contentPadding.name]: t.space.lg.var } },
+          xl: { root: { [vars.contentPadding.name]: t.space.xl.var } },
+          xxxl: { root: { [vars.contentPadding.name]: t.space.xxxl.var } },
         },
       },
     };

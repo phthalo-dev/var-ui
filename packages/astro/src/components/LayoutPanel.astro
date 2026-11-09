@@ -19,7 +19,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
 function toZonePaddingVariant(
   padding: LayoutPadding | undefined,
 ): NonNullable<LayoutPanelVariantProps['padding']> {
-  return padding === 0 ? '0' : 'inherit';
+  return padding === 'none' ? 'none' : 'inherit';
 }
 
 function toCssSize(value: number | string | undefined): string | undefined {

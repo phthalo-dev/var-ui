@@ -69,11 +69,11 @@ A global rule locks page scroll while any modal dialog is open: `html:has(dialog
 
 Anchored popups name their trigger with `anchor-name` and place themselves with `position-anchor`, `position-area` and `position-try-fallbacks`, so the browser flips them near the viewport edge. These custom properties tune them:
 
-| Variable                    | Meaning                                                         |
-| --------------------------- | --------------------------------------------------------------- |
-| `--var-ui-popup-offset`     | Gap between the trigger and the popup (falls back to `space-2`) |
-| `--var-ui-popup-max-height` | Maximum height (falls back to the viewport minus a margin)      |
-| `--var-ui-popup-max-width`  | Maximum width (falls back to the viewport minus a margin)       |
+| Variable                    | Meaning                                                          |
+| --------------------------- | ---------------------------------------------------------------- |
+| `--var-ui-popup-offset`     | Gap between the trigger and the popup (falls back to `space-xs`) |
+| `--var-ui-popup-max-height` | Maximum height (falls back to the viewport minus a margin)       |
+| `--var-ui-popup-max-width`  | Maximum width (falls back to the viewport minus a margin)        |
 
 `data-placement` holds the _requested_ placement; the browser may flip it. Select, Combobox and MultiSelector popups match the trigger width with `anchor-size(width)`.
 

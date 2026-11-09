@@ -41,13 +41,13 @@ export const chatToolCalls = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
-        marginTop: t.space[2].var,
+        gap: t.space.xxs.var,
+        marginTop: t.space.xs.var,
       },
       header: {
         display: 'flex',
         alignItems: 'center',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
         minHeight: '1.5rem',
         cursor: 'pointer',
         userSelect: 'none',
@@ -87,12 +87,12 @@ export const chatToolCalls = typestyles.recipe({
       list: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
-        paddingInlineStart: t.space[4].var,
+        gap: t.space.xxs.var,
+        paddingInlineStart: t.space.md.var,
       },
       detail: {
-        paddingInlineStart: t.space[4].var,
-        paddingBottom: t.space[2].var,
+        paddingInlineStart: t.space.md.var,
+        paddingBottom: t.space.xs.var,
       },
     },
     variants: {

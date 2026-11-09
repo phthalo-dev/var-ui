@@ -33,17 +33,17 @@ export const breadcrumbs = typestyles.recipe({
           listStyle: 'none',
           margin: 0,
           padding: 0,
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         item: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           fontSize: t.fontSize.sm.var,
           color: vars.textColor.var,
           '&:not(:last-child)::after': {
             content: vars.separator.var,
-            marginInlineStart: t.space[1].var,
+            marginInlineStart: t.space.xxs.var,
             color: vars.textColor.var,
           },
           '&[data-current]': {
@@ -54,12 +54,12 @@ export const breadcrumbs = typestyles.recipe({
         ellipsisItem: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           fontSize: t.fontSize.sm.var,
           color: vars.textColor.var,
           '&:not(:last-child)::after': {
             content: vars.separator.var,
-            marginInlineStart: t.space[1].var,
+            marginInlineStart: t.space.xxs.var,
             color: vars.textColor.var,
           },
         },

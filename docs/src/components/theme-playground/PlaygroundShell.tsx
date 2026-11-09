@@ -27,14 +27,14 @@ export default function PlaygroundShell({ framework }: PlaygroundShellProps) {
     <div className={shell.root.className} data-playground-shell>
       <Layout
         height="fill"
-        padding={0}
+        padding="none"
         className={shell.layout.className}
         start={
           <>
             <LayoutPanel
               resizable={start}
               hasDivider
-              padding={0}
+              padding="none"
               scrollable
               label="Theme editor"
               role="complementary"
@@ -45,7 +45,7 @@ export default function PlaygroundShell({ framework }: PlaygroundShellProps) {
           </>
         }
         content={
-          <LayoutContent padding={0}>
+          <LayoutContent padding="none">
             <ThemePlayground framework={framework} />
           </LayoutContent>
         }

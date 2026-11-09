@@ -14,7 +14,7 @@ export const chipGroup = typestyles.recipe({
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
     },
   }),

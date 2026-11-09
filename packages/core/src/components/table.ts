@@ -66,8 +66,8 @@ export const table = typestyles.recipe({
     borderColor: { ...atProperty.color, value: t.color.border.default.var },
     stripeBg: { ...atProperty.color, value: t.color.background.subtle.var },
     hoverBg: { ...atProperty.color, value: t.color.background.elevated.var },
-    cellPaddingY: { ...atProperty.length, value: t.space[2].var },
-    cellPaddingX: { ...atProperty.length, value: t.space[3].var },
+    cellPaddingY: { ...atProperty.length, value: t.space.xs.var },
+    cellPaddingX: { ...atProperty.length, value: t.space.sm.var },
     columnWidth: { syntax: '*', value: 'auto' },
   },
   styles: ({ vars }) => {
@@ -104,7 +104,7 @@ export const table = typestyles.recipe({
         caption: {
           captionSide: 'top',
           textAlign: 'start',
-          padding: `${t.space[2].var} ${vars.cellPaddingX.var}`,
+          padding: `${t.space.xs.var} ${vars.cellPaddingX.var}`,
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           color: vars.captionColor.var,
@@ -146,14 +146,14 @@ export const table = typestyles.recipe({
           color: vars.headerColor.var,
         },
         empty: {
-          padding: t.space[8].var,
+          padding: t.space.xxxl.var,
           textAlign: 'center',
           color: vars.captionColor.var,
         },
         sortButton: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           background: 'none',
           border: 'none',
           padding: 0,
@@ -170,23 +170,23 @@ export const table = typestyles.recipe({
         density: {
           compact: {
             headerCell: {
-              [vars.cellPaddingY.name]: t.space[1].var,
-              [vars.cellPaddingX.name]: t.space[2].var,
+              [vars.cellPaddingY.name]: t.space.xxs.var,
+              [vars.cellPaddingX.name]: t.space.xs.var,
             },
             cell: {
-              [vars.cellPaddingY.name]: t.space[1].var,
-              [vars.cellPaddingX.name]: t.space[2].var,
+              [vars.cellPaddingY.name]: t.space.xxs.var,
+              [vars.cellPaddingX.name]: t.space.xs.var,
             },
           },
           balanced: {},
           spacious: {
             headerCell: {
-              [vars.cellPaddingY.name]: t.space[3].var,
-              [vars.cellPaddingX.name]: t.space[4].var,
+              [vars.cellPaddingY.name]: t.space.sm.var,
+              [vars.cellPaddingX.name]: t.space.md.var,
             },
             cell: {
-              [vars.cellPaddingY.name]: t.space[3].var,
-              [vars.cellPaddingX.name]: t.space[4].var,
+              [vars.cellPaddingY.name]: t.space.sm.var,
+              [vars.cellPaddingX.name]: t.space.md.var,
             },
           },
         },

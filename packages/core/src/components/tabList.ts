@@ -63,7 +63,7 @@ export const tabList = typestyles.recipe({
           position: 'relative',
           display: 'inline-flex',
           alignItems: 'stretch',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           '&[data-orientation="vertical"]': {
             flexDirection: 'column',
           },
@@ -86,7 +86,7 @@ export const tabList = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           border: 'none',
           backgroundColor: 'transparent',
           color: vars.tabColor.var,
@@ -97,7 +97,7 @@ export const tabList = typestyles.recipe({
           outline: 'none',
           whiteSpace: 'nowrap',
           paddingBlock: 0,
-          paddingInline: t.space[3].var,
+          paddingInline: t.space.sm.var,
           '&:hover': {
             backgroundColor: vars.tabHoverBackground.var,
           },
@@ -117,8 +117,8 @@ export const tabList = typestyles.recipe({
         },
         indicator: {
           position: 'absolute',
-          insetInlineStart: t.space[2].var,
-          insetInlineEnd: t.space[2].var,
+          insetInlineStart: t.space.xs.var,
+          insetInlineEnd: t.space.xs.var,
           bottom: 0,
           height: '0.125rem',
           borderRadius: t.radius.sm.var,
@@ -132,8 +132,8 @@ export const tabList = typestyles.recipe({
           '[data-orientation="vertical"] &': {
             insetInlineStart: 0,
             insetInlineEnd: 'auto',
-            top: t.space[2].var,
-            bottom: t.space[2].var,
+            top: t.space.xs.var,
+            bottom: t.space.xs.var,
             width: '0.125rem',
             height: 'auto',
           },
@@ -144,7 +144,7 @@ export const tabList = typestyles.recipe({
         menuTrigger: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
           border: 'none',
           backgroundColor: 'transparent',
           color: vars.tabColor.var,
@@ -154,7 +154,7 @@ export const tabList = typestyles.recipe({
           outline: 'none',
           whiteSpace: 'nowrap',
           paddingBlock: 0,
-          paddingInline: t.space[3].var,
+          paddingInline: t.space.sm.var,
           '&:hover': {
             backgroundColor: vars.tabHoverBackground.var,
           },

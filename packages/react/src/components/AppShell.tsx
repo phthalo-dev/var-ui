@@ -65,7 +65,7 @@ export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children
   height?: NonNullable<AppShellVariantProps['height']>;
   /** @default 'elevated' */
   variant?: NonNullable<AppShellVariantProps['variant']>;
-  /** Main content padding — design-token space step. @default 0 */
+  /** Main content padding — design-token space step. @default 'none' */
   contentPadding?: AppShellContentPadding;
   /** Viewport width below which `sideNav` hides and `data-mobile` is set on the root. `'none'` never goes mobile. @default 'md' */
   mobileBreakpoint?: AppShellMobileBreakpoint;
@@ -74,12 +74,6 @@ export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children
   /** Ref to the root element: the `<div>` shell, or the `<main>` landmark when `disabled`. */
   ref?: Ref<HTMLElement>;
 };
-
-function toContentPaddingVariant(
-  padding: AppShellContentPadding | undefined,
-): `${AppShellContentPadding}` {
-  return `${padding ?? 0}` as `${AppShellContentPadding}`;
-}
 
 /**
  * Application chrome: optional banner, top nav, side nav, main content, and
@@ -122,7 +116,7 @@ export function AppShell({
   const s = appShell({
     height,
     variant,
-    contentPadding: toContentPaddingVariant(contentPadding),
+    contentPadding: contentPadding ?? 'none',
   });
 
   const effectiveHeaderHidden = headerHidden ?? (headroomEnabled ? !pinned : false);

@@ -54,7 +54,7 @@ export const toggleButton = typestyles.recipe({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
         transition: t.transition.controlSurface.var,
         '&:hover': {
           backgroundColor: t.color.background.subtle.var,

@@ -98,7 +98,7 @@ export const combobox = typestyles.recipe({
         inputWrapper: {
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           width: '100%',
           boxSizing: 'border-box',
           ...border(vars.inputBorder.var),
@@ -128,7 +128,7 @@ export const combobox = typestyles.recipe({
           color: t.color.text.secondary.var,
           cursor: 'pointer',
           borderRadius: t.radius.sm.var,
-          padding: t.space[1].var,
+          padding: t.space.xxs.var,
           '&[data-hovered]': {
             backgroundColor: t.color.background.subtle.var,
           },
@@ -139,7 +139,7 @@ export const combobox = typestyles.recipe({
         empty: {
           fontSize: t.fontSize.sm.var,
           color: t.color.text.secondary.var,
-          padding: `${t.space[2].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var}`,
         },
       },
       variants: {

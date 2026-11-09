@@ -44,10 +44,10 @@ export const popover = typestyles.recipe({
           fontWeight: t.fontWeight.semibold.var,
           color: vars.titleForeground.var,
           margin: 0,
-          padding: `${t.space[3].var} ${t.space[3].var} ${t.space[2].var}`,
+          padding: `${t.space.sm.var} ${t.space.sm.var} ${t.space.xs.var}`,
         },
         content: {
-          padding: `${t.space[2].var} ${t.space[3].var} ${t.space[3].var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.sm.var}`,
           outline: 'none',
         },
       },

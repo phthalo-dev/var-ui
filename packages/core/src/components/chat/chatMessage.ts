@@ -22,7 +22,7 @@ export const chatMessage = typestyles.recipe({
       root: {
         display: 'flex',
         alignItems: 'flex-start',
-        gap: t.space[2].var,
+        gap: t.space.xs.var,
       },
       avatar: {
         flexShrink: 0,
@@ -30,7 +30,7 @@ export const chatMessage = typestyles.recipe({
       header: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
       },
       name: {
         fontSize: t.fontSize.sm.var,
@@ -40,7 +40,7 @@ export const chatMessage = typestyles.recipe({
       content: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
         minWidth: 0,
       },
       metadata: {

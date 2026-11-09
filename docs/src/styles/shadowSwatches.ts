@@ -21,13 +21,13 @@ export const shadowSwatchesStyles = typestyles.recipe({
       root: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[8].var,
+        gap: t.space.xxxl.var,
         marginBlock: '1.5rem',
       },
       section: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
       },
       sectionTitle: {
         margin: 0,
@@ -44,7 +44,7 @@ export const shadowSwatchesStyles = typestyles.recipe({
       grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))',
-        gap: t.space[3].var,
+        gap: t.space.sm.var,
       },
       card: {
         display: 'flex',
@@ -61,7 +61,7 @@ export const shadowSwatchesStyles = typestyles.recipe({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '6.5rem',
-        padding: t.space[5].var,
+        padding: t.space.lg.var,
         backgroundColor: t.color.background.subtle.var,
         borderBottomWidth: t.borderWidth.default.var,
         borderBottomStyle: 'solid',
@@ -76,8 +76,8 @@ export const shadowSwatchesStyles = typestyles.recipe({
       meta: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space[1].var,
-        padding: t.space[2].var,
+        gap: t.space.xxs.var,
+        padding: t.space.xs.var,
       },
       token: {
         fontSize: t.fontSize.xs.var,

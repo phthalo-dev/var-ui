@@ -34,13 +34,13 @@ export const fieldset = typestyles.recipe({
     legendColor: { ...atProperty.color, value: t.color.text.primary.var },
     descriptionColor: { ...atProperty.color, value: t.color.text.secondary.var },
     errorColor: { ...atProperty.color, value: t.color.tone.danger.foreground.var },
-    gap: { ...atProperty.length, value: t.space[3].var },
+    gap: { ...atProperty.length, value: t.space.sm.var },
   },
   styles: ({ vars }) => ({
     base: {
       root: {
         display: 'grid',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
         minInlineSize: 0,
         margin: 0,
         padding: 0,
@@ -78,11 +78,11 @@ export const fieldset = typestyles.recipe({
     variants: {
       gap: {
         none: { root: { [vars.gap.name]: '0rem' } },
-        xs: { root: { [vars.gap.name]: t.space[1].var } },
-        sm: { root: { [vars.gap.name]: t.space[2].var } },
-        md: { root: { [vars.gap.name]: t.space[3].var } },
-        lg: { root: { [vars.gap.name]: t.space[5].var } },
-        xl: { root: { [vars.gap.name]: t.space[8].var } },
+        xs: { root: { [vars.gap.name]: t.space.xxs.var } },
+        sm: { root: { [vars.gap.name]: t.space.xs.var } },
+        md: { root: { [vars.gap.name]: t.space.sm.var } },
+        lg: { root: { [vars.gap.name]: t.space.lg.var } },
+        xl: { root: { [vars.gap.name]: t.space.xxxl.var } },
       },
       orientation: {
         horizontal: {},

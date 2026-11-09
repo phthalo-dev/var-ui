@@ -21,7 +21,7 @@ export const surface = typestyles.recipe({
   vars: {
     padding: {
       ...atProperty.length,
-      value: t.space[4].var,
+      value: t.space.md.var,
     },
   },
   styles: ({ vars }) => {
@@ -34,8 +34,8 @@ export const surface = typestyles.recipe({
       },
       variants: {
         padding: {
-          sm: { [vars.padding.name]: t.space[2].var },
-          md: { [vars.padding.name]: t.space[4].var },
+          sm: { [vars.padding.name]: t.space.xs.var },
+          md: { [vars.padding.name]: t.space.md.var },
         },
       },
     };

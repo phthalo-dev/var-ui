@@ -35,23 +35,23 @@ export const carousel = typestyles.recipe({
   styles: ({ vars }) => {
     return {
       base: {
-        root: { display: 'grid', gap: t.space[3].var },
+        root: { display: 'grid', gap: t.space.sm.var },
         viewport: {
           display: 'grid',
           gridAutoFlow: 'column',
           gridAutoColumns: vars.itemWidth.var,
-          gap: t.space[3].var,
+          gap: t.space.sm.var,
           overflowX: 'auto',
           overscrollBehaviorX: 'contain',
           scrollSnapType: 'x mandatory',
-          scrollPaddingInline: t.space[1].var,
-          paddingBlock: t.space[1].var,
+          scrollPaddingInline: t.space.xxs.var,
+          paddingBlock: t.space.xxs.var,
           '&:focus-visible': {
             ...focusRing,
           },
         },
         item: { scrollSnapAlign: 'start', minWidth: 0 },
-        controls: { display: 'flex', gap: t.space[2].var, justifyContent: 'flex-end' },
+        controls: { display: 'flex', gap: t.space.xs.var, justifyContent: 'flex-end' },
         control: {
           appearance: 'none',
           display: 'inline-flex',

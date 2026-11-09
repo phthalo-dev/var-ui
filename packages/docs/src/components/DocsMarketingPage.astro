@@ -68,7 +68,7 @@ const page = docsMarketingPage();
     <slot name="head" />
   </head>
   <body class={cx('docs-body', bodyClassName)}>
-    <AppShell variant="wash" height="fill" contentPadding={0} mobileBreakpoint="md">
+    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <TopNav slot="topNav" className={cx(nav.root)}>
         {
           Astro.slots.has('brand') ? (
@@ -127,7 +127,7 @@ const page = docsMarketingPage();
         ) : null
       }
 
-      <Layout height="fill" padding={0} className={cx(page.siteLayout)}>
+      <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
         <LayoutContent label="Main content">
           <main {...mergeProps(page.main)}>
             <slot />

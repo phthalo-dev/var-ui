@@ -52,8 +52,8 @@ export const alert = typestyles.recipe({
         root: {
           display: 'flex',
           alignItems: 'flex-start',
-          gap: t.space[3].var,
-          padding: t.space[4].var,
+          gap: t.space.sm.var,
+          padding: t.space.md.var,
           borderRadius: t.radius.md.var,
           lineHeight: 1.55,
         },
@@ -80,7 +80,7 @@ export const alert = typestyles.recipe({
           color: 'inherit',
         },
         action: {
-          marginTop: t.space[2].var,
+          marginTop: t.space.xs.var,
         },
         actionLink: {
           fontSize: t.fontSize.md.var,
@@ -113,7 +113,7 @@ export const alert = typestyles.recipe({
           },
         },
         contentGap: {
-          spaced: { content: { marginTop: t.space[1].var } },
+          spaced: { content: { marginTop: t.space.xxs.var } },
           flush: { content: { marginTop: 0 } },
         },
       },

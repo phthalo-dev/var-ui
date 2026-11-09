@@ -5,9 +5,9 @@ const FULL_EXTRACTION_FIXTURE = `
 @layer components {
 .var-ui-button { color: red; }
 }
-@property --var-ui-space-0 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --var-ui-space-none { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @font-face { font-family: "Newsreader"; src: url('/fonts/newsreader-latin.woff2') format('woff2'); }
-.theme-var-ui-forest { color-scheme: light dark; --var-ui-space-0: 0px; }
+.theme-var-ui-forest { color-scheme: light dark; --var-ui-space-none: 0px; }
 .theme-var-ui-forest .var-ui-side-nav { margin: 8px; }
 `;
 

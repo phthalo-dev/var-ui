@@ -55,7 +55,7 @@ export const badge = typestyles.recipe({
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.semibold.var,
         lineHeight: 1,
-        padding: `${t.space[1].var} ${t.space[2].var}`,
+        padding: `${t.space.xxs.var} ${t.space.xs.var}`,
         borderRadius: t.radius.full.var,
         ...border(vars.borderColor.var),
         backgroundColor: vars.backgroundColor.var,

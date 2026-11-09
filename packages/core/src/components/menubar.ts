@@ -30,7 +30,7 @@ export const menubar = typestyles.recipe({
       root: {
         display: 'inline-flex',
         alignItems: 'center',
-        gap: t.space[1].var,
+        gap: t.space.xxs.var,
         boxSizing: 'border-box',
       },
       trigger: {

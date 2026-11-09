@@ -64,9 +64,9 @@ export const tree = typestyles.recipe({
       ...atProperty.color,
       value: t.color.tone.accent.subtleBackground.var,
     },
-    indentSize: { ...atProperty.length, value: t.space[4].var },
-    rowPaddingY: { ...atProperty.length, value: t.space[2].var },
-    rowPaddingX: { ...atProperty.length, value: t.space[2].var },
+    indentSize: { ...atProperty.length, value: t.space.md.var },
+    rowPaddingY: { ...atProperty.length, value: t.space.xs.var },
+    rowPaddingX: { ...atProperty.length, value: t.space.xs.var },
   },
   styles: ({ vars }) => {
     return {
@@ -92,7 +92,7 @@ export const tree = typestyles.recipe({
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           padding: `${vars.rowPaddingY.var} ${vars.rowPaddingX.var}`,
           borderRadius: t.radius.md.var,
           color: vars.labelColor.var,
@@ -138,7 +138,7 @@ export const tree = typestyles.recipe({
           background: 'transparent',
           textDecoration: 'none',
           '&[data-inset="after-toggle"]': {
-            insetInlineStart: `calc(${t.size.icon.sm.var} + ${t.space[2].var})`,
+            insetInlineStart: `calc(${t.size.icon.sm.var} + ${t.space.xs.var})`,
           },
         },
         label: {
@@ -171,15 +171,15 @@ export const tree = typestyles.recipe({
         density: {
           compact: {
             row: {
-              [vars.rowPaddingY.name]: t.space[1].var,
-              [vars.rowPaddingX.name]: t.space[2].var,
+              [vars.rowPaddingY.name]: t.space.xxs.var,
+              [vars.rowPaddingX.name]: t.space.xs.var,
             },
           },
           balanced: {},
           spacious: {
             row: {
-              [vars.rowPaddingY.name]: t.space[3].var,
-              [vars.rowPaddingX.name]: t.space[4].var,
+              [vars.rowPaddingY.name]: t.space.sm.var,
+              [vars.rowPaddingX.name]: t.space.md.var,
             },
           },
         },

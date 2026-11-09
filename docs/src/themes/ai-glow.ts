@@ -92,8 +92,8 @@ const aiGlowPrimitiveValues = {
     md: '0.9375rem',
     lg: '1.0625rem',
     xl: '1.375rem',
-    '2xl': '1.75rem',
-    '3xl': '2.25rem',
+    xxl: '1.75rem',
+    xxxl: '2.25rem',
   },
   fontWeight: {
     normal: '400',

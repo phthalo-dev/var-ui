@@ -29,12 +29,12 @@ export const radio = typestyles.recipe({
       base: {
         group: {
           display: 'grid',
-          gap: t.space[1].var,
+          gap: t.space.xxs.var,
         },
         item: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space[2].var,
+          gap: t.space.xs.var,
           cursor: 'pointer',
         },
         control: {
