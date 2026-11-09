@@ -200,7 +200,7 @@ export const menu = typestyles.recipe({
          * item lines up with the trigger item. `translate` leaves the enter/exit `transform` alone.
          */
         submenuPopover: {
-          translate: `0 calc(-1 * ${t.space[1].var})`,
+          translate: `0 calc(-1 * ${t.space.xxs.var})`,
         },
         /** Trailing indicator of a submenu trigger item; flips in right-to-left. */
         submenuChevron: {
