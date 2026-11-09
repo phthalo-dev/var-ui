@@ -1,18 +1,18 @@
 {
   "button-only": {
-    "jsKb": 312.8,
+    "jsKb": 313.7,
     "cssKb": 147.7
   },
   "form-kit": {
-    "jsKb": 458,
+    "jsKb": 458.9,
     "cssKb": 167.7
   },
   "date-kit": {
-    "jsKb": 513,
+    "jsKb": 513.9,
     "cssKb": 167.1
   },
   "gallery": {
-    "jsKb": 1006.3,
+    "jsKb": 1007.1,
     "cssKb": 589.9
   }
 }
