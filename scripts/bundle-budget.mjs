@@ -54,6 +54,14 @@ const FORBIDDEN_JS_MARKERS = {
   'button-only': ['var-ui-calendar', 'var-ui-command-palette', 'var-ui-file-tree'],
 };
 
+/**
+ * Fixtures built with `compile: true` whose client bundle should contain none of the typestyles
+ * runtime (recipes become `typestyles/lite` plan handles). The gallery still keeps part of it:
+ * themes/tokens aren't compiled yet, so it is not listed.
+ */
+const ZERO_RUNTIME_FIXTURES = new Set(['button-only', 'form-kit', 'date-kit']);
+const TYPESTYLES_RUNTIME_MARKER = 'createTypeStyles';
+
 /** CSS that must not appear in minimal fixtures: unused components cost no CSS. */
 const FORBIDDEN_CSS_MARKERS = {
   'button-only': ['.var-ui-calendar', '.var-ui-command-palette', '.var-ui-file-tree'],
@@ -132,6 +140,12 @@ function measureFixture(name, config) {
   if (!isRuntimeInjectionDisabled(jsSource)) {
     throw new Error(
       `[${name}] TypeStyles runtime CSS injection does not appear disabled in JS bundle`,
+    );
+  }
+
+  if (ZERO_RUNTIME_FIXTURES.has(name) && jsSource.includes(TYPESTYLES_RUNTIME_MARKER)) {
+    throw new Error(
+      `[${name}] JS bundle still contains the typestyles runtime ("${TYPESTYLES_RUNTIME_MARKER}"). Is \`compile: true\` set, and did the build warn about modules it couldn't compile?`,
     );
   }
 
