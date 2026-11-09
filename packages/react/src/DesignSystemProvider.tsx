@@ -14,6 +14,11 @@ import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect';
 
 export type DesignSystemProviderProps = {
   children: ReactNode;
+  /**
+   * Initial color mode when uncontrolled. `'system'` follows the OS preference through CSS
+   * (`prefers-color-scheme`) and pins no `data-color-mode`, so server and client render the same.
+   * @default 'system'
+   */
   defaultColorMode?: ColorMode;
   colorMode?: ColorMode;
   onColorModeChange?: (colorMode: ColorMode) => void;
@@ -38,7 +43,7 @@ export type DesignSystemProviderProps = {
 
 export function DesignSystemProvider({
   children,
-  defaultColorMode = 'light',
+  defaultColorMode = 'system',
   colorMode: controlledColorMode,
   onColorModeChange,
   customTheme,

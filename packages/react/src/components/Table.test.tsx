@@ -109,6 +109,21 @@ describe('Table', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
+  it('marks a selected Row with data-selected only (aria-selected is invalid on a plain table row)', () => {
+    render(
+      <Table>
+        <Table.Body>
+          <Table.Row selected>
+            <Table.Cell>Song</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>,
+    );
+    const row = screen.getByRole('row');
+    expect(row.hasAttribute('data-selected')).toBe(true);
+    expect(row.hasAttribute('aria-selected')).toBe(false);
+  });
+
   it('keeps a caller aria-selected on Row when selected is unset', () => {
     render(
       <Table>

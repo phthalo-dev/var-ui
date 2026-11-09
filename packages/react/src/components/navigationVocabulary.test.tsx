@@ -286,7 +286,7 @@ describe('Table', () => {
     );
     expect(container.querySelector('tbody th[scope="row"]')).toBeTruthy();
     const row = container.querySelector('tbody tr')!;
-    expect(row.getAttribute('aria-selected')).toBe('true');
+    expect(row.hasAttribute('aria-selected')).toBe(false);
     expect(row.hasAttribute('data-selected')).toBe(true);
   });
 });
