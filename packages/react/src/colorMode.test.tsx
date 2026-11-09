@@ -166,6 +166,25 @@ describe('useColorMode wrapper color-scheme', () => {
     expect(wrapper.hasAttribute('data-color-mode')).toBe(false);
   });
 
+  it('defaults to system: follows the OS and pins no data-color-mode', () => {
+    stubMatchMedia(true);
+    const { result } = renderHook(() => useColorMode(), {
+      wrapper: ({ children }) => <DesignSystemProvider>{children}</DesignSystemProvider>,
+    });
+    expect(result.current.colorMode).toBe('system');
+    expect(result.current.resolvedColorMode).toBe('dark');
+    vi.unstubAllGlobals();
+
+    const { container } = render(
+      <DesignSystemProvider>
+        <span>child</span>
+      </DesignSystemProvider>,
+    );
+    expect((container.firstElementChild as HTMLElement).hasAttribute('data-color-mode')).toBe(
+      false,
+    );
+  });
+
   it('sets data-color-mode on the wrapper for an explicit light or dark preference', () => {
     const { container } = render(
       <DesignSystemProvider defaultColorMode="light">

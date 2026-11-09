@@ -69,6 +69,11 @@ export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
 export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 /** Remaining props (`onClick`, `onDoubleClick`, `data-*`, `aria-*`, `id`, …) are forwarded to the `<tr>`. */
 export type TableRowProps = ComponentPropsWithRef<'tr'> & {
+  /**
+   * Styles the row as selected (`data-selected`). It sets no ARIA: `aria-selected` is not valid
+   * on a plain table row, so convey selection with the row's checkbox (see `useTableSelection`).
+   * Pass `aria-selected` yourself if you render the table as a `role="grid"`.
+   */
   selected?: boolean;
 };
 /** Remaining props (`onClick`, `data-*`, `aria-*`, `headers`, …) are forwarded to the `<td>`/`<th>`. */
@@ -200,7 +205,6 @@ export function TableRow({
       {...rest}
       ref={ref}
       {...mergeProps(s.row, className)}
-      aria-selected={selected ?? rest['aria-selected']}
       data-selected={selected ? '' : undefined}
     >
       {children}
