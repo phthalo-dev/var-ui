@@ -1,14 +1,14 @@
 import type { DemoSnippets } from '../../types';
 
 export const snippets = {
-  react: `import { Chip, ChipGroup, Pill } from '@var-ui/react';
+  react: `import { Chip, ChipGroup } from '@var-ui/react';
 
 <ChipGroup multiple value={values} onValueChange={setValues} tone="accent">
   <Chip value="react">React</Chip>
   <Chip value="vue">Vue</Chip>
 </ChipGroup>
 
-<Pill onRemove={() => remove('docs')}>Documentation</Pill>`,
+<Chip onRemove={() => remove('docs')}>Documentation</Chip>`,
   astro: `---
 import { Chip } from '@var-ui/astro';
 ---

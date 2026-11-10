@@ -59,6 +59,7 @@ export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children
   /**
    * When `true` (default), a hidden header still reserves grid space.
    * When `false`, the top row collapses so main expands into the header band.
+   * @default true
    */
   headerOffset?: boolean;
   /** @default 'fill' */

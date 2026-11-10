@@ -13,7 +13,7 @@ import { render as renderCenterDefault } from './center/default/html';
 import { render as renderHiddenHideMd } from './hidden/hide-md/html';
 import { render as renderHiddenShowMd } from './hidden/show-md/html';
 import { render as renderDirectionRtl } from './direction/rtl/html';
-import { render as renderClickableCardDefault } from './clickable-card/default/html';
+import { render as renderCardLink } from './card/link/html';
 import { render as renderCodeBlockDefault } from './code-block/default/html';
 import { render as renderDividerDefault } from './divider/default/html';
 import { render as renderEmptyStateDefault } from './empty-state/default/html';
@@ -101,7 +101,7 @@ const htmlDemos = {
   'empty-state.default': renderEmptyStateDefault,
   'avatar.default': renderAvatarDefault,
   'card.default': renderCardDefault,
-  'clickable-card.default': renderClickableCardDefault,
+  'card.link': renderCardLink,
   'carousel.default': renderCarouselDefault,
   'thumbnail.default': renderThumbnailDefault,
   'timestamp.default': renderTimestampDefault,

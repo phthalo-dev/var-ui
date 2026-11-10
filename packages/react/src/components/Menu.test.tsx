@@ -302,6 +302,105 @@ describe('Menu', () => {
   });
 });
 
+describe('Menu single choice (value / defaultValue / onValueChange)', () => {
+  function renderChoice(props: {
+    value?: string | null;
+    defaultValue?: string | null;
+    onValueChange?: (value: string | null) => void;
+  }) {
+    return wrap(
+      <Menu.Root {...props}>
+        <Menu.Trigger>
+          <button type="button">Sort</button>
+        </Menu.Trigger>
+        <Menu.Popup aria-label="Sort by">
+          <Menu.Item id="name">Name</Menu.Item>
+          <Menu.Item id="date">Date</Menu.Item>
+          <Menu.Submenu label="More">
+            <Menu.Item id="size">Size</Menu.Item>
+          </Menu.Submenu>
+        </Menu.Popup>
+      </Menu.Root>,
+    );
+  }
+
+  const open = async () => {
+    await userEvent.click(screen.getByRole('button', { name: 'Sort' }));
+    await screen.findByRole('menu', { name: 'Sort' });
+  };
+
+  it('renders menuitemradio items with a check slot and checks defaultValue', async () => {
+    renderChoice({ defaultValue: 'date' });
+    await open();
+    const name = screen.getByRole('menuitemradio', { name: 'Name' });
+    const date = screen.getByRole('menuitemradio', { name: 'Date' });
+    expect(date.getAttribute('aria-checked')).toBe('true');
+    expect(name.getAttribute('aria-checked')).toBe('false');
+    expect(date.querySelector('[data-var-ui-menu-item-check]')).not.toBeNull();
+    // A submenu trigger opens its menu; it is never a choice.
+    const more = screen.getByRole('menuitem', { name: 'More' });
+    expect(more.hasAttribute('aria-checked')).toBe(false);
+  });
+
+  it('checks the chosen item and reports it (uncontrolled)', async () => {
+    const onValueChange = vi.fn();
+    renderChoice({ defaultValue: null, onValueChange });
+    await open();
+    expect(screen.getByRole('menuitemradio', { name: 'Name' }).getAttribute('aria-checked')).toBe(
+      'false',
+    );
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Name' }));
+    expect(onValueChange).toHaveBeenCalledWith('name');
+    await open();
+    expect(screen.getByRole('menuitemradio', { name: 'Name' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+
+  it('is controlled by value', async () => {
+    const onValueChange = vi.fn();
+    renderChoice({ value: 'name', onValueChange });
+    await open();
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Date' }));
+    expect(onValueChange).toHaveBeenCalledWith('date');
+    await open();
+    // The parent did not update `value`, so Name stays checked.
+    expect(screen.getByRole('menuitemradio', { name: 'Name' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+
+  it('keeps plain menuitem roles and no check slot without value / defaultValue', async () => {
+    renderChoice({});
+    await open();
+    expect(screen.queryAllByRole('menuitemradio')).toHaveLength(0);
+    expect(document.querySelector('[data-var-ui-menu-item-check]')).toBeNull();
+  });
+
+  it('Menu.FromSections forwards defaultValue', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>View</Button>}
+        aria-label="View"
+        defaultValue="grid"
+        sections={[
+          {
+            items: [
+              { id: 'list', label: 'List' },
+              { id: 'grid', label: 'Grid' },
+            ],
+          },
+        ]}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'View' }));
+    await screen.findByRole('menu', { name: 'View' });
+    expect(screen.getByRole('menuitemradio', { name: 'Grid' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+});
+
 describe('Menu.Submenu (API shape)', () => {
   function renderSubmenu(onAction = vi.fn()) {
     return wrap(

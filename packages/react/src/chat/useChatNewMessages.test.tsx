@@ -23,7 +23,7 @@ describe('useChatNewMessages', () => {
     (globalThis as { ResizeObserver: unknown }).ResizeObserver = FakeResizeObserver;
     FakeResizeObserver.instances = [];
     const onResize = vi.fn();
-    const { result } = renderHook(() => useChatNewMessages({ isLocked: true, onResize }));
+    const { result } = renderHook(() => useChatNewMessages({ locked: true, onResize }));
 
     const el = document.createElement('div');
     Object.defineProperty(el, 'scrollHeight', { value: 100, configurable: true });
@@ -43,7 +43,7 @@ describe('useChatNewMessages', () => {
   it('sets hasNewMessages when unlocked and content grows, and dismiss clears it', () => {
     (globalThis as { ResizeObserver: unknown }).ResizeObserver = FakeResizeObserver;
     FakeResizeObserver.instances = [];
-    const { result } = renderHook(() => useChatNewMessages({ isLocked: false }));
+    const { result } = renderHook(() => useChatNewMessages({ locked: false }));
 
     const el = document.createElement('div');
     Object.defineProperty(el, 'scrollHeight', { value: 100, configurable: true });
@@ -63,11 +63,11 @@ describe('useChatNewMessages', () => {
     expect(result.current.hasNewMessages).toBe(false);
   });
 
-  it('clears hasNewMessages when isLocked transitions to true', () => {
+  it('clears hasNewMessages when locked transitions to true', () => {
     (globalThis as { ResizeObserver: unknown }).ResizeObserver = FakeResizeObserver;
     FakeResizeObserver.instances = [];
-    const { result, rerender } = renderHook(({ isLocked }) => useChatNewMessages({ isLocked }), {
-      initialProps: { isLocked: false },
+    const { result, rerender } = renderHook(({ locked }) => useChatNewMessages({ locked }), {
+      initialProps: { locked: false },
     });
 
     const el = document.createElement('div');
@@ -82,7 +82,7 @@ describe('useChatNewMessages', () => {
     });
     expect(result.current.hasNewMessages).toBe(true);
 
-    rerender({ isLocked: true });
+    rerender({ locked: true });
 
     expect(result.current.hasNewMessages).toBe(false);
   });

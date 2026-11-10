@@ -13,7 +13,7 @@ import { snippets as centerDefaultSnippets } from './center/default/snippets';
 import { snippets as hiddenHideMdSnippets } from './hidden/hide-md/snippets';
 import { snippets as hiddenShowMdSnippets } from './hidden/show-md/snippets';
 import { snippets as directionRtlSnippets } from './direction/rtl/snippets';
-import { snippets as clickableCardDefaultSnippets } from './clickable-card/default/snippets';
+import { snippets as cardLinkSnippets } from './card/link/snippets';
 import { snippets as codeBlockDefaultSnippets } from './code-block/default/snippets';
 import { snippets as dividerDefaultSnippets } from './divider/default/snippets';
 import { snippets as emptyStateDefaultSnippets } from './empty-state/default/snippets';
@@ -270,7 +270,7 @@ export const DEMO_IDS = [
   'empty-state.default',
   'avatar.default',
   'card.default',
-  'clickable-card.default',
+  'card.link',
   'carousel.default',
   'thumbnail.default',
   'timestamp.default',
@@ -491,7 +491,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'empty-state.default': emptyStateDefaultSnippets,
   'avatar.default': avatarDefaultSnippets,
   'card.default': cardDefaultSnippets,
-  'clickable-card.default': clickableCardDefaultSnippets,
+  'card.link': cardLinkSnippets,
   'carousel.default': carouselDefaultSnippets,
   'thumbnail.default': thumbnailDefaultSnippets,
   'timestamp.default': timestampDefaultSnippets,
@@ -712,7 +712,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'empty-state.default': () => import('./empty-state/default/react'),
   'avatar.default': () => import('./avatar/default/react'),
   'card.default': () => import('./card/default/react'),
-  'clickable-card.default': () => import('./clickable-card/default/react'),
+  'card.link': () => import('./card/link/react'),
   'carousel.default': () => import('./carousel/default/react'),
   'thumbnail.default': () => import('./thumbnail/default/react'),
   'timestamp.default': () => import('./timestamp/default/react'),
@@ -1129,10 +1129,10 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     snippets: demoSnippets['card.default'],
     react: reactDemoLoaders['card.default'],
   },
-  'clickable-card.default': {
-    id: 'clickable-card.default',
-    snippets: demoSnippets['clickable-card.default'],
-    react: reactDemoLoaders['clickable-card.default'],
+  'card.link': {
+    id: 'card.link',
+    snippets: demoSnippets['card.link'],
+    react: reactDemoLoaders['card.link'],
   },
   'carousel.default': {
     id: 'carousel.default',

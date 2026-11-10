@@ -51,7 +51,7 @@ export type DemoId =
   | 'empty-state.default'
   | 'avatar.default'
   | 'card.default'
-  | 'clickable-card.default'
+  | 'card.link'
   | 'carousel.default'
   | 'thumbnail.default'
   | 'timestamp.default'

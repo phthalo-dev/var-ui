@@ -1,19 +1,19 @@
 import type { DemoSnippets } from '../../types';
 
 export const snippets = {
-  react: `import { ClickableCard } from '@var-ui/react';
+  react: `import { Card } from '@var-ui/react';
 
-<ClickableCard
+<Card
   href="#"
   title="Theming guide"
   description="Override any token with plain CSS custom properties."
   hint="5 min read"
 />`,
   astro: `---
-import { ClickableCard } from '@var-ui/astro';
+import { Card } from '@var-ui/astro';
 ---
 
-<ClickableCard
+<Card
   href="#"
   title="Theming guide"
   description="Override any token with plain CSS custom properties."

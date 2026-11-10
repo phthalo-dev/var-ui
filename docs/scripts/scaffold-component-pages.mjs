@@ -422,27 +422,6 @@ const previewUrl = '…';
       'import { Card } from \'@var-ui/react\';\n\n<Card title="Static card">Plain content surface.</Card>',
   },
   {
-    slug: 'clickable-card',
-    name: 'ClickableCard',
-    description: 'Card that navigates on press.',
-    importLine: "import { ClickableCard } from '@var-ui/react';",
-    demoImports: ["import { ClickableCard } from '@var-ui/react';"],
-    demoReturn: `<ClickableCard
-      href="#"
-      title="Theming guide"
-      description="Override any token with plain CSS custom properties."
-      hint="5 min read"
-    />`,
-    codeExample: `import { ClickableCard } from '@var-ui/react';
-
-<ClickableCard
-  href="#"
-  title="Theming guide"
-  description="Override any token with plain CSS custom properties."
-  hint="5 min read"
-/>`,
-  },
-  {
     slug: 'carousel',
     name: 'Carousel',
     description: 'Horizontally scrollable content strip.',

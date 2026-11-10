@@ -1,7 +1,7 @@
 /**
- * Guard for the public prop vocabulary (PR 2, rule 9): no exported component may expose
- * react-aria (RAC) leftovers such as `isDisabled`, `onPress`, `selectedKey` or
- * `onSelectionChange`. Uses the TypeScript compiler API over `src/index.ts`, so it also
+ * Guard for the public prop vocabulary (PR 2, rule 9): no exported component, and no exported
+ * hook's options object, may expose react-aria (RAC) leftovers such as `isDisabled`, `onPress`,
+ * `selectedKey` or `onSelectionChange`. Uses the TypeScript compiler API over `src/index.ts`, so it also
  * catches names that leak through un-written-out types (`Omit<AriaXProps, ...>`).
  */
 import path from 'node:path';
@@ -62,8 +62,10 @@ function collectViolations(): { checked: number; violations: string[] } {
   let checked = 0;
   for (const exported of checker.getExportsOfModule(moduleSymbol)) {
     const name = exported.getName();
-    // Components are PascalCase; hooks (`useX`), helpers and constants are not.
-    if (!/^[A-Z]/.test(name)) continue;
+    // Components are PascalCase; hooks are `useX` (their options object is checked). Helpers and
+    // constants are neither.
+    const isHook = /^use[A-Z]/.test(name);
+    if (!/^[A-Z]/.test(name) && !isHook) continue;
     const resolved =
       exported.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(exported) : exported;
     if (!(resolved.flags & (ts.SymbolFlags.Function | ts.SymbolFlags.Variable))) continue;
@@ -85,6 +87,9 @@ function collectViolations(): { checked: number; violations: string[] } {
         const param = signature.getParameters()[0];
         if (!param) continue;
         const propsType = checker.getTypeOfSymbolAtLocation(param, decl);
+        // A hook's positional primitive (`useMediaQuery(query: string)`) has no props to check, and
+        // its prototype methods (`String.prototype.isWellFormed`) would read as `is*` names.
+        if (isHook && !(propsType.flags & ts.TypeFlags.Object) && !propsType.isUnion()) continue;
         checked++;
         for (const prop of new Set(propNamesOf(checker, propsType))) {
           if (!FORBIDDEN_PATTERN.test(prop) && !FORBIDDEN_NAMES.has(prop)) continue;
@@ -97,7 +102,7 @@ function collectViolations(): { checked: number; violations: string[] } {
   return { checked, violations: [...new Set(violations)].sort() };
 }
 
-describe('public component props', () => {
+describe('public component props and hook options', () => {
   it('expose no react-aria vocabulary (is*, onPress*, selectedKey(s), onSelectionChange)', () => {
     const { checked, violations } = collectViolations();
     // Sanity: make sure the walk actually found the component surface.

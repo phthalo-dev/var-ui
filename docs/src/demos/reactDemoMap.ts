@@ -14,7 +14,7 @@ import CenterDefault from './center/default/react';
 import HiddenHideMd from './hidden/hide-md/react';
 import HiddenShowMd from './hidden/show-md/react';
 import DirectionRtl from './direction/rtl/react';
-import ClickableCardDefault from './clickable-card/default/react';
+import CardLink from './card/link/react';
 import CodeBlockDefault from './code-block/default/react';
 import DividerDefault from './divider/default/react';
 import EmptyStateDefault from './empty-state/default/react';
@@ -270,7 +270,7 @@ export const reactDemoMap = {
   'empty-state.default': EmptyStateDefault,
   'avatar.default': AvatarDefault,
   'card.default': CardDefault,
-  'clickable-card.default': ClickableCardDefault,
+  'card.link': CardLink,
   'carousel.default': CarouselDefault,
   'thumbnail.default': ThumbnailDefault,
   'timestamp.default': TimestampDefault,

@@ -11,6 +11,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'children'> &
   maxValue?: number;
   indeterminate?: boolean;
   label?: string;
+  /** Show the formatted value beside the label. @default true */
   showValueText?: boolean;
   className?: string;
 };

@@ -13,6 +13,7 @@ interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVarian
   lineHtml?: string[];
   filename?: string;
   className?: string;
+  /** Show the copy button. @default true */
   copyable?: boolean;
   wrapLongLines?: boolean;
   showLineNumbers?: boolean;
