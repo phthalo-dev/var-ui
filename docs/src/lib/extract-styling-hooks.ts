@@ -84,7 +84,6 @@ const REACT_COMPONENTS = path.resolve(
 /** Slugs whose core recipe export does not match the slug. */
 const RECIPE_ALIASES: Record<string, string[]> = {
   text: ['textBlock'],
-  'clickable-card': ['card'],
 };
 
 function camel(value: string): string {

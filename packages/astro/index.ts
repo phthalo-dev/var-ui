@@ -25,7 +25,6 @@ export { default as Meter } from './src/components/Meter.astro';
 export { default as Rating } from './src/components/Rating.astro';
 export { default as StatusDot } from './src/components/StatusDot.astro';
 export { default as Card } from './src/components/Card.astro';
-export { default as ClickableCard } from './src/components/ClickableCard.astro';
 export { default as EmptyState } from './src/components/EmptyState.astro';
 export { default as Button } from './src/components/Button.astro';
 export { default as Link } from './src/components/Link.astro';
@@ -132,7 +131,6 @@ export {
   type MenuItemDefinition,
   type MenuPlacement,
   type MenuSectionDefinition,
-  type MenuSelectionMode,
 } from './src/scripts/menu';
 export {
   initSegmentedControl,

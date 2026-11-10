@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Avatar,
-  AvatarGroup,
-  Badge,
-  Card,
-  ClickableCard,
-  HStack,
-  Thumbnail,
-  Stack,
-} from '@var-ui/react';
+import { Avatar, AvatarGroup, Badge, Card, HStack, Thumbnail, Stack } from '@var-ui/react';
 
 const PREVIEW_URL =
   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" fill="%236c8"/%3E%3C/svg%3E';
@@ -37,7 +28,7 @@ export function IdentityCardsTile({ className }: IdentityCardsTileProps) {
           <Thumbnail alt="Cover preview" src={PREVIEW_URL} />
           <Thumbnail alt="Icon preview" src={PREVIEW_URL} />
         </HStack>
-        <ClickableCard
+        <Card
           description="Browse every asset in the workspace."
           hint="24 files"
           href="#"

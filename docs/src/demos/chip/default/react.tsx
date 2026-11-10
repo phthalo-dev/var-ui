@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chip, ChipGroup, HStack, Pill } from '@var-ui/react';
+import { Chip, ChipGroup, HStack } from '@var-ui/react';
 
 export default function Preview() {
   const [frameworks, setFrameworks] = useState<string[]>(['react']);
@@ -20,13 +20,13 @@ export default function Preview() {
       </ChipGroup>
       <HStack gap="sm" wrap align="center">
         {tags.map((tag) => (
-          <Pill
+          <Chip
             key={tag}
             tone="neutral"
             onRemove={() => setTags((current) => current.filter((t) => t !== tag))}
           >
             {tag}
-          </Pill>
+          </Chip>
         ))}
       </HStack>
     </HStack>

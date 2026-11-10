@@ -328,7 +328,7 @@ export const componentRegistry: ComponentEntry[] = [
     name: 'Chip',
     category: 'feedback',
     description: 'Pill-shaped labels for filters and removable tags.',
-    importLine: "import { Chip, ChipGroup, Pill } from '@var-ui/react';",
+    importLine: "import { Chip, ChipGroup } from '@var-ui/react';",
   },
   {
     slug: 'banner',
@@ -756,13 +756,6 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'container',
     description: 'Bordered surface for grouped content.',
     importLine: "import { Card } from '@var-ui/react';",
-  },
-  {
-    slug: 'clickable-card',
-    name: 'ClickableCard',
-    category: 'container',
-    description: 'Card that navigates on press.',
-    importLine: "import { ClickableCard } from '@var-ui/react';",
   },
   {
     slug: 'carousel',

@@ -299,7 +299,7 @@ export function LayoutFooter({
 }
 
 export type LayoutContentProps = ComponentPropsWithRef<'div'> & {
-  /** Only `0` (seamless) is distinct from the inherited default. */
+  /** Only `'none'` (seamless) is distinct from the inherited default. */
   padding?: LayoutPadding;
   /** @default true */
   scrollable?: boolean;
@@ -357,7 +357,7 @@ export type LayoutPanelProps = ComponentPropsWithRef<'div'> & {
   hasDivider?: boolean;
   /** @default true */
   scrollable?: boolean;
-  /** Only `0` (seamless) is distinct from the inherited default. */
+  /** Only `'none'` (seamless) is distinct from the inherited default. */
   padding?: LayoutPadding;
   /**
    * Binds `useResizable()`'s result — reads `width` and ignores the `width` prop.

@@ -224,15 +224,13 @@ export { Badge, type BadgeProps } from './Badge';
 export {
   Chip,
   ChipGroup,
-  Pill,
   type ChipGroupKey,
   type ChipGroupOption,
   type ChipGroupProps,
   type ChipProps,
-  type PillProps,
 } from './Chip';
 export { Banner, type BannerProps } from './Banner';
-export { Card, ClickableCard, type CardProps, type ClickableCardProps } from './Card';
+export { Card, type CardAsDivProps, type CardAsLinkProps, type CardProps } from './Card';
 export { Carousel, type CarouselProps } from './Carousel';
 export { Thumbnail, type ThumbnailProps } from './Thumbnail';
 export {

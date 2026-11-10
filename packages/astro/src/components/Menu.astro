@@ -11,7 +11,6 @@ import {
   nextMenuId,
   type MenuPlacement,
   type MenuSectionDefinition,
-  type MenuSelectionMode,
 } from "../scripts/menu";
 
 /** Native attributes are forwarded to the popover `<div>` (as React `Menu.FromSections` does). */
@@ -30,12 +29,11 @@ interface Props extends ButtonVariantProps, Omit<HTMLAttributes<'div'>, 'class:l
    */
   placement?: MenuPlacement;
   /**
-   * `single` renders items as `menuitemradio` with a check affordance and
-   * tracks one `aria-checked` item. @default 'none'
+   * Initially checked item id. Passing it (even `null`, meaning nothing checked yet) makes the
+   * menu a single-choice menu: items render as `menuitemradio` with a check mark, and choosing
+   * one checks it. Same name and meaning as React's `Menu` `defaultValue`.
    */
-  selectionMode?: MenuSelectionMode;
-  /** Initially checked item id (`selectionMode="single"`). */
-  selectedId?: string;
+  defaultValue?: string | null;
   className?: string;
 }
 
@@ -45,8 +43,7 @@ const {
   "aria-label": ariaLabel,
   menuLabel,
   placement = "bottom start",
-  selectionMode = "none",
-  selectedId,
+  defaultValue,
   tone,
   appearance = "outline",
   size = "md",
@@ -83,7 +80,7 @@ const itemSwatchRecipe = mergeProps(m.itemSwatch);
 const itemLabelRecipe = mergeProps(m.itemLabel);
 const itemShortcutRecipe = mergeProps(m.itemShortcut);
 
-const singleSelection = selectionMode === "single";
+const singleSelection = defaultValue !== undefined;
 
 const hasTriggerSlot = Astro.slots.has("trigger");
 
@@ -101,7 +98,7 @@ const itemContents = await Promise.all(
 );
 ---
 
-<div data-var-ui-menu-root data-selection-mode={selectionMode} {...rootRecipe}>
+<div data-var-ui-menu-root data-selection-mode={singleSelection ? "single" : "none"} {...rootRecipe}>
   <button
     type="button"
     data-var-ui-menu-trigger
@@ -200,7 +197,7 @@ const itemContents = await Promise.all(
                 role={singleSelection ? "menuitemradio" : "menuitem"}
                 aria-checked={
                   singleSelection
-                    ? item.id === selectedId
+                    ? item.id === defaultValue
                       ? "true"
                       : "false"
                     : undefined

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
-import { Chip, ChipGroup, Pill } from './Chip';
+import { Chip, ChipGroup } from './Chip';
 
 function wrap(ui: React.ReactNode) {
   return render(<IconProvider icons={{}}>{ui}</IconProvider>);
@@ -29,15 +29,6 @@ describe('Chip', () => {
   it('calls onRemove from a removable chip', async () => {
     const onRemove = vi.fn();
     wrap(<Chip onRemove={onRemove}>TypeScript</Chip>);
-    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
-    expect(onRemove).toHaveBeenCalled();
-  });
-});
-
-describe('Pill', () => {
-  it('requires and wires onRemove', async () => {
-    const onRemove = vi.fn();
-    wrap(<Pill onRemove={onRemove}>Documentation</Pill>);
     await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
     expect(onRemove).toHaveBeenCalled();
   });

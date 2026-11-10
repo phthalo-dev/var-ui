@@ -27,6 +27,28 @@ The child menu opens beside its item (to the inline end, mirrored in RTL) with i
 
 <Demo id="menu.submenu" />
 
+### Single choice
+
+Pass `value` (controlled) or `defaultValue` to make a menu a single choice, like a sort order or a view mode. Items render as `menuitemradio` with a check mark next to the chosen one, and choosing an item checks it and calls `onValueChange(id)`. `null` means selectable with nothing checked yet. Selection applies to the top-level items; a `Menu.Submenu` trigger stays a plain item. `Menu.FromSections` forwards the same props. In Astro, `Menu` takes `defaultValue` with the same meaning.
+
+```tsx
+const [sort, setSort] = useState<string | null>('name');
+
+<Menu value={sort} onValueChange={setSort}>
+  <Menu.Trigger>
+    <Button>Sort</Button>
+  </Menu.Trigger>
+  <Menu.Popup>
+    <Menu.Item id="name">Name</Menu.Item>
+    <Menu.Item id="date">Date modified</Menu.Item>
+  </Menu.Popup>
+</Menu>;
+```
+
+```astro
+<Menu triggerLabel="Sort" defaultValue="name" sections={[{ items: sortItems }]} />
+```
+
 ### From sections
 
 Pass a `trigger` and `sections` of items (optional section labels, shortcuts, `danger`, `disabled`). An item with an `items` array of child items opens them as a submenu (the same applies to `Menu.ContextMenu`, `Menu.Overflow` and `Menu.Content`); `shortcut`, `danger` and `onAction` are ignored on such an item.

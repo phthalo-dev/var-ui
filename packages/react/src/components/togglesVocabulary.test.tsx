@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IconProvider } from '../icons';
 import { CheckboxGroup } from './CheckboxGroup';
-import { Chip, ChipGroup, Pill } from './Chip';
+import { Chip, ChipGroup } from './Chip';
 import { RadioGroup } from './RadioGroup';
 import { SegmentedControl, ToggleButton } from './SegmentedControl';
 
@@ -131,13 +131,6 @@ describe('Chip', () => {
     expect((screen.getByRole('button', { name: 'React' }) as HTMLButtonElement).disabled).toBe(
       true,
     );
-  });
-
-  it('Pill is a removable chip', async () => {
-    const onRemove = vi.fn();
-    wrap(<Pill onRemove={onRemove}>Tag</Pill>);
-    await userEvent.setup().click(screen.getByRole('button', { name: 'Remove' }));
-    expect(onRemove).toHaveBeenCalledTimes(1);
   });
 });
 

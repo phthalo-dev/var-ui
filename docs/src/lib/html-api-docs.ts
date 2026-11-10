@@ -88,7 +88,6 @@ function resolveRecipe(slug: string): { recipeName: string; result: unknown } | 
   const candidates = [camel, slug];
 
   // Known aliases where export name ≠ slug camelCase
-  if (slug === 'clickable-card') candidates.unshift('card');
   if (slug === 'text') candidates.unshift('textBlock');
   if (slug === 'link') {
     const link = (core as Record<string, unknown>).link;

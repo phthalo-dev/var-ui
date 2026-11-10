@@ -8,6 +8,7 @@ import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   width?: number | string;
   hasDivider?: boolean;
+  /** Let the zone scroll its overflow (`overflow: auto`). @default true */
   scrollable?: boolean;
   padding?: LayoutPadding;
   side?: 'start' | 'end';

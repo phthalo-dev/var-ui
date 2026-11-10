@@ -13,7 +13,7 @@ import CenterDefault from './center/default/astro.astro';
 import HiddenHideMd from './hidden/hide-md/astro.astro';
 import HiddenShowMd from './hidden/show-md/astro.astro';
 import DirectionRtl from './direction/rtl/astro.astro';
-import ClickableCardDefault from './clickable-card/default/astro.astro';
+import CardLink from './card/link/astro.astro';
 import CodeBlockDefault from './code-block/default/astro.astro';
 import DividerDefault from './divider/default/astro.astro';
 import EmptyStateDefault from './empty-state/default/astro.astro';
@@ -101,7 +101,7 @@ const astroDemos = {
   'empty-state.default': EmptyStateDefault,
   'avatar.default': AvatarDefault,
   'card.default': CardDefault,
-  'clickable-card.default': ClickableCardDefault,
+  'card.link': CardLink,
   'carousel.default': CarouselDefault,
   'thumbnail.default': ThumbnailDefault,
   'timestamp.default': TimestampDefault,

@@ -30,12 +30,6 @@ export type MenuPlacement =
   | 'end'
   | `${'top' | 'bottom' | 'start' | 'end'} ${'start' | 'center' | 'end'}`;
 
-/**
- * `none` mirrors the React `Menu`; `single` renders items as `menuitemradio`
- * and tracks one `aria-checked` item.
- */
-export type MenuSelectionMode = 'none' | 'single';
-
 /** Data model for one actionable row, mirroring the React `MenuItemDefinition`. */
 export type MenuItemDefinition = {
   id: string;

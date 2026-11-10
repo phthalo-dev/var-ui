@@ -23,7 +23,6 @@ import {
   Carousel,
   Checkbox,
   CheckboxGroup,
-  ClickableCard,
   Collapsible,
   CollapsibleGroup,
   Layout,
@@ -304,7 +303,7 @@ function ContainerSection() {
     <Section title="Containers & identity">
       <Grid columns="auto" gap="md">
         <Card title="Static card">Plain content surface.</Card>
-        <ClickableCard
+        <Card
           href="#theming"
           title="Theming guide"
           description="Override any token with plain CSS custom properties."
@@ -1014,7 +1013,7 @@ function TableDemo() {
   const selection = useTableSelection({
     data: pageData,
     getRowId: (row) => row.id,
-    mode: 'multiple',
+    multiple: true,
   });
 
   const columnSort = (column: string) => ({
@@ -1078,7 +1077,7 @@ function TableDemo() {
       </Table>
       <HStack gap="sm" align="center" justify="between">
         <Text size="sm" tone="secondary">
-          {selection.selectedKeys.size} of {sortedData.length} selected
+          {selection.value.length} of {sortedData.length} selected
         </Text>
         <Pagination page={page} onValueChange={setPage} totalPages={totalPages} size="sm" />
       </HStack>
