@@ -1,5 +1,34 @@
 # @var-ui/astro
 
+## 0.5.0
+
+### Minor Changes
+
+- [#121](https://github.com/phthalo-dev/var-ui/pull/121) [`08224f6`](https://github.com/phthalo-dev/var-ui/commit/08224f60b9c2b5ed722ce6ad062479e292d6d5d2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - API contract and React/Astro parity leftovers:
+  
+  - `useTableSelection` uses the same vocabulary as `Select`: `multiple` (opt-in), plus `value`, `defaultValue` and `onValueChange` with row ids as `string[]`. It returns `value`, `isSelected`, `toggle`, `selectAll`, `clear` and `setValue`. The `selectedKeys`/`onSelectionChange` options and the `SelectionMode` type are gone.
+  - `useChatNewMessages` takes `locked` instead of `isLocked`. The public-props guard now also checks hook options.
+  - `Menu` (React) supports a single choice: `value`, `defaultValue` and `onValueChange` on `Menu`/`Menu.Root` and `Menu.FromSections` turn items into `menuitemradio` with a check mark. Astro `Menu` replaces `selectionMode` and `selectedId` with the same `defaultValue` (`null` = selectable, nothing checked).
+  - `Card` takes `href`: the whole card becomes a link with `title`, `description` and `hint`, like `Button`. `ClickableCard` is removed from both packages; use `<Card href>`.
+  - `Pill` is removed; use `<Chip onRemove>`.
+  - Astro `ToggleButton` takes `defaultSelected` instead of `pressed`, matching React.
+
+- [#117](https://github.com/phthalo-dev/var-ui/pull/117) [`ff8bf54`](https://github.com/phthalo-dev/var-ui/commit/ff8bf545a526840a28c6a68a8caf922fe2f1fa59) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Space tokens use t-shirt names, like `fontSize` and `radius`: `none` (0), `xxs` (0.25rem), `xs` (0.5rem), `sm` (0.75rem), `md` (1rem), `lg` (1.5rem), `xl` (2rem), `xxl` (2.5rem), `xxxl` (3rem) and `xxxxl` (4rem). The old numeric keys map as `0→none`, `1→xxs`, `2→xs`, `3→sm`, `4→md`, `5→lg`, `6→xl`, `10→xxl`, `8→xxxl` and `12→xxxxl`. The unused steps `7`, `9`, `11`, `16` and `20` are removed. CSS variables follow, so `--var-ui-space-4` is now `--var-ui-space-md`.
+  
+  Scale names use letters only: `fontSize` and `size.panel` rename `2xl` to `xxl`, and `fontSize` renames `3xl` to `xxxl`.
+  
+  `Layout`, `LayoutHeader`, `LayoutFooter`, `LayoutContent`, `LayoutPanel` (`padding`) and `AppShell` (`contentPadding`) take space names instead of numbers, for example `padding="none"` instead of `padding={0}`.
+
+### Patch Changes
+
+- [#115](https://github.com/phthalo-dev/var-ui/pull/115) [`28ffffa`](https://github.com/phthalo-dev/var-ui/commit/28ffffacd2399e1b79d066c6a2ba48b94ca719e6) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Export `Density`, `Gap`, `Orientation` and `Sender`, the value types of the shared `density`, `gap`, `orientation` and `sender` variant axes, alongside `Tone`, `SurfaceAppearance` and `ControlSize`. React and Astro component props that use a shared axis now name it with these types instead of `NonNullable<XVariantProps['axis']>`. The accepted values are unchanged.
+
+- [#119](https://github.com/phthalo-dev/var-ui/pull/119) [`fa2dcb2`](https://github.com/phthalo-dev/var-ui/commit/fa2dcb2f21dc0d8f939aa2ff993c541b0b16790f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Toast: the last toast now fades out before its region unmounts (React and Astro), and a toast arriving mid-exit cancels the removal. Popups cap their width against the usable viewport instead of `100vw`, so a very wide popup no longer extends under a classic scrollbar (the root element is now a CSS anchor named `--var-ui-viewport`).
+
+- [#118](https://github.com/phthalo-dev/var-ui/pull/118) [`e1b8706`](https://github.com/phthalo-dev/var-ui/commit/e1b87060e9fb3abb847d15ddeb774d125d08d6fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Depend on `typestyles` `^0.35.2`, which keeps recipe `.vars` in `compile: true` (zero-runtime) builds, so components that set recipe vars at runtime work with the compile transform.
+
+- [#117](https://github.com/phthalo-dev/var-ui/pull/117) [`ff8bf54`](https://github.com/phthalo-dev/var-ui/commit/ff8bf545a526840a28c6a68a8caf922fe2f1fa59) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Depend on `typestyles` `^0.35.1`.
+
 ## 0.4.0
 
 ### Minor Changes
