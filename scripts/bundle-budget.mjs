@@ -54,6 +54,14 @@ const FORBIDDEN_JS_MARKERS = {
   'button-only': ['var-ui-calendar', 'var-ui-command-palette', 'var-ui-file-tree'],
 };
 
+/**
+ * Fixtures built with `compile: true` whose client bundle should contain none of the typestyles
+ * runtime (recipes become `typestyles/lite` plan handles). The gallery still keeps part of it:
+ * themes/tokens aren't compiled yet, so it is not listed.
+ */
+const ZERO_RUNTIME_FIXTURES = new Set(['button-only', 'form-kit', 'date-kit']);
+const TYPESTYLES_RUNTIME_MARKER = 'createTypeStyles';
+
 /** CSS that must not appear in minimal fixtures: unused components cost no CSS. */
 const FORBIDDEN_CSS_MARKERS = {
   'button-only': ['.var-ui-calendar', '.var-ui-command-palette', '.var-ui-file-tree'],
@@ -76,20 +84,13 @@ function collectJsFiles(distDir) {
   return [...new Set(files)];
 }
 
+/**
+ * In build mode @typestyles/vite swaps typestyles' stylesheet module for a no-op sibling in client
+ * bundles, so the CSSOM insertion code never ships. The real sheet calls `.insertRule(`; React DOM
+ * does not (it does call `createElement("style")`, so that is not a usable marker).
+ */
 function isRuntimeInjectionDisabled(jsSource) {
-  if (jsSource.includes('TYPESTYLES_RUNTIME_DISABLED')) return true;
-  // Minified guard: `var <id>=!0` where !0 is true → injection skipped via `if(<id>||`
-  // Fully constant-folded form: with `__TYPESTYLES_RUNTIME_DISABLED__` defined, the bundler drops
-  // the flag itself and the flush function only forwards pending rules to the SSR buffer (no DOM
-  // injection). This is what small bundles look like once unused recipes are tree-shaken.
-  if (/\.pendingRules=\[\],\w+\.ssrBuffer&&\w+\.ssrBuffer\.push\(\.\.\.\w+\)\}/.test(jsSource)) {
-    return true;
-  }
-  for (const match of jsSource.matchAll(/var ([a-zA-Z_$][\w$]*)=!0/g)) {
-    const flag = match[1];
-    if (jsSource.includes(`if(${flag}||`)) return true;
-  }
-  return false;
+  return !jsSource.includes('.insertRule(');
 }
 
 function measureFixture(name, config) {
@@ -111,11 +112,16 @@ function measureFixture(name, config) {
     jsSource += buf.toString('utf8');
   }
 
-  const cssPath = join(distDir, 'typestyles.css');
-  if (!existsSync(cssPath)) {
-    throw new Error(`[${name}] Missing ${cssPath}. Is @typestyles/vite configured?`);
+  // @typestyles/vite emits the extracted sheet as a hashed asset (assets/typestyles-<hash>.css).
+  const cssFiles = readDirFiles(join(distDir, 'assets'), '.css').filter((file) =>
+    /\/typestyles-[^/]*\.css$/.test(file),
+  );
+  if (cssFiles.length !== 1) {
+    throw new Error(
+      `[${name}] Expected one assets/typestyles-*.css in ${distDir}, found ${cssFiles.length}. Is @typestyles/vite configured?`,
+    );
   }
-  const cssBuf = readFileSync(cssPath);
+  const cssBuf = readFileSync(cssFiles[0]);
   const cssBytes = cssBuf.length;
   const cssSource = cssBuf.toString('utf8');
 
@@ -134,6 +140,12 @@ function measureFixture(name, config) {
   if (!isRuntimeInjectionDisabled(jsSource)) {
     throw new Error(
       `[${name}] TypeStyles runtime CSS injection does not appear disabled in JS bundle`,
+    );
+  }
+
+  if (ZERO_RUNTIME_FIXTURES.has(name) && jsSource.includes(TYPESTYLES_RUNTIME_MARKER)) {
+    throw new Error(
+      `[${name}] JS bundle still contains the typestyles runtime ("${TYPESTYLES_RUNTIME_MARKER}"). Is \`compile: true\` set, and did the build warn about modules it couldn't compile?`,
     );
   }
 

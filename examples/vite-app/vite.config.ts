@@ -6,7 +6,10 @@ import { defineConfig, type UserConfig } from 'vite-plus';
 const root = fileURLToPath(new URL('../..', import.meta.url));
 
 export default defineConfig({
-  plugins: [...react(), typestyles({ extract: { modules: ['typestyles-entry.ts'] } })],
+  plugins: [
+    ...react(),
+    typestyles({ extract: { modules: ['typestyles-entry.ts'] }, compile: true }),
+  ],
   resolve: {
     alias: {
       '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
