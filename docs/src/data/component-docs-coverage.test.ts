@@ -61,7 +61,6 @@ const REQUIRED_FAMILY_SLUGS = [
   'kbd',
   'list',
   'description-list',
-  'outline',
   'table',
   'tree',
   'file-tree',

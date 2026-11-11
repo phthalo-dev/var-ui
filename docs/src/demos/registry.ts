@@ -102,9 +102,8 @@ import { snippets as listDefaultSnippets } from './list/default/snippets';
 import { snippets as listIconsSnippets } from './list/icons/snippets';
 import { snippets as descriptionListDefaultSnippets } from './description-list/default/snippets';
 import { snippets as descriptionListHorizontalSnippets } from './description-list/horizontal/snippets';
-import { snippets as outlineDefaultSnippets } from './outline/default/snippets';
-import { snippets as outlineNestedSnippets } from './outline/nested/snippets';
 import { snippets as tocDefaultSnippets } from './toc/default/snippets';
+import { snippets as tocItemsSnippets } from './toc/items/snippets';
 import { snippets as tocNestedSnippets } from './toc/nested/snippets';
 import { snippets as breadcrumbsDefaultSnippets } from './breadcrumbs/default/snippets';
 import { snippets as breadcrumbsCollapseSnippets } from './breadcrumbs/collapse/snippets';
@@ -324,9 +323,8 @@ export const DEMO_IDS = [
   'list.icons',
   'description-list.default',
   'description-list.horizontal',
-  'outline.default',
-  'outline.nested',
   'toc.default',
+  'toc.items',
   'toc.nested',
   'breadcrumbs.default',
   'breadcrumbs.collapse',
@@ -545,9 +543,8 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'list.icons': listIconsSnippets,
   'description-list.default': descriptionListDefaultSnippets,
   'description-list.horizontal': descriptionListHorizontalSnippets,
-  'outline.default': outlineDefaultSnippets,
-  'outline.nested': outlineNestedSnippets,
   'toc.default': tocDefaultSnippets,
+  'toc.items': tocItemsSnippets,
   'toc.nested': tocNestedSnippets,
   'breadcrumbs.default': breadcrumbsDefaultSnippets,
   'breadcrumbs.collapse': breadcrumbsCollapseSnippets,
@@ -766,9 +763,8 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'list.icons': () => import('./list/icons/react'),
   'description-list.default': () => import('./description-list/default/react'),
   'description-list.horizontal': () => import('./description-list/horizontal/react'),
-  'outline.default': () => import('./outline/default/react'),
-  'outline.nested': () => import('./outline/nested/react'),
   'toc.default': () => import('./toc/default/react'),
+  'toc.items': () => import('./toc/items/react'),
   'toc.nested': () => import('./toc/nested/react'),
   'breadcrumbs.default': () => import('./breadcrumbs/default/react'),
   'breadcrumbs.collapse': () => import('./breadcrumbs/collapse/react'),
@@ -1399,20 +1395,15 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     snippets: demoSnippets['description-list.horizontal'],
     react: reactDemoLoaders['description-list.horizontal'],
   },
-  'outline.default': {
-    id: 'outline.default',
-    snippets: demoSnippets['outline.default'],
-    react: reactDemoLoaders['outline.default'],
-  },
-  'outline.nested': {
-    id: 'outline.nested',
-    snippets: demoSnippets['outline.nested'],
-    react: reactDemoLoaders['outline.nested'],
-  },
   'toc.default': {
     id: 'toc.default',
     snippets: demoSnippets['toc.default'],
     react: reactDemoLoaders['toc.default'],
+  },
+  'toc.items': {
+    id: 'toc.items',
+    snippets: demoSnippets['toc.items'],
+    react: reactDemoLoaders['toc.items'],
   },
   'toc.nested': {
     id: 'toc.nested',

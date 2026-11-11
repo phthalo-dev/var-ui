@@ -45,11 +45,17 @@ export function TocItem({
   );
 }
 
+export type TocItemData = TocHeading;
+
 export type TocProps = Omit<ComponentPropsWithRef<'nav'>, 'children' | 'title'> & {
   /** Visible section label above the list. @default 'On this page' */
   title?: ReactNode;
-  /** Manual `Toc.Item` children. Omit when using `auto`. */
+  /** Manual `Toc.Item` children. Omit when using `items` or `auto`. */
   children?: ReactNode;
+  /** Flat list of headings to render as links. Takes priority over `children` and `auto`. */
+  items?: TocItemData[];
+  /** Controlled active heading id for `items` / `auto` lists. Overrides the scroll spy. */
+  activeId?: string;
   /** Scan a content root for `h2`/`h3` headings with ids. */
   auto?: boolean;
   contentSelector?: string;
@@ -98,6 +104,8 @@ function TocList({
 export function Toc({
   title = 'On this page',
   children,
+  items,
+  activeId: activeIdProp,
   auto = false,
   contentSelector,
   headingSelector,
@@ -121,11 +129,14 @@ export function Toc({
     setContentRoot(document.querySelector(contentSelector));
   }, [auto, contentSelector]);
 
-  const { headings, activeId } = useTocSpy(auto ? contentRoot : null, {
+  const useAuto = auto && items == null;
+  const { headings: spyHeadings, activeId: spyActiveId } = useTocSpy(useAuto ? contentRoot : null, {
     headingSelector,
     minHeadings,
     headerOffset,
   });
+  const headings: TocHeading[] | undefined = items ?? (useAuto ? spyHeadings : undefined);
+  const activeId = activeIdProp ?? spyActiveId;
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -133,13 +144,13 @@ export function Toc({
 
     const activeLink = list.querySelector<HTMLAnchorElement>('[data-selected]');
     positionTocIndicator(list, activeLink);
-  }, [activeId, headings, children]);
+  }, [activeId, items, spyHeadings, children]);
 
   const s = tocStyles();
   const resolvedLabel = label ?? (typeof title === 'string' ? title : 'On this page');
   const rootStyle = stickyTop ? styleVars([[tocVars.stickyTop, stickyTop]]) : undefined;
 
-  if (auto && headings.length < minHeadings) {
+  if (useAuto && spyHeadings.length < minHeadings) {
     return null;
   }
 
@@ -152,8 +163,8 @@ export function Toc({
       ref={ref}
     >
       {title != null ? <p {...mergeProps(s.title)}>{title}</p> : null}
-      <TocList listRef={listRef} headings={auto ? headings : undefined} activeId={activeId}>
-        {children}
+      <TocList listRef={listRef} headings={headings} activeId={activeId}>
+        {items == null ? children : undefined}
       </TocList>
     </nav>
   );

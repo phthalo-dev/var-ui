@@ -156,7 +156,7 @@ export { AspectRatio, type AspectRatioProps } from './AspectRatio';
 export { Center, type CenterProps } from './Center';
 export { Hidden, type HiddenProps } from './Hidden';
 export { Breadcrumbs, type BreadcrumbItemData, type BreadcrumbsProps } from './Breadcrumbs';
-export { Toc, TocItem, type TocItemProps, type TocProps } from './Toc';
+export { Toc, TocItem, type TocItemData, type TocItemProps, type TocProps } from './Toc';
 export { List, ListItem, type ListItemData, type ListItemProps, type ListProps } from './List';
 export {
   DescriptionList,
@@ -165,7 +165,6 @@ export {
   type DescriptionListItemProps,
   type DescriptionListProps,
 } from './DescriptionList';
-export { Outline, type OutlineItemData, type OutlineItemProps, type OutlineProps } from './Outline';
 export {
   Accordion,
   type AccordionItemProps,

@@ -1,11 +1,17 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { toc } from '@var-ui/core/components/toc';
+import type { TocHeading } from '@var-ui/core/components/toc/spy';
 import { mergeProps } from '../utils';
+import TocItem from './TocItem.astro';
 
 type Props = Omit<HTMLAttributes<'nav'>, 'title'> & {
   title?: string;
   label?: string;
+  /** Flat list of headings to render as links. Takes priority over the slot and `auto`. */
+  items?: TocHeading[];
+  /** Id of the selected item in an `items` list. */
+  activeId?: string;
   auto?: boolean;
   contentSelector?: string;
   headingSelector?: string;
@@ -18,7 +24,9 @@ type Props = Omit<HTMLAttributes<'nav'>, 'title'> & {
 const {
   title = 'On this page',
   label,
-  auto = false,
+  items,
+  activeId,
+  auto: autoProp = false,
   contentSelector,
   headingSelector,
   minHeadings = 2,
@@ -29,6 +37,7 @@ const {
   ...rest
 } = Astro.props;
 
+const auto = autoProp && items == null;
 const resolvedLabel = label ?? title;
 // The recipe always hides the rail below `xl`.
 const s = toc();
@@ -52,7 +61,20 @@ const rootStyle = [baseStyle, stickyStyle].filter(Boolean).join('; ') || undefin
 >
   {title ? <p {...mergeProps(s.title)}>{title}</p> : null}
   <ol {...mergeProps(s.list)} data-var-ui-toc-list>
-    {!auto ? <slot /> : null}
+    {
+      items
+        ? items.map((item) => (
+            <TocItem
+              label={item.text}
+              href={`#${item.id}`}
+              nested={item.level === 3}
+              selected={item.id === activeId}
+            />
+          ))
+        : !auto
+          ? <slot />
+          : null
+    }
   </ol>
 </nav>
 

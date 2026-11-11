@@ -572,7 +572,8 @@ export const componentRegistry: ComponentEntry[] = [
     slug: 'toc',
     name: 'Toc',
     category: 'layout',
-    description: 'Table of contents with Toc.Item links for in-page navigation.',
+    description:
+      'Table of contents from an items list, Toc.Item links, or scanned headings, with active-heading highlighting.',
     importLine: "import { Toc } from '@var-ui/react';",
   },
   {
@@ -721,13 +722,6 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'content',
     description: 'Label/value pairs via DescriptionList.Item for metadata displays.',
     importLine: "import { DescriptionList } from '@var-ui/react';",
-  },
-  {
-    slug: 'outline',
-    name: 'Outline',
-    category: 'content',
-    description: 'Page outline links with optional scroll-spy highlighting.',
-    importLine: "import { Outline } from '@var-ui/react';",
   },
   {
     slug: 'table',

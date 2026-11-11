@@ -103,9 +103,8 @@ import ListDefault from './list/default/react';
 import ListIcons from './list/icons/react';
 import DescriptionListDefault from './description-list/default/react';
 import DescriptionListHorizontal from './description-list/horizontal/react';
-import OutlineDefault from './outline/default/react';
-import OutlineNested from './outline/nested/react';
 import TocDefault from './toc/default/react';
+import TocItems from './toc/items/react';
 import TocNested from './toc/nested/react';
 import BreadcrumbsDefault from './breadcrumbs/default/react';
 import BreadcrumbsCollapse from './breadcrumbs/collapse/react';
@@ -324,9 +323,8 @@ export const reactDemoMap = {
   'list.icons': ListIcons,
   'description-list.default': DescriptionListDefault,
   'description-list.horizontal': DescriptionListHorizontal,
-  'outline.default': OutlineDefault,
-  'outline.nested': OutlineNested,
   'toc.default': TocDefault,
+  'toc.items': TocItems,
   'toc.nested': TocNested,
   'breadcrumbs.default': BreadcrumbsDefault,
   'breadcrumbs.collapse': BreadcrumbsCollapse,
