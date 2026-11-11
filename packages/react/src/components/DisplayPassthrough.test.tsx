@@ -16,7 +16,6 @@ import { EmptyState } from './EmptyState';
 import { FileTree } from './FileTree';
 import { Kbd } from './Kbd';
 import { List } from './List';
-import { Outline } from './Outline';
 import { OverflowList } from './OverflowList';
 import { Pagination } from './Pagination';
 import { Section } from './Section';
@@ -213,7 +212,6 @@ const cases: Case[] = [
       </Toc>
     ),
   },
-  { name: 'Outline', tag: 'NAV', ui: (ref) => <Outline {...p(ref)} /> },
   {
     name: 'Pagination',
     tag: 'NAV',

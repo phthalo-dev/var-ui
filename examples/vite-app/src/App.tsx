@@ -53,7 +53,7 @@ import {
   List,
   MobileNav,
   MultiSelector,
-  Outline,
+  Toc,
   OverflowList,
   Pagination,
   ProgressBar,
@@ -736,13 +736,12 @@ function AdminShellDemo() {
         }
         mobileNav={<MobileNav header="Acme Admin">{renderAdminNavSection()}</MobileNav>}
         aside={
-          <Outline
+          <Toc
             items={[
               { id: 'admin-summary', text: 'Summary', level: 2 },
               { id: 'admin-activity', text: 'Recent activity', level: 2 },
             ]}
             activeId="admin-summary"
-            scrollSpy={false}
           />
         }
       >
@@ -761,8 +760,8 @@ function AdminShellDemo() {
               Recent activity
             </Heading>
             <Text tone="secondary">
-              The `aside` slot renders an `Outline` here as a right-rail table of contents — it
-              hides alongside `sideNav` below the mobile breakpoint.
+              The `aside` slot renders a `Toc` here as a right-rail table of contents — it hides
+              alongside `sideNav` below the mobile breakpoint.
             </Text>
           </Stack>
         </Stack>

@@ -1258,23 +1258,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-number-input-stepperforeground",
     ],
   },
-  "outline": {
-    "axes": [],
-    "slots": {
-      "link": "var-ui-outline__link",
-      "linkActive": "var-ui-outline__linkActive",
-      "linkNested": "var-ui-outline__linkNested",
-      "list": "var-ui-outline__list",
-      "root": "var-ui-outline",
-      "title": "var-ui-outline__title",
-    },
-    "vars": [
-      "--var-ui-outline-border",
-      "--var-ui-outline-linkactivecolor",
-      "--var-ui-outline-linkcolor",
-      "--var-ui-outline-titlecolor",
-    ],
-  },
   "overflow-list": {
     "axes": [
       "data-gap",
