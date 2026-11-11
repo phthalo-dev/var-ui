@@ -11,6 +11,8 @@ import type { DemoId } from './types';
  * Kept free of demo imports on purpose: Playwright's spec transform mishandles the
  * workspace-source import graph (`@var-ui/react` via tsconfig paths), while the `/e2d`
  * Astro route renders demos fine on the server.
+ *
+ * GENERATED FILE — regenerate with: node --experimental-strip-types scripts/generate-demo-ids.ts
  */
 export const demoIdChecklist = {
   'button.default': true,
@@ -62,7 +64,7 @@ export const demoIdChecklist = {
   'empty-state.default': true,
   'avatar.default': true,
   'card.default': true,
-  'clickable-card.default': true,
+  'card.link': true,
   'carousel.default': true,
   'thumbnail.default': true,
   'timestamp.default': true,
@@ -116,9 +118,8 @@ export const demoIdChecklist = {
   'list.icons': true,
   'description-list.default': true,
   'description-list.horizontal': true,
-  'outline.default': true,
-  'outline.nested': true,
   'toc.default': true,
+  'toc.items': true,
   'toc.nested': true,
   'breadcrumbs.default': true,
   'breadcrumbs.collapse': true,
