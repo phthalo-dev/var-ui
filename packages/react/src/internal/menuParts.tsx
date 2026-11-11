@@ -1,4 +1,11 @@
-import { useMemo, type ComponentPropsWithRef, type JSX, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  type ComponentPropsWithRef,
+  type JSX,
+  type ReactNode,
+} from 'react';
 import {
   Header,
   Menu as AriaMenu,
@@ -8,6 +15,7 @@ import {
   MenuTrigger as AriaMenuTrigger,
   Separator,
   SubmenuTrigger as AriaSubmenuTrigger,
+  type Key,
 } from 'react-aria-components';
 import type { IconName } from '@var-ui/core';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
@@ -26,6 +34,7 @@ import {
   type OverlayTriggerProps,
 } from '../overlays';
 import { combine, mergeProps } from 'typestyles';
+import { useControllableState } from '../hooks/useControllableState';
 
 export type MenuRootProps = {
   children: ReactNode;
@@ -38,6 +47,16 @@ export type MenuRootProps = {
    * `escape-key`, `outside-press`, `focus` or `imperative`; `details.cancel()` vetoes the change.
    */
   onOpenChange?: OverlayOpenChangeHandler;
+  /**
+   * Checked item id (controlled). Passing `value`, `defaultValue` or `onValueChange` makes the menu
+   * a single-choice menu: items become `menuitemradio` with a check mark, and choosing one checks it. `null` means
+   * selectable with nothing checked. Applies to the top-level items, not to submenus.
+   */
+  value?: string | null;
+  /** Initially checked item id when uncontrolled (see `value`). */
+  defaultValue?: string | null;
+  /** Called with the newly checked item id. */
+  onValueChange?: (value: string | null) => void;
 };
 
 /** Alias for docs and consumers referring to the root menu props. */
@@ -91,16 +110,45 @@ export type MenuSubmenuProps = Omit<ComponentPropsWithRef<'div'>, 'children' | '
   disabled?: boolean;
 };
 
+type MenuSelection = {
+  value: string | null;
+  setValue: (value: string | null) => void;
+};
+
 type MenuContextValue = {
   root: OverlayRoot;
+  /** Set when the root has `value` / `defaultValue`: the menu is a single-choice menu. */
+  selection: MenuSelection | null;
 };
+
+/** Whether items of the nearest menu list render the radio check (false inside submenus). */
+const MenuCheckContext = createContext(false);
 
 const { Context: MenuContext, use: useMenuContext } =
   createOverlayContext<MenuContextValue>('Menu');
 
-function MenuRoot({ children, open, defaultOpen, onOpenChange }: MenuRootProps): JSX.Element {
+function MenuRoot({
+  children,
+  open,
+  defaultOpen,
+  onOpenChange,
+  value,
+  defaultValue,
+  onValueChange,
+}: MenuRootProps): JSX.Element {
   const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
-  const context = useMemo<MenuContextValue>(() => ({ root }), [root]);
+  const selectable =
+    value !== undefined || defaultValue !== undefined || onValueChange !== undefined;
+  const [checked, setChecked] = useControllableState<string | null>({
+    value,
+    defaultValue: defaultValue ?? null,
+    onChange: onValueChange,
+  });
+  const selection = useMemo<MenuSelection | null>(
+    () => (selectable ? { value: checked, setValue: setChecked } : null),
+    [selectable, checked, setChecked],
+  );
+  const context = useMemo<MenuContextValue>(() => ({ root, selection }), [root, selection]);
 
   return (
     <MenuContext.Provider value={context}>
@@ -125,9 +173,21 @@ function MenuPopup({
   ref,
   ...rest
 }: MenuPopupProps): JSX.Element {
-  const { root } = useMenuContext();
+  const { root, selection } = useMenuContext();
   const m = menu();
   const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
+  const selectionProps = selection
+    ? {
+        selectionMode: 'single' as const,
+        disallowEmptySelection: true,
+        selectedKeys: selection.value === null ? [] : [selection.value],
+        onSelectionChange: (keys: 'all' | Set<Key>) => {
+          if (keys === 'all') return;
+          const [next] = keys;
+          if (next !== undefined) selection.setValue(String(next));
+        },
+      }
+    : { selectionMode: 'none' as const };
 
   // The shell is the native `[popover]` element (top layer, anchored by CSS), mounted in place;
   // RAC's MenuTrigger owns open state, keyboard, typeahead and `aria-haspopup`/`aria-expanded`.
@@ -143,9 +203,9 @@ function MenuPopup({
         {...mergeProps(m.menu)}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
-        selectionMode="none"
+        {...selectionProps}
       >
-        {children}
+        <MenuCheckContext.Provider value={selection !== null}>{children}</MenuCheckContext.Provider>
       </AriaMenu>
     </NativePopover>
   );
@@ -162,16 +222,24 @@ function MenuItem({
   ...rest
 }: MenuItemProps): JSX.Element {
   const m = menu();
+  const checkable = useContext(MenuCheckContext);
   return (
     <AriaMenuItem
       {...(rest as AriaMenuItemProps)}
       id={id}
       onAction={onAction}
       {...toRacProps({ disabled })}
-      textValue={textValue}
+      textValue={textValue ?? (typeof children === 'string' ? children : undefined)}
       {...mergeProps(m.item, className)}
       ref={ref}
     >
+      {checkable ? (
+        // Shown by the recipe when the item is `aria-checked="true"`; kept in layout otherwise
+        // so checked and unchecked rows align (same markup as the Astro Menu).
+        <span {...mergeProps(m.itemCheck)} data-var-ui-menu-item-check="" aria-hidden="true">
+          <Icon name="check" size="sm" />
+        </span>
+      ) : null}
       {children}
     </AriaMenuItem>
   );
@@ -232,7 +300,9 @@ function MenuSubmenu({
         </span>
       </AriaMenuItem>
       <NativePopover {...combine(m.popover, m.submenuPopover)} offset={0}>
-        <AriaMenu {...mergeProps(m.menu)}>{children}</AriaMenu>
+        <AriaMenu {...mergeProps(m.menu)}>
+          <MenuCheckContext.Provider value={false}>{children}</MenuCheckContext.Provider>
+        </AriaMenu>
       </NativePopover>
     </AriaSubmenuTrigger>
   );

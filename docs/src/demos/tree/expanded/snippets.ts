@@ -5,7 +5,6 @@ export const snippets = {
 
 <Tree
   aria-label="Project files"
-  selectionMode="single"
   defaultExpanded={['src', 'components']}
   defaultValue="button"
   items={[

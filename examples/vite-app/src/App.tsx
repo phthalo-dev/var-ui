@@ -23,7 +23,6 @@ import {
   Carousel,
   Checkbox,
   CheckboxGroup,
-  ClickableCard,
   Collapsible,
   CollapsibleGroup,
   Layout,
@@ -54,7 +53,7 @@ import {
   List,
   MobileNav,
   MultiSelector,
-  Outline,
+  Toc,
   OverflowList,
   Pagination,
   ProgressBar,
@@ -304,7 +303,7 @@ function ContainerSection() {
     <Section title="Containers & identity">
       <Grid columns="auto" gap="md">
         <Card title="Static card">Plain content surface.</Card>
-        <ClickableCard
+        <Card
           href="#theming"
           title="Theming guide"
           description="Override any token with plain CSS custom properties."
@@ -737,13 +736,12 @@ function AdminShellDemo() {
         }
         mobileNav={<MobileNav header="Acme Admin">{renderAdminNavSection()}</MobileNav>}
         aside={
-          <Outline
+          <Toc
             items={[
               { id: 'admin-summary', text: 'Summary', level: 2 },
               { id: 'admin-activity', text: 'Recent activity', level: 2 },
             ]}
             activeId="admin-summary"
-            scrollSpy={false}
           />
         }
       >
@@ -762,8 +760,8 @@ function AdminShellDemo() {
               Recent activity
             </Heading>
             <Text tone="secondary">
-              The `aside` slot renders an `Outline` here as a right-rail table of contents — it
-              hides alongside `sideNav` below the mobile breakpoint.
+              The `aside` slot renders a `Toc` here as a right-rail table of contents — it hides
+              alongside `sideNav` below the mobile breakpoint.
             </Text>
           </Stack>
         </Stack>
@@ -899,7 +897,6 @@ function TreeDemo() {
         density="compact"
         expanded={expanded}
         onExpandedChange={setExpanded}
-        selectionMode="single"
         value={selected}
         onValueChange={setSelected}
         items={[
@@ -1014,7 +1011,7 @@ function TableDemo() {
   const selection = useTableSelection({
     data: pageData,
     getRowId: (row) => row.id,
-    mode: 'multiple',
+    multiple: true,
   });
 
   const columnSort = (column: string) => ({
@@ -1078,7 +1075,7 @@ function TableDemo() {
       </Table>
       <HStack gap="sm" align="center" justify="between">
         <Text size="sm" tone="secondary">
-          {selection.selectedKeys.size} of {sortedData.length} selected
+          {selection.value.length} of {sortedData.length} selected
         </Text>
         <Pagination page={page} onValueChange={setPage} totalPages={totalPages} size="sm" />
       </HStack>

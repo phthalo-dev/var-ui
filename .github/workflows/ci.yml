@@ -59,13 +59,23 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
 
+      # apt-get occasionally fails with transient DNS errors on hosted runners
+      # ("Temporary failure resolving 'archive.ubuntu.com'"), so retry.
       - name: Install Chromium (with system deps)
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: vp exec --filter @var-ui/react playwright install --with-deps chromium
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          timeout_minutes: 15
+          command: vp exec --filter @var-ui/react playwright install --with-deps chromium
 
       - name: Install Chromium system deps (cached browser)
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: vp exec --filter @var-ui/react playwright install-deps chromium
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          timeout_minutes: 15
+          command: vp exec --filter @var-ui/react playwright install-deps chromium
 
       - run: vp run ci
 

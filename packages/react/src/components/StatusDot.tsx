@@ -8,7 +8,7 @@ export type StatusDotProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
 
 export function StatusDot({
   tone = 'neutral',
-  appearance = 'filled',
+  appearance = 'solid',
   pulse = false,
   'aria-label': ariaLabel,
   className,

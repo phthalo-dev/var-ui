@@ -1,21 +1,23 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
+import { controlSizeVariants, indicatorSize } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 
-const { box, trackWidth, trackHeight } = t.size.indicator;
-/** Gap between the track edge and the thumb. */
-const thumbInset = `calc((${trackHeight.var} - ${box.var}) / 2)`;
-/** The thumb travels the track width minus its own diameter and both insets, i.e. width minus height. */
-const thumbTravel = `calc(${trackWidth.var} - ${trackHeight.var})`;
+const md = indicatorSize('md');
 
 export const switchStyles = typestyles.recipe({
   name: 'switch',
   layer: 'components',
   slots: ['root', 'track', 'thumb', 'label'],
+  variants: { size: controlSize },
   vars: {
+    trackWidth: { ...atProperty.length, value: md.trackWidth },
+    trackHeight: { ...atProperty.length, value: md.trackHeight },
+    thumbSize: { ...atProperty.length, value: md.box },
     trackBackground: {
       ...atProperty.color,
       value: t.color.border.default.var,
@@ -26,19 +28,22 @@ export const switchStyles = typestyles.recipe({
     },
   },
   styles: ({ vars }) => {
+    /** Gap between the track edge and the thumb. */
+    const thumbInset = `calc((${vars.trackHeight.var} - ${vars.thumbSize.var}) / 2)`;
+    /** The thumb travels the track width minus its own diameter and both insets, i.e. width minus height. */
+    const thumbTravel = `calc(${vars.trackWidth.var} - ${vars.trackHeight.var})`;
     return {
       base: {
         root: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space.xs.var,
           cursor: 'pointer',
         },
         track: {
           position: 'relative',
-          width: trackWidth.var,
+          width: vars.trackWidth.var,
           flexShrink: 0,
-          height: trackHeight.var,
+          height: vars.trackHeight.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.trackBackground.var,
           transition: t.transition.background.var,
@@ -55,8 +60,8 @@ export const switchStyles = typestyles.recipe({
           position: 'absolute',
           top: thumbInset,
           insetInlineStart: thumbInset,
-          width: box.var,
-          height: box.var,
+          width: vars.thumbSize.var,
+          height: vars.thumbSize.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.thumbBackground.var,
           transition: t.transition.transform.var,
@@ -70,10 +75,25 @@ export const switchStyles = typestyles.recipe({
             ...atForcedColors(forced.mark),
           },
         },
-        label: {
-          fontSize: t.fontSize.md.var,
-        },
+        label: {},
+      },
+      variants: {
+        size: controlSizeVariants((size) => {
+          const m = indicatorSize(size);
+          return {
+            root: {
+              gap: m.gap,
+              [vars.trackWidth.name]: m.trackWidth,
+              [vars.trackHeight.name]: m.trackHeight,
+              [vars.thumbSize.name]: m.box,
+            },
+            label: { fontSize: m.labelFontSize },
+          };
+        }),
       },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type SwitchVariantProps = RecipeVariants<typeof switchStyles>;

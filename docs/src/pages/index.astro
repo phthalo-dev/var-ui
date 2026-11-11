@@ -5,7 +5,6 @@ import VarUiWordmark from '../components/VarUiWordmark.astro';
 import homepagePreloads from 'virtual:homepage-preloads';
 import {
   Card,
-  ClickableCard,
   CodeBlock,
   Heading,
   Text,
@@ -155,7 +154,7 @@ const secondaryCta = mergeProps(
       <div class={cx(hp.exploreGrid)}>
         {
           exploreLinks.map((link) => (
-            <ClickableCard
+            <Card
               title={link.title}
               description={link.description}
               hint={link.hint}

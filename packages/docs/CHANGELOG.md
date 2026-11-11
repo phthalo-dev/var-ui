@@ -1,5 +1,11 @@
 # @var-ui/docs
 
+## 0.3.0
+
+### Minor Changes
+
+- [#126](https://github.com/phthalo-dev/var-ui/pull/126) [`718be2b`](https://github.com/phthalo-dev/var-ui/commit/718be2bd0ff08b07076b7525842e48ac941e64af) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Merge `Outline` into `Toc`. `Toc` (React and Astro) now accepts a flat `items` list and a controlled `activeId`; `Outline` and its `outline` recipe are removed.
+
 ## 0.2.2
 
 ### Patch Changes

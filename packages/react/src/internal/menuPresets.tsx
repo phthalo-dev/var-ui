@@ -14,10 +14,16 @@ import {
 /** Root-level props the presets forward to `Menu.Root`. */
 type MenuPresetRootProps = Pick<MenuRootProps, 'open' | 'defaultOpen' | 'onOpenChange'>;
 
-/** Popup-level props the presets forward to `Menu.Popup` (native props, `placement`, aria-*). */
-type MenuPresetPopupProps = Omit<MenuPopupProps, 'children'>;
+/** Single-choice props `Menu.FromSections` forwards to `Menu.Root` (see `MenuRootProps.value`). */
+type MenuPresetSelectionProps = Pick<MenuRootProps, 'value' | 'defaultValue' | 'onValueChange'>;
+
+/** Popup-level props the presets forward to `Menu.Popup` (native props, `placement`, aria-*). The
+ * div's `defaultValue` attribute is omitted: on the presets it means the checked item (`Menu.Root`).
+ */
+type MenuPresetPopupProps = Omit<MenuPopupProps, 'children' | 'defaultValue'>;
 
 export type MenuFromSectionsProps = MenuPresetRootProps &
+  MenuPresetSelectionProps &
   MenuPresetPopupProps &
   MenuContentProps & {
     /** Trigger element (usually a `Button`). */
@@ -31,10 +37,20 @@ export function MenuFromSections({
   open,
   defaultOpen,
   onOpenChange,
+  value,
+  defaultValue,
+  onValueChange,
   ...popupProps
 }: MenuFromSectionsProps): JSX.Element {
   return (
-    <MenuRoot open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
+    <MenuRoot
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={onValueChange}
+    >
       <MenuTrigger>{trigger}</MenuTrigger>
       <MenuPopup {...popupProps}>
         <MenuContent sections={sections} />

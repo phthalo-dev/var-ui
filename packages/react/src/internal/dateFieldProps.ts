@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import type { ControlSize } from '@var-ui/core';
 import type { FieldMeta } from '../components/Field';
 import { toRacProps, type RacProps } from './racProps';
 
@@ -69,6 +70,8 @@ export type DateFieldBaseProps<
     'aria-labelledby'?: string;
     'aria-describedby'?: string;
     'aria-details'?: string;
+    /** Control density. Falls back to the surrounding control size, then `md`. */
+    size?: ControlSize;
     /** Merged onto the root. */
     className?: string;
     /** Applied to the root. */

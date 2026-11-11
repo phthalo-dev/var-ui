@@ -16,7 +16,6 @@ export {
 } from './useTableSort';
 export {
   useTableSelection,
-  type SelectionMode,
   type UseTableSelectionOptions,
   type UseTableSelectionResult,
 } from './useTableSelection';

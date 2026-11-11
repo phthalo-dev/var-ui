@@ -3,6 +3,8 @@ import { atForcedColors } from '../theme/conditions';
 import { forced } from './forcedColors';
 import { focusRing } from './focusRing';
 import { anchored, popupMaxHeightVar } from '../shared/anchored';
+import type { ControlSize } from '../shared/variantAxes';
+import { controlSizeMetrics, controlSurfaceSize } from './controlSize';
 
 export type FieldChromeColors = {
   label: string;
@@ -126,7 +128,6 @@ export function dateFieldChrome(colors: DateFieldChromeColors) {
       borderStyle: 'solid',
       borderColor: colors.groupBorder,
       borderRadius: t.radius.md.var,
-      padding: `${t.space.xs.var} ${t.space.sm.var}`,
       backgroundColor: colors.groupBackground,
       width: 'fit-content',
       '&[data-focus-within]': {
@@ -139,7 +140,6 @@ export function dateFieldChrome(colors: DateFieldChromeColors) {
       },
     },
     segment: {
-      fontSize: t.fontSize.md.var,
       fontVariantNumeric: 'tabular-nums',
       color: colors.segmentColor,
       padding: '0 0.0625rem',
@@ -155,6 +155,22 @@ export function dateFieldChrome(colors: DateFieldChromeColors) {
       '&[data-disabled]': {
         opacity: 0.6,
       },
+    },
+  } as const;
+}
+
+/**
+ * `size` variant slots for {@link dateFieldChrome}: the segment group takes text-field's
+ * fixed-height surface (height, inline inset, type) at each control size.
+ */
+export function dateFieldSize(size: ControlSize) {
+  return {
+    group: {
+      ...controlSurfaceSize(size, { inset: 'compact' }),
+      gap: t.space.xxs.var,
+    },
+    segment: {
+      fontSize: controlSizeMetrics[size].fontSize,
     },
   } as const;
 }

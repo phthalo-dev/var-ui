@@ -17,6 +17,8 @@ import {
 } from 'react-aria-components';
 import { slider } from '@var-ui/core/components/slider';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import type { FieldMeta } from './Field';
 import { FieldFrameDescription, FieldFrameError, useFieldFrame } from './FieldFrame';
 import { mergeRacClassName } from '../internal/racClassName';
@@ -56,6 +58,8 @@ export type SliderProps = Omit<
     formatOptions?: Intl.NumberFormatOptions;
     /** Name of the thumb's native `<input type="range">`, so the value is included in form submission. */
     name?: string;
+    /** Control density. Falls back to the surrounding control size, then `md`. */
+    size?: ControlSize;
     /** Show the current value beside the label. @default true */
     showOutput?: boolean;
     /** Classes for the root element. */
@@ -76,6 +80,7 @@ export function Slider({
   label,
   description,
   errorMessage,
+  size,
   className,
   showOutput = true,
   name,
@@ -91,7 +96,7 @@ export function Slider({
   'aria-describedby': describedBy,
   ...props
 }: SliderProps): JSX.Element {
-  const s = slider();
+  const s = slider({ size: useResolvedControlSize(size) });
   const inputRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, []);
   const frame = useFieldFrame({ description, errorMessage, describedBy });

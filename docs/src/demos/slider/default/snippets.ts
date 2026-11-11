@@ -7,22 +7,23 @@ export const snippets = {
   astro: `---
 // No @var-ui/astro Slider — core recipe markup + native range input pattern.
 import { slider } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
 
 const s = slider();
 const value = 40;
 ---
 
-<div class:list={[s.root]} role="group" aria-label="Volume">
-  <label class:list={[s.label]}>
+<div {...mergeProps(s.root)} role="group" aria-label="Volume">
+  <label {...mergeProps(s.label)}>
     <span>Volume</span>
-    <span class:list={[s.output]}>{value}</span>
+    <span {...mergeProps(s.output)}>{value}</span>
   </label>
-  <div class:list={[s.control]}>
-    <div class:list={[s.track]}>
-      <div class:list={[s.fill]} style="width: 40%"></div>
+  <div {...mergeProps(s.control)}>
+    <div {...mergeProps(s.track)}>
+      <div {...mergeProps(s.fill)} style="width: 40%"></div>
     </div>
     <div
-      class:list={[s.thumb]}
+      {...mergeProps(s.thumb)}
       role="slider"
       aria-valuemin="0"
       aria-valuemax="100"
@@ -32,5 +33,5 @@ const value = 40;
     ></div>
   </div>
 </div>`,
-  html: `<div class="var-ui-slider" role="group" aria-label="Volume"><label class="var-ui-slider__label"><span>Volume</span><span class="var-ui-slider__output">40</span></label><div class="var-ui-slider__control"><div class="var-ui-slider__track"><div class="var-ui-slider__fill" style="width: 40%"></div></div><div class="var-ui-slider__thumb" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" tabindex="0" style="top: 50%; left: 40%; transform: translate(-50%, -50%)"></div></div></div>`,
+  html: `<div data-size="md" class="var-ui-slider" role="group" aria-label="Volume"><label data-size="md" class="var-ui-slider__label"><span>Volume</span><span data-size="md" class="var-ui-slider__output">40</span></label><div data-size="md" class="var-ui-slider__control"><div data-size="md" class="var-ui-slider__track"><div data-size="md" class="var-ui-slider__fill" style="width: 40%"></div></div><div data-size="md" class="var-ui-slider__thumb" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" tabindex="0" style="top: 50%; left: 40%; transform: translate(-50%, -50%)"></div></div></div>`,
 } satisfies DemoSnippets;

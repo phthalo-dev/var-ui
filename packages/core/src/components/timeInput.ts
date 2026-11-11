@@ -1,7 +1,9 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { dateFieldChrome } from '../internal/fieldChrome';
+import { controlSizeVariants } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
+import { dateFieldChrome, dateFieldSize } from '../internal/fieldChrome';
 
 /**
  * Segmented time-only field — hour/minute/AM-PM entered as individually
@@ -22,6 +24,7 @@ export const timeInput = typestyles.recipe({
   name: 'timeInput',
   layer: 'components',
   slots: ['root', 'label', 'description', 'error', 'group', 'segment'],
+  variants: { size: controlSize },
   vars: {
     labelColor: { ...atProperty.color, value: t.color.text.primary.var },
     descriptionColor: {
@@ -60,6 +63,12 @@ export const timeInput = typestyles.recipe({
         group: chrome.group,
         segment: chrome.segment,
       },
+      variants: {
+        size: controlSizeVariants(dateFieldSize),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type TimeInputVariantProps = RecipeVariants<typeof timeInput>;

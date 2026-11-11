@@ -17,6 +17,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'children' | 'role'> &
     high?: number;
     optimum?: number;
     label?: string;
+    /** Show the formatted value beside the label. @default true */
     showValueText?: boolean;
     valueLabel?: string;
     className?: string;

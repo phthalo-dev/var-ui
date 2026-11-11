@@ -15,6 +15,7 @@ import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { CalendarPopover } from '../internal/CalendarBody';
 import { splitDataAttributes, type DateFieldBaseProps } from '../internal/dateFieldProps';
 import { mergeRacClassName } from '../internal/racClassName';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
 type DatePickerRac<T extends DateValue> = RACDatePickerProps<T>;
 
@@ -68,11 +69,12 @@ export function DateInput<T extends DateValue = DateValue>({
   label,
   description,
   errorMessage,
+  size,
   className,
   ref,
   ...props
 }: DateInputProps<T>): JSX.Element {
-  const di = dateInput();
+  const di = dateInput({ size: useResolvedControlSize(size) });
   const [rootProps, dataProps] = splitDataAttributes(props);
   return (
     <AriaDatePicker

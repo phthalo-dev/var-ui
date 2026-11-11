@@ -59,6 +59,10 @@ export type TimelineItemProps = Omit<ComponentPropsWithRef<'li'>, 'title' | 'chi
   tone?: Tone;
   children?: ReactNode;
   index?: number;
+  /**
+   * Reached item: filled bullet. `Timeline` sets it from `activeIndex`; pass `false` for an item
+   * that has not happened yet. @default true
+   */
   active?: boolean;
   pending?: boolean;
 };

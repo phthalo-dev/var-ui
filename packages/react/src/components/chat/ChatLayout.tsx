@@ -72,7 +72,7 @@ export function ChatLayout({
 
   const scroll = useChatStreamScroll({ scrollRef: scrollContainerRef });
   const newMessages = useChatNewMessages({
-    isLocked: scroll.isLocked,
+    locked: scroll.isLocked,
     onResize: scroll.scrollIfLocked,
   });
 

@@ -5,14 +5,14 @@ import type { HTMLAttributes } from 'astro/types';
 import { mergeProps } from "../utils";
 
 type Props = Omit<HTMLAttributes<'button'>, 'class:list'> & {
-  /** Initial pressed state. */
-  pressed?: boolean;
+  /** Initially selected (`aria-pressed`); the button toggles on click. Same name as React's uncontrolled `defaultSelected`. @default false */
+  defaultSelected?: boolean;
   size?: ControlSize;
   className?: string;
 };
 
 const {
-  pressed = false,
+  defaultSelected = false,
   size = "md",
   className,
   ...rest
@@ -23,8 +23,8 @@ const {
   type="button"
   {...rest}
   data-var-ui-toggle-button
-  aria-pressed={pressed ? "true" : "false"}
-  data-selected={pressed ? "" : undefined}
+  aria-pressed={defaultSelected ? "true" : "false"}
+  data-selected={defaultSelected ? "" : undefined}
   {...mergeProps(toggleButton({ size }), className)}
 >
   <slot />

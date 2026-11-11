@@ -156,7 +156,7 @@ export { AspectRatio, type AspectRatioProps } from './AspectRatio';
 export { Center, type CenterProps } from './Center';
 export { Hidden, type HiddenProps } from './Hidden';
 export { Breadcrumbs, type BreadcrumbItemData, type BreadcrumbsProps } from './Breadcrumbs';
-export { Toc, TocItem, type TocItemProps, type TocProps } from './Toc';
+export { Toc, TocItem, type TocItemData, type TocItemProps, type TocProps } from './Toc';
 export { List, ListItem, type ListItemData, type ListItemProps, type ListProps } from './List';
 export {
   DescriptionList,
@@ -165,7 +165,6 @@ export {
   type DescriptionListItemProps,
   type DescriptionListProps,
 } from './DescriptionList';
-export { Outline, type OutlineItemData, type OutlineItemProps, type OutlineProps } from './Outline';
 export {
   Accordion,
   type AccordionItemProps,
@@ -206,14 +205,7 @@ export {
   type TableCellProps,
   type TableCaptionProps,
 } from './Table';
-export {
-  Tree,
-  TreeItem,
-  type TreeItemData,
-  type TreeItemProps,
-  type TreeProps,
-  type TreeSelectionMode,
-} from './Tree';
+export { Tree, TreeItem, type TreeItemData, type TreeItemProps, type TreeProps } from './Tree';
 export { Divider, type DividerProps } from './Divider';
 export { Grid, type GridProps } from './Grid';
 export { Section, type SectionProps } from './Section';
@@ -224,15 +216,13 @@ export { Badge, type BadgeProps } from './Badge';
 export {
   Chip,
   ChipGroup,
-  Pill,
   type ChipGroupKey,
   type ChipGroupOption,
   type ChipGroupProps,
   type ChipProps,
-  type PillProps,
 } from './Chip';
 export { Banner, type BannerProps } from './Banner';
-export { Card, ClickableCard, type CardProps, type ClickableCardProps } from './Card';
+export { Card, type CardAsDivProps, type CardAsLinkProps, type CardProps } from './Card';
 export { Carousel, type CarouselProps } from './Carousel';
 export { Thumbnail, type ThumbnailProps } from './Thumbnail';
 export {

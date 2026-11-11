@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type UseChatNewMessagesOptions = {
   /** Current lock state from `useChatStreamScroll`. */
-  isLocked: boolean;
+  locked: boolean;
   /** Called when content grows while locked — typically `scroll.scrollIfLocked`. */
   onResize?: () => void;
 };
@@ -24,20 +24,20 @@ export type UseChatNewMessagesReturn = {
  * manually scrolls back to the bottom), not just via `dismiss()`.
  */
 export function useChatNewMessages({
-  isLocked,
+  locked,
   onResize,
 }: UseChatNewMessagesOptions): UseChatNewMessagesReturn {
   const [hasNewMessages, setHasNewMessages] = useState(false);
   const observerRef = useRef<ResizeObserver | null>(null);
   const lastHeightRef = useRef(0);
-  const isLockedRef = useRef(isLocked);
-  isLockedRef.current = isLocked;
+  const lockedRef = useRef(locked);
+  lockedRef.current = locked;
 
   useEffect(() => {
-    if (isLocked) {
+    if (locked) {
       setHasNewMessages(false);
     }
-  }, [isLocked]);
+  }, [locked]);
 
   const contentRef = useCallback(
     (el: HTMLElement | null) => {
@@ -50,7 +50,7 @@ export function useChatNewMessages({
       const observer = new ResizeObserver(() => {
         const nextHeight = el.scrollHeight;
         if (nextHeight > lastHeightRef.current) {
-          if (isLockedRef.current) {
+          if (lockedRef.current) {
             onResize?.();
           } else {
             setHasNewMessages(true);

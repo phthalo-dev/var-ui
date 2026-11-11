@@ -328,7 +328,7 @@ export const componentRegistry: ComponentEntry[] = [
     name: 'Chip',
     category: 'feedback',
     description: 'Pill-shaped labels for filters and removable tags.',
-    importLine: "import { Chip, ChipGroup, Pill } from '@var-ui/react';",
+    importLine: "import { Chip, ChipGroup } from '@var-ui/react';",
   },
   {
     slug: 'banner',
@@ -572,7 +572,8 @@ export const componentRegistry: ComponentEntry[] = [
     slug: 'toc',
     name: 'Toc',
     category: 'layout',
-    description: 'Table of contents with Toc.Item links for in-page navigation.',
+    description:
+      'Table of contents from an items list, Toc.Item links, or scanned headings, with active-heading highlighting.',
     importLine: "import { Toc } from '@var-ui/react';",
   },
   {
@@ -723,13 +724,6 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { DescriptionList } from '@var-ui/react';",
   },
   {
-    slug: 'outline',
-    name: 'Outline',
-    category: 'content',
-    description: 'Page outline links with optional scroll-spy highlighting.',
-    importLine: "import { Outline } from '@var-ui/react';",
-  },
-  {
     slug: 'table',
     name: 'Table',
     category: 'content',
@@ -756,13 +750,6 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'container',
     description: 'Bordered surface for grouped content.',
     importLine: "import { Card } from '@var-ui/react';",
-  },
-  {
-    slug: 'clickable-card',
-    name: 'ClickableCard',
-    category: 'container',
-    description: 'Card that navigates on press.',
-    importLine: "import { ClickableCard } from '@var-ui/react';",
   },
   {
     slug: 'carousel',

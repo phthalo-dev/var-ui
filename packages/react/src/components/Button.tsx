@@ -10,8 +10,11 @@ import type { ButtonVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps } from '../internal/racProps';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
-type ButtonOwnProps = ButtonVariantProps & {
+type ButtonOwnProps = Omit<ButtonVariantProps, 'size'> & {
+  /** Control density. Falls back to the surrounding control size, then `md`. */
+  size?: ButtonVariantProps['size'];
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Inline style for the root element. */
@@ -58,8 +61,9 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
  * support) when `href` is set, so a button can be a link.
  */
 export function Button(props: ButtonProps): JSX.Element {
-  const { tone, appearance, size = 'md', layout, elevated, className, ...rest } = props;
-  const styles = button({ tone, appearance, size, layout, elevated });
+  const { tone, appearance, size, layout, elevated, className, ...rest } = props;
+  const resolvedSize = useResolvedControlSize(size);
+  const styles = button({ tone, appearance, size: resolvedSize, layout, elevated });
   const merged = mergeProps(styles, className);
   const extras = pickRacDroppedDomProps(rest);
 

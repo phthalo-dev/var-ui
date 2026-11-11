@@ -1,8 +1,10 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSizeVariants } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 import { anchored, popupSurface } from '../shared/anchored';
-import { calendarGridChrome, dateFieldChrome } from '../internal/fieldChrome';
+import { calendarGridChrome, dateFieldChrome, dateFieldSize } from '../internal/fieldChrome';
 
 export const dateTimeInput = typestyles.recipe({
   name: 'dateTimeInput',
@@ -23,6 +25,7 @@ export const dateTimeInput = typestyles.recipe({
     'calendarHeaderCell',
     'calendarCell',
   ],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -161,6 +164,12 @@ export const dateTimeInput = typestyles.recipe({
         calendarHeaderCell: grid.calendarHeaderCell,
         calendarCell: grid.calendarCell,
       },
+      variants: {
+        size: controlSizeVariants(dateFieldSize),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type DateTimeInputVariantProps = RecipeVariants<typeof dateTimeInput>;

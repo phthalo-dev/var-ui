@@ -27,12 +27,15 @@ export const sizeTokenSchema = {
     xl: atProperty.length,
     xxl: atProperty.length,
   },
-  /** Checkbox / radio / switch geometry. */
+  /**
+   * Checkbox / radio / switch geometry per control size: `box` is the checkbox/radio square and the
+   * switch thumb, `dot` the radio mark, `trackWidth`/`trackHeight` the switch track.
+   */
   indicator: {
-    box: atProperty.length,
-    dot: atProperty.length,
-    trackWidth: atProperty.length,
-    trackHeight: atProperty.length,
+    box: { sm: atProperty.length, md: atProperty.length, lg: atProperty.length },
+    dot: { sm: atProperty.length, md: atProperty.length, lg: atProperty.length },
+    trackWidth: { sm: atProperty.length, md: atProperty.length, lg: atProperty.length },
+    trackHeight: { sm: atProperty.length, md: atProperty.length, lg: atProperty.length },
   },
   /** Square media: thumbnails, empty-state artwork, large progress circles. */
   media: {

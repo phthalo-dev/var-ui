@@ -18,6 +18,8 @@ import type { FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
 import { disabledKeysOf } from '../internal/racProps';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
 export type TokenizerOption = {
   /** Unique option value, also used as the token's key once selected. */
@@ -53,6 +55,8 @@ export type TokenizerProps = Omit<
     placeholder?: string;
     /** Disables the field and the hidden form inputs. */
     disabled?: boolean;
+    /** Control density. Falls back to the surrounding control size, then `md`. */
+    size?: ControlSize;
     /** Marks the field invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
     /** Name for form submission: one hidden input per token value, like `<select multiple>`. */
@@ -85,6 +89,7 @@ export function Tokenizer({
   placeholder = 'Add…',
   disabled,
   invalid,
+  size,
   name,
   tokensLabel = 'Selected',
   searchLabel = 'Search',
@@ -97,7 +102,7 @@ export function Tokenizer({
   'aria-describedby': describedByProp,
   ...rest
 }: TokenizerProps): JSX.Element {
-  const tk = tokenizer();
+  const tk = tokenizer({ size: useResolvedControlSize(size) });
   const [inputValue, setInputValue] = useState('');
   const frame = useFieldFrame({
     description,

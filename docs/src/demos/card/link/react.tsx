@@ -1,8 +1,8 @@
-import { ClickableCard } from '@var-ui/react';
+import { Card } from '@var-ui/react';
 
 export default function Preview() {
   return (
-    <ClickableCard
+    <Card
       href="#"
       title="Theming guide"
       description="Override any token with plain CSS custom properties."

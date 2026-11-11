@@ -1,4 +1,4 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { anchored, popupSurface } from '../shared/anchored';
@@ -7,6 +7,13 @@ import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { fieldChrome } from '../internal/fieldChrome';
+import {
+  compactPaddingInline,
+  controlSecondaryFontSize,
+  controlSizeMetrics,
+  controlSizeVariants,
+} from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 
 export const tokenizer = typestyles.recipe({
   name: 'tokenizer',
@@ -25,6 +32,7 @@ export const tokenizer = typestyles.recipe({
     'popover',
     'item',
   ],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -96,8 +104,9 @@ export const tokenizer = typestyles.recipe({
           alignItems: 'center',
           gap: t.space.xxs.var,
           ...border(vars.groupBorder.var),
+          boxSizing: 'border-box',
           borderRadius: t.radius.md.var,
-          padding: t.space.xs.var,
+          paddingBlock: t.space.xxs.var,
           backgroundColor: vars.groupBackground.var,
           '&[data-focus-within]': {
             ...focusRing,
@@ -115,11 +124,10 @@ export const tokenizer = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xxs.var,
-          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
+          paddingInline: t.space.xs.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.tokenBackground.var,
           color: vars.tokenForeground.var,
-          fontSize: t.fontSize.sm.var,
           ...atForcedColors(forced.boundary),
         },
         tokenLabel: {},
@@ -140,7 +148,6 @@ export const tokenizer = typestyles.recipe({
           outline: 'none',
           flex: 1,
           minWidth: '4rem',
-          fontSize: t.fontSize.md.var,
           color: vars.inputForeground.var,
         },
         popover: {
@@ -162,6 +169,23 @@ export const tokenizer = typestyles.recipe({
           },
         },
       },
+      variants: {
+        // The group wraps, so the control height is a minimum; tokens step one font size down.
+        size: controlSizeVariants((size) => ({
+          group: {
+            minHeight: controlSizeMetrics[size].height,
+            paddingInline: compactPaddingInline[size],
+          },
+          token: {
+            fontSize: controlSecondaryFontSize[size],
+            paddingBlock: size === 'sm' ? 0 : t.space.xxs.var,
+          },
+          input: { fontSize: controlSizeMetrics[size].fontSize },
+        })),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type TokenizerVariantProps = RecipeVariants<typeof tokenizer>;

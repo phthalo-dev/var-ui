@@ -14,7 +14,7 @@ import CenterDefault from './center/default/react';
 import HiddenHideMd from './hidden/hide-md/react';
 import HiddenShowMd from './hidden/show-md/react';
 import DirectionRtl from './direction/rtl/react';
-import ClickableCardDefault from './clickable-card/default/react';
+import CardLink from './card/link/react';
 import CodeBlockDefault from './code-block/default/react';
 import DividerDefault from './divider/default/react';
 import EmptyStateDefault from './empty-state/default/react';
@@ -103,9 +103,8 @@ import ListDefault from './list/default/react';
 import ListIcons from './list/icons/react';
 import DescriptionListDefault from './description-list/default/react';
 import DescriptionListHorizontal from './description-list/horizontal/react';
-import OutlineDefault from './outline/default/react';
-import OutlineNested from './outline/nested/react';
 import TocDefault from './toc/default/react';
+import TocItems from './toc/items/react';
 import TocNested from './toc/nested/react';
 import BreadcrumbsDefault from './breadcrumbs/default/react';
 import BreadcrumbsCollapse from './breadcrumbs/collapse/react';
@@ -270,7 +269,7 @@ export const reactDemoMap = {
   'empty-state.default': EmptyStateDefault,
   'avatar.default': AvatarDefault,
   'card.default': CardDefault,
-  'clickable-card.default': ClickableCardDefault,
+  'card.link': CardLink,
   'carousel.default': CarouselDefault,
   'thumbnail.default': ThumbnailDefault,
   'timestamp.default': TimestampDefault,
@@ -324,9 +323,8 @@ export const reactDemoMap = {
   'list.icons': ListIcons,
   'description-list.default': DescriptionListDefault,
   'description-list.horizontal': DescriptionListHorizontal,
-  'outline.default': OutlineDefault,
-  'outline.nested': OutlineNested,
   'toc.default': TocDefault,
+  'toc.items': TocItems,
   'toc.nested': TocNested,
   'breadcrumbs.default': BreadcrumbsDefault,
   'breadcrumbs.collapse': BreadcrumbsCollapse,

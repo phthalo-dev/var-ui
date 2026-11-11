@@ -13,101 +13,101 @@ const data: Row[] = [
 const getRowId = (row: Row) => row.id;
 
 describe('useTableSelection', () => {
-  it('starts empty when no default/controlled keys are given', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'multiple' }));
-    expect(result.current.selectedKeys.size).toBe(0);
+  it('starts empty when no default/controlled value are given', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId, multiple: true }));
+    expect(result.current.value).toEqual([]);
     expect(result.current.isSelected('a')).toBe(false);
   });
 
-  it('respects defaultSelectedKeys (uncontrolled)', () => {
+  it('respects defaultValue (uncontrolled)', () => {
     const { result } = renderHook(() =>
-      useTableSelection({ data, getRowId, mode: 'multiple', defaultSelectedKeys: ['a', 'b'] }),
+      useTableSelection({ data, getRowId, multiple: true, defaultValue: ['a', 'b'] }),
     );
-    expect(result.current.selectedKeys).toEqual(new Set(['a', 'b']));
+    expect(result.current.value).toEqual(['a', 'b']);
     expect(result.current.isSelected('a')).toBe(true);
     expect(result.current.isSelected('c')).toBe(false);
   });
 
-  it('multiple mode: toggle adds and removes keys', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'multiple' }));
+  it('multiple: toggle adds and removes keys', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId, multiple: true }));
     act(() => result.current.toggle('a'));
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
     act(() => result.current.toggle('b'));
-    expect(result.current.selectedKeys).toEqual(new Set(['a', 'b']));
+    expect(result.current.value).toEqual(['a', 'b']);
     act(() => result.current.toggle('a'));
-    expect(result.current.selectedKeys).toEqual(new Set(['b']));
+    expect(result.current.value).toEqual(['b']);
   });
 
-  it('single mode: toggle replaces the current selection', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'single' }));
+  it('single: toggle replaces the current selection', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId }));
     act(() => result.current.toggle('a'));
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
     act(() => result.current.toggle('b'));
-    expect(result.current.selectedKeys).toEqual(new Set(['b']));
+    expect(result.current.value).toEqual(['b']);
   });
 
-  it('single mode: toggling the selected key again deselects it', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'single' }));
+  it('single: toggling the selected key again deselects it', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId }));
     act(() => result.current.toggle('a'));
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
     act(() => result.current.toggle('a'));
-    expect(result.current.selectedKeys.size).toBe(0);
+    expect(result.current.value).toEqual([]);
   });
 
-  it('selectAll selects every row id in multiple mode', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'multiple' }));
+  it('selectAll selects every row id when multiple', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId, multiple: true }));
     act(() => result.current.selectAll());
-    expect(result.current.selectedKeys).toEqual(new Set(['a', 'b', 'c']));
+    expect(result.current.value).toEqual(['a', 'b', 'c']);
   });
 
-  it('selectAll selects only the first row id in single mode', () => {
-    const { result } = renderHook(() => useTableSelection({ data, getRowId, mode: 'single' }));
+  it('selectAll selects only the first row id when single', () => {
+    const { result } = renderHook(() => useTableSelection({ data, getRowId }));
     act(() => result.current.selectAll());
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
   });
 
   it('clear empties the selection', () => {
     const { result } = renderHook(() =>
-      useTableSelection({ data, getRowId, mode: 'multiple', defaultSelectedKeys: ['a', 'b'] }),
+      useTableSelection({ data, getRowId, multiple: true, defaultValue: ['a', 'b'] }),
     );
     act(() => result.current.clear());
-    expect(result.current.selectedKeys.size).toBe(0);
+    expect(result.current.value).toEqual([]);
   });
 
-  it('calls onSelectionChange whenever selection changes', () => {
-    const onSelectionChange = vi.fn<(keys: Set<string>) => void>();
+  it('calls onValueChange whenever selection changes', () => {
+    const onValueChange = vi.fn<(value: string[]) => void>();
     const { result } = renderHook(() =>
-      useTableSelection({ data, getRowId, mode: 'multiple', onSelectionChange }),
+      useTableSelection({ data, getRowId, multiple: true, onValueChange }),
     );
     act(() => result.current.toggle('a'));
-    expect(onSelectionChange).toHaveBeenCalledWith(new Set(['a']));
+    expect(onValueChange).toHaveBeenCalledWith(['a']);
   });
 
-  it('is controlled when selectedKeys is provided — internal state does not change', () => {
-    const onSelectionChange = vi.fn<(keys: Set<string>) => void>();
+  it('is controlled when value is provided — internal state does not change', () => {
+    const onValueChange = vi.fn<(value: string[]) => void>();
     const { result, rerender } = renderHook(
-      ({ selectedKeys }: { selectedKeys: Iterable<string> }) =>
-        useTableSelection({ data, getRowId, mode: 'multiple', selectedKeys, onSelectionChange }),
-      { initialProps: { selectedKeys: ['a'] } },
+      ({ value }: { value: string[] }) =>
+        useTableSelection({ data, getRowId, multiple: true, value, onValueChange }),
+      { initialProps: { value: ['a'] } },
     );
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
 
     act(() => result.current.toggle('b'));
-    expect(onSelectionChange).toHaveBeenCalledWith(new Set(['a', 'b']));
+    expect(onValueChange).toHaveBeenCalledWith(['a', 'b']);
     // Controlled: prop unchanged, so selection is unaffected by the internal toggle call.
-    expect(result.current.selectedKeys).toEqual(new Set(['a']));
+    expect(result.current.value).toEqual(['a']);
 
-    rerender({ selectedKeys: ['a', 'b'] });
-    expect(result.current.selectedKeys).toEqual(new Set(['a', 'b']));
+    rerender({ value: ['a', 'b'] });
+    expect(result.current.value).toEqual(['a', 'b']);
   });
 
-  it('onSelectionChange exposed on the result can be called directly', () => {
-    const onSelectionChange = vi.fn<(keys: Set<string>) => void>();
+  it('setValue on the result replaces the selection', () => {
+    const onValueChange = vi.fn<(value: string[]) => void>();
     const { result } = renderHook(() =>
-      useTableSelection({ data, getRowId, mode: 'multiple', onSelectionChange }),
+      useTableSelection({ data, getRowId, multiple: true, onValueChange }),
     );
-    act(() => result.current.onSelectionChange(new Set(['c'])));
-    expect(result.current.selectedKeys).toEqual(new Set(['c']));
-    expect(onSelectionChange).toHaveBeenCalledWith(new Set(['c']));
+    act(() => result.current.setValue(['c']));
+    expect(result.current.value).toEqual(['c']);
+    expect(onValueChange).toHaveBeenCalledWith(['c']);
   });
 });

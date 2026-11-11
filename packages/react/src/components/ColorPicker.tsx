@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, JSX, KeyboardEvent } from 'react';
 import { useRef } from 'react';
 import { colorPicker } from '@var-ui/core/components/colorPicker';
-import type { ColorPickerVariantProps } from '@var-ui/core';
+import type { ColorPickerVariantProps, ControlSize } from '@var-ui/core';
 import { hsvToHex, hueToPureHex, normalizeHex } from '../color/convert';
 import {
   alphaFromPointer,
@@ -11,6 +11,7 @@ import {
   useColorValue,
 } from '../color';
 import { mergeProps } from 'typestyles';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
 /** Mantine-compatible preset swatches shown below the sliders by default. */
 const DEFAULT_COLOR_SWATCHES = [
@@ -42,6 +43,8 @@ export type ColorPickerProps = Omit<
   onValueChange?: (value: string) => void;
   /** Preset swatches below the sliders. @default Mantine-compatible preset palette */
   swatches?: string[];
+  /** Control density. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Swatches per row. @default 7 */
   swatchesPerRow?: 7 | 10;
   /** Show an alpha slider and emit 8-digit hex. @default false */
@@ -72,6 +75,7 @@ export function ColorPicker({
   value,
   defaultValue,
   onValueChange,
+  size,
   swatches = [...DEFAULT_COLOR_SWATCHES],
   swatchesPerRow = 7,
   withAlpha = false,
@@ -84,7 +88,10 @@ export function ColorPicker({
   ref,
   ...rest
 }: ColorPickerProps): JSX.Element {
-  const cp = colorPicker({ swatchColumns: swatchColumnsVariant(swatchesPerRow) });
+  const cp = colorPicker({
+    size: useResolvedControlSize(size),
+    swatchColumns: swatchColumnsVariant(swatchesPerRow),
+  });
   const { hsv, setHsv, setColor } = useColorValue({
     value,
     defaultValue,

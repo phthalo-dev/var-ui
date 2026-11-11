@@ -1,5 +1,67 @@
 # @var-ui/react
 
+## 0.10.0
+
+### Minor Changes
+
+- [#123](https://github.com/phthalo-dev/var-ui/pull/123) [`d35c057`](https://github.com/phthalo-dev/var-ui/commit/d35c057df3af7218feda794315677e18a73ea34f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Every form control takes the shared `size` axis (`sm` / `md` / `lg`, default `md`).
+  
+  - New `size` variant and React prop on `TextAreaField`, `MultiSelector`, `Tokenizer`, `DateInput`, `DateRangeInput`, `DateTimeInput`, `TimeInput`, `FileInput`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup`, `Slider` and `ColorPicker`. Like `TextField`, the size resolves as `size`, then the surrounding control size (`InputGroup`, `Toolbar`, `Select.Root`, `Combobox.Root`), then `md`. Text-entry controls match `TextField` at each size; checkbox, radio and switch scale the indicator, label type and gap; group sizes apply to every option; `Slider` scales the track and thumb; `ColorPicker` scales the panel, rails, thumbs and swatches (`ColorInput` opens its picker at its own size).
+  - `Button` and `IconButton` now inherit the surrounding control size instead of always defaulting to `md`. A button inside an `InputGroup`, `Toolbar` or compound root matches it unless it sets `size`.
+  - `Toolbar` provides its `size` to the controls inside it, and falls back to the surrounding control size.
+  - Breaking: the `size.indicator` tokens are per size: `size.indicator.box.{sm,md,lg}`, `dot.{sm,md,lg}`, `trackWidth.{sm,md,lg}`, `trackHeight.{sm,md,lg}` (CSS `--var-ui-size-indicator-box-md`, ...). The switch geometry moved to recipe variables (`--var-ui-switch-trackwidth`, `--var-ui-switch-trackheight`, `--var-ui-switch-thumbsize`).
+  - Breaking: `StatusDot` uses the shared surface appearance axis: `appearance` is `solid` / `subtle` / `outline` (default `solid`). `filled` is now `solid`.
+  - Breaking: the size styles key on `data-size`, so plain-CSS markup for these controls needs `data-size` on each slot (the recipes and components set it).
+
+## 0.9.0
+
+### Minor Changes
+
+- [#126](https://github.com/phthalo-dev/var-ui/pull/126) [`718be2b`](https://github.com/phthalo-dev/var-ui/commit/718be2bd0ff08b07076b7525842e48ac941e64af) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Merge `Outline` into `Toc`. `Toc` (React and Astro) now accepts a flat `items` list and a controlled `activeId`; `Outline` and its `outline` recipe are removed.
+
+- [#124](https://github.com/phthalo-dev/var-ui/pull/124) [`cf1d209`](https://github.com/phthalo-dev/var-ui/commit/cf1d2092272f33a708dedf2a7eb6b5ba1e691c81) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Tree` selection is named like `Select`: `multiple` replaces `selectionMode`. Passing `value`, `defaultValue` or `onValueChange` makes rows selectable (single by default, `string | null`); add `multiple` for `string[]`. Without any of them a row click toggles expansion, as `selectionMode="none"` did. The `TreeSelectionMode` type is no longer exported. `Menu` follows the same rule: `onValueChange` alone now also makes it a single-choice menu.
+
+### Patch Changes
+
+- [#122](https://github.com/phthalo-dev/var-ui/pull/122) [`eea1c13`](https://github.com/phthalo-dev/var-ui/commit/eea1c13ee4012a1e09a9da9a007d3b11b2112a56) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Move the last hand-written styles into recipes: `mobileNav` gains a `headerContent` slot (React and Astro use it instead of an inline style or a `<style>` block), the `searchInput` `command` variant sizes its trigger in the recipe instead of a `<style>` block in Astro, CommandPalette drops a redundant inline style on its input, and ProgressCircle sets its progress through the recipe's var ref instead of a hand-written custom property.
+
+## 0.8.0
+
+### Minor Changes
+
+- [#120](https://github.com/phthalo-dev/var-ui/pull/120) [`ef74ee0`](https://github.com/phthalo-dev/var-ui/commit/ef74ee0e50bf15a2c6f027264c780d630df917d5) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `DesignSystemProvider` now defaults `defaultColorMode` to `'system'` instead of `'light'`, so apps follow the OS color preference unless they choose a mode. `'system'` resolves in CSS (`prefers-color-scheme`) and pins no `data-color-mode`, so the server render is unchanged by the user's OS. Pass `defaultColorMode="light"` to keep the old behaviour.
+  
+  `Table.Row` `selected` now only sets `data-selected` for styling. It no longer adds `aria-selected`, which is not valid on a row of a plain `<table>`; convey selection with the row's checkbox. Pass `aria-selected` yourself when you render the table as a `role="grid"`.
+
+- [#121](https://github.com/phthalo-dev/var-ui/pull/121) [`08224f6`](https://github.com/phthalo-dev/var-ui/commit/08224f60b9c2b5ed722ce6ad062479e292d6d5d2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - API contract and React/Astro parity leftovers:
+  
+  - `useTableSelection` uses the same vocabulary as `Select`: `multiple` (opt-in), plus `value`, `defaultValue` and `onValueChange` with row ids as `string[]`. It returns `value`, `isSelected`, `toggle`, `selectAll`, `clear` and `setValue`. The `selectedKeys`/`onSelectionChange` options and the `SelectionMode` type are gone.
+  - `useChatNewMessages` takes `locked` instead of `isLocked`. The public-props guard now also checks hook options.
+  - `Menu` (React) supports a single choice: `value`, `defaultValue` and `onValueChange` on `Menu`/`Menu.Root` and `Menu.FromSections` turn items into `menuitemradio` with a check mark. Astro `Menu` replaces `selectionMode` and `selectedId` with the same `defaultValue` (`null` = selectable, nothing checked).
+  - `Card` takes `href`: the whole card becomes a link with `title`, `description` and `hint`, like `Button`. `ClickableCard` is removed from both packages; use `<Card href>`.
+  - `Pill` is removed; use `<Chip onRemove>`.
+  - Astro `ToggleButton` takes `defaultSelected` instead of `pressed`, matching React.
+
+- [#119](https://github.com/phthalo-dev/var-ui/pull/119) [`fa2dcb2`](https://github.com/phthalo-dev/var-ui/commit/fa2dcb2f21dc0d8f939aa2ff993c541b0b16790f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Add `Menu.Submenu`: nested menus for `Menu` and `Menubar.Menu`. The trigger item has a chevron (mirrored in RTL) and `aria-haspopup`/`aria-expanded`; the child menu opens beside it on hover, ArrowRight, Enter or Space (mirrored in RTL), closes with ArrowLeft or Escape, and choosing an item closes the whole chain. Menubar keeps Left/Right for the bar except inside submenus. `Menu.FromSections`, `Menu.ContextMenu` and `Menu.Overflow` items accept `items` to render a submenu. The `menu` recipe gains `itemIcon` and `submenuPopover` slots and styles `submenuChevron`.
+
+- [#117](https://github.com/phthalo-dev/var-ui/pull/117) [`ff8bf54`](https://github.com/phthalo-dev/var-ui/commit/ff8bf545a526840a28c6a68a8caf922fe2f1fa59) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Space tokens use t-shirt names, like `fontSize` and `radius`: `none` (0), `xxs` (0.25rem), `xs` (0.5rem), `sm` (0.75rem), `md` (1rem), `lg` (1.5rem), `xl` (2rem), `xxl` (2.5rem), `xxxl` (3rem) and `xxxxl` (4rem). The old numeric keys map as `0→none`, `1→xxs`, `2→xs`, `3→sm`, `4→md`, `5→lg`, `6→xl`, `10→xxl`, `8→xxxl` and `12→xxxxl`. The unused steps `7`, `9`, `11`, `16` and `20` are removed. CSS variables follow, so `--var-ui-space-4` is now `--var-ui-space-md`.
+  
+  Scale names use letters only: `fontSize` and `size.panel` rename `2xl` to `xxl`, and `fontSize` renames `3xl` to `xxxl`.
+  
+  `Layout`, `LayoutHeader`, `LayoutFooter`, `LayoutContent`, `LayoutPanel` (`padding`) and `AppShell` (`contentPadding`) take space names instead of numbers, for example `padding="none"` instead of `padding={0}`.
+
+### Patch Changes
+
+- [#119](https://github.com/phthalo-dev/var-ui/pull/119) [`fa2dcb2`](https://github.com/phthalo-dev/var-ui/commit/fa2dcb2f21dc0d8f939aa2ff993c541b0b16790f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix Escape closing a modal `Dialog` together with a `Popover` inside it. When the popover was opened without a user activation (a timer, a controlled `open`, `showPopover()`), Chromium grouped its close watcher with the dialog's, so one Escape also fired the dialog's `cancel`. The dialog now keeps itself open when the Escape already closed a nested popover or dialog.
+
+- [#115](https://github.com/phthalo-dev/var-ui/pull/115) [`28ffffa`](https://github.com/phthalo-dev/var-ui/commit/28ffffacd2399e1b79d066c6a2ba48b94ca719e6) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Export `Density`, `Gap`, `Orientation` and `Sender`, the value types of the shared `density`, `gap`, `orientation` and `sender` variant axes, alongside `Tone`, `SurfaceAppearance` and `ControlSize`. React and Astro component props that use a shared axis now name it with these types instead of `NonNullable<XVariantProps['axis']>`. The accepted values are unchanged.
+
+- [#119](https://github.com/phthalo-dev/var-ui/pull/119) [`fa2dcb2`](https://github.com/phthalo-dev/var-ui/commit/fa2dcb2f21dc0d8f939aa2ff993c541b0b16790f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Toast: the last toast now fades out before its region unmounts (React and Astro), and a toast arriving mid-exit cancels the removal. Popups cap their width against the usable viewport instead of `100vw`, so a very wide popup no longer extends under a classic scrollbar (the root element is now a CSS anchor named `--var-ui-viewport`).
+
+- [#118](https://github.com/phthalo-dev/var-ui/pull/118) [`e1b8706`](https://github.com/phthalo-dev/var-ui/commit/e1b87060e9fb3abb847d15ddeb774d125d08d6fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Depend on `typestyles` `^0.35.2`, which keeps recipe `.vars` in `compile: true` (zero-runtime) builds, so components that set recipe vars at runtime work with the compile transform.
+
+- [#117](https://github.com/phthalo-dev/var-ui/pull/117) [`ff8bf54`](https://github.com/phthalo-dev/var-ui/commit/ff8bf545a526840a28c6a68a8caf922fe2f1fa59) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Depend on `typestyles` `^0.35.1`.
+
 ## 0.7.0
 
 ### Minor Changes

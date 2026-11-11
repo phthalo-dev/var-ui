@@ -14,6 +14,8 @@ import {
 import { checkbox } from '@var-ui/core/components/checkbox';
 import { field } from '@var-ui/core/components/field';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps, type Option } from '../internal/racProps';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
@@ -61,6 +63,8 @@ export type CheckboxGroupProps = Omit<
   validate?: RACCheckboxGroupProps['validate'];
   /** Whether to use native or ARIA validation. */
   validationBehavior?: 'native' | 'aria';
+  /** Control density for every option. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Classes for the group root. */
   className?: string;
   /** Inline style for the group root. */
@@ -74,6 +78,7 @@ export function CheckboxGroup({
   description,
   errorMessage,
   options,
+  size,
   className,
   onChange,
   value,
@@ -86,7 +91,7 @@ export function CheckboxGroup({
   ref,
   ...props
 }: CheckboxGroupProps): JSX.Element {
-  const r = checkbox();
+  const r = checkbox({ size: useResolvedControlSize(size) });
   const f = field();
   const racProps = toRacProps({
     value,

@@ -325,22 +325,4 @@ export function ChipGroup({
   );
 }
 
-export type PillProps = Omit<
-  ChipProps,
-  'onRemove' | 'selected' | 'defaultSelected' | 'onSelectedChange' | 'value'
-> & {
-  onRemove: () => void;
-};
-
-/**
- * Removable tag chip — shorthand for `<Chip onRemove={…}>`.
- *
- * ```tsx
- * <Pill onRemove={() => removeTag('docs')}>Documentation</Pill>
- * ```
- */
-export function Pill({ onRemove, ...props }: PillProps): JSX.Element {
-  return <Chip {...props} onRemove={onRemove} />;
-}
-
 export type { Key as ChipGroupKey };

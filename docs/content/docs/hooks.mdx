@@ -273,13 +273,13 @@ const { pageData, page, totalPages, setPage } = useTablePagination({
 });
 ```
 
-| Hook                 | Options                                                                                                             | Returns                                                                                          |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `useTableSort`       | `data`, `defaultSort`, `sortDescriptor`, `onSortChange`, `getSortValue(row, column)`                                | `sortedData`, `sortDescriptor`, `onSortChange`. Nullish values sort last.                        |
-| `useTableFilter`     | `data`, `query`, `defaultQuery`, `onQueryChange`, `searchKeys`, `filterFn(row, query)`                              | `filteredData`, `query`, `onQueryChange`. Default match is a case-insensitive substring.         |
-| `useTablePagination` | `data`, `pageSize`, `page` (1-based), `defaultPage`, `onPageChange`                                                 | `pageData`, `page`, `pageSize`, `totalPages`, `setPage`. The page is clamped to the valid range. |
-| `useTableSelection`  | `data`, `getRowId`, `mode` (`'single'` or `'multiple'`), `selectedKeys`, `defaultSelectedKeys`, `onSelectionChange` | `selectedKeys` (a `Set`), `isSelected`, `toggle`, `selectAll`, `clear`, `onSelectionChange`      |
-| `useColumnResize`    | `columns`, `defaultWidths` (CSS lengths), `minWidth` (80), `autoSaveId`, `widths`, `onWidthsChange`                 | `columnWidths`, `getColumnProps(key)`, `getResizeHandleProps(key)`                               |
+| Hook                 | Options                                                                                                         | Returns                                                                                          |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `useTableSort`       | `data`, `defaultSort`, `sortDescriptor`, `onSortChange`, `getSortValue(row, column)`                            | `sortedData`, `sortDescriptor`, `onSortChange`. Nullish values sort last.                        |
+| `useTableFilter`     | `data`, `query`, `defaultQuery`, `onQueryChange`, `searchKeys`, `filterFn(row, query)`                          | `filteredData`, `query`, `onQueryChange`. Default match is a case-insensitive substring.         |
+| `useTablePagination` | `data`, `pageSize`, `page` (1-based), `defaultPage`, `onPageChange`                                             | `pageData`, `page`, `pageSize`, `totalPages`, `setPage`. The page is clamped to the valid range. |
+| `useTableSelection`  | `data`, `getRowId`, `multiple`, `value`, `defaultValue`, `onValueChange` (row ids as `string[]`, like `Select`) | `value`, `isSelected`, `toggle`, `selectAll`, `clear`, `setValue`                                |
+| `useColumnResize`    | `columns`, `defaultWidths` (CSS lengths), `minWidth` (80), `autoSaveId`, `widths`, `onWidthsChange`             | `columnWidths`, `getColumnProps(key)`, `getResizeHandleProps(key)`                               |
 
 ## Context hooks
 

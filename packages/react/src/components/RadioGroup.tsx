@@ -14,6 +14,8 @@ import {
 import { radio } from '@var-ui/core/components/radio';
 import { field } from '@var-ui/core/components/field';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps, type Option } from '../internal/racProps';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
@@ -63,6 +65,8 @@ export type RadioGroupProps = Omit<
   validationBehavior?: 'native' | 'aria';
   /** Layout direction of the options. */
   orientation?: 'horizontal' | 'vertical';
+  /** Control density for every option. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Classes for the group root. */
   className?: string;
   /** Inline style for the group root. */
@@ -76,6 +80,7 @@ export function RadioGroup({
   description,
   errorMessage,
   options,
+  size,
   className,
   onChange,
   value,
@@ -88,7 +93,7 @@ export function RadioGroup({
   ref,
   ...props
 }: RadioGroupProps): JSX.Element {
-  const r = radio();
+  const r = radio({ size: useResolvedControlSize(size) });
   const f = field();
   const racProps = toRacProps({
     value,

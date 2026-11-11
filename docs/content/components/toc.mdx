@@ -1,11 +1,11 @@
 ---
 title: Toc
-description: Table of contents with Toc.Item links for in-page navigation.
+description: Table of contents from an items list, Toc.Item links, or scanned headings.
 ---
 
 # Toc
 
-In-page table of contents. Compose manual `Toc.Item`s or enable `auto` to scan headings in a content root.
+In-page table of contents. Pass a flat `items` list, compose manual `Toc.Item`s, or enable `auto` to scan headings in a content root. Priority is `items`, then children, then `auto`.
 
 ## Examples
 
@@ -20,6 +20,12 @@ A flat list of section anchors with one selected item.
 Mark subsection links with `nested` (matches auto mode’s `h3` indent).
 
 <Demo id="toc.nested" />
+
+### Items list
+
+Pass `items` (`{ id, text, level }`; `level: 3` nests) and a controlled `activeId`. `activeId` overrides the scroll spy for `items` and `auto` lists. Available in React and Astro.
+
+<Demo id="toc.items" />
 
 ## Props
 

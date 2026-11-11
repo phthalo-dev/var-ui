@@ -33,7 +33,7 @@ export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children
   mobileNav?: ReactNode;
   /** Full-width banner above the top nav / content frame. */
   banner?: ReactNode;
-  /** Optional right rail (e.g. an `Outline`). Hidden below `mobileBreakpoint`. */
+  /** Optional right rail (e.g. a `Toc`). Hidden below `mobileBreakpoint`. */
   aside?: ReactNode;
   /**
    * When `true`, renders only the main landmark — no chrome slots, skip link, or
@@ -59,6 +59,7 @@ export type AppShellProps = Omit<ComponentPropsWithRef<'div'>, 'ref' | 'children
   /**
    * When `true` (default), a hidden header still reserves grid space.
    * When `false`, the top row collapses so main expands into the header band.
+   * @default true
    */
   headerOffset?: boolean;
   /** @default 'fill' */

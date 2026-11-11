@@ -111,11 +111,20 @@ type SurfacePaintRefs = {
 };
 
 /** Surface appearances for alert, badge, chip, banner, and toast. */
-export const surfaceAppearance = variant.enum(['subtle', 'solid', 'outline'], {
+const surfaceAppearanceValues = ['subtle', 'solid', 'outline'] as const;
+
+export const surfaceAppearance = variant.enum(surfaceAppearanceValues, {
   default: 'subtle',
 });
 
 export type SurfaceAppearance = VariantOptions<typeof surfaceAppearance>;
+
+/** Same options as `surfaceAppearance`, with a component-specific default (status-dot: `solid`). */
+export function surfaceAppearanceWithDefault<const Default extends SurfaceAppearance>(
+  defaultAppearance: Default,
+) {
+  return variant.enum(surfaceAppearanceValues, { default: defaultAppearance });
+}
 
 /** Root custom properties for a component `tone` (solid + inherited semantic for subtle / title). */
 export function semanticChannelAssignments(v: SemanticChannelRefs, key: SemanticToneKey) {

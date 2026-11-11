@@ -6,6 +6,7 @@ import { mergeProps } from '../utils';
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   padding?: LayoutPadding;
+  /** Let the zone scroll its overflow (`overflow: auto`). @default true */
   scrollable?: boolean;
   label?: string;
   className?: string;

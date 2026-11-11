@@ -1,20 +1,54 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { card } from '@var-ui/core/components/card';
-import { mergeProps } from '../utils';
+import { combine, mergeProps } from '../utils';
 
-type Props = Omit<HTMLAttributes<'div'>, 'title'> & {
+type DivProps = Omit<HTMLAttributes<'div'>, 'title'> & {
+  href?: undefined;
+  /** Optional heading rendered above the body. */
   title?: string;
   /** Semantic level of the title heading. @default 3 */
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
 };
 
-const { title, headingLevel = 3, className, ...rest } = Astro.props;
-const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+/** With `href` the whole card is a link, like React's `Card` and `Button`. */
+type LinkProps = Omit<HTMLAttributes<'a'>, 'title' | 'href'> & {
+  href: string;
+  /** Card headline. */
+  title: string;
+  /** Supporting copy below the title. */
+  description?: string;
+  /** Trailing hint line (e.g. reading time, "Learn more →"). */
+  hint?: string;
+  className?: string;
+};
+
+type Props = DivProps | LinkProps;
+
+// One destructure for both shapes; `href` decides which element renders.
+const {
+  href,
+  title,
+  description,
+  hint,
+  headingLevel = 3,
+  className,
+  ...rest
+} = Astro.props as Omit<DivProps, 'href'> & Partial<Omit<LinkProps, 'href'>> & { href?: string };
 const c = card();
+const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 ---
-<div {...rest} {...mergeProps(c.root, className)}>
-  {title ? <Heading {...mergeProps(c.title)}>{title}</Heading> : null}
-  <div {...mergeProps(c.body)}><slot /></div>
-</div>
+{href !== undefined ? (
+  <a href={href} {...rest} {...combine(c.root, c.linkRoot, className)}>
+    <span {...mergeProps(c.linkTitle)}>{title}</span>
+    {description ? <p {...mergeProps(c.linkDescription)}>{description}</p> : null}
+    <slot />
+    {hint ? <span {...mergeProps(c.linkHint)}>{hint}</span> : null}
+  </a>
+) : (
+  <div {...rest} {...mergeProps(c.root, className)}>
+    {title ? <Heading {...mergeProps(c.title)}>{title}</Heading> : null}
+    <div {...mergeProps(c.body)}><slot /></div>
+  </div>
+)}

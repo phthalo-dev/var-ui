@@ -39,7 +39,8 @@ type ControlSurfaceOptions = {
   inset?: 'default' | 'compact';
 };
 
-const compactPaddingInline: Record<ControlSize, string> = {
+/** Horizontal inset for icon + input shells and text-entry fields (`inset: 'compact'`). */
+export const compactPaddingInline: Record<ControlSize, string> = {
   sm: t.space.xs.var,
   md: t.space.sm.var,
   lg: t.space.md.var,
@@ -66,5 +67,37 @@ export function controlSizeVariants<T extends Record<string, unknown>>(
     sm: apply('sm'),
     md: apply('md'),
     lg: apply('lg'),
+  };
+}
+
+/** One fontSize step below the control's: secondary text inside a control (tokens, hints, file names). */
+export const controlSecondaryFontSize: Record<ControlSize, string> = {
+  sm: t.fontSize.xs.var,
+  md: t.fontSize.sm.var,
+  lg: t.fontSize.md.var,
+};
+
+/** Vertical inset for auto-height text-entry surfaces (text areas, wrapping token groups). */
+export const controlPaddingBlock: Record<ControlSize, string> = {
+  sm: t.space.xxs.var,
+  md: t.space.xs.var,
+  lg: t.space.xs.var,
+};
+
+/**
+ * Geometry for checkbox / radio / switch at a control size: the indicator box (checkbox square,
+ * radio ring, switch thumb), radio dot, switch track, the label's fontSize and the indicator-label
+ * gap. Backed by `size.indicator` tokens.
+ */
+export function indicatorSize(size: ControlSize) {
+  const { box, dot, trackWidth, trackHeight } = t.size.indicator;
+  return {
+    box: box[size].var,
+    dot: dot[size].var,
+    trackWidth: trackWidth[size].var,
+    trackHeight: trackHeight[size].var,
+    labelFontSize: controlSizeMetrics[size].fontSize,
+    markFontSize: controlSecondaryFontSize[size],
+    gap: controlSizeMetrics[size].gap,
   };
 }
