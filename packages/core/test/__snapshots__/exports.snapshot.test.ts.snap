@@ -211,7 +211,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "string": 4,
     },
     "runtimeExports": 164,
-    "typeOnlyExports": 128,
+    "typeOnlyExports": 140,
   },
   "typeOnlyExports": [
     "AccordionGroupVariant",
