@@ -5,7 +5,36 @@ import { focusRing } from '../internal/focusRing';
 import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
-import { controlSize } from '../shared/variantAxes';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
+import { controlSizeVariants } from '../internal/controlSize';
+
+/** Picker geometry per control size: saturation panel, hue/alpha rail, thumbs, preset swatches. */
+const colorPickerSize: Record<
+  ControlSize,
+  { panel: string; rail: string; thumb: string; swatch: string; gap: string }
+> = {
+  sm: {
+    panel: `calc(8 * ${t.space.md.var})`,
+    rail: t.space.xs.var,
+    thumb: t.space.sm.var,
+    swatch: t.size.icon.md.var,
+    gap: t.space.xs.var,
+  },
+  md: {
+    panel: `calc(10 * ${t.space.md.var})`,
+    rail: t.space.sm.var,
+    thumb: t.size.icon.sm.var,
+    swatch: t.size.icon.lg.var,
+    gap: t.space.sm.var,
+  },
+  lg: {
+    panel: `calc(12 * ${t.space.md.var})`,
+    rail: t.space.md.var,
+    thumb: t.size.icon.lg.var,
+    swatch: t.space.lg.var,
+    gap: t.space.md.var,
+  },
+};
 
 /**
  * HSV color picker panel: saturation/value area, hue slider, optional alpha
@@ -27,16 +56,17 @@ export const colorPicker = typestyles.recipe({
     'swatch',
   ],
   variants: {
+    size: controlSize,
     swatchColumns: variant.enum(['seven', 'ten'], { default: 'seven' }),
   },
   vars: {
-    panelHeight: { ...atProperty.length, value: '10rem' },
-    sliderHeight: { ...atProperty.length, value: '0.75rem' },
-    thumbSize: { ...atProperty.length, value: '0.875rem' },
+    panelHeight: { ...atProperty.length, value: colorPickerSize.md.panel },
+    sliderHeight: { ...atProperty.length, value: colorPickerSize.md.rail },
+    thumbSize: { ...atProperty.length, value: colorPickerSize.md.thumb },
     border: { ...atProperty.color, value: t.color.border.default.var },
     thumbBorder: { ...atProperty.color, value: t.color.background.surface.var },
     thumbShadow: { value: t.shadow.sm.var, syntax: '*', initial: 'none' },
-    swatchSize: { ...atProperty.length, value: '1.25rem' },
+    swatchSize: { ...atProperty.length, value: colorPickerSize.md.swatch },
     swatchSelectedRing: { ...atProperty.color, value: t.color.border.focus.var },
     checkerLight: { ...atProperty.color, value: t.color.background.subtle.var },
     checkerDark: { ...atProperty.color, value: t.color.border.subtle.var },
@@ -54,7 +84,6 @@ export const colorPicker = typestyles.recipe({
       base: {
         root: {
           display: 'grid',
-          gap: t.space.sm.var,
           width: '100%',
           minWidth: t.size.field.minWidth.var,
         },
@@ -172,6 +201,18 @@ export const colorPicker = typestyles.recipe({
         },
       },
       variants: {
+        size: controlSizeVariants((size) => {
+          const m = colorPickerSize[size];
+          return {
+            root: {
+              gap: m.gap,
+              [vars.panelHeight.name]: m.panel,
+              [vars.sliderHeight.name]: m.rail,
+              [vars.thumbSize.name]: m.thumb,
+              [vars.swatchSize.name]: m.swatch,
+            },
+          };
+        }),
         swatchColumns: {
           seven: { swatches: { gridTemplateColumns: 'repeat(7, 1fr)' } },
           ten: { swatches: { gridTemplateColumns: 'repeat(10, 1fr)' } },

@@ -102,7 +102,8 @@ export function ColorInput({
   ...rest
 }: ColorInputProps): JSX.Element {
   const contextSize = useControlSize();
-  const cf = colorField({ size: size ?? contextSize ?? 'md', appearance });
+  const resolvedSize = size ?? contextSize ?? 'md';
+  const cf = colorField({ size: resolvedSize, appearance });
   const isField = appearance === 'field';
   const p = popover();
   const frame = useFieldFrame({
@@ -179,6 +180,7 @@ export function ColorInput({
           <NativePopover {...mergeProps(p.root)}>
             <div {...mergeProps(p.content)}>
               <ColorPicker
+                size={resolvedSize}
                 value={color}
                 onValueChange={handlePickerChange}
                 swatches={swatches}

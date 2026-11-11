@@ -12,3 +12,9 @@ export const ControlSizeContext = createContext<ControlSize | undefined>(undefin
 export function useControlSize(): ControlSize | undefined {
   return useContext(ControlSizeContext);
 }
+
+/** The size a control renders at: its own `size`, else the surrounding control size, else `md`. */
+export function useResolvedControlSize(size: ControlSize | undefined): ControlSize {
+  const contextSize = useControlSize();
+  return size ?? contextSize ?? 'md';
+}

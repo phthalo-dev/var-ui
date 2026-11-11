@@ -7,16 +7,17 @@ export const snippets = {
   astro: `---
 // No @var-ui/astro Switch — core recipe + native checkbox (role="switch").
 import { switchStyles } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
 
 const sw = switchStyles();
 ---
 
-<label class:list={[sw.root]}>
+<label {...mergeProps(sw.root)}>
   <input type="checkbox" role="switch" class="sr-only" />
-  <span class:list={[sw.track]}>
-    <span class:list={[sw.thumb]}></span>
+  <span {...mergeProps(sw.track)}>
+    <span {...mergeProps(sw.thumb)}></span>
   </span>
-  <span class:list={[sw.label]}>Enable notifications</span>
+  <span {...mergeProps(sw.label)}>Enable notifications</span>
 </label>`,
-  html: `<label class="var-ui-switch"><input type="checkbox" role="switch" style="position:absolute;width:0.0625rem;height:0.0625rem;opacity:0"></input><span class="var-ui-switch__track"><span class="var-ui-switch__thumb"></span></span><span class="var-ui-switch__label">Enable notifications</span></label>`,
+  html: `<label data-size="md" class="var-ui-switch"><input type="checkbox" role="switch" style="position:absolute;width:0.0625rem;height:0.0625rem;opacity:0"></input><span data-size="md" class="var-ui-switch__track"><span data-size="md" class="var-ui-switch__thumb"></span></span><span data-size="md" class="var-ui-switch__label">Enable notifications</span></label>`,
 } satisfies DemoSnippets;

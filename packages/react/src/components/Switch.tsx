@@ -11,6 +11,8 @@ import {
 import { Switch as AriaSwitch, type SwitchProps as RACSwitchProps } from 'react-aria-components';
 import { switchStyles } from '@var-ui/core/components/switch';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps } from '../internal/racProps';
 import { useNativeChecked } from '../internal/useNativeChecked';
@@ -48,6 +50,8 @@ export type SwitchProps = Omit<
   readOnly?: boolean;
   /** Label rendered beside the switch control. */
   children?: ReactNode;
+  /** Control density. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Classes for the root `<label>`. */
   className?: string;
   /** Inline style for the root `<label>`. */
@@ -62,6 +66,7 @@ export type SwitchProps = Omit<
 
 export function Switch({
   children,
+  size,
   className,
   style,
   onChange,
@@ -77,7 +82,7 @@ export function Switch({
   const selection = useNativeChecked(inputRef, checked, defaultChecked, onCheckedChange);
   // RAC's `inputRef` only takes an object ref; this also serves callback refs.
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
-  const sw = switchStyles();
+  const sw = switchStyles({ size: useResolvedControlSize(size) });
   const racProps = toRacProps({ disabled, readOnly });
   return (
     <AriaSwitch

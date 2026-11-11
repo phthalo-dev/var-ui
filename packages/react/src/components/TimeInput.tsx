@@ -12,6 +12,7 @@ import { mergeProps } from 'typestyles';
 import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { splitDataAttributes, type DateFieldBaseProps } from '../internal/dateFieldProps';
 import { mergeRacClassName } from '../internal/racClassName';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
 type TimeFieldRac<T extends TimeValue> = RACTimeFieldProps<T>;
 
@@ -54,11 +55,12 @@ export function TimeInput<T extends TimeValue = TimeValue>({
   label,
   description,
   errorMessage,
+  size,
   className,
   ref,
   ...props
 }: TimeInputProps<T>): JSX.Element {
-  const ti = timeInput();
+  const ti = timeInput({ size: useResolvedControlSize(size) });
   const [rootProps, dataProps] = splitDataAttributes(props);
   return (
     <AriaTimeField

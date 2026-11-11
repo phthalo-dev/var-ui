@@ -14,6 +14,8 @@ import {
 } from 'react-aria-components';
 import { checkbox } from '@var-ui/core/components/checkbox';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import { racRenderWithExtras } from '../internal/racDomProps';
 import { toRacProps } from '../internal/racProps';
 import { useNativeChecked } from '../internal/useNativeChecked';
@@ -58,6 +60,8 @@ export type CheckboxProps = Omit<
   invalid?: boolean;
   /** Label rendered beside the checkbox control. */
   children?: ReactNode;
+  /** Control density. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Classes for the root `<label>`. */
   className?: string;
   /** Inline style for the root `<label>`. */
@@ -71,6 +75,7 @@ export type CheckboxProps = Omit<
 
 export function Checkbox({
   children,
+  size,
   className,
   style,
   onChange,
@@ -89,7 +94,7 @@ export function Checkbox({
   const selection = useNativeChecked(inputRef, checked, defaultChecked, onCheckedChange);
   // RAC's `inputRef` only takes an object ref; this also serves callback refs.
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
-  const cb = checkbox();
+  const cb = checkbox({ size: useResolvedControlSize(size) });
   const racProps = toRacProps({
     indeterminate,
     disabled,

@@ -7,13 +7,14 @@ export const snippets = {
   astro: `---
 // No @var-ui/astro TextAreaField — use core recipe markup + native textarea.
 import { textAreaField } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
 
 const taf = textAreaField();
 ---
 
-<div class:list={[taf.root]}>
-  <label class:list={[taf.label]} for="notes">Notes</label>
-  <textarea class:list={[taf.input]} id="notes" placeholder="Add a note…"></textarea>
+<div {...mergeProps(taf.root)}>
+  <label {...mergeProps(taf.label)} for="notes">Notes</label>
+  <textarea {...mergeProps(taf.input)} id="notes" placeholder="Add a note…"></textarea>
 </div>`,
-  html: `<div class="var-ui-text-area-field"><label class="var-ui-text-area-field__label" for="notes">Notes</label><textarea class="var-ui-text-area-field__input" id="notes" placeholder="Add a note…"></textarea></div>`,
+  html: `<div data-size="md" class="var-ui-text-area-field"><label data-size="md" class="var-ui-text-area-field__label" for="notes">Notes</label><textarea data-size="md" class="var-ui-text-area-field__input" id="notes" placeholder="Add a note…"></textarea></div>`,
 } satisfies DemoSnippets;

@@ -8,7 +8,7 @@ describe('switch track CSS', () => {
     const css = getRegisteredCss();
     const track = css.match(/\.var-ui-switch__track\s*\{([^}]*)\}/);
 
-    expect(track?.[1]).toMatch(/width:\s*var\(--var-ui-size-indicator-trackWidth/);
+    expect(track?.[1]).toMatch(/width:\s*var\(--var-ui-switch-trackwidth/);
     expect(track?.[1]).toMatch(/flex-shrink:\s*0/);
   });
 });

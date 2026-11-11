@@ -1,8 +1,22 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { fieldChrome } from '../internal/fieldChrome';
+import { controlSecondaryFontSize, controlSizeVariants } from '../internal/controlSize';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
+
+const dropzonePadding: Record<ControlSize, string> = {
+  sm: `${t.space.lg.var} ${t.space.sm.var}`,
+  md: `${t.space.xl.var} ${t.space.md.var}`,
+  lg: `${t.space.xxl.var} ${t.space.lg.var}`,
+};
+
+const iconSize: Record<ControlSize, string> = {
+  sm: t.size.icon.md.var,
+  md: t.size.icon.lg.var,
+  lg: t.size.control.xs.var,
+};
 
 /**
  * File picker field: dashed dropzone (click or drag-and-drop) around field
@@ -26,6 +40,7 @@ export const fileInput = typestyles.recipe({
     'clearButton',
     'hiddenInput',
   ],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -68,7 +83,9 @@ export const fileInput = typestyles.recipe({
     });
     return {
       base: {
-        ...chrome,
+        label: chrome.label,
+        description: chrome.description,
+        error: chrome.error,
         root: {
           ...chrome.root,
           minWidth: t.size.field.minWidth.var,
@@ -89,7 +106,6 @@ export const fileInput = typestyles.recipe({
           borderStyle: 'dashed',
           borderColor: vars.dropzoneBorder.var,
           borderRadius: t.radius.md.var,
-          padding: `${t.space.xl.var} ${t.space.md.var}`,
           backgroundColor: vars.dropzoneBackground.var,
           cursor: 'pointer',
           textAlign: 'center',
@@ -108,11 +124,9 @@ export const fileInput = typestyles.recipe({
           },
         },
         placeholderText: {
-          fontSize: t.fontSize.sm.var,
           color: vars.placeholderColor.var,
         },
         fileNameText: {
-          fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
           color: vars.fileNameColor.var,
         },
@@ -120,8 +134,6 @@ export const fileInput = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: t.size.icon.lg.var,
-          height: t.size.icon.lg.var,
           color: vars.iconColor.var,
         },
         clearButton: {
@@ -157,6 +169,17 @@ export const fileInput = typestyles.recipe({
           whiteSpace: 'nowrap',
         },
       },
+      variants: {
+        size: controlSizeVariants((size) => ({
+          dropzone: { padding: dropzonePadding[size] },
+          placeholderText: { fontSize: controlSecondaryFontSize[size] },
+          fileNameText: { fontSize: controlSecondaryFontSize[size] },
+          icon: { width: iconSize[size], height: iconSize[size] },
+        })),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type FileInputVariantProps = RecipeVariants<typeof fileInput>;
