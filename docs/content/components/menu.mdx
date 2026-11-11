@@ -29,7 +29,7 @@ The child menu opens beside its item (to the inline end, mirrored in RTL) with i
 
 ### Single choice
 
-Pass `value` (controlled) or `defaultValue` to make a menu a single choice, like a sort order or a view mode. Items render as `menuitemradio` with a check mark next to the chosen one, and choosing an item checks it and calls `onValueChange(id)`. `null` means selectable with nothing checked yet. Selection applies to the top-level items; a `Menu.Submenu` trigger stays a plain item. `Menu.FromSections` forwards the same props. In Astro, `Menu` takes `defaultValue` with the same meaning.
+Pass `value` (controlled), `defaultValue` or `onValueChange` to make a menu a single choice, like a sort order or a view mode. Items render as `menuitemradio` with a check mark next to the chosen one, and choosing an item checks it and calls `onValueChange(id)`. `null` means selectable with nothing checked yet. Selection applies to the top-level items; a `Menu.Submenu` trigger stays a plain item. `Menu.FromSections` forwards the same props. In Astro, `Menu` takes `defaultValue` with the same meaning.
 
 ```tsx
 const [sort, setSort] = useState<string | null>('name');

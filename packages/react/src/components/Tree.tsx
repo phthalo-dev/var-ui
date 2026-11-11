@@ -35,27 +35,30 @@ export type TreeItemData = {
   href?: string;
 };
 
-export type TreeSelectionMode = 'none' | 'single' | 'multiple';
+/** Internal: derived from `multiple` and whether any selection prop is passed. */
+type TreeSelectionMode = 'none' | 'single' | 'multiple';
 
+/**
+ * Selection, named like `Select`: passing `value`, `defaultValue` or `onValueChange` makes rows
+ * selectable (`aria-selected`, click and Enter select); without any of them a row click toggles
+ * expansion. `multiple` allows more than one selected row.
+ */
 type TreeSelectionProps =
   | {
-      /** @default 'none' */
-      selectionMode?: 'none';
-      value?: undefined;
-      defaultValue?: undefined;
-      onValueChange?: undefined;
-    }
-  | {
-      selectionMode: 'single';
-      /** Selected item id (`null` = nothing selected). */
+      /** Allow more than one selected row. @default false */
+      multiple?: false;
+      /** Selected item id (controlled; `null` = nothing selected). */
       value?: string | null;
+      /** Initially selected item id (uncontrolled; `null` = selectable, nothing selected). */
       defaultValue?: string | null;
       onValueChange?: (value: string | null) => void;
     }
   | {
-      selectionMode: 'multiple';
-      /** Selected item ids. */
+      /** Allow more than one selected row. */
+      multiple: true;
+      /** Selected item ids (controlled). */
       value?: string[];
+      /** Initially selected item ids (uncontrolled). */
       defaultValue?: string[];
       onValueChange?: (value: string[]) => void;
     };
@@ -376,13 +379,13 @@ export function TreeItem({
  * Hierarchical expandable list with APG tree keyboard behavior (`useTreeFocus`
  * internally). Supports compound `Tree.Item` children (nest freely) or an
  * `items` array with recursive `children`. Controlled/uncontrolled
- * `expanded` and `value`; `selectionMode` defaults to `'none'`.
+ * `expanded` and `value`, named like `Select` (`multiple` for more than one).
  *
- * Clicking a row selects it when `selectionMode !== 'none'`; otherwise a
- * click toggles expansion (as does the chevron button, always).
+ * Rows are selectable when `value`, `defaultValue` or `onValueChange` is passed: a click
+ * selects the row. Otherwise a click toggles expansion (as does the chevron button, always).
  *
  * ```tsx
- * <Tree selectionMode="single" value={selected} onValueChange={setSelected}>
+ * <Tree value={selected} onValueChange={setSelected}>
  *   <Tree.Item id="src" label="src" defaultExpanded>
  *     <Tree.Item id="app" label="App.tsx" />
  *   </Tree.Item>
@@ -399,7 +402,7 @@ export function Tree({
   value,
   defaultValue,
   onValueChange,
-  selectionMode = 'none',
+  multiple = false,
   renderStart,
   renderEnd,
   className,
@@ -409,6 +412,9 @@ export function Tree({
   ...rest
 }: TreeProps): JSX.Element {
   const s = treeStyles({ density });
+  const selectable =
+    value !== undefined || defaultValue !== undefined || onValueChange !== undefined;
+  const selectionMode: TreeSelectionMode = !selectable ? 'none' : multiple ? 'multiple' : 'single';
   const rootRef = useRef<HTMLUListElement>(null);
   const setRoot = useCallback(
     (node: HTMLUListElement | null) => {

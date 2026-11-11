@@ -220,7 +220,7 @@ export function MobileNav({
       ref={ref}
     >
       <div {...mergeProps(s.header)}>
-        <div style={{ minWidth: 0 }}>{header}</div>
+        <div {...mergeProps(s.headerContent)}>{header}</div>
         <MobileNavClose label={closeLabel} />
       </div>
       <div {...mergeProps(s.body)}>{children}</div>

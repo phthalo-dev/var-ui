@@ -1216,6 +1216,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "body": "var-ui-mobile-nav__body",
       "closeButton": "var-ui-mobile-nav__closeButton",
       "header": "var-ui-mobile-nav__header",
+      "headerContent": "var-ui-mobile-nav__headerContent",
       "headerTitle": "var-ui-mobile-nav__headerTitle",
       "popup": "var-ui-mobile-nav__popup",
       "toggle": "var-ui-mobile-nav__toggle",
@@ -1275,23 +1276,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-number-input-labelcolor",
       "--var-ui-number-input-stepperbackground",
       "--var-ui-number-input-stepperforeground",
-    ],
-  },
-  "outline": {
-    "axes": [],
-    "slots": {
-      "link": "var-ui-outline__link",
-      "linkActive": "var-ui-outline__linkActive",
-      "linkNested": "var-ui-outline__linkNested",
-      "list": "var-ui-outline__list",
-      "root": "var-ui-outline",
-      "title": "var-ui-outline__title",
-    },
-    "vars": [
-      "--var-ui-outline-border",
-      "--var-ui-outline-linkactivecolor",
-      "--var-ui-outline-linkcolor",
-      "--var-ui-outline-titlecolor",
     ],
   },
   "overflow-list": {

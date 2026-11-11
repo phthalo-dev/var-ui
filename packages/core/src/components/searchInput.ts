@@ -143,6 +143,7 @@ export const searchInput = typestyles.recipe({
               },
             },
             trigger: {
+              width: '100%',
               [belowXl]: {
                 position: 'absolute',
                 inset: 0,

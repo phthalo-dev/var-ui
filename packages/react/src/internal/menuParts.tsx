@@ -48,8 +48,8 @@ export type MenuRootProps = {
    */
   onOpenChange?: OverlayOpenChangeHandler;
   /**
-   * Checked item id (controlled). Passing `value` or `defaultValue` makes the menu a single-choice
-   * menu: items become `menuitemradio` with a check mark, and choosing one checks it. `null` means
+   * Checked item id (controlled). Passing `value`, `defaultValue` or `onValueChange` makes the menu
+   * a single-choice menu: items become `menuitemradio` with a check mark, and choosing one checks it. `null` means
    * selectable with nothing checked. Applies to the top-level items, not to submenus.
    */
   value?: string | null;
@@ -137,7 +137,8 @@ function MenuRoot({
   onValueChange,
 }: MenuRootProps): JSX.Element {
   const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
-  const selectable = value !== undefined || defaultValue !== undefined;
+  const selectable =
+    value !== undefined || defaultValue !== undefined || onValueChange !== undefined;
   const [checked, setChecked] = useControllableState<string | null>({
     value,
     defaultValue: defaultValue ?? null,

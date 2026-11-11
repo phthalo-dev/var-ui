@@ -282,11 +282,11 @@ Props:
 - `triggerLabel` — text for the default trigger button (a chevron icon is added).
 - `aria-label` — accessible name for the trigger; required when the trigger has no text.
 - `menuLabel` — accessible name for the menu list (defaults to `triggerLabel` / `aria-label`).
-- `placement` — `'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'`
-  (default `'bottom-start'`).
-- `selectionMode` — `'none'` (default, mirrors the React Menu) or `'single'`, which
-  renders items as `menuitemradio` with a check affordance and tracks one
-  `aria-checked` item. Pair with `selectedId` for the initial checked item.
+- `placement` — `top | bottom | start | end`, optionally with an alignment
+  (`'bottom end'`); flips when it does not fit (default `'bottom start'`).
+- `defaultValue` — the initially checked item id. Passing it (`null` = nothing
+  checked yet) makes the menu a single choice: items render as `menuitemradio`
+  with a check mark and choosing one checks it. Same as the React `Menu`.
 - `className` — applied to the menu root.
 - Trigger appearance accepts the same variant props as `Button` (`tone`,
   `appearance`, `size`, `layout`, `elevated`); defaults to an `outline` `md` button.

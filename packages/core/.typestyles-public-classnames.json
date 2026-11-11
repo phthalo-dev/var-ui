@@ -360,12 +360,6 @@
     "number-input__input",
     "number-input__label",
     "number-input__stepper",
-    "outline",
-    "outline__link",
-    "outline__linkActive",
-    "outline__linkNested",
-    "outline__list",
-    "outline__title",
     "overflow-list",
     "overflow-list__item",
     "overflow-list__measure",
@@ -3440,54 +3434,6 @@
       "suffix": "stepper",
       "file": "src/components/numberInput.ts",
       "line": 8
-    },
-    {
-      "className": "outline",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "base",
-      "file": "src/components/outline.ts",
-      "line": 5
-    },
-    {
-      "className": "outline__link",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "link",
-      "file": "src/components/outline.ts",
-      "line": 5
-    },
-    {
-      "className": "outline__linkActive",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "linkActive",
-      "file": "src/components/outline.ts",
-      "line": 5
-    },
-    {
-      "className": "outline__linkNested",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "linkNested",
-      "file": "src/components/outline.ts",
-      "line": 5
-    },
-    {
-      "className": "outline__list",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "list",
-      "file": "src/components/outline.ts",
-      "line": 5
-    },
-    {
-      "className": "outline__title",
-      "kind": "component",
-      "namespace": "outline",
-      "suffix": "title",
-      "file": "src/components/outline.ts",
-      "line": 5
     },
     {
       "className": "overflow-list",

@@ -13,7 +13,7 @@ export type UseTreeFocusOptions = {
   getItems: () => TreeFocusItem[];
   onExpand: (id: string) => void;
   onCollapse: (id: string) => void;
-  /** Omit (or leave undefined) when `selectionMode` is `'none'` — Enter/Space become no-ops. */
+  /** Omit (or leave undefined) when rows are not selectable — Enter/Space become no-ops. */
   onSelect?: (id: string) => void;
 };
 

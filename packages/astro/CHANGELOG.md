@@ -1,5 +1,15 @@
 # @var-ui/astro
 
+## 0.6.0
+
+### Minor Changes
+
+- [#126](https://github.com/phthalo-dev/var-ui/pull/126) [`718be2b`](https://github.com/phthalo-dev/var-ui/commit/718be2bd0ff08b07076b7525842e48ac941e64af) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Merge `Outline` into `Toc`. `Toc` (React and Astro) now accepts a flat `items` list and a controlled `activeId`; `Outline` and its `outline` recipe are removed.
+
+### Patch Changes
+
+- [#122](https://github.com/phthalo-dev/var-ui/pull/122) [`eea1c13`](https://github.com/phthalo-dev/var-ui/commit/eea1c13ee4012a1e09a9da9a007d3b11b2112a56) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Move the last hand-written styles into recipes: `mobileNav` gains a `headerContent` slot (React and Astro use it instead of an inline style or a `<style>` block), the `searchInput` `command` variant sizes its trigger in the recipe instead of a `<style>` block in Astro, CommandPalette drops a redundant inline style on its input, and ProgressCircle sets its progress through the recipe's var ref instead of a hand-written custom property.
+
 ## 0.5.0
 
 ### Minor Changes
