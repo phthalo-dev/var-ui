@@ -295,7 +295,7 @@ export function CommandPalette({
               <span {...mergeProps(cp.inputIcon)}>
                 <Icon name="search" />
               </span>
-              <TextField aria-label={placeholder} style={{ display: 'flex', flex: 1, minWidth: 0 }}>
+              <TextField aria-label={placeholder}>
                 <Input {...mergeProps(cp.input)} placeholder={placeholder} autoFocus />
               </TextField>
             </div>

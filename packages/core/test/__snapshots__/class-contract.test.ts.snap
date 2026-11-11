@@ -1199,6 +1199,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "body": "var-ui-mobile-nav__body",
       "closeButton": "var-ui-mobile-nav__closeButton",
       "header": "var-ui-mobile-nav__header",
+      "headerContent": "var-ui-mobile-nav__headerContent",
       "headerTitle": "var-ui-mobile-nav__headerTitle",
       "popup": "var-ui-mobile-nav__popup",
       "toggle": "var-ui-mobile-nav__toggle",
