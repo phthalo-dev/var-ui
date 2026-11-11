@@ -97,6 +97,7 @@ export default defineConfig({
           'vp check',
           'vp test run',
           'vp run --no-cache @var-ui/playwright#test',
+          'vp run --no-cache @var-ui/docs-site#test:e2e',
           'vp run --no-cache @var-ui/astro#check',
           'vp run --no-cache @var-ui/docs#check',
           'vp run --no-cache @var-ui/docs-components#check',

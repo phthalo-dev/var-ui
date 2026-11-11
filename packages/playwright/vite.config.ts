@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import typestyles from '@typestyles/vite';
-import { defineConfig } from 'vite-plus';
+import { defineConfig, type UserConfig } from 'vite-plus';
 
 // The fixture app (`vp dev` serves it for the Playwright tests in tests/) resolves the design
 // system from source, mirroring examples/vite-app. The shipped `pack` entry (src/) never
@@ -38,4 +38,4 @@ export default defineConfig({
       neverBundle: ['@playwright/test', 'playwright-core'],
     },
   },
-});
+} as UserConfig);

@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vp test run",
+    "test:e2e": "playwright test",
     "extract:props": "node --experimental-strip-types scripts/extract-props.ts"
   },
   "dependencies": {
@@ -34,12 +35,14 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@playwright/test": "catalog:",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@typestyles/build-runner": "catalog:",
     "@typestyles/vite": "catalog:",
+    "@var-ui/playwright": "workspace:*",
     "@vitejs/plugin-react": "catalog:",
     "jsdom": "^26.0.0",
     "typescript": "catalog:",
