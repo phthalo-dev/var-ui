@@ -370,7 +370,18 @@ describe('Menu single choice (value / defaultValue / onValueChange)', () => {
     );
   });
 
-  it('keeps plain menuitem roles and no check slot without value / defaultValue', async () => {
+  it('onValueChange alone makes it a single-choice menu, starting with nothing checked', async () => {
+    const onValueChange = vi.fn();
+    renderChoice({ onValueChange });
+    await open();
+    expect(screen.getByRole('menuitemradio', { name: 'Name' }).getAttribute('aria-checked')).toBe(
+      'false',
+    );
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Date' }));
+    expect(onValueChange).toHaveBeenCalledWith('date');
+  });
+
+  it('keeps plain menuitem roles and no check slot without value / defaultValue / onValueChange', async () => {
     renderChoice({});
     await open();
     expect(screen.queryAllByRole('menuitemradio')).toHaveLength(0);

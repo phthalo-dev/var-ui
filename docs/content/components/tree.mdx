@@ -5,7 +5,7 @@ description: Hierarchical tree with Tree.Item nodes and selection modes.
 
 # Tree
 
-Hierarchical expandable list with APG tree keyboard behavior. Compose nested `Tree.Item`s or pass a recursive `items` array; control expand/selection with `expanded` / `onExpandedChange` and `value` / `onValueChange` (string ids; `string[]` when `selectionMode="multiple"`).
+Hierarchical expandable list with APG tree keyboard behavior. Compose nested `Tree.Item`s or pass a recursive `items` array; control expand/selection with `expanded` / `onExpandedChange` and `value` / `onValueChange` (string ids; `string[]` with `multiple`).
 
 ## Examples
 
@@ -17,7 +17,9 @@ A small file tree with one folder expanded.
 
 ### Expanded selection
 
-Seed nested expansion with `defaultExpandedKeys` and highlight a leaf via `selectionMode` + `defaultValue`.
+Seed nested expansion with `defaultExpanded` and highlight a leaf with `defaultValue`.
+
+Selection is named like `Select`: passing `value`, `defaultValue` or `onValueChange` makes rows selectable (a row click selects it and sets `aria-selected`), and `multiple` allows more than one selected row, with `value` as `string[]`. Without any of them a row click toggles expansion.
 
 <Demo id="tree.expanded" />
 
@@ -27,4 +29,4 @@ Seed nested expansion with `defaultExpandedKeys` and highlight a leaf via `selec
 
 ## Accessibility
 
-Root uses `role="tree"`; nodes are `treeitem` with `aria-level`, `aria-expanded`, and optional `aria-selected`. Provide an `aria-label` (or labelled-by) on the tree. Arrow keys move focus (roving tabindex); Left/Right collapse/expand; Space/Enter select when `selectionMode` is not `"none"`.
+Root uses `role="tree"`; nodes are `treeitem` with `aria-level`, `aria-expanded`, and optional `aria-selected`. Provide an `aria-label` (or labelled-by) on the tree. Arrow keys move focus (roving tabindex); Left/Right collapse/expand; Space/Enter select when the rows are selectable.

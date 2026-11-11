@@ -206,14 +206,7 @@ export {
   type TableCellProps,
   type TableCaptionProps,
 } from './Table';
-export {
-  Tree,
-  TreeItem,
-  type TreeItemData,
-  type TreeItemProps,
-  type TreeProps,
-  type TreeSelectionMode,
-} from './Tree';
+export { Tree, TreeItem, type TreeItemData, type TreeItemProps, type TreeProps } from './Tree';
 export { Divider, type DividerProps } from './Divider';
 export { Grid, type GridProps } from './Grid';
 export { Section, type SectionProps } from './Section';
