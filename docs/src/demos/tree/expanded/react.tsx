@@ -4,7 +4,6 @@ export default function Preview() {
   return (
     <Tree
       aria-label="Project files"
-      selectionMode="single"
       defaultExpanded={['src', 'components']}
       defaultValue="button"
       items={[

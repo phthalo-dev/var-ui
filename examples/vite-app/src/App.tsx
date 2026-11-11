@@ -898,7 +898,6 @@ function TreeDemo() {
         density="compact"
         expanded={expanded}
         onExpandedChange={setExpanded}
-        selectionMode="single"
         value={selected}
         onValueChange={setSelected}
         items={[

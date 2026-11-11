@@ -20,11 +20,11 @@ const FILE_TREE_ITEMS: TreeItemData[] = [
 function ControlledTree({
   onExpandedChange,
   onValueChange,
-  selectionMode = 'single',
+  multiple: multipleMode = false,
 }: {
   onExpandedChange?: (expanded: string[]) => void;
   onValueChange?: (value: string | string[] | null) => void;
-  selectionMode?: 'single' | 'multiple';
+  multiple?: boolean;
 }) {
   const [expanded, setExpanded] = useState<string[]>(['src']);
   const [single, setSingle] = useState<string | null>(null);
@@ -36,12 +36,12 @@ function ControlledTree({
       onExpandedChange?.(next);
     },
   };
-  return selectionMode === 'multiple' ? (
+  return multipleMode ? (
     <Tree
       aria-label="Files"
       items={FILE_TREE_ITEMS}
       {...expandedProps}
-      selectionMode="multiple"
+      multiple
       value={multiple}
       onValueChange={(next) => {
         setMultiple(next);
@@ -53,7 +53,6 @@ function ControlledTree({
       aria-label="Files"
       items={FILE_TREE_ITEMS}
       {...expandedProps}
-      selectionMode="single"
       value={single}
       onValueChange={(next) => {
         setSingle(next);
@@ -108,7 +107,7 @@ describe('Tree', () => {
     expect(screen.queryByRole('treeitem', { name: 'App.tsx' })).toBeNull();
   });
 
-  it('expands on row click when selectionMode is "none"', async () => {
+  it('expands on row click when not selectable (no value / defaultValue / onValueChange)', async () => {
     render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} />);
     await userEvent.click(treeitem('src'));
     expect(treeitem('src').getAttribute('aria-expanded')).toBe('true');
@@ -128,7 +127,6 @@ describe('Tree', () => {
         aria-label="Files"
         items={FILE_TREE_ITEMS}
         defaultExpanded={['src']}
-        selectionMode="single"
         onValueChange={onValueChange}
       />,
     );
@@ -136,14 +134,31 @@ describe('Tree', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
-  it('selects a row on click when selectionMode !== "none", setting aria-selected', async () => {
+  it('selects a row on click when selectable, setting aria-selected', async () => {
     render(<ControlledTree />);
     const app = treeitem('App.tsx');
     await userEvent.click(app);
     expect(app.getAttribute('aria-selected')).toBe('true');
   });
 
-  it('gives no row aria-selected when selectionMode is "none"', () => {
+  it('onValueChange alone makes rows selectable (uncontrolled, starting empty)', async () => {
+    const onValueChange = vi.fn();
+    render(
+      <Tree
+        aria-label="Files"
+        items={FILE_TREE_ITEMS}
+        defaultExpanded={['src']}
+        onValueChange={onValueChange}
+      />,
+    );
+    const app = treeitem('App.tsx');
+    expect(app.getAttribute('aria-selected')).toBe('false');
+    await userEvent.click(app);
+    expect(onValueChange).toHaveBeenCalledWith('app');
+    expect(app.getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('gives no row aria-selected when not selectable', () => {
     render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     expect(treeitem('src').hasAttribute('aria-selected')).toBe(false);
   });
@@ -211,14 +226,14 @@ describe('Tree', () => {
     expect(document.activeElement).toBe(treeitem('src'));
   });
 
-  it('Enter selects the focused row when selectionMode !== "none"', async () => {
+  it('Enter selects the focused row when selectable', async () => {
     render(<ControlledTree />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{Enter}');
     expect(treeitem('App.tsx').getAttribute('aria-selected')).toBe('true');
   });
 
-  it('does not select on Enter when selectionMode is "none"', async () => {
+  it('does not select on Enter when not selectable', async () => {
     render(<Tree aria-label="Files" items={FILE_TREE_ITEMS} defaultExpanded={['src']} />);
     treeitem('App.tsx').focus();
     await userEvent.keyboard('{Enter}');
@@ -227,7 +242,7 @@ describe('Tree', () => {
 
   it('supports multiple selection, accumulating value', async () => {
     const onValueChange = vi.fn();
-    render(<ControlledTree selectionMode="multiple" onValueChange={onValueChange} />);
+    render(<ControlledTree multiple onValueChange={onValueChange} />);
     await userEvent.click(treeitem('App.tsx'));
     await userEvent.click(treeitem('README.md'));
     expect(onValueChange).toHaveBeenLastCalledWith(['app', 'readme']);
@@ -261,7 +276,6 @@ describe('Tree', () => {
     render(
       <Tree
         aria-label="Nav"
-        selectionMode="single"
         onValueChange={onValueChange}
         items={[{ id: 'docs', label: 'Docs', href: '/docs' }]}
       />,
@@ -305,7 +319,6 @@ describe('Tree', () => {
     render(
       <Tree
         aria-label="Nav"
-        selectionMode="single"
         onValueChange={onValueChange}
         items={[
           {
@@ -382,7 +395,6 @@ describe('Tree', () => {
         aria-label="Files"
         items={FILE_TREE_ITEMS}
         defaultExpanded={['src']}
-        selectionMode="single"
         defaultValue="app"
         onValueChange={onValueChange}
       />,
@@ -399,7 +411,7 @@ describe('Tree', () => {
         aria-label="Files"
         items={FILE_TREE_ITEMS}
         defaultExpanded={['src']}
-        selectionMode="multiple"
+        multiple
         defaultValue={['app']}
       />,
     );
