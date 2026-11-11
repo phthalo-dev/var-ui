@@ -1,14 +1,22 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { border } from '../internal/border';
 import { focusRing } from '../internal/focusRing';
 import { fieldChrome } from '../internal/fieldChrome';
+import {
+  compactPaddingInline,
+  controlPaddingBlock,
+  controlSizeMetrics,
+  controlSizeVariants,
+} from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 
 export const textAreaField = typestyles.recipe({
   name: 'text-area-field',
   layer: 'components',
   slots: ['root', 'label', 'input', 'description', 'error'],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -40,21 +48,22 @@ export const textAreaField = typestyles.recipe({
     },
   },
   styles: ({ vars }) => {
+    const chrome = fieldChrome({
+      label: vars.labelColor.var,
+      description: vars.descriptionColor.var,
+      error: vars.errorColor.var,
+    });
     return {
       base: {
-        ...fieldChrome({
-          label: vars.labelColor.var,
-          description: vars.descriptionColor.var,
-          error: vars.errorColor.var,
-        }),
+        root: chrome.root,
+        label: chrome.label,
+        description: chrome.description,
+        error: chrome.error,
         input: {
           ...border(vars.inputBorder.var),
           borderRadius: t.radius.md.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
-          fontSize: t.fontSize.md.var,
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
-          minHeight: '5.5rem',
           resize: 'vertical',
           '&:focus': {
             ...focusRing,
@@ -65,6 +74,20 @@ export const textAreaField = typestyles.recipe({
           },
         },
       },
+      variants: {
+        // Same inline inset and type as text-field; the minimum height is about three lines.
+        size: controlSizeVariants((size) => ({
+          input: {
+            fontSize: controlSizeMetrics[size].fontSize,
+            paddingInline: compactPaddingInline[size],
+            paddingBlock: controlPaddingBlock[size],
+            minHeight: `calc(2.75 * ${controlSizeMetrics[size].height})`,
+          },
+        })),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type TextAreaFieldVariantProps = RecipeVariants<typeof textAreaField>;

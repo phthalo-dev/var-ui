@@ -1,4 +1,4 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
@@ -6,6 +6,8 @@ import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
 import { dropdownPopoverChrome, fieldChrome } from '../internal/fieldChrome';
+import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 
 export const multiSelector = typestyles.recipe({
   name: 'multiSelector',
@@ -24,6 +26,7 @@ export const multiSelector = typestyles.recipe({
     'itemCheckbox',
     'itemLabel',
   ],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -100,15 +103,12 @@ export const multiSelector = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: t.space.xs.var,
           width: '100%',
           textAlign: 'start',
           ...border(vars.triggerBorder.var),
           borderRadius: t.radius.md.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
           backgroundColor: vars.triggerBackground.var,
           color: vars.triggerForeground.var,
-          fontSize: t.fontSize.md.var,
           cursor: 'pointer',
           outline: 'none',
           transition: t.transition.borderShadow.var,
@@ -164,6 +164,14 @@ export const multiSelector = typestyles.recipe({
           minWidth: 0,
         },
       },
+      variants: {
+        size: controlSizeVariants((size) => ({
+          trigger: controlSurfaceSize(size, { inset: 'compact' }),
+        })),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type MultiSelectorVariantProps = RecipeVariants<typeof multiSelector>;

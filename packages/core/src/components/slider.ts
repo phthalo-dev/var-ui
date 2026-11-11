@@ -1,10 +1,19 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { fieldChrome } from '../internal/fieldChrome';
 import { focusRing } from '../internal/focusRing';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
+import { controlSizeVariants } from '../internal/controlSize';
+import { controlSize, type ControlSize } from '../shared/variantAxes';
+
+/** Track thickness, thumb diameter and the control row height (thumb plus a small halo) per size. */
+const sliderSize: Record<ControlSize, { track: string; thumb: string }> = {
+  sm: { track: `calc(${t.space.xxs.var} / 2)`, thumb: t.size.icon.sm.var },
+  md: { track: t.space.xxs.var, thumb: t.size.icon.md.var },
+  lg: { track: `calc(${t.space.xxs.var} * 1.5)`, thumb: t.size.icon.lg.var },
+};
 
 const sliderVarDefinitions = {
   labelColor: {
@@ -65,6 +74,7 @@ export const slider = typestyles.recipe({
   name: 'slider',
   layer: 'components',
   slots: ['root', 'label', 'description', 'error', 'control', 'track', 'fill', 'thumb', 'output'],
+  variants: { size: controlSize },
   vars: sliderVarDefinitions,
   styles: ({ vars }) => {
     const chrome = fieldChrome({
@@ -134,6 +144,20 @@ export const slider = typestyles.recipe({
           color: vars.outputColor.var,
         },
       },
+      variants: {
+        // Set on `control` (not `root`): React styles the RAC root through `className` only, so
+        // the root carries no `data-size`. Track, fill and thumb all sit inside `control`.
+        size: controlSizeVariants((size) => ({
+          control: {
+            [vars.trackHeight.name]: sliderSize[size].track,
+            [vars.thumbSize.name]: sliderSize[size].thumb,
+            [vars.controlHeight.name]: `calc(${sliderSize[size].thumb} + ${t.space.xxs.var})`,
+          },
+        })),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type SliderVariantProps = RecipeVariants<typeof slider>;

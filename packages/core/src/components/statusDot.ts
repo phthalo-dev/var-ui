@@ -4,14 +4,18 @@ import { designTokens as t } from '../tokens';
 import { atForcedColors, atReducedMotion } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { border } from '../internal/border';
-import { mapTone, semanticTone, tone, type SemanticToneKey } from '../shared/semanticTone';
+import {
+  mapTone,
+  semanticTone,
+  surfaceAppearanceWithDefault,
+  tone,
+  type SemanticToneKey,
+} from '../shared/semanticTone';
 
 const pulse = keyframes.create('var-ui-status-pulse', {
   from: { boxShadow: '0 0 0 0 color-mix(in srgb, currentColor 45%, transparent)' },
   to: { boxShadow: '0 0 0 0.375rem color-mix(in srgb, currentColor 0%, transparent)' },
 });
-
-const statusDotAppearance = variant.enum(['filled', 'outline', 'subtle'], { default: 'filled' });
 
 function toneColor(key: SemanticToneKey) {
   return { color: semanticTone[key].foreground };
@@ -26,7 +30,7 @@ export const statusDot = typestyles.recipe({
   layer: 'components',
   variants: {
     tone,
-    appearance: statusDotAppearance,
+    appearance: surfaceAppearanceWithDefault('solid'),
     pulse: variant.boolean({ default: false }),
   },
   vars: {
@@ -49,7 +53,7 @@ export const statusDot = typestyles.recipe({
       variants: {
         tone: mapTone((key) => (key === 'neutral' ? {} : toneColor(key))),
         appearance: {
-          filled: {},
+          solid: {},
           outline: {
             backgroundColor: 'transparent',
             ...border('currentColor', t.borderWidth.thick.var),

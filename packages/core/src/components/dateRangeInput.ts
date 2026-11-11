@@ -1,8 +1,17 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { controlSizeVariants } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 import { anchored, popupSurface } from '../shared/anchored';
-import { dateFieldChrome, calendarGridChrome } from '../internal/fieldChrome';
+import { dateFieldChrome, calendarGridChrome, dateFieldSize } from '../internal/fieldChrome';
+
+/** Calendar trigger square, one control step below the field so it fits inside the group. */
+const triggerSize = {
+  sm: t.size.control.xs.var,
+  md: t.size.control.sm.var,
+  lg: t.size.control.md.var,
+} as const;
 
 export const dateRangeInput = typestyles.recipe({
   name: 'dateRangeInput',
@@ -24,6 +33,7 @@ export const dateRangeInput = typestyles.recipe({
     'calendarHeaderCell',
     'calendarCell',
   ],
+  variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
@@ -122,7 +132,11 @@ export const dateRangeInput = typestyles.recipe({
     });
     return {
       base: {
-        ...fieldChromeSlots,
+        label: fieldChromeSlots.label,
+        description: fieldChromeSlots.description,
+        error: fieldChromeSlots.error,
+        group: fieldChromeSlots.group,
+        segment: fieldChromeSlots.segment,
         root: {
           ...fieldChromeSlots.root,
           minWidth: t.size.field.minWidth.var,
@@ -136,8 +150,6 @@ export const dateRangeInput = typestyles.recipe({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          width: t.size.control.sm.var,
-          height: t.size.control.sm.var,
           borderRadius: t.radius.sm.var,
           color: vars.navButtonColor.var,
           cursor: 'pointer',
@@ -157,8 +169,22 @@ export const dateRangeInput = typestyles.recipe({
           }),
           padding: t.space.sm.var,
         },
-        ...calendarChromeSlots,
+        calendarHeader: calendarChromeSlots.calendarHeader,
+        calendarHeading: calendarChromeSlots.calendarHeading,
+        calendarNavButton: calendarChromeSlots.calendarNavButton,
+        calendarGrid: calendarChromeSlots.calendarGrid,
+        calendarHeaderCell: calendarChromeSlots.calendarHeaderCell,
+        calendarCell: calendarChromeSlots.calendarCell,
+      },
+      variants: {
+        size: controlSizeVariants((size) => ({
+          ...dateFieldSize(size),
+          trigger: { width: triggerSize[size], height: triggerSize[size] },
+        })),
       },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type DateRangeInputVariantProps = RecipeVariants<typeof dateRangeInput>;

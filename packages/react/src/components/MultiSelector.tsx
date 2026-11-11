@@ -25,6 +25,8 @@ import { disabledKeysOf } from '../internal/racProps';
 import { mergeRefs } from '../internal/mergeRefs';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 
 export type MultiSelectorOption = {
   /** Unique option value passed to the selected value array. */
@@ -60,6 +62,8 @@ export type MultiSelectorProps = Omit<
     placeholder?: string;
     /** Disables the trigger and the hidden form inputs. */
     disabled?: boolean;
+    /** Control density. Falls back to the surrounding control size, then `md`. */
+    size?: ControlSize;
     /** Marks the field invalid; defaults to whether `errorMessage` is set. */
     invalid?: boolean;
     /** Name for form submission: one hidden input per selected id, like `<select multiple>`. */
@@ -86,6 +90,7 @@ export function MultiSelector({
   placeholder = 'Select…',
   disabled,
   invalid,
+  size,
   name,
   className,
   style,
@@ -94,7 +99,7 @@ export function MultiSelector({
   'aria-describedby': describedByProp,
   ...rest
 }: MultiSelectorProps): JSX.Element {
-  const ms = multiSelector();
+  const ms = multiSelector({ size: useResolvedControlSize(size) });
   const triggerTextId = useId();
   const frame = useFieldFrame({
     description,

@@ -1,15 +1,18 @@
-import { atProperty } from 'typestyles';
+import { atProperty, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
+import { controlSizeVariants, indicatorSize } from '../internal/controlSize';
+import { controlSize } from '../shared/variantAxes';
 
 export const checkbox = typestyles.recipe({
   name: 'checkbox',
   layer: 'components',
   slots: ['root', 'box', 'label', 'group', 'groupLabel'],
+  variants: { size: controlSize },
   vars: {
     boxBorder: {
       ...atProperty.color,
@@ -34,19 +37,16 @@ export const checkbox = typestyles.recipe({
         root: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space.xs.var,
           cursor: 'pointer',
         },
         box: {
-          width: t.size.indicator.box.var,
-          height: t.size.indicator.box.var,
+          flexShrink: 0,
           borderRadius: t.radius.sm.var,
           ...border(vars.boxBorder.var),
           backgroundColor: vars.boxBackground.var,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.semibold.var,
           color: vars.boxForeground.var,
           '&[data-selected], &[data-indeterminate]': {
@@ -58,9 +58,7 @@ export const checkbox = typestyles.recipe({
             ...focusRing,
           },
         },
-        label: {
-          fontSize: t.fontSize.md.var,
-        },
+        label: {},
         group: {
           display: 'grid',
           gap: t.space.xxs.var,
@@ -71,6 +69,19 @@ export const checkbox = typestyles.recipe({
           color: vars.groupLabelColor.var,
         },
       },
+      variants: {
+        size: controlSizeVariants((size) => {
+          const m = indicatorSize(size);
+          return {
+            root: { gap: m.gap },
+            box: { width: m.box, height: m.box, fontSize: m.markFontSize },
+            label: { fontSize: m.labelFontSize },
+          };
+        }),
+      },
     };
   },
 });
+
+/** Visual props derived from the schema. */
+export type CheckboxVariantProps = RecipeVariants<typeof checkbox>;

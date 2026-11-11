@@ -12,6 +12,8 @@ import {
 import { fileInput } from '@var-ui/core/components/fileInput';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
+import type { ControlSize } from '@var-ui/core';
+import { useResolvedControlSize } from '../internal/controlSizeContext';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
 import { useMergedRef } from '../overlays/useMergedRef';
 
@@ -19,6 +21,8 @@ export type FileInputProps = Omit<
   ComponentPropsWithRef<'input'>,
   'type' | 'value' | 'defaultValue' | 'disabled' | 'children' | 'className' | 'style' | 'size'
 > & {
+  /** Control density. Falls back to the surrounding control size, then `md`. */
+  size?: ControlSize;
   /** Visible label rendered above the dropzone. */
   label: string;
   /** Helper text shown below the control when there is no error. */
@@ -190,12 +194,14 @@ export function FileInput({
   invalidTypeMessage = (name) => `${name} is not an accepted file type.`,
   tooLargeMessage = (name, size) => `${name} exceeds the maximum size of ${size}.`,
   tooManyMessage = (max) => `Only ${max} file${max === 1 ? '' : 's'} allowed.`,
+  size,
   className,
   style,
   ref,
   ...rest
 }: FileInputProps): JSX.Element {
-  const fi = fileInput();
+  const resolvedSize = useResolvedControlSize(size);
+  const fi = fileInput({ size: resolvedSize });
   const inputRef = useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRef(inputRef, ref);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -327,7 +333,7 @@ export function FileInput({
           onDrop={handleDrop}
         >
           <span {...mergeProps(fi.icon)}>
-            <Icon name="arrowUp" />
+            <Icon name="arrowUp" size={resolvedSize} />
           </span>
           {hasValue ? (
             <span {...mergeProps(fi.fileNameText)}>{fileNameDisplay}</span>

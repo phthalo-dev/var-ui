@@ -360,7 +360,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [],
   },
   "checkbox": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "box": "var-ui-checkbox__box",
       "group": "var-ui-checkbox__group",
@@ -504,7 +507,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "color-picker": {
     "axes": [
+      "data-size",
       "data-swatch-columns",
+      "size",
       "swatchColumns",
     ],
     "slots": {
@@ -651,7 +656,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "dateInput": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "calendarCell": "var-ui-dateInput__calendarCell",
       "calendarGrid": "var-ui-dateInput__calendarGrid",
@@ -671,7 +679,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [],
   },
   "dateRangeInput": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "calendarCell": "var-ui-dateRangeInput__calendarCell",
       "calendarGrid": "var-ui-dateRangeInput__calendarGrid",
@@ -692,7 +703,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [],
   },
   "dateTimeInput": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "calendarCell": "var-ui-dateTimeInput__calendarCell",
       "calendarGrid": "var-ui-dateTimeInput__calendarGrid",
@@ -868,7 +882,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "file-input": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "clearButton": "var-ui-file-input__clearButton",
       "description": "var-ui-file-input__description",
@@ -1215,7 +1232,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "multiSelector": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "description": "var-ui-multiSelector__description",
       "error": "var-ui-multiSelector__error",
@@ -1419,7 +1439,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "radio": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "control": "var-ui-radio__control",
       "group": "var-ui-radio__group",
@@ -1634,7 +1657,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "slider": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "control": "var-ui-slider__control",
       "description": "var-ui-slider__description",
@@ -1754,7 +1780,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "switch": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "label": "var-ui-switch__label",
       "root": "var-ui-switch",
@@ -1763,7 +1792,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     },
     "vars": [
       "--var-ui-switch-thumbbackground",
+      "--var-ui-switch-thumbsize",
       "--var-ui-switch-trackbackground",
+      "--var-ui-switch-trackheight",
+      "--var-ui-switch-trackwidth",
     ],
   },
   "tab-list": {
@@ -1851,7 +1883,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "text-area-field": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "description": "var-ui-text-area-field__description",
       "error": "var-ui-text-area-field__error",
@@ -1926,7 +1961,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "timeInput": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "description": "var-ui-timeInput__description",
       "error": "var-ui-timeInput__error",
@@ -2062,7 +2100,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "tokenizer": {
-    "axes": [],
+    "axes": [
+      "data-size",
+      "size",
+    ],
     "slots": {
       "description": "var-ui-tokenizer__description",
       "error": "var-ui-tokenizer__error",
