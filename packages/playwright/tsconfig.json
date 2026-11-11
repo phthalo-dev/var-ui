@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "paths": {
+      "@var-ui/core": ["../core/src/index.ts"],
+      "@var-ui/core/*": ["../core/src/*"],
+      "@var-ui/react": ["../react/src/index.ts"]
+    }
+  },
+  "include": ["src", "tests", "fixture", "playwright.config.ts"]
+}

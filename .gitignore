@@ -26,3 +26,7 @@ packages/cli/data/catalog.json
 *.tgz
 __screenshots__
 .vitest-linux/
+
+# Playwright (packages/playwright)
+test-results/
+playwright-report/
