@@ -3,7 +3,10 @@ import { ProgressBar as AriaProgressBar } from 'react-aria-components';
 import { progressCircle } from '@var-ui/core/components/progressCircle';
 import type { ProgressCircleVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { toRacProps } from '../internal/racProps';
+
+const progressCircleVars = recipeVars(progressCircle);
 
 export type ProgressCircleProps = Omit<
   ComponentPropsWithRef<'div'>,
@@ -85,9 +88,7 @@ export function ProgressCircle({
               focusable="false"
               {...mergeProps(p.ring)}
               style={
-                isIndeterminate
-                  ? undefined
-                  : ({ '--var-ui-progress-circle-progress': fraction } as CSSProperties)
+                isIndeterminate ? undefined : styleVars([[progressCircleVars.progress, fraction]])
               }
             >
               <circle cx="50" cy="50" r="42" pathLength={100} {...mergeProps(p.track)} />

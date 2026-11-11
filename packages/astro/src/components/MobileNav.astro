@@ -45,7 +45,7 @@ const hasHeaderSlot = Astro.slots.has('header');
     {...mergeProps(s.popup, className)}
   >
     <div {...mergeProps(s.header)}>
-      <div class="mobile-nav__header-content">
+      <div {...mergeProps(s.headerContent)}>
         {hasHeaderSlot ? <slot name="header" /> : header}
       </div>
       <button
@@ -60,12 +60,6 @@ const hasHeaderSlot = Astro.slots.has('header');
     </div>
   </dialog>
 </div>
-
-<style>
-  .mobile-nav__header-content {
-    min-width: 0;
-  }
-</style>
 
 <script>
   import { initMobileNavs } from '../scripts/mobileNav';

@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'astro/types';
 import { progressCircle } from '@var-ui/core/components/progressCircle';
 import type { ProgressCircleVariantProps } from '@var-ui/core';
+import { recipeVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
 
 /**
@@ -44,7 +45,7 @@ const valueText = valueLabel ?? `${Math.round(fraction * 100)}%`;
 const hasContent = Astro.slots.has('default');
 const ringStyle = isIndeterminate
   ? undefined
-  : `--var-ui-progress-circle-progress: ${fraction}`;
+  : `${recipeVars(progressCircle).progress.name}: ${fraction}`;
 ---
 <div
   aria-label={label}

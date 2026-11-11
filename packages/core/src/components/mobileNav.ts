@@ -69,7 +69,7 @@ const mobileNavVarDefinitions = {
 export const mobileNav = typestyles.recipe({
   name: 'mobile-nav',
   layer: 'components',
-  slots: ['popup', 'header', 'headerTitle', 'body', 'closeButton', 'toggle'],
+  slots: ['popup', 'header', 'headerContent', 'headerTitle', 'body', 'closeButton', 'toggle'],
   vars: mobileNavVarDefinitions,
   styles: ({ vars }) => {
     return {
@@ -112,6 +112,10 @@ export const mobileNav = typestyles.recipe({
           fontSize: t.fontSize.md.var,
           fontWeight: t.fontWeight.semibold.var,
           flexShrink: 0,
+        },
+        /** Wraps the header's custom content so long titles shrink instead of pushing the close button out. */
+        headerContent: {
+          minWidth: 0,
         },
         headerTitle: {
           minWidth: 0,
