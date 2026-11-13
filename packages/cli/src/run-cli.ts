@@ -30,6 +30,7 @@ Commands:
 Options:
   --json               Print JSON
   --list, -l           List all components or guides
+  --all-props          Include inherited HTML/ARIA/DOM props in the table
 `;
 
 export function runCli(argv: string[], io: CliIo, options?: RunCliOptions): void {
@@ -64,7 +65,7 @@ export function runCli(argv: string[], io: CliIo, options?: RunCliOptions): void
         io.exit(1);
         return;
       }
-      io.stdout.write(formatComponent(record, parsed.json));
+      io.stdout.write(formatComponent(record, { json: parsed.json, allProps: parsed.allProps }));
       io.exit(0);
       return;
     }

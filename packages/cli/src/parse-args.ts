@@ -2,7 +2,7 @@ import { parseArgs } from 'node:util';
 
 export type ParsedCli =
   | { command: 'help' }
-  | { command: 'component'; list: boolean; query?: string; json: boolean }
+  | { command: 'component'; list: boolean; query?: string; json: boolean; allProps: boolean }
   | { command: 'docs'; list: boolean; query?: string; json: boolean }
   | { command: 'search'; query: string; json: boolean }
   | { command: 'init' }
@@ -16,6 +16,7 @@ export function parseCliArgs(argv: string[]): ParsedCli {
     options: {
       list: { type: 'boolean', short: 'l' },
       json: { type: 'boolean' },
+      'all-props': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
   });
@@ -30,9 +31,10 @@ export function parseCliArgs(argv: string[]): ParsedCli {
 
   if (command === 'component') {
     const query = rest[0];
+    const allProps = Boolean(values['all-props']);
     return query === undefined
-      ? { command: 'component', list, json }
-      : { command: 'component', list, query, json };
+      ? { command: 'component', list, json, allProps }
+      : { command: 'component', list, query, json, allProps };
   }
 
   if (command === 'docs') {

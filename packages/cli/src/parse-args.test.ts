@@ -17,11 +17,13 @@ describe('parseCliArgs', () => {
       command: 'component',
       list: true,
       json: false,
+      allProps: false,
     });
     expect(parseCliArgs(['component', '-l'])).toEqual({
       command: 'component',
       list: true,
       json: false,
+      allProps: false,
     });
   });
 
@@ -31,15 +33,24 @@ describe('parseCliArgs', () => {
       list: false,
       query: 'Button',
       json: false,
+      allProps: false,
     });
   });
 
-  it('parses component --json', () => {
+  it('parses component --json and --all-props', () => {
     expect(parseCliArgs(['component', 'Button', '--json'])).toEqual({
       command: 'component',
       list: false,
       query: 'Button',
       json: true,
+      allProps: false,
+    });
+    expect(parseCliArgs(['component', 'Button', '--all-props'])).toEqual({
+      command: 'component',
+      list: false,
+      query: 'Button',
+      json: false,
+      allProps: true,
     });
   });
 
