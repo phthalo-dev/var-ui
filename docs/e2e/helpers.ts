@@ -2,9 +2,9 @@ import type { Page } from '@playwright/test';
 import type { DemoId } from '../src/demos/types';
 
 /**
- * Navigate to a demo in the `/e2d` gallery and wait until its island is hydrated.
+ * Navigate to a demo in the `/demo` gallery and wait until its island is hydrated.
  * SSR'd islands put the interactive elements in the HTML before React attaches
- * handlers; the island flips `data-e2d-hydrated` on `<html>` after mounting
+ * handlers; the island flips `data-demo-hydrated` on `<html>` after mounting
  * (see `src/components/DemoE2D.tsx`).
  */
 export async function gotoDemo(
@@ -16,6 +16,6 @@ export async function gotoDemo(
   if (params.direction) search.set('direction', params.direction);
   if (params.colorMode) search.set('colorMode', params.colorMode);
   const query = search.size > 0 ? `?${search}` : '';
-  await page.goto(`/e2d/${id}${query}`);
-  await page.waitForSelector('html[data-e2d-hydrated]');
+  await page.goto(`/demo/${id}${query}`);
+  await page.waitForSelector('html[data-demo-hydrated]');
 }

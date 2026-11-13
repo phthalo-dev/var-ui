@@ -18,7 +18,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'pnpm exec astro dev --port 4321 --host localhost',
-    url: 'http://localhost:4321/e2d/button.default',
+    url: 'http://localhost:4321/demo/button.default',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

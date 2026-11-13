@@ -9,7 +9,7 @@ import type { DemoId } from './types';
  * adding a `DemoId` forces adding it here — and therefore to the browser suite.
  *
  * Kept free of demo imports on purpose: Playwright's spec transform mishandles the
- * workspace-source import graph (`@var-ui/react` via tsconfig paths), while the `/e2d`
+ * workspace-source import graph (`@var-ui/react` via tsconfig paths), while the `/demo`
  * Astro route renders demos fine on the server.
  *
  * GENERATED FILE — regenerate with: node --experimental-strip-types scripts/generate-demo-ids.ts

@@ -1,16 +1,14 @@
 ---
 /**
- * `--e2d` gallery route for the harness-driven browser suite: exactly one docs
- * demo, no site chrome, honoring `?direction=rtl` / `?colorMode=dark|light`. The smoke
- * spec (e2e/smoke.spec.ts) derives its list from the demo registry, so any new demo must
- * render cleanly here or the suite fails with its id.
- *
- * Note: the path is `/e2d` (not `/_e2d`) because Astro excludes underscore-prefixed
- * directories from routing.
+ * `/demo/<demo-id>` route: exactly one docs demo, no site chrome, honoring
+ * `?direction=rtl` / `?colorMode=dark|light`. Useful for deep-linking a single demo;
+ * the harness-driven browser suite (docs/e2e) drives it — the smoke spec derives its
+ * list from the demo registry, so any new demo must render cleanly here or the suite
+ * fails with its id.
  */
 import { defaultThemeClassName } from '@var-ui/core';
 import { ThemeScript } from '@var-ui/astro';
-import DemoE2D from '../../components/DemoE2D';
+import Demo from '../../components/Demo';
 import { reactDemoMap } from '../../demos/reactDemoMap';
 import type { DemoId } from '../../demos/types';
 
@@ -32,13 +30,13 @@ const colorMode =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>_e2d {id}</title>
+    <title>demo {id}</title>
     <ThemeScript themeClass={defaultThemeClassName} />
     <link rel="stylesheet" href="/typestyles.css" />
   </head>
   <body>
-    <div id="root" data-e2d-demo={id}>
-      <DemoE2D id={id} direction={direction} colorMode={colorMode} client:load />
+    <div id="root" data-demo={id}>
+      <Demo id={id} direction={direction} colorMode={colorMode} client:load />
     </div>
   </body>
 </html>
