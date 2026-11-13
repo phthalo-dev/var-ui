@@ -24,8 +24,10 @@
   },
   "include": [
     "src",
+    "e2e",
     "astro.config.mjs",
     "vite.config.ts",
+    "playwright.config.ts",
     "typestyles-entry.ts",
     "scripts",
     "src/content.config.ts"

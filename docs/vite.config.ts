@@ -42,6 +42,9 @@ export default defineConfig({
     clearMocks: false,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    // Unit tests live in src/; `e2e/*.spec.ts` are Playwright tests (playwright.config.ts,
+    // run via the test:e2e script) and must not be collected by vitest.
+    include: ['src/**/*.test.{ts,tsx}'],
   },
   resolve: {
     alias: {
