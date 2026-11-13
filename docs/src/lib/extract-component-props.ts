@@ -76,11 +76,19 @@ function getPropSource(
   checker: ts.TypeChecker,
   declaredNames: Set<string>,
 ): PropDoc['source'] {
-  if (isVarUiDeclaration(declaration, checker) || declaredNames.has(propName)) {
+  const sourceFile = declaration.getSourceFile().fileName;
+
+  // Anything declared outside node_modules is first-party: the @var-ui/react
+  // component source and @var-ui/core recipe types (e.g. BadgeVariantProps,
+  // whose declaration lives in packages/core, not packages/react/src), which
+  // are the component's own API just as much as props written inline.
+  if (
+    isVarUiDeclaration(declaration, checker) ||
+    declaredNames.has(propName) ||
+    !sourceFile.includes('node_modules')
+  ) {
     return 'var-ui';
   }
-
-  const sourceFile = declaration.getSourceFile().fileName;
 
   if (isReactAriaSourceFile(sourceFile)) {
     return 'react-aria';
