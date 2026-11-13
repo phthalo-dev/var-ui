@@ -1,7 +1,15 @@
+import { execSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { Catalog, ComponentExample, ComponentRecord, GuideRecord, PropRow } from '../types';
+import type {
+  Catalog,
+  CatalogMeta,
+  ComponentExample,
+  ComponentRecord,
+  GuideRecord,
+  PropRow,
+} from '../types';
 
 export type RepoPaths = {
   repoRoot: string;
@@ -93,9 +101,47 @@ export async function buildCatalog(paths: RepoPaths, version: string): Promise<C
 
   return {
     version,
+    meta: buildCatalogMeta(paths.repoRoot),
     components,
     guides: await loadGuides(paths, transformMdx),
   };
+}
+
+/**
+ * Stamp the catalog with what it was generated from, so the CLI can warn when
+ * the installed @var-ui/react is newer than the docs it ships (#129).
+ */
+export function buildCatalogMeta(repoRoot: string): CatalogMeta {
+  return {
+    generatedAt: new Date().toISOString(),
+    commit: currentCommit(repoRoot),
+    packages: {
+      react: readWorkspaceVersion(repoRoot, 'react'),
+      core: readWorkspaceVersion(repoRoot, 'core'),
+      icons: readWorkspaceVersion(repoRoot, 'icons'),
+      astro: readWorkspaceVersion(repoRoot, 'astro'),
+    },
+  };
+}
+
+function readWorkspaceVersion(repoRoot: string, name: string): string {
+  const filePath = join(repoRoot, 'packages', name, 'package.json');
+  return (JSON.parse(readFileSync(filePath, 'utf8')) as { version: string }).version;
+}
+
+function currentCommit(repoRoot: string): string | undefined {
+  if (!existsSync(join(repoRoot, '.git'))) {
+    return undefined;
+  }
+  try {
+    const output = execSync('git rev-parse HEAD', {
+      cwd: repoRoot,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return output.toString().trim() || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 async function extractComponentProps(paths: RepoPaths): Promise<void> {
