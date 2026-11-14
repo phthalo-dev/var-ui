@@ -1,12 +1,15 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { gap } from '../shared/variantAxes';
+import { gapValues } from '../shared/variantAxes';
 
 const stackDirection = variant.enum(['column', 'row'], { default: 'column' });
 const stackAlign = variant.enum(['start', 'center', 'end', 'stretch'], { default: 'stretch' });
 const stackJustify = variant.enum(['start', 'center', 'end', 'between'], { default: 'start' });
 const stackWrap = variant.enum(['wrap', 'nowrap'], { default: 'nowrap' });
+// Default `sm` keeps the historical 0.75rem default now that gap names map 1:1
+// to the space tokens.
+const stackGap = variant.enum(gapValues, { default: 'sm' });
 
 /**
  * Flex stack — the workhorse layout primitive. Vertical by default; use
@@ -21,7 +24,7 @@ export const stack = typestyles.recipe({
   layer: 'components',
   variants: {
     direction: stackDirection,
-    gap,
+    gap: stackGap,
     align: stackAlign,
     justify: stackJustify,
     wrap: stackWrap,
@@ -42,13 +45,18 @@ export const stack = typestyles.recipe({
           column: {},
           row: { flexDirection: 'row' },
         },
+        // Step names map 1:1 to the space tokens (#133).
         gap: {
-          none: { [vars.gap.name]: '0rem' },
-          xs: { [vars.gap.name]: t.space.xxs.var },
-          sm: { [vars.gap.name]: t.space.xs.var },
-          md: { [vars.gap.name]: t.space.sm.var },
+          none: { [vars.gap.name]: t.space.none.var },
+          xxs: { [vars.gap.name]: t.space.xxs.var },
+          xs: { [vars.gap.name]: t.space.xs.var },
+          sm: { [vars.gap.name]: t.space.sm.var },
+          md: { [vars.gap.name]: t.space.md.var },
           lg: { [vars.gap.name]: t.space.lg.var },
-          xl: { [vars.gap.name]: t.space.xxxl.var },
+          xl: { [vars.gap.name]: t.space.xl.var },
+          xxl: { [vars.gap.name]: t.space.xxl.var },
+          xxxl: { [vars.gap.name]: t.space.xxxl.var },
+          xxxxl: { [vars.gap.name]: t.space.xxxxl.var },
         },
         align: {
           start: { alignItems: 'flex-start' },

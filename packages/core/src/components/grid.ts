@@ -45,13 +45,18 @@ export const grid = typestyles.recipe({
           six: { gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' },
           eight: { gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' },
         },
+        // Step names map 1:1 to the space tokens (#133).
         gap: {
-          none: { [vars.gap.name]: '0rem' },
-          xs: { [vars.gap.name]: t.space.xxs.var },
-          sm: { [vars.gap.name]: t.space.xs.var },
+          none: { [vars.gap.name]: t.space.none.var },
+          xxs: { [vars.gap.name]: t.space.xxs.var },
+          xs: { [vars.gap.name]: t.space.xs.var },
+          sm: { [vars.gap.name]: t.space.sm.var },
           md: { [vars.gap.name]: t.space.md.var },
           lg: { [vars.gap.name]: t.space.lg.var },
-          xl: { [vars.gap.name]: t.space.xxxl.var },
+          xl: { [vars.gap.name]: t.space.xl.var },
+          xxl: { [vars.gap.name]: t.space.xxl.var },
+          xxxl: { [vars.gap.name]: t.space.xxxl.var },
+          xxxxl: { [vars.gap.name]: t.space.xxxxl.var },
         },
       },
     };

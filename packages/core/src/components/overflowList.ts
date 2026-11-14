@@ -1,7 +1,11 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { gap } from '../shared/variantAxes';
+import { gapValues } from '../shared/variantAxes';
+
+// Default `sm` keeps the historical 0.75rem default now that gap names map 1:1
+// to the space tokens.
+const overflowListGap = variant.enum(gapValues, { default: 'sm' });
 
 /**
  * Single-row flex chrome for a horizontally overflowing list of items. Pair with
@@ -21,7 +25,7 @@ export const overflowList = typestyles.recipe({
   layer: 'components',
   slots: ['root', 'item', 'overflow', 'measure'],
   variants: {
-    gap,
+    gap: overflowListGap,
     fillParent: variant.boolean({ default: false }),
   },
   vars: {
@@ -60,13 +64,18 @@ export const overflowList = typestyles.recipe({
         },
       },
       variants: {
+        // Step names map 1:1 to the space tokens (#133).
         gap: {
-          none: { root: { [vars.gap.name]: '0rem' } },
-          xs: { root: { [vars.gap.name]: t.space.xxs.var } },
-          sm: { root: { [vars.gap.name]: t.space.xs.var } },
-          md: { root: { [vars.gap.name]: t.space.sm.var } },
+          none: { root: { [vars.gap.name]: t.space.none.var } },
+          xxs: { root: { [vars.gap.name]: t.space.xxs.var } },
+          xs: { root: { [vars.gap.name]: t.space.xs.var } },
+          sm: { root: { [vars.gap.name]: t.space.sm.var } },
+          md: { root: { [vars.gap.name]: t.space.md.var } },
           lg: { root: { [vars.gap.name]: t.space.lg.var } },
-          xl: { root: { [vars.gap.name]: t.space.xxxl.var } },
+          xl: { root: { [vars.gap.name]: t.space.xl.var } },
+          xxl: { root: { [vars.gap.name]: t.space.xxl.var } },
+          xxxl: { root: { [vars.gap.name]: t.space.xxxl.var } },
+          xxxxl: { root: { [vars.gap.name]: t.space.xxxxl.var } },
         },
         fillParent: {
           true: { root: { width: '100%' } },

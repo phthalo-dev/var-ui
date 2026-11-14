@@ -3,7 +3,11 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { forced } from '../internal/forcedColors';
 import { atForcedColors } from '../theme/conditions';
-import { gap, orientation } from '../shared/variantAxes';
+import { gapValues, orientation } from '../shared/variantAxes';
+
+// Default `sm` keeps the historical 0.75rem default now that gap names map 1:1
+// to the space tokens.
+const fieldsetGap = variant.enum(gapValues, { default: 'sm' });
 
 /**
  * Grouping container for related form controls, styled on the native `<fieldset>` + `<legend>`.
@@ -26,7 +30,7 @@ export const fieldset = typestyles.recipe({
   layer: 'components',
   slots: ['root', 'legend', 'description', 'error', 'content'],
   variants: {
-    gap,
+    gap: fieldsetGap,
     orientation,
     legendHidden: variant.boolean({ default: false }),
   },
@@ -76,13 +80,18 @@ export const fieldset = typestyles.recipe({
       },
     },
     variants: {
+      // Step names map 1:1 to the space tokens (#133).
       gap: {
-        none: { root: { [vars.gap.name]: '0rem' } },
-        xs: { root: { [vars.gap.name]: t.space.xxs.var } },
-        sm: { root: { [vars.gap.name]: t.space.xs.var } },
-        md: { root: { [vars.gap.name]: t.space.sm.var } },
+        none: { root: { [vars.gap.name]: t.space.none.var } },
+        xxs: { root: { [vars.gap.name]: t.space.xxs.var } },
+        xs: { root: { [vars.gap.name]: t.space.xs.var } },
+        sm: { root: { [vars.gap.name]: t.space.sm.var } },
+        md: { root: { [vars.gap.name]: t.space.md.var } },
         lg: { root: { [vars.gap.name]: t.space.lg.var } },
-        xl: { root: { [vars.gap.name]: t.space.xxxl.var } },
+        xl: { root: { [vars.gap.name]: t.space.xl.var } },
+        xxl: { root: { [vars.gap.name]: t.space.xxl.var } },
+        xxxl: { root: { [vars.gap.name]: t.space.xxxl.var } },
+        xxxxl: { root: { [vars.gap.name]: t.space.xxxxl.var } },
       },
       orientation: {
         horizontal: {},

@@ -6,7 +6,7 @@ import { mergeProps } from 'typestyles';
 export type StackProps = HTMLAttributes<HTMLDivElement> & {
   /** Flex direction. @default column */
   direction?: NonNullable<StackVariantProps['direction']>;
-  /** Spacing between children. @default md */
+  /** Spacing between children. @default sm */
   gap?: Gap;
   /** Cross-axis alignment. @default stretch */
   align?: NonNullable<StackVariantProps['align']>;
@@ -27,7 +27,7 @@ export type StackProps = HTMLAttributes<HTMLDivElement> & {
  */
 export function Stack({
   direction = 'column',
-  gap = 'md',
+  gap = 'sm',
   align = 'stretch',
   justify = 'start',
   wrap = false,
