@@ -11,6 +11,7 @@ export const dialog = typestyles.recipe({
   slots: ['popup', 'content', 'header', 'heading', 'description', 'closeButton', 'actions'],
   variants: {
     role: variant.enum(['dialog', 'alertdialog'], { default: 'dialog' }),
+    size: variant.enum(['sm', 'md', 'lg', 'xl'], { default: 'xl' }),
   },
   vars: {
     overlayBackground: {
@@ -101,6 +102,18 @@ export const dialog = typestyles.recipe({
               borderColor: t.color.border.strong.var,
             },
           },
+        },
+        size: {
+          sm: {
+            popup: { width: `min(${t.size.panel.sm.var}, calc(100% - 2 * ${t.space.md.var}))` },
+          },
+          md: {
+            popup: { width: `min(${t.size.panel.md.var}, calc(100% - 2 * ${t.space.md.var}))` },
+          },
+          lg: {
+            popup: { width: `min(${t.size.panel.lg.var}, calc(100% - 2 * ${t.space.md.var}))` },
+          },
+          xl: {},
         },
       },
     };

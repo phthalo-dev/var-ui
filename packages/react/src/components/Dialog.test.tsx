@@ -67,6 +67,77 @@ describe('Dialog', () => {
     expect(screen.getByText('Pinned')).toBeTruthy();
   });
 
+  it('title shorthand renders the popup with header, close button and body', async () => {
+    function Shorthand() {
+      const [open, setOpen] = useState(true);
+      return (
+        <Dialog.Root open={open} onOpenChange={setOpen} title="Add memory" size="lg">
+          <p>Body content</p>
+        </Dialog.Root>
+      );
+    }
+    render(<Shorthand />);
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    expect(screen.getByText('Add memory')).toBeTruthy();
+    expect(screen.getByText('Body content')).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: 'Add memory' })).toBeTruthy();
+    expect(dialog.getAttribute('data-size')).toBe('lg');
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.queryByText('Body content')).toBeNull();
+  });
+
+  it('fires onClose when the dialog closes and not when the change is vetoed', async () => {
+    const onClose = vi.fn();
+    function Harness({ veto }: { veto: boolean }) {
+      const [open, setOpen] = useState(true);
+      return (
+        <Dialog.Root
+          open={open}
+          onOpenChange={(next, details) => {
+            if (veto) {
+              details.cancel();
+              return;
+            }
+            setOpen(next);
+          }}
+          onClose={onClose}
+          title="Confirm"
+        >
+          <p>body</p>
+        </Dialog.Root>
+      );
+    }
+    const { unmount } = render(<Harness veto={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+    unmount();
+
+    render(<Harness veto />);
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('size sm/md/lg set data-size and the popup width class variant', () => {
+    render(
+      <>
+        <Dialog.Root open title="A" size="sm">
+          <p>x</p>
+        </Dialog.Root>
+        <Dialog.Root open title="B" size="md">
+          <p>x</p>
+        </Dialog.Root>
+        <Dialog.Root open title="C">
+          <p>x</p>
+        </Dialog.Root>
+      </>,
+    );
+    const dialogs = [...document.querySelectorAll('dialog')];
+    expect(dialogs[0].getAttribute('data-size')).toBe('sm');
+    expect(dialogs[1].getAttribute('data-size')).toBe('md');
+    expect(dialogs[2].getAttribute('data-size')).toBe('xl');
+    expect(dialogs[0].className).toContain('var-ui-dialog');
+  });
+
   it('opens and closes from the open prop', async () => {
     function Harness() {
       const [open, setOpen] = useState(false);

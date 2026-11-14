@@ -27,6 +27,23 @@ The usual arrangement for a short dialog.
 
 <Demo id="dialog.simple" />
 
+### Shorthand
+
+Controlled dialogs that don't need a trigger can pass `title` (and optionally
+`description`) to `Dialog.Root`: it renders the popup, the header with a close button and
+treats `children` as the body. `size` (`sm` | `md` | `lg` | `xl`, default `xl`) sets the
+popup width on `Dialog.Popup` or in the shorthand, and `onClose` fires when the dialog
+closes (unless the change was vetoed) — a convenience alongside `onOpenChange`.
+
+```tsx
+const d = useDisclosure();
+
+<Button onClick={d.show}>Add memory</Button>
+<Dialog open={d.open} onOpenChange={d.setOpen} title="Add memory" size="lg">
+  <input />
+</Dialog>
+```
+
 ## Props
 
 <PropsTable slug="dialog" />

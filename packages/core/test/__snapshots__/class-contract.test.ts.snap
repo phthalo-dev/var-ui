@@ -741,7 +741,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "dialog": {
     "axes": [
       "data-role",
+      "data-size",
       "role",
+      "size",
     ],
     "slots": {
       "actions": "var-ui-dialog__actions",

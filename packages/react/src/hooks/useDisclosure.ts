@@ -21,7 +21,9 @@ export type UseDisclosureResult = {
  * const d = useDisclosure();
  *
  * <Button onClick={d.show}>Edit</Button>
- * <Dialog open={d.open} onOpenChange={d.setOpen} title="Edit" />
+ * <Dialog open={d.open} onOpenChange={d.setOpen} title="Edit" description="Rename the workstream">
+ *   <input />
+ * </Dialog>
  * ```
  */
 export function useDisclosure(initial = false): UseDisclosureResult {
