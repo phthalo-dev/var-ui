@@ -93,6 +93,7 @@ export default defineConfig({
       ci: {
         cache: false,
         command: [
+          'node scripts/check-cli-catalog-changeset.mjs',
           'vp run --no-cache -F @var-ui/core -F @var-ui/react -F @var-ui/icons -F @var-ui/cli build',
           'vp check',
           'vp test run',
