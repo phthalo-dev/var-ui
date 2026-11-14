@@ -1,5 +1,11 @@
 # @var-ui/docs
 
+## 0.3.1
+
+### Patch Changes
+
+- [#151](https://github.com/phthalo-dev/var-ui/pull/151) [`79c5191`](https://github.com/phthalo-dev/var-ui/commit/79c5191b5fc3b8f926c05dc7b6f328bfdd49152c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Getting started gains a Routing section: how to mount React Aria's `RouterProvider` for client-side navigation with react-router, TanStack Router, and the Next.js App Router, which link-rendering components honour it, and the caveat that `Card href` renders a native `<a>`. Link, Button, SideNav, Breadcrumbs, Toc and TopNav docs note that their links honour `RouterProvider`.
+
 ## 0.3.0
 
 ### Minor Changes
