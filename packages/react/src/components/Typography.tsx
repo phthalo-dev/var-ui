@@ -2,7 +2,10 @@ import type { HTMLAttributes, JSX, Ref } from 'react';
 import { createElement } from 'react';
 import { heading, textBlock } from '@var-ui/core/components/typography';
 import type { HeadingVariantProps, TextBlockVariantProps } from '@var-ui/core';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from 'typestyles';
+
+const textVars = recipeVars(textBlock);
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   /** Semantic heading level (document outline). @default 2 */
@@ -43,23 +46,30 @@ export type TextProps = HTMLAttributes<HTMLElement> & {
   tone?: NonNullable<TextBlockVariantProps['tone']>;
   /** Font weight. @default normal */
   weight?: NonNullable<TextBlockVariantProps['weight']>;
-  /** Max lines before truncation. @default none */
-  lineClamp?: 1 | 2 | 3;
+  /** Uppercase eyebrow/overline label treatment. @default false */
+  eyebrow?: boolean;
+  /** Whitespace handling — `pre-wrap` preserves newlines and wrapping (agent output, memory bodies). @default normal */
+  whiteSpace?: 'normal' | 'pre-wrap';
+  /** Max lines before truncation. Counts above 3 go through the `lineClamp` variable. */
+  lineClamp?: number;
   /** Ref to the underlying text element. */
   ref?: Ref<HTMLElement>;
 };
 
 /** Public numeric `lineClamp` stanzas resolved from the `textBlock.lineClamp` axis. */
-const lineClampVariant: Record<
-  NonNullable<TextProps['lineClamp']>,
-  NonNullable<TextBlockVariantProps['lineClamp']>
-> = { 1: '1', 2: '2', 3: '3' };
+const lineClampVariant: Record<1 | 2 | 3, NonNullable<TextBlockVariantProps['lineClamp']>> = {
+  1: '1',
+  2: '2',
+  3: '3',
+};
 
 /**
  * Body text with size/tone/weight axes. Renders a `<p>` by default.
  *
  * ```tsx
  * <Text tone="secondary" size="sm">Supporting copy</Text>
+ * <Text eyebrow size="xs">Steps</Text>
+ * <Text whiteSpace="pre-wrap" lineClamp={20}>{agentOutput}</Text>
  * ```
  */
 export function Text({
@@ -67,22 +77,40 @@ export function Text({
   size = 'md',
   tone = 'primary',
   weight = 'normal',
+  eyebrow = false,
+  whiteSpace = 'normal',
   lineClamp,
   className,
   ref,
   ...props
 }: TextProps): JSX.Element {
+  let clampVariant: NonNullable<TextBlockVariantProps['lineClamp']> | undefined;
+  let clampStyle: Record<string, string> | undefined;
+  if (lineClamp !== undefined) {
+    if (lineClamp === 1 || lineClamp === 2 || lineClamp === 3) {
+      clampVariant = lineClampVariant[lineClamp];
+    } else {
+      if (!Number.isInteger(lineClamp) || lineClamp < 1) {
+        throw new Error('[var-ui] Text lineClamp must be a positive integer.');
+      }
+      clampVariant = 'n';
+      clampStyle = styleVars([[textVars.lineClamp, lineClamp]]);
+    }
+  }
   return createElement(as, {
     ...props,
-    ref,
     ...mergeProps(
       textBlock({
         size,
         tone,
         weight,
-        lineClamp: lineClamp === undefined ? undefined : lineClampVariant[lineClamp],
+        eyebrow,
+        whiteSpace,
+        lineClamp: clampVariant,
       }),
       className,
     ),
+    ref,
+    style: clampStyle ? { ...props.style, ...clampStyle } : props.style,
   });
 }

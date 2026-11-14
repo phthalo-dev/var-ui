@@ -63,10 +63,14 @@ export const textBlock = typestyles.recipe({
   name: 'text-block',
   layer: 'components',
   variants: {
-    size: variant.enum(['xs', 'sm', 'md', 'lg'], { default: 'md' }),
+    size: variant.enum(['xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' }),
     tone: variant.enum(['primary', 'secondary', ...TONE_KEYS], { default: 'primary' }),
-    weight: variant.enum(['normal', 'medium', 'semibold'], { default: 'normal' }),
-    lineClamp: variant.enum(['false', '1', '2', '3'], { default: 'false' }),
+    weight: variant.enum(['normal', 'medium', 'semibold', 'bold'], { default: 'normal' }),
+    /** Uppercase eyebrow/overline label treatment. */
+    eyebrow: variant.boolean({ default: false }),
+    whiteSpace: variant.enum(['normal', 'pre-wrap'], { default: 'normal' }),
+    /** `n` clamps to the `lineClamp` variable (arbitrary line counts). */
+    lineClamp: variant.enum(['false', '1', '2', '3', 'n'], { default: 'false' }),
   },
   vars: {
     color: { ...atProperty.color, value: t.color.text.primary.var },
@@ -74,6 +78,7 @@ export const textBlock = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.secondary.var,
     },
+    lineClamp: { ...atProperty.integer, value: 3 },
   },
   styles: ({ vars }) => {
     return {
@@ -88,6 +93,7 @@ export const textBlock = typestyles.recipe({
           sm: { fontSize: t.fontSize.sm.var },
           md: { fontSize: t.fontSize.md.var },
           lg: { fontSize: t.fontSize.lg.var },
+          xl: { fontSize: t.fontSize.xl.var },
         },
         tone: {
           primary: {},
@@ -104,6 +110,15 @@ export const textBlock = typestyles.recipe({
           normal: { fontWeight: t.fontWeight.normal.var },
           medium: { fontWeight: t.fontWeight.medium.var },
           semibold: { fontWeight: t.fontWeight.semibold.var },
+          bold: { fontWeight: t.fontWeight.bold.var },
+        },
+        eyebrow: {
+          false: {},
+          true: { textTransform: 'uppercase', letterSpacing: '0.08em' },
+        },
+        whiteSpace: {
+          normal: {},
+          'pre-wrap': { whiteSpace: 'pre-wrap' },
         },
         lineClamp: {
           false: {},
@@ -123,6 +138,12 @@ export const textBlock = typestyles.recipe({
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: 3,
+          },
+          n: {
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: vars.lineClamp.var,
           },
         },
       },

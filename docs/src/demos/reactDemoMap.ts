@@ -51,6 +51,8 @@ import SpinnerDefault from './spinner/default/react';
 import StackDefault from './stack/default/react';
 import TextDefault from './text/default/react';
 import TextTones from './text/tones/react';
+import TextEmphasis from './text/emphasis/react';
+import TextClamp from './text/clamp/react';
 import ThumbnailDefault from './thumbnail/default/react';
 import TimestampDefault from './timestamp/default/react';
 import FieldDefault from './field/default/react';
@@ -235,6 +237,8 @@ export const reactDemoMap = {
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
   'text.tones': TextTones,
+  'text.emphasis': TextEmphasis,
+  'text.clamp': TextClamp,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,

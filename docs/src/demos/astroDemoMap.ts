@@ -26,6 +26,8 @@ import SpinnerDefault from './spinner/default/astro.astro';
 import StackDefault from './stack/default/astro.astro';
 import TextDefault from './text/default/astro.astro';
 import TextTones from './text/tones/astro.astro';
+import TextEmphasis from './text/emphasis/astro.astro';
+import TextClamp from './text/clamp/astro.astro';
 import ThumbnailDefault from './thumbnail/default/astro.astro';
 import TimestampDefault from './timestamp/default/astro.astro';
 import FieldDefault from './field/default/astro.astro';
@@ -91,6 +93,8 @@ const astroDemos = {
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
   'text.tones': TextTones,
+  'text.emphasis': TextEmphasis,
+  'text.clamp': TextClamp,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,

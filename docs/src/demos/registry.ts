@@ -50,6 +50,8 @@ import { snippets as spinnerDefaultSnippets } from './spinner/default/snippets';
 import { snippets as stackDefaultSnippets } from './stack/default/snippets';
 import { snippets as textDefaultSnippets } from './text/default/snippets';
 import { snippets as textTonesSnippets } from './text/tones/snippets';
+import { snippets as textEmphasisSnippets } from './text/emphasis/snippets';
+import { snippets as textClampSnippets } from './text/clamp/snippets';
 import { snippets as thumbnailDefaultSnippets } from './thumbnail/default/snippets';
 import { snippets as timestampDefaultSnippets } from './timestamp/default/snippets';
 import { snippets as fieldDefaultSnippets } from './field/default/snippets';
@@ -235,6 +237,8 @@ export const DEMO_IDS = [
   'heading.default',
   'text.default',
   'text.tones',
+  'text.emphasis',
+  'text.clamp',
   'link.default',
   'code-block.default',
   'alert.default',
@@ -455,6 +459,8 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'heading.default': headingDefaultSnippets,
   'text.default': textDefaultSnippets,
   'text.tones': textTonesSnippets,
+  'text.emphasis': textEmphasisSnippets,
+  'text.clamp': textClampSnippets,
   'link.default': linkDefaultSnippets,
   'code-block.default': codeBlockDefaultSnippets,
   'alert.default': alertDefaultSnippets,
@@ -675,6 +681,8 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'heading.default': () => import('./heading/default/react'),
   'text.default': () => import('./text/default/react'),
   'text.tones': () => import('./text/tones/react'),
+  'text.emphasis': () => import('./text/emphasis/react'),
+  'text.clamp': () => import('./text/clamp/react'),
   'link.default': () => import('./link/default/react'),
   'code-block.default': () => import('./code-block/default/react'),
   'alert.default': () => import('./alert/default/react'),
@@ -954,6 +962,16 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'text.tones',
     snippets: demoSnippets['text.tones'],
     react: reactDemoLoaders['text.tones'],
+  },
+  'text.emphasis': {
+    id: 'text.emphasis',
+    snippets: demoSnippets['text.emphasis'],
+    react: reactDemoLoaders['text.emphasis'],
+  },
+  'text.clamp': {
+    id: 'text.clamp',
+    snippets: demoSnippets['text.clamp'],
+    react: reactDemoLoaders['text.clamp'],
   },
   'link.default': {
     id: 'link.default',

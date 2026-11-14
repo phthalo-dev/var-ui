@@ -19,6 +19,18 @@ Body text with size and tone variants.
 
 <Demo id="text.tones" />
 
+### Emphasis and labels
+
+`weight` covers `normal`, `medium`, `semibold` and `bold`; `size` runs `xs`–`xl`. `eyebrow` renders an uppercase label treatment (`STEPS`, `COST`, section labels) — combine it with `size="xs"` and a tone for overline labels.
+
+<Demo id="text.emphasis" />
+
+### Whitespace and clamping
+
+`whiteSpace="pre-wrap"` preserves newlines and wrapping (agent output, memory bodies). `lineClamp` takes any line count — 1 renders a single-line ellipsis, anything else uses the `-webkit-line-clamp` box (counts above 3 go through the `--var-ui-text-block-lineclamp` variable).
+
+<Demo id="text.clamp" />
+
 ## Props
 
 <PropsTable slug="text" />
