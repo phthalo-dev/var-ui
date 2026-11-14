@@ -22,12 +22,13 @@ There is no `@var-ui/astro` ChatComposer — Astro and HTML previews show static
 | `value`         | `string`                  | (required)          |
 | `onValueChange` | `(value: string) => void` | (required)          |
 | `onSubmit`      | `(value: string) => void` | (required)          |
+| `submitOn`      | `'enter' \| 'mod+enter'`  | `'enter'`           |
 | `placeholder`   | `string`                  | `'Type a message…'` |
 | `maxRows`       | `number`                  | `8`                 |
 | `disabled`      | `boolean`                 | `false`             |
 | `className`     | `string`                  | —                   |
 
-Enter submits (trimmed, non-empty only); Shift+Enter inserts a newline.
+With the default `submitOn="enter"`, Enter submits (trimmed, non-empty only) and Shift+Enter inserts a newline. `submitOn="mod+enter"` submits on ⌘/Ctrl+Enter and lets every Enter insert newlines.
 
 ## Props
 

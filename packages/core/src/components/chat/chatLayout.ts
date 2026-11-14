@@ -18,6 +18,7 @@ export const chatLayout = typestyles.recipe({
   vars: {
     background: { ...atProperty.color, value: t.color.background.surface.var },
     border: { ...atProperty.color, value: t.color.border.default.var },
+    maxHeight: { syntax: '*', initial: 'none', value: 'none' },
   },
   styles: ({ vars }) => {
     return {
@@ -28,6 +29,7 @@ export const chatLayout = typestyles.recipe({
           flexDirection: 'column',
           flex: 1,
           minHeight: 0,
+          maxHeight: vars.maxHeight.var,
         },
         messageArea: {
           flex: 1,

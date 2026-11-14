@@ -51,4 +51,23 @@ describe('ChatSendButton', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Stop generating' }));
     expect(onStop).toHaveBeenCalledTimes(1);
   });
+
+  it('loading shows a spinner, disables presses, and keeps streaming stop pressable', async () => {
+    const onClick = vi.fn();
+    const onStop = vi.fn();
+    render(
+      <IconProvider icons={{}}>
+        <ChatSendButton loading onClick={onClick} />
+        <ChatSendButton streaming loading onStop={onStop} />
+      </IconProvider>,
+    );
+    const sending = screen.getByRole('button', { name: 'Send message' });
+    expect(sending.hasAttribute('disabled')).toBe(true);
+    expect(sending.querySelector('[role="status"]')).toBeTruthy();
+    await userEvent.click(sending);
+    expect(onClick).not.toHaveBeenCalled();
+    // streaming wins over loading: stop stays pressable
+    await userEvent.click(screen.getByRole('button', { name: 'Stop generating' }));
+    expect(onStop).toHaveBeenCalledTimes(1);
+  });
 });

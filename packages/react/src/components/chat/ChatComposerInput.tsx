@@ -19,8 +19,10 @@ export type ChatComposerInputProps = Omit<
   value: string;
   /** Fires with the new text on every edit. The native `onChange` event also reaches the `<textarea>`. */
   onValueChange: (value: string) => void;
-  /** Submit handler — called with the trimmed value on Enter (without Shift). */
+  /** Submit handler — called with the trimmed value when the submit key fires per `submitOn`. */
   onSubmit: (value: string) => void;
+  /** Which key combination submits. `enter` (default): Enter without Shift. `mod+enter`: ⌘/Ctrl+Enter, Enter inserts newlines. @default 'enter' */
+  submitOn?: 'enter' | 'mod+enter';
   /** Placeholder text. @default 'Type a message…' */
   placeholder?: string;
   /** Max rows before the textarea scrolls instead of growing. @default 8 */
@@ -36,18 +38,20 @@ export type ChatComposerInputProps = Omit<
 const LINE_HEIGHT_PX = 22;
 
 /**
- * Auto-resizing message textarea. Enter submits (trimmed, non-empty only);
- * Shift+Enter inserts a newline. `ref` and native attributes reach the
- * `<textarea>`.
+ * Auto-resizing message textarea. Submits per `submitOn` (trimmed, non-empty
+ * only); other Enter presses insert newlines. `ref` and native attributes
+ * reach the `<textarea>`.
  *
  * ```tsx
  * <ChatComposerInput value={value} onValueChange={setValue} onSubmit={sendMessage} />
+ * <ChatComposerInput submitOn="mod+enter" value={value} onValueChange={setValue} onSubmit={sendMessage} />
  * ```
  */
 export function ChatComposerInput({
   value,
   onValueChange,
   onSubmit,
+  submitOn = 'enter',
   placeholder = 'Type a message…',
   maxRows = 8,
   disabled = false,
@@ -75,12 +79,25 @@ export function ChatComposerInput({
     if (event.defaultPrevented) {
       return;
     }
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key !== 'Enter') {
+      return;
+    }
+    const submit = () => {
       event.preventDefault();
       const trimmed = value.trim();
       if (trimmed) {
         onSubmit(trimmed);
       }
+    };
+    if (submitOn === 'mod+enter') {
+      // ⌘/Ctrl+Enter submits; bare (and Shift+) Enter keeps the native newline.
+      if (event.metaKey || event.ctrlKey) {
+        submit();
+      }
+      return;
+    }
+    if (!event.shiftKey) {
+      submit();
     }
   }
 

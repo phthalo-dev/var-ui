@@ -15,7 +15,7 @@ import { type RecipeVariants } from 'typestyles';
 export const chatMessageList = typestyles.recipe({
   name: 'chat-message-list',
   layer: 'components',
-  slots: ['root', 'inner', 'emptyState'],
+  slots: ['root', 'inner', 'emptyState', 'loading'],
   variants: { density },
   styles: () => ({
     base: {
@@ -37,6 +37,12 @@ export const chatMessageList = typestyles.recipe({
         justifyContent: 'center',
         flex: 1,
         minHeight: 0,
+      },
+      loading: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: t.space.md.var,
       },
     },
     variants: {

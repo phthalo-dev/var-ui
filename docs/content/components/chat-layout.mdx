@@ -15,6 +15,12 @@ There is no `@var-ui/astro` ChatLayout — Astro and HTML previews show a static
 
 <Demo id="chat-layout.default" />
 
+## Bounded height
+
+By default the root is `flex: 1; min-height: 0`, made for a full-height flex parent. Pass
+`maxHeight` (any CSS length — `20rem`, `50dvh`) to bound the shell inside a page section;
+the message area scrolls within it.
+
 ## Props
 
 <PropsTable slug="chat-layout" />

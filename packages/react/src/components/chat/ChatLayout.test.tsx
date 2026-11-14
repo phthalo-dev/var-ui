@@ -95,4 +95,15 @@ describe('ChatLayout', () => {
 
     (globalThis as { ResizeObserver: unknown }).ResizeObserver = originalResizeObserver;
   });
+
+  it('assigns the maxHeight variable on the root and preserves user style', () => {
+    const { container } = render(
+      <ChatLayout composer={<div />} maxHeight="20rem" style={{ borderRadius: '4px' }}>
+        <div>messages</div>
+      </ChatLayout>,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.style.getPropertyValue('--var-ui-chat-layout-maxheight')).toBe('20rem');
+    expect(root.style.borderRadius).toBe('4px');
+  });
 });

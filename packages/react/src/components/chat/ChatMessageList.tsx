@@ -21,6 +21,12 @@ export type ChatMessageListProps = Omit<
   streaming?: boolean;
   /** Visual density — flows to child messages via context. @default balanced */
   density?: Density;
+  /**
+   * Loading row rendered below the messages (typically a `Spinner`) — a
+   * pending send or in-flight assistant reply indicator inside the log
+   * region. Rendered while provided, alongside `children`.
+   */
+  loading?: ReactNode;
   /** Additional CSS class names merged onto the root element. */
   className?: string;
   /** Ref to the underlying root `<div>` element. */
@@ -48,6 +54,7 @@ export function ChatMessageList({
   children,
   emptyState,
   streaming = false,
+  loading,
   density = 'balanced',
   className,
   ref,
@@ -70,6 +77,7 @@ export function ChatMessageList({
           ) : emptyState ? (
             <div {...mergeProps(l.emptyState)}>{emptyState}</div>
           ) : null}
+          {loading ? <div {...mergeProps(l.loading)}>{loading}</div> : null}
         </div>
       </div>
     </ChatListContext.Provider>
