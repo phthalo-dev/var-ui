@@ -58,6 +58,7 @@ const UNDOCUMENTED_HOOKS = [
   'data-wrap',
   'data-line-numbers',
   'data-highlighted',
+  'data-line-tone',
   'data-collapsed',
   'data-collapsible',
   'data-collapsible-config',

@@ -2,8 +2,21 @@
 import type { HTMLAttributes } from 'astro/types';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { mergeProps } from '../utils';
+
+const codeBlockVars = recipeVars(codeBlock);
+
+type DiffLineTone = 'added' | 'deleted' | 'hunk';
+
+/** Unified-diff line classification for `variant="diff"` line painting. */
+function classifyDiffLine(line: string): DiffLineTone | undefined {
+  if (line.startsWith('@@')) return 'hunk';
+  if (line.startsWith('+') && !line.startsWith('+++')) return 'added';
+  if (line.startsWith('-') && !line.startsWith('---')) return 'deleted';
+  return undefined;
+}
 
 interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVariantProps {
   code: string;
@@ -18,6 +31,8 @@ interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVarian
   wrapLongLines?: boolean;
   showLineNumbers?: boolean;
   highlightedLines?: number[];
+  /** Scroll cap for the code body — any CSS length. */
+  maxHeight?: string;
   copyLabel?: string;
   copiedLabel?: string;
   copyErrorLabel?: string;
@@ -44,6 +59,7 @@ const {
   wrapLongLines = false,
   showLineNumbers = false,
   highlightedLines = [],
+  maxHeight,
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
@@ -56,7 +72,9 @@ const highlightedSet = new Set(highlightedLines);
 const lines = code.replace(/\n$/, '').split('\n');
 const terminal = variant === 'terminal';
 const inline = variant === 'inline';
+const diff = variant === 'diff';
 const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
+const maxHeightStyle = maxHeight ? styleVars([[codeBlockVars.maxHeight, maxHeight]]) : undefined;
 ---
 
 {
@@ -96,7 +114,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
         ) : null}
       </div>
 
-      <div {...mergeProps(cb.body)} data-codeblock-body>
+      <div {...mergeProps(cb.body)} style={maxHeightStyle} data-codeblock-body>
         <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre
         >{showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
@@ -107,6 +125,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
                   <span
                     {...mergeProps(cb.line)}
                     data-highlighted={highlightedSet.has(lineNumber) || undefined}
+                    data-line-tone={diff ? classifyDiffLine(line) : undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}
@@ -122,6 +141,14 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
                   </span>
                 );
               })}
+            </code>
+          ) : diff ? (
+            <code {...mergeProps(cb.code)}>
+              {lines.map((line, index) => (
+                <span {...mergeProps(cb.line)} data-line-tone={classifyDiffLine(line)}>
+                  <span {...mergeProps(cb.lineContent)}>{line || ' '}</span>
+                </span>
+              ))}
             </code>
           ) : useHighlightedHtml ? (
             <code {...mergeProps(cb.code, highlightedCodeClassName)} set:html={codeHtml} />

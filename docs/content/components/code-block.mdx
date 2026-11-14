@@ -72,6 +72,21 @@ const lines = code.replace(/\n$/, '').split('\n');
 />;
 ```
 
+### Diffs
+
+`variant="diff"` paints unified-diff lines from the `color.code` tokens — `+` lines get
+`additionBackground`/`addition`, `-` lines `deletionBackground`/`deletion`, and `@@` hunk
+headers the `section` color. Lines are classified from their leading character (`+`, `-`,
+`@@`), with or without `showLineNumbers`.
+
+### Limiting height
+
+`maxHeight` takes any CSS length and scrolls the code body inside the block:
+
+```tsx
+<CodeBlock code={toolOutput} maxHeight="20rem" />
+```
+
 ## Props
 
 <PropsTable slug="code-block" />

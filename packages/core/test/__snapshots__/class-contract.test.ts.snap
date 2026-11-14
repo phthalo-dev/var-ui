@@ -442,6 +442,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-code-block-languagecolor",
       "--var-ui-code-block-linehighlightbackground",
       "--var-ui-code-block-linenumbercolor",
+      "--var-ui-code-block-maxheight",
     ],
   },
   "collapsible": {
