@@ -2,10 +2,6 @@ import { codeBlock } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
-function classOf(result: string | { className: string }): string {
-  return typeof result === 'string' ? result : result.className;
-}
-
 export function render(): string {
   const cb = codeBlock();
   const code = 'const greeting = "hello";';
@@ -20,7 +16,7 @@ export function render(): string {
   const pre = serializeHtmlTag(
     'pre',
     {
-      ...mergeProps(cb.pre, classOf(cb.preScrollX)),
+      ...mergeProps(cb.pre),
       'data-codeblock-pre': true,
     },
     codeEl,
@@ -28,7 +24,7 @@ export function render(): string {
   const body = serializeHtmlTag(
     'div',
     {
-      ...mergeProps(cb.body, classOf(cb.bodyScrollable)),
+      ...mergeProps(cb.body),
       'data-codeblock-body': true,
     },
     pre,

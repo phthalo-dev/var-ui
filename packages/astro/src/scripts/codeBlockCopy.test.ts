@@ -29,9 +29,6 @@ describe('initCodeBlockCopy', () => {
           data-copy-label="Copy code"
           data-copied-label="${copiedLabel}"
           data-copy-error-label="${copyErrorLabel}"
-          data-class-idle="copy-idle"
-          data-class-copied="copy-copied"
-          data-class-error="copy-error"
           aria-label="Copy code"
         >
           <span data-codeblock-copy-icon>
@@ -39,12 +36,7 @@ describe('initCodeBlockCopy', () => {
           </span>
           <span data-codeblock-copy-text>Copy</span>
         </button>
-        <span
-          data-codeblock-feedback
-          data-class-success="feedback-success"
-          data-class-error="feedback-error"
-          role="status"
-        ></span>
+        <span data-codeblock-feedback role="status"></span>
       </div>
     `;
   }
@@ -63,7 +55,6 @@ describe('initCodeBlockCopy', () => {
 
     expect(btn.getAttribute('aria-label')).toBe('Saved to clipboard');
     expect(btn.getAttribute('data-copied')).toBe('');
-    expect(btn.classList.contains('copy-copied')).toBe(true);
     expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Copied');
     expect(btn.querySelector('[data-codeblock-copy-icon] svg path')?.getAttribute('d')).toBe(
       'M4.5 12.5l5 5L19.5 7',
@@ -71,7 +62,7 @@ describe('initCodeBlockCopy', () => {
 
     const feedback = document.querySelector('[data-codeblock-feedback]')!;
     expect(feedback.textContent).toBe('Saved to clipboard');
-    expect(feedback.classList.contains('feedback-success')).toBe(true);
+    expect(feedback.getAttribute('data-tone')).toBe('success');
   });
 
   it('does not duplicate default copied label in inline feedback', async () => {
@@ -104,12 +95,11 @@ describe('initCodeBlockCopy', () => {
 
     expect(btn.getAttribute('aria-label')).toBe('Could not copy');
     expect(btn.getAttribute('data-error')).toBe('');
-    expect(btn.classList.contains('copy-error')).toBe(true);
     expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Error');
 
     const feedback = document.querySelector('[data-codeblock-feedback]')!;
     expect(feedback.textContent).toBe('Could not copy');
-    expect(feedback.classList.contains('feedback-error')).toBe(true);
+    expect(feedback.getAttribute('data-tone')).toBe('error');
   });
 
   it('resets copy state after timeout', async () => {
