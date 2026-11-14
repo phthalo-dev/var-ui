@@ -9,6 +9,8 @@ interface Props extends Omit<HTMLAttributes<'details'>, 'id' | 'title'>, Collaps
   id?: string;
   title?: string;
   defaultExpanded?: boolean;
+  /** Hides the default chevron on the title trigger. */
+  hideIcon?: boolean;
   className?: string;
 }
 
@@ -16,6 +18,7 @@ const {
   id,
   title,
   defaultExpanded = false,
+  hideIcon = false,
   variant = 'flush',
   className,
   ...rest
@@ -23,16 +26,20 @@ const {
 
 const c = collapsible({ variant });
 const hasTriggerSlot = Astro.slots.has('trigger');
+const hasIconSlot = Astro.slots.has('icon');
 ---
 
 <details {...rest} id={id} open={defaultExpanded || undefined} {...mergeProps(c.root, className)}>
   <summary {...mergeProps(c.trigger)}>
     {
       hasTriggerSlot ? (
-        <slot name="trigger" />
+        <>
+          {hasIconSlot && <span {...mergeProps(c.triggerIcon)}><slot name="icon" /></span>}
+          <slot name="trigger" />
+        </>
       ) : (
         <>
-          <span {...mergeProps(c.triggerIcon)} set:html={chevronDownSvg} />
+          {!hideIcon && <span {...mergeProps(c.triggerIcon)} set:html={chevronDownSvg} />}
           {title}
         </>
       )

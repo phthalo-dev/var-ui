@@ -8,6 +8,9 @@ description: Expand/collapse disclosure panel.
 Expand/collapse panel built on React Aria `Disclosure`. Use [`Accordion`](/components/accordion)
 for stacked multi-panel layouts, or `CollapsibleGroup` for a lower-level grouping API.
 
+- `headingLevel={false}` renders the trigger button without the wrapping heading — useful for long lists of collapsible rows that shouldn't pollute the document outline.
+- `trigger` replaces the default title + chevron. Pass `icon` alongside it to render the rotating chevron (or any node) next to the custom content; `icon={null}` hides the default chevron on title triggers. The Astro component mirrors this with a named `icon` slot and a `hideIcon` prop.
+
 ## Examples
 
 ### Default
