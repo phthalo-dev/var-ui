@@ -10,6 +10,8 @@ import type {
   GuideRecord,
   PropRow,
 } from '../types';
+// @ts-expect-error TS5097: the Node generate entry resolves sibling imports with a .ts extension
+import { domPropsNote } from '../props-note.ts';
 
 export type RepoPaths = {
   repoRoot: string;
@@ -78,12 +80,20 @@ export async function buildCatalog(paths: RepoPaths, version: string): Promise<C
 
     const source = readFileSync(filePath, 'utf8');
     const props = loadProps(paths.propsDir, entry.slug);
+    // The inlined markdown table shows only the component's own API (Var UI +
+    // React Aria props). Every inherited HTML/ARIA/DOM attribute stays in
+    // `props` for `var-ui component <name> --all-props` (#130).
+    const ownProps = props.filter((prop) => prop.source !== 'dom');
     const transformed = transformMdx({
       source,
       snippets: snippetIndex,
-      props,
+      props: ownProps,
       filePath,
     });
+    const markdown =
+      ownProps.length < props.length
+        ? `${transformed.markdown}\n\n${domPropsNote(entry.slug)}\n`
+        : transformed.markdown;
 
     components.push({
       slug: entry.slug,
@@ -93,7 +103,7 @@ export async function buildCatalog(paths: RepoPaths, version: string): Promise<C
       importLine: entry.importLine,
       packages: componentPackages(paths.astroComponents, entry.slug),
       docsPath: `/components/${entry.slug}`,
-      markdown: transformed.markdown,
+      markdown,
       examples: demoIdsInPage(source).map((id) => toExample(id, snippetIndex[id]!)),
       props,
     });
@@ -217,6 +227,7 @@ function loadProps(propsDir: string, slug: string): PropRow[] {
       required: boolean;
       default?: string;
       description?: string;
+      source?: PropRow['source'];
     }>;
   };
   return (data.props ?? []).map((prop) => {
@@ -224,6 +235,7 @@ function loadProps(propsDir: string, slug: string): PropRow[] {
       name: prop.name,
       type: prop.type,
       required: prop.required,
+      source: prop.source,
     };
     if (prop.default !== undefined) {
       row.default = prop.default;

@@ -43,6 +43,9 @@ export type PropRow = {
   required: boolean;
   default?: string;
   description?: string;
+  // Absent in catalogs generated before the source field was threaded through;
+  // treated as Var UI's own props (never filtered out).
+  source?: 'var-ui' | 'react-aria' | 'dom';
 };
 
 export type GuideRecord = {

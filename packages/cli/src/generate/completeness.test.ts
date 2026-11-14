@@ -29,7 +29,7 @@ describe('catalog completeness', () => {
     expect(button!.markdown).toContain('| Name | Type |');
     expect(button!.markdown).toContain('| tone |');
 
-    const formatted = formatComponent(button!, false);
+    const formatted = formatComponent(button!, { json: false, allProps: false });
     expect(formatted.startsWith("# Button\n\nimport { Button } from '@var-ui/react';\n\n")).toBe(
       true,
     );
@@ -37,5 +37,14 @@ describe('catalog completeness', () => {
     expect(formatted).toContain(
       "```tsx\nimport { Button } from '@var-ui/react';\n\n<Button>Click me</Button>\n```",
     );
+
+    // The baked markdown table shows only the component's own props, with a
+    // pointer to --all-props for the inherited HTML/ARIA/DOM attributes (#130).
+    const domProps = button!.props.filter((prop) => prop.source === 'dom');
+    expect(domProps.length).toBeGreaterThan(0);
+    expect(button!.markdown).not.toContain(`| ${domProps[0]!.name} |`);
+    expect(button!.markdown).toContain('> Also accepts all standard HTML attributes');
+    const withAllProps = formatComponent(button!, { json: false, allProps: true });
+    expect(withAllProps).toContain(`| ${domProps[0]!.name} |`);
   }, 120_000);
 });

@@ -54,6 +54,68 @@ import { Button } from '@var-ui/react';
 <Button>Click me</Button>;
 ```
 
+## Routing
+
+The components that render links — `Link`, `Button` and `IconButton` with `href`, `SideNav.Item`, `TopNav` links, `Breadcrumbs`, and `Toc` — are built on React Aria's `Link`. Client-side navigation works through React Aria's `RouterProvider`, mounted inside your router's context so it can translate between router hrefs and plain URLs:
+
+```tsx
+import { RouterProvider } from 'react-aria-components';
+import { useHref, useNavigate } from 'react-router-dom';
+import { DesignSystemProvider } from '@var-ui/react';
+
+function App() {
+  return (
+    <DesignSystemProvider applyToDocument>
+      <RouterProvider navigate={useNavigate()} useHref={useHref}>
+        <Routes />
+      </RouterProvider>
+    </DesignSystemProvider>
+  );
+}
+```
+
+Every link component above then navigates in-app — `SideNav.Item href="/settings"` pushes the route instead of reloading the page.
+
+Without a `RouterProvider`, `href` falls back to normal browser navigation.
+
+### Other routers
+
+TanStack Router:
+
+```tsx
+import { RouterProvider } from 'react-aria-components';
+import { useRouter } from '@tanstack/react-router';
+
+const router = useRouter();
+
+<RouterProvider
+  navigate={(href) => router.navigate({ to: href })}
+  useHref={(href) => router.buildLocation({ to: href }).href}
+>
+  {children}
+</RouterProvider>;
+```
+
+Next.js App Router (in a client component; `href` is already the final URL):
+
+```tsx
+'use client';
+
+import { RouterProvider } from 'react-aria-components';
+import { useRouter } from 'next/navigation';
+
+const router = useRouter();
+
+<RouterProvider navigate={(href) => router.push(href)} useHref={(href) => href}>
+  {children}
+</RouterProvider>;
+```
+
+Caveats:
+
+- `Card` with `href` renders a plain `<a>`, so it always does a full page navigation. Put a `Link` inside the card title when the card should participate in client-side routing.
+- `RouterProvider` only intercepts React Aria links; native `<a>` elements you render yourself are untouched.
+
 ## Astro without React
 
 ```bash
