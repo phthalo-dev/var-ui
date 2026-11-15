@@ -1,7 +1,20 @@
 export type Catalog = {
   version: string; // @var-ui/cli package version
+  // Absent in older catalogs and hand-written test fixtures.
+  meta?: CatalogMeta;
   components: ComponentRecord[];
   guides: GuideRecord[];
+};
+
+export type CatalogMeta = {
+  generatedAt: string; // ISO timestamp of when the catalog was built
+  commit?: string; // git commit the docs content was read from
+  packages: {
+    react: string;
+    core: string;
+    icons: string;
+    astro: string;
+  };
 };
 
 export type ComponentRecord = {
