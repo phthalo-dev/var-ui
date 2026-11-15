@@ -176,4 +176,48 @@ describe('runCli', () => {
     expect(written).toContain(AGENTS_END);
     expect(written).toContain('Button (`button`)');
   });
+
+  it('warns on stderr when the catalog predates the installed @var-ui/react', () => {
+    const project = tmpDir();
+    const pkgDir = path.join(project, 'node_modules', '@var-ui', 'react');
+    fs.mkdirSync(pkgDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(pkgDir, 'package.json'),
+      JSON.stringify({ name: '@var-ui/react', version: '9.9.9' }),
+    );
+    const stale: Catalog = {
+      ...catalog,
+      meta: {
+        generatedAt: '2026-11-13T00:00:00.000Z',
+        packages: { react: '0.10.0', core: '0.10.0', icons: '0.10.0', astro: '0.10.0' },
+      },
+    };
+    const cap = capture();
+    runCli(['component', 'Button'], cap.io, { catalog: stale, cwd: project });
+    expect(cap.exitCode).toBe(0);
+    expect(cap.stderr).toContain('warning: this @var-ui/cli catalog was generated against');
+    // stdout stays clean for --json consumers.
+    expect(cap.stdout).toContain('# Button');
+  });
+
+  it('does not warn when catalog and installed versions match', () => {
+    const project = tmpDir();
+    const pkgDir = path.join(project, 'node_modules', '@var-ui', 'react');
+    fs.mkdirSync(pkgDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(pkgDir, 'package.json'),
+      JSON.stringify({ name: '@var-ui/react', version: '0.10.0' }),
+    );
+    const fresh: Catalog = {
+      ...catalog,
+      meta: {
+        generatedAt: '2026-11-13T00:00:00.000Z',
+        packages: { react: '0.10.0', core: '0.10.0', icons: '0.10.0', astro: '0.10.0' },
+      },
+    };
+    const cap = capture();
+    runCli(['component', 'Button'], cap.io, { catalog: fresh, cwd: project });
+    expect(cap.exitCode).toBe(0);
+    expect(cap.stderr).toBe('');
+  });
 });
