@@ -1,30 +1,71 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { grid } from '@var-ui/core/components/grid';
+import { grid, gridColumnsStyle, type GridResponsiveColumns } from '@var-ui/core/components/grid';
 import type { Gap, GridVariantProps } from '@var-ui/core';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
 
-type Props = HTMLAttributes<'div'> & {
-  columns?: 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 8;
-  gap?: Gap;
-  className?: string;
-};
+const gridVars = recipeVars(grid);
+
+type GridColumns = 'auto' | number | GridResponsiveColumns;
 
 const columnVariant = {
-  auto: 'auto',
   1: 'one',
   2: 'two',
   3: 'three',
   4: 'four',
   5: 'five',
   6: 'six',
+  7: 'seven',
   8: 'eight',
-} as const satisfies Record<
-  NonNullable<Props['columns']>,
-  NonNullable<GridVariantProps['columns']>
->;
+} as const satisfies Partial<Record<number, NonNullable<GridVariantProps['columns']>>>;
 
-const { columns = 'auto', gap = 'md', className, ...rest } = Astro.props;
-const rp = mergeProps(grid({ columns: columnVariant[columns], gap }), className);
+type Props = HTMLAttributes<'div'> & {
+  /** `auto` packs minmax(minColumnWidth, 1fr) tracks; a number gives 1–8 fixed equal tracks; a map gives per-breakpoint counts (`{ base: 2, lg: 7 }`). @default auto */
+  columns?: GridColumns;
+  /** Minimum track width for `columns="auto"`. Any CSS length. @default size.field.minWidth (15rem) */
+  minColumnWidth?: string;
+  gap?: Gap;
+  className?: string;
+};
+
+const { columns = 'auto', minColumnWidth, gap = 'md', className, style, ...rest } = Astro.props;
+
+let variant: NonNullable<GridVariantProps['columns']> = 'auto';
+let columnsClassName: string | undefined;
+if (typeof columns === 'number') {
+  const word = columnVariant[columns as keyof typeof columnVariant];
+  if (word) {
+    variant = word;
+  } else {
+    if (!Number.isInteger(columns) || columns < 1) {
+      throw new Error(
+        '[var-ui] Grid columns must be a positive integer, "auto", or a per-breakpoint count map.',
+      );
+    }
+    variant = 'fixed';
+    columnsClassName = gridColumnsStyle({ base: columns });
+  }
+} else if (typeof columns === 'object' && columns !== null) {
+  variant = columns.base != null ? 'fixed' : 'auto';
+  columnsClassName = gridColumnsStyle(columns);
+}
+
+const minColumnWidthStyle = minColumnWidth
+  ? styleVars([[gridVars.minColumnWidth, minColumnWidth]])
+  : undefined;
+// `style` may be a string or an object depending on the caller.
+const mergedStyle =
+  minColumnWidthStyle == null
+    ? style
+    : typeof style === 'string'
+      ? [
+          ...Object.entries(minColumnWidthStyle).map(([name, value]) => `${name}: ${value}`),
+          style,
+        ]
+          .filter(Boolean)
+          .join('; ')
+      : { ...style, ...minColumnWidthStyle };
+const rp = mergeProps(grid({ columns: variant, gap }), columnsClassName, className);
 ---
-<div {...rest} {...rp}><slot /></div>
+<div {...rest} {...rp} style={mergedStyle}><slot /></div>
