@@ -66,6 +66,7 @@ import { snippets as pinInputDefaultSnippets } from './pin-input/default/snippet
 import { snippets as selectDefaultSnippets } from './select/default/snippets';
 import { snippets as selectOptionsSnippets } from './select/options/snippets';
 import { snippets as selectPartsSnippets } from './select/parts/snippets';
+import { snippets as selectSectionsSnippets } from './select/sections/snippets';
 import { snippets as comboboxDefaultSnippets } from './combobox/default/snippets';
 import { snippets as comboboxFieldSnippets } from './combobox/field/snippets';
 import { snippets as typeaheadDefaultSnippets } from './typeahead/default/snippets';
@@ -287,6 +288,7 @@ export const DEMO_IDS = [
   'select.default',
   'select.options',
   'select.parts',
+  'select.sections',
   'combobox.default',
   'combobox.field',
   'typeahead.default',
@@ -507,6 +509,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'select.default': selectDefaultSnippets,
   'select.options': selectOptionsSnippets,
   'select.parts': selectPartsSnippets,
+  'select.sections': selectSectionsSnippets,
   'combobox.default': comboboxDefaultSnippets,
   'combobox.field': comboboxFieldSnippets,
   'typeahead.default': typeaheadDefaultSnippets,
@@ -727,6 +730,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'select.default': () => import('./select/default/react'),
   'select.options': () => import('./select/options/react'),
   'select.parts': () => import('./select/parts/react'),
+  'select.sections': () => import('./select/sections/react'),
   'combobox.default': () => import('./combobox/default/react'),
   'combobox.field': () => import('./combobox/field/react'),
   'typeahead.default': () => import('./typeahead/default/react'),
@@ -1214,6 +1218,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'select.parts',
     snippets: demoSnippets['select.parts'],
     react: reactDemoLoaders['select.parts'],
+  },
+  'select.sections': {
+    id: 'select.sections',
+    snippets: demoSnippets['select.sections'],
+    react: reactDemoLoaders['select.sections'],
   },
   'combobox.default': {
     id: 'combobox.default',
