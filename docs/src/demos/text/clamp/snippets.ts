@@ -14,7 +14,7 @@ import { Text } from '@var-ui/astro';
 ---
 
 <Text eyebrow size="xs" tone="secondary">Agent output</Text>
-<Text whiteSpace="pre-wrap">Step 1: index rebuilt{'\\n'}Step 2: pending review</Text>
+<Text whiteSpace="pre-wrap">{'Step 1: index rebuilt\\nStep 2: pending review'}</Text>
 <Text lineClamp={2} tone="secondary">The migration stalls whenever a shard…</Text>
 <Text lineClamp={20}>The migration stalls whenever a shard…</Text>`,
   html: `<p data-size="xs" data-tone="secondary" data-weight="normal" data-eyebrow class="var-ui-text-block">Agent output</p>

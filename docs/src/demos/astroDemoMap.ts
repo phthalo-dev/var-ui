@@ -40,6 +40,7 @@ import SliderDefault from './slider/default/astro.astro';
 import PinInputDefault from './pin-input/default/astro.astro';
 import SelectDefault from './select/default/astro.astro';
 import SelectOptions from './select/options/astro.astro';
+import SelectSections from './select/sections/astro.astro';
 import ComboboxDefault from './combobox/default/astro.astro';
 import ComboboxField from './combobox/field/astro.astro';
 import TypeaheadDefault from './typeahead/default/astro.astro';
@@ -119,6 +120,7 @@ const astroDemos = {
   'pin-input.default': PinInputDefault,
   'select.default': SelectDefault,
   'select.options': SelectOptions,
+  'select.sections': SelectSections,
   'combobox.default': ComboboxDefault,
   'combobox.field': ComboboxField,
   'typeahead.default': TypeaheadDefault,

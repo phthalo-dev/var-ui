@@ -1565,6 +1565,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "description": "var-ui-select__description",
       "error": "var-ui-select__error",
+      "group": "var-ui-select__group",
+      "groupHeading": "var-ui-select__groupHeading",
       "item": "var-ui-select__item",
       "label": "var-ui-select__label",
       "listbox": "var-ui-select__listbox",
@@ -1577,6 +1579,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-select-descriptioncolor",
       "--var-ui-select-errorcolor",
+      "--var-ui-select-groupheadingcolor",
       "--var-ui-select-itemfocusedbackground",
       "--var-ui-select-itemselectedcolor",
       "--var-ui-select-labelcolor",

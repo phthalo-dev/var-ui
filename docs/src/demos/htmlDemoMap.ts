@@ -40,6 +40,7 @@ import { render as renderSliderDefault } from './slider/default/html';
 import { render as renderPinInputDefault } from './pin-input/default/html';
 import { render as renderSelectDefault } from './select/default/html';
 import { render as renderSelectOptions } from './select/options/html';
+import { render as renderSelectSections } from './select/sections/html';
 import { render as renderComboboxDefault } from './combobox/default/html';
 import { render as renderComboboxField } from './combobox/field/html';
 import { render as renderTypeaheadDefault } from './typeahead/default/html';
@@ -119,6 +120,7 @@ const htmlDemos = {
   'pin-input.default': renderPinInputDefault,
   'select.default': renderSelectDefault,
   'select.options': renderSelectOptions,
+  'select.sections': renderSelectSections,
   'combobox.default': renderComboboxDefault,
   'combobox.field': renderComboboxField,
   'typeahead.default': renderTypeaheadDefault,
