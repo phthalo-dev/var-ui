@@ -1,5 +1,31 @@
 # @var-ui/react
 
+## 0.11.0
+
+### Minor Changes
+
+- [#160](https://github.com/phthalo-dev/var-ui/pull/160) [`a50c766`](https://github.com/phthalo-dev/var-ui/commit/a50c766397deb0c421e8b8afd86c723cc8c39867) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Chat fixes from agent-chat usage: `ChatComposerInput` gains a `submitOn` prop (`'enter' | 'mod+enter'`, default `enter`) so ⌘/Ctrl+Enter products keep Enter for newlines; `ChatMessageBubble` supports `variant="subtle"`; `ChatLayout` gains `maxHeight`; `ChatSendButton` gains `loading` (spinner, presses ignored, streaming stop stays pressable); `ChatMessageList` gains a `loading` row rendered inside the log region.
+
+- [#159](https://github.com/phthalo-dev/var-ui/pull/159) [`167a67b`](https://github.com/phthalo-dev/var-ui/commit/167a67bca37aa1f34071d16663cfc63e80034610) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CodeBlock` paints unified-diff lines in `variant="diff"` (added/deleted/hunk classified from line prefixes, styled from the `color.code` tokens) and gains a `maxHeight` prop that caps the body height with internal scrolling.
+
+- [#157](https://github.com/phthalo-dev/var-ui/pull/157) [`0a53eac`](https://github.com/phthalo-dev/var-ui/commit/0a53eacba79eecedf79f08079630eba926d8fe33) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Collapsible` gains a `headingLevel={false}` opt-out that renders the trigger button without the wrapping heading (long collapsible lists stop polluting the document outline), and an `icon` prop that renders the rotating chevron alongside a custom `trigger` or replaces it (`icon={null}` hides the default chevron).
+
+- [#161](https://github.com/phthalo-dev/var-ui/pull/161) [`df42660`](https://github.com/phthalo-dev/var-ui/commit/df42660ad3ab6d1ab152aeab723d7a4b7074566f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Dialog.Root` gains a `title`/`description` shorthand (renders the popup, header with close button, and treats `children` as the body — the `useDisclosure` example now type-checks), an `onClose` convenience that fires on close requests unless the change was vetoed, and a `size` pass-through; `Dialog.Popup` gains a `size` prop (`sm` | `md` | `lg` | `xl`).
+
+- [#155](https://github.com/phthalo-dev/var-ui/pull/155) [`c12a5b3`](https://github.com/phthalo-dev/var-ui/commit/c12a5b328d309dc5f8cb364134c6e6956a66a90f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Grid` accepts responsive `columns` (`{ base: 2, sm: 3, lg: 7 }`, theme breakpoints), any integer column count (1–8 map to the named variants, larger counts go through the responsive style), and a `minColumnWidth` prop that sets the auto-track minimum without `styleVars`.
+
+- [#156](https://github.com/phthalo-dev/var-ui/pull/156) [`81de958`](https://github.com/phthalo-dev/var-ui/commit/81de9585fb1b961671be84b324bb522dd758b8f8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Text` gains `eyebrow`, `whiteSpace`, and accepts any positive `lineClamp` (counts above 3 assign the `lineClamp` variable); `size` now includes `xl` and `weight` includes `bold`.
+
+- [#165](https://github.com/phthalo-dev/var-ui/pull/165) [`2b89db5`](https://github.com/phthalo-dev/var-ui/commit/2b89db5b245b9b464728ff2eee27a94b19747ec7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Select` supports option sections and render hooks on the preset: pass `sections` (`{ title, options }[]`, in place of `options`) to group options under headings — the core recipe gained `group` / `groupHeading` slots with a muted uppercase heading (`Select.Section` / `Select.Header` exist for the compound API too). `renderOption` customizes each row and `renderValue` the closed trigger (it receives the selected option, or `null` when nothing is selected). Options accept a `textValue` for typeahead and the trigger, used when the label is a node or the row shows more than the label.
+
+- [#157](https://github.com/phthalo-dev/var-ui/pull/157) [`0a53eac`](https://github.com/phthalo-dev/var-ui/commit/0a53eacba79eecedf79f08079630eba926d8fe33) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Stack`/`HStack` gain an `as` prop (`'div' | 'span'`) so layout stacks work inside buttons and links.
+
+### Patch Changes
+
+- [#158](https://github.com/phthalo-dev/var-ui/pull/158) [`9765b4f`](https://github.com/phthalo-dev/var-ui/commit/9765b4f0e40d4291189b23fcaaebbb299a75a038) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CodeBlock` no longer emits typestyles dev warnings on every render: attribute-mode slots are merged with `mergeProps` (never `cx`) and modifier slots are gone in favour of `data-*` state hooks, so each element carries exactly one recipe result.
+
+- [#154](https://github.com/phthalo-dev/var-ui/pull/154) [`4fe10de`](https://github.com/phthalo-dev/var-ui/commit/4fe10dec7ef3dadfcc669bd7fcb34b7a85325b35) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Keep the rendered default gap of `Stack`, `HStack` and `OverflowList` at 12px after the core spacing-vocabulary change (gap names now map 1:1 to the `space.*` tokens): the component default is now `gap="sm"` instead of `gap="md"`, which used to resolve to 12px.
+
 ## 0.10.0
 
 ### Minor Changes

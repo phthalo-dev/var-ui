@@ -1,5 +1,13 @@
 # @var-ui/cli
 
+## 0.3.3
+
+### Patch Changes
+
+- [#151](https://github.com/phthalo-dev/var-ui/pull/151) [`79c5191`](https://github.com/phthalo-dev/var-ui/commit/79c5191b5fc3b8f926c05dc7b6f328bfdd49152c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `var-ui component <Name>` now shows only the component's own props by default: the inlined table lists Var UI and React Aria props, with a one-line note that the component also accepts all standard HTML attributes, and `--all-props` prints the complete inherited list (text and `--json`). Prop rows now carry their `source` so the filter is exact, and props declared in `@var-ui/core` recipe types (e.g. Badge's `tone`/`appearance`) are classified as the component's own instead of DOM attributes.
+
+- [#149](https://github.com/phthalo-dev/var-ui/pull/149) [`3c64c92`](https://github.com/phthalo-dev/var-ui/commit/3c64c924ab887443170f7f6d20ce3ec72a3834bf) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Keep the shipped docs catalog from going stale against @var-ui/react. The generated catalog now records the @var-ui/* versions and git commit it was built from, `var-ui` warns on stderr when the installed @var-ui/react does not match the catalog, and a CI check fails when core/react/icons/astro have a pending changeset but the CLI does not, so the CLI is republished whenever the catalog changes.
+
 ## 0.3.2
 
 ### Patch Changes

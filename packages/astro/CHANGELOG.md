@@ -1,5 +1,25 @@
 # @var-ui/astro
 
+## 0.8.0
+
+### Minor Changes
+
+- [#159](https://github.com/phthalo-dev/var-ui/pull/159) [`167a67b`](https://github.com/phthalo-dev/var-ui/commit/167a67bca37aa1f34071d16663cfc63e80034610) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `CodeBlock` paints unified-diff lines in `variant="diff"` and gains a `maxHeight` prop that caps the body height with internal scrolling.
+
+- [#157](https://github.com/phthalo-dev/var-ui/pull/157) [`0a53eac`](https://github.com/phthalo-dev/var-ui/commit/0a53eacba79eecedf79f08079630eba926d8fe33) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `Collapsible` gains a named `icon` slot rendered alongside a custom `trigger` slot, and a `hideIcon` prop to drop the default chevron.
+
+- [#155](https://github.com/phthalo-dev/var-ui/pull/155) [`c12a5b3`](https://github.com/phthalo-dev/var-ui/commit/c12a5b328d309dc5f8cb364134c6e6956a66a90f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `Grid` accepts responsive `columns` (`{ base: 2, sm: 3, lg: 7 }`, theme breakpoints), any integer column count, and a `minColumnWidth` prop that sets the auto-track minimum without `styleVars`.
+
+- [#157](https://github.com/phthalo-dev/var-ui/pull/157) [`0a53eac`](https://github.com/phthalo-dev/var-ui/commit/0a53eacba79eecedf79f08079630eba926d8fe33) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `Stack`/`HStack` gain an `as` prop (`'div' | 'span'`) so layout stacks work inside buttons and links.
+
+- [#156](https://github.com/phthalo-dev/var-ui/pull/156) [`81de958`](https://github.com/phthalo-dev/var-ui/commit/81de9585fb1b961671be84b324bb522dd758b8f8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `Text` gains `eyebrow`, `whiteSpace`, and accepts any positive `lineClamp` (counts above 3 assign the `lineClamp` variable); `size` now includes `xl` and `weight` includes `bold`.
+
+### Patch Changes
+
+- [#158](https://github.com/phthalo-dev/var-ui/pull/158) [`9765b4f`](https://github.com/phthalo-dev/var-ui/commit/9765b4f0e40d4291189b23fcaaebbb299a75a038) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The Astro `CodeBlock` copy script toggles state with `data-copied`/`data-error`/`data-tone` attributes instead of swapping class names, and the component merges one recipe slot per element (no more typestyles dev warnings from `combine()`).
+
+- [#154](https://github.com/phthalo-dev/var-ui/pull/154) [`4fe10de`](https://github.com/phthalo-dev/var-ui/commit/4fe10dec7ef3dadfcc669bd7fcb34b7a85325b35) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Keep the rendered default gap of the Astro `Stack` and `HStack` at 12px after the core spacing-vocabulary change (gap names now map 1:1 to the `space.*` tokens): the component default is now `gap="sm"` instead of `gap="md"`, which used to resolve to 12px.
+
 ## 0.7.0
 
 ### Minor Changes
