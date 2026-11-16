@@ -27,15 +27,29 @@ import {
 import { mergeProps } from 'typestyles';
 
 export type DialogRootProps = {
-  children: ReactNode;
+  /**
+   * Trigger + popup when building the dialog from parts. When `title` is
+   * given, the shorthand renders the popup, header (title + close button)
+   * and optional description automatically, and `children` is the dialog
+   * body instead.
+   */
+  children?: ReactNode;
   /** Controlled open state. */
   open?: boolean;
   /** Initial open state when uncontrolled. */
   defaultOpen?: boolean;
   /** Called when the dialog requests to open or close. `details.cancel()` vetoes the change. */
   onOpenChange?: OverlayOpenChangeHandler;
+  /** Convenience close handler — fires when the dialog requests to close and the change is not vetoed. */
+  onClose?: () => void;
   /** Whether pressing the backdrop closes the dialog. Escape is native and always reported. @default true */
   dismissable?: boolean;
+  /** Shorthand: renders the popup with a header (title + close button) and treats `children` as the body. */
+  title?: ReactNode;
+  /** Shorthand description under the `title` header. */
+  description?: ReactNode;
+  /** Popup width for the shorthand. @default xl */
+  size?: NonNullable<DialogVariantProps['size']>;
 };
 
 /** Alias for docs and consumers referring to the root dialog props. */
@@ -54,6 +68,8 @@ export type DialogPopupProps = Omit<
 > & {
   children: ReactNode;
   role?: NonNullable<DialogVariantProps['role']>;
+  /** Popup width: `sm` | `md` | `lg` | `xl` (panel widths). @default xl */
+  size?: NonNullable<DialogVariantProps['size']>;
 };
 
 export type DialogHeaderProps = ComponentPropsWithRef<'div'>;
@@ -82,9 +98,22 @@ function DialogRoot({
   open,
   defaultOpen,
   onOpenChange,
+  onClose,
   dismissable = true,
+  title,
+  description,
+  size,
 }: DialogRootProps): JSX.Element {
-  const root = useOverlayRoot({ open, defaultOpen, onOpenChange });
+  const root = useOverlayRoot({
+    open,
+    defaultOpen,
+    onOpenChange: (nextOpen, details) => {
+      onOpenChange?.(nextOpen, details);
+      if (!nextOpen && !details.isCanceled) {
+        onClose?.();
+      }
+    },
+  });
   const titleId = useId();
   const descriptionId = useId();
 
@@ -93,7 +122,22 @@ function DialogRoot({
     [root, dismissable, titleId, descriptionId],
   );
 
-  return <DialogContext.Provider value={context}>{children}</DialogContext.Provider>;
+  return (
+    <DialogContext.Provider value={context}>
+      {title !== undefined ? (
+        <DialogPopup size={size}>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogClose />
+          </DialogHeader>
+          {description !== undefined ? <DialogDescription>{description}</DialogDescription> : null}
+          {children}
+        </DialogPopup>
+      ) : (
+        children
+      )}
+    </DialogContext.Provider>
+  );
 }
 
 function DialogTrigger({
@@ -125,6 +169,7 @@ function DialogPopup({
   children,
   className,
   role = 'dialog',
+  size,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   'aria-describedby': ariaDescribedBy,
@@ -133,7 +178,7 @@ function DialogPopup({
 }: DialogPopupProps): JSX.Element {
   const ctx = useDialogContext();
   const { root } = ctx;
-  const d = dialog({ role });
+  const d = dialog({ role, size });
   const native = useDialogElement(root, { dismissable: ctx.dismissable });
   const setRef = useMergedRef<HTMLDialogElement>(native.ref, ref);
   return (
