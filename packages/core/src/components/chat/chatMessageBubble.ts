@@ -5,7 +5,7 @@ import { sender } from '../../shared/variantAxes';
 import { forced } from '../../internal/forcedColors';
 import { atForcedColors } from '../../theme/conditions';
 
-const bubbleVariant = variant.enum(['filled', 'ghost'], { default: 'filled' });
+const bubbleVariant = variant.enum(['filled', 'subtle', 'ghost'], { default: 'filled' });
 const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
 
 /**
@@ -75,6 +75,17 @@ export const chatMessageBubble = typestyles.recipe({
         },
         variant: {
           filled: { root: { ...atForcedColors(forced.boundary) } },
+          subtle: {
+            root: {
+              // User bubbles drop the solid accent fill for a subtle one so
+              // arbitrary inline content (links, markdown spans) stays
+              // readable; higher specificity than the sender var overrides.
+              '&[data-sender="user"]': {
+                [vars.senderBackground.name]: t.color.tone.accent.subtleBackground.var,
+                [vars.senderText.name]: t.color.text.primary.var,
+              },
+            },
+          },
           ghost: {
             root: {
               backgroundColor: 'transparent',

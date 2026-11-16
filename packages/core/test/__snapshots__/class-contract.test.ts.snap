@@ -279,6 +279,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-chat-layout-background",
       "--var-ui-chat-layout-border",
+      "--var-ui-chat-layout-maxheight",
     ],
   },
   "chat-message": {
@@ -321,6 +322,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "emptyState": "var-ui-chat-message-list__emptyState",
       "inner": "var-ui-chat-message-list__inner",
+      "loading": "var-ui-chat-message-list__loading",
       "root": "var-ui-chat-message-list",
     },
     "vars": [],

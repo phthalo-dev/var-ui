@@ -8,11 +8,14 @@ import {
   type RefObject,
 } from 'react';
 import { chatLayout } from '@var-ui/core/components/chat/chatLayout';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { Button } from '../Button';
 import { Icon } from '../../icons';
 import { useChatStreamScroll } from '../../chat/useChatStreamScroll';
 import { useChatNewMessages } from '../../chat/useChatNewMessages';
 import { mergeProps } from 'typestyles';
+
+const chatLayoutVars = recipeVars(chatLayout);
 
 export type ChatLayoutProps = Omit<
   ComponentPropsWithRef<'div'>,
@@ -22,6 +25,11 @@ export type ChatLayoutProps = Omit<
   children: ReactNode;
   /** Composer element, fixed to the bottom dock — typically `ChatComposer`. */
   composer: ReactNode;
+  /**
+   * Bounded height for layouts that don't sit in a full-height flex parent —
+   * any CSS length (`20rem`, `50dvh`). The message area scrolls inside it.
+   */
+  maxHeight?: string;
   /** Content shown when `children` is empty. */
   emptyState?: ReactNode;
   /**
@@ -60,9 +68,11 @@ export function ChatLayout({
   children,
   composer,
   emptyState,
+  maxHeight,
   scrollButton,
   scrollRef: externalScrollRef,
   className,
+  style,
   ref,
   ...rest
 }: ChatLayoutProps): JSX.Element {
@@ -97,8 +107,12 @@ export function ChatLayout({
     </Button>
   ) : null;
 
+  const boundedStyle = maxHeight
+    ? { ...style, ...styleVars([[chatLayoutVars.maxHeight, maxHeight]]) }
+    : style;
+
   return (
-    <div {...rest} {...mergeProps(l.root, className)} ref={ref}>
+    <div {...rest} style={boundedStyle} {...mergeProps(l.root, className)} ref={ref}>
       <div {...mergeProps(l.messageArea)} ref={setMessageAreaRef}>
         {hasVisibleContent(children) ? children : (emptyState ?? null)}
       </div>

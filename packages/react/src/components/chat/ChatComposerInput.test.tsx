@@ -45,4 +45,43 @@ describe('ChatComposerInput', () => {
     await userEvent.keyboard('{Enter}');
     expect(onSubmit).not.toHaveBeenCalled();
   });
+
+  it('submitOn="mod+enter" submits on ⌘/Ctrl+Enter and lets Enter newline', async () => {
+    const onSubmit = vi.fn();
+    render(
+      <ChatComposerInput
+        value="hello"
+        onValueChange={vi.fn()}
+        onSubmit={onSubmit}
+        submitOn="mod+enter"
+      />,
+    );
+    const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
+    textarea.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(onSubmit).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Shift>}{Enter}{/Shift}');
+    expect(onSubmit).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Meta>}{Enter}{/Meta}');
+    expect(onSubmit).toHaveBeenCalledWith('hello');
+    onSubmit.mockClear();
+    await userEvent.keyboard('{Control>}{Enter}{/Control}');
+    expect(onSubmit).toHaveBeenCalledWith('hello');
+  });
+
+  it('onKeyDown can still veto the submit via preventDefault', async () => {
+    const onSubmit = vi.fn();
+    render(
+      <ChatComposerInput
+        value="hello"
+        onValueChange={vi.fn()}
+        onSubmit={onSubmit}
+        onKeyDown={(event) => event.preventDefault()}
+      />,
+    );
+    const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
+    textarea.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
 });
