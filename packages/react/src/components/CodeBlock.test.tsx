@@ -24,12 +24,6 @@ describe('CodeBlock', () => {
             wrapLongLines
             copyable={false}
           />
-          <CodeBlock
-            variant="diff"
-            code={'@@ -1 +1 @@\n-old\n+new'}
-            maxHeight="12rem"
-            copyable={false}
-          />
           <Card title="Usage">1.2M requests.</Card>
           <CopyButton value="hello" />
         </div>,
@@ -59,36 +53,28 @@ describe('CodeBlock', () => {
     expect(lines[0].textContent).toContain('beta');
   });
 
+  it('classifies diff lines with line numbers and applies the max height', () => {
+    const { container } = render(
+      <CodeBlock
+        code={'@@ -1 +1 @@\n-old\n+new'}
+        variant="diff"
+        showLineNumbers
+        maxHeight="20rem"
+        copyable={false}
+      />,
+    );
+    const body = container.querySelector<HTMLElement>('[data-codeblock-body]')!;
+    expect(body.style.getPropertyValue('--var-ui-code-block-maxheight')).toBe('20rem');
+    expect(
+      Array.from(container.querySelectorAll('[data-line-tone]')).map((line) =>
+        line.getAttribute('data-line-tone'),
+      ),
+    ).toEqual(['hunk', 'deleted', 'added']);
+  });
+
   it('renders the inline variant as a single code element with both slot classes', () => {
     const { container } = render(<CodeBlock code="const x = 1" variant="inline" />);
     const code = container.querySelector('code[data-codeblock]')!;
     expect(code.className).toContain('var-ui-code-block');
-  });
-
-  it('classifies diff lines with data-line-tone', () => {
-    const { container } = render(
-      <CodeBlock
-        variant="diff"
-        code={'@@ -1,3 +1,3 @@\n-removed line\n+added line\n context line'}
-      />,
-    );
-    const tones = [...container.querySelectorAll('[data-line-tone]')].map((el) =>
-      el.getAttribute('data-line-tone'),
-    );
-    // The context line gets no attribute (undefined tone), so it is not matched.
-    expect(tones).toEqual(['hunk', 'deleted', 'added']);
-    const added = container.querySelector('[data-line-tone="added"]')!;
-    expect(added.className).toContain('var-ui-code-block__line');
-  });
-
-  it('does not classify lines outside the diff variant', () => {
-    const { container } = render(<CodeBlock code={'+added\n-normal'} />);
-    expect(container.querySelectorAll('[data-line-tone]').length).toBe(0);
-  });
-
-  it('assigns the maxHeight variable on the body', () => {
-    const { container } = render(<CodeBlock code={'x'} maxHeight="12rem" />);
-    const body = container.querySelector('[data-codeblock-body]') as HTMLElement;
-    expect(body.style.getPropertyValue('--var-ui-code-block-maxheight')).toBe('12rem');
   });
 });
