@@ -1,5 +1,28 @@
 # @var-ui/core
 
+## 0.11.0
+
+### Minor Changes
+
+- [#160](https://github.com/phthalo-dev/var-ui/pull/160) [`a50c766`](https://github.com/phthalo-dev/var-ui/commit/a50c766397deb0c421e8b8afd86c723cc8c39867) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Chat recipe updates: `chat-message-bubble` gains a `subtle` variant (user bubbles drop the solid accent fill for `tone.accent.subtleBackground` + `text.primary` so links and markdown stay readable), `chat-layout` gains a `maxHeight` variable that bounds the shell and scrolls the message area inside it, and `chat-message-list` gains a `loading` slot rendered below the messages.
+
+- [#159](https://github.com/phthalo-dev/var-ui/pull/159) [`167a67b`](https://github.com/phthalo-dev/var-ui/commit/167a67bca37aa1f34071d16663cfc63e80034610) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `variant="diff"` on the code-block recipe paints line backgrounds and colors from the `color.code` tokens (`addition`/`additionBackground` for `+` lines, `deletion`/`deletionBackground` for `-` lines, `section` for `@@` hunk headers), and a new `maxHeight` variable caps the code body height and scrolls inside the block.
+
+- [#158](https://github.com/phthalo-dev/var-ui/pull/158) [`9765b4f`](https://github.com/phthalo-dev/var-ui/commit/9765b4f0e40d4291189b23fcaaebbb299a75a038) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Consolidate the `code-block` recipe's state and modifier slots into `data-*` hooks styled by the recipe, removing slots whose only job was to be merged onto an already-styled element: `bodyScrollable`, `preWrap`, `preScrollX`, `lines`, `lineHighlighted`, `lineAdded`, `lineDeleted`, `copyButtonIdle`, `copyButtonCopied`, `copyButtonError`, `feedbackInline`, `feedbackSuccess`, `feedbackError`. State styling now comes from `data-copied`/`data-error` (already present), plus new `data-wrap`, `data-line-numbers`, `data-highlighted`, `data-line-tone` and `data-tone` selectors; `body` always scrolls and `feedback` is always inline. This is a breaking change for anyone overriding the removed classes — the remaining slot classes are unchanged.
+
+- [#161](https://github.com/phthalo-dev/var-ui/pull/161) [`df42660`](https://github.com/phthalo-dev/var-ui/commit/df42660ad3ab6d1ab152aeab723d7a4b7074566f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The dialog recipe gains a `size` axis (`sm` | `md` | `lg` | `xl`, default `xl`) that sets the popup width to the matching `size.panel.*` token.
+
+- [#155](https://github.com/phthalo-dev/var-ui/pull/155) [`c12a5b3`](https://github.com/phthalo-dev/var-ui/commit/c12a5b328d309dc5f8cb364134c6e6956a66a90f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Grid gains responsive column counts and a min column width: `gridColumnsStyle` builds the media-query class for per-breakpoint counts (`{ base: 2, lg: 7 }` using the theme breakpoints), the `columns` axis gains `seven` and the internal `fixed` mode that hands the template to that class, and `--var-ui-grid-mincolumnwidth` stays overridable.
+
+- [#165](https://github.com/phthalo-dev/var-ui/pull/165) [`2b89db5`](https://github.com/phthalo-dev/var-ui/commit/2b89db5b245b9b464728ff2eee27a94b19747ec7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Select` supports option sections and render hooks on the preset: pass `sections` (`{ title, options }[]`, in place of `options`) to group options under headings — the core recipe gained `group` / `groupHeading` slots with a muted uppercase heading (`Select.Section` / `Select.Header` exist for the compound API too). `renderOption` customizes each row and `renderValue` the closed trigger (it receives the selected option, or `null` when nothing is selected). Options accept a `textValue` for typeahead and the trigger, used when the label is a node or the row shows more than the label.
+
+- [#154](https://github.com/phthalo-dev/var-ui/pull/154) [`4fe10de`](https://github.com/phthalo-dev/var-ui/commit/4fe10dec7ef3dadfcc669bd7fcb34b7a85325b35) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - One spacing vocabulary: `gap`/`padding` step names now map 1:1 to the `space.*` tokens everywhere (`md` is always `space.md`), and the axes cover the full scale — `none`, `xxs`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`, `xxxxl`.
+  
+  - `stack`, `grid`, `fieldset`, `overflowList` gap axes and `surface` padding follow the same names and sizes. Rendered defaults are unchanged in pixels (Stack/Fieldset/OverflowList default to 12px, Grid and Surface to 16px).
+  - Values that change for explicit steps: Stack/Fieldset/OverflowList `gap="md"` 12px → 16px and `gap="xl"` 48px → 32px; Grid `gap="sm"` 8px → 12px and `gap="xl"` 48px → 32px; Surface `padding="sm"` 8px → 12px, and it gains `none`/`xxs`/`lg`/`xl`/`xxl`/`xxxl`/`xxxxl`.
+
+- [#156](https://github.com/phthalo-dev/var-ui/pull/156) [`81de958`](https://github.com/phthalo-dev/var-ui/commit/81de9585fb1b961671be84b324bb522dd758b8f8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The `textBlock` recipe (React/Astro `Text`) gains an `eyebrow` variant (uppercase with tracking for label treatments), a `whiteSpace` axis (`pre-wrap` preserves newlines and wrapping), an `xl` size, a `bold` weight, and an `n` line-clamp mode driven by the new `--var-ui-text-block-lineclamp` integer variable for arbitrary line counts.
+
 ## 0.10.0
 
 ### Minor Changes
