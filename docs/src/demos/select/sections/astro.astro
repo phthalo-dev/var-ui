@@ -1,0 +1,34 @@
+---
+import { select } from '@var-ui/core';
+import { mergeProps } from '../../../lib/mergeProps';
+
+const s = select();
+const groups = [
+  {
+    label: 'Anthropic',
+    options: [
+      { value: 'claude-opus', label: 'claude-opus' },
+      { value: 'claude-haiku', label: 'claude-haiku' },
+    ],
+  },
+  {
+    label: 'OpenAI',
+    options: [
+      { value: 'gpt-5', label: 'gpt-5' },
+      { value: 'gpt-5-mini', label: 'gpt-5-mini' },
+    ],
+  },
+];
+---
+
+<div {...mergeProps(s.root)}>
+  <label {...mergeProps(s.label)} for="model-sections">Model</label>
+  <select {...mergeProps(s.trigger)} id="model-sections">
+    <option value="" disabled selected>Choose a model…</option>
+    {groups.map((group) => (
+      <optgroup label={group.label}>
+        {group.options.map((option) => <option value={option.value}>{option.label}</option>)}
+      </optgroup>
+    ))}
+  </select>
+</div>

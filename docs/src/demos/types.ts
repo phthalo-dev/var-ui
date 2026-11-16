@@ -70,6 +70,7 @@ export type DemoId =
   | 'select.default'
   | 'select.options'
   | 'select.parts'
+  | 'select.sections'
   | 'combobox.default'
   | 'combobox.field'
   | 'typeahead.default'

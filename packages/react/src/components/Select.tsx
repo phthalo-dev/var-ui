@@ -8,13 +8,16 @@ import {
 import {
   Button as AriaButton,
   FieldError,
+  Header as AriaHeader,
   Label,
   ListBox,
   ListBoxItem,
+  ListBoxSection,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
   Text,
   type SelectProps as RACSelectProps,
+  type SelectValueRenderProps,
 } from 'react-aria-components';
 import { NativePopover } from '../internal/NativePopover';
 import type { AnchorPlacement } from '../overlays';
@@ -27,7 +30,6 @@ import { RacFieldFrame, racInvalid } from './FieldFrame';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 import {
   multiValueProps,
-  optionTextValue,
   racItemProps,
   singleValueProps,
   toRacProps,
@@ -329,6 +331,52 @@ function SelectListBox({ children, className, ref, ...rest }: SelectListBoxProps
   );
 }
 
+/**
+ * A titled group of options for the `sections` preset. Native `<optgroup>`-like shape.
+ */
+export type SelectSectionData = {
+  /** Heading shown above the group. */
+  title: string;
+  /** Options in this group. */
+  options: SelectOption[];
+};
+
+export type SelectSectionProps = Omit<
+  ComponentPropsWithRef<'section'>,
+  'children' | 'className'
+> & {
+  /** `Select.Item` rows in this group. */
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<section>` element. */
+  ref?: Ref<HTMLElement>;
+};
+
+function SelectSection({ children, className, ref, ...rest }: SelectSectionProps): JSX.Element {
+  const s = useSelectStyles();
+  return (
+    <ListBoxSection {...(rest as object)} {...mergeProps(s.group, className)} ref={ref}>
+      {children}
+    </ListBoxSection>
+  );
+}
+
+export type SelectHeaderProps = Omit<ComponentPropsWithRef<'header'>, 'children' | 'className'> & {
+  children: ReactNode;
+  className?: string;
+  /** Ref to the underlying `<header>` element. */
+  ref?: Ref<HTMLElement>;
+};
+
+function SelectHeader({ children, className, ref, ...rest }: SelectHeaderProps): JSX.Element {
+  const s = useSelectStyles();
+  return (
+    <AriaHeader {...(rest as object)} {...mergeProps(s.groupHeading, className)} ref={ref}>
+      {children}
+    </AriaHeader>
+  );
+}
+
 export type SelectItemProps = Omit<
   ComponentPropsWithRef<'div'>,
   'children' | 'className' | 'id' | 'value'
@@ -419,8 +467,18 @@ export type SelectProps = Omit<
   SelectStateProps &
   SelectSelectionProps &
   FieldMeta & {
-    /** Options shown in the dropdown listbox. */
-    options: SelectOption[];
+    /** Options shown in the dropdown listbox. One of `options` or `sections` is required. */
+    options?: SelectOption[];
+    /** Titled option groups (`{ title, options }`), instead of `options`. */
+    sections?: SelectSectionData[];
+    /** Custom row content. Receives the option; by default the row shows `option.label`. */
+    renderOption?: (option: SelectOption) => ReactNode;
+    /**
+     * Custom closed-trigger content. Receives the selected option, or `null` when nothing is
+     * selected — return `placeholder` (or anything else) for that case. Ignored with `multiple`;
+     * compose `Select.Value` for a custom multi-value trigger.
+     */
+    renderValue?: (option: SelectOption | null) => ReactNode;
     /** Placeholder text when no value is selected. @default Select… */
     placeholder?: string;
     /** Name submitted with a form. */
@@ -438,16 +496,20 @@ export type SelectProps = Omit<
   };
 
 /**
- * Dropdown select. `Select` with `options` is the assembled preset; add `multiple` for several
- * values. `className` and `style` style the root; `ref` and native attributes (`data-*`,
+ * Dropdown select. `Select` with `options` (or titled `sections`) is the assembled preset; add
+ * `multiple` for several values. `renderOption` customizes each row and `renderValue` the closed
+ * trigger. `className` and `style` style the root; `ref` and native attributes (`data-*`,
  * `title`, `onClick`, ...) reach the trigger `<button>`. Compose `Root`, `Trigger`, `Value`,
- * `Popover`, `ListBox`, and `Item` for custom rows.
+ * `Popover`, `ListBox`, `Item`, `Section`, and `Header` for full control.
  */
 function Select({
   label,
   description,
   errorMessage,
   options,
+  sections,
+  renderOption,
+  renderValue,
   placeholder = 'Select…',
   className,
   size,
@@ -457,12 +519,27 @@ function Select({
   const contextSize = useControlSize();
   const resolvedSize = size ?? contextSize;
   const s = select({ size: resolvedSize });
+  if (options && sections) {
+    throw new Error('Select: pass either `options` or `sections`, not both.');
+  }
+  const allOptions = sections ? sections.flatMap((section) => section.options) : (options ?? []);
+  const renderItem = (option: SelectOption) => (
+    <SelectItem
+      key={option.value}
+      value={option.value}
+      disabled={option.disabled}
+      textValue={option.textValue}
+    >
+      {renderOption ? renderOption(option) : option.label}
+    </SelectItem>
+  );
   // Root keys keep VarUI names: `SelectRoot` does the RAC conversion.
   const rootProps: Record<string, unknown> = {};
   const triggerProps: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(props)) {
     (ROOT_KEY_SET.has(key) ? rootProps : triggerProps)[key] = val;
   }
+  const multiple = props.multiple === true;
   return (
     <SelectRoot
       {...(rootProps as SelectRootProps)}
@@ -471,20 +548,31 @@ function Select({
       invalid={racInvalid(props.invalid, errorMessage)}
     >
       <RacFieldFrame slots={s} label={label} description={description} errorMessage={errorMessage}>
-        <SelectTrigger {...(triggerProps as object)} placeholder={placeholder} ref={ref} />
+        <SelectTrigger {...(triggerProps as object)} placeholder={placeholder} ref={ref}>
+          {renderValue && !multiple ? (
+            <AriaSelectValue {...mergeProps(s.selectValue)}>
+              {({ isPlaceholder, state }: SelectValueRenderProps<unknown>) => {
+                if (isPlaceholder) return renderValue(null);
+                const selected =
+                  allOptions.find((option) =>
+                    state.selectionManager.selectedKeys.has(option.value),
+                  ) ?? null;
+                return renderValue(selected);
+              }}
+            </AriaSelectValue>
+          ) : undefined}
+        </SelectTrigger>
       </RacFieldFrame>
       <SelectPopover>
         <SelectListBox>
-          {options.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              disabled={option.disabled}
-              textValue={optionTextValue(option)}
-            >
-              {option.label}
-            </SelectItem>
-          ))}
+          {sections
+            ? sections.map((section) => (
+                <SelectSection key={section.title}>
+                  <SelectHeader>{section.title}</SelectHeader>
+                  {section.options.map(renderItem)}
+                </SelectSection>
+              ))
+            : allOptions.map(renderItem)}
         </SelectListBox>
       </SelectPopover>
     </SelectRoot>
@@ -501,6 +589,8 @@ export const SelectNamespace = Object.assign(Select, {
   Popover: SelectPopover,
   ListBox: SelectListBox,
   Item: SelectItem,
+  Section: SelectSection,
+  Header: SelectHeader,
 });
 
 export { SelectNamespace as Select };
