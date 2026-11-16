@@ -6,8 +6,6 @@ import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
-const codeBlockVars = recipeVars(codeBlock);
-
 export type { CodeBlockVariant } from '@var-ui/core';
 
 type FeedbackTone = 'success' | 'error' | null;
@@ -103,7 +101,6 @@ export function CodeBlock({
   const inline = variant === 'inline';
   const diff = variant === 'diff';
   const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-  const maxHeightStyle = maxHeight ? styleVars([[codeBlockVars.maxHeight, maxHeight]]) : undefined;
 
   const resetCopyState = () => {
     setIsCopied(false);
@@ -180,7 +177,7 @@ export function CodeBlock({
         ) : null}
       </div>
 
-      <div {...mergeProps(cb.body)} style={maxHeightStyle} data-codeblock-body>
+      <div {...mergeProps(cb.body)} data-codeblock-body>
         <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
           {showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
@@ -192,7 +189,6 @@ export function CodeBlock({
                     key={lineNumber}
                     {...mergeProps(cb.line)}
                     data-highlighted={highlightedSet.has(lineNumber) || undefined}
-                    data-line-tone={diff ? classifyDiffLine(line) : undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}

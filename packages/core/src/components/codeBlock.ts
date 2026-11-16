@@ -241,15 +241,10 @@ export const codeBlock = typestyles.recipe({
             backgroundColor: vars.lineHighlightBackground.var,
           },
           '&[data-line-tone="added"]': {
-            backgroundColor: t.color.code.additionBackground.var,
-            color: t.color.code.addition.var,
+            backgroundColor: t.color.tone.success.subtleBackground.var,
           },
           '&[data-line-tone="deleted"]': {
-            backgroundColor: t.color.code.deletionBackground.var,
-            color: t.color.code.deletion.var,
-          },
-          '&[data-line-tone="hunk"]': {
-            color: t.color.code.section.var,
+            backgroundColor: t.color.tone.danger.subtleBackground.var,
           },
         },
         lineNumber: {

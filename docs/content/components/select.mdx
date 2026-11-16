@@ -5,9 +5,9 @@ description: Dropdown single-select with options, or compound parts for custom r
 
 # Select
 
-Dropdown select (single, or `multiple`). `Select` with `options` is the assembled preset (`label`, `description`, `errorMessage`, `placeholder`). Compose `Select.Root`, `Select.Trigger`, `Select.Value`, `Select.Popover`, `Select.ListBox`, and `Select.Item` when a row needs more than a label.
+Dropdown select (single, or `multiple`). `Select` with `options` (or titled `sections`) is the assembled preset (`label`, `description`, `errorMessage`, `placeholder`). `renderOption` customizes each row and `renderValue` the closed trigger. Compose `Select.Root`, `Select.Trigger`, `Select.Value`, `Select.Popover`, `Select.ListBox`, `Select.Item`, `Select.Section`, and `Select.Header` when a row needs more than that.
 
-Custom item rows are React-only. Astro and HTML previews keep using a native `<select>` with the core recipe classes.
+Custom item rows are React-only. Astro and HTML previews keep using a native `<select>` — group with `<optgroup>` there.
 
 ## Examples
 
@@ -17,13 +17,19 @@ Custom item rows are React-only. Astro and HTML previews keep using a native `<s
 
 ### Options list
 
-Pass an `options` array of `{ value, label, disabled? }` objects. Use `placeholder` when no value is selected.
+Pass an `options` array of `{ value, label, disabled?, textValue? }` objects. Use `placeholder` when no value is selected. `textValue` is the plain-text form used for typeahead and the closed trigger — set it when the label is a node or the row shows more than the label.
 
 <Demo id="select.options" />
 
+### Sections
+
+Pass `sections` instead of `options` to group options under headings. Each section is `{ title, options }`. `renderOption` replaces the row content (the trigger still uses `textValue`), and `renderValue` replaces the closed-trigger content — it receives the selected option, or `null` when nothing is selected. In Astro and plain HTML, group a native `<select>` with `<optgroup>`.
+
+<Demo id="select.sections" />
+
 ### Compound parts
 
-Compose parts for custom item content. `textValue` is the string used for typeahead and the default closed trigger. Compose `Select.Value` inside `Select.Trigger` when the closed value should match custom row chrome. The list renders in place, in the top layer (a native `popover`), so it inherits the theme of its ancestors and works inside a modal `Dialog` without any container prop.
+Compose parts for full control over item content. `textValue` is the string used for typeahead and the default closed trigger. Compose `Select.Value` inside `Select.Trigger` when the closed value should match custom row chrome. The list renders in place, in the top layer (a native `popover`), so it inherits the theme of its ancestors and works inside a modal `Dialog` without any container prop.
 
 <Demo id="select.parts" />
 
