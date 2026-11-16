@@ -50,6 +50,11 @@ const codeBlockVarDefinitions = {
     ...atProperty.color,
     value: t.color.background.subtle.var,
   },
+  maxHeight: {
+    syntax: '*',
+    initial: 'none',
+    value: 'none',
+  },
 } as const;
 
 const codeBlockVariant = variant.enum(['default', 'inline', 'diff', 'terminal'], {
@@ -197,6 +202,8 @@ export const codeBlock = typestyles.recipe({
           padding: 0,
           backgroundColor: vars.background.var,
           overflowX: 'auto',
+          overflowY: 'auto',
+          maxHeight: vars.maxHeight.var,
         },
         pre: {
           margin: 0,
@@ -234,10 +241,15 @@ export const codeBlock = typestyles.recipe({
             backgroundColor: vars.lineHighlightBackground.var,
           },
           '&[data-line-tone="added"]': {
-            backgroundColor: t.color.tone.success.subtleBackground.var,
+            backgroundColor: t.color.code.additionBackground.var,
+            color: t.color.code.addition.var,
           },
           '&[data-line-tone="deleted"]': {
-            backgroundColor: t.color.tone.danger.subtleBackground.var,
+            backgroundColor: t.color.code.deletionBackground.var,
+            color: t.color.code.deletion.var,
+          },
+          '&[data-line-tone="hunk"]': {
+            color: t.color.code.section.var,
           },
         },
         lineNumber: {
