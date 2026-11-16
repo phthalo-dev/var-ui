@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
-import { combine, cx, mergeProps } from 'typestyles';
+import { mergeProps } from 'typestyles';
 
 export type { CodeBlockVariant } from '@var-ui/core';
 
@@ -86,14 +86,6 @@ export function CodeBlock({
   const terminal = variant === 'terminal';
   const inline = variant === 'inline';
   const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-  const resolvedCodeClassName = cx(cb.code, highlightedCodeClassName);
-
-  const feedbackProps = combine(
-    cb.feedback,
-    cb.feedbackInline,
-    feedbackTone === 'success' && cb.feedbackSuccess,
-    feedbackTone === 'error' && cb.feedbackError,
-  );
 
   const resetCopyState = () => {
     setIsCopied(false);
@@ -124,7 +116,7 @@ export function CodeBlock({
     return (
       <code
         {...(rest as ComponentPropsWithoutRef<'code'>)}
-        {...mergeProps(cb.root, cx(cb.code, className))}
+        {...mergeProps(cb.root, cb.code.className, className)}
         ref={ref}
         data-codeblock
       >
@@ -149,12 +141,7 @@ export function CodeBlock({
           <div {...mergeProps(cb.actions)}>
             <button
               type="button"
-              {...combine(
-                cb.copyButton,
-                !isCopied && !hasError && cb.copyButtonIdle,
-                isCopied && cb.copyButtonCopied,
-                hasError && cb.copyButtonError,
-              )}
+              {...mergeProps(cb.copyButton)}
               data-copied={isCopied || undefined}
               data-error={hasError || undefined}
               onClick={onCopy}
@@ -163,24 +150,30 @@ export function CodeBlock({
               <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
               {isCopied ? copiedLabel : hasError ? errorText : copyText}
             </button>
-            <span {...feedbackProps} role="status" aria-live="polite">
+            <span
+              {...mergeProps(cb.feedback)}
+              data-tone={feedbackTone ?? undefined}
+              role="status"
+              aria-live="polite"
+            >
               {feedbackText}
             </span>
           </div>
         ) : null}
       </div>
 
-      <div {...combine(cb.body, cb.bodyScrollable)} data-codeblock-body>
-        <pre {...combine(cb.pre, wrapLongLines ? cb.preWrap : cb.preScrollX)} data-codeblock-pre>
+      <div {...mergeProps(cb.body)} data-codeblock-body>
+        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
           {showLineNumbers ? (
-            <code {...combine(cb.code, cb.lines)}>
+            <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {
                 const lineNumber = index + 1;
                 const lineContentHtml = lineHtml?.[index];
                 return (
                   <span
                     key={lineNumber}
-                    {...combine(cb.line, highlightedSet.has(lineNumber) && cb.lineHighlighted)}
+                    {...mergeProps(cb.line)}
+                    data-highlighted={highlightedSet.has(lineNumber) || undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}
@@ -197,7 +190,7 @@ export function CodeBlock({
             </code>
           ) : useHighlightedHtml ? (
             <code
-              {...mergeProps(cb.code, resolvedCodeClassName)}
+              {...mergeProps(cb.code, highlightedCodeClassName)}
               dangerouslySetInnerHTML={{ __html: codeHtml! }}
             />
           ) : (

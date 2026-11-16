@@ -71,27 +71,14 @@ export const codeBlock = typestyles.recipe({
     'language',
     'actions',
     'copyButton',
-    'copyButtonIdle',
-    'copyButtonCopied',
-    'copyButtonError',
     'feedback',
-    'feedbackInline',
     'feedbackToast',
-    'feedbackSuccess',
-    'feedbackError',
     'body',
-    'bodyScrollable',
     'pre',
-    'preWrap',
-    'preScrollX',
     'code',
-    'lines',
     'line',
     'lineNumber',
     'lineContent',
-    'lineHighlighted',
-    'lineAdded',
-    'lineDeleted',
   ],
   variants: { variant: codeBlockVariant },
   vars: codeBlockVarDefinitions,
@@ -181,22 +168,19 @@ export const codeBlock = typestyles.recipe({
             color: t.color.tone.danger.foreground.var,
           },
         },
-        copyButtonIdle: {},
-        copyButtonCopied: {
-          color: t.color.tone.success.foreground.var,
-        },
-        copyButtonError: {
-          color: t.color.tone.danger.foreground.var,
-        },
         feedback: {
           fontSize: t.fontSize.sm.var,
           color: vars.feedbackColor.var,
           minHeight: '1lh',
-        },
-        feedbackInline: {
           display: 'inline-flex',
           alignItems: 'center',
           marginInlineStart: t.space.xxs.var,
+          '&[data-tone="success"]': {
+            color: t.color.tone.success.foreground.var,
+          },
+          '&[data-tone="error"]': {
+            color: t.color.tone.danger.foreground.var,
+          },
         },
         feedbackToast: {
           position: 'absolute',
@@ -209,17 +193,9 @@ export const codeBlock = typestyles.recipe({
           padding: `0.125rem ${t.space.xs.var}`,
           boxShadow: t.shadow.sm.var,
         },
-        feedbackSuccess: {
-          color: t.color.tone.success.foreground.var,
-        },
-        feedbackError: {
-          color: t.color.tone.danger.foreground.var,
-        },
         body: {
           padding: 0,
           backgroundColor: vars.background.var,
-        },
-        bodyScrollable: {
           overflowX: 'auto',
         },
         pre: {
@@ -232,22 +208,20 @@ export const codeBlock = typestyles.recipe({
           backgroundColor: 'transparent',
           border: 'none',
           borderRadius: 0,
-        },
-        preWrap: {
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-          overflowX: 'visible',
-        },
-        preScrollX: {
           whiteSpace: 'pre',
           overflowX: 'auto',
+          '&[data-wrap]': {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            overflowX: 'visible',
+          },
         },
         code: {
           display: 'block',
-        },
-        lines: {
-          display: 'grid',
-          gap: '0.125rem',
+          '&[data-line-numbers]': {
+            display: 'grid',
+            gap: '0.125rem',
+          },
         },
         line: {
           display: 'grid',
@@ -256,6 +230,15 @@ export const codeBlock = typestyles.recipe({
           columnGap: t.space.sm.var,
           borderRadius: t.radius.sm.var,
           paddingInline: t.space.xs.var,
+          '&[data-highlighted]': {
+            backgroundColor: vars.lineHighlightBackground.var,
+          },
+          '&[data-line-tone="added"]': {
+            backgroundColor: t.color.tone.success.subtleBackground.var,
+          },
+          '&[data-line-tone="deleted"]': {
+            backgroundColor: t.color.tone.danger.subtleBackground.var,
+          },
         },
         lineNumber: {
           minWidth: '2ch',
@@ -267,15 +250,6 @@ export const codeBlock = typestyles.recipe({
         },
         lineContent: {
           minWidth: 0,
-        },
-        lineHighlighted: {
-          backgroundColor: vars.lineHighlightBackground.var,
-        },
-        lineAdded: {
-          backgroundColor: t.color.tone.success.subtleBackground.var,
-        },
-        lineDeleted: {
-          backgroundColor: t.color.tone.danger.subtleBackground.var,
         },
       },
       variants: {

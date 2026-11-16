@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
-import { combine, cx, mergeProps } from '../utils';
+import { mergeProps } from '../utils';
 
 interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVariantProps {
   code: string;
@@ -57,14 +57,11 @@ const lines = code.replace(/\n$/, '').split('\n');
 const terminal = variant === 'terminal';
 const inline = variant === 'inline';
 const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-const resolvedCodeClassName = cx(cb.code, highlightedCodeClassName);
-
-const feedbackProps = combine(cb.feedback, cb.feedbackInline);
 ---
 
 {
   inline ? (
-    <code {...rest} {...mergeProps(cb.root, cx(cb.code, className))} data-codeblock>
+    <code {...rest} {...mergeProps(cb.root, cb.code.className, className)} data-codeblock>
       {code}
     </code>
   ) : (
@@ -78,25 +75,20 @@ const feedbackProps = combine(cb.feedback, cb.feedbackInline);
           <div {...mergeProps(cb.actions)}>
             <button
               type="button"
-              {...combine(cb.copyButton, cb.copyButtonIdle)}
+              {...mergeProps(cb.copyButton)}
               data-var-ui-code-copy
               data-code={code}
               data-copy-label={copyLabel}
               data-copied-label={copiedLabel}
               data-copy-error-label={copyErrorLabel}
-              data-class-idle={cb.copyButtonIdle.className}
-              data-class-copied={cb.copyButtonCopied.className}
-              data-class-error={cb.copyButtonError.className}
               aria-label={copyLabel}
             >
               <span data-codeblock-copy-icon set:html={copySvg} />
               <span data-codeblock-copy-text>Copy</span>
             </button>
             <span
-              {...feedbackProps}
+              {...mergeProps(cb.feedback)}
               data-codeblock-feedback
-              data-class-success={cb.feedbackSuccess.className}
-              data-class-error={cb.feedbackError.className}
               role="status"
               aria-live="polite"
             />
@@ -104,23 +96,17 @@ const feedbackProps = combine(cb.feedback, cb.feedbackInline);
         ) : null}
       </div>
 
-      <div
-        {...combine(cb.body, cb.bodyScrollable)}
-        data-codeblock-body
-      >
-        <pre
-          {...combine(cb.pre, wrapLongLines ? cb.preWrap : cb.preScrollX)}
-          data-codeblock-pre>{showLineNumbers ? (
-            <code {...combine(cb.code, cb.lines)}>
+      <div {...mergeProps(cb.body)} data-codeblock-body>
+        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre
+        >{showLineNumbers ? (
+            <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {
                 const lineNumber = index + 1;
                 const lineContentHtml = lineHtml?.[index];
                 return (
                   <span
-                    {...combine(
-                      cb.line,
-                      highlightedSet.has(lineNumber) && cb.lineHighlighted,
-                    )}
+                    {...mergeProps(cb.line)}
+                    data-highlighted={highlightedSet.has(lineNumber) || undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}
@@ -138,7 +124,7 @@ const feedbackProps = combine(cb.feedback, cb.feedbackInline);
               })}
             </code>
           ) : useHighlightedHtml ? (
-            <code {...mergeProps(cb.code, resolvedCodeClassName)} set:html={codeHtml} />
+            <code {...mergeProps(cb.code, highlightedCodeClassName)} set:html={codeHtml} />
           ) : (
             <code {...mergeProps(cb.code)}>{escapeHtml(code)}</code>
           )}</pre>

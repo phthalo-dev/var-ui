@@ -101,30 +101,17 @@
     "code-block",
     "code-block__actions",
     "code-block__body",
-    "code-block__bodyScrollable",
     "code-block__code",
     "code-block__copyButton",
-    "code-block__copyButtonCopied",
-    "code-block__copyButtonError",
-    "code-block__copyButtonIdle",
     "code-block__feedback",
-    "code-block__feedbackError",
-    "code-block__feedbackInline",
-    "code-block__feedbackSuccess",
     "code-block__feedbackToast",
     "code-block__filename",
     "code-block__header",
     "code-block__language",
     "code-block__line",
-    "code-block__lineAdded",
     "code-block__lineContent",
-    "code-block__lineDeleted",
-    "code-block__lineHighlighted",
     "code-block__lineNumber",
-    "code-block__lines",
     "code-block__pre",
-    "code-block__preScrollX",
-    "code-block__preWrap",
     "code-block__title",
     "collapsible",
     "collapsible__panel",
@@ -1376,14 +1363,6 @@
       "line": 61
     },
     {
-      "className": "code-block__bodyScrollable",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "bodyScrollable",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
       "className": "code-block__code",
       "kind": "component",
       "namespace": "code-block",
@@ -1400,58 +1379,10 @@
       "line": 61
     },
     {
-      "className": "code-block__copyButtonCopied",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "copyButtonCopied",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__copyButtonError",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "copyButtonError",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__copyButtonIdle",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "copyButtonIdle",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
       "className": "code-block__feedback",
       "kind": "component",
       "namespace": "code-block",
       "suffix": "feedback",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__feedbackError",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "feedbackError",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__feedbackInline",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "feedbackInline",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__feedbackSuccess",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "feedbackSuccess",
       "file": "src/components/codeBlock.ts",
       "line": 61
     },
@@ -1496,34 +1427,10 @@
       "line": 61
     },
     {
-      "className": "code-block__lineAdded",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "lineAdded",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
       "className": "code-block__lineContent",
       "kind": "component",
       "namespace": "code-block",
       "suffix": "lineContent",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__lineDeleted",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "lineDeleted",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__lineHighlighted",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "lineHighlighted",
       "file": "src/components/codeBlock.ts",
       "line": 61
     },
@@ -1536,34 +1443,10 @@
       "line": 61
     },
     {
-      "className": "code-block__lines",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "lines",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
       "className": "code-block__pre",
       "kind": "component",
       "namespace": "code-block",
       "suffix": "pre",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__preScrollX",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "preScrollX",
-      "file": "src/components/codeBlock.ts",
-      "line": 61
-    },
-    {
-      "className": "code-block__preWrap",
-      "kind": "component",
-      "namespace": "code-block",
-      "suffix": "preWrap",
       "file": "src/components/codeBlock.ts",
       "line": 61
     },
