@@ -10,6 +10,8 @@ type Props = HTMLAttributes<'div'> & {
   align?: NonNullable<StackVariantProps['align']>;
   justify?: NonNullable<StackVariantProps['justify']>;
   wrap?: boolean;
+  /** HTML element to render — `span` works inside buttons and links. @default div */
+  as?: 'div' | 'span';
   className?: string;
 };
 
@@ -19,6 +21,7 @@ const {
   align = 'stretch',
   justify = 'start',
   wrap = false,
+  as = 'div',
   className,
   ...rest
 } = Astro.props;
@@ -26,5 +29,6 @@ const rp = mergeProps(
   stack({ direction, gap, align, justify, wrap: wrap ? 'wrap' : 'nowrap' }),
   className,
 );
+const StackTag = as;
 ---
-<div {...rest} {...rp}><slot /></div>
+<StackTag {...rest} {...rp}><slot /></StackTag>

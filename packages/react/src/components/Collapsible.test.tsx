@@ -38,6 +38,50 @@ describe('Collapsible', () => {
     expect(panelFor('Panel body').getAttribute('aria-hidden')).not.toBe('true');
   });
 
+  it('renders an explicit icon alongside a custom trigger and rotates it', () => {
+    render(
+      <IconProvider icons={{}}>
+        <Collapsible
+          trigger={<span>Custom trigger</span>}
+          icon={<span data-testid="glyph" />}
+          defaultExpanded
+        >
+          <p>Panel body</p>
+        </Collapsible>
+      </IconProvider>,
+    );
+    const button = screen.getByRole('button', { name: /Custom trigger/i });
+    expect(button.querySelector('[data-testid="glyph"]')).toBeTruthy();
+    expect(button.querySelector('[class*="triggerIcon"], [data-icon]')).toBeTruthy();
+  });
+
+  it('icon={null} hides the default chevron', () => {
+    render(
+      <IconProvider icons={{}}>
+        <Collapsible title="No icon" icon={null}>
+          <p>Panel body</p>
+        </Collapsible>
+      </IconProvider>,
+    );
+    expect(screen.getByRole('button', { name: /No icon/i }).querySelector('svg')).toBeNull();
+  });
+
+  it('headingLevel={false} renders the trigger without a heading and still toggles', async () => {
+    render(
+      <IconProvider icons={{}}>
+        <Collapsible title="No heading" headingLevel={false} defaultExpanded={false}>
+          <p>Panel body</p>
+        </Collapsible>
+      </IconProvider>,
+    );
+    expect(document.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
+    const button = screen.getByRole('button', { name: /No heading/i });
+    expect(button.closest('h3')).toBeNull();
+    expect(panelFor('Panel body').getAttribute('aria-hidden')).toBe('true');
+    await userEvent.click(button);
+    expect(panelFor('Panel body').getAttribute('aria-hidden')).not.toBe('true');
+  });
+
   it('allows only one open panel in a CollapsibleGroup by default', async () => {
     render(
       <IconProvider icons={{}}>
