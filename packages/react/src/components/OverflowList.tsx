@@ -18,11 +18,15 @@ import { useOverflow } from '../hooks/useOverflow';
 /** Mirrors the `space` primitive steps backing each named gap variant in the `overflowList` recipe. */
 const GAP_PX: Record<Gap, number> = {
   none: 0,
-  xs: 4,
-  sm: 8,
-  md: 12,
+  xxs: 4,
+  xs: 8,
+  sm: 12,
+  md: 16,
   lg: 24,
-  xl: 48,
+  xl: 32,
+  xxl: 40,
+  xxxl: 48,
+  xxxxl: 64,
 };
 
 export type OverflowListProps<T = unknown> = Omit<
@@ -97,7 +101,7 @@ export function OverflowList<T = unknown>({
   renderOverflow,
   maxVisible,
   fillParent = false,
-  gap = 'md',
+  gap = 'sm',
   className,
   style,
   ref,

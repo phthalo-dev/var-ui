@@ -26,8 +26,10 @@ catalog:
   '@hookform/resolvers': ^5.0.0
 catalogMode: prefer
 linkWorkspacePackages: true
-onlyBuiltDependencies:
-  - esbuild
+allowBuilds:
+  esbuild: true
+  '@parcel/watcher': false
+  sharp: false
 overrides:
   vite@*: 'catalog:'
   '@var-ui/docs-site>vite': npm:vite@^6.4.1

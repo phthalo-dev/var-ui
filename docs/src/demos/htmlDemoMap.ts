@@ -26,6 +26,8 @@ import { render as renderSpinnerDefault } from './spinner/default/html';
 import { render as renderStackDefault } from './stack/default/html';
 import { render as renderTextDefault } from './text/default/html';
 import { render as renderTextTones } from './text/tones/html';
+import { render as renderTextEmphasis } from './text/emphasis/html';
+import { render as renderTextClamp } from './text/clamp/html';
 import { render as renderThumbnailDefault } from './thumbnail/default/html';
 import { render as renderTimestampDefault } from './timestamp/default/html';
 import { render as renderFieldDefault } from './field/default/html';
@@ -38,6 +40,7 @@ import { render as renderSliderDefault } from './slider/default/html';
 import { render as renderPinInputDefault } from './pin-input/default/html';
 import { render as renderSelectDefault } from './select/default/html';
 import { render as renderSelectOptions } from './select/options/html';
+import { render as renderSelectSections } from './select/sections/html';
 import { render as renderComboboxDefault } from './combobox/default/html';
 import { render as renderComboboxField } from './combobox/field/html';
 import { render as renderTypeaheadDefault } from './typeahead/default/html';
@@ -91,6 +94,8 @@ const htmlDemos = {
   'heading.default': renderHeadingDefault,
   'text.default': renderTextDefault,
   'text.tones': renderTextTones,
+  'text.emphasis': renderTextEmphasis,
+  'text.clamp': renderTextClamp,
   'link.default': renderLinkDefault,
   'code-block.default': renderCodeBlockDefault,
   'alert.default': renderAlertDefault,
@@ -115,6 +120,7 @@ const htmlDemos = {
   'pin-input.default': renderPinInputDefault,
   'select.default': renderSelectDefault,
   'select.options': renderSelectOptions,
+  'select.sections': renderSelectSections,
   'combobox.default': renderComboboxDefault,
   'combobox.field': renderComboboxField,
   'typeahead.default': renderTypeaheadDefault,

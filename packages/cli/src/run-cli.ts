@@ -2,6 +2,7 @@ import { formatComponent, listComponents, unknownComponentMessage } from './comm
 import { formatGuide, listGuides, unknownGuideMessage } from './commands/docs';
 import { initAgentsDocs } from './commands/init';
 import { formatSearchHits } from './commands/search';
+import { findInstalledReactVersion, staleCatalogWarning } from './catalog-freshness';
 import { loadCatalog } from './load-catalog';
 import { findComponent, findGuide } from './lookup';
 import { parseCliArgs } from './parse-args';
@@ -51,6 +52,17 @@ export function runCli(argv: string[], io: CliIo, options?: RunCliOptions): void
     }
 
     const catalog = options?.catalog ?? loadCatalog();
+
+    // The bundled docs catalog can lag the installed @var-ui/react (#129); say
+    // so on stderr rather than serving stale docs silently. stdout stays clean
+    // for --json consumers.
+    const warning = staleCatalogWarning(
+      catalog,
+      findInstalledReactVersion(options?.cwd ?? process.cwd()),
+    );
+    if (warning) {
+      io.stderr.write(`${warning}\n`);
+    }
 
     if (parsed.command === 'component') {
       if (parsed.list) {

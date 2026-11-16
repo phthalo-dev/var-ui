@@ -28,22 +28,10 @@ function getFeedback(btn: HTMLButtonElement): HTMLElement | null {
   return btn.parentElement?.querySelector('[data-codeblock-feedback]') ?? null;
 }
 
-function swapClasses(el: HTMLElement, add: string | null, remove: string[]): void {
-  for (const className of remove) {
-    if (className) el.classList.remove(className);
-  }
-  if (add) el.classList.add(add);
-}
-
 function setCopySuccess(btn: HTMLButtonElement, copiedLabel: string): void {
   btn.setAttribute('data-copied', '');
   btn.removeAttribute('data-error');
   btn.setAttribute('aria-label', copiedLabel);
-
-  swapClasses(btn, btn.getAttribute('data-class-copied'), [
-    btn.getAttribute('data-class-idle') ?? '',
-    btn.getAttribute('data-class-error') ?? '',
-  ]);
 
   const iconEl = getIconEl(btn);
   if (iconEl) iconEl.innerHTML = CHECK_ICON;
@@ -56,15 +44,10 @@ function setCopySuccess(btn: HTMLButtonElement, copiedLabel: string): void {
     // Button label already reads "Copied"; skip inline feedback when labels match.
     if (copiedLabel === 'Copied') {
       feedback.textContent = '';
-      swapClasses(feedback, null, [
-        feedback.getAttribute('data-class-success') ?? '',
-        feedback.getAttribute('data-class-error') ?? '',
-      ]);
+      feedback.removeAttribute('data-tone');
     } else {
       feedback.textContent = copiedLabel;
-      swapClasses(feedback, feedback.getAttribute('data-class-success'), [
-        feedback.getAttribute('data-class-error') ?? '',
-      ]);
+      feedback.setAttribute('data-tone', 'success');
     }
   }
 }
@@ -73,11 +56,6 @@ function setCopyError(btn: HTMLButtonElement, copyErrorLabel: string): void {
   btn.removeAttribute('data-copied');
   btn.setAttribute('data-error', '');
   btn.setAttribute('aria-label', copyErrorLabel);
-
-  swapClasses(btn, btn.getAttribute('data-class-error'), [
-    btn.getAttribute('data-class-idle') ?? '',
-    btn.getAttribute('data-class-copied') ?? '',
-  ]);
 
   const iconEl = getIconEl(btn);
   if (iconEl) iconEl.innerHTML = COPY_ICON;
@@ -88,9 +66,7 @@ function setCopyError(btn: HTMLButtonElement, copyErrorLabel: string): void {
   const feedback = getFeedback(btn);
   if (feedback) {
     feedback.textContent = copyErrorLabel;
-    swapClasses(feedback, feedback.getAttribute('data-class-error'), [
-      feedback.getAttribute('data-class-success') ?? '',
-    ]);
+    feedback.setAttribute('data-tone', 'error');
   }
 }
 
@@ -101,11 +77,6 @@ function resetCopyButton(btn: HTMLButtonElement): void {
   const copyLabel = btn.getAttribute('data-copy-label') ?? 'Copy code';
   btn.setAttribute('aria-label', copyLabel);
 
-  swapClasses(btn, btn.getAttribute('data-class-idle'), [
-    btn.getAttribute('data-class-copied') ?? '',
-    btn.getAttribute('data-class-error') ?? '',
-  ]);
-
   const iconEl = getIconEl(btn);
   if (iconEl) iconEl.innerHTML = COPY_ICON;
 
@@ -115,10 +86,7 @@ function resetCopyButton(btn: HTMLButtonElement): void {
   const feedback = getFeedback(btn);
   if (feedback) {
     feedback.textContent = '';
-    swapClasses(feedback, null, [
-      feedback.getAttribute('data-class-success') ?? '',
-      feedback.getAttribute('data-class-error') ?? '',
-    ]);
+    feedback.removeAttribute('data-tone');
   }
 }
 

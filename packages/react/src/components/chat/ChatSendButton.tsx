@@ -1,6 +1,11 @@
 import type { ComponentPropsWithRef, JSX, MouseEvent, Ref } from 'react';
+import { spinner } from '@var-ui/core/components/spinner';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { Button } from '../Button';
+import { Spinner } from '../Spinner';
 import { Icon } from '../../icons';
+
+const spinnerVars = recipeVars(spinner);
 
 export type ChatSendButtonProps = Omit<
   ComponentPropsWithRef<'button'>,
@@ -8,9 +13,11 @@ export type ChatSendButtonProps = Omit<
 > & {
   /** Whether an assistant reply is currently streaming — swaps send → stop. @default false */
   streaming?: boolean;
+  /** Shows a spinner and ignores presses while a send is in flight. @default false */
+  loading?: boolean;
   /** Disables the button. Ignored while streaming (stop stays pressable). @default false */
   disabled?: boolean;
-  /** Called on click when not streaming. */
+  /** Called on click when not streaming or loading. */
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   /** Called on click while streaming (cancel). */
   onStop?: () => void;
@@ -25,11 +32,12 @@ export type ChatSendButtonProps = Omit<
  * `Icon` rather than a dedicated recipe.
  *
  * ```tsx
- * <ChatSendButton streaming={isStreaming} onClick={send} onStop={cancel} />
+ * <ChatSendButton streaming={isStreaming} loading={isSending} onClick={send} onStop={cancel} />
  * ```
  */
 export function ChatSendButton({
   streaming = false,
+  loading = false,
   disabled = false,
   onClick,
   onStop,
@@ -45,10 +53,23 @@ export function ChatSendButton({
       appearance="filled"
       className={className}
       ref={ref}
-      disabled={streaming ? false : disabled}
-      onClick={streaming ? () => onStop?.() : onClick}
+      disabled={streaming ? false : disabled || loading}
+      onClick={streaming ? () => onStop?.() : loading ? undefined : onClick}
     >
-      <Icon name={streaming ? 'stop' : 'arrowUp'} size="sm" />
+      {streaming ? (
+        <Icon name="stop" size="sm" />
+      ) : loading ? (
+        <Spinner
+          size="sm"
+          label="Sending"
+          style={styleVars([
+            [spinnerVars.indicatorColor, 'currentColor'],
+            [spinnerVars.trackColor, 'transparent'],
+          ])}
+        />
+      ) : (
+        <Icon name="arrowUp" size="sm" />
+      )}
     </Button>
   );
 }

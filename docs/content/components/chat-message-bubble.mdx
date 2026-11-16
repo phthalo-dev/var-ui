@@ -17,6 +17,10 @@ There is no `@var-ui/astro` ChatMessageBubble — Astro and HTML previews use th
 
 Use `group` when rendering several consecutive bubbles from the same sender, to tighten the corners between them.
 
+`variant="subtle"` keeps a tinted bubble but drops the solid accent fill on user bubbles
+(`tone.accent.subtleBackground` + `text.primary`), so inline content that sets its own
+color — links, markdown spans — stays readable. `ghost` drops the background entirely.
+
 ## Props
 
 <PropsTable slug="chat-message-bubble" />

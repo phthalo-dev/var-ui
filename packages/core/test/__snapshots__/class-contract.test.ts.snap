@@ -279,6 +279,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-chat-layout-background",
       "--var-ui-chat-layout-border",
+      "--var-ui-chat-layout-maxheight",
     ],
   },
   "chat-message": {
@@ -321,6 +322,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "emptyState": "var-ui-chat-message-list__emptyState",
       "inner": "var-ui-chat-message-list__inner",
+      "loading": "var-ui-chat-message-list__loading",
       "root": "var-ui-chat-message-list",
     },
     "vars": [],
@@ -416,30 +418,17 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "actions": "var-ui-code-block__actions",
       "body": "var-ui-code-block__body",
-      "bodyScrollable": "var-ui-code-block__bodyScrollable",
       "code": "var-ui-code-block__code",
       "copyButton": "var-ui-code-block__copyButton",
-      "copyButtonCopied": "var-ui-code-block__copyButtonCopied",
-      "copyButtonError": "var-ui-code-block__copyButtonError",
-      "copyButtonIdle": "var-ui-code-block__copyButtonIdle",
       "feedback": "var-ui-code-block__feedback",
-      "feedbackError": "var-ui-code-block__feedbackError",
-      "feedbackInline": "var-ui-code-block__feedbackInline",
-      "feedbackSuccess": "var-ui-code-block__feedbackSuccess",
       "feedbackToast": "var-ui-code-block__feedbackToast",
       "filename": "var-ui-code-block__filename",
       "header": "var-ui-code-block__header",
       "language": "var-ui-code-block__language",
       "line": "var-ui-code-block__line",
-      "lineAdded": "var-ui-code-block__lineAdded",
       "lineContent": "var-ui-code-block__lineContent",
-      "lineDeleted": "var-ui-code-block__lineDeleted",
-      "lineHighlighted": "var-ui-code-block__lineHighlighted",
       "lineNumber": "var-ui-code-block__lineNumber",
-      "lines": "var-ui-code-block__lines",
       "pre": "var-ui-code-block__pre",
-      "preScrollX": "var-ui-code-block__preScrollX",
-      "preWrap": "var-ui-code-block__preWrap",
       "root": "var-ui-code-block",
       "title": "var-ui-code-block__title",
     },
@@ -455,6 +444,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-code-block-languagecolor",
       "--var-ui-code-block-linehighlightbackground",
       "--var-ui-code-block-linenumbercolor",
+      "--var-ui-code-block-maxheight",
     ],
   },
   "collapsible": {
@@ -751,7 +741,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "dialog": {
     "axes": [
       "data-role",
+      "data-size",
       "role",
+      "size",
     ],
     "slots": {
       "actions": "var-ui-dialog__actions",
@@ -1565,6 +1557,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "description": "var-ui-select__description",
       "error": "var-ui-select__error",
+      "group": "var-ui-select__group",
+      "groupHeading": "var-ui-select__groupHeading",
       "item": "var-ui-select__item",
       "label": "var-ui-select__label",
       "listbox": "var-ui-select__listbox",
@@ -1577,6 +1571,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-select-descriptioncolor",
       "--var-ui-select-errorcolor",
+      "--var-ui-select-groupheadingcolor",
       "--var-ui-select-itemfocusedbackground",
       "--var-ui-select-itemselectedcolor",
       "--var-ui-select-labelcolor",
@@ -1894,16 +1889,20 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "data-size",
       "data-tone",
       "data-weight",
+      "data-white-space",
+      "eyebrow",
       "lineClamp",
       "size",
       "tone",
       "weight",
+      "whiteSpace",
     ],
     "slots": {
       "base": "var-ui-text-block",
     },
     "vars": [
       "--var-ui-text-block-color",
+      "--var-ui-text-block-lineclamp",
       "--var-ui-text-block-secondarycolor",
     ],
   },

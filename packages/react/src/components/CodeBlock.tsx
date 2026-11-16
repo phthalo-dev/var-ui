@@ -2,12 +2,25 @@ import type { ComponentPropsWithoutRef, JSX, Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { codeBlock } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { Icon } from '../icons';
-import { combine, cx, mergeProps } from 'typestyles';
+import { mergeProps } from 'typestyles';
 
 export type { CodeBlockVariant } from '@var-ui/core';
 
+const codeBlockVars = recipeVars(codeBlock);
+
 type FeedbackTone = 'success' | 'error' | null;
+
+type DiffLineTone = 'added' | 'deleted' | 'hunk';
+
+/** Unified-diff line classification for `variant="diff"` line painting. */
+function classifyDiffLine(line: string): DiffLineTone | undefined {
+  if (line.startsWith('@@')) return 'hunk';
+  if (line.startsWith('+') && !line.startsWith('+++')) return 'added';
+  if (line.startsWith('-') && !line.startsWith('---')) return 'deleted';
+  return undefined;
+}
 
 function escapeHtml(text: string): string {
   return text
@@ -39,6 +52,8 @@ export type CodeBlockProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
     showLineNumbers?: boolean;
     /** 1-based line numbers to highlight. */
     highlightedLines?: number[];
+    /** Scroll cap for the code body — any CSS length (`maxLines`-style scrolling). */
+    maxHeight?: string;
     /** Accessible label for the copy button. @default Copy code */
     copyLabel?: string;
     /** Feedback text after a successful copy. @default Copied */
@@ -66,6 +81,7 @@ export function CodeBlock({
   wrapLongLines = false,
   showLineNumbers = false,
   highlightedLines = [],
+  maxHeight,
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
   copyErrorLabel = 'Copy failed',
@@ -85,15 +101,8 @@ export function CodeBlock({
   const lines = useMemo(() => code.replace(/\n$/, '').split('\n'), [code]);
   const terminal = variant === 'terminal';
   const inline = variant === 'inline';
+  const diff = variant === 'diff';
   const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-  const resolvedCodeClassName = cx(cb.code, highlightedCodeClassName);
-
-  const feedbackProps = combine(
-    cb.feedback,
-    cb.feedbackInline,
-    feedbackTone === 'success' && cb.feedbackSuccess,
-    feedbackTone === 'error' && cb.feedbackError,
-  );
 
   const resetCopyState = () => {
     setIsCopied(false);
@@ -124,7 +133,7 @@ export function CodeBlock({
     return (
       <code
         {...(rest as ComponentPropsWithoutRef<'code'>)}
-        {...mergeProps(cb.root, cx(cb.code, className))}
+        {...mergeProps(cb.root, cb.code.className, className)}
         ref={ref}
         data-codeblock
       >
@@ -149,12 +158,7 @@ export function CodeBlock({
           <div {...mergeProps(cb.actions)}>
             <button
               type="button"
-              {...combine(
-                cb.copyButton,
-                !isCopied && !hasError && cb.copyButtonIdle,
-                isCopied && cb.copyButtonCopied,
-                hasError && cb.copyButtonError,
-              )}
+              {...mergeProps(cb.copyButton)}
               data-copied={isCopied || undefined}
               data-error={hasError || undefined}
               onClick={onCopy}
@@ -163,24 +167,35 @@ export function CodeBlock({
               <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
               {isCopied ? copiedLabel : hasError ? errorText : copyText}
             </button>
-            <span {...feedbackProps} role="status" aria-live="polite">
+            <span
+              {...mergeProps(cb.feedback)}
+              data-tone={feedbackTone ?? undefined}
+              role="status"
+              aria-live="polite"
+            >
               {feedbackText}
             </span>
           </div>
         ) : null}
       </div>
 
-      <div {...combine(cb.body, cb.bodyScrollable)} data-codeblock-body>
-        <pre {...combine(cb.pre, wrapLongLines ? cb.preWrap : cb.preScrollX)} data-codeblock-pre>
+      <div
+        {...mergeProps(cb.body)}
+        data-codeblock-body
+        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
+      >
+        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
           {showLineNumbers ? (
-            <code {...combine(cb.code, cb.lines)}>
+            <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {
                 const lineNumber = index + 1;
                 const lineContentHtml = lineHtml?.[index];
                 return (
                   <span
                     key={lineNumber}
-                    {...combine(cb.line, highlightedSet.has(lineNumber) && cb.lineHighlighted)}
+                    {...mergeProps(cb.line)}
+                    data-highlighted={highlightedSet.has(lineNumber) || undefined}
+                    data-line-tone={diff ? classifyDiffLine(line) : undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}
@@ -195,9 +210,17 @@ export function CodeBlock({
                 );
               })}
             </code>
+          ) : diff ? (
+            <code {...mergeProps(cb.code)}>
+              {lines.map((line, index) => (
+                <span key={index} {...mergeProps(cb.line)} data-line-tone={classifyDiffLine(line)}>
+                  <span {...mergeProps(cb.lineContent)}>{line || ' '}</span>
+                </span>
+              ))}
+            </code>
           ) : useHighlightedHtml ? (
             <code
-              {...mergeProps(cb.code, resolvedCodeClassName)}
+              {...mergeProps(cb.code, highlightedCodeClassName)}
               dangerouslySetInnerHTML={{ __html: codeHtml! }}
             />
           ) : (

@@ -402,7 +402,7 @@ export function renderContentSampleTileMarkup(framework: DocsFramework): string 
   const pre = serializeHtmlTag(
     'pre',
     {
-      ...mergeProps(cb.pre, classOf(cb.preScrollX)),
+      ...mergeProps(cb.pre),
       'data-codeblock-pre': true,
     },
     codeEl,
@@ -410,7 +410,7 @@ export function renderContentSampleTileMarkup(framework: DocsFramework): string 
   const codeBody = serializeHtmlTag(
     'div',
     {
-      ...mergeProps(cb.body, classOf(cb.bodyScrollable)),
+      ...mergeProps(cb.body),
       'data-codeblock-body': true,
     },
     pre,

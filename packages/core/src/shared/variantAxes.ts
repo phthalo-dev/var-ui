@@ -37,8 +37,28 @@ export const density = variant.enum(['compact', 'balanced', 'spacious'], {
 
 export type Density = VariantOptions<typeof density>;
 
-/** Spacing scale axis for layout primitives (stack, grid, overflow-list). */
-export const gap = variant.enum(['none', 'xs', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
+/** Spacing scale axis for layout primitives (stack, grid, overflow-list, fieldset). */
+export const gapValues = [
+  'none',
+  'xxs',
+  'xs',
+  'sm',
+  'md',
+  'lg',
+  'xl',
+  'xxl',
+  'xxxl',
+  'xxxxl',
+] as const;
+
+/**
+ * Spacing scale axis for layout primitives (stack, grid, overflow-list,
+ * fieldset). Step names map 1:1 to the `space` tokens — `md` is always
+ * `space.md`, wherever it is used (#133). Recipes whose rendered default used
+ * to be one step smaller pass a local default instead of shrinking their
+ * mapping.
+ */
+export const gap = variant.enum(gapValues, { default: 'md' });
 
 export type Gap = VariantOptions<typeof gap>;
 

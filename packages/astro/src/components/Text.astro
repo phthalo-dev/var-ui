@@ -2,18 +2,65 @@
 import type { HTMLAttributes } from 'astro/types';
 import { textBlock } from '@var-ui/core/components/typography';
 import type { TextBlockVariantProps } from '@var-ui/core';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
+
+const textVars = recipeVars(textBlock);
 
 type Props = HTMLAttributes<'p'> & {
   as?: 'p' | 'span' | 'div';
   size?: NonNullable<TextBlockVariantProps['size']>;
   tone?: NonNullable<TextBlockVariantProps['tone']>;
   weight?: NonNullable<TextBlockVariantProps['weight']>;
+  /** Uppercase eyebrow/overline label treatment. @default false */
+  eyebrow?: boolean;
+  /** Whitespace handling — `pre-wrap` preserves newlines and wrapping. @default normal */
+  whiteSpace?: 'normal' | 'pre-wrap';
+  /** Max lines before truncation. Counts above 3 go through the `lineClamp` variable. */
+  lineClamp?: number;
   className?: string;
 };
 
-const { as = 'p', size = 'md', tone = 'primary', weight = 'normal', className, ...rest } = Astro.props;
-const rp = mergeProps(textBlock({ size, tone, weight }), className);
+const {
+  as = 'p',
+  size = 'md',
+  tone = 'primary',
+  weight = 'normal',
+  eyebrow = false,
+  whiteSpace = 'normal',
+  lineClamp,
+  className,
+  style,
+  ...rest
+} = Astro.props;
+
+let clampVariant: NonNullable<TextBlockVariantProps['lineClamp']> | undefined;
+let clampStyle: Record<string, string> | undefined;
+if (lineClamp !== undefined) {
+  if (lineClamp === 1 || lineClamp === 2 || lineClamp === 3) {
+    clampVariant = lineClamp === 1 ? '1' : lineClamp === 2 ? '2' : '3';
+  } else {
+    if (!Number.isInteger(lineClamp) || lineClamp < 1) {
+      throw new Error('[var-ui] Text lineClamp must be a positive integer.');
+    }
+    clampVariant = 'n';
+    clampStyle = styleVars([[textVars.lineClamp, lineClamp]]);
+  }
+}
+
+const mergedStyle =
+  clampStyle == null
+    ? style
+    : typeof style === 'string'
+      ? [...Object.entries(clampStyle).map(([name, value]) => `${name}: ${value}`), style]
+          .filter(Boolean)
+          .join('; ')
+      : { ...style, ...clampStyle };
+
+const rp = mergeProps(
+  textBlock({ size, tone, weight, eyebrow, whiteSpace, lineClamp: clampVariant }),
+  className,
+);
 const TextTag = as;
 ---
-<TextTag {...rest} {...rp}><slot /></TextTag>
+<TextTag {...rest} {...rp} style={mergedStyle}><slot /></TextTag>

@@ -51,6 +51,8 @@ import SpinnerDefault from './spinner/default/react';
 import StackDefault from './stack/default/react';
 import TextDefault from './text/default/react';
 import TextTones from './text/tones/react';
+import TextEmphasis from './text/emphasis/react';
+import TextClamp from './text/clamp/react';
 import ThumbnailDefault from './thumbnail/default/react';
 import TimestampDefault from './timestamp/default/react';
 import FieldDefault from './field/default/react';
@@ -67,6 +69,7 @@ import PinInputDefault from './pin-input/default/react';
 import SelectDefault from './select/default/react';
 import SelectOptions from './select/options/react';
 import SelectParts from './select/parts/react';
+import SelectSections from './select/sections/react';
 import ComboboxDefault from './combobox/default/react';
 import ComboboxField from './combobox/field/react';
 import TypeaheadDefault from './typeahead/default/react';
@@ -235,6 +238,8 @@ export const reactDemoMap = {
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
   'text.tones': TextTones,
+  'text.emphasis': TextEmphasis,
+  'text.clamp': TextClamp,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,
@@ -287,6 +292,7 @@ export const reactDemoMap = {
   'select.default': SelectDefault,
   'select.options': SelectOptions,
   'select.parts': SelectParts,
+  'select.sections': SelectSections,
   'combobox.default': ComboboxDefault,
   'combobox.field': ComboboxField,
   'typeahead.default': TypeaheadDefault,

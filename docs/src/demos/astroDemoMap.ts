@@ -26,6 +26,8 @@ import SpinnerDefault from './spinner/default/astro.astro';
 import StackDefault from './stack/default/astro.astro';
 import TextDefault from './text/default/astro.astro';
 import TextTones from './text/tones/astro.astro';
+import TextEmphasis from './text/emphasis/astro.astro';
+import TextClamp from './text/clamp/astro.astro';
 import ThumbnailDefault from './thumbnail/default/astro.astro';
 import TimestampDefault from './timestamp/default/astro.astro';
 import FieldDefault from './field/default/astro.astro';
@@ -38,6 +40,7 @@ import SliderDefault from './slider/default/astro.astro';
 import PinInputDefault from './pin-input/default/astro.astro';
 import SelectDefault from './select/default/astro.astro';
 import SelectOptions from './select/options/astro.astro';
+import SelectSections from './select/sections/astro.astro';
 import ComboboxDefault from './combobox/default/astro.astro';
 import ComboboxField from './combobox/field/astro.astro';
 import TypeaheadDefault from './typeahead/default/astro.astro';
@@ -91,6 +94,8 @@ const astroDemos = {
   'heading.default': HeadingDefault,
   'text.default': TextDefault,
   'text.tones': TextTones,
+  'text.emphasis': TextEmphasis,
+  'text.clamp': TextClamp,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,
@@ -115,6 +120,7 @@ const astroDemos = {
   'pin-input.default': PinInputDefault,
   'select.default': SelectDefault,
   'select.options': SelectOptions,
+  'select.sections': SelectSections,
   'combobox.default': ComboboxDefault,
   'combobox.field': ComboboxField,
   'typeahead.default': TypeaheadDefault,
