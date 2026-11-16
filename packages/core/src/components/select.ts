@@ -21,12 +21,18 @@ export const select = typestyles.recipe({
     'popover',
     'listbox',
     'item',
+    'group',
+    'groupHeading',
   ],
   variants: { size: controlSize },
   vars: {
     labelColor: {
       ...atProperty.color,
       value: t.color.text.primary.var,
+    },
+    groupHeadingColor: {
+      ...atProperty.color,
+      value: t.color.text.secondary.var,
     },
     triggerBackground: {
       ...atProperty.color,
@@ -135,6 +141,15 @@ export const select = typestyles.recipe({
         popover: panel.popover,
         listbox: panel.listbox,
         item: panel.item,
+        group: { margin: 0, padding: 0 },
+        groupHeading: {
+          padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.xxs.var}`,
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.semibold.var,
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em',
+          color: vars.groupHeadingColor.var,
+        },
       },
       variants: {
         size: controlSizeVariants((size) => ({

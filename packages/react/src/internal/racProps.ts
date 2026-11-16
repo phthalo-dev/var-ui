@@ -189,10 +189,17 @@ export type Option = {
   label: ReactNode;
   /** Prevents selecting this option. */
   disabled?: boolean;
+  /**
+   * Plain-text form of the row for typeahead and the closed trigger. Defaults to `label` when it
+   * is a string or number, and to `value` otherwise. Set it when the row shows more than the
+   * label (e.g. a price) or the label is a node.
+   */
+  textValue?: string;
 };
 
 /** Plain-text form of a label for typeahead / accessible names; `undefined` for non-text labels. */
-export function optionTextValue(option: Pick<Option, 'label' | 'value'>): string {
+export function optionTextValue(option: Pick<Option, 'label' | 'value' | 'textValue'>): string {
+  if (option.textValue) return option.textValue;
   const { label, value } = option;
   return typeof label === 'string' || typeof label === 'number' ? String(label) : value;
 }
