@@ -43,4 +43,28 @@ describe('Typography', () => {
     expect(el.getAttribute('data-size')).toBe('xs');
     expect(el.getAttribute('data-line-clamp')).toBe('2');
   });
+
+  it('Text eyebrow, bold, xl and pre-wrap map to recipe variants', () => {
+    render(
+      <Text eyebrow size="xl" weight="bold" whiteSpace="pre-wrap">
+        styled
+      </Text>,
+    );
+    const el = screen.getByText('styled');
+    expect(el.hasAttribute('data-eyebrow')).toBe(true);
+    expect(el.getAttribute('data-size')).toBe('xl');
+    expect(el.getAttribute('data-weight')).toBe('bold');
+    expect(el.getAttribute('data-white-space')).toBe('pre-wrap');
+  });
+
+  it('Text lineClamp above 3 goes through the lineClamp variable', () => {
+    render(<Text lineClamp={20}>long</Text>);
+    const el = screen.getByText('long');
+    expect(el.getAttribute('data-line-clamp')).toBe('n');
+    expect(el.style.getPropertyValue('--var-ui-text-block-lineclamp')).toBe('20');
+  });
+
+  it('Text rejects non-positive lineClamp counts', () => {
+    expect(() => render(<Text lineClamp={0}>bad</Text>)).toThrow(/positive integer/);
+  });
 });

@@ -17,6 +17,8 @@ export type DemoId =
   | 'heading.default'
   | 'text.default'
   | 'text.tones'
+  | 'text.emphasis'
+  | 'text.clamp'
   | 'link.default'
   | 'code-block.default'
   | 'alert.default'
