@@ -8,6 +8,8 @@ import { mergeProps } from 'typestyles';
 
 export type { CodeBlockVariant } from '@var-ui/core';
 
+const codeBlockVars = recipeVars(codeBlock);
+
 type FeedbackTone = 'success' | 'error' | null;
 
 type DiffLineTone = 'added' | 'deleted' | 'hunk';
@@ -177,7 +179,11 @@ export function CodeBlock({
         ) : null}
       </div>
 
-      <div {...mergeProps(cb.body)} data-codeblock-body>
+      <div
+        {...mergeProps(cb.body)}
+        data-codeblock-body
+        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
+      >
         <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
           {showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
@@ -189,6 +195,7 @@ export function CodeBlock({
                     key={lineNumber}
                     {...mergeProps(cb.line)}
                     data-highlighted={highlightedSet.has(lineNumber) || undefined}
+                    data-line-tone={diff ? classifyDiffLine(line) : undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}

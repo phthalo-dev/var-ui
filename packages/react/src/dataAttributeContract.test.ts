@@ -54,6 +54,7 @@ const UNDOCUMENTED_HOOKS = [
   'data-codeblock-feedback',
   'data-codeblock-header',
   'data-codeblock-pre',
+  'data-line-tone',
   // codeBlock state hooks styled by the recipe's `&[data-…]` selectors.
   'data-wrap',
   'data-line-numbers',

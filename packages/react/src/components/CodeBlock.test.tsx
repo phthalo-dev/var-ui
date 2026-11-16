@@ -53,6 +53,25 @@ describe('CodeBlock', () => {
     expect(lines[0].textContent).toContain('beta');
   });
 
+  it('classifies diff lines with line numbers and applies the max height', () => {
+    const { container } = render(
+      <CodeBlock
+        code={'@@ -1 +1 @@\n-old\n+new'}
+        variant="diff"
+        showLineNumbers
+        maxHeight="20rem"
+        copyable={false}
+      />,
+    );
+    const body = container.querySelector<HTMLElement>('[data-codeblock-body]')!;
+    expect(body.style.getPropertyValue('--var-ui-code-block-maxheight')).toBe('20rem');
+    expect(
+      Array.from(container.querySelectorAll('[data-line-tone]')).map((line) =>
+        line.getAttribute('data-line-tone'),
+      ),
+    ).toEqual(['hunk', 'deleted', 'added']);
+  });
+
   it('renders the inline variant as a single code element with both slot classes', () => {
     const { container } = render(<CodeBlock code="const x = 1" variant="inline" />);
     const code = container.querySelector('code[data-codeblock]')!;

@@ -6,6 +6,8 @@ import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { mergeProps } from '../utils';
 
+type DiffLineTone = 'added' | 'deleted' | 'hunk';
+
 interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVariantProps {
   code: string;
   language?: string;
@@ -24,6 +26,13 @@ interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVarian
   copyLabel?: string;
   copiedLabel?: string;
   copyErrorLabel?: string;
+}
+
+function classifyDiffLine(line: string): DiffLineTone | undefined {
+  if (line.startsWith('@@')) return 'hunk';
+  if (line.startsWith('+') && !line.startsWith('+++')) return 'added';
+  if (line.startsWith('-') && !line.startsWith('---')) return 'deleted';
+  return undefined;
 }
 
 function escapeHtml(text: string): string {
@@ -55,6 +64,7 @@ const {
 } = Astro.props as Props;
 
 const cb = codeBlock({ variant });
+const codeBlockVars = recipeVars(codeBlock);
 
 const highlightedSet = new Set(highlightedLines);
 const lines = code.replace(/\n$/, '').split('\n');
@@ -101,7 +111,11 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
         ) : null}
       </div>
 
-      <div {...mergeProps(cb.body)} data-codeblock-body>
+      <div
+        {...mergeProps(cb.body)}
+        data-codeblock-body
+        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
+      >
         <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre
         >{showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
@@ -112,6 +126,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
                   <span
                     {...mergeProps(cb.line)}
                     data-highlighted={highlightedSet.has(lineNumber) || undefined}
+                    data-line-tone={diff ? classifyDiffLine(line) : undefined}
                   >
                     <span {...mergeProps(cb.lineNumber)} aria-hidden="true">
                       {lineNumber}
@@ -130,7 +145,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
             </code>
           ) : diff ? (
             <code {...mergeProps(cb.code)}>
-              {lines.map((line, index) => (
+              {lines.map((line) => (
                 <span {...mergeProps(cb.line)} data-line-tone={classifyDiffLine(line)}>
                   <span {...mergeProps(cb.lineContent)}>{line || ' '}</span>
                 </span>
