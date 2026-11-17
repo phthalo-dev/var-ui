@@ -4,6 +4,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
 {
   "runtimeExports": {
     "constant": [
+      "THEME_CLASS_PREFIX",
       "link",
     ],
     "fonts": [
@@ -195,7 +196,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
   },
   "summary": {
     "runtimeByCategory": {
-      "constant": 1,
+      "constant": 2,
       "fonts": 4,
       "helper": 56,
       "icons": 1,
@@ -211,9 +212,9 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "function": 139,
       "number": 4,
       "object": 20,
-      "string": 4,
+      "string": 5,
     },
-    "runtimeExports": 167,
+    "runtimeExports": 168,
     "typeOnlyExports": 142,
   },
   "typeOnlyExports": [

@@ -37,4 +37,20 @@ describe('registerFontFace', () => {
     const matches = css.match(/font-family: "JetBrains Mono"/g) ?? [];
     expect(matches).toHaveLength(1);
   });
+
+  it('ignores unicode-range / font-display when deduping', () => {
+    const face = {
+      family: 'Figtree',
+      src: "url('/fonts/figtree-latin.woff2') format('woff2')",
+      fontWeight: '300 900',
+      fontStyle: 'normal',
+    };
+
+    registerFontFace({ ...face, unicodeRange: 'U+0000-00FF' });
+    registerFontFace({ ...face, fontDisplay: 'swap' });
+
+    const css = getRegisteredCss();
+    const matches = css.match(/font-family: "Figtree"/g) ?? [];
+    expect(matches).toHaveLength(1);
+  });
 });

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { runTypestylesBuild } from '@typestyles/build-runner';
 import type { Plugin } from 'vite';
-import { extractThemeOnlyCss } from '../utils/theme/extract-theme-css';
+import { extractFontFaces, extractThemeOnlyCss } from '../utils/theme/extract-theme-css';
 import {
   getLazyThemePresets,
   type DocsThemePreset,
@@ -14,6 +14,11 @@ const THEME_ID_PATTERN = /^\/themes\/([a-z0-9-]+)\.css$/;
 export type ThemeCssExtractOptions = {
   root: string;
   presets: readonly DocsThemePreset[];
+  /**
+   * Main TypeStyles entry (relative to root). Its `@font-face` rules are always
+   * on the page via `typestyles.css`, so lazy themes must not repeat them.
+   */
+  typestylesEntry?: string;
   /** Output directory for production CSS (absolute or relative to root). */
   outDir?: string;
 };
@@ -23,15 +28,37 @@ function resolveOutDir(root: string, outDir?: string): string {
   return path.isAbsolute(target) ? target : path.resolve(root, target);
 }
 
-async function buildThemeCss(root: string, preset: ResolvedDocsThemePreset): Promise<string> {
-  if (!preset.entry) {
-    throw new Error(`[var-docs] lazy theme "${preset.id}" is missing an extract entry`);
-  }
-  const css = await runTypestylesBuild({
-    root,
-    modules: [preset.entry],
-  });
-  return extractThemeOnlyCss(css, preset.id);
+/** Build lazy theme CSS, sharing the base font-face set across all themes. */
+function createThemeCssBuilder(options: ThemeCssExtractOptions) {
+  let baseFontFacesPromise: Promise<string[]> | undefined;
+
+  const getBaseFontFaces = (): Promise<string[]> => {
+    baseFontFacesPromise ??= options.typestylesEntry
+      ? runTypestylesBuild({
+          root: options.root,
+          modules: [options.typestylesEntry],
+        }).then(extractFontFaces)
+      : Promise.resolve([]);
+    return baseFontFacesPromise;
+  };
+
+  const build = async (preset: ResolvedDocsThemePreset): Promise<string> => {
+    if (!preset.entry) {
+      throw new Error(`[var-docs] lazy theme "${preset.id}" is missing an extract entry`);
+    }
+    const [css, baseFontFaces] = await Promise.all([
+      runTypestylesBuild({ root: options.root, modules: [preset.entry] }),
+      getBaseFontFaces(),
+    ]);
+    return extractThemeOnlyCss(css, preset.id, { baseFontFaces });
+  };
+
+  return {
+    build,
+    invalidate: () => {
+      baseFontFacesPromise = undefined;
+    },
+  };
 }
 
 /** Write `public/themes/{id}.css` for every lazy preset. */
@@ -41,9 +68,10 @@ export async function buildDocsThemeStyles(options: ThemeCssExtractOptions): Pro
 
   const outDir = resolveOutDir(options.root, options.outDir);
   fs.mkdirSync(outDir, { recursive: true });
+  const { build } = createThemeCssBuilder(options);
 
   for (const preset of lazy) {
-    const css = await buildThemeCss(options.root, preset);
+    const css = await build(preset);
     const outPath = path.join(outDir, `${preset.id}.css`);
     fs.writeFileSync(outPath, css);
     const kb = (Buffer.byteLength(css, 'utf8') / 1024).toFixed(1);
@@ -59,6 +87,7 @@ export function docsThemeStylesDevPlugin(options: ThemeCssExtractOptions): Plugi
   const byId = new Map(lazy.map((preset) => [preset.id, preset]));
   const cache = new Map<string, string>();
   const inflight = new Map<string, Promise<string>>();
+  const { build, invalidate: invalidateBaseFontFaces } = createThemeCssBuilder(options);
 
   return {
     name: 'var-docs-theme-styles-dev',
@@ -91,7 +120,7 @@ export function docsThemeStylesDevPlugin(options: ThemeCssExtractOptions): Plugi
             if (!inflight.has(themeId)) {
               inflight.set(
                 themeId,
-                buildThemeCss(options.root, preset)
+                build(preset)
                   .then((built) => {
                     cache.set(themeId, built);
                     return built;
@@ -120,6 +149,7 @@ export function docsThemeStylesDevPlugin(options: ThemeCssExtractOptions): Plugi
       const invalidate = () => {
         cache.clear();
         inflight.clear();
+        invalidateBaseFontFaces();
       };
       server.watcher.on('change', invalidate);
       server.watcher.on('add', invalidate);

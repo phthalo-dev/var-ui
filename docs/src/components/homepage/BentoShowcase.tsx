@@ -31,7 +31,7 @@ export function BentoShowcase({ themeId, previewStyle, ref }: BentoShowcaseProps
       className={cx(b.showcase.className, theme.className)}
       data-testid="bento-showcase"
       ref={ref}
-      style={{ colorScheme: 'inherit', ...previewStyle }}
+      style={{ ...previewStyle }}
     >
       <div className={b.grid.className}>
         <RevenueTile className={cx(tile, b.spanWide.className)} />

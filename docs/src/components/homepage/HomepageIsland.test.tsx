@@ -43,7 +43,7 @@ describe('HomepageIsland', () => {
     expect(wrapper).toBeTruthy();
     expect(wrapper!.hasAttribute('data-color-mode')).toBe(false);
     expect(wrapper!.style.colorScheme).toBe('');
-    expect(showcase.style.colorScheme).toBe('inherit');
+    expect(showcase.style.colorScheme).toBe('');
   });
 
   it('inherits color-scheme from the docs site on load and after toggle updates', async () => {
@@ -53,7 +53,7 @@ describe('HomepageIsland', () => {
     render(<HomepageIsland />);
 
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
-    expect(container.style.colorScheme).toBe('inherit');
+    expect(container.style.colorScheme).toBe('');
     expect(container.getAttribute('data-color-mode')).toBeNull();
 
     await act(async () => {
@@ -63,7 +63,7 @@ describe('HomepageIsland', () => {
     });
 
     await waitFor(() => {
-      expect(container.style.colorScheme).toBe('inherit');
+      expect(container.style.colorScheme).toBe('');
       expect(container.getAttribute('data-color-mode')).toBeNull();
     });
   });
@@ -74,7 +74,7 @@ describe('HomepageIsland', () => {
     render(<HomepageIsland />);
 
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
-    expect(container.style.colorScheme).toBe('inherit');
+    expect(container.style.colorScheme).toBe('');
 
     await act(async () => {
       localStorage.setItem('theme-mode', 'system');
@@ -90,7 +90,7 @@ describe('HomepageIsland', () => {
     });
 
     await waitFor(() => {
-      expect(container.style.colorScheme).toBe('inherit');
+      expect(container.style.colorScheme).toBe('');
     });
   });
 });

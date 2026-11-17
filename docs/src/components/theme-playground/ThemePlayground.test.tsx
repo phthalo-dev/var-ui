@@ -31,12 +31,13 @@ describe('ThemePlayground', () => {
     });
   });
 
-  it('inherits color-scheme from docs site', () => {
+  it('does not pin its own color-scheme so the docs site pin applies', () => {
     localStorage.setItem('theme-mode', 'dark');
     document.documentElement.setAttribute('data-color-mode', 'dark');
     render(<ThemePlayground />);
     const showcase = screen.getByTestId('bento-showcase');
-    expect(showcase.style.colorScheme).toBe('inherit');
+    expect(showcase.getAttribute('data-color-mode')).toBeNull();
+    expect(showcase.style.colorScheme).toBe('');
   });
 
   it('applies color overrides as CSS variables on preview', () => {

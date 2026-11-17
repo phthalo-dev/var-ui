@@ -34,6 +34,7 @@ export { default as Banner } from './src/components/Banner.astro';
 export { default as Toast } from './src/components/Toast.astro';
 export { default as ToastRegion } from './src/components/ToastRegion.astro';
 export { default as CodeBlock } from './src/components/CodeBlock.astro';
+export { default as CopyButton } from './src/components/CopyButton.astro';
 export { default as Steps } from './src/components/Steps.astro';
 export { default as Fieldset } from './src/components/Fieldset.astro';
 export { default as Timeline } from './src/components/Timeline.astro';

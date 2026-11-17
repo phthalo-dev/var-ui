@@ -74,6 +74,13 @@ const UNDOCUMENTED_HOOKS = [
   'data-copied-label',
   'data-copy-error-label',
   'data-copy-label',
+  // CopyButton (Astro): icon/label spans the script swaps, plus the value and
+  // reset-timeout inputs the script reads back from the markup.
+  'data-copy-button-icon',
+  'data-copy-button-text',
+  'data-error-label',
+  'data-timeout',
+  'data-value',
   'data-current',
   'data-dirty',
   'data-divider',
