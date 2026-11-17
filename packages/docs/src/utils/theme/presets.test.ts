@@ -5,7 +5,7 @@ import {
   getLazyThemePresets,
   resolveThemePresets,
 } from './presets';
-import { extractThemeOnlyCss } from './extract-theme-css';
+import { extractFontFaces, extractThemeOnlyCss } from './extract-theme-css';
 
 const samplePresets = [
   { id: 'default', label: 'Default', className: 'theme-var-ui-default', swatch: '#64748b' },
@@ -64,5 +64,45 @@ describe('extractThemeOnlyCss', () => {
 
   it('throws when theme class missing', () => {
     expect(() => extractThemeOnlyCss('.other{}', 'forest')).toThrow(/No theme CSS/);
+  });
+
+  it('drops @font-face rules already present in the base stylesheet', () => {
+    const baseFontFaces = extractFontFaces(
+      `@font-face { font-family: "JetBrains Mono"; src: url('/fonts/jetbrains-mono.woff2'); font-weight: 100 800; font-style: normal; font-display: swap; unicode-range: U+0000-00FF; }`,
+    );
+    const themeCss = `@font-face { font-family: "Newsreader"; src: url('/fonts/newsreader.woff2'); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url('/fonts/jetbrains-mono.woff2'); font-weight: 100 800; font-style: normal; font-display: swap; unicode-range: U+0000-00FF; }
+.theme-var-ui-forest { --c: 1 }`;
+
+    const extracted = extractThemeOnlyCss(themeCss, 'forest', { baseFontFaces });
+    expect(extracted).toContain('font-family: "Newsreader"');
+    expect(extracted).not.toContain('JetBrains Mono');
+    expect(extracted).toContain('.theme-var-ui-forest { --c: 1 }');
+    // Without the base set the theme keeps its own copy (legacy behaviour).
+    expect(extractThemeOnlyCss(themeCss, 'forest')).toContain('JetBrains Mono');
+  });
+
+  it('ignores unicode-range / font-display differences when matching base faces', () => {
+    const baseFontFaces = extractFontFaces(
+      `@font-face { font-family: "Figtree"; src: url('/fonts/figtree.woff2'); font-weight: 300 900; font-style: normal; unicode-range: U+0000-00FF; }`,
+    );
+    const themeCss = `@font-face { font-family: "Figtree"; src: url('/fonts/figtree.woff2'); font-weight: 300 900; font-style: normal; font-display: swap; }
+.theme-var-ui-forest { --c: 1 }`;
+
+    const extracted = extractThemeOnlyCss(themeCss, 'forest', { baseFontFaces });
+    expect(extractFontFaces(extracted)).toHaveLength(0);
+    expect(extracted).toContain('.theme-var-ui-forest { --c: 1 }');
+  });
+
+  it('keeps faces whose descriptors differ in family, weight, style or src', () => {
+    const baseFontFaces = extractFontFaces(
+      `@font-face { font-family: "Figtree"; src: url('/fonts/figtree.woff2'); font-weight: 300 900; font-style: normal; }`,
+    );
+    const themeCss = `@font-face { font-family: "Figtree"; src: url('/fonts/figtree-italic.woff2'); font-weight: 300 900; font-style: italic; }
+@font-face { font-family: "Figtree"; src: url('/fonts/figtree.woff2'); font-weight: 400; font-style: normal; }
+.theme-var-ui-forest { --c: 1 }`;
+
+    const extracted = extractThemeOnlyCss(themeCss, 'forest', { baseFontFaces });
+    expect(extractFontFaces(extracted)).toHaveLength(2);
   });
 });

@@ -11,4 +11,5 @@ const docsRoot = fileURLToPath(new URL('..', import.meta.url));
 await buildDocsThemeStyles({
   root: docsRoot,
   presets: [...docsThemePresets],
+  typestylesEntry: 'typestyles-entry.ts',
 });
