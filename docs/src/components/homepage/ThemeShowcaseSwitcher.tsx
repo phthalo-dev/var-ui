@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, type RefObject } from 'react';
+import { formatOklch } from '@/lib/formatOklch';
 import { homeBento } from '@/styles/homeBento';
 import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
 import type { ShowcaseThemeId } from '@/themes/presets';
@@ -33,11 +34,28 @@ const SWATCHES = [
   'var(--var-ui-color-text-primary)',
 ] as const;
 
+/**
+ * A colour token as one notation: resolved through a probe's `color` (so `var()` chains and
+ * `light-dark()` settle to the mode in use) and formatted as `oklch()`, whatever the theme
+ * authored (`#hex`, `rgb()`, `oklch()`).
+ */
+function resolveColor(element: HTMLElement, property: string): string {
+  const probe = document.createElement('span');
+  probe.hidden = true;
+  probe.style.color = `var(${property})`;
+  element.append(probe);
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  return formatOklch(resolved);
+}
+
 function readTokens(element: HTMLElement | null | undefined): string[] {
   if (!element) return READOUT.map(() => '…');
   const style = getComputedStyle(element);
   return READOUT.map(([, property]) => {
     const value = style.getPropertyValue(property).trim();
+    if (!value) return value;
+    if (property.includes('-color-')) return resolveColor(element, property);
     return property.endsWith('fontFamily-body') ? (value.split(',')[0] ?? value) : value;
   });
 }

@@ -35,4 +35,8 @@ Marketing-grade primitives and fixes:
 - `Switch` / `Checkbox` / `Radio`: the control root is `position: relative`, so the visually-hidden native input sits on the control. It used to resolve against a distant positioned ancestor, and focusing or clicking a control inside a scroll container scrolled that ancestor (blanking an app shell).
 - `Layout` content / panel scrollers and `AppShell` main are containing blocks (`position: relative`), so absolutely positioned descendants scroll with them.
 - `CodeBlock`: new `fontSize` var (defaults to `fontSize.sm`) for the code and line numbers.
+- `atDarkMode()`: emits its two pinned-dark selectors as separate keys, so styles nested under it (`& child`) apply on both branches. Before, a nested rule also matched the host itself, which turned the whole docs page italic and bold after switching to dark mode.
+- `Checkbox` / `CheckboxGroup`: the ✓ / − indicator is `aria-hidden`, so a checked box's accessible name no longer gains a leading "✓".
+- `Code`: new `nowrap` boolean (`inlineCode` recipe `nowrap` variant) keeps a snippet such as `@var-ui/react` on one line. New Astro `Code` component with the same props.
+- `ChatMessageBubble`: the bubble is `inline-block` instead of a flex column, so inline markup (`<code>`, links, emphasis) flows with the message text instead of breaking onto its own row.
 - `@var-ui/cli`: republish the generated docs catalog for the component changes above.

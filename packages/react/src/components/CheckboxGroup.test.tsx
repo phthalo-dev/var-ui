@@ -52,4 +52,10 @@ describe('CheckboxGroup', () => {
     render(<CheckboxGroup label="Colors" options={options} className="custom" />);
     expect(screen.getByRole('group', { name: 'Colors' }).className).toContain('custom');
   });
+
+  it("keeps the indicator glyph out of each option's accessible name", () => {
+    render(<CheckboxGroup options={options} defaultValue={['green']} />);
+    expect(screen.getByRole('checkbox', { name: 'Green' })).toBeTruthy();
+    expect(screen.getByRole('checkbox', { name: 'Red' })).toBeTruthy();
+  });
 });

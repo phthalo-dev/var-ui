@@ -24,6 +24,7 @@ export const homeInspector = typestyles.recipe({
     'computedRow',
     'computedName',
     'computedValue',
+    'computedNote',
     'swatch',
     'empty',
     'boxModel',
@@ -162,6 +163,13 @@ export const homeInspector = typestyles.recipe({
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         color: t.color.text.primary.var,
+      },
+      // Where a resolved value came from (the token it reads), in the comment colour.
+      computedNote: {
+        minWidth: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        color: t.color.text.secondary.var,
       },
       swatch: {
         flexShrink: 0,

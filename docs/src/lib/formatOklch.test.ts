@@ -16,4 +16,15 @@ describe('formatOklch', () => {
       'color-mix(in oklch, red 50%, blue)',
     );
   });
+
+  test('converts color(srgb …), the computed form of color-mix(in srgb …)', () => {
+    expect(formatOklch('color(srgb 1 0 0)')).toBe('oklch(0.628 0.258 29)');
+    expect(formatOklch('color(srgb 1 1 1)')).toBe('oklch(1 0 0)');
+    expect(formatOklch('color(srgb 0.6068 0.3958 0.3992)')).toMatch(/^oklch\(0\.\d+ 0\.\d+ \d+\)$/);
+    expect(formatOklch('color(srgb 0 0 0 / 0.5)')).toBe('oklch(0 0 0 / 0.5)');
+  });
+
+  test('keeps a translucent rgba() alpha', () => {
+    expect(formatOklch('rgba(0, 0, 0, 0.25)')).toBe('oklch(0 0 0 / 0.25)');
+  });
 });

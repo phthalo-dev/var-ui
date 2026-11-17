@@ -73,8 +73,12 @@ export function atMoreContrast(style: VariantOptionStyle) {
  * or an ancestor wins over the OS preference, including a light pin inside an OS-dark page.
  */
 export function atDarkMode(style: VariantOptionStyle) {
+  // Two keys, not one `A &, &B` list: TypeStyles appends nested `& child` selectors only to
+  // the last item of a list parent, so the first item matched the host itself
+  // (phthalo-dev/typestyles#335).
   return {
-    [`${pinnedDark} &, &${pinnedDark}`]: style,
+    [`${pinnedDark} &`]: style,
+    [`&${pinnedDark}`]: style,
     '@media (prefers-color-scheme: dark)': {
       [`&:not(${pinnedLight}):not(${pinnedLight} *)`]: style,
     },

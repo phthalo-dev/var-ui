@@ -42,6 +42,35 @@ const INPUT_ROLES: Record<string, string> = {
   range: 'slider',
 };
 
+/**
+ * Text a screen reader takes from an element's content: `aria-hidden` and `hidden` subtrees (such
+ * as a checkbox's ✓ indicator) are skipped, as the accessible-name algorithm skips them.
+ */
+function textFromContent(node: Node): string {
+  if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? '';
+  if (!(node instanceof Element)) return '';
+  if (node.getAttribute('aria-hidden') === 'true' || node.hasAttribute('hidden')) return '';
+  if (node instanceof HTMLInputElement) return '';
+  return Array.from(node.childNodes, textFromContent).join('');
+}
+
+/** The accessible name: `aria-label`, then `aria-labelledby`, then `<label>`, then content. */
+function accessibleName(element: Element): string {
+  const label = element.getAttribute('aria-label');
+  if (label) return label;
+  const labelledBy = element.getAttribute('aria-labelledby');
+  if (labelledBy) {
+    return labelledBy
+      .split(/\s+/)
+      .map((id) => document.getElementById(id))
+      .map((node) => (node ? textFromContent(node) : ''))
+      .join(' ');
+  }
+  const labels = element instanceof HTMLInputElement ? element.labels : null;
+  if (labels && labels.length > 0) return Array.from(labels, textFromContent).join(' ');
+  return textFromContent(element);
+}
+
 /** Role, accessible name and state of the focused element, as a screen reader would get them. */
 function describe(element: Element): Pick<Entry, 'role' | 'name' | 'state'> {
   const input = element instanceof HTMLInputElement ? element : null;
@@ -50,14 +79,7 @@ function describe(element: Element): Pick<Entry, 'role' | 'name' | 'state'> {
     (input
       ? (INPUT_ROLES[input.type] ?? 'textbox')
       : (IMPLICIT_ROLES[element.tagName] ?? element.tagName.toLowerCase()));
-  const labelled = element.getAttribute('aria-labelledby');
-  const name =
-    element.getAttribute('aria-label') ??
-    (labelled ? document.getElementById(labelled)?.textContent : null) ??
-    input?.labels?.[0]?.textContent ??
-    element.closest('label')?.textContent ??
-    element.textContent ??
-    '';
+  const name = accessibleName(element);
   const checked =
     element.getAttribute('aria-checked') ??
     element.getAttribute('aria-pressed') ??
@@ -75,12 +97,16 @@ function describe(element: Element): Pick<Entry, 'role' | 'name' | 'state'> {
   };
 }
 
-/** What a keyboard pass over the panel reports; shown until the visitor tries it. */
+/**
+ * What a keyboard pass over the panel reports, newest first; shown until the visitor tries it.
+ * It ends in the panel's default state (Team selected, notifications on, not pinned). Tab enters
+ * the segmented control on its first segment today (var-ui#179); update row -4 when that's fixed.
+ */
 const EXAMPLE: Entry[] = [
-  { id: -1, keys: 'Space', role: 'switch', name: 'Notify subscribers', state: 'checked=false' },
+  { id: -1, keys: 'Tab', role: 'checkbox', name: 'Pin to top', state: 'checked=false' },
   { id: -2, keys: 'Tab', role: 'switch', name: 'Notify subscribers', state: 'checked=true' },
-  { id: -3, keys: '→', role: 'radio', name: 'Public', state: 'checked=true' },
-  { id: -4, keys: 'Tab', role: 'radio', name: 'Team', state: 'checked=true' },
+  { id: -3, keys: '→', role: 'radio', name: 'Team', state: 'checked=true' },
+  { id: -4, keys: 'Tab', role: 'radio', name: 'Private', state: 'checked=false' },
   { id: -5, keys: 'Tab', role: 'button', name: 'More actions', state: 'expanded=false' },
 ];
 
@@ -95,6 +121,9 @@ export default function KeyboardDemo() {
   const shown = [...entries, ...EXAMPLE.slice(0, Math.max(0, LOG_SIZE - entries.length))];
   const nextId = useRef(0);
   const pendingKeys = useRef<string | null>(null);
+  // The focused element while focus is inside the demo (React tree, so the menu popup counts
+  // wherever it is portalled); null once focus leaves, so Tab out to the page isn't logged.
+  const focused = useRef<Element | null>(null);
 
   const record = useCallback((target: Element | null) => {
     if (!target) return;
@@ -104,20 +133,34 @@ export default function KeyboardDemo() {
     setEntries((previous) => [{ id, keys, ...describe(target) }, ...previous].slice(0, LOG_SIZE));
   }, []);
 
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    // Capture phase: components stop some keys (Space on a switch) from bubbling.
+  // Read on key-up, after the component has acted: a checkbox or switch toggles on Space's
+  // key-up, so reading on key-down can report the state from before the press.
+  // Capture phase: components stop some key events from bubbling.
+  const onKeyUp = (event: KeyboardEvent<HTMLDivElement>) => {
     const label = KEY_LABELS[event.key];
     if (!label) return;
     // One chip per press: Shift+Tab reads as "⇧ Tab".
     pendingKeys.current = event.shiftKey && event.key === 'Tab' ? `⇧ ${label}` : label;
-    // Let the component handle the key, then read where focus and state ended up.
-    requestAnimationFrame(() => record(document.activeElement));
+    requestAnimationFrame(() => {
+      const target = document.activeElement;
+      if (target && target === focused.current) record(target);
+      else pendingKeys.current = null;
+    });
   };
 
   return (
     <IconProvider icons={defaultIcons}>
       <div className={k.root.className}>
-        <div className={k.demo.className} onKeyDownCapture={onKeyDown}>
+        <div
+          className={k.demo.className}
+          onKeyUpCapture={onKeyUp}
+          onFocusCapture={(event) => {
+            focused.current = event.target;
+          }}
+          onBlurCapture={() => {
+            focused.current = null;
+          }}
+        >
           <TextField
             className={k.phoneHidden.className}
             defaultValue="Spring launch notes"

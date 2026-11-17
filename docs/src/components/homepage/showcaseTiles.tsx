@@ -15,6 +15,7 @@ import {
   ChatSendButton,
   ChatToolCalls,
   Checkbox,
+  Code,
   Heading,
   HStack,
   Meter,
@@ -145,7 +146,8 @@ export function AgentChatTile({ className }: TileProps) {
                 ]}
               />
               <ChatMessageBubble>
-                Done. I used SegmentedControl and Card from @var-ui/react, so it follows your theme.
+                Done. I used SegmentedControl and Card from <Code nowrap>@var-ui/react</Code>, so it
+                follows your theme.
               </ChatMessageBubble>
             </ChatMessage>
             <ChatMessage sender="user">

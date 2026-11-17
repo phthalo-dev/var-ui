@@ -1,4 +1,4 @@
-import { atProperty } from 'typestyles';
+import { atProperty, variant } from 'typestyles';
 import { typestyles } from '../runtime';
 import { border } from '../internal/border';
 import { designTokens as t } from '../tokens';
@@ -8,11 +8,16 @@ import { designTokens as t } from '../tokens';
  *
  * ```tsx
  * <code className={inlineCode().className}>theme.className</code>
+ * <code className={inlineCode({ nowrap: true }).className}>@var-ui/react</code>
  * ```
  */
 export const inlineCode = typestyles.recipe({
   name: 'inline-code',
   layer: 'components',
+  variants: {
+    /** Keeps the snippet on one line: package names and identifiers never split at `-` or `/`. */
+    nowrap: variant.boolean({ default: false }),
+  },
   vars: {
     background: {
       ...atProperty.color,
@@ -34,6 +39,12 @@ export const inlineCode = typestyles.recipe({
         backgroundColor: vars.background.var,
         ...border(vars.border.var),
         borderRadius: t.radius.sm.var,
+      },
+      variants: {
+        nowrap: {
+          false: {},
+          true: { whiteSpace: 'nowrap' },
+        },
       },
     };
   },

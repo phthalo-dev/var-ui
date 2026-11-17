@@ -973,7 +973,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "inline-code": {
-    "axes": [],
+    "axes": [
+      "nowrap",
+    ],
     "slots": {
       "base": "var-ui-inline-code",
     },

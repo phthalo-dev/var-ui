@@ -7,7 +7,7 @@ import homepagePreloads from 'virtual:homepage-preloads';
 import HeroAppWindow from '../components/homepage/HeroAppWindow.astro';
 import LiveInspector from '../components/homepage/LiveInspector';
 import KeyboardDemo from '../components/homepage/KeyboardDemo';
-import { Button, Heading, Text, cx } from '@var-ui/astro';
+import { Button, Code, Heading, Text, cx } from '@var-ui/astro';
 import VariableRibbons from '../components/homepage/VariableRibbons.astro';
 import TokenCascade from '../components/homepage/TokenCascade.astro';
 import { SPECTRUM_STEPS, homeSpectrum } from '../styles/homeSpectrum';
@@ -73,7 +73,7 @@ const facts = [
           One system. Every theme.
         </Heading>
         <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
-          Everything below is live <code>@var-ui/react</code>. Pick a theme and the whole product
+          Everything below is live <Code nowrap>@var-ui/react</Code>. Pick a theme and the whole product
           UI repaints from CSS variables alone, while the readout shows the values doing the
           work.
         </Text>
@@ -116,8 +116,8 @@ const facts = [
             <Heading level={3} size="display-sm">One variable, every component.</Heading>
             <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
               A token feeds a rule you can read, and the rule paints every component that uses
-              it. Re-point <code>--color-accent</code> and everything downstream follows, with the
-              same names and props in <code>@var-ui/react</code>, <code>@var-ui/astro</code>, or
+              it. Re-point <Code nowrap>--color-accent</Code> and everything downstream follows, with the
+              same names and props in <Code nowrap>@var-ui/react</Code>, <Code nowrap>@var-ui/astro</Code>, or
               plain HTML.
             </Text>
           </div>

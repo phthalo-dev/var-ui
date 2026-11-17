@@ -45,8 +45,10 @@ export const chatMessageBubble = typestyles.recipe({
     return {
       base: {
         root: {
-          display: 'inline-flex',
-          flexDirection: 'column',
+          // A block formatting context, not a flex column: inline markup in a message
+          // (`<code>`, links, emphasis) flows with the text instead of becoming its own row,
+          // and block children (paragraphs, lists) still stack.
+          display: 'inline-block',
           maxWidth: '100%',
           padding: `${t.space.sm.var} ${t.space.md.var}`,
           borderRadius: t.radius.lg.var,

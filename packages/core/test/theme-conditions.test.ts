@@ -81,3 +81,34 @@ describe('theme conditions and colorModes', () => {
     expect(css).toContain('transition: none');
   });
 });
+
+describe('atDarkMode', () => {
+  beforeEach(() => {
+    reset();
+  });
+
+  it('keeps nested child selectors on every dark-mode branch', async () => {
+    const { atDarkMode } = await import('../src/theme/conditions');
+    const { typestyles } = await import('../src/runtime');
+    typestyles.recipe({
+      name: 'dark-nesting-fixture',
+      slots: ['root'],
+      styles: {
+        base: {
+          root: { ...atDarkMode({ '& .child': { fontStyle: 'italic' } }) },
+        },
+      },
+    });
+    const css = getRegisteredCss();
+    const italicSelectors = [...css.matchAll(/([^{}]+)\{[^}]*font-style:\s*italic/g)].flatMap((m) =>
+      m[1]
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s.includes('dark-nesting-fixture')),
+    );
+    expect(italicSelectors.length).toBeGreaterThan(0);
+    for (const selector of italicSelectors) {
+      expect(selector).toMatch(/\.child$/);
+    }
+  });
+});

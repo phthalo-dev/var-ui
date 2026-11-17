@@ -87,7 +87,7 @@ function openingTag(element: Element, multiline: boolean): string {
 /** Properties listed in the Computed tab, in devtools' alphabetical order. */
 const COMPUTED_PROPERTIES = [
   'background-color',
-  'border-bottom-color',
+  'border-color',
   'border-radius',
   'color',
   'display',
@@ -100,6 +100,62 @@ const COMPUTED_PROPERTIES = [
 ] as const;
 
 const isColor = (value: string) => /^(rgb|oklch|oklab|hsl|#|color\()/.test(value);
+
+type ComputedEntry = { name: string; value: string; token?: string };
+
+const SIDES = ['top', 'right', 'bottom', 'left'] as const;
+
+const closestMatch = (element: Element, selector: string) => {
+  try {
+    return element.closest(selector) != null;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * The authored `border-radius` token of the last rule that matches (`var(--var-ui-radius-full)`)
+ * and that token's declared value (`624rem`), read from the stylesheets. The resolved px value of
+ * a pill radius (9984px) reads like a bug, so the Computed tab shows what the theme declared.
+ */
+function radiusToken(element: Element): { token: string; declared: string } | undefined {
+  const rules = collectStyleRules();
+  let token: string | undefined;
+  for (const rule of rules) {
+    const authored = rule.style.getPropertyValue('border-radius');
+    if (!authored || !element.matches(rule.selectorText)) continue;
+    token = /^var\((--[\w-]+)\)$/.exec(authored.trim())?.[1];
+  }
+  if (!token) return undefined;
+  let declared = '';
+  for (const rule of rules) {
+    const value = rule.style.getPropertyValue(token).trim();
+    if (value && closestMatch(element, rule.selectorText)) declared = value;
+  }
+  return declared ? { token, declared } : undefined;
+}
+
+/** One Computed row per listed property; four equal border sides collapse to `border-color`. */
+function readComputed(element: Element, style: CSSStyleDeclaration): ComputedEntry[] {
+  // One color notation, matching the tokens (themes and `color-mix(in srgb …)` resolve to
+  // `rgb()` / `color(srgb …)`).
+  const tidy = (value: string) => (isColor(value) ? formatOklch(value) : value);
+  return COMPUTED_PROPERTIES.flatMap((name): ComputedEntry[] => {
+    if (name === 'border-color') {
+      const sides = SIDES.map((side) =>
+        tidy(style.getPropertyValue(`border-${side}-color`).trim()),
+      );
+      return sides.every((value) => value === sides[0])
+        ? [{ name, value: sides[0]! }]
+        : SIDES.map((side, index) => ({ name: `border-${side}-color`, value: sides[index]! }));
+    }
+    if (name === 'border-radius') {
+      const radius = radiusToken(element);
+      if (radius) return [{ name, value: radius.declared, token: `var(${radius.token})` }];
+    }
+    return [{ name, value: tidy(style.getPropertyValue(name).trim()) }];
+  });
+}
 
 type Box = { margin: number[]; border: number[]; padding: number[]; width: number; height: number };
 
@@ -130,7 +186,7 @@ export default function LiveInspector() {
   const [rules, setRules] = useState<MatchedRule[]>([]);
   const [markup, setMarkup] = useState('<button class="var-ui-button">');
   const [size, setSize] = useState('');
-  const [computed, setComputed] = useState<[string, string][]>([]);
+  const [computed, setComputed] = useState<ComputedEntry[]>([]);
   const [box, setBox] = useState<Box | null>(null);
   const [filter, setFilter] = useState('');
 
@@ -151,13 +207,7 @@ export default function LiveInspector() {
       const rect = button.getBoundingClientRect();
       setSize(`${Math.round(rect.width)} × ${Math.round(rect.height)}`);
       const style = getComputedStyle(button);
-      setComputed(
-        COMPUTED_PROPERTIES.map((name) => {
-          const value = style.getPropertyValue(name).trim();
-          // One color notation, matching the tokens (some themes resolve to rgb()).
-          return [name, isColor(value) ? formatOklch(value) : value];
-        }),
-      );
+      setComputed(readComputed(button, style));
       setBox(readBox(style));
       setRules(matchVariantRules(button));
       setMarkup(openingTag(button, narrow));
@@ -174,7 +224,7 @@ export default function LiveInspector() {
         `${rule.selector} {\n${rule.declarations.map(([p, v]) => `  ${p}: ${v};`).join('\n')}\n}`,
     )
     .join('\n\n');
-  const visibleComputed = computed.filter(([name]) => name.includes(filter.trim().toLowerCase()));
+  const visibleComputed = computed.filter(({ name }) => name.includes(filter.trim().toLowerCase()));
 
   const panel = (
     <Tabs
@@ -207,7 +257,7 @@ export default function LiveInspector() {
                 value={filter}
               />
               <dl className={s.computedList.className}>
-                {visibleComputed.map(([name, value]) => (
+                {visibleComputed.map(({ name, value, token }) => (
                   <div className={s.computedRow.className} key={name}>
                     <dt className={s.computedName.className}>{name}</dt>
                     <dd className={s.computedValue.className}>
@@ -219,6 +269,7 @@ export default function LiveInspector() {
                         />
                       ) : null}
                       {value}
+                      {token ? <span className={s.computedNote.className}>{token}</span> : null}
                     </dd>
                   </div>
                 ))}

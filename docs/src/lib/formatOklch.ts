@@ -1,7 +1,8 @@
 /**
  * Formats a resolved CSS color as `oklch(L C H)` so token readouts share one notation whatever
- * the theme authored (`#hex` and `rgb()` are converted; `oklch()` is tidied; anything else,
- * such as `color-mix()` or a keyword, is returned as is).
+ * the theme authored or the browser resolved: `#hex`, `rgb()` and `color(srgb …)` (what a
+ * computed `color-mix(in srgb …)` serialises to) are converted, `oklch()` is tidied, and anything
+ * else, such as an unresolved `color-mix()` or a keyword, is returned as is.
  */
 export function formatOklch(value: string): string {
   const color = value.trim();
@@ -35,9 +36,22 @@ function parseRgb(color: string): { r: number; g: number; b: number; alpha?: str
   }
   const match =
     /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*(?:[,/]\s*([\d.]+%?))?\s*\)$/i.exec(color);
-  if (!match) return null;
-  const alpha = match[4] && match[4] !== '1' && match[4] !== '100%' ? `/ ${match[4]}` : undefined;
-  return { r: +match[1]!, g: +match[2]!, b: +match[3]!, alpha };
+  if (match) return { r: +match[1]!, g: +match[2]!, b: +match[3]!, alpha: alphaOf(match[4]) };
+  const srgb =
+    /^color\(\s*srgb\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*(?:\/\s*([\d.]+%?))?\s*\)$/i.exec(
+      color,
+    );
+  if (!srgb) return null;
+  return {
+    r: +srgb[1]! * 255,
+    g: +srgb[2]! * 255,
+    b: +srgb[3]! * 255,
+    alpha: alphaOf(srgb[4]),
+  };
+}
+
+function alphaOf(alpha: string | undefined): string | undefined {
+  return alpha && alpha !== '1' && alpha !== '100%' ? `/ ${alpha}` : undefined;
 }
 
 /** sRGB 0–255 → OKLab (Björn Ottosson's reference matrices). */

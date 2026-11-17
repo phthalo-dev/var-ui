@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { inlineCode } from '@var-ui/core/components/inlineCode';
+import { mergeProps } from '../utils';
+
+type Props = HTMLAttributes<'code'> & {
+  /** Keeps the snippet on one line, so a package name such as `@var-ui/react` never splits. */
+  nowrap?: boolean;
+  className?: string;
+};
+
+const { nowrap = false, className, ...rest } = Astro.props;
+const rp = mergeProps(inlineCode({ nowrap }), className);
+---
+<code {...rest} {...rp}><slot /></code>
