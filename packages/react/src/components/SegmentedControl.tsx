@@ -1,9 +1,10 @@
 import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
+  Radio as AriaRadio,
+  RadioGroup as AriaRadioGroup,
   ToggleButton as AriaToggleButton,
-  ToggleButtonGroup as AriaToggleButtonGroup,
-  type ToggleButtonGroupProps as RACToggleButtonGroupProps,
+  type RadioGroupProps as RACRadioGroupProps,
   type ToggleButtonProps as RACToggleButtonProps,
 } from 'react-aria-components';
 import { segmentedControl } from '@var-ui/core/components/segmentedControl';
@@ -13,7 +14,7 @@ import { observeSegmentedControlIndicator } from '@var-ui/core/components/indica
 import { mergeProps } from 'typestyles';
 import { mergeRefs } from '../internal/mergeRefs';
 import { useControlSize } from '../internal/controlSizeContext';
-import { selectionProps, toRacProps, type Option } from '../internal/racProps';
+import { toRacProps, type Option } from '../internal/racProps';
 import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomProps';
 
 export type SegmentedControlOption = Omit<Option, 'label'> & {
@@ -53,7 +54,7 @@ export type SegmentedControlProps = Omit<
 };
 
 /**
- * Single-select segmented control built on `ToggleButtonGroup`.
+ * Single-select segmented control built on `RadioGroup`.
  *
  * ```tsx
  * <SegmentedControl options={[{ value: 'list', label: 'List' }, { value: 'grid', label: 'Grid' }]} />
@@ -76,9 +77,9 @@ export function SegmentedControl({
   const rootRef = useRef<HTMLDivElement>(null);
   const setRoot = useMemo(() => mergeRefs(rootRef, ref), [ref]);
   const isControlled = value !== undefined;
-  const [uncontrolledValue, setUncontrolledValue] = useState<string | null>(
-    defaultValue !== undefined ? defaultValue : (options[0]?.value ?? null),
-  );
+  const resolvedDefaultValue =
+    defaultValue !== undefined ? defaultValue : (options[0]?.value ?? null);
+  const [uncontrolledValue, setUncontrolledValue] = useState<string | null>(resolvedDefaultValue);
   const activeValue = isControlled ? value : uncontrolledValue;
 
   useLayoutEffect(() => {
@@ -87,38 +88,35 @@ export function SegmentedControl({
     return observeSegmentedControlIndicator(root);
   }, [activeValue, options]);
 
-  const toArray = (v: string | null | undefined) => (v == null ? [] : [v]);
-  const selection = selectionProps({
-    value: isControlled ? toArray(value) : undefined,
-    defaultValue: isControlled || defaultValue === undefined ? undefined : toArray(defaultValue),
-    onValueChange: (values) => {
-      const next = values[0] ?? null;
+  const selection = toRacProps({
+    value: isControlled ? value : undefined,
+    defaultValue: isControlled ? undefined : resolvedDefaultValue,
+    onValueChange: (next: string | null) => {
       if (!isControlled) setUncontrolledValue(next);
       onValueChange?.(next);
     },
   });
 
   return (
-    <AriaToggleButtonGroup
-      {...(props as RACToggleButtonGroupProps)}
+    <AriaRadioGroup
+      {...(props as RACRadioGroupProps)}
       {...toRacProps({ disabled })}
-      {...(selection as object)}
+      {...selection}
       ref={setRoot}
-      selectionMode="single"
       {...mergeProps(s.root, className)}
     >
       {options.map((option) => (
-        <AriaToggleButton
+        <AriaRadio
           key={option.value}
-          id={option.value}
+          value={option.value}
           aria-label={option['aria-label']}
           isDisabled={option.disabled}
           {...mergeProps(t)}
         >
           {option.label}
-        </AriaToggleButton>
+        </AriaRadio>
       ))}
-    </AriaToggleButtonGroup>
+    </AriaRadioGroup>
   );
 }
 

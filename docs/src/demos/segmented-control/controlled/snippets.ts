@@ -7,6 +7,7 @@ import { useState } from 'react';
 const [value, setValue] = useState<string | null>('list');
 
 <SegmentedControl
+  aria-label="View"
   value={value}
   onValueChange={setValue}
   options={[

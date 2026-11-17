@@ -59,6 +59,7 @@ describe('SegmentedControl', () => {
   it('renders toggle segments', () => {
     wrap(
       <SegmentedControl
+        aria-label="View"
         defaultValue="list"
         options={[
           { value: 'list', label: 'List' },

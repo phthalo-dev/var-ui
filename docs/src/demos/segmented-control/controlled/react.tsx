@@ -6,6 +6,7 @@ export default function Preview() {
 
   return (
     <SegmentedControl
+      aria-label="View"
       value={value}
       onValueChange={setValue}
       options={[
