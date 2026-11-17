@@ -1,0 +1,63 @@
+---
+import { copyButton } from '@var-ui/core/components/copyButton';
+import type { HTMLAttributes } from 'astro/types';
+import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
+import { combine } from '../utils';
+
+interface Props extends Omit<HTMLAttributes<'button'>, 'children'> {
+  /** Text written to the clipboard when the button is clicked. */
+  value: string;
+  /** Milliseconds before the copied state resets. @default 2000 */
+  timeout?: number;
+  /** Label before a copy and after the copied state resets. @default Copy */
+  copyLabel?: string;
+  /** Label after a successful copy. @default Copied */
+  copiedLabel?: string;
+  /** Label after a failed copy. @default Error */
+  errorLabel?: string;
+  className?: string;
+}
+
+const {
+  value,
+  timeout = 2000,
+  copyLabel = 'Copy',
+  copiedLabel = 'Copied',
+  errorLabel = 'Error',
+  className,
+  ...rest
+} = Astro.props as Props;
+
+const cb = copyButton();
+
+// The progressive-enhancement script swaps the recipe's variant classes by
+// rewriting `className`; bake every state (plus the consumer's `className`)
+// into data attributes so the button stays in sync with this render.
+const idle = combine(cb.button, cb.buttonIdle, className);
+const copied = combine(cb.button, cb.buttonCopied, className);
+const error = combine(cb.button, cb.buttonError, className);
+---
+
+<button
+  type="button"
+  {...rest}
+  data-var-ui-copy-button
+  data-value={value}
+  data-timeout={timeout}
+  data-copy-label={copyLabel}
+  data-copied-label={copiedLabel}
+  data-error-label={errorLabel}
+  data-class-idle={idle.className}
+  data-class-copied={copied.className}
+  data-class-error={error.className}
+  aria-label={copyLabel}
+  {...idle}
+>
+  <span data-copy-button-icon set:html={copySvg} />
+  <span data-copy-button-text>{copyLabel}</span>
+</button>
+
+<script>
+  import { initCopyButtons } from '../scripts/copyButton';
+  initCopyButtons();
+</script>
