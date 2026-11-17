@@ -58,11 +58,11 @@ describe('BentoShowcase', () => {
     expect(htmlShowcase.textContent).toContain('Invite a teammate');
   });
 
-  it('applies the selected theme class and inherits color-scheme from the docs site', () => {
+  it('applies the selected theme class and lets the docs site pin the color-scheme', () => {
     renderShowcase('forest');
     const container = screen.getByTestId('bento-showcase') as HTMLElement;
     expect(container.className).toContain(forestTheme.className);
     expect(container.getAttribute('data-color-mode')).toBeNull();
-    expect(container.style.colorScheme).toBe('inherit');
+    expect(container.style.colorScheme).toBe('');
   });
 });

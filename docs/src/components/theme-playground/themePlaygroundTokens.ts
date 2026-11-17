@@ -186,7 +186,6 @@ export function buildColorOverrideVars(
 
 export function buildPreviewOverrideStyle(state: ThemePlaygroundState): Record<string, string> {
   return {
-    colorScheme: 'inherit',
     ...buildColorOverrideVars(state.colors),
     ...buildFontFamilyOverrideVars(state.typography),
     ...buildFontSizeOverrideVars(state.typography),
