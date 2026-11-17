@@ -3,7 +3,17 @@
   "changelog": ["@changesets/changelog-github", { "repo": "phthalo-dev/var-ui" }],
   "commit": false,
   "fixed": [],
-  "linked": [["@var-ui/core", "@var-ui/react"]],
+  "fixed": [
+    [
+      "@var-ui/astro",
+      "@var-ui/cli",
+      "@var-ui/core",
+      "@var-ui/docs",
+      "@var-ui/docs-components",
+      "@var-ui/icons",
+      "@var-ui/react"
+    ]
+  ],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
