@@ -10,6 +10,7 @@ import {
 } from '@var-ui/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { HighlightedCodeBlock } from '@/components/HighlightedCodeBlock';
+import { formatOklch } from '@/lib/formatOklch';
 import { homeInspector } from '@/styles/homeInspector';
 
 type Tone = 'accent' | 'neutral' | 'danger';
@@ -65,8 +66,11 @@ function matchVariantRules(element: Element): MatchedRule[] {
   );
 }
 
-/** The element's opening tag as devtools shows it: class plus the recipe's data attributes. */
-function openingTag(element: Element): string {
+/**
+ * The element's opening tag as devtools shows it: class plus the recipe's data attributes, on
+ * one line (attributes break onto their own lines on phones).
+ */
+function openingTag(element: Element, multiline: boolean): string {
   const attributes = element
     .getAttributeNames()
     .filter((name) => name === 'class' || /^data-(tone|appearance|size|pill)$/.test(name))
@@ -76,7 +80,8 @@ function openingTag(element: Element): string {
         ? name
         : `${name}="${value}"`;
     });
-  return `<${element.localName}\n  ${attributes.join('\n  ')}>`;
+  const separator = multiline ? '\n  ' : ' ';
+  return `<${element.localName}${separator}${attributes.join(separator)}>`;
 }
 
 /** Properties listed in the Computed tab, in devtools' alphabetical order. */
@@ -129,24 +134,6 @@ export default function LiveInspector() {
   const [box, setBox] = useState<Box | null>(null);
   const [filter, setFilter] = useState('');
 
-  useLayoutEffect(() => {
-    const button = targetRef.current?.querySelector('.var-ui-button');
-    if (!button) return;
-    const read = () => {
-      const rect = button.getBoundingClientRect();
-      setSize(`${Math.round(rect.width)} × ${Math.round(rect.height)}`);
-      const style = getComputedStyle(button);
-      setComputed(COMPUTED_PROPERTIES.map((name) => [name, style.getPropertyValue(name).trim()]));
-      setBox(readBox(style));
-      setRules(matchVariantRules(button));
-      setMarkup(openingTag(button));
-    };
-    read();
-    // Styles may land after hydration in dev; read again once they settle.
-    const timer = window.setTimeout(read, 400);
-    return () => window.clearTimeout(timer);
-  }, [tone, appearance]);
-
   // Phones: the panel sits behind a "Show CSS" disclosure to keep the page short.
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
@@ -156,6 +143,30 @@ export default function LiveInspector() {
     query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
   }, []);
+
+  useLayoutEffect(() => {
+    const button = targetRef.current?.querySelector('.var-ui-button');
+    if (!button) return;
+    const read = () => {
+      const rect = button.getBoundingClientRect();
+      setSize(`${Math.round(rect.width)} × ${Math.round(rect.height)}`);
+      const style = getComputedStyle(button);
+      setComputed(
+        COMPUTED_PROPERTIES.map((name) => {
+          const value = style.getPropertyValue(name).trim();
+          // One color notation, matching the tokens (some themes resolve to rgb()).
+          return [name, isColor(value) ? formatOklch(value) : value];
+        }),
+      );
+      setBox(readBox(style));
+      setRules(matchVariantRules(button));
+      setMarkup(openingTag(button, narrow));
+    };
+    read();
+    // Styles may land after hydration in dev; read again once they settle.
+    const timer = window.setTimeout(read, 400);
+    return () => window.clearTimeout(timer);
+  }, [tone, appearance, narrow]);
 
   const css = rules
     .map(
@@ -179,7 +190,6 @@ export default function LiveInspector() {
                 code={css || '/* reading stylesheets… */'}
                 copyable={false}
                 language="css"
-                wrapLongLines
               />
             </div>
           ),

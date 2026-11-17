@@ -56,6 +56,11 @@ const codeBlockVarDefinitions = {
     initial: 'none',
     value: 'none',
   },
+  /** Font size of the code and line numbers (set it to fit long declarations in a narrow column). */
+  fontSize: {
+    syntax: '*',
+    value: t.fontSize.sm.var,
+  },
   /** Width of the right-edge fade on horizontally scrollable code (scroll-driven; 0 at the end). */
   scrollFade: {
     ...atProperty.length,
@@ -219,7 +224,7 @@ export const codeBlock = typestyles.recipe({
           margin: 0,
           padding: t.space.md.var,
           fontFamily: t.fontFamily.mono.var,
-          fontSize: t.fontSize.sm.var,
+          fontSize: vars.fontSize.var,
           lineHeight: 1.6,
           overflow: 'auto',
           backgroundColor: 'transparent',
@@ -265,7 +270,7 @@ export const codeBlock = typestyles.recipe({
         lineNumber: {
           minWidth: '2ch',
           textAlign: 'end',
-          fontSize: t.fontSize.sm.var,
+          fontSize: vars.fontSize.var,
           color: vars.lineNumberColor.var,
           opacity: 0.8,
           userSelect: 'none',

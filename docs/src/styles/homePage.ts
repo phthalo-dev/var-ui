@@ -199,9 +199,12 @@ export const homePage = typestyles.recipe({
       // ── Feature bento ───────────────────────────────────────────────────
       // "Why" rows: unboxed, alternating text/visual rows separated by hairlines. Only the
       // demos themselves carry panels.
+      // A hairline under the section intro too, so every proof starts the same way.
       features: {
         display: 'flex',
         flexDirection: 'column',
+        paddingTop: t.space.xxl.var,
+        borderTop: `1px solid ${t.color.border.default.var}`,
         '& > * + *': {
           marginTop: t.space.xxl.var,
           paddingTop: t.space.xxl.var,

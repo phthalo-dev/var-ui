@@ -14,21 +14,32 @@ export const homeRibbons = typestyles.recipe({
   styles: () => ({
     base: {
       root: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: t.space.xs.var,
         paddingBlock: t.space.md.var,
         paddingInline: t.space.md.var,
         borderBlock: `1px solid ${t.color.border.default.var}`,
         backgroundColor: t.color.background.surface.var,
       },
+      // Each list is one centred line on wide screens (tokens, then facts: about equal
+      // length); narrower screens wrap it; phones turn it into name/value rows.
       list: {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        gap: `${t.space.xs.var} ${t.space.xl.var}`,
+        gap: `${t.space.xs.var} ${t.space.lg.var}`,
+        width: '100%',
         maxWidth: '80rem',
         marginInline: 'auto',
         marginBlock: 0,
         padding: 0,
         listStyle: 'none',
+        // Phones: the long token declarations become name/value rows; the short facts wrap.
+        '&[data-tokens]': {
+          [belowMd]: { flexDirection: 'column', gap: 0, maxWidth: '30rem' },
+        },
+        [belowMd]: { columnGap: t.space.md.var },
       },
       item: {
         display: 'inline-flex',
@@ -38,19 +49,34 @@ export const homeRibbons = typestyles.recipe({
         fontFamily: t.fontFamily.mono.var,
         fontSize: t.fontSize.sm.var,
         color: t.color.text.secondary.var,
-        // Phones: a long name and its value break onto two lines instead of overflowing.
-        [belowMd]: { flexWrap: 'wrap', justifyContent: 'center', fontSize: t.fontSize.xs.var },
+        [belowMd]: { fontSize: t.fontSize.xs.var },
+        // Phones: a token name may wrap at its hyphens; its value stays on the same row.
+        '[data-tokens] > &': {
+          [belowMd]: {
+            display: 'flex',
+            alignItems: 'baseline',
+            paddingBlock: '0.3125rem',
+            borderBottom: `1px dashed ${t.color.border.default.var}`,
+            whiteSpace: 'normal',
+          },
+        },
       },
       swatch: {
+        flexShrink: 0,
+        alignSelf: 'center',
         width: '0.75rem',
         height: '0.75rem',
         borderRadius: t.radius.sm.var,
         boxShadow: `inset 0 0 0 1px color-mix(in oklch, ${t.color.text.primary.var} 20%, transparent)`,
       },
-      prop: { color: t.color.code.attr.var },
+      prop: {
+        color: t.color.code.attr.var,
+        '[data-tokens] &': { [belowMd]: { flex: '1 1 auto', minWidth: 0 } },
+      },
       value: {
         color: t.color.text.primary.var,
         fontWeight: t.fontWeight.semibold.var,
+        whiteSpace: 'nowrap',
       },
     },
   }),

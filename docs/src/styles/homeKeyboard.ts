@@ -27,9 +27,11 @@ export const homeKeyboard = typestyles.recipe({
         minWidth: 0,
         [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
       },
+      // Controls spread over the card's height, so it ends with the log instead of leaving a gap.
       demo: {
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'space-between',
         gap: t.space.lg.var,
         padding: t.space.lg.var,
         borderRadius: t.radius.lg.var,
@@ -45,8 +47,6 @@ export const homeKeyboard = typestyles.recipe({
       log: {
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '15rem',
-        [belowMd]: { minHeight: 0 },
         borderRadius: t.radius.lg.var,
         border: `1px solid ${t.color.border.default.var}`,
         backgroundColor: t.color.background.code.var,
@@ -66,20 +66,23 @@ export const homeKeyboard = typestyles.recipe({
       },
       entry: {
         display: 'grid',
-        gridTemplateColumns: '5rem minmax(0, 1fr)',
+        gridTemplateColumns: '4.5rem minmax(0, 1fr)',
+        [belowMd]: { gridTemplateColumns: '3.5rem minmax(0, 1fr)' },
         alignItems: 'center',
         gap: t.space.sm.var,
         paddingBlock: t.space.xs.var,
         paddingInline: t.space.md.var,
         borderBottom: `1px dashed ${t.color.border.default.var}`,
-        '&:first-of-type': { backgroundColor: t.color.tone.accent.subtleBackground.var },
-        // Phones: the three most recent entries are enough (the header div is the 1st of type).
-        '&:nth-of-type(n + 5)': { [belowMd]: { display: 'none' } },
+        // The newest row (the header is the first child).
+        '&:nth-child(2)': { backgroundColor: t.color.tone.accent.subtleBackground.var },
+        // Leftover example rows under the visitor's own entries.
+        '&[data-example]': { opacity: 0.5 },
+        // Phones: the three most recent entries are enough.
+        '&:nth-child(n + 5)': { [belowMd]: { display: 'none' } },
       },
       keys: {
         display: 'flex',
-        gap: t.space.xxs.var,
-        flexWrap: 'wrap',
+        whiteSpace: 'nowrap',
       },
       target: {
         minWidth: 0,
@@ -87,6 +90,8 @@ export const homeKeyboard = typestyles.recipe({
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         color: t.color.text.primary.var,
+        // Phones: wrap rather than truncate, so the state (the point of the demo) stays visible.
+        [belowMd]: { whiteSpace: 'normal', overflowWrap: 'anywhere' },
         '& b': { color: t.color.code.attr.var, fontWeight: t.fontWeight.normal.var },
       },
       // Phones keep the demo to its core controls.

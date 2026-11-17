@@ -116,27 +116,31 @@ export const homeInspector = typestyles.recipe({
         border: `1px solid ${t.color.border.default.var}`,
         backgroundColor: t.color.background.surface.var,
       },
+      // Element above its matched rules, full width, so declarations never wrap mid-identifier.
       styles: {
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 3fr)',
-        alignItems: 'start',
-        gap: t.space.md.var,
-        [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+        gridTemplateColumns: 'minmax(0, 1fr)',
+        gap: t.space.sm.var,
       },
       // Computed: devtools' property/value list, not code.
       computed: {
         display: 'flex',
         flexDirection: 'column',
         gap: t.space.sm.var,
-        maxWidth: '40rem',
       },
+      // Two columns of property rows across the full panel.
       computedList: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+        columnGap: t.space.xl.var,
+        alignContent: 'start',
         margin: 0,
         borderTop: `1px solid ${t.color.border.default.var}`,
+        [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
       },
       computedRow: {
         display: 'grid',
-        gridTemplateColumns: 'minmax(10rem, 14rem) minmax(0, 1fr)',
+        gridTemplateColumns: 'minmax(9rem, 12rem) minmax(0, 1fr)',
         alignItems: 'center',
         gap: t.space.md.var,
         paddingBlock: '0.375rem',
@@ -167,6 +171,7 @@ export const homeInspector = typestyles.recipe({
         boxShadow: `inset 0 0 0 1px ${mix(t.color.text.primary.var, 25)}`,
       },
       empty: {
+        gridColumn: '1 / -1',
         margin: 0,
         paddingBlock: t.space.sm.var,
         color: t.color.text.secondary.var,

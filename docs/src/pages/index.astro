@@ -90,6 +90,10 @@ const facts = [
           <span>Readable CSS. Real tokens.</span>
           <span>Any framework.</span>
         </Heading>
+        <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+          Three proofs, all running on this page: read the rules a component emits, re-point
+          the variable behind them, then drive the controls without a mouse.
+        </Text>
       </div>
 
       <div class={cx(hp.features)}>
@@ -103,7 +107,7 @@ const facts = [
               stylesheets.
             </Text>
           </div>
-          <LiveInspector client:visible />
+          <LiveInspector client:idle />
         </article>
 
         <article class={cx(hp.feature, hp.featureWide)}>
@@ -130,7 +134,7 @@ const facts = [
               what assistive tech is told.
             </Text>
           </div>
-          <KeyboardDemo client:visible />
+          <KeyboardDemo client:idle />
         </article>
       </div>
     </section>

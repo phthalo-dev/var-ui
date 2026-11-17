@@ -1,5 +1,5 @@
 import { keyframes } from 'typestyles';
-import { atReducedMotion, designTokens as t, typestyles } from '@var-ui/core';
+import { atReducedMotion, codeBlock, designTokens as t, typestyles } from '@var-ui/core';
 
 const belowLg = typestyles.breakpoint('lg', 'max');
 const fromLg = typestyles.breakpoint('lg', 'min');
@@ -34,9 +34,10 @@ export const homeCascade = typestyles.recipe({
     'step3',
     'token',
     'tokenSwatch',
-    'tokenText',
+    'tokenRow',
     'tokenName',
     'tokenValue',
+    'caption',
     'components',
     'connector',
     'connector1',
@@ -52,9 +53,11 @@ export const homeCascade = typestyles.recipe({
         gridTemplateColumns: 'minmax(0, 1fr)',
         rowGap: t.space.sm.var,
         [fromLg]: {
-          gridTemplateColumns: 'minmax(0, 0.85fr) 2rem minmax(0, 2.2fr) 2rem minmax(0, 0.85fr)',
+          gridTemplateColumns:
+            'minmax(0, 1.15fr) 2.5rem minmax(0, 2.05fr) 2.5rem minmax(0, 0.85fr)',
           gridTemplateRows: 'auto auto',
-          alignItems: 'start',
+          // Every step fills the row, so the three cards share a bottom edge.
+          alignItems: 'stretch',
         },
       },
       label: {
@@ -63,7 +66,7 @@ export const homeCascade = typestyles.recipe({
         color: t.color.text.secondary.var,
         textTransform: 'uppercase',
         letterSpacing: '0.08em',
-        [fromLg]: { gridRow: '1' },
+        [fromLg]: { gridRow: '1', alignSelf: 'end' },
         [belowLg]: { marginTop: t.space.md.var },
       },
       cell: {
@@ -76,32 +79,58 @@ export const homeCascade = typestyles.recipe({
         gap: t.space.md.var,
         ...step(1),
       },
-      step2: step(3),
+      step2: {
+        ...step(3),
+        display: 'flex',
+        flexDirection: 'column',
+        // Small code so each declaration fits on one line; the card fills the row.
+        '& [data-codeblock]': {
+          [codeBlock.vars.fontSize.name]: t.fontSize.xs.var,
+          flex: '1 1 auto',
+          display: 'flex',
+          flexDirection: 'column',
+        },
+        '& [data-codeblock-body]': { flex: '1 1 auto' },
+      },
       step3: step(5),
+      // Name on one line, swatch + value on the next.
       token: {
         display: 'flex',
-        alignItems: 'center',
-        gap: t.space.sm.var,
+        flexDirection: 'column',
+        gap: t.space.xs.var,
         paddingBlock: t.space.sm.var,
-        paddingInline: t.space.md.var,
+        paddingInline: t.space.sm.var,
         borderRadius: t.radius.lg.var,
         border: `1px solid ${mix(t.color.tone.accent.foreground.var, 45)}`,
         backgroundColor: t.color.tone.accent.subtleBackground.var,
         fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.sm.var,
         color: t.color.text.primary.var,
       },
-      tokenText: {
+      tokenRow: {
         display: 'flex',
-        flexDirection: 'column',
-        gap: '0.125rem',
-        minWidth: 0,
+        alignItems: 'center',
+        gap: t.space.sm.var,
+        fontSize: t.fontSize.sm.var,
       },
       tokenName: {
+        fontSize: t.fontSize.xs.var,
         color: t.color.code.attr.var,
-        overflowWrap: 'anywhere',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
       },
-      tokenValue: { color: t.color.text.primary.var, fontWeight: t.fontWeight.semibold.var },
+      tokenValue: {
+        color: t.color.text.primary.var,
+        fontWeight: t.fontWeight.semibold.var,
+        whiteSpace: 'nowrap',
+      },
+      caption: {
+        margin: 0,
+        marginTop: 'auto',
+        fontSize: t.fontSize.sm.var,
+        color: t.color.text.secondary.var,
+        [belowLg]: { display: 'none' },
+      },
       tokenSwatch: {
         width: '1.25rem',
         height: '1.25rem',
@@ -114,6 +143,7 @@ export const homeCascade = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
+        justifyContent: 'center',
         gap: t.space.md.var,
         padding: t.space.lg.var,
         borderRadius: t.radius.lg.var,
@@ -121,15 +151,26 @@ export const homeCascade = typestyles.recipe({
         backgroundColor: t.color.background.surface.var,
         '& > .var-ui-progress-bar': { alignSelf: 'stretch' },
       },
+      // Flowing dashed line with an arrowhead, centred between the cards.
       connector: {
+        position: 'relative',
+        alignSelf: 'center',
         height: '2px',
-        // Level with the first line of the cells.
-        marginTop: '1.4rem',
-        marginInline: t.space.xs.var,
+        marginInlineStart: t.space.xs.var,
+        marginInlineEnd: '0.75rem',
         backgroundImage: `linear-gradient(90deg, ${t.color.tone.accent.foreground.var} 50%, transparent 50%)`,
         backgroundSize: '0.75rem 2px',
         animation: `${flow} 1.2s linear infinite`,
         ...atReducedMotion({ animation: 'none' }),
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          insetInlineStart: '100%',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          borderBlock: '0.375rem solid transparent',
+          borderInlineStart: `0.5rem solid ${t.color.tone.accent.foreground.var}`,
+        },
         [fromLg]: { gridRow: '2' },
         [belowLg]: { display: 'none' },
       },

@@ -12,7 +12,10 @@ import {
 import { useCallback, useRef, useState, type KeyboardEvent } from 'react';
 import { homeKeyboard } from '@/styles/homeKeyboard';
 
-type Entry = { id: number; keys: string[]; role: string; name: string; state?: string };
+type Entry = { id: number; keys: string; role: string; name: string; state?: string };
+
+/** Rows the log keeps. */
+const LOG_SIZE = 5;
 
 const KEY_LABELS: Record<string, string> = {
   ArrowLeft: '←',
@@ -74,12 +77,11 @@ function describe(element: Element): Pick<Entry, 'role' | 'name' | 'state'> {
 
 /** What a keyboard pass over the panel reports; shown until the visitor tries it. */
 const EXAMPLE: Entry[] = [
-  { id: -1, keys: ['Space'], role: 'switch', name: 'Notify subscribers', state: 'checked=false' },
-  { id: -2, keys: ['Tab'], role: 'switch', name: 'Notify subscribers', state: 'checked=true' },
-  { id: -3, keys: ['→'], role: 'radio', name: 'Public', state: 'checked=true' },
-  { id: -4, keys: ['Tab'], role: 'radio', name: 'Team', state: 'checked=true' },
-  { id: -5, keys: ['Tab'], role: 'button', name: 'More actions', state: 'expanded=false' },
-  { id: -6, keys: ['Tab'], role: 'button', name: 'Publish' },
+  { id: -1, keys: 'Space', role: 'switch', name: 'Notify subscribers', state: 'checked=false' },
+  { id: -2, keys: 'Tab', role: 'switch', name: 'Notify subscribers', state: 'checked=true' },
+  { id: -3, keys: '→', role: 'radio', name: 'Public', state: 'checked=true' },
+  { id: -4, keys: 'Tab', role: 'radio', name: 'Team', state: 'checked=true' },
+  { id: -5, keys: 'Tab', role: 'button', name: 'More actions', state: 'expanded=false' },
 ];
 
 /**
@@ -89,22 +91,25 @@ const EXAMPLE: Entry[] = [
 export default function KeyboardDemo() {
   const k = homeKeyboard();
   const [entries, setEntries] = useState<Entry[]>([]);
-  const shown = entries.length > 0 ? entries : EXAMPLE;
+  // The example run stays underneath (dimmed) until the visitor's own entries fill the log.
+  const shown = [...entries, ...EXAMPLE.slice(0, Math.max(0, LOG_SIZE - entries.length))];
   const nextId = useRef(0);
-  const pendingKeys = useRef<string[]>([]);
+  const pendingKeys = useRef<string | null>(null);
 
   const record = useCallback((target: Element | null) => {
     if (!target) return;
-    const keys = pendingKeys.current.length > 0 ? pendingKeys.current : ['click'];
-    pendingKeys.current = [];
+    const keys = pendingKeys.current ?? 'click';
+    pendingKeys.current = null;
     const id = nextId.current++;
-    setEntries((previous) => [{ id, keys, ...describe(target) }, ...previous].slice(0, 6));
+    setEntries((previous) => [{ id, keys, ...describe(target) }, ...previous].slice(0, LOG_SIZE));
   }, []);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    // Capture phase: components stop some keys (Space on a switch) from bubbling.
     const label = KEY_LABELS[event.key];
     if (!label) return;
-    pendingKeys.current = [...(event.shiftKey && event.key === 'Tab' ? ['Shift'] : []), label];
+    // One chip per press: Shift+Tab reads as "⇧ Tab".
+    pendingKeys.current = event.shiftKey && event.key === 'Tab' ? `⇧ ${label}` : label;
     // Let the component handle the key, then read where focus and state ended up.
     requestAnimationFrame(() => record(document.activeElement));
   };
@@ -112,7 +117,7 @@ export default function KeyboardDemo() {
   return (
     <IconProvider icons={defaultIcons}>
       <div className={k.root.className}>
-        <div className={k.demo.className} onKeyDown={onKeyDown}>
+        <div className={k.demo.className} onKeyDownCapture={onKeyDown}>
           <TextField
             className={k.phoneHidden.className}
             defaultValue="Spring launch notes"
@@ -156,11 +161,13 @@ export default function KeyboardDemo() {
             <span>role · name · state</span>
           </div>
           {shown.map((entry) => (
-            <div key={entry.id} className={k.entry.className}>
+            <div
+              key={entry.id}
+              className={k.entry.className}
+              data-example={(entries.length > 0 && entry.id < 0) || undefined}
+            >
               <span className={k.keys.className}>
-                {entry.keys.map((key) => (
-                  <Kbd key={key}>{key}</Kbd>
-                ))}
+                <Kbd>{entry.keys}</Kbd>
               </span>
               <span className={k.target.className}>
                 <b>{entry.role}</b> “{entry.name}”{entry.state ? ` · ${entry.state}` : ''}
