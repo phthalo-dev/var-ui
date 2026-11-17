@@ -32,7 +32,7 @@ First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design t
 
 ## Browser tests
 
-Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci` and the pre-push hook). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. Filter with `vp test run --project browser|jsdom`.
+Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. Filter with `vp test run --project browser|jsdom`.
 
 One-time setup per machine: `pnpm exec playwright install chromium` (the test run fails with that hint if the browser is missing). CI installs and caches it in the Verify job.
 
@@ -53,7 +53,7 @@ Failure screenshots from `--browser` land in `.vitest-linux/` (gitignored). Asse
 
 All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Everything lives in `.github/workflows/ci.yml`.
 
-- **Verify** is the status check to require on `main`. It runs `vp run ci`, the same command the pre-push hook runs, so run it before pushing. `@var-ui/core`, `react`, `icons` and `cli` are built (`dist`); the Astro packages ship source.
+- **Verify** is the status check to require on `main`. It runs `vp run ci`; there is no pre-push hook, so run it locally if you want a green check before pushing. `@var-ui/core`, `react`, `icons` and `cli` are built (`dist`); the Astro packages ship source.
 - **Release** runs on `main` after `Verify`. It reuses the `dist` that `Verify` built, mints a token from the GitHub App (so the version PR and tags trigger CI), and runs the changesets action.
 - **Deploy docs / Preview docs** build the docs site with the Netlify CLI (`netlify deploy --build`) and deploy it: production after `Verify` on `main`, a `deploy-preview-<PR>` alias with a sticky comment on same-repo PRs. They only run when docs or the packages they use changed (the `Changes` job). Netlify's own git builds are turned off (`ignore = "exit 0"` in `netlify.toml`).
 
@@ -66,7 +66,7 @@ All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Eve
 
 ### Things that bite
 
-- Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit, `vp run ci` on push). They exit early when `CI` is set; the release job commits and pushes tags, and must not re-run them.
+- Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit). There is no pre-push hook — `vp run ci` runs in GitHub Actions on the PR. The pre-commit hook exits early when `CI` is set; the release job commits version bumps and pushes tags, and must not re-run it.
 - Generated `CHANGELOG.md` files are excluded from formatting; changesets does not format them.
 - Do not set `registry-url` on `setup-vp`: it writes a placeholder auth token that blocks OIDC. The release job also installs `npm@^11.5.1` (trusted publishing needs it; npm 12 rejects flags pnpm forwards).
 - Secrets: `APP_CLIENT_ID` and `APP_PRIVATE_KEY` (GitHub App) are org secrets, with `NETLIFY_AUTH_TOKEN`; `NETLIFY_SITE_ID` is a repo secret.
