@@ -3,6 +3,7 @@
 '@var-ui/react': minor
 '@var-ui/astro': minor
 '@var-ui/docs': minor
+'@var-ui/cli': patch
 ---
 
 Marketing-grade primitives and fixes:
@@ -31,3 +32,4 @@ Marketing-grade primitives and fixes:
 - `Calendar`: new `marked` prop (ISO strings or date values) draws a marker dot on those days; today gets a ring; selection/hover now style the day cell itself (they targeted a child that doesn't exist); the standalone grid shrinks with narrow containers.
 - New `scrollFade` recipe: scroll-driven edge fades for any horizontal scroller (shared with `CodeBlock`'s fade via an internal helper).
 - `ChatMessage`: the 80% width cap moved from the bubble to the message content column, so short bubbles no longer wrap into a narrow column.
+- `@var-ui/cli`: republish the generated docs catalog for the component changes above.
