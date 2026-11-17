@@ -7,7 +7,7 @@ import { forced } from '../internal/forcedColors';
 import { transitionOf } from '../internal/motion';
 import { atForcedColors } from '../theme/conditions';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
-import { controlSize } from '../shared/variantAxes';
+import type { ControlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,
   mapTone,
@@ -19,6 +19,19 @@ const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], 
   default: 'subtle',
 });
 const buttonLayout = variant.enum(['default', 'icon'], { default: 'default' });
+/** Control sizes plus `xl`, a call-to-action size for heroes and marketing bands. */
+const buttonSize = variant.enum(['sm', 'md', 'lg', 'xl'], { default: 'md' });
+
+/** `xl` call-to-action metrics: one step above `lg` on every axis. */
+const buttonXlSize = {
+  boxSizing: 'border-box' as const,
+  height: t.size.control.xl.var,
+  minHeight: t.size.control.xl.var,
+  fontSize: t.fontSize.lg.var,
+  paddingInline: t.space.xl.var,
+  paddingBlock: 0,
+  gap: t.space.sm.var,
+};
 
 export const button = typestyles.recipe({
   name: 'button',
@@ -26,9 +39,11 @@ export const button = typestyles.recipe({
   variants: {
     tone,
     appearance: buttonAppearance,
-    size: controlSize,
+    size: buttonSize,
     layout: buttonLayout,
     elevated: variant.boolean({ default: false }),
+    /** Fully rounded ends. */
+    pill: variant.boolean({ default: false }),
   },
   vars: {
     semantic: {
@@ -102,7 +117,10 @@ export const button = typestyles.recipe({
           subtle: controlAppearancePaint(vars, 'subtle'),
           ghost: controlAppearancePaint(vars, 'ghost'),
         },
-        size: controlSizeVariants((size) => controlSurfaceSize(size)),
+        size: {
+          ...controlSizeVariants((size: ControlSize) => controlSurfaceSize(size)),
+          xl: buttonXlSize,
+        },
         layout: {
           default: {},
           icon: {
@@ -114,6 +132,12 @@ export const button = typestyles.recipe({
         elevated: {
           true: {
             boxShadow: t.shadow.md.var,
+          },
+          false: {},
+        },
+        pill: {
+          true: {
+            borderRadius: t.radius.full.var,
           },
           false: {},
         },

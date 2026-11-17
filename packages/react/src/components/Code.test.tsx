@@ -9,4 +9,10 @@ describe('Code', () => {
     expect(el.tagName).toBe('CODE');
     expect(el.className).toContain('var-ui-inline-code');
   });
+
+  it('keeps the snippet on one line with nowrap', () => {
+    render(<Code nowrap>@var-ui/react</Code>);
+    const el = screen.getByText('@var-ui/react');
+    expect(el.hasAttribute('data-nowrap')).toBe(true);
+  });
 });

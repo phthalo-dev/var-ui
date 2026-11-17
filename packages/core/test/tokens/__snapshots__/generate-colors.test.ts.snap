@@ -7,6 +7,14 @@ exports[`generateColors > clamps chroma for a near-gray accent 1`] = `
       "dark": "oklch(22.00% 0.005 0)",
       "light": "oklch(97.00% 0.002 0)",
     },
+    "code": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+    },
+    "codeHeader": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
+    },
     "elevated": {
       "dark": "oklch(22.00% 0.005 0)",
       "light": "oklch(97.00% 0.002 0)",
@@ -264,6 +272,14 @@ exports[`generateColors > returns mode-aware color leaves for the default accent
       "dark": "oklch(22.00% 0.005 258.81008101651366)",
       "light": "oklch(97.00% 0.002 258.81008101651366)",
     },
+    "code": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+    },
+    "codeHeader": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
+    },
     "elevated": {
       "dark": "oklch(22.00% 0.005 258.81008101651366)",
       "light": "oklch(97.00% 0.002 258.81008101651366)",
@@ -520,6 +536,14 @@ exports[`generateColors > returns themes for a saturated pink accent 1`] = `
     "app": {
       "dark": "oklch(22.00% 0.005 356.9447697294126)",
       "light": "oklch(97.00% 0.002 356.9447697294126)",
+    },
+    "code": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+    },
+    "codeHeader": {
+      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
+      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
     },
     "elevated": {
       "dark": "oklch(22.00% 0.005 356.9447697294126)",

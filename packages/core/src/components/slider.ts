@@ -86,7 +86,8 @@ export const slider = typestyles.recipe({
       base: {
         root: {
           ...chrome.root,
-          minWidth: `calc(15 * ${t.space.md.var})`,
+          // Never wider than its container: narrow cards and sidebars shrink the slider.
+          minWidth: `min(calc(15 * ${t.space.md.var}), 100%)`,
         },
         label: {
           ...chrome.label,

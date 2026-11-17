@@ -243,7 +243,7 @@ function LayoutSection() {
 function ContentSection() {
   return (
     <Section title="Content">
-      <Heading level={3} size="display">
+      <Heading level={3} size="display-sm">
         Display heading
       </Heading>
       <Heading level={3} size="sm">
@@ -1299,7 +1299,7 @@ export function App() {
         <ToastProvider>
           <Stack gap="xl" style={{ padding: '2rem', maxWidth: '56rem', margin: '0 auto' }}>
             <Stack gap="sm">
-              <Heading level={1} size="display">
+              <Heading level={1} size="display-sm">
                 var-ui
               </Heading>
               <Text tone="secondary">

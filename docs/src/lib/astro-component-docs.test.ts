@@ -16,8 +16,9 @@ describe('astro-component-docs', () => {
       expect.arrayContaining(['tone', 'appearance', 'size', 'className', 'type', 'disabled']),
     );
     expect(doc?.props.find((p) => p.name === 'intent')).toBeUndefined();
-    expect(doc?.props.find((p) => p.name === 'size')?.type).toBe("'sm' | 'md' | 'lg'");
+    expect(doc?.props.find((p) => p.name === 'size')?.type).toBe("'sm' | 'md' | 'lg' | 'xl'");
     expect(doc?.props.find((p) => p.name === 'elevated')?.type).toBe('boolean');
+    expect(doc?.props.find((p) => p.name === 'pill')?.type).toBe('boolean');
     expect(doc?.slots.some((s) => s.name === 'default')).toBe(true);
   });
 

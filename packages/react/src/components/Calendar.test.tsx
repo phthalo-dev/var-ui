@@ -7,6 +7,20 @@ import { Calendar } from './Calendar';
 const focusedJuly2026 = new CalendarDate(2026, 7, 15);
 
 describe('Calendar', () => {
+  it('puts a marker on `marked` dates (ISO strings or date values)', () => {
+    const { container } = render(
+      <Calendar
+        aria-label="Appointment date"
+        defaultFocusedValue={focusedJuly2026}
+        marked={['2026-07-03', new CalendarDate(2026, 7, 20)]}
+      />,
+    );
+    const marks = container.querySelectorAll('[data-calendar-mark]');
+    expect(marks.length).toBe(2);
+    expect(marks[0]?.parentElement?.textContent).toBe('3');
+    expect(marks[1]?.parentElement?.textContent).toBe('20');
+  });
+
   it('renders a heading with the visible month and year', () => {
     render(<Calendar aria-label="Appointment date" defaultFocusedValue={focusedJuly2026} />);
     expect(screen.getByText('July 2026', { selector: 'h2' })).toBeTruthy();

@@ -35,14 +35,6 @@ function classifyDiffLine(line: string): DiffLineTone | undefined {
   return undefined;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
 const {
   code,
   language,
@@ -154,7 +146,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
           ) : useHighlightedHtml ? (
             <code {...mergeProps(cb.code, highlightedCodeClassName)} set:html={codeHtml} />
           ) : (
-            <code {...mergeProps(cb.code)}>{escapeHtml(code)}</code>
+            <code {...mergeProps(cb.code)}>{code}</code>
           )}</pre>
       </div>
     </div>

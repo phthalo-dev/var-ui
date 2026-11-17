@@ -1,33 +1,38 @@
 import { defaultIcons } from '@var-ui/icons';
 import { DesignSystemProvider, IconProvider, type ColorMode } from '@var-ui/react';
-import { useCallback, useEffect, useState } from 'react';
-import type { DocsFramework } from '@var-ui/docs-components/framework';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
 import { readStoredColorMode } from '@/lib/storedColorMode';
-import { useDocsFramework } from '@/lib/useDocsFramework';
+import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
 import { BentoShowcase } from './BentoShowcase';
 import { ThemeShowcaseSwitcher, type ShowcaseThemeId } from './ThemeShowcaseSwitcher';
 
 const STORAGE_KEY = 'theme-mode';
 
-function readInitialColorMode(): ColorMode {
-  return readStoredColorMode(STORAGE_KEY) ?? 'system';
-}
-
-export type HomepageIslandProps = {
-  framework?: DocsFramework;
-};
-
 /**
- * Homepage product theater: bento tiles follow the docs framework switcher
- * (`@var-ui/react`, `@var-ui/astro` markup, or core HTML recipes).
+ * Homepage product theater: a theme picker with a live token readout over a bento of
+ * `@var-ui/react` product UI.
  *
  * Color mode is controlled and synced with Astro header `ColorModeToggle`, which writes
  * `theme-mode` + `document.documentElement[data-color-mode]` in-tab (no `storage` event).
  */
-export default function HomepageIsland({ framework: initialFramework }: HomepageIslandProps) {
-  const framework = useDocsFramework(initialFramework);
+export default function HomepageIsland() {
   const [showcaseThemeId, setShowcaseThemeId] = useState<ShowcaseThemeId>('default');
-  const [colorMode, setColorMode] = useState<ColorMode>(readInitialColorMode);
+  // Start at 'system' to match the server render; the effect below applies the stored mode.
+  // Reading storage here would leave the SSR wrapper without `data-color-mode` after
+  // hydration (React does not patch mismatched attributes), so nested theme classes
+  // would follow the OS instead of the page.
+  const [colorMode, setColorMode] = useState<ColorMode>('system');
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [stylesVersion, setStylesVersion] = useState(0);
+
+  // Showcase themes ship as lazy stylesheets; load them all so every picker swatch and
+  // the readout show real theme colors before anything is clicked.
+  useEffect(() => {
+    for (const theme of docsThemePresets) {
+      ensureShowcaseThemeStyles(theme, () => setStylesVersion((n) => n + 1));
+    }
+  }, []);
 
   const syncColorModeFromStorage = useCallback(() => {
     const stored = readStoredColorMode(STORAGE_KEY);
@@ -74,8 +79,13 @@ export default function HomepageIsland({ framework: initialFramework }: Homepage
     >
       <IconProvider icons={defaultIcons}>
         <>
-          <ThemeShowcaseSwitcher onSelect={setShowcaseThemeId} selected={showcaseThemeId} />
-          <BentoShowcase framework={framework} themeId={showcaseThemeId} />
+          <ThemeShowcaseSwitcher
+            onSelect={setShowcaseThemeId}
+            previewRef={previewRef}
+            selected={showcaseThemeId}
+            stylesVersion={stylesVersion}
+          />
+          <BentoShowcase ref={previewRef} themeId={showcaseThemeId} />
         </>
       </IconProvider>
     </DesignSystemProvider>

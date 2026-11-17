@@ -1,9 +1,9 @@
 import { tokens } from '../declare';
 import type { DesignTokens } from '../types';
 
-/** Mode-aware shadow tint derived from primary text. */
+/** Mode-aware shadow tint from the `overlay.shadow` ink (dark in both modes). */
 function shadowTint(opacity: number): string {
-  return `color-mix(in oklch, ${tokens.color.text.primary.var} ${opacity}%, transparent)`;
+  return `color-mix(in oklch, ${tokens.color.overlay.shadow.var} ${opacity}%, transparent)`;
 }
 
 type ShadowLayer = {

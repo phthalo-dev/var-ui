@@ -4,7 +4,13 @@ import { designTokens as t } from '../tokens';
 import { semanticTone } from '../shared/semanticTone';
 import { TONE_KEYS } from '../tokens/schema/color/tone';
 
-const headingSize = variant.enum(['xs', 'sm', 'md', 'lg', 'xl', 'display'], { default: 'md' });
+const headingSize = variant.enum(
+  ['xs', 'sm', 'md', 'lg', 'xl', 'display-sm', 'display-md', 'display-lg'],
+  { default: 'md' },
+);
+const headingWeight = variant.enum(['light', 'normal', 'medium', 'semibold', 'bold'], {
+  default: 'semibold',
+});
 
 /**
  * Named heading recipe. Visual `size` is independent of the semantic level
@@ -19,6 +25,8 @@ export const heading = typestyles.recipe({
   layer: 'components',
   variants: {
     size: headingSize,
+    /** Display headlines often pair a light lead-in with a bold payoff. */
+    weight: headingWeight,
   },
   vars: {
     color: { ...atProperty.color, value: t.color.text.primary.var },
@@ -29,9 +37,9 @@ export const heading = typestyles.recipe({
         margin: 0,
         color: vars.color.var,
         fontFamily: t.fontFamily.display.var,
-        fontWeight: t.fontWeight.semibold.var,
         lineHeight: t.lineHeight.tight.var,
         letterSpacing: '-0.01em',
+        textWrap: 'balance',
       },
       variants: {
         size: {
@@ -40,11 +48,29 @@ export const heading = typestyles.recipe({
           md: { fontSize: t.fontSize.xl.var },
           lg: { fontSize: t.fontSize.xxl.var },
           xl: { fontSize: t.fontSize.xxxl.var },
-          display: {
-            fontSize: t.fontSize.xxxl.var,
-            fontFamily: t.fontFamily.display.var,
-            letterSpacing: '-0.02em',
+          // Fluid display steps: tighter leading and tracking as the type grows.
+          'display-sm': {
+            fontSize: t.fontSize.display.sm.var,
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
           },
+          'display-md': {
+            fontSize: t.fontSize.display.md.var,
+            lineHeight: 1.08,
+            letterSpacing: t.letterSpacing.display.var,
+          },
+          'display-lg': {
+            fontSize: t.fontSize.display.lg.var,
+            lineHeight: 1.02,
+            letterSpacing: t.letterSpacing.display.var,
+          },
+        },
+        weight: {
+          light: { fontWeight: t.fontWeight.light.var },
+          normal: { fontWeight: t.fontWeight.normal.var },
+          medium: { fontWeight: t.fontWeight.medium.var },
+          semibold: { fontWeight: t.fontWeight.semibold.var },
+          bold: { fontWeight: t.fontWeight.bold.var },
         },
       },
     };
@@ -68,6 +94,8 @@ export const textBlock = typestyles.recipe({
     weight: variant.enum(['normal', 'medium', 'semibold', 'bold'], { default: 'normal' }),
     /** Uppercase eyebrow/overline label treatment. */
     eyebrow: variant.boolean({ default: false }),
+    /** Monospace family: code-flavored labels, token names, figures. */
+    mono: variant.boolean({ default: false }),
     whiteSpace: variant.enum(['normal', 'pre-wrap'], { default: 'normal' }),
     /** `n` clamps to the `lineClamp` variable (arbitrary line counts). */
     lineClamp: variant.enum(['false', '1', '2', '3', 'n'], { default: 'false' }),
@@ -115,6 +143,10 @@ export const textBlock = typestyles.recipe({
         eyebrow: {
           false: {},
           true: { textTransform: 'uppercase', letterSpacing: '0.08em' },
+        },
+        mono: {
+          false: {},
+          true: { fontFamily: t.fontFamily.mono.var },
         },
         whiteSpace: {
           normal: {},

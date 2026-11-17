@@ -11,9 +11,6 @@ import {
 import {
   neoBrutalistBorderDarkDefault,
   neoBrutalistBorderDarkStrong,
-  neoBrutalistShadowOffsetDark,
-  neoBrutalistShadowOffsetLight,
-  neoBrutalistShadowValues,
 } from './neo-brutalist-shadows';
 
 const amberDarkHue = 65;
@@ -83,10 +80,7 @@ const amberTone = {
   }),
 };
 
-const amberLightNeoShadow = neoBrutalistShadowValues(
-  neoBrutalistShadowOffsetLight(amberLightSubtle),
-);
-const amberDarkNeoShadow = neoBrutalistShadowValues(neoBrutalistShadowOffsetDark(amberDarkHue));
+const noShadow = '0 0 0 0 transparent';
 
 const amberOverlayDefault = color.alpha(p.color.palette['sand-10'].var, 0.55, 'oklch');
 
@@ -183,12 +177,14 @@ export const amberThemeTokens = {
       },
     } as ColorTokenPatch['code'],
   },
+  // Flat: no drop shadows; edges come from the plain black borders above. A transparent
+  // zero shadow (not `none`) so the tokens stay valid inside comma-separated stacks.
   shadow: {
-    xs: { light: amberLightNeoShadow.xs, dark: amberDarkNeoShadow.xs },
-    sm: { light: amberLightNeoShadow.sm, dark: amberDarkNeoShadow.sm },
-    md: { light: amberLightNeoShadow.md, dark: amberDarkNeoShadow.md },
-    lg: { light: amberLightNeoShadow.lg, dark: amberDarkNeoShadow.lg },
-    xl: { light: amberLightNeoShadow.xl, dark: amberDarkNeoShadow.xl },
+    xs: noShadow,
+    sm: noShadow,
+    md: noShadow,
+    lg: noShadow,
+    xl: noShadow,
   },
 } satisfies DesignThemeTokenValues;
 

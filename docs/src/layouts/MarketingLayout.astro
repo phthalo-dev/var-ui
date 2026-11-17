@@ -6,11 +6,12 @@ import { defaultThemeClassName } from '@var-ui/core';
 import DocsThemePicker from '../components/DocsThemePicker.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
 import { topNav as topNavItems } from '../data/navigation';
 import { buildDocsSearchIndex } from '../lib/search-index';
 
-const { title = 'Var UI' } = Astro.props as { title?: string };
+const { title = 'Var UI', bleed = false } = Astro.props as { title?: string; bleed?: boolean };
 
 const framework = Astro.locals.framework;
 const hljsScopeClass = cx(codeHljsScope().root);
@@ -25,6 +26,7 @@ const searchItems = buildDocsSearchIndex();
   searchItems={searchItems}
   brand={{ heading: 'Var UI', href: '/' }}
   htmlAttributes={{ 'data-framework': framework }}
+  bleed={bleed}
 >
   <VarUiWordmark slot="brand" size="header" />
   <DocsThemeScript slot="themeScript" />
@@ -32,6 +34,7 @@ const searchItems = buildDocsSearchIndex();
   <DocsThemePicker slot="themePicker" />
   <slot name="head" slot="head" />
   <slot />
+  <SiteFooter slot="footer" />
 </DocsMarketingPage>
 
 <script>

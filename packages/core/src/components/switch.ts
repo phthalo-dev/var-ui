@@ -35,6 +35,9 @@ export const switchStyles = typestyles.recipe({
     return {
       base: {
         root: {
+          // Anchors the visually-hidden native input, so focusing it never scrolls a distant
+          // ancestor (it would otherwise sit at its unscrolled static position).
+          position: 'relative',
           display: 'inline-flex',
           alignItems: 'center',
           cursor: 'pointer',

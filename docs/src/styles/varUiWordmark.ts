@@ -1,7 +1,7 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 import { variant } from 'typestyles';
 
-const wordmarkSize = variant.enum(['hero', 'header'], { default: 'hero' });
+const wordmarkSize = variant.enum(['hero', 'header', 'inline'], { default: 'hero' });
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
 export const varUiWordmark = typestyles.recipe({
@@ -26,7 +26,8 @@ export const varUiWordmark = typestyles.recipe({
         fontFeatureSettings: '"calt", "liga"',
       },
       keyword: {
-        color: t.color.code.keyword.var,
+        // Brand pairing: phthalo accent for `var`, amber for `--ui`.
+        color: t.color.tone.accent.foreground.var,
       },
       punctuation: {
         color: t.color.code.base.var,
@@ -40,14 +41,22 @@ export const varUiWordmark = typestyles.recipe({
       size: {
         hero: {
           root: {
-            fontSize: 'clamp(3.5rem, 13vw, 8rem)',
+            fontSize: 'clamp(3.5rem, 14vw, 9rem)',
             letterSpacing: '-0.08em',
+            textShadow: `0 0 64px color-mix(in oklch, ${t.color.tone.accent.foreground.var} 35%, transparent)`,
           },
         },
         header: {
           root: {
             flexShrink: 0,
             fontSize: t.fontSize.md.var,
+            letterSpacing: '-0.06em',
+          },
+        },
+        inline: {
+          root: {
+            display: 'inline',
+            fontSize: '0.92em',
             letterSpacing: '-0.06em',
           },
         },

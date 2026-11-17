@@ -129,6 +129,7 @@ export function CheckboxGroup({
                   {...mergeProps(r.box)}
                   data-selected={isSelected || undefined}
                   data-indeterminate={isIndeterminate || undefined}
+                  aria-hidden
                 >
                   {isIndeterminate ? '−' : isSelected ? '✓' : ''}
                 </span>

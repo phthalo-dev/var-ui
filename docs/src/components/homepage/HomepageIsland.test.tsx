@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vite-plus/test';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import HomepageIsland from './HomepageIsland';
 
 describe('HomepageIsland', () => {
@@ -9,13 +9,25 @@ describe('HomepageIsland', () => {
     document.documentElement.removeAttribute('data-framework');
   });
 
-  it('renders bento tiles for the selected docs framework', () => {
-    document.documentElement.dataset.framework = 'html';
-    render(<HomepageIsland framework="html" />);
+  it('renders the theme picker above the live showcase', () => {
+    render(<HomepageIsland />);
 
+    expect(screen.getByRole('radiogroup', { name: 'Preview theme' })).toBeTruthy();
     const showcase = screen.getByTestId('bento-showcase');
-    expect(showcase.getAttribute('data-framework')).toBe('html');
-    expect(showcase.querySelector('.var-ui-alert')).toBeTruthy();
+    expect(showcase.querySelector('.var-ui-calendar')).toBeTruthy();
+  });
+
+  it('pins the stored mode after hydration so themed picker options follow the page', async () => {
+    localStorage.setItem('theme-mode', 'light');
+    render(<HomepageIsland />);
+
+    const picker = screen.getByRole('radiogroup', { name: 'Preview theme' });
+    await waitFor(() => {
+      expect(picker.closest('[data-color-mode]')?.getAttribute('data-color-mode')).toBe('light');
+    });
+    for (const option of within(picker).getAllByRole('radio')) {
+      expect(option.style.colorScheme).toBe('inherit');
+    }
   });
 
   it('does not isolate color-scheme from the docs site before storage hydrates', () => {

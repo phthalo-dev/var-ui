@@ -2,7 +2,7 @@ import { breakpoint } from '../runtime';
 import { designBreakpoints } from '../tokens/defaults/breakpoint';
 
 /** Breakpoint names used by `AppShell` for `data-mobile` / `matchMedia`. */
-export type AppShellMobileBreakpointName = Exclude<keyof typeof designBreakpoints, 'xl'>;
+export type AppShellMobileBreakpointName = Exclude<keyof typeof designBreakpoints, 'xl' | 'xxl'>;
 
 /** `AppShell` `mobileBreakpoint` prop, including `'none'` to disable mobile layout. */
 export type AppShellMobileBreakpoint = AppShellMobileBreakpointName | 'none';

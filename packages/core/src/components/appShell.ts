@@ -234,6 +234,8 @@ export const appShell = typestyles.recipe({
           minHeight: 0,
           minWidth: 0,
           overflow: 'auto',
+          // Containing block for absolutely positioned descendants, so they scroll with it.
+          position: 'relative',
           padding: vars.contentPadding.var,
         },
         aside: {

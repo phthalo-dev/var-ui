@@ -262,6 +262,16 @@ export const sideNav = typestyles.recipe({
           },
         },
         item: {
+          // Items without `href` render a <button>: reset native button chrome so both
+          // element types look identical.
+          appearance: 'none',
+          boxSizing: 'border-box',
+          width: '100%',
+          margin: 0,
+          border: 'none',
+          backgroundColor: 'transparent',
+          font: 'inherit',
+          textAlign: 'start',
           display: 'flex',
           alignItems: 'center',
           gap: t.space.xs.var,

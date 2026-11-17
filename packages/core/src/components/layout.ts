@@ -228,7 +228,10 @@ export const layoutContent = typestyles.recipe({
       variants: {
         scrollable: {
           true: {
-            content: { overflow: 'auto' },
+            // A scroller must be a containing block: an absolutely positioned descendant (a
+            // visually-hidden input) would otherwise resolve against an ancestor outside it,
+            // ignore its scroll, and make focus scroll that far ancestor instead.
+            content: { overflow: 'auto', position: 'relative' },
           },
           false: {
             content: { overflow: 'visible' },
@@ -344,9 +347,9 @@ export const layoutPanel = typestyles.recipe({
       variants: {
         scrollable: {
           true: {
-            panel: { overflow: 'auto' },
+            panel: { overflow: 'auto', position: 'relative' },
             popup: { overflow: 'visible' },
-            body: { overflow: 'auto' },
+            body: { overflow: 'auto', position: 'relative' },
           },
           false: {
             panel: { overflow: 'visible' },

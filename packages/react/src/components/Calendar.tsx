@@ -1,4 +1,4 @@
-import type { CSSProperties, JSX, Ref } from 'react';
+import { useMemo, type CSSProperties, type JSX, type Ref } from 'react';
 import type { DateValue } from '@internationalized/date';
 import {
   Calendar as AriaCalendar,
@@ -24,6 +24,11 @@ export type CalendarProps<T extends DateValue = DateValue> = {
   min?: CalendarRac<T>['minValue'];
   /** Latest selectable date. */
   max?: CalendarRac<T>['maxValue'];
+  /**
+   * Dates that get a marker dot (events, deadlines). ISO strings (`'2026-11-20'`) or date
+   * values. Purely visual: describe what the marks mean elsewhere on the page.
+   */
+  marked?: readonly (DateValue | string)[];
   /** Marks dates as unavailable: they cannot be selected. */
   unavailable?: CalendarRac<T>['isDateUnavailable'];
   /** Controlled focused date. */
@@ -66,9 +71,14 @@ export type CalendarProps<T extends DateValue = DateValue> = {
 export function Calendar<T extends DateValue = DateValue>({
   className,
   ref,
+  marked,
   ...props
 }: CalendarProps<T>): JSX.Element {
   const c = calendar();
+  const markedSet = useMemo(
+    () => (marked ? new Set(marked.map((date) => date.toString())) : undefined),
+    [marked],
+  );
   return (
     <AriaCalendar
       {...(toRacDateProps(props) as RACCalendarProps<T>)}
@@ -76,6 +86,7 @@ export function Calendar<T extends DateValue = DateValue>({
       ref={ref}
     >
       <CalendarBody
+        marked={markedSet}
         slots={{
           header: c.header,
           navButton: c.navButton,

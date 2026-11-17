@@ -118,6 +118,7 @@ export function Checkbox({
             {...mergeProps(cb.box)}
             data-selected={isSelected || undefined}
             data-indeterminate={isIndeterminate || undefined}
+            aria-hidden
           >
             {isIndeterminate ? '−' : isSelected ? '✓' : ''}
           </span>

@@ -51,7 +51,13 @@ const COMPONENT_NAMESPACE_LABELS: Record<string, string> = {
 };
 
 function isTokenRef(value: unknown): value is TokenRef {
-  return Boolean(value && typeof value === 'object' && 'var' in value);
+  // Token groups are proxies that also answer `var`; only leaves carry a string `var`.
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    'var' in value &&
+    typeof (value as { var: unknown }).var === 'string',
+  );
 }
 
 function isModeAwareColorLeaf(

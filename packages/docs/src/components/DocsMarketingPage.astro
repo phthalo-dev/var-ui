@@ -35,6 +35,7 @@ const {
   searchItems = [],
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
+  bleed = false,
 } = Astro.props as {
   title?: string;
   themeClassName: string;
@@ -43,6 +44,12 @@ const {
   searchItems?: readonly DocsSearchItem[];
   brand?: DocsBrand;
   htmlAttributes?: Record<string, string | undefined>;
+  /**
+   * Drop the main column's padding so sections can run edge to edge (full-bleed bands,
+   * hero backdrops). The page then owns its own gutters.
+   * @default false
+   */
+  bleed?: boolean;
 };
 
 const pathname = stripAstroBase(Astro.url.pathname, import.meta.env.BASE_URL);
@@ -53,7 +60,8 @@ const hasThemeScriptSlot = Astro.slots.has('themeScript');
 const showMobileNav = topNav.length > 0;
 
 const nav = docsTopNav();
-const page = docsMarketingPage();
+const page = docsMarketingPage({ bleed });
+const hasFooterSlot = Astro.slots.has('footer');
 ---
 
 <html lang="en" class={themeClassName} {...htmlAttributes}>
@@ -132,6 +140,7 @@ const page = docsMarketingPage();
           <main {...mergeProps(page.main)}>
             <slot />
           </main>
+          {hasFooterSlot ? <slot name="footer" /> : null}
         </LayoutContent>
       </Layout>
     </AppShell>

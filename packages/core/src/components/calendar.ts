@@ -59,11 +59,18 @@ export const calendar = typestyles.recipe({
     });
     return {
       base: {
-        root: { display: 'grid', gap: t.space.xs.var, width: 'fit-content' },
+        // Natural width is seven day boxes plus cell padding; narrower containers shrink it.
+        root: {
+          display: 'grid',
+          gap: t.space.xs.var,
+          width: '100%',
+          maxWidth: `calc(7 * (${t.size.control.md.var} + 2 * ${t.space.xxs.var}))`,
+        },
         header: grid.calendarHeader,
         heading: grid.calendarHeading,
         navButton: grid.calendarNavButton,
-        grid: grid.calendarGrid,
+        // Standalone calendar: seven equal columns that shrink with a narrow container.
+        grid: { ...grid.calendarGrid, tableLayout: 'fixed' },
         headerCell: grid.calendarHeaderCell,
         cell: grid.calendarCell,
       },

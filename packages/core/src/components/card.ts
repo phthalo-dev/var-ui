@@ -37,8 +37,9 @@ export const card = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           gap: t.space.xs.var,
-          padding: t.space.md.var,
-          borderRadius: t.radius.md.var,
+          padding: t.space.lg.var,
+          // Surfaces use the surface radius step; controls inside stay on `md`.
+          borderRadius: t.radius.lg.var,
           ...border(vars.border.var),
           backgroundColor: vars.background.var,
           transition: t.transition.borderShadow.var,

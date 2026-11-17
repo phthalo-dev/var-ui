@@ -67,6 +67,7 @@ export * from './radio';
 export * from './rating';
 export * from './resizeHandle';
 export * from './scrollArea';
+export * from './scrollFade';
 export * from './searchInput';
 export * from './section';
 export * from './segmentedControl';
