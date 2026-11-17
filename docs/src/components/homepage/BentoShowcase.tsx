@@ -1,119 +1,45 @@
 'use client';
 
-import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { cx } from '@var-ui/react';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, Ref } from 'react';
 import { homeBento } from '@/styles/homeBento';
+import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
+import type { ShowcaseThemeId } from '@/themes/presets';
 import {
-  renderBannerTileMarkup,
-  renderCarouselStripTileMarkup,
-  renderContentSampleTileMarkup,
-  renderEmptyStateDialogTileMarkup,
-  renderIdentityCardsTileMarkup,
-  renderLayoutTabsTileMarkup,
-  renderQuickActionsTileMarkup,
-  renderSettingsFormTileMarkup,
-  renderStatusFeedbackTileMarkup,
-} from './bentoMarkup';
-import { BannerTile } from './bentoTiles/BannerTile';
-import { CarouselStripTile } from './bentoTiles/CarouselStripTile';
-import { ContentSampleTile } from './bentoTiles/ContentSampleTile';
-import { EmptyStateDialogTile } from './bentoTiles/EmptyStateDialogTile';
-import { IdentityCardsTile } from './bentoTiles/IdentityCardsTile';
-import { LayoutTabsTile } from './bentoTiles/LayoutTabsTile';
-import { QuickActionsTile } from './bentoTiles/QuickActionsTile';
-import { SettingsFormTile } from './bentoTiles/SettingsFormTile';
-import { StatusFeedbackTile } from './bentoTiles/StatusFeedbackTile';
-import { MarkupTile } from './MarkupTile';
-import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
+  AgentChatTile,
+  KudosTile,
+  LaunchCalendarTile,
+  MembersTile,
+  PreferencesTile,
+  RevenueTile,
+} from './showcaseTiles';
 
 export type BentoShowcaseProps = {
   themeId: ShowcaseThemeId;
-  framework?: DocsFramework;
   previewStyle?: CSSProperties;
+  ref?: Ref<HTMLDivElement>;
 };
 
-export function BentoShowcase({ themeId, framework = 'react', previewStyle }: BentoShowcaseProps) {
+/** Live `@var-ui/react` product UI, repainted by the selected showcase theme. */
+export function BentoShowcase({ themeId, previewStyle, ref }: BentoShowcaseProps) {
   const b = homeBento();
   const theme = docsThemePresets.find((entry) => entry.id === themeId) ?? docsThemePresets[0];
-  const useReactTiles = framework === 'react';
+  const tile = b.tile.className;
 
   return (
     <div
       className={cx(b.showcase.className, theme.className)}
-      data-framework={framework}
       data-testid="bento-showcase"
+      ref={ref}
       style={{ colorScheme: 'inherit', ...previewStyle }}
     >
       <div className={b.grid.className}>
-        {useReactTiles ? (
-          <QuickActionsTile
-            className={cx(b.tile.className, b.tileSpan2.className, b.tileRowSpan2.className)}
-          />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileSpan2.className, b.tileRowSpan2.className)}
-            html={renderQuickActionsTileMarkup()}
-          />
-        )}
-        {useReactTiles ? (
-          <StatusFeedbackTile className={b.tile.className} />
-        ) : (
-          <MarkupTile className={b.tile.className} html={renderStatusFeedbackTileMarkup()} />
-        )}
-        {useReactTiles ? (
-          <SettingsFormTile className={cx(b.tile.className, b.tileRowSpan2.className)} />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileRowSpan2.className)}
-            html={renderSettingsFormTileMarkup()}
-          />
-        )}
-        {useReactTiles ? (
-          <EmptyStateDialogTile className={b.tile.className} />
-        ) : (
-          <MarkupTile className={b.tile.className} html={renderEmptyStateDialogTileMarkup()} />
-        )}
-        {useReactTiles ? (
-          <ContentSampleTile
-            className={cx(b.tile.className, b.tileSpan2.className)}
-            framework={framework}
-          />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileSpan2.className)}
-            html={renderContentSampleTileMarkup(framework)}
-          />
-        )}
-        {useReactTiles ? (
-          <IdentityCardsTile className={b.tile.className} />
-        ) : (
-          <MarkupTile className={b.tile.className} html={renderIdentityCardsTileMarkup()} />
-        )}
-        {useReactTiles ? (
-          <CarouselStripTile className={cx(b.tile.className, b.tileSpan2.className)} />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileSpan2.className)}
-            html={renderCarouselStripTileMarkup()}
-          />
-        )}
-        {useReactTiles ? (
-          <LayoutTabsTile className={cx(b.tile.className, b.tileSpan2.className)} />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileSpan2.className)}
-            html={renderLayoutTabsTileMarkup()}
-          />
-        )}
-        {useReactTiles ? (
-          <BannerTile className={cx(b.tile.className, b.tileSpanFull.className)} />
-        ) : (
-          <MarkupTile
-            className={cx(b.tile.className, b.tileSpanFull.className)}
-            html={renderBannerTileMarkup()}
-          />
-        )}
+        <RevenueTile className={cx(tile, b.spanWide.className)} />
+        <KudosTile className={cx(tile, b.spanNarrow.className, b.tileWide.className)} />
+        <AgentChatTile className={cx(tile, b.spanHalf.className, b.tileRowSpan2.className)} />
+        <PreferencesTile className={cx(tile, b.spanHalf.className)} />
+        <LaunchCalendarTile className={cx(tile, b.spanHalf.className)} />
+        <MembersTile className={cx(tile, b.spanFull.className, b.tileWide.className)} />
       </div>
     </div>
   );

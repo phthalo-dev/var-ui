@@ -14,7 +14,9 @@ export function useControlSize(): ControlSize | undefined {
 }
 
 /** The size a control renders at: its own `size`, else the surrounding control size, else `md`. */
-export function useResolvedControlSize(size: ControlSize | undefined): ControlSize {
+export function useResolvedControlSize<S extends string = ControlSize>(
+  size: S | undefined,
+): S | ControlSize {
   const contextSize = useControlSize();
   return size ?? contextSize ?? 'md';
 }

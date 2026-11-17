@@ -3,6 +3,7 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { border, borderSide } from '../internal/border';
+import { inlineScrollFade } from '../internal/scrollFade';
 
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const codeBlockVarDefinitions = {
@@ -12,7 +13,7 @@ const codeBlockVarDefinitions = {
   },
   background: {
     ...atProperty.color,
-    value: t.color.background.surface.var,
+    value: t.color.background.code.var,
   },
   backgroundInline: {
     ...atProperty.color,
@@ -20,7 +21,7 @@ const codeBlockVarDefinitions = {
   },
   backgroundHeader: {
     ...atProperty.color,
-    value: t.color.background.subtle.var,
+    value: t.color.background.codeHeader.var,
   },
   filenameColor: {
     ...atProperty.color,
@@ -54,6 +55,11 @@ const codeBlockVarDefinitions = {
     syntax: '*',
     initial: 'none',
     value: 'none',
+  },
+  /** Width of the right-edge fade on horizontally scrollable code (scroll-driven; 0 at the end). */
+  scrollFade: {
+    ...atProperty.length,
+    value: '0px',
   },
 } as const;
 
@@ -95,7 +101,7 @@ export const codeBlock = typestyles.recipe({
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
           overflow: 'hidden',
-          boxShadow: t.shadow.lg.var,
+          boxShadow: t.shadow.sm.var,
         },
         header: {
           display: 'flex',
@@ -206,6 +212,10 @@ export const codeBlock = typestyles.recipe({
           maxHeight: vars.maxHeight.var,
         },
         pre: {
+          // Scroll affordance: while more code is off to the right, the edge fades out.
+          // The scroll-driven timeline is inactive when nothing overflows, so short code
+          // keeps a hard edge and browsers without scroll timelines show no fade.
+          ...inlineScrollFade('var-ui-code-block-scroll-fade', { end: vars.scrollFade }),
           margin: 0,
           padding: t.space.md.var,
           fontFamily: t.fontFamily.mono.var,

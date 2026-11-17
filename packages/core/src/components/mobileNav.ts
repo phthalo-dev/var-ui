@@ -27,17 +27,22 @@ const mobileNavVarDefinitions = {
     ...atProperty.length,
     value: t.size.panel.md.var,
   },
+  // The toggle lives in the top nav, outside the popup host, so its channels are also
+  // declared on the `toggle` slot (otherwise they compute to `transparent`).
   headerColor: {
     ...atProperty.color,
     value: t.color.text.primary.var,
+    slots: ['toggle'],
   },
   toggleColor: {
     ...atProperty.color,
     value: t.color.text.secondary.var,
+    slots: ['toggle'],
   },
   toggleHoverBackground: {
     ...atProperty.color,
     value: t.color.background.subtle.var,
+    slots: ['toggle'],
   },
   closeButtonColor: {
     ...atProperty.color,

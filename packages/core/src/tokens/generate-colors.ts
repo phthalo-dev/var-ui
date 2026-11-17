@@ -1,6 +1,7 @@
 import { color } from 'typestyles/color';
 import { contrastRatio, generateRamp, parseColor } from 'typestyles/color-scale';
 import { darkSyntaxValues, lightSyntaxValues } from './defaults/color';
+import { codeSurfaceValues } from './defaults/color/background';
 import { paletteHue } from './defaults/color/palette';
 import { buildToneFace, createToneFace } from './tone-face';
 import type { ColorTokenPatch, DesignTokens } from './types';
@@ -168,6 +169,8 @@ function mapModeAwareColors(
         rampAt(neutral, slots.background.tertiary),
         rampAt(neutral, m(slots.background.tertiary)),
       ),
+      code: mode(codeSurfaceValues.code.light, codeSurfaceValues.code.dark),
+      codeHeader: mode(codeSurfaceValues.codeHeader.light, codeSurfaceValues.codeHeader.dark),
     },
     text: {
       primary: mode(rampAt(neutral, slots.text.primary), rampAt(neutral, m(slots.text.primary))),

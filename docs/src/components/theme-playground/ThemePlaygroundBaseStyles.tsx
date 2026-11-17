@@ -68,6 +68,7 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
 
       <ControlGroup label="Preset">
         <SegmentedControl
+          size="sm"
           aria-label="Spacing preset"
           options={[...SPACING_PRESET_OPTIONS]}
           value={state.spacingPreset}
@@ -112,6 +113,7 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
 
       <ControlGroup label="Type size">
         <SegmentedControl
+          size="sm"
           aria-label="Base type size"
           options={[...BASE_SIZE_OPTIONS]}
           value={state.typography.baseSize}

@@ -20,13 +20,14 @@ const {
   size = 'md',
   layout,
   elevated,
+  pill,
   className,
   href,
   disabled,
   type = 'button',
   ...rest
 } = Astro.props as Record<string, any>;
-const rp = mergeProps(button({ tone, appearance, size, layout, elevated }), className);
+const rp = mergeProps(button({ tone, appearance, size, layout, elevated, pill }), className);
 const isLink = href !== undefined;
 ---
 

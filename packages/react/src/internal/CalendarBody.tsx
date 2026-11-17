@@ -32,7 +32,14 @@ export type CalendarBodySlots = {
  * `Calendar` and the popover calendars of the date fields. Must be rendered
  * inside a RAC `Calendar` or `RangeCalendar`.
  */
-export function CalendarBody({ slots }: { slots: CalendarBodySlots }): JSX.Element {
+export function CalendarBody({
+  slots,
+  marked,
+}: {
+  slots: CalendarBodySlots;
+  /** ISO dates (`YYYY-MM-DD`) that get a marker dot. */
+  marked?: ReadonlySet<string>;
+}): JSX.Element {
   return (
     <>
       <header {...mergeProps(slots.header)}>
@@ -51,7 +58,18 @@ export function CalendarBody({ slots }: { slots: CalendarBodySlots }): JSX.Eleme
           )}
         </CalendarGridHeader>
         <CalendarGridBody>
-          {(date) => <CalendarCell date={date} {...mergeProps(slots.cell)} />}
+          {(date) => (
+            <CalendarCell date={date} {...mergeProps(slots.cell)}>
+              {({ formattedDate }) => (
+                <>
+                  {formattedDate}
+                  {marked?.has(date.toString()) ? (
+                    <span aria-hidden="true" data-calendar-mark="" />
+                  ) : null}
+                </>
+              )}
+            </CalendarCell>
+          )}
         </CalendarGridBody>
       </CalendarGrid>
     </>

@@ -5,4 +5,5 @@ export const breakpointTokenSchema = {
   md: atProperty.length,
   lg: atProperty.length,
   xl: atProperty.length,
+  xxl: atProperty.length,
 } as const satisfies TokenSchema;

@@ -9,13 +9,12 @@ describe('HomepageIsland', () => {
     document.documentElement.removeAttribute('data-framework');
   });
 
-  it('renders bento tiles for the selected docs framework', () => {
-    document.documentElement.dataset.framework = 'html';
-    render(<HomepageIsland framework="html" />);
+  it('renders the theme picker above the live showcase', () => {
+    render(<HomepageIsland />);
 
+    expect(screen.getByRole('radiogroup', { name: 'Preview theme' })).toBeTruthy();
     const showcase = screen.getByTestId('bento-showcase');
-    expect(showcase.getAttribute('data-framework')).toBe('html');
-    expect(showcase.querySelector('.var-ui-alert')).toBeTruthy();
+    expect(showcase.querySelector('.var-ui-calendar')).toBeTruthy();
   });
 
   it('does not isolate color-scheme from the docs site before storage hydrates', () => {

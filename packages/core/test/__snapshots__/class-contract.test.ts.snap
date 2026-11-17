@@ -167,6 +167,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "data-tone",
       "elevated",
       "layout",
+      "pill",
       "size",
       "tone",
     ],
@@ -445,6 +446,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-code-block-linehighlightbackground",
       "--var-ui-code-block-linenumbercolor",
       "--var-ui-code-block-maxheight",
+      "--var-ui-code-block-scrollfade",
     ],
   },
   "collapsible": {
@@ -933,7 +935,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "heading": {
     "axes": [
       "data-size",
+      "data-weight",
       "size",
+      "weight",
     ],
     "slots": {
       "base": "var-ui-heading",
@@ -1497,6 +1501,16 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-scroll-area-fadesize",
     ],
   },
+  "scroll-fade": {
+    "axes": [],
+    "slots": {
+      "base": "var-ui-scroll-fade",
+    },
+    "vars": [
+      "--var-ui-scroll-fade-end",
+      "--var-ui-scroll-fade-start",
+    ],
+  },
   "search-input": {
     "axes": [
       "data-size",
@@ -1892,6 +1906,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "data-white-space",
       "eyebrow",
       "lineClamp",
+      "mono",
       "size",
       "tone",
       "weight",

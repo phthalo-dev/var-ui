@@ -1,27 +1,17 @@
-import { generateLinearScale } from 'typestyles/token-scale';
 import { tokens } from '../declare';
 import type { DesignTokens } from '../types';
 
-const RADIUS_STEPS = [1, 2, 3, 4] as const;
-const RADIUS_NAMES = ['sm', 'md', 'lg', 'xl'] as const;
-const radiusScale = generateLinearScale({
-  base: 2,
-  multiplier: 1.25,
-  steps: [...RADIUS_STEPS],
-});
-
-function zipRem<T extends string>(
-  names: readonly T[],
-  values: number[],
-): Record<T, `${number}rem`> {
-  return Object.fromEntries(
-    names.map((name, index) => [name, `${(values[index] ?? 0) / 16}rem`]),
-  ) as Record<T, `${number}rem`>;
-}
-
+/**
+ * Radius scale: `sm`/`md` for controls (inputs, buttons, chips), `lg`/`xl` for
+ * surfaces (cards, panels, dialogs). Surfaces step up noticeably so nested
+ * controls read as inset.
+ */
 export const radius = {
   none: '0',
-  ...zipRem(RADIUS_NAMES, radiusScale),
+  sm: '0.25rem',
+  md: '0.375rem',
+  lg: '0.75rem',
+  xl: '1rem',
   /**
    * Large enough to render any element as a pill (≈10k px at the default root
    * size). Docs themes use a smaller magnitude (measured against their own

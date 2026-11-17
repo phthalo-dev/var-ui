@@ -1,0 +1,96 @@
+---
+/**
+ * One variable, three hops: the token (and the theme code that sets it), the readable rule
+ * that consumes it, and live components painted by it. The swatches re-point only the
+ * accent tokens on this diagram (surfaces stay put), so everything downstream follows.
+ */
+import { Avatar, Badge, Button, ProgressBar, cx } from '@var-ui/astro';
+import { docsThemePresetMeta } from '../../themes/presetMeta';
+import { homeCascade } from '../../styles/homeCascade';
+
+const c = homeCascade();
+const pickerIds = ['default', 'rose', 'amber', 'ai-glow'];
+const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.id === id)!);
+---
+
+<div class={cx(c.root)} data-cascade>
+  <span class={cx(c.label, c.step1)}>1 · token</span>
+  <div class={cx(c.cell, c.step1)}>
+    <div class={cx(c.token)}>
+      <span class={cx(c.tokenSwatch)} aria-hidden="true"></span>
+      --color-accent
+    </div>
+    <pre class={cx(c.code)}><b>createDesignTheme</b>({'{'}
+  <i>tokens</i>: {'{'} <i>color</i>: {'{'} <i>tone</i>: {'{'}
+    <i>accent</i>: {'{'} <i>background</i>: <em>'#0f766e'</em> {'}'},
+  {'}'} {'}'} {'}'},
+{'}'});</pre>
+    <div class={cx(c.pickers)} role="group" aria-label="Value of --color-accent">
+      {
+        pickers.map((theme, index) => (
+          <button
+            type="button"
+            class={cx(c.picker)}
+            aria-pressed={index === 0 ? 'true' : 'false'}
+            aria-label={`${theme.label} accent`}
+            data-cascade-theme={theme.id}
+          >
+            <span class={cx(c.pickerSwatch, theme.className)} aria-hidden="true" />
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <span class={cx(c.connector, c.connector1)} aria-hidden="true"></span>
+
+  <span class={cx(c.label, c.step2)}>2 · recipe</span>
+  <pre class={cx(c.cell, c.step2, c.rule)}><b>.var-ui-button</b>[<i>data-tone</i>=<em>"accent"</em>] {'{'}
+  <i>background</i>: var(<em>--color-accent</em>);
+{'}'}</pre>
+
+  <span class={cx(c.connector, c.connector2)} aria-hidden="true"></span>
+
+  <span class={cx(c.label, c.step3)}>3 · components</span>
+  <div class={cx(c.cell, c.step3, c.components)}>
+    <Button tone="accent" appearance="filled" pill>Publish release</Button>
+    <Badge tone="accent">Synced</Badge>
+    <ProgressBar label="Rollout" value={64} showValueText />
+    <Avatar name="Maya Okafor" size="sm" />
+  </div>
+</div>
+
+<script>
+  import { ensureShowcaseThemeStyles } from '../../lib/showcaseThemeStyles';
+
+  /** The accent family: the only tokens a swatch re-points. */
+  const ACCENT_TOKENS = [
+    '--var-ui-color-tone-accent-background',
+    '--var-ui-color-tone-accent-foreground',
+    '--var-ui-color-tone-accent-subtleBackground',
+    '--var-ui-color-tone-accent-border',
+    '--var-ui-color-tone-accent-foregroundOnBackground',
+  ];
+
+  function initCascade() {
+    const root = document.querySelector<HTMLElement>('[data-cascade]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-cascade-theme]')];
+    for (const button of buttons) ensureShowcaseThemeStyles({ id: button.dataset.cascadeTheme! });
+
+    buttons.forEach((button) =>
+      button.addEventListener('click', () => {
+        const swatch = button.querySelector<HTMLElement>('span')!;
+        const style = getComputedStyle(swatch);
+        for (const token of ACCENT_TOKENS) {
+          if (button.dataset.cascadeTheme === 'default') root.style.removeProperty(token);
+          else root.style.setProperty(token, style.getPropertyValue(token).trim());
+        }
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      }),
+    );
+  }
+  initCascade();
+  document.addEventListener('astro:page-load', initCascade);
+</script>

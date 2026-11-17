@@ -4,7 +4,10 @@ import { defaultIcons } from '@var-ui/icons';
 import { DesignSystemProvider, IconProvider, Select, Tabs, type ColorMode } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { readStoredColorMode } from '@/lib/storedColorMode';
-import { docsThemePresets, type ShowcaseThemeId } from '@/themes/presets';
+// Class names only: importing the theme modules re-registers them at runtime and leaks
+// their mode-aware shadows onto :root (typestyles#325).
+import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
+import type { ShowcaseThemeId } from '@/themes/presets';
 import { playgroundSidebarStyles } from '@/styles/playgroundSidebar';
 import {
   ThemePlaygroundAdvancedTab,

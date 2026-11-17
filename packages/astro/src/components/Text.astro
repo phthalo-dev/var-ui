@@ -14,6 +14,8 @@ type Props = HTMLAttributes<'p'> & {
   weight?: NonNullable<TextBlockVariantProps['weight']>;
   /** Uppercase eyebrow/overline label treatment. @default false */
   eyebrow?: boolean;
+  /** Monospace family for code-flavored labels and figures. @default false */
+  mono?: boolean;
   /** Whitespace handling — `pre-wrap` preserves newlines and wrapping. @default normal */
   whiteSpace?: 'normal' | 'pre-wrap';
   /** Max lines before truncation. Counts above 3 go through the `lineClamp` variable. */
@@ -27,6 +29,7 @@ const {
   tone = 'primary',
   weight = 'normal',
   eyebrow = false,
+  mono = false,
   whiteSpace = 'normal',
   lineClamp,
   className,
@@ -58,7 +61,7 @@ const mergedStyle =
       : { ...style, ...clampStyle };
 
 const rp = mergeProps(
-  textBlock({ size, tone, weight, eyebrow, whiteSpace, lineClamp: clampVariant }),
+  textBlock({ size, tone, weight, eyebrow, mono, whiteSpace, lineClamp: clampVariant }),
   className,
 );
 const TextTag = as;

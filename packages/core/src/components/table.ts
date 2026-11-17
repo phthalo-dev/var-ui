@@ -119,6 +119,7 @@ export const table = typestyles.recipe({
           color: vars.headerColor.var,
           backgroundColor: vars.headerBg.var,
           padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
+          verticalAlign: 'middle',
           '&[data-align="center"]': { textAlign: 'center' },
           '&[data-align="end"]': { textAlign: 'end' },
         },
@@ -138,6 +139,11 @@ export const table = typestyles.recipe({
         cell: {
           padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
           color: vars.bodyColor.var,
+          // Override the element base styles (`th` header fill, top alignment): a row-header
+          // `th` in the body is still a body cell, and mixed-height rows center their content.
+          textAlign: 'start',
+          verticalAlign: 'middle',
+          backgroundColor: 'transparent',
           '&[data-align="center"]': { textAlign: 'center' },
           '&[data-align="end"]': { textAlign: 'end' },
         },

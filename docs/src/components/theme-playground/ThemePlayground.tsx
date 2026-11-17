@@ -10,9 +10,9 @@ import {
   type ColorMode,
 } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
 import { readStoredColorMode } from '@/lib/storedColorMode';
-import { useDocsFramework } from '@/lib/useDocsFramework';
-import type { DocsFramework } from '@var-ui/docs-components/framework';
+import { docsThemePresetMeta } from '@/themes/presetMeta';
 import { HighlightedCodeBlock } from '../HighlightedCodeBlock';
 import { BentoShowcase } from '../homepage/BentoShowcase';
 import { themePlaygroundStyles } from '@/styles/themePlayground';
@@ -28,12 +28,7 @@ const VIEWPORT_OPTIONS = [
   { value: 'mobile' as const, label: 'Mobile' },
 ];
 
-export type ThemePlaygroundProps = {
-  framework?: DocsFramework;
-};
-
-export default function ThemePlayground({ framework: initialFramework }: ThemePlaygroundProps) {
-  const framework = useDocsFramework(initialFramework);
+export default function ThemePlayground() {
   const { state, patchState } = useThemePlaygroundState();
   const [colorMode, setColorMode] = useState<ColorMode>(
     () => readStoredColorMode(STORAGE_KEY) ?? 'system',
@@ -44,6 +39,12 @@ export default function ThemePlayground({ framework: initialFramework }: ThemePl
     const stored = readStoredColorMode(STORAGE_KEY);
     if (stored !== undefined) setColorMode(stored);
   }, []);
+
+  // Showcase theme CSS is extracted to /themes/<id>.css; load the selected one.
+  useEffect(() => {
+    const theme = docsThemePresetMeta.find((entry) => entry.id === state.presetId);
+    if (theme) ensureShowcaseThemeStyles(theme);
+  }, [state.presetId]);
 
   useEffect(() => {
     syncColorModeFromStorage();
@@ -102,11 +103,7 @@ export default function ThemePlayground({ framework: initialFramework }: ThemePl
                     (state.viewport === 'mobile' ? s.previewFrameMobile : s.previewFrame).className,
                   )}
                 >
-                  <BentoShowcase
-                    framework={framework}
-                    themeId={state.presetId}
-                    previewStyle={previewStyle}
-                  />
+                  <BentoShowcase themeId={state.presetId} previewStyle={previewStyle} />
                 </div>
               </div>
             </div>

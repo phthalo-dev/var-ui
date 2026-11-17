@@ -35,6 +35,8 @@ const UNDOCUMENTED_HOOKS = [
   // jsdom stand-in for `:popover-open` (usePopoverElement reads it only when the selector is unsupported).
   'data-popover-open',
   'data-accordion-type',
+  // Calendar `marked` dates: the marker dot inside a day cell.
+  'data-calendar-mark',
   'data-active',
   'data-alert-action',
   'data-align',

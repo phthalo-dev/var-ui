@@ -208,6 +208,12 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
       color: colors.headingColor,
     },
     calendarNavButton: {
+      // Reset native <button> chrome (React Aria renders a real button).
+      appearance: 'none',
+      border: 'none',
+      backgroundColor: 'transparent',
+      font: 'inherit',
+      padding: 0,
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -224,38 +230,77 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
         cursor: 'not-allowed',
       },
     },
+    // The day grid is a <table>: opt out of the element base styles (outer border, cell
+    // borders, `th` fill, bottom margin) that are meant for prose tables.
     calendarGrid: {
       borderCollapse: 'collapse',
       width: '100%',
+      margin: 0,
+      border: 'none',
     },
     calendarHeaderCell: {
+      border: 'none',
+      backgroundColor: 'transparent',
+      textAlign: 'center',
       fontSize: t.fontSize.sm.var,
       fontWeight: t.fontWeight.medium.var,
       color: colors.headerCellColor,
       padding: t.space.xxs.var,
     },
+    // The cell slot is the focusable day element itself (RAC renders `td > div`), so the
+    // day box, hover, selection, today and marked states all style it directly.
     calendarCell: {
+      position: 'relative',
+      boxSizing: 'border-box',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // Fills its column up to the control size; never below the small control size, so
+      // shrink-to-fit popovers keep a usable grid.
+      width: '100%',
+      minWidth: t.size.control.sm.var,
+      maxWidth: t.size.control.md.var,
+      aspectRatio: '1',
+      margin: '0 auto',
+      borderRadius: t.radius.md.var,
+      border: 'none',
+      backgroundColor: 'transparent',
       textAlign: 'center',
       fontSize: t.fontSize.md.var,
+      fontVariantNumeric: 'tabular-nums',
       color: colors.cellColor,
-      padding: t.space.xxs.var,
       cursor: 'pointer',
-      '& > *': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: t.size.control.md.var,
-        height: t.size.control.md.var,
-        margin: '0 auto',
-        borderRadius: t.radius.md.var,
-      },
-      '&[data-hovered] > *': {
+      outline: 'none',
+      '&[data-hovered]': {
         backgroundColor: colors.cellHoverBackground,
       },
-      '&[data-selected] > *': {
+      '&[data-focus-visible]': {
+        boxShadow: `0 0 0 2px ${t.color.border.focus.var}`,
+      },
+      // Today: a ring in the selection color, so it reads without competing with selection.
+      '&[data-today]': {
+        fontWeight: t.fontWeight.semibold.var,
+        boxShadow: `inset 0 0 0 1.5px ${colors.cellSelectedBackground}`,
+      },
+      '&[data-selected]': {
         backgroundColor: colors.cellSelectedBackground,
         color: colors.cellSelectedColor,
+        boxShadow: 'none',
         ...atForcedColors(forced.selected),
+      },
+      // Marked days (`marked` prop): a dot under the number.
+      '& [data-calendar-mark]': {
+        position: 'absolute',
+        bottom: '0.1875rem',
+        left: '50%',
+        width: '0.25rem',
+        height: '0.25rem',
+        marginLeft: '-0.125rem',
+        borderRadius: t.radius.full.var,
+        backgroundColor: colors.cellSelectedBackground,
+      },
+      '&[data-selected] [data-calendar-mark]': {
+        backgroundColor: colors.cellSelectedColor,
       },
       '&[data-outside-month]': {
         opacity: 0.4,

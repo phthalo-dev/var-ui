@@ -1,16 +1,11 @@
 'use client';
 
-import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { Layout, LayoutContent, LayoutPanel, ResizeHandle, useResizable } from '@var-ui/react';
 import PlaygroundEditorSidebar from './PlaygroundEditorSidebar';
 import ThemePlayground from './ThemePlayground';
 import { playgroundShellStyles } from '@/styles/playgroundShell';
 
-export type PlaygroundShellProps = {
-  framework?: DocsFramework;
-};
-
-export default function PlaygroundShell({ framework }: PlaygroundShellProps) {
+export default function PlaygroundShell() {
   const { start } = useResizable({
     regions: {
       start: {
@@ -46,7 +41,7 @@ export default function PlaygroundShell({ framework }: PlaygroundShellProps) {
         }
         content={
           <LayoutContent padding="none">
-            <ThemePlayground framework={framework} />
+            <ThemePlayground />
           </LayoutContent>
         }
       />

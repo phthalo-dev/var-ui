@@ -6,4 +6,6 @@ export const overlayTokenSchema = {
   panel: atProperty.color,
   hover: atProperty.color,
   pressed: atProperty.color,
+  /** Shadow ink: a dark tint in both modes (never the light text color). */
+  shadow: atProperty.color,
 } as const satisfies TokenSchema;

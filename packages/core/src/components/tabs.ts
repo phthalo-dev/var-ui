@@ -67,6 +67,10 @@ export const tabs = typestyles.recipe({
       base: {
         root: {
           display: 'grid',
+          // A shrinkable track: wide panel content (code, tables) scrolls inside the panel
+          // instead of widening the tabs past their container.
+          gridTemplateColumns: 'minmax(0, 1fr)',
+          minWidth: 0,
           gap: t.space.sm.var,
         },
         list: {
@@ -117,7 +121,10 @@ export const tabs = typestyles.recipe({
           },
         },
         panel: {
-          padding: t.space.sm.var,
+          minWidth: 0,
+          // Block padding only: panel content lines up with the tab list's edges.
+          paddingBlock: t.space.sm.var,
+          paddingInline: 0,
         },
       },
     };

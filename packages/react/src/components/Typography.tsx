@@ -12,6 +12,8 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   /** Visual size, independent of level. @default md */
   size?: NonNullable<HeadingVariantProps['size']>;
+  /** Font weight; display headlines often pair a light lead-in with a bold payoff. @default semibold */
+  weight?: NonNullable<HeadingVariantProps['weight']>;
   /** Ref to the underlying heading element. */
   ref?: Ref<HTMLHeadingElement>;
 };
@@ -20,12 +22,13 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
  * Semantic heading with decoupled visual size.
  *
  * ```tsx
- * <Heading level={1} size="display">var-ui</Heading>
+ * <Heading level={1} size="display-lg">var-ui</Heading>
  * ```
  */
 export function Heading({
   level = 2,
   size = 'md',
+  weight,
   className,
   ref,
   ...props
@@ -33,7 +36,7 @@ export function Heading({
   return createElement(`h${level}`, {
     ...props,
     ref,
-    ...mergeProps(heading({ size }), className),
+    ...mergeProps(heading({ size, weight }), className),
   });
 }
 
@@ -48,6 +51,8 @@ export type TextProps = HTMLAttributes<HTMLElement> & {
   weight?: NonNullable<TextBlockVariantProps['weight']>;
   /** Uppercase eyebrow/overline label treatment. @default false */
   eyebrow?: boolean;
+  /** Monospace family for code-flavored labels and figures. @default false */
+  mono?: boolean;
   /** Whitespace handling — `pre-wrap` preserves newlines and wrapping (agent output, memory bodies). @default normal */
   whiteSpace?: 'normal' | 'pre-wrap';
   /** Max lines before truncation. Counts above 3 go through the `lineClamp` variable. */
@@ -78,6 +83,7 @@ export function Text({
   tone = 'primary',
   weight = 'normal',
   eyebrow = false,
+  mono = false,
   whiteSpace = 'normal',
   lineClamp,
   className,
@@ -105,6 +111,7 @@ export function Text({
         tone,
         weight,
         eyebrow,
+        mono,
         whiteSpace,
         lineClamp: clampVariant,
       }),

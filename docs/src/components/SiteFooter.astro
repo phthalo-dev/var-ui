@@ -1,0 +1,69 @@
+---
+import { Text, mergeProps } from '@var-ui/astro';
+import VarUiWordmark from './VarUiWordmark.astro';
+import { githubUrl } from '../data/navigation';
+import { siteFooter } from '../styles/siteFooter';
+
+const f = siteFooter();
+
+const columns = [
+  {
+    title: 'Docs',
+    links: [
+      { text: 'Getting started', href: '/docs/getting-started' },
+      { text: 'Installation', href: '/docs/installation' },
+      { text: 'Forms', href: '/docs/forms' },
+    ],
+  },
+  {
+    title: 'System',
+    links: [
+      { text: 'Components', href: '/components' },
+      { text: 'Theming', href: '/theming' },
+      { text: 'Design tokens', href: '/theming/tokens' },
+      { text: 'Playground', href: '/playground' },
+    ],
+  },
+  {
+    title: 'Project',
+    links: [
+      { text: 'GitHub', href: githubUrl },
+      { text: 'Releases', href: `${githubUrl}/releases` },
+      { text: 'Issues', href: `${githubUrl}/issues` },
+    ],
+  },
+];
+---
+
+<footer {...mergeProps(f.root)}>
+  <div {...mergeProps(f.inner)}>
+    <div {...mergeProps(f.brand)}>
+      <a href="/" aria-label="Var UI home"><VarUiWordmark size="header" /></a>
+      <Text size="sm" tone="secondary" className={f.blurb.className}>
+        An open source design system built on React Aria Components and TypeStyles. Readable CSS,
+        real tokens, any framework.
+      </Text>
+    </div>
+    <nav {...mergeProps(f.columns)} aria-label="Footer">
+      {
+        columns.map((column) => (
+          <div {...mergeProps(f.column)}>
+            <Text as="p" size="xs" tone="secondary" weight="semibold" eyebrow mono className={f.heading.className}>
+              {column.title}
+            </Text>
+            <ul {...mergeProps(f.list)}>
+              {column.links.map((link) => (
+                <li>
+                  <a href={link.href} {...mergeProps(f.link)}>{link.text}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+    <Text size="xs" tone="secondary" className={f.legal.className}>
+      MIT licensed. Styled with TypeStyles, so every class in this page is one you can read.
+    </Text>
+  </div>
+</footer>

@@ -11,4 +11,10 @@ export const overlay = {
   backdrop: alpha(tokens.color.overlay.default.var, 0.6, 'oklch'),
   hover: alpha(tokens.color.text.primary.var, 0.08, 'oklch'),
   pressed: alpha(tokens.color.text.primary.var, 0.14, 'oklch'),
+  // Dark-mode shadows tinted with the (light) text color read as a pale glow; use near-black
+  // ink in both modes, deeper in dark mode where the surface itself is dark.
+  shadow: {
+    light: tokens.color.palette['slate-10'].var,
+    dark: 'oklch(0 0 0)',
+  },
 } satisfies ColorTokenPatch['overlay'];

@@ -34,9 +34,21 @@ function isResolvableColor(value: string): boolean {
   return !value.startsWith('var(');
 }
 
-/** Resolve accessible text on a filled tone background. */
+const INK = 'oklch(18% 0.02 260)';
+
+/**
+ * Resolve accessible text on a filled tone background: white when it reaches 4.5:1,
+ * otherwise the theme's fallback when it reaches 4.5:1, otherwise whichever of the fallback
+ * and a near-black ink contrasts more (so a failing fallback, like white on a light cyan,
+ * never ships).
+ */
 export function onBackground(background: string, onFilledFallback: string): string {
-  return contrastRatio(WHITE, background) >= 4.5 ? WHITE : onFilledFallback;
+  if (contrastRatio(WHITE, background) >= 4.5) return WHITE;
+  const fallbackRatio = isResolvableColor(onFilledFallback)
+    ? contrastRatio(onFilledFallback, background)
+    : Number.POSITIVE_INFINITY;
+  if (fallbackRatio >= 4.5) return onFilledFallback;
+  return fallbackRatio >= contrastRatio(INK, background) ? onFilledFallback : INK;
 }
 
 /** Build a single-mode tone face from ramp foreground/background anchors. */

@@ -42,6 +42,10 @@ export const chatMessage = typestyles.recipe({
         flexDirection: 'column',
         gap: t.space.xxs.var,
         minWidth: 0,
+        // The width cap lives here, against the message row. On the bubble, a percentage
+        // resolved against this shrink-to-fit column and squeezed short messages
+        // ("Perfect, ship it.") onto two lines.
+        maxWidth: `min(80%, ${t.size.panel.xl.var})`,
       },
       metadata: {
         fontSize: t.fontSize.xs.var,

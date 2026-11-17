@@ -1,168 +1,167 @@
 ---
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import HomepageIsland from '../components/homepage/HomepageIsland';
+import InstallCommand from '../components/homepage/InstallCommand';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
 import homepagePreloads from 'virtual:homepage-preloads';
-import {
-  Card,
-  CodeBlock,
-  Heading,
-  Text,
-  cx,
-  mergeProps,
-} from '@var-ui/astro';
-import { button } from '@var-ui/core';
-import { githubUrl } from '../data/navigation';
+import HeroAppWindow from '../components/homepage/HeroAppWindow.astro';
+import LiveInspector from '../components/homepage/LiveInspector';
+import KeyboardDemo from '../components/homepage/KeyboardDemo';
+import { Button, Heading, Text, cx } from '@var-ui/astro';
+import VariableRibbons from '../components/homepage/VariableRibbons.astro';
+import TokenCascade from '../components/homepage/TokenCascade.astro';
+import { SPECTRUM_STEPS, homeSpectrum } from '../styles/homeSpectrum';
+import { componentRegistry } from '../data/components';
+import { docsThemePresets } from '../themes/presets';
 import { homePage } from '../styles/homePage';
 
-const framework = Astro.locals.framework;
 const hp = homePage();
+const installCommand = 'npx @var-ui/cli init';
 
-const features = [
-  {
-    title: 'TypeStyles-first',
-    description:
-      'Component recipes and design tokens replace ad-hoc CSS files. Breakpoints, themes, and variants stay type-safe.',
-  },
-  {
-    title: 'Accessibility built in',
-    description:
-      'React bindings use React Aria Components for keyboard, focus, and screen-reader behavior out of the box.',
-  },
-  {
-    title: 'React, Astro, or HTML',
-    description:
-      'Ship with @var-ui/react, @var-ui/astro, or core HTML recipes — the same tokens and visuals everywhere.',
-  },
-  {
-    title: 'Theme system',
-    description:
-      'createDesignTheme() drives color modes, presets, and CSS variables. Swap palettes without rewriting components.',
-  },
-  {
-    title: 'Docs kit',
-    description:
-      '@var-ui/docs powers this site: search, TOC, markdown views, and optional component catalogs.',
-  },
-  {
-    title: 'Agent-ready CLI',
-    description:
-      'npx @var-ui/cli init wires AGENTS.md, component search, and generated docs for coding assistants.',
-  },
-] as const;
+const sp = homeSpectrum();
 
-const exploreLinks = [
-  {
-    title: 'Documentation',
-    description: 'Installation, providers, and architecture guides for new projects.',
-    hint: 'Getting started →',
-    href: '/docs/getting-started',
-  },
-  {
-    title: 'Components',
-    description: 'Live demos for every exported component with React, Astro, and HTML snippets.',
-    hint: 'Browse catalog →',
-    href: '/components',
-  },
-  {
-    title: 'Theming',
-    description: 'Tokens, themes, color modes, and CSS variables for brand customization.',
-    hint: 'Customize →',
-    href: '/theming',
-  },
-  {
-    title: 'Playground',
-    description: 'Tune tokens and preview themes interactively before committing to a palette.',
-    hint: 'Open playground →',
-    href: '/playground',
-  },
-] as const;
+/** Project facts written as custom properties for the ticker. */
+const facts = [
+  { property: '--components', value: `${componentRegistry.length}` },
+  { property: '--frameworks', value: '3', note: 'react, astro, html' },
+  { property: '--themes', value: `${docsThemePresets.length}` },
+  { property: '--hashed-class-names', value: '0' },
+  { property: '--wcag', value: 'AA' },
+  { property: '--runtime-css-in-js', value: 'none' },
+  { property: '--license', value: 'MIT' },
+];
 
-const primaryCta = mergeProps(button({ tone: 'accent', appearance: 'filled', size: 'md' }));
-const secondaryCta = mergeProps(
-  button({ size: 'md' }),
-);
+
 ---
 
-<MarketingLayout title="Var UI">
+<MarketingLayout title="Var UI — readable, token-first design system" bleed>
   <Fragment slot="head">
     {homepagePreloads.map((href) => <link rel="modulepreload" href={href} crossorigin />)}
   </Fragment>
 
   <div class={cx(hp.root)}>
     <header class={cx(hp.hero)}>
-      <VarUiWordmark as="h1" size="hero" />
-      <p class={cx(hp.heroHeadline)}>
-        An open source design system that&apos;s fully customizable and agent ready.
-      </p>
-      <div class={cx(hp.heroActions)}>
-        <a href="/docs/getting-started" {...primaryCta}>Get started</a>
-        <a href="/components" {...secondaryCta}>Browse components</a>
+      <div class={cx(hp.container, hp.heroGrid)}>
+
+        <div class={cx(hp.heroInner)}>
+          <a class={cx(hp.announce)} href="/components/dialog">
+            <span class={cx(hp.announceBadge)}>New</span>
+            <span class={cx(hp.announceText)}>
+              <span class={cx(hp.announceLong)}>Dialog sizes, title shorthand &amp; onClose</span>
+              <span class={cx(hp.announceShort)}>Dialog sizes &amp; onClose</span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <VarUiWordmark as="h1" size="hero" />
+          <Heading level={2} size="display-sm" weight="light" className={cx(hp.tagline)}>
+            <span>An open source design system that&apos;s</span>
+            <span class={cx(hp.taglineStrong)}>fully customizable and agent ready</span>
+          </Heading>
+          <div class={cx(hp.heroActions)}>
+            <Button href="/docs/getting-started" tone="accent" appearance="filled" size="xl" pill>
+              Get started
+            </Button>
+            <Button href="/components" appearance="outline" size="xl" pill>
+              Browse components
+            </Button>
+          </div>
+          <InstallCommand client:idle command={installCommand} quiet />
+        </div>
+
+        <HeroAppWindow />
       </div>
-      <p class={cx(hp.heroMeta)}>
-        Open source · Built on <a href="/docs/getting-started">React Aria Components</a> and{' '}
-        <a href="/theming/tokens">TypeStyles</a> ·{' '}
-        <a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
-      </p>
     </header>
 
-    <section class={cx(hp.install)} aria-label="Install">
-      <CodeBlock
-        variant="terminal"
-        language="bash"
-        code="pnpm add @var-ui/react @var-ui/core @var-ui/icons react react-dom react-aria-components"
-      />
+
+    <div class={cx(hp.band)}>
+    <section class={cx(hp.container, hp.section)} aria-labelledby="home-showcase-heading">
+      <div class={cx(hp.sectionHeader)}>
+        <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>try-it</Text>
+        <Heading level={2} size="display-md" id="home-showcase-heading">
+          Your turn. Pick a theme.
+        </Heading>
+        <Text tone="secondary" className={cx(hp.sectionLead)}>
+          The hero window cycles themes for you; here you drive. Everything below is live
+          <code>@var-ui/react</code>: pick a theme and the whole product UI repaints from CSS
+          variables alone, while the readout shows the values doing the work.
+        </Text>
+      </div>
+      <HomepageIsland client:load />
+    </section>
+    </div>
+
+    <VariableRibbons facts={facts} />
+
+    <section class={cx(hp.container, hp.section)} aria-labelledby="home-why-heading">
+      <div class={cx(hp.sectionHeader)}>
+        <Heading level={2} size="display-md" id="home-why-heading" className={cx(hp.headingLines)}>
+          <span>Readable CSS. Real tokens.</span>
+          <span>Any framework.</span>
+        </Heading>
+      </div>
+
+      <div class={cx(hp.features)}>
+        <article class={cx(hp.feature, hp.featureWide)}>
+          <div class={cx(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>devtools</Text>
+            <Heading level={3} size="display-sm">Inspect it and understand it.</Heading>
+            <Text tone="secondary" className={cx(hp.sectionLead)}>
+              TypeStyles emits named classes and data attributes, not hashed atoms. Flip the props
+              on this live button: the panel reads the rules that now match straight from the page&apos;s
+              stylesheets.
+            </Text>
+          </div>
+          <LiveInspector client:visible />
+        </article>
+
+        <article class={cx(hp.feature, hp.featureWide)}>
+          <div class={cx(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>cascade</Text>
+            <Heading level={3} size="display-sm">One variable, every component.</Heading>
+            <Text tone="secondary" className={cx(hp.sectionLead)}>
+              A token feeds a rule you can read, and the rule paints every component that uses
+              it. Re-point <code>--color-accent</code> and everything downstream follows, with the
+              same names and props in <code>@var-ui/react</code>, <code>@var-ui/astro</code>, or
+              plain HTML.
+            </Text>
+          </div>
+          <TokenCascade />
+        </article>
+
+        <article class={cx(hp.feature, hp.featureWide)}>
+          <div class={cx(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>a11y</Text>
+            <Heading level={3} size="display-sm">Built for the keyboard.</Heading>
+            <Text tone="secondary" className={cx(hp.sectionLead)}>
+              Interactive components sit on React Aria, so focus order, arrow-key navigation,
+              roles, names and states come built in. Drive these with the keyboard and watch
+              what assistive tech is told.
+            </Text>
+          </div>
+          <KeyboardDemo client:visible />
+        </article>
+      </div>
     </section>
 
-    <section class={cx(hp.section)} aria-labelledby="home-why-heading">
-      <div class={cx(hp.sectionHeader)}>
-        <Heading level={2} size="lg" id="home-why-heading">Why teams choose Var UI</Heading>
-        <p class={cx(hp.sectionLead)}>
-          Compare us to shadcn, Mantine, or Reshaped: Var UI pairs a typed token system with
-          multi-framework output and a docs kit you can fork for your own design system site.
-        </p>
+    <section class={cx(hp.closing)} aria-labelledby="home-closing-heading">
+      <div class={cx(sp.root)} aria-hidden="true">
+        <div class={cx(sp.anchor)}>
+          {SPECTRUM_STEPS.map(() => <span class={cx(sp.ring)} />)}
+        </div>
       </div>
-      <div class={cx(hp.featuresGrid)}>
-        {
-          features.map((feature) => (
-            <Card title={feature.title} className={cx(hp.featureCard)}>
-              <Text>{feature.description}</Text>
-            </Card>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class={cx(hp.showcaseBand)} aria-labelledby="home-showcase-heading">
-      <div class={cx(hp.sectionHeader)}>
-        <Heading level={2} size="lg" id="home-showcase-heading">See it in action</Heading>
-        <p class={cx(hp.sectionLead)}>
-          Switch themes and frameworks with the controls below. The same components render as
-          React, Astro markup, or core HTML recipes.
-        </p>
-      </div>
-      <HomepageIsland client:load framework={framework} />
-    </section>
-
-    <section class={cx(hp.section)} aria-labelledby="home-explore-heading">
-      <div class={cx(hp.sectionHeader)}>
-        <Heading level={2} size="lg" id="home-explore-heading">Explore</Heading>
-        <p class={cx(hp.sectionLead)}>
-          Jump into guides, component demos, theming docs, or the interactive playground.
-        </p>
-      </div>
-      <div class={cx(hp.exploreGrid)}>
-        {
-          exploreLinks.map((link) => (
-            <Card
-              title={link.title}
-              description={link.description}
-              hint={link.hint}
-              href={link.href}
-              className={cx(hp.exploreCard)}
-            />
-          ))
-        }
+      <div class={cx(hp.container, hp.closingInner)}>
+        <Heading level={2} size="display-lg" id="home-closing-heading">
+          Start with <VarUiWordmark size="inline" />
+        </Heading>
+        <div class={cx(hp.heroActions)}>
+          <Button href="/docs/getting-started" tone="accent" appearance="filled" size="xl" pill>
+            Read the docs
+          </Button>
+          <Button href="/playground" appearance="outline" size="xl" pill>
+            Open the playground
+          </Button>
+        </div>
+        <InstallCommand client:visible command={installCommand} />
       </div>
     </section>
   </div>

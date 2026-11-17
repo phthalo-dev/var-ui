@@ -61,9 +61,9 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
  * support) when `href` is set, so a button can be a link.
  */
 export function Button(props: ButtonProps): JSX.Element {
-  const { tone, appearance, size, layout, elevated, className, ...rest } = props;
+  const { tone, appearance, size, layout, elevated, pill, className, ...rest } = props;
   const resolvedSize = useResolvedControlSize(size);
-  const styles = button({ tone, appearance, size: resolvedSize, layout, elevated });
+  const styles = button({ tone, appearance, size: resolvedSize, layout, elevated, pill });
   const merged = mergeProps(styles, className);
   const extras = pickRacDroppedDomProps(rest);
 
