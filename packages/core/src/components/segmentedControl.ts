@@ -116,7 +116,7 @@ export const segmentedControl = typestyles.recipe({
               backgroundColor: 'transparent',
               borderColor: 'transparent',
             },
-            '&:focus-visible': {
+            '&:focus-visible, &[data-focus-visible]': {
               ...focusRing,
             },
             '&[data-selected], &[aria-pressed="true"]': {

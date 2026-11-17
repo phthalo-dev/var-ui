@@ -4,6 +4,7 @@ export const snippets = {
   react: `import { SegmentedControl } from '@var-ui/react';
 
 <SegmentedControl
+  aria-label="View"
   defaultValue="list"
   options={[
     { value: 'list', label: 'List' },

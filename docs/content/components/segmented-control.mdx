@@ -5,7 +5,7 @@ description: Segmented toggle group for mutually exclusive options.
 
 # SegmentedControl
 
-Segmented toggle group for mutually exclusive options. Built on React Aria `ToggleButtonGroup` with an animated indicator. Prefer this over a row of standalone `ToggleButton`s when only one choice should be active.
+Segmented toggle group for mutually exclusive options. Built on React Aria `RadioGroup` with an animated indicator. Prefer this over a row of standalone `ToggleButton`s when only one choice should be active.
 
 ## Examples
 
@@ -27,4 +27,4 @@ Drive selection with `value` and `onValueChange` when the active segment must sy
 
 ## Accessibility
 
-Each segment is a toggle button inside a group; keyboard users can move between segments with arrow keys (React Aria). For icon-only options, set `aria-label` on the option. Options are `{ value, label, disabled? }`; the control is always single-select.
+Each segment is a radio button inside a `role="radiogroup"`; keyboard users Tab to the checked option (or the first option when none is checked) and move between options with arrow keys (React Aria). For icon-only options, set `aria-label` on the option. Give the group an accessible name with `aria-label` or `aria-labelledby`. Options are `{ value, label, disabled? }`; the control is always single-select.

@@ -206,31 +206,68 @@ describe('SegmentedControl', () => {
 
   it('uncontrolled: defaultValue and onValueChange', async () => {
     const onValueChange = vi.fn();
-    render(<SegmentedControl options={segs} defaultValue="list" onValueChange={onValueChange} />);
-    expect(screen.getByRole('radio', { name: 'List' }).getAttribute('aria-checked')).toBe('true');
+    render(
+      <SegmentedControl
+        aria-label="View"
+        options={segs}
+        defaultValue="list"
+        onValueChange={onValueChange}
+      />,
+    );
+    expect((screen.getByRole('radio', { name: 'List' }) as HTMLInputElement).checked).toBe(true);
     await userEvent.setup().click(screen.getByRole('radio', { name: 'Grid' }));
     expect(onValueChange).toHaveBeenCalledWith('grid');
-    expect(screen.getByRole('radio', { name: 'Grid' }).getAttribute('aria-checked')).toBe('true');
-    expect((screen.getByRole('radio', { name: 'Board' }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole('radio', { name: 'Grid' }) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByRole('radio', { name: 'Board' }) as HTMLInputElement).disabled).toBe(true);
   });
 
   it('controlled value', async () => {
     const onValueChange = vi.fn();
     const { rerender } = render(
-      <SegmentedControl options={segs} value="list" onValueChange={onValueChange} />,
+      <SegmentedControl
+        aria-label="View"
+        options={segs}
+        value="list"
+        onValueChange={onValueChange}
+      />,
     );
     await userEvent.setup().click(screen.getByRole('radio', { name: 'Grid' }));
     expect(onValueChange).toHaveBeenCalledWith('grid');
     // parent has not updated: stays on list
-    expect(screen.getByRole('radio', { name: 'List' }).getAttribute('aria-checked')).toBe('true');
-    rerender(<SegmentedControl options={segs} value="grid" onValueChange={onValueChange} />);
-    expect(screen.getByRole('radio', { name: 'Grid' }).getAttribute('aria-checked')).toBe('true');
+    expect((screen.getByRole('radio', { name: 'List' }) as HTMLInputElement).checked).toBe(true);
+    rerender(
+      <SegmentedControl
+        aria-label="View"
+        options={segs}
+        value="grid"
+        onValueChange={onValueChange}
+      />,
+    );
+    expect((screen.getByRole('radio', { name: 'Grid' }) as HTMLInputElement).checked).toBe(true);
   });
 
   it('disabled disables every segment', () => {
-    render(<SegmentedControl options={segs} disabled />);
+    render(<SegmentedControl aria-label="View" options={segs} disabled />);
     for (const r of screen.getAllByRole('radio')) {
-      expect((r as HTMLButtonElement).disabled).toBe(true);
+      expect((r as HTMLInputElement).disabled).toBe(true);
     }
+  });
+
+  it('Tab lands on the checked radio and roving tabindex skips unchecked radios', async () => {
+    render(
+      <>
+        <button>Before</button>
+        <SegmentedControl aria-label="View" options={segs} defaultValue="grid" />
+      </>,
+    );
+    const list = screen.getByRole('radio', { name: 'List' }) as HTMLInputElement;
+    const grid = screen.getByRole('radio', { name: 'Grid' }) as HTMLInputElement;
+
+    expect(list.tabIndex).toBe(-1);
+    expect(grid.tabIndex).toBe(0);
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Before' }));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(grid);
   });
 });

@@ -36,20 +36,20 @@ describe('ColorModeToggle', () => {
 
   it('marks the current color mode as selected', () => {
     wrap(<ColorModeToggle />, 'dark');
-    expect(screen.getByRole('radio', { name: 'Dark' }).getAttribute('aria-checked')).toBe('true');
-    expect(screen.getByRole('radio', { name: 'Light' }).getAttribute('aria-checked')).toBe('false');
+    expect((screen.getByRole('radio', { name: 'Dark' }) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByRole('radio', { name: 'Light' }) as HTMLInputElement).checked).toBe(false);
   });
 
   it('updates color mode when a segment is pressed', async () => {
     const user = userEvent.setup();
     wrap(<ColorModeToggle />);
     await user.click(screen.getByRole('radio', { name: 'Dark' }));
-    expect(screen.getByRole('radio', { name: 'Dark' }).getAttribute('aria-checked')).toBe('true');
+    expect((screen.getByRole('radio', { name: 'Dark' }) as HTMLInputElement).checked).toBe(true);
   });
 
   it('renders text labels when appearance is labels', () => {
     wrap(<ColorModeToggle appearance="labels" />);
-    expect(screen.getByRole('radio', { name: 'Light' }).textContent).toContain('Light');
+    expect(screen.getByText('Light')).toBeTruthy();
     expect(screen.queryByTestId('icon-light')).toBeNull();
   });
 
@@ -68,7 +68,7 @@ describe('ColorModeToggle', () => {
   it('maps system preference to resolved light/dark when system is omitted', () => {
     wrap(<ColorModeToggle resolvedColorMode="dark" />, 'system');
     // defaultColorMode is system but includeSystem is false — selection follows resolved
-    expect(screen.getByRole('radio', { name: 'Dark' }).getAttribute('aria-checked')).toBe('true');
+    expect((screen.getByRole('radio', { name: 'Dark' }) as HTMLInputElement).checked).toBe(true);
   });
 
   it('selects the stored preference rather than defaultColorMode when storageKey is set', () => {
@@ -80,10 +80,8 @@ describe('ColorModeToggle', () => {
         </IconProvider>
       </DesignSystemProvider>,
     );
-    expect(screen.getByRole('radio', { name: 'Dark' }).getAttribute('aria-checked')).toBe('true');
-    expect(screen.getByRole('radio', { name: 'System' }).getAttribute('aria-checked')).toBe(
-      'false',
-    );
+    expect((screen.getByRole('radio', { name: 'Dark' }) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByRole('radio', { name: 'System' }) as HTMLInputElement).checked).toBe(false);
     localStorage.clear();
   });
 });

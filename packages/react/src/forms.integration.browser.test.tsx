@@ -481,9 +481,10 @@ describe('Controller: ToggleGroup and SegmentedControl', () => {
       ),
       { defaultValues: { view: 'list' as string | null } },
     );
-    const selected = (name: string) =>
-      getByRole('radio', { name }).getAttribute('aria-checked') === 'true';
-    await userEvent.click(getByRole('radio', { name: 'Grid' }));
+    const selected = (name: string) => (getByRole('radio', { name }) as HTMLInputElement).checked;
+    const radioLabel = (name: string) =>
+      getByRole('radio', { name }).parentElement?.parentElement as HTMLElement;
+    await userEvent.click(radioLabel('Grid'));
     await submit();
     expect(onValid.mock.calls[0]![0]).toEqual({ view: 'grid' });
     form().setValue('view', 'list');
@@ -538,7 +539,7 @@ describe('field.ref on controls whose ref is a container', () => {
       required,
     );
     await submit();
-    expect(document.activeElement?.textContent).toBe('List');
+    expect(document.activeElement?.parentElement?.parentElement?.textContent).toBe('List');
   });
 });
 
