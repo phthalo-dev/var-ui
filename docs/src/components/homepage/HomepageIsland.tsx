@@ -9,10 +9,6 @@ import { ThemeShowcaseSwitcher, type ShowcaseThemeId } from './ThemeShowcaseSwit
 
 const STORAGE_KEY = 'theme-mode';
 
-function readInitialColorMode(): ColorMode {
-  return readStoredColorMode(STORAGE_KEY) ?? 'system';
-}
-
 /**
  * Homepage product theater: a theme picker with a live token readout over a bento of
  * `@var-ui/react` product UI.
@@ -22,7 +18,11 @@ function readInitialColorMode(): ColorMode {
  */
 export default function HomepageIsland() {
   const [showcaseThemeId, setShowcaseThemeId] = useState<ShowcaseThemeId>('default');
-  const [colorMode, setColorMode] = useState<ColorMode>(readInitialColorMode);
+  // Start at 'system' to match the server render; the effect below applies the stored mode.
+  // Reading storage here would leave the SSR wrapper without `data-color-mode` after
+  // hydration (React does not patch mismatched attributes), so nested theme classes
+  // would follow the OS instead of the page.
+  const [colorMode, setColorMode] = useState<ColorMode>('system');
   const previewRef = useRef<HTMLDivElement>(null);
   const [stylesVersion, setStylesVersion] = useState(0);
 

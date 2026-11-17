@@ -2,7 +2,6 @@ import { keyframes } from 'typestyles';
 import { atReducedMotion, designTokens as t, typestyles } from '@var-ui/core';
 
 const belowLg = typestyles.breakpoint('lg', 'max');
-const belowMd = typestyles.breakpoint('md', 'max');
 const fromLg = typestyles.breakpoint('lg', 'min');
 
 const flow = keyframes.create('home-cascade-flow', {
@@ -35,8 +34,9 @@ export const homeCascade = typestyles.recipe({
     'step3',
     'token',
     'tokenSwatch',
-    'code',
-    'rule',
+    'tokenText',
+    'tokenName',
+    'tokenValue',
     'components',
     'connector',
     'connector1',
@@ -52,7 +52,7 @@ export const homeCascade = typestyles.recipe({
         gridTemplateColumns: 'minmax(0, 1fr)',
         rowGap: t.space.sm.var,
         [fromLg]: {
-          gridTemplateColumns: 'minmax(0, 1.1fr) 3.5rem minmax(0, 1fr) 3.5rem minmax(0, 0.9fr)',
+          gridTemplateColumns: 'minmax(0, 0.85fr) 2rem minmax(0, 2.2fr) 2rem minmax(0, 0.85fr)',
           gridTemplateRows: 'auto auto',
           alignItems: 'start',
         },
@@ -76,10 +76,7 @@ export const homeCascade = typestyles.recipe({
         gap: t.space.md.var,
         ...step(1),
       },
-      step2: {
-        ...step(3),
-        [belowMd]: { display: 'none' },
-      },
+      step2: step(3),
       step3: step(5),
       token: {
         display: 'flex',
@@ -87,13 +84,24 @@ export const homeCascade = typestyles.recipe({
         gap: t.space.sm.var,
         paddingBlock: t.space.sm.var,
         paddingInline: t.space.md.var,
-        borderRadius: t.radius.full.var,
+        borderRadius: t.radius.lg.var,
         border: `1px solid ${mix(t.color.tone.accent.foreground.var, 45)}`,
         backgroundColor: t.color.tone.accent.subtleBackground.var,
         fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.md.var,
+        fontSize: t.fontSize.sm.var,
         color: t.color.text.primary.var,
       },
+      tokenText: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.125rem',
+        minWidth: 0,
+      },
+      tokenName: {
+        color: t.color.code.attr.var,
+        overflowWrap: 'anywhere',
+      },
+      tokenValue: { color: t.color.text.primary.var, fontWeight: t.fontWeight.semibold.var },
       tokenSwatch: {
         width: '1.25rem',
         height: '1.25rem',
@@ -101,39 +109,6 @@ export const homeCascade = typestyles.recipe({
         borderRadius: t.radius.full.var,
         backgroundColor: t.color.tone.accent.background.var,
         boxShadow: `0 0 0 3px ${mix(t.color.tone.accent.background.var, 25)}`,
-      },
-      code: {
-        margin: 0,
-        padding: t.space.md.var,
-        borderRadius: t.radius.lg.var,
-        border: `1px solid ${t.color.border.default.var}`,
-        backgroundColor: t.color.background.code.var,
-        fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.sm.var,
-        lineHeight: 1.7,
-        whiteSpace: 'pre',
-        overflowX: 'auto',
-        color: t.color.code.base.var,
-        '& b': { color: t.color.code.title.var, fontWeight: t.fontWeight.normal.var },
-        '& i': { color: t.color.code.attr.var, fontStyle: 'normal' },
-        '& em': { color: t.color.code.string.var, fontStyle: 'normal' },
-        [belowMd]: { display: 'none' },
-      },
-      rule: {
-        margin: 0,
-        padding: t.space.lg.var,
-        borderRadius: t.radius.lg.var,
-        border: `1px solid ${t.color.border.default.var}`,
-        backgroundColor: t.color.background.code.var,
-        fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.md.var,
-        lineHeight: 1.8,
-        whiteSpace: 'pre',
-        overflowX: 'auto',
-        color: t.color.code.base.var,
-        '& b': { color: t.color.code.title.var, fontWeight: t.fontWeight.normal.var },
-        '& i': { color: t.color.code.attr.var, fontStyle: 'normal' },
-        '& em': { color: t.color.code.string.var, fontStyle: 'normal' },
       },
       components: {
         display: 'flex',

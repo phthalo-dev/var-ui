@@ -1,9 +1,8 @@
 ---
 /**
- * Hero product window: a small billing screen built from Var UI components, annotated with
- * the tokens that style it. Its accent hue animates through one registered CSS variable
- * (see `homeAppWindow`). Decorative — the same components are live further down — so it is
- * `aria-hidden` and `inert`.
+ * Hero product window: a small billing screen built from Var UI components, annotated like a
+ * design spec with the tokens that style it. Decorative (the same components are live further
+ * down), so it is `aria-hidden` and `inert`.
  */
 import {
   Avatar,
@@ -18,30 +17,23 @@ import {
   Text,
   cx,
 } from '@var-ui/astro';
-import { defaultThemeClassName, scrollFade } from '@var-ui/core';
-import { docsThemePresetMeta } from '../../themes/presetMeta';
 import { homeAppWindow } from '../../styles/homeAppWindow';
-
-/** Themes the window cycles through, in order. */
-// Calm themes first and between the loud ones; Default (the brand) dwells longest.
-const cycle = ['default', 'forest', 'windows-95', 'ai-glow', 'amber', 'rose'];
-const cycleThemes = cycle.map((id) => docsThemePresetMeta.find((theme) => theme.id === id)!);
 
 const w = homeAppWindow();
 ---
 
-<div class={cx(w.stage)} aria-hidden="true" inert data-home-window-stage>
-  <span class={cx(w.spec, w.specTopLeft)}>--radius-xl: <span class={cx(w.specValue)} data-spec="radius">16px</span></span>
+<div class={cx(w.stage)} aria-hidden="true" inert>
+  <span class={cx(w.spec, w.specTopLeft)}>--radius-xl: <span class={cx(w.specValue)}>16px</span></span>
   <span class={cx(w.spec, w.specRight)}>
-    <span class={cx(w.specSwatch)} data-spec="swatch"></span>--accent: <span class={cx(w.specValue)} data-spec="accent">phthalo</span>
+    <span class={cx(w.specSwatch)}></span>--color-accent
   </span>
   <span class={cx(w.spec, w.specLeft)} data-side="left">
-    --font-display: <span class={cx(w.specValue)} data-spec="font">Space Grotesk</span>
+    --space-lg: <span class={cx(w.specValue)}>24px</span>
     <span class={cx(w.specLine)}></span>
   </span>
-  <span class={cx(w.spec, w.specBottom)}><span class={cx(w.specValue)} data-spec="theme">.{defaultThemeClassName}</span></span>
+  <span class={cx(w.spec, w.specBottom)}>--shadow-xl</span>
 
-  <div class={cx(w.window, defaultThemeClassName)} data-home-window>
+  <div class={cx(w.window)}>
     <div class={cx(w.titlebar)}>
       <span class={cx(w.dots)}>
         <span class={cx(w.dot)}></span><span class={cx(w.dot)}></span><span class={cx(w.dot)}></span>
@@ -100,165 +92,3 @@ const w = homeAppWindow();
     </div>
   </div>
 </div>
-
-<div class={cx(w.themeBar, scrollFade())} role="group" aria-label="Theme of the window above" data-home-window-themes>
-  <button
-    type="button"
-    class={cx(w.themeButton, w.playButton)}
-    aria-pressed="true"
-    aria-label="Auto-play themes"
-    data-home-window-play
-  >
-    <span class={cx(w.playIcon)} aria-hidden="true">
-      <svg class={cx(w.playRing)} viewBox="0 0 24 24" aria-hidden="true" data-play-ring>
-        <circle cx="12" cy="12" r="10.5" data-track />
-        <circle cx="12" cy="12" r="10.5" pathLength="100" />
-      </svg>
-    </span>
-    <span data-play-label>Playing</span>
-  </button>
-  <span class={cx(w.themeDivider)} aria-hidden="true"></span>
-  {
-    cycleThemes.map((theme, index) => (
-      <button
-        type="button"
-        class={cx(w.themeButton)}
-        aria-pressed={index === 0 ? 'true' : 'false'}
-        data-theme-id={theme.id}
-        data-theme-class={theme.className}
-      >
-        <span class={cx(w.themeDot)} aria-hidden="true" />
-        {theme.label}
-      </button>
-    ))
-  }
-</div>
-
-<script>
-  import { ensureShowcaseThemeStyles } from '../../lib/showcaseThemeStyles';
-
-  /** How long each theme stays up; the brand default dwells longest. */
-  const DWELL_MS = { first: 10000, default: 8000, other: 4500 };
-
-  function initHeroWindow() {
-    const stage = document.querySelector<HTMLElement>('[data-home-window-stage]');
-    const windowEl = stage?.querySelector<HTMLElement>('[data-home-window]');
-    const bar = document.querySelector<HTMLElement>('[data-home-window-themes]');
-    const play = bar?.querySelector<HTMLButtonElement>('[data-home-window-play]');
-    if (!stage || !windowEl || !bar || !play || bar.dataset.ready) return;
-    bar.dataset.ready = 'true';
-
-    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('button[data-theme-id]')];
-    const classes = buttons.map((button) => button.dataset.themeClass!);
-    const spec = (name: string) => stage.querySelector<HTMLElement>(`[data-spec="${name}"]`);
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let index = 0;
-    let hovering = false;
-    let visible = false;
-    // WCAG 2.2.2: auto-play is user-controllable, and off from the start under reduced motion.
-    let playing = !reduceMotion.matches;
-    let timer: number | undefined;
-
-    const preload = () =>
-      buttons.forEach((button) => ensureShowcaseThemeStyles({ id: button.dataset.themeId! }));
-    ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(preload);
-
-    /** Read the live token values off the window and print them in the spec chips. */
-    function readSpecs() {
-      const style = getComputedStyle(windowEl!);
-      const token = (name: string) => style.getPropertyValue(name).trim();
-      const radius = token('--var-ui-radius-xl');
-      const accent = token('--var-ui-color-tone-accent-background');
-      // The stack's lead face: a system stack (ui-sans-serif, system-ui, …) reads as
-      // `system-ui`; otherwise the first family, unquoted.
-      const stack = token('--var-ui-fontFamily-display');
-      const lead = stack.split(',')[0]?.trim().replace(/["']/g, '') ?? '';
-      const font = /^(ui-|system-ui|-apple-system)/.test(lead) ? 'system-ui' : lead;
-      const set = (name: string, value: string) => {
-        const el = spec(name);
-        if (el) el.textContent = value;
-      };
-      set('radius', radius);
-      set('accent', accent.length > 22 ? `${accent.slice(0, 21)}…` : accent);
-      set('font', font);
-      set('theme', `.${classes[index]}`);
-      const swatch = spec('swatch');
-      if (swatch) swatch.style.backgroundColor = accent;
-    }
-
-    function show(next: number) {
-      index = (next + classes.length) % classes.length;
-      const swap = () => {
-        windowEl!.classList.remove(...classes);
-        windowEl!.classList.add(classes[index]!);
-        buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
-        readSpecs();
-      };
-      ensureShowcaseThemeStyles({ id: buttons[index]!.dataset.themeId! }, () => {
-        if (!reduceMotion.matches && 'startViewTransition' in document) {
-          (document as Document & { startViewTransition: (cb: () => void) => unknown })
-            .startViewTransition(swap);
-        } else {
-          swap();
-        }
-      });
-    }
-
-    let first = true;
-
-    function schedule() {
-      window.clearTimeout(timer);
-      if (!playing) return;
-      // The first frame is the brand default, held long enough to read the hero first.
-      const dwell = first
-        ? DWELL_MS.first
-        : buttons[index]!.dataset.themeId === 'default'
-          ? DWELL_MS.default
-          : DWELL_MS.other;
-      first = false;
-      // Restart the progress ring for this dwell.
-      const icon = play!.querySelector<HTMLElement>('span');
-      const ring = play!.querySelector<SVGElement>('[data-play-ring]');
-      if (icon && ring) {
-        icon.removeAttribute('data-running');
-        ring.style.animationDuration = `${dwell}ms`;
-        void ring.getBoundingClientRect();
-        icon.setAttribute('data-running', '');
-      }
-      timer = window.setTimeout(() => {
-        if (playing && visible && !hovering && !document.hidden) show(index + 1);
-        schedule();
-      }, dwell);
-    }
-
-    function setPlaying(next: boolean) {
-      playing = next;
-      play!.setAttribute('aria-pressed', String(playing));
-      const label = play!.querySelector('[data-play-label]');
-      if (label) label.textContent = playing ? 'Playing' : 'Paused';
-      schedule();
-    }
-
-    play.addEventListener('click', () => setPlaying(!playing));
-    buttons.forEach((button, i) =>
-      button.addEventListener('click', () => {
-        setPlaying(false);
-        show(i);
-      }),
-    );
-
-    new IntersectionObserver(([entry]) => {
-      visible = Boolean(entry?.isIntersecting);
-    }).observe(stage);
-    stage.addEventListener('pointerenter', () => (hovering = true));
-    stage.addEventListener('pointerleave', () => (hovering = false));
-
-    readSpecs();
-    // Start the clock once the page has finished loading, not while it is still busy.
-    if (document.readyState === 'complete') setPlaying(playing);
-    else window.addEventListener('load', () => setPlaying(playing), { once: true });
-  }
-
-  initHeroWindow();
-  document.addEventListener('astro:page-load', initHeroWindow);
-</script>

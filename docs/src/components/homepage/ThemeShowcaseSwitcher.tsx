@@ -74,6 +74,9 @@ export function ThemeShowcaseSwitcher({
               className={`${b.switcherOption.className} ${theme.className}`}
               onClick={() => onSelect(theme.id)}
               role="radio"
+              // Inline so it beats the theme's unlayered `color-scheme: light dark`: the
+              // option renders in the page's mode, not the OS's (var-ui#177).
+              style={{ colorScheme: 'inherit' }}
               tabIndex={active ? 0 : -1}
               type="button"
               onKeyDown={(event) => {

@@ -1,6 +1,15 @@
 import { defaultIcons } from '@var-ui/icons';
-import { Button, Collapsible, IconProvider, SegmentedControl, Switch, cx } from '@var-ui/react';
+import {
+  Button,
+  Collapsible,
+  IconProvider,
+  SearchInput,
+  SegmentedControl,
+  Tabs,
+  cx,
+} from '@var-ui/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { HighlightedCodeBlock } from '@/components/HighlightedCodeBlock';
 import { homeInspector } from '@/styles/homeInspector';
 
 type Tone = 'accent' | 'neutral' | 'danger';
@@ -56,20 +65,69 @@ function matchVariantRules(element: Element): MatchedRule[] {
   );
 }
 
+/** The element's opening tag as devtools shows it: class plus the recipe's data attributes. */
+function openingTag(element: Element): string {
+  const attributes = element
+    .getAttributeNames()
+    .filter((name) => name === 'class' || /^data-(tone|appearance|size|pill)$/.test(name))
+    .map((name) => {
+      const value = element.getAttribute(name);
+      return value === '' || (value === 'true' && name === 'data-pill')
+        ? name
+        : `${name}="${value}"`;
+    });
+  return `<${element.localName}\n  ${attributes.join('\n  ')}>`;
+}
+
+/** Properties listed in the Computed tab, in devtools' alphabetical order. */
+const COMPUTED_PROPERTIES = [
+  'background-color',
+  'border-bottom-color',
+  'border-radius',
+  'color',
+  'display',
+  'font-family',
+  'font-size',
+  'font-weight',
+  'gap',
+  'height',
+  'padding-inline',
+] as const;
+
+const isColor = (value: string) => /^(rgb|oklch|oklab|hsl|#|color\()/.test(value);
+
+type Box = { margin: number[]; border: number[]; padding: number[]; width: number; height: number };
+
+function readBox(style: CSSStyleDeclaration): Box {
+  const sides = (prefix: string, suffix = '') =>
+    ['top', 'right', 'bottom', 'left'].map((side) =>
+      Math.round(parseFloat(style.getPropertyValue(`${prefix}-${side}${suffix}`)) || 0),
+    );
+  return {
+    margin: sides('margin'),
+    border: sides('border', '-width'),
+    padding: sides('padding'),
+    width: Math.round(parseFloat(style.width) || 0),
+    height: Math.round(parseFloat(style.height) || 0),
+  };
+}
+
 /**
- * A real `@var-ui/react` Button under a DevTools-style overlay. Change its props and the
- * panel shows the markup, the authored variant rules that now match (read from the live
- * stylesheets), and the resolved colors — no hashed class names anywhere.
+ * A real `@var-ui/react` Button with a devtools-style panel: Styles (the element and the
+ * authored rules that match, read from the page's stylesheets), Computed (resolved values,
+ * filterable) and Layout (the box model). Right-click → Inspect shows the same thing.
  */
 export default function LiveInspector() {
   const s = homeInspector();
   const [tone, setTone] = useState<Tone>('accent');
   const [appearance, setAppearance] = useState<Appearance>('filled');
-  const [pill, setPill] = useState(true);
   const targetRef = useRef<HTMLSpanElement>(null);
   const [rules, setRules] = useState<MatchedRule[]>([]);
+  const [markup, setMarkup] = useState('<button class="var-ui-button">');
   const [size, setSize] = useState('');
-  const [resolved, setResolved] = useState({ background: '', color: '' });
+  const [computed, setComputed] = useState<[string, string][]>([]);
+  const [box, setBox] = useState<Box | null>(null);
+  const [filter, setFilter] = useState('');
 
   useLayoutEffect(() => {
     const button = targetRef.current?.querySelector('.var-ui-button');
@@ -77,30 +135,19 @@ export default function LiveInspector() {
     const read = () => {
       const rect = button.getBoundingClientRect();
       setSize(`${Math.round(rect.width)} × ${Math.round(rect.height)}`);
-      const computed = getComputedStyle(button);
-      setResolved({ background: computed.backgroundColor, color: computed.color });
+      const style = getComputedStyle(button);
+      setComputed(COMPUTED_PROPERTIES.map((name) => [name, style.getPropertyValue(name).trim()]));
+      setBox(readBox(style));
       setRules(matchVariantRules(button));
+      setMarkup(openingTag(button));
     };
     read();
     // Styles may land after hydration in dev; read again once they settle.
     const timer = window.setTimeout(read, 400);
     return () => window.clearTimeout(timer);
-  }, [tone, appearance, pill]);
+  }, [tone, appearance]);
 
-  useEffect(() => {
-    const button = targetRef.current?.querySelector('.var-ui-button');
-    if (!button || typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(() => {
-      const rect = button.getBoundingClientRect();
-      setSize(`${Math.round(rect.width)} × ${Math.round(rect.height)}`);
-    });
-    observer.observe(button);
-    return () => observer.disconnect();
-  }, []);
-
-  const markup = `<button class="var-ui-button"\n  data-tone="${tone}" data-appearance="${appearance}"\n  data-size="lg"${pill ? ' data-pill' : ''}>`;
-
-  // Phones: the styles panel sits behind a "Show CSS" disclosure to keep the page short.
+  // Phones: the panel sits behind a "Show CSS" disclosure to keep the page short.
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
     const query = window.matchMedia('(max-width: 48rem)');
@@ -109,6 +156,95 @@ export default function LiveInspector() {
     query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
   }, []);
+
+  const css = rules
+    .map(
+      (rule) =>
+        `${rule.selector} {\n${rule.declarations.map(([p, v]) => `  ${p}: ${v};`).join('\n')}\n}`,
+    )
+    .join('\n\n');
+  const visibleComputed = computed.filter(([name]) => name.includes(filter.trim().toLowerCase()));
+
+  const panel = (
+    <Tabs
+      className={s.panel.className}
+      tabs={[
+        {
+          value: 'styles',
+          label: 'Styles',
+          content: (
+            <div className={s.styles.className}>
+              <HighlightedCodeBlock code={markup} copyable={false} language="html" />
+              <HighlightedCodeBlock
+                code={css || '/* reading stylesheets… */'}
+                copyable={false}
+                language="css"
+                wrapLongLines
+              />
+            </div>
+          ),
+        },
+        {
+          value: 'computed',
+          label: 'Computed',
+          content: (
+            <div className={s.computed.className}>
+              <SearchInput
+                aria-label="Filter computed properties"
+                onValueChange={setFilter}
+                placeholder="Filter"
+                size="sm"
+                value={filter}
+              />
+              <dl className={s.computedList.className}>
+                {visibleComputed.map(([name, value]) => (
+                  <div className={s.computedRow.className} key={name}>
+                    <dt className={s.computedName.className}>{name}</dt>
+                    <dd className={s.computedValue.className}>
+                      {isColor(value) ? (
+                        <span
+                          aria-hidden="true"
+                          className={s.swatch.className}
+                          style={{ backgroundColor: value }}
+                        />
+                      ) : null}
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+                {visibleComputed.length === 0 ? (
+                  <p className={s.empty.className}>No matching properties</p>
+                ) : null}
+              </dl>
+            </div>
+          ),
+        },
+        {
+          value: 'layout',
+          label: 'Layout',
+          content: box ? (
+            <div className={s.boxModel.className} aria-label="Box model">
+              <div className={cx(s.boxLayer.className, s.boxMargin.className)}>
+                <span className={s.boxLabel.className}>margin</span>
+                <span className={s.boxEdges.className}>{box.margin.join(' ')}</span>
+                <div className={cx(s.boxLayer.className, s.boxBorder.className)}>
+                  <span className={s.boxLabel.className}>border</span>
+                  <span className={s.boxEdges.className}>{box.border.join(' ')}</span>
+                  <div className={cx(s.boxLayer.className, s.boxPadding.className)}>
+                    <span className={s.boxLabel.className}>padding</span>
+                    <span className={s.boxEdges.className}>{box.padding.join(' ')}</span>
+                    <div className={s.boxContent.className}>
+                      {box.width} × {box.height}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null,
+        },
+      ]}
+    />
+  );
 
   return (
     <IconProvider icons={defaultIcons}>
@@ -137,133 +273,27 @@ export default function LiveInspector() {
               size="sm"
               value={appearance}
             />
-            <Switch checked={pill} onCheckedChange={setPill} size="sm">
-              pill
-            </Switch>
           </div>
           <span ref={targetRef} className={s.target.className}>
             <span aria-hidden="true" className={s.tag.className}>
               button.var-ui-button · {size}
             </span>
             <span aria-hidden="true" className={s.outline.className} />
-            <Button appearance={appearance} pill={pill} size="lg" tone={tone}>
+            <Button appearance={appearance} pill size="lg" tone={tone}>
               Deploy to production
             </Button>
           </span>
+          <p className={s.cue.className}>
+            Right-click → Inspect: your browser shows the same classes and rules.
+          </p>
         </div>
 
         {narrow ? (
           <Collapsible title="Show CSS" variant="flush">
-            <div aria-label="Inspector" className={s.panel.className} role="region">
-              <div className={s.panelHeader.className}>
-                <span>Styles</span>
-                <span>Computed</span>
-                <span>Layout</span>
-              </div>
-              <div aria-live="polite" className={s.panelBody.className}>
-                <div className={s.column.className}>
-                  <div className={s.markup.className}>{markup}</div>
-                  <div className={s.rule.className}>
-                    <span className={s.selector.className}>computed</span> {'{'}
-                    <div className={s.decl.className}>
-                      <span className={s.prop.className}>background-color</span>:
-                      <span className={s.resolved.className}>
-                        <span
-                          className={s.swatch.className}
-                          style={{ backgroundColor: resolved.background }}
-                        />
-                        {resolved.background}
-                      </span>
-                    </div>
-                    <div className={s.decl.className}>
-                      <span className={s.prop.className}>color</span>:
-                      <span className={s.resolved.className}>
-                        <span
-                          className={s.swatch.className}
-                          style={{ backgroundColor: resolved.color }}
-                        />
-                        {resolved.color}
-                      </span>
-                    </div>
-                    {'}'}
-                  </div>
-                </div>
-                <div className={s.column.className}>
-                  {rules.map((rule) => (
-                    <div key={rule.selector} className={s.rule.className}>
-                      <span className={s.selector.className}>{rule.selector}</span> {'{'}
-                      {rule.declarations.map(([property, value]) => (
-                        <div key={property} className={s.decl.className}>
-                          <span className={s.prop.className}>{property}</span>:{' '}
-                          <span className={s.val.className}>{value}</span>;
-                        </div>
-                      ))}
-                      {'}'}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className={cx(s.atomic.className)}>
-                Atomic CSS-in-JS would show:{' '}
-                <s>class=&quot;x1n2onr6 x1ja2u2z x78zum5 x6s0dn4 xl56j7k x1q0g3np&quot;</s>
-              </div>
-            </div>
+            {panel}
           </Collapsible>
         ) : (
-          <div aria-label="Inspector" className={s.panel.className} role="region">
-            <div className={s.panelHeader.className}>
-              <span>Styles</span>
-              <span>Computed</span>
-              <span>Layout</span>
-            </div>
-            <div aria-live="polite" className={s.panelBody.className}>
-              <div className={s.column.className}>
-                <div className={s.markup.className}>{markup}</div>
-                <div className={s.rule.className}>
-                  <span className={s.selector.className}>computed</span> {'{'}
-                  <div className={s.decl.className}>
-                    <span className={s.prop.className}>background-color</span>:
-                    <span className={s.resolved.className}>
-                      <span
-                        className={s.swatch.className}
-                        style={{ backgroundColor: resolved.background }}
-                      />
-                      {resolved.background}
-                    </span>
-                  </div>
-                  <div className={s.decl.className}>
-                    <span className={s.prop.className}>color</span>:
-                    <span className={s.resolved.className}>
-                      <span
-                        className={s.swatch.className}
-                        style={{ backgroundColor: resolved.color }}
-                      />
-                      {resolved.color}
-                    </span>
-                  </div>
-                  {'}'}
-                </div>
-              </div>
-              <div className={s.column.className}>
-                {rules.map((rule) => (
-                  <div key={rule.selector} className={s.rule.className}>
-                    <span className={s.selector.className}>{rule.selector}</span> {'{'}
-                    {rule.declarations.map(([property, value]) => (
-                      <div key={property} className={s.decl.className}>
-                        <span className={s.prop.className}>{property}</span>:{' '}
-                        <span className={s.val.className}>{value}</span>;
-                      </div>
-                    ))}
-                    {'}'}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={cx(s.atomic.className)}>
-              Atomic CSS-in-JS would show:{' '}
-              <s>class=&quot;x1n2onr6 x1ja2u2z x78zum5 x6s0dn4 xl56j7k x1q0g3np&quot;</s>
-            </div>
-          </div>
+          panel
         )}
       </div>
     </IconProvider>

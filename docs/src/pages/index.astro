@@ -44,14 +44,6 @@ const facts = [
       <div class={cx(hp.container, hp.heroGrid)}>
 
         <div class={cx(hp.heroInner)}>
-          <a class={cx(hp.announce)} href="/components/dialog">
-            <span class={cx(hp.announceBadge)}>New</span>
-            <span class={cx(hp.announceText)}>
-              <span class={cx(hp.announceLong)}>Dialog sizes, title shorthand &amp; onClose</span>
-              <span class={cx(hp.announceShort)}>Dialog sizes &amp; onClose</span>
-            </span>
-            <span aria-hidden="true">→</span>
-          </a>
           <VarUiWordmark as="h1" size="hero" />
           <Heading level={2} size="display-sm" weight="light" className={cx(hp.tagline)}>
             <span>An open source design system that&apos;s</span>
@@ -65,7 +57,7 @@ const facts = [
               Browse components
             </Button>
           </div>
-          <InstallCommand client:idle command={installCommand} quiet />
+          <InstallCommand client:idle command={installCommand} />
         </div>
 
         <HeroAppWindow />
@@ -76,14 +68,14 @@ const facts = [
     <div class={cx(hp.band)}>
     <section class={cx(hp.container, hp.section)} aria-labelledby="home-showcase-heading">
       <div class={cx(hp.sectionHeader)}>
-        <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>try-it</Text>
+        <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>themes</Text>
         <Heading level={2} size="display-md" id="home-showcase-heading">
-          Your turn. Pick a theme.
+          One system. Every theme.
         </Heading>
-        <Text tone="secondary" className={cx(hp.sectionLead)}>
-          The hero window cycles themes for you; here you drive. Everything below is live
-          <code>@var-ui/react</code>: pick a theme and the whole product UI repaints from CSS
-          variables alone, while the readout shows the values doing the work.
+        <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+          Everything below is live <code>@var-ui/react</code>. Pick a theme and the whole product
+          UI repaints from CSS variables alone, while the readout shows the values doing the
+          work.
         </Text>
       </div>
       <HomepageIsland client:load />
@@ -105,7 +97,7 @@ const facts = [
           <div class={cx(hp.featureCopyWide)}>
             <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>devtools</Text>
             <Heading level={3} size="display-sm">Inspect it and understand it.</Heading>
-            <Text tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
               TypeStyles emits named classes and data attributes, not hashed atoms. Flip the props
               on this live button: the panel reads the rules that now match straight from the page&apos;s
               stylesheets.
@@ -118,7 +110,7 @@ const facts = [
           <div class={cx(hp.featureCopyWide)}>
             <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>cascade</Text>
             <Heading level={3} size="display-sm">One variable, every component.</Heading>
-            <Text tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
               A token feeds a rule you can read, and the rule paints every component that uses
               it. Re-point <code>--color-accent</code> and everything downstream follows, with the
               same names and props in <code>@var-ui/react</code>, <code>@var-ui/astro</code>, or
@@ -132,7 +124,7 @@ const facts = [
           <div class={cx(hp.featureCopyWide)}>
             <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>a11y</Text>
             <Heading level={3} size="display-sm">Built for the keyboard.</Heading>
-            <Text tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
               Interactive components sit on React Aria, so focus order, arrow-key navigation,
               roles, names and states come built in. Drive these with the keyboard and watch
               what assistive tech is told.

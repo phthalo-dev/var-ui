@@ -1,16 +1,46 @@
 ---
 /**
- * One variable, three hops: the token (and the theme code that sets it), the readable rule
- * that consumes it, and live components painted by it. The swatches re-point only the
- * accent tokens on this diagram (surfaces stay put), so everything downstream follows.
+ * One variable, three hops, all real: the accent custom property and its live value, the
+ * button rules exactly as TypeStyles emits them (read from the registered stylesheet), and
+ * live components painted by them. The swatches re-point only the accent tokens on this
+ * diagram (surfaces stay put), so everything downstream follows.
  */
 import { Avatar, Badge, Button, ProgressBar, cx } from '@var-ui/astro';
+import { button } from '@var-ui/core';
+import { getRegisteredCss } from 'typestyles';
+import HighlightedCodeBlock from '../HighlightedCodeBlock.astro';
 import { docsThemePresetMeta } from '../../themes/presetMeta';
 import { homeCascade } from '../../styles/homeCascade';
 
 const c = homeCascade();
 const pickerIds = ['default', 'rose', 'amber', 'ai-glow'];
 const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.id === id)!);
+
+/** The accent token the components consume. */
+const TOKEN = '--var-ui-color-tone-accent-background';
+
+/**
+ * The two button rules that carry the token to the paint: the tone rule maps it onto the
+ * button's own variable, the appearance rule puts that on the background. Read from the
+ * registered CSS so the text is what the page actually ships.
+ */
+void button; // ensure the recipe is registered before reading the sheet
+function emittedRule(selector: string): string | undefined {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = getRegisteredCss().match(new RegExp(`${escaped} \\{([^}]*)\\}`));
+  if (!match?.[1]) return undefined;
+  const declarations = match[1]
+    .split(';')
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return `${selector} {\n${declarations.map((d) => `  ${d};`).join('\n')}\n}`;
+}
+const ruleCss = [
+  emittedRule('.var-ui-button[data-tone="accent"]') ??
+    `.var-ui-button[data-tone="accent"] {\n  --var-ui-button-solidbg: var(${TOKEN});\n}`,
+  emittedRule('.var-ui-button[data-appearance="filled"]') ??
+    '.var-ui-button[data-appearance="filled"] {\n  --var-ui-button-background: var(--var-ui-button-solidbg);\n}',
+].join('\n\n');
 ---
 
 <div class={cx(c.root)} data-cascade>
@@ -18,14 +48,12 @@ const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.
   <div class={cx(c.cell, c.step1)}>
     <div class={cx(c.token)}>
       <span class={cx(c.tokenSwatch)} aria-hidden="true"></span>
-      --color-accent
+      <span class={cx(c.tokenText)}>
+        <span class={cx(c.tokenName)}>{TOKEN}</span>
+        <span class={cx(c.tokenValue)} data-cascade-value>…</span>
+      </span>
     </div>
-    <pre class={cx(c.code)}><b>createDesignTheme</b>({'{'}
-  <i>tokens</i>: {'{'} <i>color</i>: {'{'} <i>tone</i>: {'{'}
-    <i>accent</i>: {'{'} <i>background</i>: <em>'#0f766e'</em> {'}'},
-  {'}'} {'}'} {'}'},
-{'}'});</pre>
-    <div class={cx(c.pickers)} role="group" aria-label="Value of --color-accent">
+    <div class={cx(c.pickers)} role="group" aria-label={`Value of ${TOKEN}`}>
       {
         pickers.map((theme, index) => (
           <button
@@ -35,7 +63,12 @@ const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.
             aria-label={`${theme.label} accent`}
             data-cascade-theme={theme.id}
           >
-            <span class={cx(c.pickerSwatch, theme.className)} aria-hidden="true" />
+            {/* Inline: beats the theme's unlayered `color-scheme: light dark` (var-ui#177). */}
+            <span
+              class={cx(c.pickerSwatch, theme.className)}
+              style="color-scheme: inherit"
+              aria-hidden="true"
+            />
           </button>
         ))
       }
@@ -44,15 +77,15 @@ const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.
 
   <span class={cx(c.connector, c.connector1)} aria-hidden="true"></span>
 
-  <span class={cx(c.label, c.step2)}>2 · recipe</span>
-  <pre class={cx(c.cell, c.step2, c.rule)}><b>.var-ui-button</b>[<i>data-tone</i>=<em>"accent"</em>] {'{'}
-  <i>background</i>: var(<em>--color-accent</em>);
-{'}'}</pre>
+  <span class={cx(c.label, c.step2)}>2 · emitted CSS</span>
+  <div class={cx(c.cell, c.step2)}>
+    <HighlightedCodeBlock code={ruleCss} language="css" copyable={false} wrapLongLines />
+  </div>
 
   <span class={cx(c.connector, c.connector2)} aria-hidden="true"></span>
 
   <span class={cx(c.label, c.step3)}>3 · components</span>
-  <div class={cx(c.cell, c.step3, c.components)}>
+  <div class={cx(c.cell, c.step3, c.components)} data-cascade-components>
     <Button tone="accent" appearance="filled" pill>Publish release</Button>
     <Badge tone="accent">Synced</Badge>
     <ProgressBar label="Rollout" value={64} showValueText />
@@ -63,9 +96,11 @@ const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.
 <script>
   import { ensureShowcaseThemeStyles } from '../../lib/showcaseThemeStyles';
 
+  const TOKEN = '--var-ui-color-tone-accent-background';
+
   /** The accent family: the only tokens a swatch re-points. */
   const ACCENT_TOKENS = [
-    '--var-ui-color-tone-accent-background',
+    TOKEN,
     '--var-ui-color-tone-accent-foreground',
     '--var-ui-color-tone-accent-subtleBackground',
     '--var-ui-color-tone-accent-border',
@@ -77,17 +112,33 @@ const pickers = pickerIds.map((id) => docsThemePresetMeta.find((theme) => theme.
     if (!root || root.dataset.ready) return;
     root.dataset.ready = 'true';
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-cascade-theme]')];
+    const valueEl = root.querySelector<HTMLElement>('[data-cascade-value]');
+    const components = root.querySelector<HTMLElement>('[data-cascade-components]');
     for (const button of buttons) ensureShowcaseThemeStyles({ id: button.dataset.cascadeTheme! });
+
+    /** Print the value the components actually resolve. */
+    const readValue = () => {
+      if (valueEl && components) {
+        valueEl.textContent = getComputedStyle(components).getPropertyValue(TOKEN).trim();
+      }
+    };
+
+    readValue();
+    // Color mode changes the resolved value.
+    new MutationObserver(readValue).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-color-mode'],
+    });
 
     buttons.forEach((button) =>
       button.addEventListener('click', () => {
-        const swatch = button.querySelector<HTMLElement>('span')!;
-        const style = getComputedStyle(swatch);
+        const style = getComputedStyle(button.querySelector('span')!);
         for (const token of ACCENT_TOKENS) {
           if (button.dataset.cascadeTheme === 'default') root.style.removeProperty(token);
           else root.style.setProperty(token, style.getPropertyValue(token).trim());
         }
         buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        readValue();
       }),
     );
   }
