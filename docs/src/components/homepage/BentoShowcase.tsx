@@ -43,7 +43,7 @@ export function BentoShowcase({ themeId, framework = 'react', previewStyle }: Be
       className={cx(b.showcase.className, theme.className)}
       data-framework={framework}
       data-testid="bento-showcase"
-      style={{ colorScheme: 'inherit', ...previewStyle }}
+      style={{ ...previewStyle }}
     >
       <div className={b.grid.className}>
         {useReactTiles ? (

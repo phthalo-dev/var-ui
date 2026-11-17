@@ -19,4 +19,11 @@ describe('base-styles', () => {
     expect(css).toMatch(/@layer\s+reset/);
     expect(css).toMatch(/@layer\s+base/);
   });
+
+  it('makes nested theme surfaces inherit the ancestor color-scheme', async () => {
+    await import('../src/theme/base-styles');
+    const css = getRegisteredCss();
+    expect(css).toContain('html [class*="theme-var-ui-"]:not([data-color-mode])');
+    expect(css).toContain(':root[class*="theme-var-ui-"]');
+  });
 });

@@ -20,6 +20,12 @@ export type DesignSystemProviderProps = {
    * @default 'system'
    */
   defaultColorMode?: ColorMode;
+  /**
+   * Controlled color mode. When initialised from `localStorage` in `useState`, render the same
+   * value on the server (or start from `'system'`) and apply storage in an effect; React does not
+   * patch mismatched attributes on hydration, so a missing `data-color-mode` on the server would
+   * leave nested theme surfaces following the OS instead of the stored pin.
+   */
   colorMode?: ColorMode;
   onColorModeChange?: (colorMode: ColorMode) => void;
   /** Theme class name, or a `createDesignTheme` result (`{ className }`). */

@@ -2,7 +2,7 @@ import { reset } from 'typestyles/globals';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { atReducedMotion } from './conditions';
-import { COLOR_MODE_ATTRIBUTE } from './constants';
+import { COLOR_MODE_ATTRIBUTE, THEME_CLASS_PREFIX } from './constants';
 import { global } from '../runtime';
 import { viewportAnchor } from '../shared/anchored';
 
@@ -22,11 +22,25 @@ export function registerBaseStyles(): void {
   global.rules(
     {
       ':root': { colorScheme: 'light dark' },
+      // Root theme surface without a pin: keep resolving light-dark() from the OS.
+      [`:root[class*="${THEME_CLASS_PREFIX}"]`]: { colorScheme: 'light dark' },
       // Doubled so the pin outranks the theme class's `color-scheme: light dark` in the same layer.
       [`[${COLOR_MODE_ATTRIBUTE}="dark"][${COLOR_MODE_ATTRIBUTE}="dark"]`]: {
         colorScheme: 'dark',
       },
       [`[${COLOR_MODE_ATTRIBUTE}="light"][${COLOR_MODE_ATTRIBUTE}="light"]`]: {
+        colorScheme: 'light',
+      },
+      // Nested theme surfaces without their own pin inherit the ancestor's pinned scheme
+      // instead of following the OS via `color-scheme: light dark` (see var-ui#177).
+      [`html [class*="${THEME_CLASS_PREFIX}"]:not([${COLOR_MODE_ATTRIBUTE}])`]: {
+        colorScheme: 'inherit',
+      },
+      // Pinned theme surfaces (including nested ones) keep their own explicit scheme.
+      [`html [class*="${THEME_CLASS_PREFIX}"][${COLOR_MODE_ATTRIBUTE}="dark"]`]: {
+        colorScheme: 'dark',
+      },
+      [`html [class*="${THEME_CLASS_PREFIX}"][${COLOR_MODE_ATTRIBUTE}="light"]`]: {
         colorScheme: 'light',
       },
     },
