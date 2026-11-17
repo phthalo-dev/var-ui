@@ -58,7 +58,11 @@ export {
   type ResolvedDocsThemePreset,
 } from './theme/presets';
 
-export { extractThemeOnlyCss } from './theme/extract-theme-css';
+export {
+  extractFontFaces,
+  extractThemeOnlyCss,
+  type ExtractThemeOnlyCssOptions,
+} from './theme/extract-theme-css';
 
 export { highlightCode, highlightCodeClassName } from './highlightCode';
 export { highlightCodeBlockContent, type HighlightedCodeBlockContent } from './highlightCodeBlock';

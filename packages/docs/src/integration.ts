@@ -138,6 +138,7 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
             docsThemeStylesDevPlugin({
               root,
               presets: config.theme.presets ?? [],
+              typestylesEntry: config.typestyles.entry,
             }),
           );
           logger.info(`Theme lazy CSS (dev): ${lazyPresets.map((preset) => preset.id).join(', ')}`);
@@ -167,6 +168,7 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
         await buildDocsThemeStyles({
           root,
           presets: config.theme.presets ?? [],
+          typestylesEntry: config.typestyles.entry,
         });
       },
     },
