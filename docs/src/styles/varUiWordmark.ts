@@ -17,8 +17,11 @@ registerFontFace({
 
 const wordmarkSize = variant.enum(['hero', 'header', 'bar', 'mark', 'inline'], { default: 'hero' });
 
-/** `min-width: md`: includes 768 (the `max` query does too, so it would hide the text there). */
-const atMd = typestyles.breakpoint('md', 'min');
+/**
+ * `min-width: lg`: the bar shows the full lockup only where the right-side controls still fit
+ * beside it; between md and lg the full nav + switcher + search + appearance need the room.
+ */
+const atLg = typestyles.breakpoint('lg', 'min');
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
 export const varUiWordmark = typestyles.recipe({
@@ -93,8 +96,8 @@ export const varUiWordmark = typestyles.recipe({
           },
           text: { alignItems: 'center' },
         },
-        // App bar: the tile + wordmark lockup from `md` (768px) up, the tile alone below (the narrow bar
-        // keeps its room for search, appearance and the hamburger). The tile matches `mark`.
+        // App bar: the tile + wordmark lockup from `lg` up, the tile alone below (tablet widths need the
+        // room for the nav and right-side controls). The tile matches `mark`.
         bar: {
           root: {
             flexShrink: 0,
@@ -106,12 +109,12 @@ export const varUiWordmark = typestyles.recipe({
             width: '1.5rem',
             height: '1.5rem',
             marginInlineEnd: 0,
-            [atMd]: { marginInlineEnd: t.space.xs.var },
+            [atLg]: { marginInlineEnd: t.space.xs.var },
           },
           text: {
             display: 'none',
             alignItems: 'center',
-            [atMd]: { display: 'inline-flex' },
+            [atLg]: { display: 'inline-flex' },
           },
         },
         // Icon only (drawer header): the tile alone, a touch larger than in the lockup.

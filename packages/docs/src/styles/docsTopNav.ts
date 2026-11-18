@@ -69,8 +69,9 @@ export const docsTopNav = typestyles.recipe({
         },
         '& .docs-search [data-var-ui-search-input]': {
           width: '15rem',
+          // Tablet widths: the full nav, switcher and appearance controls share the bar.
           [belowLg]: {
-            width: '12rem',
+            width: '10rem',
           },
           [belowMd]: {
             width: 'auto',
