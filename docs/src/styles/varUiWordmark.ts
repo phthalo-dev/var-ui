@@ -1,5 +1,19 @@
-import { designTokens as t, typestyles } from '@var-ui/core';
+import { designTokens as t, registerFontFace, typestyles } from '@var-ui/core';
 import { variant } from 'typestyles';
+
+/**
+ * Brand face for the wordmark only (code keeps the theme's mono). Inconsolata is the font the
+ * `(-)` mark is drawn from, so the parens and dashes match the icon. OFL, latin subset.
+ */
+registerFontFace({
+  family: 'Inconsolata',
+  src: "url('/fonts/inconsolata-latin.woff2') format('woff2')",
+  fontWeight: '400 700',
+  fontStyle: 'normal',
+  fontDisplay: 'swap',
+  unicodeRange:
+    'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
+});
 
 const wordmarkSize = variant.enum(['hero', 'header', 'mark', 'inline'], { default: 'hero' });
 
@@ -18,7 +32,7 @@ export const varUiWordmark = typestyles.recipe({
         alignItems: 'baseline',
         maxWidth: '100%',
         margin: 0,
-        fontFamily: t.fontFamily.mono.var,
+        fontFamily: `Inconsolata, ${t.fontFamily.mono.var}`,
         fontWeight: t.fontWeight.semibold.var,
         lineHeight: 1,
         whiteSpace: 'nowrap',
@@ -78,7 +92,7 @@ export const varUiWordmark = typestyles.recipe({
         inline: {
           root: {
             display: 'inline',
-            fontSize: '0.92em',
+            fontSize: '1em',
             letterSpacing: '-0.06em',
           },
         },
