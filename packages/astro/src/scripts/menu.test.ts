@@ -140,6 +140,33 @@ function mountRadioMenu(): HTMLElement {
   return host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
 }
 
+/** Two independent radio groups in one menu (sections with their own `defaultValue`). */
+function mountGroupedRadioMenu(): HTMLElement {
+  const radio = (id: string, checked: boolean) => `
+    <button type="button" role="menuitemradio" aria-checked="${checked}" data-var-ui-menu-item
+      data-item-id="${id}" tabindex="-1"><span>${id}</span></button>`;
+  const host = document.createElement('div');
+  host.innerHTML = `
+    <div data-var-ui-menu-root data-selection-mode="none">
+      <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+        aria-controls="menu-3" popovertarget="menu-3-popover">Appearance</button>
+      <div data-var-ui-menu-popover data-placement="bottom end" id="menu-3-popover" popover="auto">
+        <div role="menu" id="menu-3" aria-label="Appearance">
+          <div role="group" aria-label="Mode" data-var-ui-menu-group>
+            ${radio('light', false)}${radio('dark', true)}
+          </div>
+          <div role="separator"></div>
+          <div role="group" aria-label="Theme" data-var-ui-menu-group>
+            ${radio('teal', true)}${radio('rose', false)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(host);
+  return host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+}
+
 function trigger(root: HTMLElement): HTMLElement {
   return root.querySelector('[data-var-ui-menu-trigger]') as HTMLElement;
 }
@@ -441,6 +468,33 @@ describe('initMenu', () => {
   });
 });
 
+describe('menu with per-section radio groups', () => {
+  it('checks within the item group only', () => {
+    const root = mountGroupedRadioMenu();
+    initMenu(root);
+    trigger(root).click();
+
+    item(root, 'rose').click();
+
+    expect(item(root, 'rose').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'teal').getAttribute('aria-checked')).toBe('false');
+    // The other group keeps its choice.
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'light').getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('controller.select() moves the check within that group', () => {
+    const root = mountGroupedRadioMenu();
+    initMenu(root);
+
+    getMenuController(root)?.select('light');
+
+    expect(item(root, 'light').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('false');
+    expect(item(root, 'teal').getAttribute('aria-checked')).toBe('true');
+  });
+});
+
 describe('initMenus', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
@@ -454,5 +508,109 @@ describe('initMenus', () => {
 
     expect(first.hasAttribute('data-var-ui-menu-initialized')).toBe(true);
     expect(second.hasAttribute('data-var-ui-menu-initialized')).toBe(true);
+  });
+});
+
+describe('row sections (layout: row)', () => {
+  it('ArrowRight/Left step through a row; outside a row they do nothing', () => {
+    const host = document.createElement('div');
+    host.innerHTML = `
+      <div data-var-ui-menu-root data-selection-mode="none">
+        <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+          aria-controls="menu-r" popovertarget="menu-r-popover">Appearance</button>
+        <div data-var-ui-menu-popover id="menu-r-popover" popover="auto">
+          <div role="menu" id="menu-r" aria-label="Appearance">
+            <div role="group" aria-label="Mode" data-layout="row">
+              <button type="button" role="menuitemradio" aria-checked="false" aria-label="Light" data-var-ui-menu-item data-item-id="light" tabindex="-1"></button>
+              <button type="button" role="menuitemradio" aria-checked="true" aria-label="Dark" data-var-ui-menu-item data-item-id="dark" tabindex="-1"></button>
+            </div>
+            <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="other" tabindex="-1">Other</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(host);
+    const root = host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+    initMenu(root);
+    keydown(trigger(root), 'ArrowDown');
+    // Opens on the checked item.
+    expect(document.activeElement).toBe(item(root, 'dark'));
+    keydown(item(root, 'dark'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'light'));
+    keydown(item(root, 'light'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'dark'));
+    item(root, 'other').focus();
+    keydown(item(root, 'other'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'other'));
+  });
+  let appearanceCount = 0;
+  function mountAppearance(): HTMLElement {
+    appearanceCount += 1;
+    const id = `menu-a${appearanceCount}`;
+    const radio = (itemId: string, checked: boolean) =>
+      `<button type="button" role="menuitemradio" aria-checked="${checked}" aria-label="${itemId}"
+        data-var-ui-menu-item data-item-id="${itemId}" tabindex="-1"></button>`;
+    const host = document.createElement('div');
+    host.innerHTML = `
+      <div data-var-ui-menu-root data-selection-mode="none">
+        <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+          aria-controls="${id}" popovertarget="${id}-popover">Appearance</button>
+        <div data-var-ui-menu-popover id="${id}-popover" popover="auto">
+          <div role="menu" id="${id}" aria-label="Appearance">
+            <div role="group" aria-label="Mode" data-var-ui-menu-group data-layout="row">
+              ${radio('light', false)}${radio('dark', false)}${radio('system', true)}
+            </div>
+            <div role="separator"></div>
+            <div role="group" aria-label="Theme" data-var-ui-menu-group>
+              <button type="button" role="menuitemradio" aria-checked="true" data-var-ui-menu-item data-item-id="teal" tabindex="-1">Teal</button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-item-id="rose" tabindex="-1">Rose</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(host);
+    const root = host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+    initMenu(root);
+    return root;
+  }
+
+  it('wraps ArrowLeft/Right within the row instead of leaving it', () => {
+    const root = mountAppearance();
+    keydown(trigger(root), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    keydown(item(root, 'system'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'light'));
+    keydown(item(root, 'light'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    // Left/Right inside the Theme list do nothing.
+    item(root, 'teal').focus();
+    keydown(item(root, 'teal'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'teal'));
+  });
+
+  it('ArrowUp/Down treat the row as one stop, entering it on the checked item', () => {
+    const root = mountAppearance();
+    trigger(root).click();
+    item(root, 'light').focus();
+    keydown(item(root, 'light'), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'teal'));
+    keydown(item(root, 'teal'), 'ArrowUp');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    keydown(item(root, 'system'), 'ArrowUp');
+    expect(document.activeElement).toBe(item(root, 'rose'));
+    keydown(item(root, 'rose'), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'system'));
+  });
+
+  it('stays open after a row pick; a list pick still closes', () => {
+    const root = mountAppearance();
+    const actions = collectActions(root);
+    trigger(root).click();
+    item(root, 'dark').click();
+    expect(isOpen(root)).toBe(true);
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'system').getAttribute('aria-checked')).toBe('false');
+    item(root, 'rose').click();
+    expect(isOpen(root)).toBe(false);
+    expect(actions).toEqual(['dark', 'rose']);
   });
 });

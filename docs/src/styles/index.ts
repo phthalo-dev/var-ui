@@ -16,6 +16,7 @@ import './colorSwatches';
 import './cssVariableReference';
 import './shadowSwatches';
 import './playgroundShell';
+import './playgroundLayout';
 import './playgroundSidebar';
 import '@var-ui/docs/styles';
 import './componentPage';

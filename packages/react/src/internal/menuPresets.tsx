@@ -42,6 +42,17 @@ export function MenuFromSections({
   onValueChange,
   ...popupProps
 }: MenuFromSectionsProps): JSX.Element {
+  // Per-section choices outlive the popup, which unmounts on close.
+  const [sectionValues, setSectionValues] = useState<Record<number, string | null>>(() =>
+    Object.fromEntries(
+      sections.flatMap((section, index) =>
+        section.defaultValue !== undefined ? [[index, section.defaultValue]] : [],
+      ),
+    ),
+  );
+  const onSectionValueChange = useCallback((index: number, next: string | null) => {
+    setSectionValues((current) => ({ ...current, [index]: next }));
+  }, []);
   return (
     <MenuRoot
       open={open}
@@ -53,7 +64,11 @@ export function MenuFromSections({
     >
       <MenuTrigger>{trigger}</MenuTrigger>
       <MenuPopup {...popupProps}>
-        <MenuContent sections={sections} />
+        <MenuContent
+          sections={sections}
+          sectionValues={sectionValues}
+          onSectionValueChange={onSectionValueChange}
+        />
       </MenuPopup>
     </MenuRoot>
   );

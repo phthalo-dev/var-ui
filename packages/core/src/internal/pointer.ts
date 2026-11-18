@@ -1,0 +1,13 @@
+import { toMediaAtRuleKey, type VariantOptionStyle } from 'typestyles';
+import { typestyles } from '../runtime';
+
+/** A touch-first device: the primary pointer is coarse and cannot hover. */
+const coarsePointerQuery = '(hover: none) and (pointer: coarse)';
+
+/**
+ * Touch-first styles — spread into a style object: hide keyboard hints, show touch affordances
+ * (a Cancel button). Only one per style object (a second spread replaces the first).
+ */
+export function atCoarsePointer(style: VariantOptionStyle) {
+  return typestyles.atRuleBlock(toMediaAtRuleKey(coarsePointerQuery), style);
+}

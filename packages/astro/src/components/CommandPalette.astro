@@ -2,8 +2,13 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 import { mergeProps } from '../utils';
-import type { CommandPaletteItem } from '../scripts/commandPaletteUtils';
+import Kbd from './Kbd.astro';
+import type {
+  CommandPaletteClientItem,
+  CommandPaletteItem,
+} from '../scripts/commandPaletteUtils';
 
 type CommandPaletteSlot =
   | 'root'
@@ -17,7 +22,17 @@ type CommandPaletteSlot =
   | 'resultBody'
   | 'resultTitle'
   | 'resultMeta'
-  | 'empty';
+  | 'resultIcon'
+  | 'mark'
+  | 'group'
+  | 'groupHeading'
+  | 'footer'
+  | 'footerHint'
+  | 'empty'
+  | 'emptyIcon'
+  | 'emptyTitle'
+  | 'emptyHint'
+  | 'cancel';
 type CommandPaletteSlots = Record<CommandPaletteSlot, ComponentAttrsResult>;
 type CommandPaletteRecipeFn = () => CommandPaletteSlots;
 
@@ -28,6 +43,26 @@ type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   placeholder?: string;
   'aria-label'?: string;
   hotkey?: boolean;
+  /** Keyboard hints under the results (↑↓ navigate, ↵ open, esc close). @default true */
+  hints?: boolean;
+  /**
+   * Wraps the part of each title and meta that matches the query in a `<mark>`. Pass `false` to
+   * render plain text. @default true
+   */
+  highlightMatches?: boolean;
+  /**
+   * Remembers chosen items in `localStorage` under this key and lists them under a "Recent"
+   * heading while the query is empty. Omit to keep no history.
+   */
+  recentKey?: string;
+  /** Heading of the recent items group (see `recentKey`). @default 'Recent' */
+  recentLabel?: string;
+  /** Message shown when no items match the query, followed by the query. @default 'No results' */
+  emptyLabel?: string;
+  /** Second line of the empty state, e.g. a suggestion ("Try 'button'"). */
+  emptyHint?: string;
+  /** Label of the Cancel button shown on touch-first devices (no Escape key). @default 'Cancel' */
+  cancelLabel?: string;
   className?: string;
 };
 
@@ -37,11 +72,22 @@ const {
   placeholder = 'Search…',
   'aria-label': ariaLabel = placeholder,
   hotkey = true,
+  hints = true,
+  highlightMatches = true,
+  recentKey,
+  recentLabel = 'Recent',
+  emptyLabel = 'No results',
+  emptyHint,
+  cancelLabel = 'Cancel',
   className,
   ...rest
 } = Astro.props;
 
-const indexJson = JSON.stringify(items);
+const iconSvgs: Record<string, string> = defaultIconSvgs;
+const clientItems: CommandPaletteClientItem[] = items.map(({ icon, ...item }) =>
+  icon && iconSvgs[icon] ? { ...item, iconSvg: iconSvgs[icon] } : item,
+);
+const indexJson = JSON.stringify(clientItems);
 const cp = (commandPalette as unknown as CommandPaletteRecipeFn)();
 const dialogRecipe = mergeProps(cp.root);
 const frameRecipe = mergeProps(cp.frame);
@@ -55,6 +101,13 @@ const resultBodyClass = (cp.resultBody).className;
 const resultTitleClass = (cp.resultTitle).className;
 const resultMetaClass = (cp.resultMeta).className;
 const emptyClass = (cp.empty).className;
+const cancelRecipe = mergeProps(cp.cancel);
+const resultIconClass = cp.resultIcon.className;
+const markClass = cp.mark.className;
+const groupClass = cp.group.className;
+const groupHeadingClass = cp.groupHeading.className;
+const footerRecipe = mergeProps(cp.footer);
+const footerHintRecipe = mergeProps(cp.footerHint);
 ---
 
 <div
@@ -69,8 +122,18 @@ const emptyClass = (cp.empty).className;
   data-class-result-title={resultTitleClass}
   data-class-result-meta={resultMetaClass}
   data-class-empty={emptyClass}
-  data-class-group="var-ui-command-palette__group"
-  data-class-group-label="var-ui-command-palette__groupLabel"
+  data-class-empty-icon={cp.emptyIcon.className}
+  data-class-empty-title={cp.emptyTitle.className}
+  data-class-empty-hint={cp.emptyHint.className}
+  data-empty-hint={emptyHint}
+  data-class-result-icon={resultIconClass}
+  data-class-mark={markClass}
+  data-highlight-matches={highlightMatches ? undefined : 'false'}
+  data-recent-key={recentKey}
+  data-recent-label={recentLabel}
+  data-empty-label={emptyLabel}
+  data-class-group={groupClass}
+  data-class-group-heading={groupHeadingClass}
 >
   <dialog
     {...rest}
@@ -81,7 +144,7 @@ const emptyClass = (cp.empty).className;
   >
     <div {...frameRecipe}>
       <div {...inputRowRecipe}>
-        <span {...inputIconRecipe} aria-hidden="true">
+        <span {...inputIconRecipe} aria-hidden="true" data-var-ui-command-palette-input-icon>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -108,6 +171,9 @@ const emptyClass = (cp.empty).className;
           aria-controls={`${id}-results`}
           aria-expanded="false"
         />
+        <button {...cancelRecipe} type="button" data-var-ui-command-palette-cancel>
+          {cancelLabel}
+        </button>
       </div>
       <div
         {...resultsRecipe}
@@ -116,6 +182,13 @@ const emptyClass = (cp.empty).className;
         role="listbox"
       >
       </div>
+      {hints ? (
+        <div {...footerRecipe} aria-hidden="true">
+          <span {...footerHintRecipe}><Kbd>↑</Kbd><Kbd>↓</Kbd> to navigate</span>
+          <span {...footerHintRecipe}><Kbd>↵</Kbd> to open</span>
+          <span {...footerHintRecipe}><Kbd>esc</Kbd> to close</span>
+        </div>
+      ) : null}
     </div>
   </dialog>
 

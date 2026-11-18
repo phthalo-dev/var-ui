@@ -1,17 +1,16 @@
 ---
 import { icon } from '@var-ui/core/components/icon';
-import { segmentedControl } from '@var-ui/core/components/segmentedControl';
-import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { ControlSize } from '@var-ui/core';
 import { svg as colorModeDark } from '@var-ui/icons/glyphs/colorModeDark';
 import { svg as colorModeLight } from '@var-ui/icons/glyphs/colorModeLight';
 import { svg as colorModeSystem } from '@var-ui/icons/glyphs/colorModeSystem';
 import type { HTMLAttributes } from 'astro/types';
+import SegmentedControl from '../components/SegmentedControl.astro';
 import { mergeProps } from "../utils";
 
 type ColorModeToggleAppearance = "icons" | "labels" | "iconsAndLabels";
 
-type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
+type Props = Omit<HTMLAttributes<'div'>, 'class:list' | 'role'> & {
   includeSystem?: boolean;
   appearance?: ColorModeToggleAppearance;
   size?: ControlSize;
@@ -36,56 +35,60 @@ const {
 const modes = includeSystem
   ? (["light", "dark", "system"] as const)
   : (["light", "dark"] as const);
-const s = segmentedControl({ size });
-const t = toggleButton({ segmented: true });
-const i = icon({ size: size === "lg" ? "lg" : size === "sm" ? "sm" : "md" });
-const buttonRecipe = mergeProps(t);
-const iconRecipe = mergeProps(i);
+const iconRecipe = mergeProps(icon({ size: size === "lg" ? "lg" : size === "sm" ? "sm" : "md" }));
 
 const MODE_META = {
   light: { label: labels?.light ?? "Light", icon: colorModeLight },
   dark: { label: labels?.dark ?? "Dark", icon: colorModeDark },
   system: { label: labels?.system ?? "System", icon: colorModeSystem },
 };
+
+const options = modes.map((mode) => ({
+  value: mode,
+  label: MODE_META[mode].label,
+  ...(appearance === "icons" ? { "aria-label": MODE_META[mode].label } : {}),
+}));
 ---
 
-<div
-  role="group"
+{/*
+  Same radio group as `SegmentedControl` (and React's `ColorModeToggle`). Nothing is checked in
+  the HTML: the stored preference is only known on the client, which checks it on load.
+*/}
+<SegmentedControl
   {...rest}
+  options={options}
+  defaultValue=""
+  size={size}
+  layout={appearance === "icons" ? "icon" : "default"}
+  className={className}
   aria-label={ariaLabel}
-  {...mergeProps(s.root, className)}
   data-var-ui-color-mode-toggle
   data-include-system={includeSystem ? "true" : "false"}
   data-storage-key={storageKey}
 >
-  {modes.map((mode) => {
-    const meta = MODE_META[mode];
-    const ariaLabelProp =
-      appearance === "icons" ? { "aria-label": meta.label } : {};
-    return (
-      <button
-        type="button"
-        data-color-mode-value={mode}
-        aria-pressed="false"
-        {...buttonRecipe}
-        {...ariaLabelProp}
-      >
-        {appearance === "labels" ? (
-          meta.label
-        ) : appearance === "iconsAndLabels" ? (
-          <>
-            <span {...iconRecipe} set:html={meta.icon} />
-            {meta.label}
-          </>
-        ) : (
-          <span {...iconRecipe} set:html={meta.icon} />
-        )}
-      </button>
-    );
-  })}
-</div>
+  {/* One static slot per mode: Astro cannot name slots inside a map. */}
+  {appearance !== "labels" ? (
+    <Fragment slot="light">
+      <span {...iconRecipe} aria-hidden="true" set:html={MODE_META.light.icon} />
+      {appearance === "iconsAndLabels" ? MODE_META.light.label : null}
+    </Fragment>
+  ) : null}
+  {appearance !== "labels" ? (
+    <Fragment slot="dark">
+      <span {...iconRecipe} aria-hidden="true" set:html={MODE_META.dark.icon} />
+      {appearance === "iconsAndLabels" ? MODE_META.dark.label : null}
+    </Fragment>
+  ) : null}
+  {appearance !== "labels" ? (
+    <Fragment slot="system">
+      <span {...iconRecipe} aria-hidden="true" set:html={MODE_META.system.icon} />
+      {appearance === "iconsAndLabels" ? MODE_META.system.label : null}
+    </Fragment>
+  ) : null}
+</SegmentedControl>
 
 <script>
   import { initColorModeToggle } from "../scripts/colorMode";
   initColorModeToggle();
+  document.addEventListener("astro:page-load", () => initColorModeToggle());
 </script>

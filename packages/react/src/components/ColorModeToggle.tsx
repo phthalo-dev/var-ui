@@ -166,6 +166,7 @@ export function ColorModeToggle({
       // SSR and the first client render both omit selection, then the real preference paints.
       value={colorModeReady ? selectedId : null}
       size={size}
+      layout={appearance === 'icons' ? 'icon' : 'default'}
       onValueChange={onValueChange}
     />
   );

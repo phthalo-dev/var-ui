@@ -141,6 +141,8 @@ export type MobileNavProps = Omit<ComponentPropsWithRef<'dialog'>, 'children' | 
   side?: 'start' | 'end' | 'auto';
   /** Drawer content, typically a `SideNav.Section`/`SideNav.Item` tree. */
   children: ReactNode;
+  /** Pinned under the scrolling content (preferences, account), always in reach. */
+  footer?: ReactNode;
   /** Label for the close button. @default 'Close navigation' */
   closeLabel?: string;
   /** Accessible name for the dialog. @default 'Navigation' */
@@ -187,6 +189,7 @@ export function MobileNav({
   width = 320,
   side = 'auto',
   children,
+  footer,
   className,
   closeLabel = 'Close navigation',
   label = 'Navigation',
@@ -224,6 +227,7 @@ export function MobileNav({
         <MobileNavClose label={closeLabel} />
       </div>
       <div {...mergeProps(s.body)}>{children}</div>
+      {footer ? <div {...mergeProps(s.footer)}>{footer}</div> : null}
     </NativeSheetPopup>
   );
 }

@@ -111,6 +111,21 @@ export const sideNav = typestyles.recipe({
   ],
   vars: sideNavVarDefinitions,
   styles: ({ vars }) => {
+    // Sections and items also render outside a `SideNav` root (e.g. inside `MobileNav`). The
+    // vars are registered with transparent initial values, so re-declare the defaults on a
+    // section/item that has no side-nav ancestor; inside a root they keep inheriting its values
+    // (and any theme overrides on it).
+    const orphanVarDefaults = Object.fromEntries(
+      Object.entries(sideNavVarDefinitions)
+        .filter(([key]) => key !== 'width')
+        .map(([key, definition]) => [
+          vars[key as keyof typeof sideNavVarDefinitions].name,
+          definition.value,
+        ]),
+    );
+    const orphan = {
+      '&:not(.var-ui-side-nav *):not(.var-ui-side-nav__section *)': orphanVarDefaults,
+    };
     return {
       base: {
         root: {
@@ -242,6 +257,7 @@ export const sideNav = typestyles.recipe({
           color: t.color.text.secondary.var,
         },
         section: {
+          ...orphan,
           display: 'flex',
           flexDirection: 'column',
           gap: '0.125rem',
@@ -336,6 +352,7 @@ export const sideNav = typestyles.recipe({
         item: {
           // Items without `href` render a <button>: reset native button chrome so both
           // element types look identical.
+          ...orphan,
           appearance: 'none',
           boxSizing: 'border-box',
           width: '100%',

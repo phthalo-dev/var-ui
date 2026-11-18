@@ -1,5 +1,5 @@
 import { atProperty, variant } from 'typestyles';
-import { designTokens as t, sideNav, typestyles } from '@var-ui/core';
+import { designTokens as t, typestyles } from '@var-ui/core';
 
 const belowXl = typestyles.breakpoint('xl', 'max');
 const belowMd = typestyles.breakpoint('md', 'max');
@@ -35,16 +35,7 @@ const gutters = {
 export const docsPage = typestyles.recipe({
   name: 'docs-page',
   layer: 'components',
-  slots: [
-    'siteLayout',
-    'sidebar',
-    'drawerNav',
-    'pageBody',
-    'content',
-    'toc',
-    'tocActions',
-    'tocAction',
-  ],
+  slots: ['siteLayout', 'sidebar', 'pageBody', 'content', 'toc', 'tocActions', 'tocAction'],
   variants: { contentWidth, contentPlacement },
   vars: {
     headerHeight: {
@@ -64,13 +55,11 @@ export const docsPage = typestyles.recipe({
         minHeight: 0,
         minWidth: 0,
       },
+      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `md`.
       sidebar: {
-        [sideNav.vars.width.name]: '16.5rem',
-        borderInlineEnd: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
-      },
-      drawerNav: {
-        height: 'auto',
-        minHeight: '100%',
+        [belowMd]: {
+          display: 'none',
+        },
       },
       /**
        * Page frame. The main column's wrapper is `display: contents`, so its children are grid
@@ -124,6 +113,10 @@ export const docsPage = typestyles.recipe({
         },
         [belowXl]: {
           gridTemplateColumns: `minmax(0, ${mainColumn})`,
+        },
+        [belowMd]: {
+          paddingInline: t.space.md.var,
+          paddingBlock: t.space.lg.var,
         },
         '& .docs-page-toc-nav': {
           position: 'static',

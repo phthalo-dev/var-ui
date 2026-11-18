@@ -25,7 +25,28 @@ export function initSearchInput(root: HTMLElement): () => void {
   return () => {};
 }
 
+/** Apple platforms show ⌘ for the palette hotkey; everything else uses Ctrl. */
+export function isApplePlatform(
+  nav: Pick<Navigator, 'platform' | 'userAgent'> = navigator,
+): boolean {
+  return /Mac|iPhone|iPad|iPod/i.test(nav.platform || nav.userAgent);
+}
+
+/** Text of the default `mod+<key>` shortcut hint for this platform (`⌘K` or `Ctrl K`). */
+export function modShortcutLabel(key: string, apple = isApplePlatform()): string {
+  return apple ? `⌘${key.toUpperCase()}` : `Ctrl ${key.toUpperCase()}`;
+}
+
+/** Swap default `⌘K` hints (`data-var-ui-mod-shortcut`) for `Ctrl K` off Apple platforms. */
+export function localizeModShortcuts(root: ParentNode = document): void {
+  root.querySelectorAll<HTMLElement>('[data-var-ui-mod-shortcut]').forEach((el) => {
+    const key = el.dataset.varUiModShortcut;
+    if (key) el.textContent = modShortcutLabel(key);
+  });
+}
+
 export function initSearchInputs(): void {
+  localizeModShortcuts();
   document.querySelectorAll(TRIGGER_SELECTOR).forEach((node) => {
     if (node instanceof HTMLElement) initSearchInput(node);
   });

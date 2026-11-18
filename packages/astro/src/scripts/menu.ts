@@ -1,3 +1,5 @@
+import type { IconName } from '@var-ui/core';
+import { MENU_ROW_SELECTOR, menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
  * (trigger + popup list) with roving focus and typeahead. The popup is a native
@@ -41,12 +43,29 @@ export type MenuItemDefinition = {
   href?: string;
   /** Leading color swatch (e.g. theme pickers). Any CSS color value. */
   swatch?: string;
+  /** Leading icon from the icon registry. In a `layout: 'row'` section, the item shows only it. */
+  icon?: IconName;
 };
 
 /** Data model for a group of items, mirroring the React `MenuSectionDefinition`. */
 export type MenuSectionDefinition = {
   label?: string;
   items: MenuItemDefinition[];
+  /**
+   * Initially checked item id of this section. Passing it (even `null`) makes the section its
+   * own single-choice group (`role="group"` of `menuitemradio`s), independent of other sections:
+   * e.g. a "Mode" and a "Theme" group in one preferences menu. Same as React's section
+   * `defaultValue`.
+   */
+  defaultValue?: string | null;
+  /**
+   * `row` lays the items out side by side as compact icon buttons (give each an `icon`; the
+   * `label` becomes its accessible name and tooltip), e.g. a Light / Dark / System switch.
+   * ArrowLeft / ArrowRight move (and wrap) within the row; ArrowUp / ArrowDown treat it as one
+   * stop. Choosing a row item keeps the menu open: it is a setting beside the rest of the menu.
+   * @default 'list'
+   */
+  layout?: 'list' | 'row';
 };
 
 export type MenuController = {
@@ -63,6 +82,7 @@ const INITIALIZED_ATTR = 'data-var-ui-menu-initialized';
 const TRIGGER_SELECTOR = '[data-var-ui-menu-trigger]';
 const POPOVER_SELECTOR = '[data-var-ui-menu-popover]';
 const ITEM_SELECTOR = '[data-var-ui-menu-item]';
+const GROUP_SELECTOR = '[data-var-ui-menu-group]';
 
 const controllers = new WeakMap<Element, MenuController>();
 const openRoots = new Set<HTMLElement>();
@@ -119,8 +139,6 @@ export function initMenu(root: Element): void {
 
   attachGlobalListeners();
 
-  const singleSelection = rootEl.dataset.selectionMode === 'single';
-
   let open = false;
   /** Which item the next open focuses (`none` for a programmatic open). */
   let pendingFocus: 'first' | 'last' | 'none' = 'first';
@@ -137,9 +155,12 @@ export function initMenu(root: Element): void {
     }
   }
 
-  function syncCheckedItem(checkedItem: HTMLElement | null): void {
+  /** Check `checkedItem` and uncheck the other radios of its group (the section, else the menu). */
+  function syncCheckedItem(checkedItem: HTMLElement): void {
+    const group = checkedItem.closest(GROUP_SELECTOR);
     for (const candidate of items) {
       if (candidate.getAttribute('role') !== 'menuitemradio') continue;
+      if (candidate.closest(GROUP_SELECTOR) !== group) continue;
       candidate.setAttribute('aria-checked', String(candidate === checkedItem));
     }
   }
@@ -162,9 +183,9 @@ export function initMenu(root: Element): void {
 
   function focusOnOpen(target: 'first' | 'last' | 'none'): void {
     if (target === 'first') {
-      const checkedIndex = singleSelection
-        ? items.findIndex((candidate) => candidate.getAttribute('aria-checked') === 'true')
-        : -1;
+      const checkedIndex = items.findIndex(
+        (candidate) => candidate.getAttribute('aria-checked') === 'true',
+      );
       focusItemAt(checkedIndex >= 0 ? checkedIndex : 0);
     } else if (target === 'last') {
       focusItemAt(items.length - 1);
@@ -208,11 +229,6 @@ export function initMenu(root: Element): void {
     if (restore && (active === document.body || popover.contains(active))) trigger.focus();
   });
 
-  function moveFocus(currentIndex: number, delta: number): void {
-    const next = (currentIndex + delta + items.length) % items.length;
-    focusItemAt(next);
-  }
-
   function handleTypeahead(event: KeyboardEvent, currentIndex: number): void {
     typeaheadBuffer += event.key.toLocaleLowerCase();
     clearTimeout(typeaheadTimer);
@@ -239,7 +255,7 @@ export function initMenu(root: Element): void {
     toggle: () => (isOpenNow() ? hideMenu() : showMenu('none')),
     select: (id: string) => {
       const match = items.find((candidate) => candidate.getAttribute('data-item-id') === id);
-      if (match) syncCheckedItem(match);
+      if (match?.getAttribute('role') === 'menuitemradio') syncCheckedItem(match);
     },
   };
   controllers.set(rootEl, controller);
@@ -277,14 +293,20 @@ export function initMenu(root: Element): void {
     if (currentIndex === -1) return;
 
     switch (event.key) {
+      // Lists step up/down; a `layout: 'row'` section is one stop whose items left/right step
+      // through (wrapping within the row).
       case 'ArrowDown':
-        event.preventDefault();
-        moveFocus(currentIndex, 1);
-        return;
       case 'ArrowUp':
+      case 'ArrowRight':
+      case 'ArrowLeft': {
+        const next = menuArrowTarget(items, target, event.key, {
+          rtl: getComputedStyle(target).direction === 'rtl',
+        });
+        if (!next) return;
         event.preventDefault();
-        moveFocus(currentIndex, -1);
+        next.focus();
         return;
+      }
       case 'Home':
         event.preventDefault();
         focusItemAt(0);
@@ -331,13 +353,16 @@ export function initMenu(root: Element): void {
         return;
       }
       const isLink = item.localName === 'a';
-      if (singleSelection) syncCheckedItem(item);
+      if (item.getAttribute('role') === 'menuitemradio') syncCheckedItem(item);
       rootEl.dispatchEvent(
         new CustomEvent<MenuActionDetail>(MENU_ACTION_EVENT, {
           bubbles: true,
           detail: { id: item.getAttribute('data-item-id') },
         }),
       );
+      // A row (Light / Dark / System) is a setting beside the rest of the menu, not a command:
+      // the menu stays open so the next choice is one step away.
+      if (item.closest(MENU_ROW_SELECTOR)) return;
       hideMenu({ restoreFocus: !isLink });
     });
   }

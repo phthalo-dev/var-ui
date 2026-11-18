@@ -3,11 +3,10 @@ export type ResolvedColorMode = 'light' | 'dark';
 
 import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 import {
-  observeSegmentedControlIndicator,
-  syncSegmentedControlIndicator,
-} from '@var-ui/core/components/indicators/segmented-control';
-
-const COLOR_MODE_VALUE_ATTRIBUTE = 'data-color-mode-value';
+  initSegmentedControl,
+  SEGMENTED_CONTROL_CHANGE_EVENT,
+  setSegmentedControlValue,
+} from './segmentedControl';
 
 const VALID: ReadonlySet<string> = new Set(['light', 'dark', 'system']);
 
@@ -43,6 +42,9 @@ export function setColorMode(mode: ColorMode, storageKey = 'theme-mode'): void {
   persistColorMode(storageKey, mode);
   applyColorModeToDocument(mode);
   syncColorModeToggles(storageKey);
+  document.dispatchEvent(
+    new CustomEvent(COLOR_MODE_CHANGE_EVENT, { detail: { mode, storageKey } }),
+  );
 }
 
 /** Boot path used by ThemeScript (theme class + `data-color-mode`). */
@@ -88,33 +90,27 @@ export function watchThemeOnNavigation(themeClass: string, storageKey = 'theme-m
   });
 }
 
-function readEffectiveColorMode(storageKey: string): ColorMode {
-  const stored = readStoredColorMode(storageKey);
-  if (stored) return stored;
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return prefersDark ? 'dark' : 'light';
+/** The stored preference, or `system` when nothing valid is stored (what `ThemeScript` applies). */
+export function readColorModePreference(storageKey: string): ColorMode {
+  return readStoredColorMode(storageKey) ?? 'system';
+}
+
+/** The mode a toggle shows as checked: the stored preference, resolved when there is no System segment. */
+export function colorModeToggleValue(
+  storageKey: string,
+  includeSystem: boolean,
+): ColorMode | ResolvedColorMode {
+  const mode = readColorModePreference(storageKey);
+  return includeSystem || mode !== 'system' ? mode : resolveColorMode(mode);
 }
 
 function syncToggleRoot(root: Element, storageKey: string): void {
   const includeSystem = root.getAttribute('data-include-system') === 'true';
-  const mode = readEffectiveColorMode(storageKey);
-  const selected: ColorMode | ResolvedColorMode =
-    includeSystem || mode !== 'system' ? mode : resolveColorMode(mode);
-
-  root.querySelectorAll(`[${COLOR_MODE_VALUE_ATTRIBUTE}]`).forEach((button) => {
-    const buttonMode = button.getAttribute(COLOR_MODE_VALUE_ATTRIBUTE);
-    const pressed = buttonMode === selected;
-    button.setAttribute('aria-pressed', String(pressed));
-    if (pressed) {
-      button.setAttribute('data-selected', '');
-    } else {
-      button.removeAttribute('data-selected');
-    }
-  });
-  if (root instanceof HTMLElement) {
-    syncSegmentedControlIndicator(root);
-  }
+  setSegmentedControlValue(root, colorModeToggleValue(storageKey, includeSystem));
 }
+
+/** Event dispatched on `document` after `setColorMode` changes the preference. */
+export const COLOR_MODE_CHANGE_EVENT = 'var-ui:color-mode-change';
 
 function syncColorModeToggles(storageKey?: string): void {
   document.querySelectorAll('[data-var-ui-color-mode-toggle]').forEach((root) => {
@@ -123,6 +119,10 @@ function syncColorModeToggles(storageKey?: string): void {
   });
 }
 
+/**
+ * Wire every `ColorModeToggle` on the page: check the stored mode and store the one the user
+ * picks. The toggle is a `SegmentedControl` radio group (arrow keys move and check).
+ */
 export function initColorModeToggle(): void {
   document.querySelectorAll('[data-var-ui-color-mode-toggle]').forEach((root) => {
     if (root.hasAttribute('data-var-ui-color-mode-initialized')) return;
@@ -130,18 +130,14 @@ export function initColorModeToggle(): void {
 
     const storageKey = root.getAttribute('data-storage-key') ?? 'theme-mode';
 
+    initSegmentedControl(root);
     syncToggleRoot(root, storageKey);
-    if (root instanceof HTMLElement) {
-      observeSegmentedControlIndicator(root);
-    }
 
-    root.querySelectorAll(`[${COLOR_MODE_VALUE_ATTRIBUTE}]`).forEach((button) => {
-      button.addEventListener('click', () => {
-        const mode = button.getAttribute(COLOR_MODE_VALUE_ATTRIBUTE);
-        if (mode === 'light' || mode === 'dark' || mode === 'system') {
-          setColorMode(mode, storageKey);
-        }
-      });
+    root.addEventListener(SEGMENTED_CONTROL_CHANGE_EVENT, (event) => {
+      const mode = (event as CustomEvent<{ id?: string | null }>).detail?.id;
+      if (mode === 'light' || mode === 'dark' || mode === 'system') {
+        setColorMode(mode, storageKey);
+      }
     });
   });
 }

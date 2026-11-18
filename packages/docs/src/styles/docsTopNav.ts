@@ -1,46 +1,51 @@
-import { designTokens as t, typestyles } from '@var-ui/core';
+import { designTokens as t, focusRing, typestyles } from '@var-ui/core';
 
-const belowXl = typestyles.breakpoint('xl', 'max');
+const belowLg = typestyles.breakpoint('lg', 'max');
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowSm = typestyles.breakpoint('sm', 'max');
 
-const toolsCluster = {
-  display: 'flex',
-  alignItems: 'center',
-  flexWrap: 'nowrap',
-  gap: t.space.sm.var,
-  minWidth: 0,
-  [belowXl]: {
-    gap: t.space.xs.var,
-  },
-  [belowSm]: {
-    gap: t.space.xxs.var,
-  },
-} as const;
-
 /**
- * Docs kit header chrome: one nowrap row. Section links hide below `md`
- * (hamburger + MobileNav), search compact is owned by `searchInput`, and
- * optional toolbar extras hide below `sm`.
+ * Docs kit header chrome (`DocsTopBar`): brand, section links, then one calm cluster on the
+ * right: search, optional tools (e.g. a framework switcher), a hairline, the appearance menu.
+ *
+ * Responsive plan:
+ * - `>= md`: everything, full search field (narrower below `lg`).
+ * - `sm`–`md`: the search collapses to its icon (`SearchInput` default `collapseBelow="md"`),
+ *   tools move into the mobile drawer and the hamburger appears (docs sidebars live in the
+ *   drawer below `md`). Section links stay visible.
+ * - `< sm`: section links move into the drawer too.
  */
 export const docsTopNav = typestyles.recipe({
   name: 'docs-top-nav',
   layer: 'components',
-  slots: ['root', 'tools', 'toolsPersist', 'toolbar', 'toolbarExtra', 'mobileNavBody'],
+  slots: [
+    'root',
+    'tools',
+    'toolbarExtra',
+    'divider',
+    'mobileNavBrand',
+    'mobileNavBody',
+    'mobileNavPrimary',
+    'mobileNavSection',
+    'mobileNavSectionTitle',
+  ],
   styles: () => ({
     base: {
       root: {
         minWidth: 0,
         flexWrap: 'nowrap',
+        gap: t.space.lg.var,
+        [belowLg]: {
+          gap: t.space.md.var,
+        },
+        '& [data-var-ui-top-nav-heading]': {
+          // Optical: the wordmark's bracket sits on the same centre line as the nav labels.
+          paddingInlineEnd: t.space.xs.var,
+        },
         '& [data-var-ui-top-nav-start]': {
           flexShrink: 0,
-          [belowMd]: {
+          [belowSm]: {
             display: 'none',
-          },
-        },
-        '& [data-var-ui-top-nav-start] a, & [data-var-ui-top-nav-start] button': {
-          [belowXl]: {
-            paddingInline: t.space.xs.var,
           },
         },
         '& [data-var-ui-mobile-nav-toggle]': {
@@ -50,37 +55,93 @@ export const docsTopNav = typestyles.recipe({
             display: 'inline-flex',
           },
         },
+      },
+      tools: {
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'nowrap',
+        gap: t.space.xs.var,
+        minWidth: 0,
         '& .docs-search': {
           display: 'inline-flex',
           alignItems: 'center',
           flexShrink: 0,
+          marginInlineEnd: t.space.xxs.var,
+          // Collapsed to an icon button: one even 8px rhythm with its icon neighbours.
+          [belowMd]: {
+            marginInlineEnd: 0,
+          },
         },
-      },
-      tools: toolsCluster,
-      toolsPersist: {
-        ...toolsCluster,
-        flexShrink: 0,
-      },
-      toolbar: {
-        ...toolsCluster,
-        flexShrink: 0,
-        [belowSm]: {
-          gap: t.space.xxs.var,
-          '& [role="group"] button': {
-            paddingInline: t.space.xxs.var,
+        '& .docs-search [data-var-ui-search-input]': {
+          width: '15rem',
+          [belowLg]: {
+            width: '12rem',
+          },
+          [belowMd]: {
+            width: 'auto',
           },
         },
       },
       toolbarExtra: {
-        [belowSm]: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        [belowMd]: {
           display: 'none',
         },
+      },
+      // Hairline between content controls (search, tools) and preferences.
+      divider: {
+        alignSelf: 'center',
+        width: '0.0625rem',
+        height: t.space.md.var,
+        marginInline: t.space.xxs.var,
+        backgroundColor: t.color.border.default.var,
+        [belowMd]: {
+          display: 'none',
+        },
+      },
+      // Drawer header: the brand, linked home (same mark as the bar).
+      mobileNavBrand: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        minHeight: t.size.control.md.var,
+        color: 'inherit',
+        textDecoration: 'none',
+        borderRadius: t.radius.sm.var,
+        outline: 'none',
+        '&:focus-visible': focusRing,
       },
       mobileNavBody: {
         display: 'flex',
         flexDirection: 'column',
-        gap: t.space.xs.var,
+        gap: t.space.md.var,
         padding: t.space.sm.var,
+      },
+      // Site sections (Docs, Components, …): a hair heavier than the page tree, with a divider
+      // before it (`data-divided`) so the two lists do not run together.
+      mobileNavPrimary: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& a': { fontWeight: t.fontWeight.medium.var },
+        '&[data-divided]': {
+          paddingBlockEnd: t.space.md.var,
+          borderBlockEnd: `0.0625rem solid ${t.color.border.subtle.var}`,
+        },
+      },
+      // Preferences, pinned in the drawer footer (`MobileNav` draws the top border).
+      mobileNavSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: t.space.xs.var,
+      },
+      mobileNavSectionTitle: {
+        margin: 0,
+        fontSize: t.fontSize.xs.var,
+        fontWeight: t.fontWeight.semibold.var,
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        color: t.color.text.secondary.var,
       },
     },
   }),

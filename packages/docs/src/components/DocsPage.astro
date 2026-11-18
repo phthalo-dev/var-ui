@@ -2,24 +2,17 @@
 import { ClientRouter } from 'astro:transitions';
 import {
   AppShell,
-  ColorModeToggle,
   cx,
   Layout,
   LayoutContent,
-  MobileNav,
-  MobileNavToggle,
+  LayoutPanel,
   mergeProps,
   SideNav,
-  SideNavItem,
-  SideNavSection,
   ThemeScript,
-  TopNav,
-  TopNavHeading,
-  TopNavItem,
 } from '@var-ui/astro';
-import { docsTopNav } from '../styles/docsTopNav';
 import { docsPage, docsPageContent } from '../styles/docsPage';
-import DocsSearch from './DocsSearch.astro';
+import DocsMobileMenu from './DocsMobileMenu.astro';
+import DocsTopBar from './DocsTopBar.astro';
 import DocsSidebar from './DocsSidebar.astro';
 import DocsToc from './DocsToc.astro';
 import type { DocsBrand, DocsSearchItem, SidebarSection, TopNavItem as TopNavItemType } from '../types';
@@ -86,7 +79,8 @@ const showAutoToc =
         });
 const showTocPanel = hasTocSlot || showAutoToc;
 const hasToolsSlot = Astro.slots.has('tools');
-const hasThemePickerSlot = Astro.slots.has('themePicker');
+const hasDrawerToolsSlot = Astro.slots.has('drawerTools');
+const hasBrandSlot = Astro.slots.has('brand');
 const hasThemeScriptSlot = Astro.slots.has('themeScript');
 const showMobileNav = topNav.length > 0 || Boolean(sidebarSections);
 
@@ -94,7 +88,6 @@ function isSidebarLinkActive(link: string): boolean {
   return currentPath === normalizeDocsPath(link);
 }
 
-const nav = docsTopNav();
 const page = docsPage();
 const sidebarContent = docsPageContent({
   width: contentWidth === 'full' ? 'full' : 'default',
@@ -104,6 +97,7 @@ const pageBodyContent = docsPageContent({
   width: contentWidth === 'full' ? 'full' : 'default',
   placement: 'inPageBody',
 });
+const pageBodyDefaultContent = docsPageContent({ placement: 'inPageBody' });
 const defaultContent = docsPageContent();
 const markdownGlyph =
   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="9" rx="2"/><path d="M4 10V6l2 2 2-2v4M11 6v4m-1.5-1.5L11 10l1.5-1.5"/></svg>';
@@ -122,102 +116,114 @@ const markdownGlyph =
   </head>
   <body class={cx('docs-body', bodyClassName)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
-      <TopNav slot="topNav" className={cx(nav.root)}>
-        <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} />
-        {
-          topNav.map((item) => (
-            <TopNavItem
-              label={item.text}
-              href={item.link}
-              selected={currentPath.startsWith(item.match)}
-            />
-          ))
-        }
-        <div slot="end" class={cx(nav.tools)}>
-          <div
-            class={cx(nav.toolsPersist)}
-            transition:persist="docs-top-nav-tools"
-            transition:animate="none"
-          >
-            <DocsSearch items={searchItems} />
-            <div class={cx(nav.toolbar)}>
-              {hasToolsSlot ? (
-                <div class={cx(nav.toolbarExtra)}>
-                  <slot name="tools" />
-                </div>
-              ) : null}
-              {hasThemePickerSlot ? <slot name="themePicker" /> : null}
-              <ColorModeToggle includeSystem size="md" />
-            </div>
-          </div>
-          {
-            showMobileNav ? <MobileNavToggle /> : null
-          }
-        </div>
-      </TopNav>
+      <DocsTopBar
+        slot="topNav"
+        topNav={topNav}
+        searchItems={searchItems}
+        brand={brand}
+        currentPath={currentPath}
+        mobileNav={showMobileNav}
+      >
+        {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
+        {hasToolsSlot ? <slot name="tools" slot="tools" /> : null}
+      </DocsTopBar>
 
       {
         showMobileNav ? (
-          <MobileNav slot="mobileNav" header="Menu">
-            {/* SideNav root carries the item color vars; bare sections would render transparent. */}
-            <SideNav label="Site navigation" {...mergeProps(page.drawerNav)}>
-              {
-                topNav.length > 0 ? (
-                  <SideNavSection>
-                    {topNav.map((item) => (
-                      <SideNavItem
-                        label={item.text}
-                        href={item.link}
-                        selected={currentPath.startsWith(item.match)}
-                      />
-                    ))}
-                  </SideNavSection>
-                ) : null
-              }
-              {sidebarSections ? (
-                <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
-              ) : null}
-            </SideNav>
-          </MobileNav>
+          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath} brand={brand}>
+            {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
+            {sidebarSections ? (
+              <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
+            ) : null}
+            {hasDrawerToolsSlot ? <slot name="drawerTools" slot="tools" /> : null}
+          </DocsMobileMenu>
         ) : null
       }
 
       {
         sidebarSections ? (
-          <SideNav slot="sideNav" label="Section navigation" {...mergeProps(page.sidebar)}>
-            <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
-          </SideNav>
-        ) : null
-      }
-
-      <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
-        <LayoutContent label="Main content">
-          {
-            showTocPanel ? (
-              <div {...mergeProps(page.pageBody)}>
-                <div {...mergeProps(pageBodyContent)} data-docs-content>
-                  <slot />
-                </div>
-                <aside {...mergeProps(page.toc)} aria-label="On this page" data-docs-toc-slot hidden={tocHidden || undefined}>
-                  {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
-                  {mdHref && !hasTocSlot ? (
-                    <div {...mergeProps(page.tocActions)}>
-                      <a {...mergeProps(page.tocAction)} href={mdHref}>
-                        <span aria-hidden="true" set:html={markdownGlyph} />
-                        View as Markdown
-                      </a>
+          <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
+            <LayoutPanel
+              slot="start"
+              side="start"
+              width={280}
+              hasDivider
+              padding="none"
+              scrollable={false}
+              className={page.sidebar.className}
+            >
+              <SideNav label="Section navigation" collapsible>
+                <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
+              </SideNav>
+            </LayoutPanel>
+            <LayoutContent label="Main content">
+              {
+                showTocPanel ? (
+                  <div {...mergeProps(page.pageBody)}>
+                    <div {...mergeProps(pageBodyContent)} data-docs-content>
+                      <slot />
                     </div>
-                  ) : null}
-                </aside>
-              </div>
-            ) : (
-              <div {...mergeProps(sidebarSections ? sidebarContent : defaultContent)}>
-                <slot />
-              </div>
-            )
-          }
-        </LayoutContent>
-      </Layout>
+                    <aside
+                      {...mergeProps(page.toc)}
+                      aria-label="On this page"
+                      data-docs-toc-slot
+                      hidden={tocHidden || undefined}
+                    >
+                      {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
+                      {mdHref && !hasTocSlot ? (
+                        <div {...mergeProps(page.tocActions)}>
+                          <a {...mergeProps(page.tocAction)} href={mdHref}>
+                            <span aria-hidden="true" set:html={markdownGlyph} />
+                            View as Markdown
+                          </a>
+                        </div>
+                      ) : null}
+                    </aside>
+                  </div>
+                ) : (
+                  <div {...mergeProps(sidebarContent)}>
+                    <slot />
+                  </div>
+                )
+              }
+            </LayoutContent>
+          </Layout>
+        ) : (
+          <Layout height="fill" padding={showTocPanel ? 'none' : 'xl'} className={cx(page.siteLayout)}>
+            <LayoutContent label="Main content">
+              {
+                showTocPanel ? (
+                  <div {...mergeProps(page.pageBody)}>
+                    <div {...mergeProps(pageBodyDefaultContent)} data-docs-content>
+                      <slot />
+                    </div>
+                    <aside
+                      {...mergeProps(page.toc)}
+                      aria-label="On this page"
+                      data-docs-toc-slot
+                      hidden={tocHidden || undefined}
+                    >
+                      {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
+                      {mdHref && !hasTocSlot ? (
+                        <div {...mergeProps(page.tocActions)}>
+                          <a {...mergeProps(page.tocAction)} href={mdHref}>
+                            <span aria-hidden="true" set:html={markdownGlyph} />
+                            View as Markdown
+                          </a>
+                        </div>
+                      ) : null}
+                    </aside>
+                  </div>
+                ) : (
+                  <div {...mergeProps(defaultContent)}>
+                    <slot />
+                  </div>
+                )
+              }
+            </LayoutContent>
+          </Layout>
+        )
+      }
     </AppShell>
     <script>
       import '../scripts/docsPageClient.ts';

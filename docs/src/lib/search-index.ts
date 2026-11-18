@@ -4,30 +4,54 @@ import type { DocsSearchItem } from '@var-ui/docs/utils';
 
 export type { DocsSearchItem };
 
+// Page descriptions from guide frontmatter, keyed by URL, so every result has the same kind of
+// subtitle (what the page is about) rather than some showing descriptions and others raw paths.
+const guideSources = import.meta.glob<string>(
+  '../../content/{docs,theming,playground}/*.{md,mdx}',
+  {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  },
+);
+
+const descriptions = new Map<string, string>(
+  Object.entries(guideSources).flatMap(([file, source]) => {
+    const match = /^---\r?\n[\s\S]*?^description:\s*(.+?)\s*$[\s\S]*?^---/m.exec(source);
+    if (!match?.[1]) return [];
+    const [, section = '', slug = ''] = /content\/([^/]+)\/([^/]+)\.mdx?$/.exec(file) ?? [];
+    const url = slug === 'index' ? `/${section}` : `/${section}/${slug}`;
+    return [[url, match[1].replace(/^(['"])(.*)\1$/, '$2')]];
+  }),
+);
+
 function sidebarItems(
   items: ReadonlyArray<{ text: string; link: string }>,
-  meta: string,
   group: string,
+  icon: DocsSearchItem['icon'],
 ): DocsSearchItem[] {
   return items.map((item) => ({
     id: item.link,
     title: item.text,
-    meta,
+    meta: descriptions.get(item.link),
+    keywords: [group],
     group,
+    icon,
   }));
 }
 
 /** Flat CommandPalette index from docs/theming sidebars and the component registry. */
 export function buildDocsSearchIndex(): DocsSearchItem[] {
-  const docs = sidebarItems(docsSidebar, 'Docs', 'Docs');
-  const theming = sidebarItems(themingSidebar, 'Theming', 'Theming');
-  const playground = sidebarItems(playgroundSidebar, 'Playground', 'Playground');
-  const components = componentRegistry.map((entry) => ({
+  const docs = sidebarItems(docsSidebar, 'Docs', 'page');
+  const theming = sidebarItems(themingSidebar, 'Theming', 'palette');
+  const playground = sidebarItems(playgroundSidebar, 'Playground', 'wrench');
+  const components = componentRegistry.map((entry): DocsSearchItem => ({
     id: `/components/${entry.slug}`,
     title: entry.name,
-    meta: categoryLabels[entry.category],
+    meta: entry.description,
     group: 'Components',
-    keywords: [entry.slug, entry.category, entry.description],
+    icon: 'component',
+    keywords: [entry.slug, entry.category, categoryLabels[entry.category]],
   }));
 
   return [...docs, ...theming, ...playground, ...components];

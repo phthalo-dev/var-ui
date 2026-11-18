@@ -80,6 +80,21 @@ describe('MobileNav on a native dialog', () => {
     expect(dlg().open).toBe(false);
   });
 
+  test('close button has a 32px hit box and a visible icon', async () => {
+    render(<Nav defaultOpen closeLabel="Close nav" />);
+    await raf();
+    const button = document.querySelector<HTMLElement>('button[aria-label="Close nav"]')!;
+    const box = button.getBoundingClientRect();
+    expect(box.width).toBeGreaterThanOrEqual(32);
+    expect(box.height).toBeGreaterThanOrEqual(32);
+    const svg = button.querySelector('svg');
+    if (svg) {
+      const icon = svg.getBoundingClientRect();
+      expect(icon.width).toBeGreaterThan(8);
+      expect(icon.height).toBeGreaterThan(8);
+    }
+  });
+
   test('close button: close-press', async () => {
     const onOpenChange = vi.fn<OverlayOpenChangeHandler>();
     render(<Nav defaultOpen onOpenChange={onOpenChange} closeLabel="Close nav" />);

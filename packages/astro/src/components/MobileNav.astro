@@ -1,6 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+import { icon } from '@var-ui/core/components/icon';
 import { mobileNav } from '@var-ui/core/components/mobileNav';
+import { svg as closeSvg } from '@var-ui/icons/glyphs/close';
 import { mergeProps } from '../utils';
 
 /**
@@ -29,9 +31,11 @@ const {
 } = Astro.props;
 
 const s = mobileNav();
+const closeIcon = mergeProps(icon({ size: 'sm' }));
 const resolvedSide = side === 'auto' ? 'start' : side;
 const panelStyle = `--var-ui-mobile-nav-panelwidth: ${width}px`;
 const hasHeaderSlot = Astro.slots.has('header');
+const hasFooterSlot = Astro.slots.has('footer');
 ---
 
 <div data-var-ui-mobile-nav>
@@ -53,11 +57,20 @@ const hasHeaderSlot = Astro.slots.has('header');
         data-var-ui-mobile-nav-close
         aria-label={closeLabel}
         {...mergeProps(s.closeButton)}
-      ></button>
+      >
+        <span {...closeIcon} aria-hidden="true" set:html={closeSvg} />
+      </button>
     </div>
     <div {...mergeProps(s.body)}>
       <slot />
     </div>
+    {
+      hasFooterSlot ? (
+        <div {...mergeProps(s.footer)}>
+          <slot name="footer" />
+        </div>
+      ) : null
+    }
   </dialog>
 </div>
 
