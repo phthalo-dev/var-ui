@@ -2,7 +2,7 @@
 import { codeBlock, stage } from '@var-ui/core';
 import { combine, cx, mergeProps } from '@var-ui/astro';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
-import { docsPageHeader } from '../styles/docsPageHeader';
+import { docsPageBar, docsPageHeader } from '../styles/docsPageHeader';
 
 export type DocsPageHeaderMetaLink = { label: string; href: string };
 
@@ -17,6 +17,8 @@ export type DocsPageHeaderMeta = {
   code?: string;
 };
 
+export type DocsPageHeaderTab = { id: string; label: string };
+
 type Props = {
   title: string;
   eyebrow?: string;
@@ -24,16 +26,86 @@ type Props = {
   /** Import statement shown as a copyable pill. */
   importCode?: string;
   meta?: readonly DocsPageHeaderMeta[];
+  /**
+   * Page tabs mirrored in the collapsed bar. Each item drives the page's real tab with
+   * id `tab-<id>` (the bar holds plain buttons, not a second tablist).
+   */
+  tabs?: readonly DocsPageHeaderTab[];
+  /** Initially selected tab id. */
+  selectedTab?: string;
 };
 
-const { title, eyebrow, lead, importCode, meta = [] } = Astro.props;
+const { title, eyebrow, lead, importCode, meta = [], tabs = [], selectedTab } = Astro.props;
 const s = docsPageHeader();
+const bar = docsPageBar();
+const barLinks = meta.flatMap((row) =>
+  (row.links ?? []).map((link) => ({ ...link, icon: row.icon, secondary: Boolean(row.label) })),
+);
 const cb = codeBlock({ variant: 'default' });
 const hasPreview = Astro.slots.has('preview');
 ---
 
+<div {...mergeProps(bar.root)} data-docs-page-bar aria-hidden="true">
+  <div {...mergeProps(bar.identity)}>
+    {eyebrow ? <span {...mergeProps(bar.eyebrow)}>{eyebrow}</span> : null}
+    <span {...mergeProps(bar.title)}>{title}</span>
+  </div>
+  {
+    tabs.length > 0 ? (
+      <div {...mergeProps(bar.tabs)}>
+        {tabs.map((tab) => (
+          <button
+            type="button"
+            tabindex="-1"
+            {...mergeProps(bar.tab)}
+            data-docs-bar-tab={tab.id}
+            aria-current={tab.id === (selectedTab ?? tabs[0]?.id) ? 'true' : undefined}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    ) : null
+  }
+  <div {...mergeProps(bar.end)}>
+    {barLinks.map((link) => (
+      <a
+        {...mergeProps(bar.link)}
+        href={link.href}
+        tabindex="-1"
+        data-bar-secondary={link.secondary || undefined}
+        target={/^https?:/.test(link.href) ? '_blank' : undefined}
+        rel="noreferrer"
+      >
+        {!link.secondary && link.icon ? <span {...mergeProps(bar.icon)} set:html={link.icon} /> : null}
+        {link.label}
+      </a>
+    ))}
+    {
+      importCode ? (
+        <span {...mergeProps(bar.copy)}>
+          <button
+            type="button"
+            tabindex="-1"
+            {...mergeProps(cb.copyButton)}
+            data-var-ui-code-copy
+            data-code={importCode}
+            data-copy-label="Copy import"
+            data-copied-label="Copied"
+            data-copy-error-label="Copy failed"
+            aria-label="Copy import"
+          >
+            <span data-codeblock-copy-icon set:html={copySvg} />
+            <span data-codeblock-copy-text>Copy</span>
+          </button>
+        </span>
+      ) : null
+    }
+  </div>
+</div>
 <header
   {...combine(stage({ tone: 'accent', fade: 'end' }), s.root)}
+  data-docs-page-hero
   data-has-preview={hasPreview || undefined}
 >
   <div class={cx(s.content)}>
@@ -90,3 +162,8 @@ const hasPreview = Astro.slots.has('preview');
     ) : null
   }
 </header>
+
+<script>
+  import { initDocsPageBar } from '../scripts/docsPageBar';
+  initDocsPageBar();
+</script>

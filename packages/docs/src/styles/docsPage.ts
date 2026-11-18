@@ -11,6 +11,8 @@ const mainColumn = '50rem';
 /** Width of the on-this-page rail. */
 const tocColumn = '13.5rem';
 const columnGap = t.space.xxxl.var;
+/** Height of the collapsed page bar that replaces the hero once it scrolls away. */
+export const pageBarHeight = '3.5rem';
 
 /** Page gutters: generous on desktop, 16px on phones. */
 const gutters = {
@@ -63,15 +65,49 @@ export const docsPage = typestyles.recipe({
         height: 'auto',
         minHeight: '100%',
       },
+      /**
+       * Page frame. The main column's wrapper is `display: contents`, so its children are grid
+       * items here: a page hero (`data-docs-page-hero`), its collapsed bar (`data-docs-page-bar`)
+       * and the page tab list span the full frame (main + rail); everything else flows into the
+       * main column, and the rail starts on the row after the tabs and sticks below the bar.
+       * `timeline-scope` lets the bar animate on the hero's view timeline.
+       */
       pageBody: {
         ...gutters,
         display: 'grid',
         gridTemplateColumns: `minmax(0, ${mainColumn}) ${tocColumn}`,
         justifyContent: 'center',
         columnGap,
+        rowGap: 0,
         alignItems: 'start',
         boxSizing: 'border-box',
         minHeight: '100%',
+        timelineScope: '--docs-page-hero',
+        '& > [data-docs-content]': { display: 'contents' },
+        '& > [data-docs-content] > *': { gridColumn: '1', minWidth: 0 },
+        '& > [data-docs-content] > [data-docs-page-bar]': {
+          gridColumn: '1 / -1',
+          gridRow: '1',
+        },
+        '& > [data-docs-content] > [data-docs-page-hero]': {
+          gridColumn: '1 / -1',
+          gridRow: '2',
+        },
+        '& > [data-docs-content] > [data-docs-page-tabs]': { display: 'contents' },
+        '& [data-docs-page-tabs] > [role="tablist"]': {
+          gridColumn: '1 / -1',
+          gridRow: '3',
+          marginBlockEnd: t.space.xl.var,
+        },
+        '& [data-docs-page-tabs] > [role="tabpanel"]': { gridColumn: '1' },
+        // The rail spans every row below the tabs (or the whole page without a hero).
+        '& > aside': { gridColumn: '2', gridRow: '1 / span 60' },
+        '&:has(> [data-docs-content] > [data-docs-page-hero]) > aside': {
+          gridRow: '3 / span 60',
+        },
+        '&:has(> [data-docs-content] > [data-docs-page-tabs]) > aside': {
+          gridRow: '4 / span 60',
+        },
         [belowXl]: {
           gridTemplateColumns: `minmax(0, ${mainColumn})`,
         },
@@ -91,13 +127,14 @@ export const docsPage = typestyles.recipe({
       },
       toc: {
         position: 'sticky',
-        top: t.space.xxl.var,
+        // Clear the collapsed page bar (when there is one) that sticks above it.
+        top: `calc(${pageBarHeight} + ${t.space.lg.var})`,
         alignSelf: 'start',
         display: 'flex',
         flexDirection: 'column',
         gap: t.space.xl.var,
         minWidth: 0,
-        maxHeight: `calc(100dvh - ${t.size.nav.bar.var} - 2 * ${t.space.xxl.var})`,
+        maxHeight: `calc(100dvh - ${t.size.nav.bar.var} - ${pageBarHeight} - 2 * ${t.space.lg.var})`,
         overflowY: 'auto',
         // A tab without a TOC keeps the rail's column, so the frame never changes width.
         '&[hidden]': {
@@ -153,10 +190,7 @@ export const docsPage = typestyles.recipe({
         standalone: {},
         inPageBody: {
           content: {
-            maxWidth: 'none',
-            margin: 0,
-            padding: 0,
-            minWidth: 0,
+            display: 'contents',
           },
         },
       },

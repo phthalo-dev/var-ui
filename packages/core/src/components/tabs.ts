@@ -10,7 +10,7 @@ import { designTokens as t } from '../tokens';
 const tabsVarDefinitions = {
   railColor: {
     ...atProperty.color,
-    value: t.color.border.subtle.var,
+    value: t.color.border.default.var,
   },
   railWidth: {
     ...atProperty.length,
@@ -30,7 +30,7 @@ const tabsVarDefinitions = {
   },
   tabIndicatorColor: {
     ...atProperty.color,
-    value: t.color.text.primary.var,
+    value: t.color.tone.accent.foreground.var,
   },
   indicatorX: {
     ...atProperty.length,
@@ -87,10 +87,23 @@ export const tabs = typestyles.recipe({
           minWidth: 0,
           gap: t.space.sm.var,
         },
+        // Underline tabs: a hairline rail the full width of the list, and a 2px accent indicator
+        // that slides to the selected tab. The row scrolls sideways (with a trailing fade) when it
+        // is wider than its container.
         list: {
           position: 'relative',
-          display: 'inline-flex',
-          gap: t.space.xxs.var,
+          display: 'flex',
+          alignItems: 'stretch',
+          gap: 0,
+          minWidth: 0,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollbarWidth: 'none',
+          // Room for focus rings inside the scroll container's clip box.
+          paddingBlockStart: '0.1875rem',
+          paddingInline: '0.1875rem',
+          marginInline: '-0.1875rem',
+          ...inlineScrollFade('var-ui-tabs-underline-fade', { end: vars.scrollFadeEnd }),
           [vars.indicatorX.name]: '0rem',
           [vars.indicatorWidth.name]: '0rem',
           [vars.indicatorOpacity.name]: '0',
@@ -100,8 +113,7 @@ export const tabs = typestyles.recipe({
             insetInlineStart: 0,
             insetInlineEnd: 0,
             bottom: 0,
-            height: vars.railWidth.var,
-            borderRadius: vars.railRadius.var,
+            height: t.borderWidth.default.var,
             backgroundColor: vars.railColor.var,
             pointerEvents: 'none',
             ...atForcedColors({ backgroundColor: 'GrayText' }),
@@ -113,41 +125,56 @@ export const tabs = typestyles.recipe({
             insetInlineStart: 0,
             width: vars.indicatorWidth.var,
             height: vars.railWidth.var,
-            borderRadius: vars.railRadius.var,
+            borderRadius: `${vars.railRadius.var} ${vars.railRadius.var} 0 0`,
             backgroundColor: vars.tabIndicatorColor.var,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
             zIndex: t.zIndex.raised.var,
             transform: `translateX(${vars.indicatorX.var})`,
+            transition: `${transitionOf('transform')}, ${transitionOf('width')}`,
             ...atForcedColors(forced.fill),
           },
         },
         tab: {
+          position: 'relative',
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xs.var,
+          flexShrink: 0,
+          whiteSpace: 'nowrap',
           border: 'none',
           backgroundColor: 'transparent',
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          minHeight: '2.75rem',
+          paddingBlock: 0,
+          paddingInline: t.space.sm.var,
           color: vars.tabColor.var,
           cursor: 'pointer',
           fontFamily: 'inherit',
           fontSize: t.fontSize.md.var,
-          transition: transitionOf(['color', 'background-color', 'border-color'], 'fast'),
+          fontWeight: t.fontWeight.medium.var,
+          borderRadius: `${t.radius.md.var} ${t.radius.md.var} 0 0`,
+          transition: transitionOf(['color', 'background-color', 'box-shadow'], 'fast'),
           '& svg': {
             width: '1rem',
             height: '1rem',
             flexShrink: 0,
+            opacity: 0.8,
           },
+          // Hover: text firms up and a neutral underline previews the move.
           '&:hover:not([data-selected])': {
             color: vars.tabSelectedColor.var,
+            boxShadow: `inset 0 calc(-1 * ${vars.railWidth.var}) 0 ${t.color.border.strong.var}`,
           },
           '&:focus-visible': {
             ...focusRing,
+            outlineOffset: '-0.125rem',
           },
           '&[data-selected]': {
             color: vars.tabSelectedColor.var,
-            fontWeight: t.fontWeight.semibold.var,
+          },
+          '&[data-selected] svg': {
+            opacity: 1,
+            color: vars.tabIndicatorColor.var,
           },
         },
         panel: {
@@ -183,6 +210,7 @@ export const tabs = typestyles.recipe({
               flexShrink: 0,
               scrollSnapAlign: 'start',
               whiteSpace: 'nowrap',
+              minHeight: 0,
               height: t.size.control.md.var,
               paddingBlock: 0,
               paddingInline: t.space.md.var,
@@ -192,6 +220,7 @@ export const tabs = typestyles.recipe({
               fontSize: t.fontSize.md.var,
               fontWeight: t.fontWeight.medium.var,
               '&:hover:not([data-selected])': {
+                boxShadow: 'none',
                 backgroundColor: t.color.background.subtle.var,
               },
               // Selected: ink fill in light mode; in dark mode a raised surface with an accent

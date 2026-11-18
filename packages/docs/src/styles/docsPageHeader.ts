@@ -1,6 +1,15 @@
-import { codeBlock, designTokens as t, typestyles } from '@var-ui/core';
+import {
+  atDarkMode,
+  atReducedMotion,
+  codeBlock,
+  designTokens as t,
+  typestyles,
+} from '@var-ui/core';
+import { keyframes } from 'typestyles';
+import { pageBarHeight } from './docsPage';
 
 const belowMd = typestyles.breakpoint('md', 'max');
+const belowLg = typestyles.breakpoint('lg', 'max');
 
 /**
  * Docs page hero band: a softly tinted accent panel with a fading dot field (the Var UI stage
@@ -36,10 +45,13 @@ export const docsPageHeader = typestyles.recipe({
         columnGap: t.space.xl.var,
         // With a live preview the band splits: copy on the left, the component on the right.
         '&[data-has-preview]': {
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(14rem, 18rem)',
-          [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+          gridTemplateColumns: 'minmax(0, 1.12fr) minmax(0, 1fr)',
+          [belowLg]: { gridTemplateColumns: 'minmax(0, 1fr)' },
         },
-        marginBlockEnd: t.space.lg.var,
+        // The collapsed page bar animates on this element's scroll exit.
+        viewTimelineName: '--docs-page-hero',
+        viewTimelineAxis: 'block',
+        marginBlockEnd: t.space.md.var,
         padding: `${t.space.xl.var} ${t.space.xl.var} ${t.space.lg.var}`,
         minWidth: 0,
         borderRadius: t.radius.xl.var,
@@ -56,20 +68,27 @@ export const docsPageHeader = typestyles.recipe({
         gap: t.space.sm.var,
         minWidth: 0,
       },
-      // The hero preview: the live component on a raised plate, at most 200px tall.
+      // The hero showcase: the live component on a plate set into the band (same border
+      // family, one surface step up, no floating shadow).
       preview: {
         display: 'grid',
         placeItems: 'center',
+        alignSelf: 'stretch',
         boxSizing: 'border-box',
-        minHeight: '7.5rem',
-        maxHeight: '12.5rem',
-        padding: t.space.md.var,
+        minHeight: '15rem',
+        maxHeight: '18rem',
+        padding: t.space.lg.var,
         overflow: 'hidden',
+        // Showcases render a touch larger than life inside the plate.
+        '& > *': { zoom: 1.15 },
         borderRadius: t.radius.lg.var,
-        border: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
-        backgroundColor: t.color.background.surface.var,
-        boxShadow: t.shadow.md.var,
-        [belowMd]: { display: 'none' },
+        border: `${t.borderWidth.default.var} solid color-mix(in oklab, ${t.color.tone.accent.foreground.var} 16%, ${t.color.border.subtle.var})`,
+        backgroundColor: `color-mix(in oklab, ${t.color.background.surface.var} 72%, transparent)`,
+        ...atDarkMode({
+          backgroundColor: `color-mix(in oklab, ${t.color.background.surface.var} 60%, ${t.color.background.secondary.var})`,
+          borderColor: 'oklch(1 0 0 / 9%)',
+        }),
+        [belowLg]: { display: 'none' },
       },
       eyebrow: {
         margin: 0,
@@ -138,7 +157,7 @@ export const docsPageHeader = typestyles.recipe({
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        columnGap: t.space.lg.var,
+        columnGap: t.space.md.var,
         rowGap: t.space.xs.var,
         margin: 0,
         marginBlockStart: t.space.xxs.var,
@@ -205,6 +224,7 @@ export const docsPageTabs = typestyles.recipe({
       },
       list: {
         display: 'flex',
+        scrollMarginTop: `calc(${pageBarHeight} + ${t.space.sm.var})`,
       },
       panel: {
         minWidth: 0,
@@ -240,6 +260,192 @@ export const docsGuideArticle = typestyles.recipe({
         '& > h1:first-child + h2': {
           marginTop: 0,
         },
+      },
+    },
+  }),
+});
+
+const barReveal = keyframes.create('docs-page-bar-reveal', {
+  from: { opacity: '0', transform: 'translateY(-0.5rem)', visibility: 'hidden' },
+  '1%': { visibility: 'visible' },
+  to: { opacity: '1', transform: 'translateY(0)', visibility: 'visible' },
+});
+
+/** Reduced motion: the same reveal without the slide. */
+const barRevealFade = keyframes.create('docs-page-bar-reveal-fade', {
+  from: { opacity: '0', visibility: 'hidden' },
+  '1%': { visibility: 'visible' },
+  to: { opacity: '1', visibility: 'visible' },
+});
+
+const barHidden = {
+  opacity: 0,
+  transform: 'translateY(-0.5rem)',
+  visibility: 'hidden',
+} as const;
+
+const barShown = {
+  opacity: 1,
+  transform: 'translateY(0)',
+  visibility: 'visible',
+} as const;
+
+/**
+ * Collapsed page bar: once the hero scrolls away, a compact bar pins to the top of the content
+ * area with the page name, the page tabs and the hero's links and copy action.
+ *
+ * Reveal is a CSS scroll-driven animation on the hero's view timeline (`--docs-page-hero`,
+ * exit range) where supported; elsewhere a small IntersectionObserver sets `data-stuck` and a
+ * transition runs. The bar overlays (negative margin), so it never shifts the layout.
+ */
+export const docsPageBar = typestyles.recipe({
+  name: 'docs-page-bar',
+  layer: 'components',
+  slots: ['root', 'identity', 'eyebrow', 'title', 'tabs', 'tab', 'end', 'link', 'icon', 'copy'],
+  styles: () => ({
+    base: {
+      root: {
+        // Seed the code-block vars the reused copy button reads.
+        [codeBlock.vars.copyButtonColor.name]: t.color.text.secondary.var,
+        [codeBlock.vars.filenameColor.name]: t.color.text.primary.var,
+        [codeBlock.vars.copyButtonHoverBackground.name]:
+          `color-mix(in oklab, ${t.color.text.primary.var} 7%, transparent)`,
+        position: 'sticky',
+        top: 0,
+        zIndex: t.zIndex.sticky.var,
+        boxSizing: 'border-box',
+        height: pageBarHeight,
+        marginBlockEnd: `calc(-1 * ${pageBarHeight})`,
+        display: 'flex',
+        alignItems: 'center',
+        gap: t.space.lg.var,
+        paddingInline: t.space.md.var,
+        borderEndStartRadius: t.radius.lg.var,
+        borderEndEndRadius: t.radius.lg.var,
+        border: `${t.borderWidth.default.var} solid color-mix(in oklab, ${t.color.tone.accent.foreground.var} 16%, ${t.color.border.subtle.var})`,
+        borderBlockStart: 'none',
+        backgroundColor: `color-mix(in oklab, color-mix(in oklab, ${t.color.tone.accent.foreground.var} 5%, ${t.color.background.surface.var}) 94%, transparent)`,
+        backdropFilter: 'blur(12px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+        boxShadow: t.shadow.sm.var,
+        ...barHidden,
+        transition: `opacity ${t.duration.slow.var} ${t.easing.standard.var}, transform ${t.duration.slow.var} ${t.easing.standard.var}, visibility ${t.duration.slow.var}`,
+        '&[data-stuck]': barShown,
+        '@supports (animation-timeline: view())': {
+          transition: 'none',
+          animationName: barReveal,
+          animationDuration: '1ms',
+          animationTimingFunction: 'linear',
+          animationFillMode: 'both',
+          animationTimeline: '--docs-page-hero',
+          animationRange: 'exit 78% exit 96%',
+        },
+        // Reduced motion: the bar still fades (durations collapse) but never slides.
+        ...atReducedMotion({ transform: 'none', animationName: barRevealFade }),
+        [belowMd]: {
+          gap: t.space.sm.var,
+          paddingInline: t.space.sm.var,
+          marginInline: `calc(-1 * ${t.space.md.var})`,
+          borderRadius: 0,
+          borderInline: 'none',
+        },
+      },
+      identity: {
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: t.space.xs.var,
+        minWidth: 0,
+        flexShrink: 1,
+      },
+      eyebrow: {
+        fontSize: t.fontSize.xs.var,
+        fontWeight: t.fontWeight.semibold.var,
+        letterSpacing: t.letterSpacing.caps.var,
+        textTransform: 'uppercase',
+        color: t.color.tone.accent.foreground.var,
+        whiteSpace: 'nowrap',
+        [belowMd]: { display: 'none' },
+      },
+      title: {
+        margin: 0,
+        fontFamily: t.fontFamily.display.var,
+        fontSize: '1.0625rem',
+        lineHeight: '1.5rem',
+        fontWeight: t.fontWeight.bold.var,
+        letterSpacing: '-0.01em',
+        color: t.color.text.primary.var,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+      // Mini tab row: plain text items with an accent underline on the current tab.
+      tabs: {
+        display: 'flex',
+        alignSelf: 'stretch',
+        gap: t.space.xxs.var,
+        minWidth: 0,
+        [belowMd]: { display: 'none' },
+      },
+      tab: {
+        appearance: 'none',
+        display: 'inline-flex',
+        alignItems: 'center',
+        paddingInline: t.space.xs.var,
+        border: 'none',
+        backgroundColor: 'transparent',
+        fontFamily: 'inherit',
+        fontSize: t.fontSize.sm.var,
+        fontWeight: t.fontWeight.medium.var,
+        color: t.color.text.secondary.var,
+        cursor: 'pointer',
+        boxShadow: 'inset 0 -2px 0 transparent',
+        transition: t.transition.colorShift.var,
+        '&:hover': {
+          color: t.color.text.primary.var,
+          boxShadow: `inset 0 -2px 0 ${t.color.border.strong.var}`,
+        },
+        '&:focus-visible': {
+          outline: `2px solid ${t.color.border.focus.var}`,
+          outlineOffset: '-2px',
+          borderRadius: t.radius.sm.var,
+        },
+        '&[aria-current="true"]': {
+          color: t.color.text.primary.var,
+          boxShadow: `inset 0 -2px 0 ${t.color.tone.accent.foreground.var}`,
+        },
+      },
+      end: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: t.space.sm.var,
+        marginInlineStart: 'auto',
+        flexShrink: 0,
+      },
+      link: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: t.space.xxs.var,
+        fontSize: t.fontSize.sm.var,
+        fontWeight: t.fontWeight.medium.var,
+        color: t.color.text.secondary.var,
+        textDecoration: 'none',
+        whiteSpace: 'nowrap',
+        '&:hover': { color: t.color.text.primary.var, textDecoration: 'underline' },
+        '&[data-bar-secondary]': {
+          [belowMd]: { display: 'none' },
+        },
+      },
+      icon: {
+        display: 'inline-flex',
+        color: t.color.text.secondary.var,
+        '& svg': { width: '0.875rem', height: '0.875rem' },
+        [belowMd]: { display: 'none' },
+      },
+      copy: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        paddingInlineStart: t.space.sm.var,
+        borderInlineStart: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
       },
     },
   }),

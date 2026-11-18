@@ -195,7 +195,7 @@ const markdownGlyph =
           {
             showTocPanel ? (
               <div {...mergeProps(page.pageBody)}>
-                <div {...mergeProps(pageBodyContent)}>
+                <div {...mergeProps(pageBodyContent)} data-docs-content>
                   <slot />
                 </div>
                 <aside {...mergeProps(page.toc)} aria-label="On this page" data-docs-toc-slot hidden={tocHidden || undefined}>

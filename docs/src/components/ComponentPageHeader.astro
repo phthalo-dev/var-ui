@@ -2,6 +2,7 @@
 import DocsPageHeader, { type DocsPageHeaderMeta } from '@var-ui/docs/DocsPageHeader';
 import { markdownHref } from '@var-ui/docs/utils';
 import DemoPreview from './DemoPreview.astro';
+import HeroShowcase, { hasHeroShowcase } from './HeroShowcase';
 import { heroDemoId } from '../lib/hero-demo';
 import type { ComponentEntry } from '../data/components';
 import type { ComponentSourceLink } from '../lib/component-page';
@@ -10,9 +11,12 @@ type Props = {
   entry: ComponentEntry;
   categoryLabel?: string;
   sourceLinks: ComponentSourceLink[];
+  /** Page tabs, mirrored in the collapsed header bar. */
+  tabs?: readonly { id: string; label: string }[];
+  selectedTab?: string;
 };
 
-const { entry, categoryLabel, sourceLinks } = Astro.props;
+const { entry, categoryLabel, sourceLinks, tabs, selectedTab } = Astro.props;
 const framework = Astro.locals.framework;
 
 const ICON =
@@ -37,7 +41,8 @@ if (sourceLinks.length > 0) {
     links: sourceLinks.map((link) => ({ label: link.label, href: link.href })),
   });
 }
-meta.push({ label: 'Package', icon: icons.package, code: packageName });
+// The package icon labels this item; dropping the word keeps the row on one line.
+meta.push({ icon: icons.package, code: packageName });
 if (mdHref) {
   meta.push({ icon: icons.markdown, links: [{ label: 'View as Markdown', href: mdHref }] });
 }
@@ -49,6 +54,14 @@ if (mdHref) {
   lead={entry.description}
   importCode={importCode}
   meta={meta}
+  tabs={tabs}
+  selectedTab={selectedTab}
 >
-  {heroId ? <DemoPreview slot="preview" id={heroId} /> : null}
+  {
+    hasHeroShowcase(entry.slug) ? (
+      <HeroShowcase slot="preview" slug={entry.slug} />
+    ) : heroId ? (
+      <DemoPreview slot="preview" id={heroId} />
+    ) : null
+  }
 </DocsPageHeader>

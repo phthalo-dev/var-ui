@@ -13,7 +13,7 @@ type Props = {
 
 const { tabs, defaultSelectedId, className } = Astro.props;
 const selected = defaultSelectedId ?? tabs[0]?.id;
-const t = tabsRecipe({ appearance: "pill" });
+const t = tabsRecipe({ appearance: "underline" });
 const page = docsPageTabs();
 
 const ICON_ATTRS =
@@ -33,7 +33,7 @@ const panelSlots = await Promise.all(
 );
 ---
 
-<div data-var-ui-tabs data-component-doc-tabs {...combine(t.root, page.root, className)}>
+<div data-var-ui-tabs data-component-doc-tabs data-docs-page-tabs {...combine(t.root, page.root, className)}>
   <div role="tablist" aria-label="Page view" {...combine(t.list, page.list)}>
     {tabs.map((tab) => (
       <button

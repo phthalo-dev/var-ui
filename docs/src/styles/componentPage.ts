@@ -140,10 +140,23 @@ export const componentRail = typestyles.recipe({
           fontSize: '0.75rem',
         },
       },
+      // Laid out like the TOC: same label, a left rule, the same row rhythm.
       actions: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.125rem',
+        '& > a': {
+          position: 'relative',
+          paddingInlineStart: t.space.sm.var,
+          borderInlineStart: `${t.borderWidth.thick.var} solid ${t.color.border.subtle.var}`,
+        },
+        '& > a:hover': {
+          borderInlineStartColor: t.color.border.strong.var,
+        },
+        '& > a:focus-visible': {
+          outline: `2px solid ${t.color.border.focus.var}`,
+          outlineOffset: '2px',
+          borderRadius: t.radius.sm.var,
+        },
       },
       title: {
         margin: `0 0 ${t.space.sm.var}`,
@@ -155,6 +168,7 @@ export const componentRail = typestyles.recipe({
       },
       action: {
         paddingBlock: '0.3125rem',
+        lineHeight: '1.125rem',
         fontSize: t.fontSize.sm.var,
         color: t.color.text.secondary.var,
         textDecoration: 'none',

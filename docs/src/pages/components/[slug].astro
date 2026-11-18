@@ -57,7 +57,13 @@ const tocContentSelector = "[data-panel='documentation']";
   showToc
   tocContentSelector={tocContentSelector}
 >
-  <ComponentPageHeader entry={entry} categoryLabel={categoryLabel} sourceLinks={sourceLinks} />
+  <ComponentPageHeader
+    entry={entry}
+    categoryLabel={categoryLabel}
+    sourceLinks={sourceLinks}
+    tabs={docTabs}
+    selectedTab={initialTab}
+  />
 
   <ComponentDocTabs tabs={docTabs} defaultSelectedId={initialTab}>
     <div slot="documentation">
