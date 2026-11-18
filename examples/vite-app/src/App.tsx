@@ -1035,7 +1035,7 @@ function TableDemo() {
       <Text size="sm" weight="medium">
         Servers
       </Text>
-      <Table density="compact" dividers="rows" hasHover stickyHeader>
+      <Table density="compact" dividers="rows" highlightOnHover stickyHeader>
         <Table.Header>
           <Table.Row>
             <Table.Column width="2.5rem">

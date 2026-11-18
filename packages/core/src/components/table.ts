@@ -1,14 +1,15 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
-import { borderSide } from '../internal/border';
+import { border, borderSide } from '../internal/border';
 import { density } from '../shared/variantAxes';
 
 const tableDividers = variant.enum(['rows', 'columns', 'grid', 'none'], { default: 'rows' });
 const tableTextOverflow = variant.enum(['wrap', 'truncate'], { default: 'wrap' });
 const tableLayout = variant.enum(['auto', 'fixed'], { default: 'auto' });
 const tableIsStriped = variant.boolean({ default: false });
-const tableHasHover = variant.boolean({ default: false });
+const tableHighlightOnHover = variant.boolean({ default: false });
+const tableBordered = variant.boolean({ default: false });
 const tableStickyHeader = variant.boolean({ default: false });
 
 /**
@@ -53,7 +54,8 @@ export const table = typestyles.recipe({
     density,
     dividers: tableDividers,
     striped: tableIsStriped,
-    hasHover: tableHasHover,
+    highlightOnHover: tableHighlightOnHover,
+    bordered: tableBordered,
     stickyHeader: tableStickyHeader,
     textOverflow: tableTextOverflow,
     layout: tableLayout,
@@ -69,6 +71,11 @@ export const table = typestyles.recipe({
     cellPaddingY: { ...atProperty.length, value: t.space.xs.var },
     cellPaddingX: { ...atProperty.length, value: t.space.sm.var },
     columnWidth: { syntax: '*', value: 'auto' },
+    /**
+     * Minimum inline size of the `<table>`. Below it the root scrolls horizontally instead of
+     * squeezing columns. Any CSS `min-width` value (`48rem`, `max-content`).
+     */
+    minWidth: { syntax: '*', value: 'auto' },
   },
   styles: ({ vars }) => {
     const rowDivider = {
@@ -97,6 +104,7 @@ export const table = typestyles.recipe({
         },
         table: {
           width: '100%',
+          minWidth: vars.minWidth.var,
           borderCollapse: 'collapse',
           fontSize: t.fontSize.sm.var,
           color: vars.bodyColor.var,
@@ -206,8 +214,21 @@ export const table = typestyles.recipe({
           true: { row: { '&:nth-of-type(even)': { backgroundColor: vars.stripeBg.var } } },
           false: {},
         },
-        hasHover: {
+        highlightOnHover: {
           true: { row: { '&:hover': { backgroundColor: vars.hoverBg.var } } },
+          false: {},
+        },
+        bordered: {
+          true: {
+            // The root is the scrollport, so it carries the frame: the radius clips the header
+            // fill and rows, and the border stays put while the table scrolls inside it.
+            root: {
+              ...border(vars.borderColor.var),
+              borderRadius: t.radius.lg.var,
+            },
+            // The frame closes the table, so the last body row drops its own divider.
+            row: { 'tbody > &:last-child': { borderBlockEndWidth: 0 } },
+          },
           false: {},
         },
         stickyHeader: {

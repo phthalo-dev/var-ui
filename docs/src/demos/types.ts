@@ -219,6 +219,7 @@ export type DemoId =
   | 'color-picker.swatch'
   | 'table.default'
   | 'table.striped'
+  | 'table.bordered'
   | 'tree.default'
   | 'tree.expanded'
   | 'file-tree.default'

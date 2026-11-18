@@ -137,6 +137,7 @@ export const REACT_ONLY_DEMO_IDS = new Set<DemoId>([
   'color-picker.swatch',
   'table.default',
   'table.striped',
+  'table.bordered',
   'tree.default',
   'tree.expanded',
   'file-tree.default',

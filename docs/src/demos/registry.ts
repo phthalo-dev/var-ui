@@ -216,6 +216,7 @@ import { snippets as colorPickerDefaultSnippets } from './color-picker/default/s
 import { snippets as colorPickerSwatchSnippets } from './color-picker/swatch/snippets';
 import { snippets as tableDefaultSnippets } from './table/default/snippets';
 import { snippets as tableStripedSnippets } from './table/striped/snippets';
+import { snippets as tableBorderedSnippets } from './table/bordered/snippets';
 import { snippets as treeDefaultSnippets } from './tree/default/snippets';
 import { snippets as treeExpandedSnippets } from './tree/expanded/snippets';
 import { snippets as fileTreeDefaultSnippets } from './file-tree/default/snippets';
@@ -441,6 +442,7 @@ export const DEMO_IDS = [
   'color-picker.swatch',
   'table.default',
   'table.striped',
+  'table.bordered',
   'tree.default',
   'tree.expanded',
   'file-tree.default',
@@ -665,6 +667,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'color-picker.swatch': colorPickerSwatchSnippets,
   'table.default': tableDefaultSnippets,
   'table.striped': tableStripedSnippets,
+  'table.bordered': tableBorderedSnippets,
   'tree.default': treeDefaultSnippets,
   'tree.expanded': treeExpandedSnippets,
   'file-tree.default': fileTreeDefaultSnippets,
@@ -889,6 +892,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'color-picker.swatch': () => import('./color-picker/swatch/react'),
   'table.default': () => import('./table/default/react'),
   'table.striped': () => import('./table/striped/react'),
+  'table.bordered': () => import('./table/bordered/react'),
   'tree.default': () => import('./tree/default/react'),
   'tree.expanded': () => import('./tree/expanded/react'),
   'file-tree.default': () => import('./file-tree/default/react'),
@@ -1980,6 +1984,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'table.striped',
     snippets: demoSnippets['table.striped'],
     react: reactDemoLoaders['table.striped'],
+  },
+  'table.bordered': {
+    id: 'table.bordered',
+    snippets: demoSnippets['table.bordered'],
+    react: reactDemoLoaders['table.bordered'],
   },
   'tree.default': {
     id: 'tree.default',
