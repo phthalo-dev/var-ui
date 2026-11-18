@@ -30,6 +30,9 @@ describe('icon system (core)', () => {
         'eye',
         'eyeOff',
         'star',
+        'page',
+        'component',
+        'palette',
       ].sort(),
     );
   });

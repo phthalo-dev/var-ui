@@ -14,6 +14,15 @@ const Tag = as;
 ---
 
 <Tag {...mergeProps(wordmark.root, className)} aria-label="Var UI">
+  {
+    size === 'header' ? (
+      <span {...mergeProps(wordmark.mark)} aria-hidden="true">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round">
+          <path d="M5.25 10h3.5M11.25 10h3.5" />
+        </svg>
+      </span>
+    ) : null
+  }
   <span {...mergeProps(wordmark.keyword)} aria-hidden="true">var</span><span
     {...mergeProps(wordmark.punctuation)}
     aria-hidden="true"

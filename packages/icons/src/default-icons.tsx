@@ -21,6 +21,9 @@ import { menu } from './icons/menu';
 import { moreHorizontal } from './icons/moreHorizontal';
 import { search } from './icons/search';
 import { star } from './icons/star';
+import { page } from './icons/page';
+import { component } from './icons/component';
+import { palette } from './icons/palette';
 import { stop } from './icons/stop';
 import { success } from './icons/success';
 import { warning } from './icons/warning';
@@ -49,6 +52,9 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   moreHorizontal,
   search,
   star,
+  page,
+  component,
+  palette,
   stop,
   success,
   warning,

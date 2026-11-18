@@ -2,9 +2,13 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 import { mergeProps } from '../utils';
 import Kbd from './Kbd.astro';
-import type { CommandPaletteItem } from '../scripts/commandPaletteUtils';
+import type {
+  CommandPaletteClientItem,
+  CommandPaletteItem,
+} from '../scripts/commandPaletteUtils';
 
 type CommandPaletteSlot =
   | 'root'
@@ -18,6 +22,8 @@ type CommandPaletteSlot =
   | 'resultBody'
   | 'resultTitle'
   | 'resultMeta'
+  | 'resultIcon'
+  | 'mark'
   | 'group'
   | 'groupHeading'
   | 'footer'
@@ -35,6 +41,20 @@ type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   hotkey?: boolean;
   /** Keyboard hints under the results (↑↓ navigate, ↵ open, esc close). @default true */
   hints?: boolean;
+  /**
+   * Wraps the part of each title and meta that matches the query in a `<mark>`. Pass `false` to
+   * render plain text. @default true
+   */
+  highlightMatches?: boolean;
+  /**
+   * Remembers chosen items in `localStorage` under this key and lists them under a "Recent"
+   * heading while the query is empty. Omit to keep no history.
+   */
+  recentKey?: string;
+  /** Heading of the recent items group (see `recentKey`). @default 'Recent' */
+  recentLabel?: string;
+  /** Message shown when no items match the query. @default 'No results' */
+  emptyLabel?: string;
   className?: string;
 };
 
@@ -45,11 +65,19 @@ const {
   'aria-label': ariaLabel = placeholder,
   hotkey = true,
   hints = true,
+  highlightMatches = true,
+  recentKey,
+  recentLabel = 'Recent',
+  emptyLabel = 'No results',
   className,
   ...rest
 } = Astro.props;
 
-const indexJson = JSON.stringify(items);
+const iconSvgs: Record<string, string> = defaultIconSvgs;
+const clientItems: CommandPaletteClientItem[] = items.map(({ icon, ...item }) =>
+  icon && iconSvgs[icon] ? { ...item, iconSvg: iconSvgs[icon] } : item,
+);
+const indexJson = JSON.stringify(clientItems);
 const cp = (commandPalette as unknown as CommandPaletteRecipeFn)();
 const dialogRecipe = mergeProps(cp.root);
 const frameRecipe = mergeProps(cp.frame);
@@ -63,6 +91,8 @@ const resultBodyClass = (cp.resultBody).className;
 const resultTitleClass = (cp.resultTitle).className;
 const resultMetaClass = (cp.resultMeta).className;
 const emptyClass = (cp.empty).className;
+const resultIconClass = cp.resultIcon.className;
+const markClass = cp.mark.className;
 const groupClass = cp.group.className;
 const groupHeadingClass = cp.groupHeading.className;
 const footerRecipe = mergeProps(cp.footer);
@@ -81,6 +111,12 @@ const footerHintRecipe = mergeProps(cp.footerHint);
   data-class-result-title={resultTitleClass}
   data-class-result-meta={resultMetaClass}
   data-class-empty={emptyClass}
+  data-class-result-icon={resultIconClass}
+  data-class-mark={markClass}
+  data-highlight-matches={highlightMatches ? undefined : 'false'}
+  data-recent-key={recentKey}
+  data-recent-label={recentLabel}
+  data-empty-label={emptyLabel}
   data-class-group={groupClass}
   data-class-group-heading={groupHeadingClass}
 >

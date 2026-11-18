@@ -7,7 +7,7 @@ const wordmarkSize = variant.enum(['hero', 'header', 'inline'], { default: 'hero
 export const varUiWordmark = typestyles.recipe({
   name: 'wordmark',
   layer: 'components',
-  slots: ['root', 'keyword', 'punctuation', 'customProperty'],
+  slots: ['root', 'mark', 'keyword', 'punctuation', 'customProperty'],
   variants: {
     size: wordmarkSize,
   },
@@ -24,6 +24,20 @@ export const varUiWordmark = typestyles.recipe({
         whiteSpace: 'nowrap',
         color: t.color.code.base.var,
         fontFeatureSettings: '"calt", "liga"',
+      },
+      // Header glyph: a phthalo tile with the custom-property dashes (`--`), set before the
+      // wordmark. Sized to the cap height of the bar's labels plus a hair.
+      mark: {
+        display: 'inline-flex',
+        flexShrink: 0,
+        alignSelf: 'center',
+        width: '1.25rem',
+        height: '1.25rem',
+        marginInlineEnd: t.space.xs.var,
+        borderRadius: t.radius.sm.var,
+        backgroundColor: t.color.tone.accent.foreground.var,
+        color: t.color.background.surface.var,
+        '& svg': { display: 'block', width: '100%', height: '100%' },
       },
       keyword: {
         // Brand pairing: phthalo accent for `var`, amber for `--ui`.

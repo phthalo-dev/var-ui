@@ -4,6 +4,15 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite-plus';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+
+// String alias keys match by prefix, so the glyph barrel (`@var-ui/icons/glyphs`) and single
+// glyphs (`@var-ui/icons/glyphs/<name>`) need anchored patterns.
+const glyphAliases = (iconsSrc: string) => [
+  { find: /^@var-ui\/icons\/glyphs$/, replacement: `${iconsSrc}/glyphs.ts` },
+  { find: /^@var-ui\/icons\/glyphs\/(.+)$/, replacement: `${iconsSrc}/glyph-data/$1` },
+];
+const aliasList = (aliases: Record<string, string>) =>
+  Object.entries(aliases).map(([find, replacement]) => ({ find, replacement }));
 const docsRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
@@ -44,42 +53,43 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
   },
   resolve: {
-    alias: {
-      '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
-      '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
-      '@var-ui/core/components': `${root}/packages/core/src/components`,
-      '@var-ui/core/shared': `${root}/packages/core/src/shared`,
-      '@var-ui/core/tokens': `${root}/packages/core/src/tokens`,
-      '@var-ui/core/icons': `${root}/packages/core/src/icons`,
-      '@var-ui/core': `${root}/packages/core/src/index.ts`,
-      '@var-ui/react': `${root}/packages/react/src/index.ts`,
-      '@var-ui/icons/glyphs/': `${root}/packages/icons/src/glyph-data/`,
-      '@var-ui/icons/glyphs': `${root}/packages/icons/src/glyphs.ts`,
-      '@var-ui/icons': `${root}/packages/icons/src/index.ts`,
-      '@var-ui/astro': `${root}/packages/astro/index.ts`,
-      '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
-      '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
-      '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
-      '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,
-      '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
-      '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
-      '@var-ui/docs/DocsGuidePage': `${root}/packages/docs/src/components/DocsGuidePage.astro`,
-      '@var-ui/docs/DocsGuideArticle': `${root}/packages/docs/src/components/DocsGuideArticle.astro`,
-      '@var-ui/docs/DocsPage': `${root}/packages/docs/src/components/DocsPage.astro`,
-      '@var-ui/docs/DocsMarketingPage': `${root}/packages/docs/src/components/DocsMarketingPage.astro`,
-      '@var-ui/docs/DocsSearch': `${root}/packages/docs/src/components/DocsSearch.astro`,
-      '@var-ui/docs/DocsSidebar': `${root}/packages/docs/src/components/DocsSidebar.astro`,
-      '@var-ui/docs/DocsToc': `${root}/packages/docs/src/components/DocsToc.astro`,
-      '@var-ui/docs/DocsThemePicker': `${root}/packages/docs/src/components/DocsThemePicker.astro`,
-      '@var-ui/docs/CodeBlock': `${root}/packages/docs/src/components/CodeBlock.astro`,
-      '@var-ui/docs/CodeDemoCodeBlock': `${root}/packages/docs/src/components/CodeDemoCodeBlock.astro`,
-      '@var-ui/docs/DocsThemeScript': `${root}/packages/docs/src/components/DocsThemeScript.astro`,
-      '@var-ui/docs': `${root}/packages/docs/index.ts`,
-      '@var-ui/docs-components/framework': `${root}/packages/docs-components/src/framework.ts`,
-      '@var-ui/docs-components/scripts/frameworkSwitcher': `${root}/packages/docs-components/src/scripts/frameworkSwitcher.ts`,
-      '@var-ui/docs-components/scripts/componentPageTabs': `${root}/packages/docs-components/src/scripts/componentPageTabs.ts`,
-      '@var-ui/docs-components': `${root}/packages/docs-components/index.ts`,
-      '@': path.join(docsRoot, 'src'),
-    },
+    alias: [
+      ...glyphAliases(`${root}/packages/icons/src`),
+      ...aliasList({
+        '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
+        '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
+        '@var-ui/core/components': `${root}/packages/core/src/components`,
+        '@var-ui/core/shared': `${root}/packages/core/src/shared`,
+        '@var-ui/core/tokens': `${root}/packages/core/src/tokens`,
+        '@var-ui/core/icons': `${root}/packages/core/src/icons`,
+        '@var-ui/core': `${root}/packages/core/src/index.ts`,
+        '@var-ui/react': `${root}/packages/react/src/index.ts`,
+        '@var-ui/icons': `${root}/packages/icons/src/index.ts`,
+        '@var-ui/astro': `${root}/packages/astro/index.ts`,
+        '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
+        '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
+        '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
+        '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,
+        '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
+        '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
+        '@var-ui/docs/DocsGuidePage': `${root}/packages/docs/src/components/DocsGuidePage.astro`,
+        '@var-ui/docs/DocsGuideArticle': `${root}/packages/docs/src/components/DocsGuideArticle.astro`,
+        '@var-ui/docs/DocsPage': `${root}/packages/docs/src/components/DocsPage.astro`,
+        '@var-ui/docs/DocsMarketingPage': `${root}/packages/docs/src/components/DocsMarketingPage.astro`,
+        '@var-ui/docs/DocsSearch': `${root}/packages/docs/src/components/DocsSearch.astro`,
+        '@var-ui/docs/DocsSidebar': `${root}/packages/docs/src/components/DocsSidebar.astro`,
+        '@var-ui/docs/DocsToc': `${root}/packages/docs/src/components/DocsToc.astro`,
+        '@var-ui/docs/DocsThemePicker': `${root}/packages/docs/src/components/DocsThemePicker.astro`,
+        '@var-ui/docs/CodeBlock': `${root}/packages/docs/src/components/CodeBlock.astro`,
+        '@var-ui/docs/CodeDemoCodeBlock': `${root}/packages/docs/src/components/CodeDemoCodeBlock.astro`,
+        '@var-ui/docs/DocsThemeScript': `${root}/packages/docs/src/components/DocsThemeScript.astro`,
+        '@var-ui/docs': `${root}/packages/docs/index.ts`,
+        '@var-ui/docs-components/framework': `${root}/packages/docs-components/src/framework.ts`,
+        '@var-ui/docs-components/scripts/frameworkSwitcher': `${root}/packages/docs-components/src/scripts/frameworkSwitcher.ts`,
+        '@var-ui/docs-components/scripts/componentPageTabs': `${root}/packages/docs-components/src/scripts/componentPageTabs.ts`,
+        '@var-ui/docs-components': `${root}/packages/docs-components/index.ts`,
+        '@': path.join(docsRoot, 'src'),
+      }),
+    ],
   },
 });

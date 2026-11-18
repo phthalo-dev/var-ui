@@ -1,4 +1,4 @@
-import { designTokens as t, typestyles } from '@var-ui/core';
+import { designTokens as t, focusRing, typestyles } from '@var-ui/core';
 
 const belowLg = typestyles.breakpoint('lg', 'max');
 const belowMd = typestyles.breakpoint('md', 'max');
@@ -23,6 +23,7 @@ export const docsTopNav = typestyles.recipe({
     'tools',
     'toolbarExtra',
     'divider',
+    'mobileNavBrand',
     'mobileNavBody',
     'mobileNavSection',
     'mobileNavSectionTitle',
@@ -65,6 +66,10 @@ export const docsTopNav = typestyles.recipe({
           alignItems: 'center',
           flexShrink: 0,
           marginInlineEnd: t.space.xxs.var,
+          // Collapsed to an icon button: one even 8px rhythm with its icon neighbours.
+          [belowMd]: {
+            marginInlineEnd: 0,
+          },
         },
         '& .docs-search [data-var-ui-search-input]': {
           width: '15rem',
@@ -93,6 +98,17 @@ export const docsTopNav = typestyles.recipe({
         [belowMd]: {
           display: 'none',
         },
+      },
+      // Drawer header: the brand, linked home (same mark as the bar).
+      mobileNavBrand: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        minHeight: t.size.control.md.var,
+        color: 'inherit',
+        textDecoration: 'none',
+        borderRadius: t.radius.sm.var,
+        outline: 'none',
+        '&:focus-visible': focusRing,
       },
       mobileNavBody: {
         display: 'flex',

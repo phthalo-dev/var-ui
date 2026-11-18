@@ -2,6 +2,7 @@ import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { atDarkMode } from '../theme/conditions';
 import { border } from '../internal/border';
 import {
   controlSizeMetrics,
@@ -23,35 +24,39 @@ const collapseBelow = variant.enum(['none', 'sm', 'md', 'lg', 'xl'], { default: 
 const shortcutHeight = '1.25rem';
 
 /** Collapsed command trigger: a square icon button the size of the control. */
-const collapsedCommand = {
-  root: {
-    position: 'relative',
-    minWidth: 0,
-    width: 'auto',
-    justifyContent: 'center',
-    aspectRatio: '1 / 1',
-    paddingInline: 0,
-    flexShrink: 0,
-    // Collapsed, it is an icon button: quiet like its neighbours until hovered.
-    borderColor: 'transparent',
-    backgroundColor: 'transparent',
-    '&:hover': {
+const collapsedCommand = (iconColorVar: string) =>
+  ({
+    root: {
+      position: 'relative',
+      minWidth: 0,
+      width: 'auto',
+      justifyContent: 'center',
+      aspectRatio: '1 / 1',
+      paddingInline: 0,
+      flexShrink: 0,
+      // Collapsed, it is an icon button: quiet like its neighbours until hovered.
       borderColor: 'transparent',
-      backgroundColor: t.color.background.subtle.var,
+      backgroundColor: 'transparent',
+      '&:hover': {
+        borderColor: 'transparent',
+        backgroundColor: t.color.background.subtle.var,
+        // Icon brightens like the bar's other icon buttons.
+        [iconColorVar]: t.color.text.primary.var,
+      },
     },
-  },
-  trigger: { position: 'absolute', inset: 0 },
-  triggerLabel: { display: 'none' },
-  shortcut: { display: 'none' },
-} as const;
+    trigger: { position: 'absolute', inset: 0 },
+    triggerLabel: { display: 'none' },
+    shortcut: { display: 'none' },
+  }) as const;
 
-function collapseAt(bp: 'sm' | 'md' | 'lg' | 'xl') {
+function collapseAt(bp: 'sm' | 'md' | 'lg' | 'xl', iconColorVar: string) {
   const query = breakpoint(bp, 'max');
+  const collapsed = collapsedCommand(iconColorVar);
   return {
-    root: { '&[data-variant="command"]': { [query]: collapsedCommand.root } },
-    trigger: { [query]: collapsedCommand.trigger },
-    triggerLabel: { [query]: collapsedCommand.triggerLabel },
-    shortcut: { [query]: collapsedCommand.shortcut },
+    root: { '&[data-variant="command"]': { [query]: collapsed.root } },
+    trigger: { [query]: collapsed.trigger },
+    triggerLabel: { [query]: collapsed.triggerLabel },
+    shortcut: { [query]: collapsed.shortcut },
   };
 }
 
@@ -171,16 +176,29 @@ export const searchInput = typestyles.recipe({
           alignItems: 'center',
           // Sits in the trigger's hit area; clicks fall through to the field.
           pointerEvents: 'none',
+          // The key cap sits one step above the (filled) field in both modes, hovered or not.
+          '& kbd': {
+            backgroundColor: t.color.background.surface.var,
+            borderColor: t.color.border.default.var,
+            ...atDarkMode({
+              backgroundColor: t.color.background.elevated.var,
+            }),
+          },
         },
       },
       variants: {
         variant: {
           default: {},
+          // Filled tray + hairline, the same chrome as a SegmentedControl track, so a search
+          // trigger and a switcher side by side read as one family. Hover firms the hairline
+          // only: the fill stays put so the key cap (surface fill) keeps its contrast.
           command: {
             root: {
+              [vars.background.name]: t.color.background.subtle.var,
+              [vars.border.name]: t.color.border.subtle.var,
               cursor: 'pointer',
               '&:hover': {
-                backgroundColor: t.color.background.subtle.var,
+                borderColor: t.color.border.default.var,
               },
             },
             trigger: {
@@ -202,10 +220,10 @@ export const searchInput = typestyles.recipe({
         // After `size` so the collapsed square wins over the size insets.
         collapseBelow: {
           none: {},
-          sm: collapseAt('sm'),
-          md: collapseAt('md'),
-          lg: collapseAt('lg'),
-          xl: collapseAt('xl'),
+          sm: collapseAt('sm', vars.iconColor.name),
+          md: collapseAt('md', vars.iconColor.name),
+          lg: collapseAt('lg', vars.iconColor.name),
+          xl: collapseAt('xl', vars.iconColor.name),
         },
       },
     };

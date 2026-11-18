@@ -1,11 +1,11 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 import type { MultiSlotReturn } from 'typestyles';
 
-type DocsAppearanceMenuSlots = readonly ['root', 'trigger', 'modeIcon', 'swatch', 'itemIcon'];
+type DocsAppearanceMenuSlots = readonly ['root', 'trigger', 'modeIcon', 'swatch'];
 
 /**
  * Header appearance menu: one icon button whose glyph shows the colour mode (`data-mode-preference`
- * on `root` picks it) with a dot in the current theme's swatch colour.
+ * on `root` picks it) over a short bar in the current theme's swatch colour.
  *
  * No `variants` here, so this is a plain multi-slot recipe (each slot is a className string).
  * Slot names that do not collide with CSS property names make TS pick the slot-with-variants
@@ -14,7 +14,7 @@ type DocsAppearanceMenuSlots = readonly ['root', 'trigger', 'modeIcon', 'swatch'
 export const docsAppearanceMenu = typestyles.recipe({
   name: 'docs-appearance-menu',
   layer: 'components',
-  slots: ['root', 'trigger', 'modeIcon', 'swatch', 'itemIcon'],
+  slots: ['root', 'trigger', 'modeIcon', 'swatch'],
   styles: () => ({
     base: {
       root: {
@@ -39,25 +39,27 @@ export const docsAppearanceMenu = typestyles.recipe({
         alignItems: 'center',
         justifyContent: 'center',
         lineHeight: 0,
+        // Same quiet icon colour as the bar's other icon buttons; brightens with the button.
+        color: t.color.text.secondary.var,
+        transition: t.transition.surfaceFast.var,
+        '[data-var-ui-menu-trigger]:hover &, [data-var-ui-menu-trigger][aria-expanded="true"] &': {
+          color: t.color.text.primary.var,
+        },
       },
       modeIcon: {
         display: 'inline-flex',
       },
-      // Theme swatch: a small dot on the glyph's lower edge, ringed in the bar colour.
+      // Theme swatch: a short colour bar under the glyph (a colour chip, not a status dot).
       swatch: {
         position: 'absolute',
-        insetInlineEnd: '-0.1875rem',
-        insetBlockEnd: '-0.1875rem',
-        width: '0.4375rem',
-        height: '0.4375rem',
+        insetInlineStart: '50%',
+        insetBlockEnd: '-0.3125rem',
+        width: '0.625rem',
+        height: '0.125rem',
         borderRadius: t.radius.full.var,
+        transform: 'translateX(-50%)',
         backgroundColor: t.color.tone.accent.foreground.var,
-        boxShadow: `0 0 0 0.125rem ${t.color.background.surface.var}`,
         pointerEvents: 'none',
-      },
-      itemIcon: {
-        display: 'inline-flex',
-        color: t.color.text.secondary.var,
       },
     },
   }),

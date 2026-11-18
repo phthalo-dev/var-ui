@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { syncDocsTopBarSelection } from './docsTopBarClient';
+import { initDocsTopBar, syncDocsTopBarSelection } from './docsTopBarClient';
 
 function mountBar(): HTMLElement {
   document.body.innerHTML = `
@@ -27,5 +27,37 @@ describe('syncDocsTopBarSelection', () => {
     const bar = mountBar();
     syncDocsTopBarSelection('/');
     expect(bar.querySelectorAll('[data-selected]')).toHaveLength(0);
+  });
+});
+
+describe('initDocsTopBar', () => {
+  it('moves the selection when navigation starts, before the page swap', () => {
+    const bar = mountBar();
+    initDocsTopBar();
+    const event = Object.assign(new Event('astro:before-preparation'), {
+      to: new URL('/components/button', window.location.origin),
+    });
+    document.dispatchEvent(event);
+    const [docs, components] = Array.from(bar.querySelectorAll('a'));
+    expect(components.hasAttribute('data-selected')).toBe(true);
+    expect(docs.hasAttribute('data-selected')).toBe(false);
+    expect(bar.querySelectorAll('[data-selected]')).toHaveLength(1);
+  });
+
+  it('a late page-load from the previous navigation does not undo a newer click', () => {
+    const bar = mountBar();
+    initDocsTopBar();
+    const go = (path: string) =>
+      document.dispatchEvent(
+        Object.assign(new Event('astro:before-preparation'), {
+          to: new URL(path, window.location.origin),
+        }),
+      );
+    go('/components/button');
+    // The page-load of the page we are leaving fires while the new navigation is in flight.
+    document.dispatchEvent(new Event('astro:page-load'));
+    const [docs, components] = Array.from(bar.querySelectorAll('a'));
+    expect(components.hasAttribute('data-selected')).toBe(true);
+    expect(docs.hasAttribute('data-selected')).toBe(false);
   });
 });

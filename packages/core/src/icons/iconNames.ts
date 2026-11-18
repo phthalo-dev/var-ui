@@ -31,6 +31,9 @@ export const iconNameList = [
   'eye',
   'eyeOff',
   'star',
+  'page',
+  'component',
+  'palette',
 ] as const;
 
 export type IconName = (typeof iconNameList)[number];

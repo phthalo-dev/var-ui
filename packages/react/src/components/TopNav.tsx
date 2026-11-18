@@ -7,7 +7,9 @@ import type {
   ReactNode,
   Ref,
 } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
+import { observeTopNavIndicator } from '@var-ui/core/components/indicators/top-nav';
 import { topNav } from '@var-ui/core/components/topNav';
 import type { IconName } from '@var-ui/core';
 import { Icon } from '../icons';
@@ -83,6 +85,15 @@ export function TopNav({
   const s = topNav();
   const start = startContent ?? children;
   const hasCenter = centerContent != null;
+  const startRef = useRef<HTMLDivElement>(null);
+  const hasStart = start != null;
+
+  // The selected pill slides between items as `selected` moves (`data-selected`).
+  useLayoutEffect(() => {
+    const zone = startRef.current;
+    if (!zone) return;
+    return observeTopNavIndicator(zone);
+  }, [hasStart]);
 
   return (
     <nav
@@ -99,7 +110,7 @@ export function TopNav({
         </div>
       ) : null}
       {start != null ? (
-        <div data-var-ui-top-nav-start {...mergeProps(s.start)}>
+        <div ref={startRef} data-var-ui-top-nav-start {...mergeProps(s.start)}>
           {start}
         </div>
       ) : null}

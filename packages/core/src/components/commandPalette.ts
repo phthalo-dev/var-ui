@@ -71,7 +71,7 @@ export const commandPalette = typestyles.recipe({
     },
     resultForeground: {
       ...atProperty.color,
-      value: t.color.navItem.foreground.var,
+      value: t.color.text.primary.var,
     },
     resultHoverBackground: {
       ...atProperty.color,
@@ -117,7 +117,7 @@ export const commandPalette = typestyles.recipe({
           [vars.inputIconColor.name]: t.color.text.placeholder.var,
           [vars.inputForeground.name]: t.color.text.primary.var,
           [vars.inputPlaceholder.name]: t.color.text.placeholder.var,
-          [vars.resultForeground.name]: t.color.navItem.foreground.var,
+          [vars.resultForeground.name]: t.color.text.primary.var,
           [vars.resultHoverBackground.name]: t.color.navItem.hoverBackground.var,
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
           [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
@@ -227,11 +227,15 @@ export const commandPalette = typestyles.recipe({
         result: {
           margin: 0,
         },
+        // ~44px rows: icon tile, title over a muted one-line subtitle, optional shortcut.
         resultLink: {
           display: 'flex',
           alignItems: 'center',
           gap: t.space.sm.var,
-          padding: `${t.space.xs.var} ${t.space.md.var}`,
+          boxSizing: 'border-box',
+          minHeight: '2.75rem',
+          paddingBlock: t.space.xxs.var,
+          paddingInline: t.space.sm.var,
           textDecoration: 'none',
           color: vars.resultForeground.var,
           transition: t.transition.surfaceFast.var,
@@ -245,12 +249,23 @@ export const commandPalette = typestyles.recipe({
           color: vars.resultSelectedForeground.var,
           ...atForcedColors(forced.selected),
         },
+        // Result type tile (page, component, theme…): a quiet square that tints with the row.
         resultIcon: {
           flexShrink: 0,
           display: 'inline-flex',
           alignItems: 'center',
+          justifyContent: 'center',
+          width: '1.75rem',
+          height: '1.75rem',
+          borderRadius: t.radius.sm.var,
+          ...border(vars.inputRowBorder.var),
+          boxSizing: 'border-box',
           color: vars.resultMetaColor.var,
           lineHeight: 0,
+          '& svg': {
+            width: t.size.icon.sm.var,
+            height: t.size.icon.sm.var,
+          },
         },
         resultBody: {
           flex: '1 1 auto',
@@ -265,23 +280,38 @@ export const commandPalette = typestyles.recipe({
         },
         resultTitle: {
           display: 'block',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
           fontSize: t.fontSize.md.var,
-          fontWeight: t.fontWeight.semibold.var,
-          lineHeight: 1.35,
-          marginBottom: t.space.xxs.var,
+          fontWeight: t.fontWeight.medium.var,
+          lineHeight: 1.3,
         },
+        // Subtitle: one muted 12px line under the title.
         resultMeta: {
           display: 'block',
-          fontSize: t.fontSize.sm.var,
-          color: vars.resultMetaColor.var,
-          lineHeight: 1.35,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.normal.var,
+          // A step below the group headings and hints, so the title leads.
+          color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
+          lineHeight: 1.3,
+          // Matches in the subtitle: weight only, no tint (the title carries the highlight).
+          '& mark': {
+            backgroundColor: 'transparent',
+            color: vars.resultForeground.var,
+          },
         },
+        // Matched text: an underline-weight tint, no padding (the text must not shift).
         mark: {
           fontFamily: 'inherit',
+          fontWeight: t.fontWeight.semibold.var,
           backgroundColor: vars.markBackground.var,
           color: vars.markForeground.var,
-          borderRadius: t.radius.sm.var,
-          padding: `0 ${t.space.xxs.var}`,
+          borderRadius: '0.125rem',
+          padding: 0,
         },
         // Keyboard hints under the results (↑↓ navigate, ↵ open, esc close).
         footer: {

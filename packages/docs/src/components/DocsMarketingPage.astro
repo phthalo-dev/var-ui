@@ -76,7 +76,8 @@ const hasFooterSlot = Astro.slots.has('footer');
 
       {
         showMobileNav ? (
-          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath}>
+          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath} brand={brand}>
+            {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
             {hasDrawerToolsSlot ? <slot name="drawerTools" slot="tools" /> : null}
           </DocsMobileMenu>
         ) : null

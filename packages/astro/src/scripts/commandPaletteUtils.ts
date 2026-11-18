@@ -1,18 +1,30 @@
+import type { IconName } from '@var-ui/core';
+
 export type CommandPaletteItem = {
+  /** Destination URL (the result is a link). */
   id: string;
   title: string;
+  /** Muted one-line subtitle under the title (also searched). */
   meta?: string;
   keywords?: string[];
   group?: string;
+  /** Leading type icon (page, component, theme…), resolved from the icon registry. */
+  icon?: IconName;
 };
 
-export type CommandPaletteGroup = {
+/** An item as serialized for the client script: the icon resolved to SVG markup. */
+export type CommandPaletteClientItem = Omit<CommandPaletteItem, 'icon'> & { iconSvg?: string };
+
+export type CommandPaletteGroup<T = CommandPaletteItem> = {
   id: string;
   label: string;
-  items: CommandPaletteItem[];
+  items: T[];
 };
 
-export function matchCommandPaletteItem(item: CommandPaletteItem, query: string): boolean {
+export function matchCommandPaletteItem(
+  item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords'>,
+  query: string,
+): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
   if (item.title.toLowerCase().includes(q)) return true;
@@ -21,23 +33,22 @@ export function matchCommandPaletteItem(item: CommandPaletteItem, query: string)
   return false;
 }
 
-export function filterCommandPaletteItems(
-  items: ReadonlyArray<CommandPaletteItem>,
-  query: string,
-): CommandPaletteItem[] {
+export function filterCommandPaletteItems<
+  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords'>,
+>(items: ReadonlyArray<T>, query: string): T[] {
   return items.filter((item) => matchCommandPaletteItem(item, query));
 }
 
-export function groupCommandPaletteResults(
-  items: ReadonlyArray<CommandPaletteItem>,
-): CommandPaletteGroup[] {
+export function groupCommandPaletteResults<T extends Pick<CommandPaletteItem, 'group' | 'title'>>(
+  items: ReadonlyArray<T>,
+): CommandPaletteGroup<T>[] {
   const hasGroups = items.some((item) => item.group);
   if (!hasGroups) {
     return items.length > 0 ? [{ id: 'default', label: '', items: [...items] }] : [];
   }
 
   const order: string[] = [];
-  const buckets = new Map<string, CommandPaletteItem[]>();
+  const buckets = new Map<string, T[]>();
 
   for (const item of items) {
     const label = item.group ?? 'Other';
@@ -55,9 +66,7 @@ export function groupCommandPaletteResults(
   }));
 }
 
-export function flattenCommandPaletteGroups(
-  groups: ReadonlyArray<CommandPaletteGroup>,
-): CommandPaletteItem[] {
+export function flattenCommandPaletteGroups<T>(groups: ReadonlyArray<CommandPaletteGroup<T>>): T[] {
   return groups.flatMap((group) => group.items);
 }
 
@@ -70,4 +79,30 @@ export function moveCommandPaletteActiveIndex(
   if (activeIndex < 0) return direction === 'down' ? 0 : length - 1;
   if (direction === 'down') return (activeIndex + 1) % length;
   return (activeIndex - 1 + length) % length;
+}
+
+const RECENT_LIMIT = 5;
+
+/** Ids remembered under `key` (most recent first); `[]` when storage is unavailable. */
+export function readRecentCommandPaletteIds(key: string): string[] {
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(key) ?? '[]');
+    return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Remember `id` as the most recent choice under `key` (deduped, capped at five). */
+export function rememberCommandPaletteId(key: string, id: string): string[] {
+  const next = [id, ...readRecentCommandPaletteIds(key).filter((entry) => entry !== id)].slice(
+    0,
+    RECENT_LIMIT,
+  );
+  try {
+    localStorage.setItem(key, JSON.stringify(next));
+  } catch {
+    // History is a convenience only.
+  }
+  return next;
 }

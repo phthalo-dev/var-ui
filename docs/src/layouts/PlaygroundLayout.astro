@@ -51,7 +51,13 @@ const frame = playgroundLayout({ bleed });
         <FrameworkSwitcher slot="tools" />
       </DocsTopBar>
 
-      <DocsMobileMenu slot="mobileNav" topNav={topNavItems} currentPath={currentPath}>
+      <DocsMobileMenu
+        slot="mobileNav"
+        topNav={topNavItems}
+        currentPath={currentPath}
+        brand={{ heading: 'Var UI', href: '/' }}
+      >
+        <VarUiWordmark slot="brand" size="header" />
         <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" />
       </DocsMobileMenu>
 

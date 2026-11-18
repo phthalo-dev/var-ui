@@ -11,6 +11,9 @@ import {
 } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
+import { findTextMatch } from '@var-ui/core/shared/textMatch';
+import { iconNameList } from '@var-ui/core/icons/iconNames';
+import type { IconName } from '@var-ui/core';
 import { Icon } from '../icons';
 import {
   useDialogElement,
@@ -39,8 +42,11 @@ export type CommandPaletteItem = {
    * without a heading.
    */
   group?: string;
-  /** Leading icon, rendered in a recipe-sized `Icon` shell. */
-  icon?: ReactNode;
+  /**
+   * Leading type icon (page, component, theme…): an icon registry name or a node, rendered in a
+   * small tile before the title.
+   */
+  icon?: IconName | Exclude<ReactNode, string>;
   /**
    * Shortcut hint shown on the trailing edge. A string renders one key cap; an array renders one
    * per entry (`['⌘', 'K']`). Display only; it does not bind the shortcut.
@@ -82,8 +88,18 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
    * and `false` disables the listener. @default 'mod+k'
    */
   hotkey?: boolean | string | string[];
-  /** Wraps the part of each title and meta that matches the query in a `<mark>`. */
+  /**
+   * Wraps the part of each title and meta that matches the query in a `<mark>`. Pass `false` to
+   * render plain text. @default true
+   */
   highlightMatches?: boolean;
+  /**
+   * Remembers chosen items in `localStorage` under this key and lists them under a "Recent"
+   * heading while the query is empty. Omit to keep no history.
+   */
+  recentKey?: string;
+  /** Heading of the recent items group (see `recentKey`). @default 'Recent' */
+  recentLabel?: string;
   /**
    * Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip
    * client-side filtering, e.g. when `items` already are the (remote) results for the query.
@@ -111,33 +127,10 @@ function defaultFilter(item: CommandPaletteItem, query: string): boolean {
 const subscribeNever = () => () => {};
 const getFalse = () => false;
 
-/**
- * Lowercases `text` and records, for every UTF-16 unit of the result, the index of the original
- * character it came from. Lowercasing can change length (`İ` → `i̇`), so offsets found in the
- * lowercase string must be mapped back before slicing the original.
- */
-function lowerWithOffsets(text: string): { lower: string; origin: number[] } {
-  let lower = '';
-  const origin: number[] = [];
-  for (let i = 0; i < text.length;) {
-    const char = String.fromCodePoint(text.codePointAt(i)!);
-    const lowered = char.toLowerCase();
-    lower += lowered;
-    for (let j = 0; j < lowered.length; j++) origin.push(i);
-    i += char.length;
-  }
-  return { lower, origin };
-}
-
 function renderHighlighted(text: string, query: string, cp: { mark: ComponentAttrsResult }) {
-  const q = query.trim().toLowerCase();
-  if (!q) return text;
-  const { lower, origin } = lowerWithOffsets(text);
-  const matchStart = lower.indexOf(q);
-  if (matchStart < 0) return text;
-  const start = origin[matchStart]!;
-  const lastOrigin = origin[matchStart + q.length - 1]!;
-  const end = lastOrigin + String.fromCodePoint(text.codePointAt(lastOrigin)!).length;
+  const match = findTextMatch(text, query);
+  if (!match) return text;
+  const [start, end] = match;
   return (
     <>
       {text.slice(0, start)}
@@ -145,6 +138,31 @@ function renderHighlighted(text: string, query: string, cp: { mark: ComponentAtt
       {text.slice(end)}
     </>
   );
+}
+
+const RECENT_LIMIT = 5;
+const RECENT_PREFIX = 'recent:';
+
+function readRecent(key: string | undefined): string[] {
+  if (!key || typeof localStorage === 'undefined') return [];
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(key) ?? '[]');
+    return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeRecent(key: string, ids: string[]): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(ids));
+  } catch {
+    // Storage unavailable (private mode, quota): history is a convenience only.
+  }
+}
+
+function isIconName(value: unknown): value is IconName {
+  return typeof value === 'string' && (iconNameList as readonly string[]).includes(value);
 }
 
 type ItemBlock = { group?: string; items: CommandPaletteItem[] };
@@ -176,7 +194,9 @@ export function CommandPalette({
   placeholder = 'Search…',
   emptyLabel = 'No results',
   hotkey = true,
-  highlightMatches = false,
+  highlightMatches = true,
+  recentKey,
+  recentLabel = 'Recent',
   filter = defaultFilter,
   onQueryChange,
   loading = false,
@@ -237,15 +257,39 @@ export function CommandPalette({
     [items, filter, query],
   );
 
+  const [recentIds, setRecentIds] = useState<string[]>([]);
+  // Read on open (not during render) so server and client markup match.
+  useEffect(() => {
+    if (dialog.mounted) setRecentIds(readRecent(recentKey));
+  }, [dialog.mounted, recentKey]);
+
+  const recentItems = useMemo(() => {
+    if (!recentKey || query.trim() !== '') return [];
+    return recentIds
+      .map((id) => items.find((item) => item.id === id))
+      .filter((item): item is CommandPaletteItem => item !== undefined);
+  }, [recentKey, recentIds, items, query]);
+
   const blocks = useMemo(() => toBlocks(visibleItems), [visibleItems]);
 
-  const renderItem = (item: CommandPaletteItem) => (
+  const remember = (id: string) => {
+    if (!recentKey) return;
+    const next = [id, ...readRecent(recentKey).filter((entry) => entry !== id)].slice(
+      0,
+      RECENT_LIMIT,
+    );
+    writeRecent(recentKey, next);
+    setRecentIds(next);
+  };
+
+  const renderItem = (item: CommandPaletteItem, keyPrefix = '') => (
     <ListBoxItem
-      key={item.id}
-      id={item.id}
+      key={keyPrefix + item.id}
+      id={keyPrefix + item.id}
       textValue={item.title}
       {...mergeProps(cp.result)}
       onAction={() => {
+        remember(item.id);
         item.onSelect?.();
         onAction?.(item.id);
         if (closeOnAction) root.close({ reason: 'trigger-press' });
@@ -254,8 +298,12 @@ export function CommandPalette({
       {({ isFocused }) => (
         <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
           {item.icon ? (
-            <span {...mergeProps(cp.resultIcon)}>
-              <Icon>{item.icon}</Icon>
+            <span {...mergeProps(cp.resultIcon)} aria-hidden="true">
+              {isIconName(item.icon) ? (
+                <Icon name={item.icon} size="sm" />
+              ) : (
+                <Icon size="sm">{item.icon}</Icon>
+              )}
             </span>
           ) : null}
           <span {...mergeProps(cp.resultBody)}>
@@ -311,14 +359,20 @@ export function CommandPalette({
                 </div>
               )}
             >
+              {recentItems.length > 0 ? (
+                <ListBoxSection key="recent" {...mergeProps(cp.group)}>
+                  <Header {...mergeProps(cp.groupHeading)}>{recentLabel}</Header>
+                  {recentItems.map((item) => renderItem(item, RECENT_PREFIX))}
+                </ListBoxSection>
+              ) : null}
               {blocks.map((block, index) =>
                 block.group ? (
                   <ListBoxSection key={`${index}:${block.group}`} {...mergeProps(cp.group)}>
                     <Header {...mergeProps(cp.groupHeading)}>{block.group}</Header>
-                    {block.items.map(renderItem)}
+                    {block.items.map((item) => renderItem(item))}
                   </ListBoxSection>
                 ) : (
-                  block.items.map(renderItem)
+                  block.items.map((item) => renderItem(item))
                 ),
               )}
             </ListBox>

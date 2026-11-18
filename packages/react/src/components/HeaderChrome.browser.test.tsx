@@ -5,7 +5,7 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { raf } from '../test/browser';
+import { raf, settled } from '../test/browser';
 import { SegmentedControl } from './SegmentedControl';
 import { SideNavItem, SideNavSection } from './SideNav';
 import { TopNav, TopNavItem } from './TopNav';
@@ -125,5 +125,73 @@ describe('TopNav item metrics', () => {
     await raf();
     expect(getComputedStyle(item()).fontWeight).toBe('600');
     expect(item().getBoundingClientRect().width).toBe(before.width);
+  });
+});
+
+describe('TopNav sliding selected pill', () => {
+  function Bar({ selected }: { selected: string }) {
+    return (
+      <Shell>
+        <TopNav>
+          {['Docs', 'Components', 'Theming'].map((label) => (
+            <TopNavItem
+              key={label}
+              label={label}
+              href={`#${label}`}
+              selected={selected === label}
+            />
+          ))}
+        </TopNav>
+      </Shell>
+    );
+  }
+
+  const pill = (start: HTMLElement) => {
+    const zone = start.getBoundingClientRect();
+    const cs = getComputedStyle(start, '::before');
+    const x = new DOMMatrixReadOnly(cs.transform).m41;
+    return { left: zone.left + x, width: parseFloat(cs.width), opacity: cs.opacity };
+  };
+
+  test('one pill sits under the selected item and the item paints no fill of its own', async () => {
+    const { getByText } = render(<Bar selected="Components" />);
+    await raf();
+    await raf();
+    const item = getByText('Components').closest('a')!;
+    const start = item.closest('[data-var-ui-top-nav-start]') as HTMLElement;
+    expect(start.hasAttribute('data-indicator')).toBe(true);
+    const p = pill(start);
+    const r = item.getBoundingClientRect();
+    expect(Math.abs(p.left - r.left)).toBeLessThan(0.5);
+    expect(Math.abs(p.width - r.width)).toBeLessThan(0.5);
+    expect(p.opacity).toBe('1');
+    await settled(item);
+    expect(transparent(getComputedStyle(item).backgroundColor)).toBe(true);
+    expect(transparent(getComputedStyle(start, '::before').backgroundColor)).toBe(false);
+  });
+
+  test('moving the selection slides the pill (transition) to the new item', async () => {
+    const { getByText, rerender } = render(<Bar selected="Docs" />);
+    await raf();
+    await raf();
+    const start = getByText('Docs').closest('[data-var-ui-top-nav-start]') as HTMLElement;
+    expect(start.hasAttribute('data-indicator-ready')).toBe(true);
+    expect(getComputedStyle(start, '::before').transitionProperty).toContain('transform');
+
+    rerender(<Bar selected="Theming" />);
+    await raf();
+    const target = getByText('Theming').closest('a')!.getBoundingClientRect();
+    await settled(start);
+    const p = pill(start);
+    expect(Math.abs(p.left - target.left)).toBeLessThan(0.5);
+    expect(Math.abs(p.width - target.width)).toBeLessThan(0.5);
+  });
+
+  test('hides when nothing is selected', async () => {
+    const { getByText } = render(<Bar selected="" />);
+    await raf();
+    const start = getByText('Docs').closest('[data-var-ui-top-nav-start]') as HTMLElement;
+    expect(getComputedStyle(start, '::before').opacity).toBe('0');
+    expect(start.hasAttribute('data-indicator')).toBe(false);
   });
 });

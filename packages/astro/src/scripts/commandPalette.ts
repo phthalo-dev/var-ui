@@ -1,21 +1,25 @@
+import { findTextMatch } from '@var-ui/core/shared/textMatch';
 import {
   filterCommandPaletteItems,
   flattenCommandPaletteGroups,
   groupCommandPaletteResults,
   moveCommandPaletteActiveIndex,
-  type CommandPaletteItem,
+  readRecentCommandPaletteIds,
+  rememberCommandPaletteId,
+  type CommandPaletteClientItem,
+  type CommandPaletteGroup,
 } from './commandPaletteUtils';
 import { bindBackdropDismiss } from './backdropDismiss';
 
 const ROOT_SELECTOR = '[data-var-ui-command-palette-root]';
 const INITIALIZED_ATTR = 'data-var-ui-command-palette-initialized';
 
-function parseItems(root: HTMLElement): CommandPaletteItem[] {
+function parseItems(root: HTMLElement): CommandPaletteClientItem[] {
   const script = root.querySelector<HTMLScriptElement>('script[data-var-ui-command-palette-items]');
   if (!script?.textContent) return [];
   try {
     const parsed: unknown = JSON.parse(script.textContent);
-    return Array.isArray(parsed) ? (parsed as CommandPaletteItem[]) : [];
+    return Array.isArray(parsed) ? (parsed as CommandPaletteClientItem[]) : [];
   } catch {
     return [];
   }
@@ -31,6 +35,20 @@ function escapeHtml(value: string): string {
 
 function escapeAttr(value: string): string {
   return escapeHtml(value).replaceAll("'", '&#39;');
+}
+
+/** Escaped `text` with the first match of `query` wrapped in `<mark class>`. */
+export function highlightCommandPaletteText(
+  text: string,
+  query: string,
+  markClass: string,
+): string {
+  const match = findTextMatch(text, query);
+  if (!match) return escapeHtml(text);
+  const [start, end] = match;
+  return `${escapeHtml(text.slice(0, start))}<mark class="${markClass}">${escapeHtml(
+    text.slice(start, end),
+  )}</mark>${escapeHtml(text.slice(end))}`;
 }
 
 function isEditableTarget(target: EventTarget | null): boolean {
@@ -73,7 +91,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
 
   const index = parseItems(root);
   let activeIndex = -1;
-  let flatItems: CommandPaletteItem[] = [];
+  let flatItems: CommandPaletteClientItem[] = [];
 
   const resultLinkClass = root.dataset.classResultLink ?? 'var-ui-command-palette__resultLink';
   const resultLinkActiveClass =
@@ -82,6 +100,12 @@ export function initCommandPalette(root: HTMLElement): () => void {
   const resultTitleClass = root.dataset.classResultTitle ?? 'var-ui-command-palette__resultTitle';
   const resultMetaClass = root.dataset.classResultMeta ?? 'var-ui-command-palette__resultMeta';
   const emptyClass = root.dataset.classEmpty ?? 'var-ui-command-palette__empty';
+  const resultIconClass = root.dataset.classResultIcon ?? 'var-ui-command-palette__resultIcon';
+  const markClass = root.dataset.classMark ?? 'var-ui-command-palette__mark';
+  const highlight = root.dataset.highlightMatches !== 'false';
+  const recentKey = root.dataset.recentKey || '';
+  const recentLabel = root.dataset.recentLabel || 'Recent';
+  const emptyLabel = root.dataset.emptyLabel || 'No results';
   const groupClass = root.dataset.classGroup ?? 'var-ui-command-palette__group';
   const groupHeadingClass =
     root.dataset.classGroupHeading ?? 'var-ui-command-palette__groupHeading';
@@ -108,16 +132,28 @@ export function initCommandPalette(root: HTMLElement): () => void {
       .forEach((trigger) => trigger.setAttribute('aria-expanded', String(open)));
   }
 
+  function recentGroup(query: string): CommandPaletteGroup<CommandPaletteClientItem>[] {
+    if (!recentKey || query.trim() !== '') return [];
+    const recent = readRecentCommandPaletteIds(recentKey)
+      .map((id) => index.find((item) => item.id === id))
+      .filter((item): item is CommandPaletteClientItem => item !== undefined);
+    return recent.length > 0 ? [{ id: 'recent', label: recentLabel, items: recent }] : [];
+  }
+
   function render(query: string): void {
     const filtered = filterCommandPaletteItems(index, query);
-    const groups = groupCommandPaletteResults(filtered);
+    const groups = [...recentGroup(query), ...groupCommandPaletteResults(filtered)];
     flatItems = flattenCommandPaletteGroups(groups);
     activeIndex = flatItems.length > 0 ? 0 : -1;
 
     if (groups.length === 0 || flatItems.length === 0) {
-      results.innerHTML = `<p class="${emptyClass}" data-var-ui-command-palette-empty>No results</p>`;
+      results.innerHTML = `<p class="${emptyClass}" data-var-ui-command-palette-empty>${escapeHtml(emptyLabel)}</p>`;
+      syncActive();
       return;
     }
+
+    const text = (value: string) =>
+      highlight ? highlightCommandPaletteText(value, query, markClass) : escapeHtml(value);
 
     let flatIdx = 0;
     results.innerHTML = groups
@@ -126,17 +162,21 @@ export function initCommandPalette(root: HTMLElement): () => void {
           .map((item) => {
             const optionIndex = flatIdx++;
             const active = optionIndex === activeIndex ? ` ${resultLinkActiveClass}` : '';
+            const icon = item.iconSvg
+              ? `<span class="${resultIconClass}" aria-hidden="true">${item.iconSvg}</span>`
+              : '';
             const meta = item.meta
-              ? `<span class="${resultMetaClass}">${escapeHtml(item.meta)}</span>`
+              ? `<span class="${resultMetaClass}">${text(item.meta)}</span>`
               : '';
             return `<a
                 class="${resultLinkClass}${active}"
                 href="${escapeAttr(item.id)}"
                 role="option"
                 data-var-ui-command-palette-item
+                data-item-id="${escapeAttr(item.id)}"
                 data-index="${optionIndex}"
                 id="var-ui-command-palette-option-${paletteId || 'default'}-${optionIndex}"
-              ><span class="${resultBodyClass}"><span class="${resultTitleClass}">${escapeHtml(item.title)}</span>${meta}</span></a>`;
+              >${icon}<span class="${resultBodyClass}"><span class="${resultTitleClass}">${text(item.title)}</span>${meta}</span></a>`;
           })
           .join('');
 
@@ -162,12 +202,15 @@ export function initCommandPalette(root: HTMLElement): () => void {
       el.classList.toggle(resultLinkActiveClass, isActive);
       el.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
-    input.setAttribute(
-      'aria-activedescendant',
-      activeIndex >= 0
-        ? `var-ui-command-palette-option-${paletteId || 'default'}-${activeIndex}`
-        : '',
-    );
+    // No option (e.g. "No results"): drop the reference instead of pointing at a removed node.
+    if (activeIndex >= 0) {
+      input.setAttribute(
+        'aria-activedescendant',
+        `var-ui-command-palette-option-${paletteId || 'default'}-${activeIndex}`,
+      );
+    } else {
+      input.removeAttribute('aria-activedescendant');
+    }
     results.querySelector(`[data-index="${activeIndex}"]`)?.scrollIntoView?.({ block: 'nearest' });
   }
 
@@ -193,6 +236,15 @@ export function initCommandPalette(root: HTMLElement): () => void {
   };
 
   controllers.set(root, controller);
+
+  // Remember chosen results (Enter clicks the link too) for the "Recent" group.
+  results.addEventListener('click', (event) => {
+    const link = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+      '[data-var-ui-command-palette-item]',
+    );
+    const id = link?.dataset.itemId;
+    if (recentKey && id) rememberCommandPaletteId(recentKey, id);
+  });
 
   dialog.addEventListener('close', () => {
     activeIndex = -1;

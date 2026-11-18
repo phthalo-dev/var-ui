@@ -7,15 +7,16 @@ const glyphData = fileURLToPath(new URL('../icons/src/glyph-data/', import.meta.
 
 export default defineConfig({
   resolve: {
-    alias: {
-      '@var-ui/core/components': `${coreSrc}/components`,
-      '@var-ui/core/shared': `${coreSrc}/shared`,
-      '@var-ui/core/tokens': `${coreSrc}/tokens`,
-      '@var-ui/core/icons': `${coreSrc}/icons`,
-      '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
-      '@var-ui/icons/glyphs/': glyphData,
-      '@var-ui/icons/glyphs': glyphs,
-    },
+    // String keys match by prefix: the glyph barrel and single glyphs need anchored patterns.
+    alias: [
+      { find: /^@var-ui\/icons\/glyphs$/, replacement: glyphs },
+      { find: /^@var-ui\/icons\/glyphs\/(.+)$/, replacement: `${glyphData}$1` },
+      { find: '@var-ui/core/components', replacement: `${coreSrc}/components` },
+      { find: '@var-ui/core/shared', replacement: `${coreSrc}/shared` },
+      { find: '@var-ui/core/tokens', replacement: `${coreSrc}/tokens` },
+      { find: '@var-ui/core/icons', replacement: `${coreSrc}/icons` },
+      { find: '@var-ui/core/theme-constants', replacement: `${coreSrc}/theme/constants.ts` },
+    ],
   },
   test: {
     // Vitest v4 compatibility: preserve mock call history.

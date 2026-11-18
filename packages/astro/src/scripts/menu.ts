@@ -1,3 +1,4 @@
+import type { IconName } from '@var-ui/core';
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
  * (trigger + popup list) with roving focus and typeahead. The popup is a native
@@ -41,6 +42,8 @@ export type MenuItemDefinition = {
   href?: string;
   /** Leading color swatch (e.g. theme pickers). Any CSS color value. */
   swatch?: string;
+  /** Leading icon from the icon registry. In a `layout: 'row'` section, the item shows only it. */
+  icon?: IconName;
 };
 
 /** Data model for a group of items, mirroring the React `MenuSectionDefinition`. */
@@ -54,6 +57,12 @@ export type MenuSectionDefinition = {
    * `defaultValue`.
    */
   defaultValue?: string | null;
+  /**
+   * `row` lays the items out side by side as compact icon buttons (give each an `icon`; the
+   * `label` becomes its accessible name and tooltip), e.g. a Light / Dark / System switch.
+   * @default 'list'
+   */
+  layout?: 'list' | 'row';
 };
 
 export type MenuController = {
@@ -294,6 +303,16 @@ export function initMenu(root: Element): void {
         event.preventDefault();
         moveFocus(currentIndex, -1);
         return;
+      // A `layout: 'row'` section lays its items out horizontally: left/right step through it.
+      case 'ArrowRight':
+      case 'ArrowLeft': {
+        if (!target.closest('[data-layout="row"]')) return;
+        event.preventDefault();
+        const rtl = getComputedStyle(target).direction === 'rtl';
+        const forward = (event.key === 'ArrowRight') !== rtl;
+        moveFocus(currentIndex, forward ? 1 : -1);
+        return;
+      }
       case 'Home':
         event.preventDefault();
         focusItemAt(0);

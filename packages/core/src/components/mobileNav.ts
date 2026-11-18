@@ -3,6 +3,8 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { borderSide } from '../internal/border';
+import { transitionOf } from '../internal/motion';
+import { pressedState } from '../internal/press';
 import {
   nativeBackdrop,
   nativeDialogReset,
@@ -171,8 +173,14 @@ export const mobileNav = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: t.space.xs.var,
-          borderRadius: t.radius.sm.var,
+          flexShrink: 0,
+          boxSizing: 'border-box',
+          // A square control-sized icon button, like the bar's other icon controls.
+          width: t.size.control.md.var,
+          height: t.size.control.md.var,
+          padding: 0,
+          borderRadius: t.radius.md.var,
+          transition: transitionOf(['background-color', 'color', 'transform'], 'fast'),
           '& svg': {
             display: 'block',
             width: t.size.icon.md.var,
@@ -182,6 +190,7 @@ export const mobileNav = typestyles.recipe({
             backgroundColor: vars.toggleHoverBackground.var,
             color: vars.headerColor.var,
           },
+          ...pressedState,
           '&:focus-visible': {
             ...focusRing,
           },

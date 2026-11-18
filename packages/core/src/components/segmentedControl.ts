@@ -120,6 +120,9 @@ export const segmentedControl = typestyles.recipe({
             opacity: vars.indicatorOpacity.var,
             zIndex: t.zIndex.base.var,
             transform: `translateX(${vars.indicatorX.var})`,
+          },
+          // Slide only once placed (`observeSegmentedControlIndicator`), never on first paint.
+          '&[data-indicator-ready]::after': {
             transition: `${transitionOf(['transform', 'width'], 'medium', 'emphasized')}, ${transitionOf('opacity', 'fast')}`,
           },
           '& > *': {

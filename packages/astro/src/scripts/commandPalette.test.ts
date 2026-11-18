@@ -127,3 +127,86 @@ describe('initCommandPalette', () => {
     expect(input.getAttribute('aria-expanded')).toBe('false');
   });
 });
+
+describe('command palette results (round 2)', () => {
+  function mount(extra = '', items = '[]'): HTMLElement {
+    HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+      this.open = true;
+    };
+    HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+      this.open = false;
+    };
+    document.body.innerHTML = `
+      <div id="p2" data-var-ui-command-palette-root data-command-palette-id="p2" data-hotkey="false"
+        data-class-mark="mark" data-class-result-icon="result-icon" ${extra}>
+        <dialog data-var-ui-command-palette-dialog aria-label="Search">
+          <input data-var-ui-command-palette-input />
+          <div data-var-ui-command-palette-results role="listbox"></div>
+        </dialog>
+        <script type="application/json" data-var-ui-command-palette-items>${items}</script>
+      </div>`;
+    const root = document.getElementById('p2') as HTMLElement;
+    initCommandPalette(root);
+    getCommandPaletteController(root)?.open();
+    return root;
+  }
+
+  function type(root: HTMLElement, value: string): HTMLInputElement {
+    const input = root.querySelector('input') as HTMLInputElement;
+    input.value = value;
+    input.dispatchEvent(new Event('input'));
+    return input;
+  }
+
+  const items = JSON.stringify([
+    {
+      id: '/docs',
+      title: 'Getting started',
+      meta: 'Install and set up',
+      iconSvg: '<svg data-i></svg>',
+    },
+    { id: '/button', title: 'Button', meta: 'Actions' },
+  ]);
+
+  it('drops aria-activedescendant when nothing matches', () => {
+    const root = mount('', items);
+    const input = type(root, 'start');
+    expect(input.getAttribute('aria-activedescendant')).toBe('var-ui-command-palette-option-p2-0');
+    type(root, 'zzz');
+    expect(root.querySelector('[data-var-ui-command-palette-empty]')).toBeTruthy();
+    expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+  });
+
+  it('highlights matched text (escaped) unless highlighting is off', () => {
+    const root = mount('', items);
+    type(root, 'start');
+    expect(root.querySelector('mark.mark')?.textContent).toBe('start');
+    const plain = mount('data-highlight-matches="false"', items);
+    type(plain, 'start');
+    expect(plain.querySelector('mark')).toBeNull();
+  });
+
+  it('renders the resolved type icon in the icon tile', () => {
+    const root = mount('', items);
+    const first = root.querySelector('[data-var-ui-command-palette-item]');
+    expect(first?.querySelector('.result-icon [data-i]')).toBeTruthy();
+  });
+
+  it('lists chosen items under Recent while the query is empty', () => {
+    localStorage.removeItem('p2-recent');
+    const root = mount('data-recent-key="p2-recent"', items);
+    expect(root.querySelector('[data-group="recent"]')).toBeNull();
+    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    button.addEventListener('click', (event) => event.preventDefault());
+    button.click();
+    expect(JSON.parse(localStorage.getItem('p2-recent') ?? '[]')).toEqual(['/button']);
+    getCommandPaletteController(root)?.close();
+    getCommandPaletteController(root)?.open();
+    const recent = root.querySelector('[data-group="recent"]');
+    expect(recent?.textContent).toContain('Recent');
+    expect(recent?.querySelectorAll('[data-var-ui-command-palette-item]')).toHaveLength(1);
+    type(root, 'but');
+    expect(root.querySelector('[data-group="recent"]')).toBeNull();
+    localStorage.removeItem('p2-recent');
+  });
+});

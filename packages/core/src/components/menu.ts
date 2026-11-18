@@ -18,6 +18,7 @@ export const menu = typestyles.recipe({
     'popover',
     'menu',
     'section',
+    'sectionRow',
     'sectionHeader',
     'item',
     'itemDanger',
@@ -63,6 +64,16 @@ export const menu = typestyles.recipe({
       slots: ['popover'],
       value: t.color.text.secondary.var,
     },
+    itemSelectedBackground: {
+      ...atProperty.color,
+      slots: ['popover'],
+      value: t.color.navItem.selectedBackground.var,
+    },
+    itemSelectedForeground: {
+      ...atProperty.color,
+      slots: ['popover'],
+      value: t.color.navItem.selectedForeground.var,
+    },
     separatorColor: {
       ...atProperty.color,
       slots: ['popover'],
@@ -100,6 +111,10 @@ export const menu = typestyles.recipe({
           }),
           padding: t.space.xxs.var,
           minWidth: t.size.panel.xs.var,
+          // Long menus scroll inside the surface instead of running off the viewport.
+          maxBlockSize: `min(32rem, calc(100dvh - 2 * ${t.space.md.var}))`,
+          overflowY: 'auto',
+          overscrollBehavior: 'contain',
         },
         menu: {
           outline: 'none',
@@ -109,11 +124,40 @@ export const menu = typestyles.recipe({
           flexDirection: 'column',
           gap: t.space.xxs.var,
         },
+        /**
+         * A section laid out as a row of compact icon items (`layout: 'row'`), e.g. a
+         * Light / Dark / System switch. The checked item fills like a selected segment.
+         */
+        sectionRow: {
+          display: 'flex',
+          flexDirection: 'row',
+          gap: t.space.xxs.var,
+          padding: `${t.space.xxs.var} ${t.space.xxs.var}`,
+          '& > *': {
+            flex: '1 1 0',
+            justifyContent: 'center',
+            minHeight: t.size.control.md.var,
+            paddingBlock: 0,
+            paddingInline: t.space.xs.var,
+            borderRadius: t.radius.sm.var,
+          },
+          '& [data-var-ui-menu-item-check]': {
+            display: 'none',
+          },
+          // `[class]` lifts it over the item's own focused fill (same specificity otherwise).
+          '& > [aria-checked="true"][class], & > [data-selected][class]': {
+            backgroundColor: vars.itemSelectedBackground.var,
+            color: vars.itemSelectedForeground.var,
+            ...atForcedColors(forced.selected),
+          },
+        },
+        // Quiet 12px label above a group: it names the items, it is not one.
         sectionHeader: {
-          fontSize: t.fontSize.sm.var,
-          fontWeight: t.fontWeight.semibold.var,
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.medium.var,
+          lineHeight: 1.3,
           color: vars.sectionHeaderForeground.var,
-          padding: `${t.space.xxs.var} ${t.space.sm.var}`,
+          padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.xxs.var}`,
         },
         item: {
           // Reset UA button/link chrome so the slot works on <button>/<a>

@@ -23,7 +23,7 @@ Use `meta` (and `keywords`) so related commands are scannable and searchable eve
 
 ### Icons, shortcut hints and highlighting
 
-`icon` and `shortcut` decorate each row (the shortcut is display-only), `highlightMatches` marks the matching text, and a `controller` lets any code open the palette. `hotkey` accepts a combo (`'mod+k'`, `'ctrl+shift+p'`) or an array of combos.
+`icon` (an icon name such as `page` or `component`, shown in a small type tile) and `shortcut` decorate each row (the shortcut is display-only), and `meta` is a muted one-line subtitle. Matching text is highlighted by default (`highlightMatches={false}` turns it off). Set `recentKey` to remember chosen items in `localStorage` and list them under "Recent" while the query is empty. A `controller` lets any code open the palette. `hotkey` accepts a combo (`'mod+k'`, `'ctrl+shift+p'`) or an array of combos.
 
 <Demo id="command-palette.rich" />
 

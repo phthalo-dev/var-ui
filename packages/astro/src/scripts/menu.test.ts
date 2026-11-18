@@ -510,3 +510,36 @@ describe('initMenus', () => {
     expect(second.hasAttribute('data-var-ui-menu-initialized')).toBe(true);
   });
 });
+
+describe('row sections (layout: row)', () => {
+  it('ArrowRight/Left step through a row; outside a row they do nothing', () => {
+    const host = document.createElement('div');
+    host.innerHTML = `
+      <div data-var-ui-menu-root data-selection-mode="none">
+        <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+          aria-controls="menu-r" popovertarget="menu-r-popover">Appearance</button>
+        <div data-var-ui-menu-popover id="menu-r-popover" popover="auto">
+          <div role="menu" id="menu-r" aria-label="Appearance">
+            <div role="group" aria-label="Mode" data-layout="row">
+              <button type="button" role="menuitemradio" aria-checked="false" aria-label="Light" data-var-ui-menu-item data-item-id="light" tabindex="-1"></button>
+              <button type="button" role="menuitemradio" aria-checked="true" aria-label="Dark" data-var-ui-menu-item data-item-id="dark" tabindex="-1"></button>
+            </div>
+            <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="other" tabindex="-1">Other</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(host);
+    const root = host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+    initMenu(root);
+    keydown(trigger(root), 'ArrowDown');
+    // Opens on the checked item.
+    expect(document.activeElement).toBe(item(root, 'dark'));
+    keydown(item(root, 'dark'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'light'));
+    keydown(item(root, 'light'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'dark'));
+    item(root, 'other').focus();
+    keydown(item(root, 'other'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'other'));
+  });
+});

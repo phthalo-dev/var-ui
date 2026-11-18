@@ -1,8 +1,9 @@
 ---
 /**
- * Header appearance menu: one quiet icon button that opens a Menu with a "Mode" group
- * (Light / Dark / System) and, when the docs config has theme presets, a "Theme" group.
- * The trigger glyph shows the current mode; the dot shows the current theme's swatch.
+ * Header appearance menu: one quiet icon button that opens a Menu with a compact "Mode" row
+ * (Light / Dark / System) and, when the docs config has theme presets, a "Theme" list.
+ * The trigger glyph shows the current mode; a short bar under it shows the theme's swatch
+ * (a colour chip, like a text-colour button, not a notification dot).
  */
 import config from "virtual:var-docs/config";
 import { icon } from "@var-ui/core";
@@ -27,7 +28,6 @@ const defaultThemeId = presets[0]?.id ?? null;
 
 const s = docsAppearanceMenu();
 const iconRecipe = mergeProps(icon({ size: "md" }));
-const itemIconRecipe = mergeProps(icon({ size: "sm" }));
 
 const presetsJson = JSON.stringify(
   presets.map((theme) => ({
@@ -40,16 +40,17 @@ const presetsJson = JSON.stringify(
 );
 
 const modes = [
-  { id: "light", label: "Light", svg: colorModeLight },
-  { id: "dark", label: "Dark", svg: colorModeDark },
-  { id: "system", label: "System", svg: colorModeSystem },
+  { id: "light", label: "Light", svg: colorModeLight, icon: "colorModeLight" },
+  { id: "dark", label: "Dark", svg: colorModeDark, icon: "colorModeDark" },
+  { id: "system", label: "System", svg: colorModeSystem, icon: "colorModeSystem" },
 ] as const;
 
 const sections = [
   {
     label: "Mode",
+    layout: "row" as const,
     defaultValue: "mode-system",
-    items: modes.map((mode) => ({ id: `mode-${mode.id}`, label: mode.label })),
+    items: modes.map((mode) => ({ id: `mode-${mode.id}`, label: mode.label, icon: mode.icon })),
   },
   ...(presets.length > 1
     ? [
@@ -105,19 +106,6 @@ const defaultSwatch = presets[0]?.swatch;
         ) : null
       }
     </span>
-    {/* Rich item content (one static slot per item: Astro cannot name slots inside a map). */}
-    <Fragment slot="mode-light">
-      <span class={s.itemIcon} aria-hidden="true"><span {...itemIconRecipe} set:html={colorModeLight} /></span>
-      <span>Light</span>
-    </Fragment>
-    <Fragment slot="mode-dark">
-      <span class={s.itemIcon} aria-hidden="true"><span {...itemIconRecipe} set:html={colorModeDark} /></span>
-      <span>Dark</span>
-    </Fragment>
-    <Fragment slot="mode-system">
-      <span class={s.itemIcon} aria-hidden="true"><span {...itemIconRecipe} set:html={colorModeSystem} /></span>
-      <span>System</span>
-    </Fragment>
   </Menu>
   {/* Reflect the stored mode / theme before first paint (the module script syncs after). */}
   <script

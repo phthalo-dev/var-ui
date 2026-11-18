@@ -16,7 +16,8 @@ export const docsThemePresets = [
     id: 'default',
     label: 'Default',
     className: defaultThemeClassName,
-    swatch: '#64748b',
+    // Phthalo, the default accent (hue 175).
+    swatch: 'oklch(0.62 0.15 175)',
     lazyCss: false as boolean | undefined,
   },
   {

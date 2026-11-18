@@ -105,6 +105,11 @@ const UNDOCUMENTED_HOOKS = [
   'data-header-offset',
   'data-heading-selector',
   'data-hotkey',
+  // Astro CommandPalette root: config the client script reads (React takes them as props).
+  'data-empty-label',
+  'data-highlight-matches',
+  'data-recent-key',
+  'data-recent-label',
   'data-icon-fallback',
   'data-include-system',
   'data-index',

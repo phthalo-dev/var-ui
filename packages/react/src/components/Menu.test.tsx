@@ -532,3 +532,40 @@ describe('Menu.Submenu (API shape)', () => {
     expect(item.hasAttribute('aria-haspopup')).toBe(true);
   });
 });
+
+describe('Menu.FromSections row sections, icons and swatches', () => {
+  it('lays a layout="row" section out as labelled icon items, with list items keeping icon/swatch', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>Appearance</Button>}
+        aria-label="Appearance"
+        sections={[
+          {
+            label: 'Mode',
+            layout: 'row',
+            defaultValue: 'dark',
+            items: [
+              { id: 'light', label: 'Light', icon: 'colorModeLight' },
+              { id: 'dark', label: 'Dark', icon: 'colorModeDark' },
+            ],
+          },
+          {
+            label: 'Theme',
+            items: [{ id: 'teal', label: 'Teal', swatch: 'teal', icon: 'palette' }],
+          },
+        ]}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Appearance' }));
+    await screen.findByRole('menu', { name: 'Appearance' });
+    const row = screen.getByRole('group', { name: 'Mode' });
+    expect(row.getAttribute('data-layout')).toBe('row');
+    const dark = screen.getByRole('menuitemradio', { name: 'Dark' });
+    expect(dark.getAttribute('aria-checked')).toBe('true');
+    // Icon only: the label is the accessible name, not visible text.
+    expect(dark.textContent).toBe('');
+    expect(screen.getByText('Mode')).toBeTruthy();
+    const teal = screen.getByRole('menuitem', { name: 'Teal' });
+    expect(teal.querySelector('[style*="background-color"]')).not.toBeNull();
+  });
+});

@@ -123,7 +123,8 @@ const defaultContent = docsPageContent();
 
       {
         showMobileNav ? (
-          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath}>
+          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath} brand={brand}>
+            {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
             {sidebarSections ? (
               <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
             ) : null}
