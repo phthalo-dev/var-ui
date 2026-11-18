@@ -5,25 +5,40 @@ export type CommandSearchFields = {
   title: string;
   meta?: string;
   keywords?: ReadonlyArray<string>;
+  /**
+   * Section headings inside the item (a page's h2/h3s). A word-start match ranks below the title
+   * and description, and the matched heading becomes the subtitle.
+   */
+  headings?: ReadonlyArray<string>;
   group?: string;
 };
 
 /**
- * How strongly an item matched the query, best first. Ranking compares tiers only; items in the
- * same tier keep their original order.
+ * How strongly an item matched the query, best first. Ranking compares tiers (one-typo matches
+ * also prefer a longer correctly typed prefix); items that tie keep their original order.
+ *
+ * Title hits at a word start or camelCase hump outrank descriptions; a title match in the middle
+ * of a word (`sel` in Carousel) is closer to noise and ranks below description word-starts.
  */
 export const commandMatchTier = {
-  exactTitle: 11,
-  titlePrefix: 10,
+  exactTitle: 12,
+  titlePrefix: 11,
   /** At the start of a later word of the title (after a space or punctuation): `Icon button`. */
-  titleWordStart: 9,
+  titleWordStart: 10,
   /** At a camelCase hump: `IconButton`, `ChatComposer`. */
-  titleHump: 8,
-  titleSubstring: 7,
-  keyword: 6,
+  titleHump: 9,
+  /** At the start of a keyword or one of its words. */
+  keyword: 8,
   /** The description starts with the query: it is about that thing. */
-  metaPrefix: 5,
-  metaWordStart: 4,
+  metaPrefix: 7,
+  /**
+   * At the start of a word in one of the item's section `headings` (`providers` → Getting
+   * started's "Providers"): an authored section title, above a passing word in a description.
+   */
+  heading: 6,
+  metaWordStart: 5,
+  /** Inside a title or keyword word, not at its start: `sel` in Carousel (or its `carousel` slug). */
+  titleSubstring: 4,
   meta: 3,
   /**
    * One typo (insertion, deletion, substitution or swap) at the start of the title, for queries
@@ -104,20 +119,40 @@ function withinOneEdit(a: string, b: string): boolean {
 /** Shortest query that gets one-typo tolerance: shorter ones match too much. */
 const TYPO_MIN_LENGTH = 4;
 
-/** Index of the first title word that starts with `q` give or take one typo, or `-1`. */
-function typoWordIndex(title: string, q: string): number {
-  if (q.length < TYPO_MIN_LENGTH || /\s/.test(q)) return -1;
-  return titleWords(title).findIndex((word) =>
+/** Length of the common prefix of `a` and `b`. */
+function sharedPrefix(a: string, b: string): number {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  return i;
+}
+
+/**
+ * The first title word that starts with `q` give or take one typo: its index (`-1` for none) and
+ * how many leading characters of `q` it shares as typed (`inpt` keeps 3 of Input, 2 of Install).
+ */
+function typoWordMatch(title: string, q: string): { index: number; shared: number } {
+  if (q.length < TYPO_MIN_LENGTH || /\s/.test(q)) return { index: -1, shared: 0 };
+  const words = titleWords(title);
+  const index = words.findIndex((word) =>
     [q.length - 1, q.length, q.length + 1].some(
       (length) => length <= word.length && withinOneEdit(q, word.slice(0, length)),
     ),
   );
+  return { index, shared: index < 0 ? 0 : sharedPrefix(q, words[index]!) };
+}
+
+/** The first heading with a word that starts with `q` (already trimmed and lowercased). */
+function headingMatch(item: CommandSearchFields, q: string): string | undefined {
+  return item.headings?.find((heading) => {
+    const lower = heading.toLowerCase();
+    return lower.startsWith(q) || boundaryMatch(heading, lower, q) !== null;
+  });
 }
 
 /**
  * Scores `item` against `query`: exact title > title prefix > title word-start > title camelCase
- * hump > title substring > keyword > description prefix > description word-start > description
- * substring > title with one typo. Returns `null` when nothing matches, and `0` for an empty
+ * hump > keyword word-start > description prefix > section heading word-start > description
+ * word-start > mid-word title or keyword substring > description substring > title with one typo. Returns `null` when nothing matches, and `0` for an empty
  * query (everything matches equally).
  */
 export function scoreCommandItem(
@@ -132,23 +167,36 @@ export function scoreCommandItem(
   const titleBoundary = boundaryMatch(item.title, title, q);
   if (titleBoundary === 'word') return commandMatchTier.titleWordStart;
   if (titleBoundary === 'hump') return commandMatchTier.titleHump;
-  if (title.includes(q)) return commandMatchTier.titleSubstring;
-  if (item.keywords?.some((keyword) => keyword.toLowerCase().includes(q))) {
+  const keywords = item.keywords?.map((keyword) => keyword.toLowerCase()) ?? [];
+  if (keywords.some((keyword) => keyword.startsWith(q) || boundaryMatch(keyword, keyword, q))) {
     return commandMatchTier.keyword;
   }
-  if (item.meta) {
-    const meta = item.meta.toLowerCase();
-    if (meta.startsWith(q)) return commandMatchTier.metaPrefix;
-    if (meta.includes(q)) {
-      return boundaryMatch(item.meta, meta, q) === 'word'
-        ? commandMatchTier.metaWordStart
-        : commandMatchTier.meta;
-    }
+  const meta = item.meta?.toLowerCase();
+  if (meta?.startsWith(q)) return commandMatchTier.metaPrefix;
+  if (headingMatch(item, q) !== undefined) return commandMatchTier.heading;
+  const metaAt = meta ? meta.indexOf(q) : -1;
+  if (meta && metaAt > 0 && boundaryMatch(item.meta!, meta, q) === 'word') {
+    return commandMatchTier.metaWordStart;
   }
-  const typoAt = typoWordIndex(item.title, q);
-  if (typoAt === 0) return commandMatchTier.titleTypoPrefix;
-  if (typoAt > 0) return commandMatchTier.titleTypo;
+  if (title.includes(q) || keywords.some((keyword) => keyword.includes(q))) {
+    return commandMatchTier.titleSubstring;
+  }
+  if (metaAt > 0) return commandMatchTier.meta;
+  const typo = typoWordMatch(item.title, q);
+  if (typo.index === 0) return commandMatchTier.titleTypoPrefix;
+  if (typo.index > 0) return commandMatchTier.titleTypo;
   return null;
+}
+
+/**
+ * The sort key `rankCommandItems` uses: the tier, plus (for one-typo matches only) a fraction for
+ * the correctly typed prefix, so `inpt` puts Input* (3 letters right) above Installation (2).
+ */
+function rankScore(item: CommandSearchFields, query: string): number | null {
+  const tier = scoreCommandItem(item, query);
+  if (tier !== commandMatchTier.titleTypoPrefix && tier !== commandMatchTier.titleTypo) return tier;
+  const { shared } = typoWordMatch(item.title, query.trim().toLowerCase());
+  return tier + Math.min(shared, 99) / 100;
 }
 
 function isMetaTier(tier: number | null): boolean {
@@ -183,7 +231,7 @@ export function rankCommandItems<T extends CommandSearchFields>(
   type Scored = { item: T; score: number };
   const groups = new Map<string, { best: number; first: number; entries: Scored[] }>();
   items.forEach((item, index) => {
-    const tier = scoreCommandItem(item, query);
+    const tier = rankScore(item, query);
     if (isMatch ? !isMatch(item, query) : tier === null) return;
     const score = tier ?? 0;
     const key = item.group ?? '';
@@ -197,17 +245,13 @@ export function rankCommandItems<T extends CommandSearchFields>(
   });
 
   // Typo matches only rescue a query that found nothing as typed.
-  const exactHit = [...groups.values()].some(
-    (group) => group.best > commandMatchTier.titleTypoPrefix,
-  );
+  const exactHit = [...groups.values()].some((group) => group.best >= commandMatchTier.meta);
   return [...groups.values()]
     .map((group) =>
       exactHit && !isMatch
         ? {
             ...group,
-            entries: group.entries.filter(
-              (entry) => entry.score > commandMatchTier.titleTypoPrefix,
-            ),
+            entries: group.entries.filter((entry) => entry.score >= commandMatchTier.meta),
           }
         : group,
     )
@@ -223,14 +267,20 @@ export function rankCommandItems<T extends CommandSearchFields>(
 const SNIPPET_LEAD = 24;
 
 /**
- * The subtitle to show for `item` under `query`. When the item matched only in its description
+ * The subtitle to show for `item` under `query`. When the item matched only by a section heading,
+ * that heading. When the item matched only in its description
  * (not its title or keywords) and the match sits past the start, the text is cut to begin shortly
  * before the match (at a word boundary, with a leading `…`) so the highlighted match is not lost
  * to truncation. Otherwise returns `meta` unchanged.
  */
 export function commandMetaSnippet(item: CommandSearchFields, query: string): string | undefined {
   const { meta } = item;
-  if (!meta || !isMetaTier(scoreCommandItem(item, query))) return meta;
+  const tier = scoreCommandItem(item, query);
+  // Found by a section heading: show that heading, so the result says where the match is.
+  if (tier === commandMatchTier.heading) {
+    return headingMatch(item, query.trim().toLowerCase()) ?? meta;
+  }
+  if (!meta || !isMetaTier(tier)) return meta;
   const match = findTextMatch(meta, query);
   if (!match || match[0] <= SNIPPET_LEAD) return meta;
   let start = match[0] - SNIPPET_LEAD;

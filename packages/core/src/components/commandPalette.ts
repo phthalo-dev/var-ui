@@ -87,9 +87,11 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.navItem.selectedBackground.var,
     },
+    // The active row keeps body ink (the tinted fill marks it), so the accent match run in its
+    // title still reads; an accent title would swallow it.
     resultSelectedForeground: {
       ...atProperty.color,
-      value: t.color.navItem.selectedForeground.var,
+      value: t.color.text.primary.var,
     },
     resultMetaColor: {
       ...atProperty.color,
@@ -127,7 +129,7 @@ export const commandPalette = typestyles.recipe({
           [vars.resultForeground.name]: t.color.text.primary.var,
           [vars.resultHoverBackground.name]: t.color.navItem.hoverBackground.var,
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
-          [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
+          [vars.resultSelectedForeground.name]: t.color.text.primary.var,
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
           [vars.markBackground.name]: 'transparent',
           [vars.markForeground.name]: t.color.tone.accent.foreground.var,

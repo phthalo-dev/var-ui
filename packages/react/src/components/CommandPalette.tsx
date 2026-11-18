@@ -42,6 +42,11 @@ export type CommandPaletteItem = {
   /** Extra search terms matched by the default filter but never rendered. */
   keywords?: string[];
   /**
+   * Section headings inside the item (a page's h2/h3s). Searched by the default filter below the
+   * title and description; when one is the match, it is shown as the subtitle.
+   */
+  headings?: string[];
+  /**
    * Section heading. Consecutive items with the same `group` render together under that heading;
    * keyboard navigation still moves through all items in order. Items without a `group` render
    * without a heading. While filtering, items sharing a `group` are gathered and groups are ordered

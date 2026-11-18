@@ -8,6 +8,8 @@ export type CommandPaletteItem = {
   /** Muted one-line subtitle under the title (also searched). */
   meta?: string;
   keywords?: string[];
+  /** Section headings inside the item (a page's h2/h3s): searched, and a match is the subtitle. */
+  headings?: string[];
   group?: string;
   /** Leading type icon (page, component, theme…), resolved from the icon registry. */
   icon?: IconName;
@@ -23,7 +25,7 @@ export type CommandPaletteGroup<T = CommandPaletteItem> = {
 };
 
 export function matchCommandPaletteItem(
-  item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords'>,
+  item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings'>,
   query: string,
 ): boolean {
   return matchCommandItem(item, query);
@@ -31,11 +33,11 @@ export function matchCommandPaletteItem(
 
 /**
  * Items matching `query`, ranked by relevance (exact title > title prefix > title word-start >
- * title substring > keyword > description); groups are ordered by their best hit, so the first
+ * keyword > description > section heading > mid-word title); groups are ordered by their best hit, so the first
  * item is the top hit. An empty query keeps the original order.
  */
 export function filterCommandPaletteItems<
-  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'group'>,
+  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings' | 'group'>,
 >(items: ReadonlyArray<T>, query: string): T[] {
   return rankCommandItems(items, query);
 }

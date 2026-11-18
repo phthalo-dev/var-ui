@@ -16,6 +16,8 @@ export const guideFrontmatterSchema = z.object({
   template: z.enum(['guide', 'splash']).default('guide'),
   /** When false, DocsPage suppresses the auto TOC. */
   tableOfContents: z.boolean().optional().default(true),
+  /** Extra search terms for the docs search (words the page covers but its title and headings don't say). */
+  keywords: z.array(z.string()).optional(),
   /** Wider article column (e.g. Colors / Shadows token grids). */
   wide: z.boolean().optional().default(false),
 });

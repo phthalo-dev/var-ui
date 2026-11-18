@@ -7,6 +7,7 @@ import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { transitionOf } from '../internal/motion';
 import { pressedState } from '../internal/press';
+import { neutralHoverChip } from '../shared/semanticTone';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
   background: {
@@ -35,7 +36,7 @@ const topNavVarDefinitions = {
   // and an ink wash over `transparent` loses the palette's hue (a cool grey on warm chrome).
   itemHoverBackground: {
     ...atProperty.color,
-    value: `color-mix(in oklch, ${t.color.navItem.hoverBackground.var}, ${t.color.text.primary.var} 4%)`,
+    value: neutralHoverChip,
   },
   itemSelectedBackground: {
     ...atProperty.color,

@@ -134,12 +134,13 @@ export const roseThemeTokens = {
         light: p.color.palette['rose-3'].var,
         dark: neoBrutalistBorderDarkSubtle(roseDarkHue),
       },
+      // Neo-brutalist ink lines, in deep rose rather than pure black (the text ink's hue).
       default: {
-        light: '#000',
+        light: p.color.palette['rose-9'].var,
         dark: neoBrutalistBorderDarkDefault(roseDarkHue),
       },
       strong: {
-        light: '#000',
+        light: p.color.palette['rose-10'].var,
         dark: neoBrutalistBorderDarkStrong(roseDarkHue),
       },
       focus: {

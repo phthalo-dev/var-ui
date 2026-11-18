@@ -96,7 +96,7 @@ export const docsTopNav = typestyles.recipe({
           display: 'none',
         },
       },
-      // Drawer header: the brand, linked home (same mark as the bar).
+      // Drawer header: the brand lockup, linked home.
       mobileNavBrand: {
         display: 'inline-flex',
         alignItems: 'center',
@@ -122,7 +122,11 @@ export const docsTopNav = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         '& a': { fontWeight: t.fontWeight.medium.var },
+        // Full-bleed like the drawer's header and footer rules: step out over the body's 4px inset
+        // and pad back in, so the links stay on the shared left edge.
         '&[data-divided]': {
+          marginInline: `calc(-1 * ${t.space.xxs.var})`,
+          paddingInline: t.space.xxs.var,
           paddingBlockEnd: t.space.md.var,
           borderBlockEnd: `0.0625rem solid ${t.color.border.subtle.var}`,
         },

@@ -102,6 +102,66 @@ describe('rankCommandItems on docs-like data', () => {
   });
 });
 
+describe('section headings', () => {
+  const page = {
+    title: 'CSS variables',
+    meta: 'Theme and style var-ui with custom properties.',
+    headings: ['Naming', 'Light and dark mode'],
+  };
+
+  it('matches a heading word-start below the title and description prefix', () => {
+    expect(scoreCommandItem(page, 'dark')).toBe(commandMatchTier.heading);
+    expect(scoreCommandItem(page, 'light and')).toBe(commandMatchTier.heading);
+    expect(scoreCommandItem(page, 'ark')).toBeNull();
+    expect(commandMatchTier.heading).toBeLessThan(commandMatchTier.metaPrefix);
+    expect(commandMatchTier.heading).toBeGreaterThan(commandMatchTier.metaWordStart);
+  });
+
+  it('shows the matched heading as the subtitle', () => {
+    expect(commandMetaSnippet(page, 'dark')).toBe('Light and dark mode');
+    // A title or description match keeps the description.
+    expect(commandMetaSnippet(page, 'css')).toBe(page.meta);
+  });
+});
+
+describe('rankCommandItems tie-breaks', () => {
+  const items = [
+    { title: 'Installation', meta: 'Package setup for React apps.', group: 'Docs' },
+    {
+      title: 'Carousel',
+      meta: 'Horizontally scrollable content.',
+      keywords: ['carousel'],
+      group: 'Components',
+    },
+    { title: 'InputGroup', meta: 'Composes inputs with addons.', group: 'Components' },
+    { title: 'PinInput', meta: 'One-time code entry.', group: 'Components' },
+    { title: 'RadioGroup', meta: 'Single selection from a list.', group: 'Components' },
+    { title: 'Select', meta: 'Dropdown single-select.', group: 'Components' },
+    { title: 'MultiSelector', meta: 'Multi-select combobox.', group: 'Components' },
+  ];
+  const titles = (query: string) => rankCommandItems(items, query).map((item) => item.title);
+
+  it('"inpt": one-typo ties prefer the longer correctly typed prefix (Input over Install)', () => {
+    expect(titles('inpt')).toEqual(['InputGroup', 'PinInput', 'Installation']);
+  });
+
+  it('"sel": title word-starts, then description word-starts, then mid-word title hits', () => {
+    expect(titles('sel')).toEqual(['Select', 'MultiSelector', 'RadioGroup', 'Carousel']);
+  });
+
+  it('ranks a mid-word title or keyword hit below a description word-start', () => {
+    expect(scoreCommandItem({ title: 'Carousel' }, 'sel')).toBe(commandMatchTier.titleSubstring);
+    expect(scoreCommandItem({ title: 'Slides', keywords: ['carousel'] }, 'sel')).toBe(
+      commandMatchTier.titleSubstring,
+    );
+    expect(scoreCommandItem({ title: 'Slides', keywords: ['image carousel'] }, 'car')).toBe(
+      commandMatchTier.keyword,
+    );
+    expect(commandMatchTier.titleSubstring).toBeLessThan(commandMatchTier.metaWordStart);
+    expect(commandMatchTier.titleSubstring).toBeGreaterThan(commandMatchTier.meta);
+  });
+});
+
 describe('rankCommandItems', () => {
   const items = [
     { title: 'Overlay lifecycle', meta: 'Open and close with a trigger button', group: 'Docs' },

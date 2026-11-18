@@ -11,9 +11,10 @@ import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize
 import type { ControlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,
+  controlToneAssignments,
   mapTone,
+  subtleBackgroundColor,
   tone,
-  toneChannelAssignments,
 } from '../shared/semanticTone';
 
 const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], {
@@ -71,6 +72,10 @@ export const button = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.primary.var,
     },
+    ghostHover: {
+      ...atProperty.color,
+      value: subtleBackgroundColor(t.color.text.primary.var),
+    },
   },
   styles: ({ vars }) => {
     return {
@@ -113,7 +118,7 @@ export const button = typestyles.recipe({
         },
       },
       variants: {
-        tone: mapTone((key) => toneChannelAssignments(vars, key)),
+        tone: mapTone((key) => controlToneAssignments(vars, key)),
         appearance: {
           filled: controlAppearancePaint(vars, 'filled'),
           outline: controlAppearancePaint(vars, 'outline'),
