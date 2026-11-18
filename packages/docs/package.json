@@ -28,6 +28,7 @@
     ".": "./index.ts",
     "./schema": "./schema.ts",
     "./utils": "./src/utils/index.ts",
+    "./theme-client": "./src/utils/theme/client.ts",
     "./highlight": "./src/utils/highlightCodeBlock.ts",
     "./guide-entry": "./src/utils/guideEntry.ts",
     "./styles": "./src/styles/index.ts",

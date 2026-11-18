@@ -108,6 +108,7 @@ export default defineConfig({
           '@var-ui/astro': `${root}/packages/astro/index.ts`,
           '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
           '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
+          '@var-ui/docs/theme-client': `${root}/packages/docs/src/utils/theme/client.ts`,
           '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
           '@var-ui/docs/guide-entry': `${root}/packages/docs/src/utils/guideEntry.ts`,
           '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,

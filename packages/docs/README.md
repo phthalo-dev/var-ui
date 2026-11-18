@@ -109,6 +109,17 @@ Add more guide collections as needed and map them in `routes` — e.g. Var UI do
 adds `theming`; a library might add `api` or `guides`. Use `matchGuideRoute()` from
 `@var-ui/docs/utils` to map URLs → collection entries.
 
+`@var-ui/docs/utils` is for server code (pages, integrations, build scripts): it also exports
+Node-only helpers. In client islands and `<script>`s, import the theme helpers from
+`@var-ui/docs/theme-client` instead. It's browser-safe and exports `ensureDocsThemeStyles` (load
+a lazy theme's `/themes/<id>.css` once), `createDocsThemeController` and the preset helpers:
+
+```ts
+import { ensureDocsThemeStyles } from '@var-ui/docs/theme-client';
+
+ensureDocsThemeStyles('forest', presets, () => repaint());
+```
+
 ## Shell components
 
 ```astro
