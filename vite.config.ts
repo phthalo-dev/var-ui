@@ -114,14 +114,8 @@ export default defineConfig({
     // https://viteplus.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
     // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
     clearMocks: false,
-    projects: [
-      'packages/core',
-      'packages/react',
-      'packages/icons',
-      'packages/astro',
-      'packages/docs',
-      'packages/cli',
-      'docs',
-    ],
+    // Every workspace package runs its tests here (and so in `vp run ci`). A glob, not a list,
+    // so a new package can't be left out by accident (#181).
+    projects: ['packages/*', 'docs'],
   },
 });
