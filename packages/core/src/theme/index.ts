@@ -14,4 +14,5 @@ export {
 } from './register-default';
 export { mergeThemeOverrides, type OverrideConfigFor } from 'typestyles';
 export * from './constants';
+export * from './colorModeScript';
 export * from './conditions';

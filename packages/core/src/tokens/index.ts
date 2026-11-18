@@ -23,6 +23,7 @@ export {
 /** Declared design token refs (`declare.ts` exports `tokens` internally). */
 export { tokens as designTokens } from './declare';
 export { tokenValues } from './preset';
+export { listDesignTokens, type DesignTokenEntry, type ModeAwareTokenValue } from './list';
 export {
   darkSyntaxValues,
   lightSyntaxValues,

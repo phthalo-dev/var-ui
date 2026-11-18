@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { COLOR_MODE } from './colorModeConfig';
 import { defaultThemeClassName, layoutBreakpointQueries } from '@var-ui/core';
 import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
 import { getLocalTimeZone, today } from '@internationalized/date';
@@ -1294,7 +1295,7 @@ export function App() {
   const activeTheme = palette === 'acme' ? acmeTheme : { className: defaultThemeClassName };
 
   return (
-    <DesignSystemProvider applyToDocument defaultColorMode="light" customTheme={activeTheme}>
+    <DesignSystemProvider applyToDocument {...COLOR_MODE} customTheme={activeTheme}>
       <IconProvider icons={defaultIcons}>
         <ToastProvider>
           <Stack gap="xl" style={{ padding: '2rem', maxWidth: '56rem', margin: '0 auto' }}>

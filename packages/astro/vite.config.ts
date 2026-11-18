@@ -16,6 +16,10 @@ export default defineConfig({
       { find: '@var-ui/core/tokens', replacement: `${coreSrc}/tokens` },
       { find: '@var-ui/core/icons', replacement: `${coreSrc}/icons` },
       { find: '@var-ui/core/theme-constants', replacement: `${coreSrc}/theme/constants.ts` },
+      {
+        find: '@var-ui/core/color-mode-script',
+        replacement: `${coreSrc}/theme/colorModeScript.ts`,
+      },
     ],
   },
   test: {

@@ -1,11 +1,25 @@
 ---
 import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
+import {
+  getColorModeInitScript,
+  type ColorModePreference,
+} from '@var-ui/core/color-mode-script';
 
 type Props = {
+  /** Theme class added to `<html>` before paint. */
   themeClass: string;
+  /** `localStorage` key of the stored preference. @default theme-mode */
   storageKey?: string;
+  /** Mode used when nothing valid is stored. @default system */
+  defaultColorMode?: ColorModePreference;
 };
-const { themeClass, storageKey = 'theme-mode' } = Astro.props;
+const { themeClass, storageKey = 'theme-mode', defaultColorMode = 'system' } = Astro.props;
+// The same script the React provider and the Vite plugin use (`@var-ui/core/color-mode-script`).
+const initScript = getColorModeInitScript({
+  storageKey,
+  defaultColorMode,
+  themeClassName: themeClass,
+});
 const colorModeAttribute = COLOR_MODE_ATTRIBUTE;
 ---
 <meta name="color-scheme" content="light dark" />
@@ -13,29 +27,19 @@ const colorModeAttribute = COLOR_MODE_ATTRIBUTE;
   /* Must match `layers` in packages/core/src/runtime.ts */
   @layer reset, base, tokens, components, overrides, utilities;
 </style>
-<script is:inline define:vars={{ themeClass, storageKey, colorModeAttribute }}>
-  function applyThemeTo(doc) {
-    const root = doc.documentElement;
-    const stored = localStorage.getItem(storageKey);
-    root.classList.add(themeClass);
-    root.style.colorScheme = '';
-    if (stored === 'light' || stored === 'dark') {
-      root.setAttribute(colorModeAttribute, stored);
-    } else {
-      root.removeAttribute(colorModeAttribute);
-    }
-  }
-
-  applyThemeTo(document);
-
-  const navKey = `__varUiThemeNav:${storageKey}`;
-  if (!window[navKey]) {
-    window[navKey] = true;
+<script is:inline set:html={initScript} />
+<script is:inline define:vars={{ themeClass, colorModeAttribute }}>
+  // View transitions swap in a fresh <html>: carry the resolved theme class and mode over
+  // before it paints. (Nothing to re-read: the preference can't change mid-navigation.)
+  if (!window.__varUiThemeNav) {
+    window.__varUiThemeNav = true;
     document.addEventListener('astro:before-swap', (event) => {
-      applyThemeTo(event.newDocument);
-    });
-    document.addEventListener('astro:after-swap', () => {
-      applyThemeTo(document);
+      const from = document.documentElement;
+      const to = event.newDocument.documentElement;
+      to.classList.add(themeClass);
+      const mode = from.getAttribute(colorModeAttribute);
+      if (mode) to.setAttribute(colorModeAttribute, mode);
+      else to.removeAttribute(colorModeAttribute);
     });
   }
 </script>

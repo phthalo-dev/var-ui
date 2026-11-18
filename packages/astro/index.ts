@@ -98,8 +98,6 @@ export { createResizeHandle } from './src/scripts/resizeHandle';
 export { copyText, initCodeBlockCopy } from './src/scripts/codeBlockCopy';
 export {
   applyColorModeToDocument,
-  applyThemeBoot,
-  bootTheme,
   COLOR_MODE_CHANGE_EVENT,
   colorModeToggleValue,
   initColorModeToggle,
@@ -108,7 +106,6 @@ export {
   readStoredColorMode,
   resolveColorMode,
   setColorMode,
-  watchThemeOnNavigation,
 } from './src/scripts/colorMode';
 export {
   getCommandPaletteController,

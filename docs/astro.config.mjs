@@ -97,6 +97,7 @@ export default defineConfig({
         ...glyphAliases(`${root}/packages/icons/src`),
         ...aliasList({
           '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
+          '@var-ui/core/color-mode-script': `${root}/packages/core/src/theme/colorModeScript.ts`,
           '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
           '@var-ui/core/components': `${root}/packages/core/src/components`,
           '@var-ui/core/shared': `${root}/packages/core/src/shared`,

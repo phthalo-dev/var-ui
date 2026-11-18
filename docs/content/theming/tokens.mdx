@@ -23,6 +23,23 @@ designTokens.fontSize.md;
 
 Default registered values live in `tokenValues` (used as the built-in `from` preset base).
 
+## Listing tokens
+
+`designTokens` is typed from the schema, so editors autocomplete every path. At runtime it has
+no enumerable keys (`Object.keys(designTokens.space)` is `[]`). To list or search tokens, use
+`listDesignTokens()`:
+
+```ts
+import { listDesignTokens } from '@var-ui/core';
+
+listDesignTokens().filter((token) => token.path.startsWith('space.'));
+// [{ path: 'space.md', cssVar: '--var-ui-space-md', ref: 'var(--var-ui-space-md)', value: '1rem' }, …]
+```
+
+Each entry has the dot `path`, the `cssVar` name, the `ref` (`var(--…)`, the same string as
+`designTokens.<path>.var`) and the default `value` (colours carry `{ light, dark }`). The
+[CSS variables](/theming/css-variables) page shows the whole list, searchable.
+
 ## Spacing
 
 `designTokens.space.*`: the gap and padding scale, in rem.
