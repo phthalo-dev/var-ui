@@ -54,14 +54,6 @@
       "types": "./dist/icons/arrowsUpDown.d.mts",
       "import": "./dist/icons/arrowsUpDown.mjs"
     },
-    "./glyphs/bell": {
-      "types": "./dist/glyph-data/bell.d.mts",
-      "import": "./dist/glyph-data/bell.mjs"
-    },
-    "./bell": {
-      "types": "./dist/icons/bell.d.mts",
-      "import": "./dist/icons/bell.mjs"
-    },
     "./glyphs/check": {
       "types": "./dist/glyph-data/check.d.mts",
       "import": "./dist/glyph-data/check.mjs"
@@ -182,22 +174,6 @@
       "types": "./dist/icons/info.d.mts",
       "import": "./dist/icons/info.mjs"
     },
-    "./glyphs/layers": {
-      "types": "./dist/glyph-data/layers.d.mts",
-      "import": "./dist/glyph-data/layers.mjs"
-    },
-    "./layers": {
-      "types": "./dist/icons/layers.d.mts",
-      "import": "./dist/icons/layers.mjs"
-    },
-    "./glyphs/layout": {
-      "types": "./dist/glyph-data/layout.d.mts",
-      "import": "./dist/glyph-data/layout.mjs"
-    },
-    "./layout": {
-      "types": "./dist/icons/layout.d.mts",
-      "import": "./dist/icons/layout.mjs"
-    },
     "./glyphs/menu": {
       "types": "./dist/glyph-data/menu.d.mts",
       "import": "./dist/glyph-data/menu.mjs"
@@ -205,14 +181,6 @@
     "./menu": {
       "types": "./dist/icons/menu.d.mts",
       "import": "./dist/icons/menu.mjs"
-    },
-    "./glyphs/message": {
-      "types": "./dist/glyph-data/message.d.mts",
-      "import": "./dist/glyph-data/message.mjs"
-    },
-    "./message": {
-      "types": "./dist/icons/message.d.mts",
-      "import": "./dist/icons/message.mjs"
     },
     "./glyphs/moreHorizontal": {
       "types": "./dist/glyph-data/moreHorizontal.d.mts",
@@ -237,14 +205,6 @@
     "./palette": {
       "types": "./dist/icons/palette.d.mts",
       "import": "./dist/icons/palette.mjs"
-    },
-    "./glyphs/pointer": {
-      "types": "./dist/glyph-data/pointer.d.mts",
-      "import": "./dist/glyph-data/pointer.mjs"
-    },
-    "./pointer": {
-      "types": "./dist/icons/pointer.d.mts",
-      "import": "./dist/icons/pointer.mjs"
     },
     "./glyphs/search": {
       "types": "./dist/glyph-data/search.d.mts",
@@ -277,22 +237,6 @@
     "./success": {
       "types": "./dist/icons/success.d.mts",
       "import": "./dist/icons/success.mjs"
-    },
-    "./glyphs/text": {
-      "types": "./dist/glyph-data/text.d.mts",
-      "import": "./dist/glyph-data/text.mjs"
-    },
-    "./text": {
-      "types": "./dist/icons/text.d.mts",
-      "import": "./dist/icons/text.mjs"
-    },
-    "./glyphs/textInput": {
-      "types": "./dist/glyph-data/textInput.d.mts",
-      "import": "./dist/glyph-data/textInput.mjs"
-    },
-    "./textInput": {
-      "types": "./dist/icons/textInput.d.mts",
-      "import": "./dist/icons/textInput.mjs"
     },
     "./glyphs/warning": {
       "types": "./dist/glyph-data/warning.d.mts",

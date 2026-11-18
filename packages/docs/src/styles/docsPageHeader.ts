@@ -6,7 +6,8 @@ import {
   tabs,
   typestyles,
 } from '@var-ui/core';
-import { docsPage, pageBarHeight } from './docsPage';
+import { docsMainContainer, docsPage, narrowMain, pageBarHeight } from './docsPage';
+import { container } from 'typestyles';
 
 const gutter = docsPage.vars.gutter.var;
 /** Distance from the page frame's edge to the content area's edge (gutter + centring slack). */
@@ -15,8 +16,10 @@ const bleed = `calc((100cqw - 100%) / 2 + ${gutter})`;
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowLg = typestyles.breakpoint('lg', 'max');
 const belowXl = typestyles.breakpoint('xl', 'max');
-/** Height of the hero showcase slot (wide screens): every component page's hero is this tall. */
+/** Showcase slot height on pages with tabs (it overhangs the tab row; see `preview`). */
 const heroSlot = '17.5rem';
+/** Main areas narrower than this get the smaller showcase. */
+const midMain = container(docsMainContainer, { maxWidth: '72rem' });
 
 /**
  * Docs page hero band: a softly tinted accent panel with a fading dot field (the Var UI stage
@@ -49,17 +52,15 @@ export const docsPageHeader = typestyles.recipe({
       root: {
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1fr)',
-        // Text hangs from the top so the H1 lands at the same y on every page, whatever the lead
-        // length or the showcase height.
+        // Text hangs from the top, so the H1 lands at the same y on every page.
         alignItems: 'start',
         columnGap: t.space.xxl.var,
-        // With a showcase (wide screens only) the hero is a fixed-height slot: text at the top,
-        // the scene centred in it, so the page tabs below also land at one y. Below `xl` the
-        // showcase is dropped and the text takes the whole frame.
+        // With a showcase the hero splits; on a narrow main area the showcase is dropped.
         '&[data-has-preview]': {
           gridTemplateColumns: 'minmax(0, 1fr) auto',
-          [belowXl]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+          [narrowMain]: { gridTemplateColumns: 'minmax(0, 1fr)' },
         },
+        // The page tabs follow the metadata row by a fixed 40px (16px here + the 24px margin).
         marginBlockEnd: t.space.lg.var,
         paddingBlock: `${t.space.lg.var} ${t.space.md.var}`,
         minWidth: 0,
@@ -74,25 +75,39 @@ export const docsPageHeader = typestyles.recipe({
         minWidth: 0,
       },
       // The showcase scene sits directly on the page: no plate, border or surface; only the dot
-      // field, fading out on all sides.
+      // field, fading out on all sides. It is top-aligned with the hero and sized to its scene;
+      // its end edge is the frame's end edge (the page bar's and the rail's).
+      //
+      // `data-overhang` (pages with tabs): the scene gets a fixed slot that does not add to the
+      // hero's height, so the tabs follow the text (no dead band under a short lead) and the
+      // scene hangs past the tab row on the right, where the tabs never reach.
       preview: {
         display: 'grid',
-        placeItems: 'center',
-        alignSelf: 'stretch',
+        alignItems: 'center',
+        justifyItems: 'end',
+        alignSelf: 'start',
         justifySelf: 'end',
         boxSizing: 'border-box',
-        height: heroSlot,
         minWidth: '17rem',
         maxWidth: '26rem',
-        // The dot field haloes past the scene; the end margin keeps the halo inside the frame.
-        [stage.vars.bleed.name]: t.space.xl.var,
-        marginInlineEnd: t.space.xl.var,
-        paddingInline: t.space.lg.var,
+        [stage.vars.bleed.name]: t.space.lg.var,
         paddingBlock: t.space.md.var,
+        paddingInlineStart: t.space.lg.var,
         overflow: 'visible',
-        // Showcases render a touch larger than life.
+        // Showcases render a touch larger than life where there is room.
         '& > *': { zoom: 1.15 },
-        [belowXl]: { display: 'none' },
+        '[data-overhang] > &': {
+          height: heroSlot,
+          marginBlockEnd: `calc(-1 * ${heroSlot})`,
+        },
+        // A tighter main area (about 1200–1400px viewports): a smaller scene, not none.
+        [midMain]: {
+          maxWidth: '21rem',
+          minWidth: '14rem',
+          '& > *': { zoom: 0.95 },
+          '[data-overhang] > &': { height: '15rem', marginBlockEnd: '-15rem' },
+        },
+        [narrowMain]: { display: 'none' },
       },
       eyebrow: {
         margin: 0,

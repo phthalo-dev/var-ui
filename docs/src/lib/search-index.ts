@@ -1,4 +1,4 @@
-import { categoryLabels, componentRegistry, type ComponentCategory } from '@/data/components';
+import { categoryLabels, componentRegistry } from '@/data/components';
 import { docsSidebar, playgroundSidebar, themingSidebar } from '@/data/navigation';
 import type { DocsSearchItem } from '@var-ui/docs/utils';
 
@@ -40,18 +40,6 @@ function sidebarItems(
   }));
 }
 
-/** One glyph per component category, so the palette's icon column tells result types apart. */
-const categoryIcons = {
-  action: 'pointer',
-  'data-input': 'textInput',
-  feedback: 'bell',
-  overlay: 'layers',
-  layout: 'layout',
-  content: 'text',
-  container: 'component',
-  chat: 'message',
-} as const satisfies Record<ComponentCategory, DocsSearchItem['icon']>;
-
 /** Flat CommandPalette index from docs/theming sidebars and the component registry. */
 export function buildDocsSearchIndex(): DocsSearchItem[] {
   const docs = sidebarItems(docsSidebar, 'Docs', 'page');
@@ -62,7 +50,7 @@ export function buildDocsSearchIndex(): DocsSearchItem[] {
     title: entry.name,
     meta: entry.description,
     group: 'Components',
-    icon: categoryIcons[entry.category],
+    icon: 'component',
     keywords: [entry.slug, entry.category, categoryLabels[entry.category]],
   }));
 

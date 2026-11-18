@@ -33,13 +33,6 @@ describe('icon system (core)', () => {
         'page',
         'component',
         'palette',
-        'pointer',
-        'textInput',
-        'bell',
-        'layers',
-        'layout',
-        'text',
-        'message',
       ].sort(),
     );
   });

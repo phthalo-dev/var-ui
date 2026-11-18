@@ -1,7 +1,16 @@
-import { atProperty, variant } from 'typestyles';
+import { atProperty, container, variant } from 'typestyles';
 import { designTokens as t, typestyles } from '@var-ui/core';
 
-const belowXl = typestyles.breakpoint('xl', 'max');
+/**
+ * The main content area (`LayoutContent`) is a size container, so the frame responds to the room
+ * it actually has (sidebar shown, collapsed or in the drawer), not to the viewport.
+ */
+export const docsMainContainer = typestyles.containerRef('docs-main');
+/**
+ * Below this content width the rail (TOC) and the hero showcase drop out. With the 280px sidebar
+ * that is a 1200px viewport; the main column's left edge does not move at the switch.
+ */
+export const narrowMain = container(docsMainContainer, { maxWidth: '57.4rem' });
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowLg = typestyles.breakpoint('lg', 'max');
 const contentWidth = variant.enum(['default', 'full'], { default: 'default' });
@@ -36,7 +45,7 @@ const gutters = {
 export const docsPage = typestyles.recipe({
   name: 'docs-page',
   layer: 'components',
-  slots: ['siteLayout', 'sidebar', 'pageBody', 'content', 'toc', 'tocActions', 'tocAction'],
+  slots: ['siteLayout', 'sidebar', 'main', 'pageBody', 'content', 'toc', 'tocActions', 'tocAction'],
   variants: { contentWidth, contentPlacement },
   vars: {
     headerHeight: {
@@ -62,6 +71,10 @@ export const docsPage = typestyles.recipe({
         [belowLg]: {
           display: 'none',
         },
+      },
+      main: {
+        containerType: 'inline-size',
+        containerName: docsMainContainer,
       },
       /**
        * Page frame. The main column's wrapper is `display: contents`, so its children are grid
@@ -116,8 +129,10 @@ export const docsPage = typestyles.recipe({
         '&:has(> [data-docs-content] > [data-docs-page-tabs]) > aside': {
           gridRow: '4 / span 60',
         },
-        [belowXl]: {
+        // One column: it starts where the two-column frame starts (no re-centring jump).
+        [narrowMain]: {
           gridTemplateColumns: `minmax(0, ${mainColumn})`,
+          justifyContent: 'start',
         },
         [belowMd]: {
           paddingInline: t.space.md.var,
@@ -152,7 +167,7 @@ export const docsPage = typestyles.recipe({
         '&[hidden]': {
           display: 'flex',
           visibility: 'hidden',
-          [belowXl]: { display: 'none' },
+          [narrowMain]: { display: 'none' },
         },
         '& [data-var-ui-toc]': {
           position: 'static',
@@ -160,7 +175,7 @@ export const docsPage = typestyles.recipe({
           maxHeight: 'none',
           overflow: 'visible',
         },
-        [belowXl]: {
+        [narrowMain]: {
           display: 'none',
         },
       },

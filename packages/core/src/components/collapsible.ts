@@ -88,6 +88,12 @@ export const collapsible = typestyles.recipe({
         panel: {
           padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.sm.var}`,
           minWidth: 0,
+          // Closed: RAC keeps the panel as `hidden="until-found"` (find-in-page can open it),
+          // which skips its content but keeps its own box, so drop the padding too: a closed
+          // row is just its trigger.
+          '&[hidden]': {
+            paddingBlock: 0,
+          },
         },
       },
       variants: {
@@ -116,6 +122,7 @@ export const collapsible = typestyles.recipe({
               paddingInline: t.space.md.var,
               paddingBlockEnd: t.space.md.var,
               paddingBlockStart: 0,
+              '&[hidden]': { paddingBlock: 0 },
             },
           },
         },

@@ -4,8 +4,15 @@ import DocsGuidePage from '@var-ui/docs/DocsGuidePage';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import * as mdxComponents from '../../lib/guide-mdx-components';
 import HeroShowcase from '../../components/HeroShowcase';
+import { Toc, TocItem } from '@var-ui/astro';
 ---
 
 <DocsGuidePage layout={BaseLayout} mdxComponents={mdxComponents}>
   <HeroShowcase slot="preview" slug="docs-index" />
+  <Toc slot="rail" title="Start here" label="Start here">
+    <TocItem label="Getting started" href="/docs/getting-started" />
+    <TocItem label="Installation" href="/docs/installation" />
+    <TocItem label="Browse components" href="/components" />
+    <TocItem label="Theming" href="/theming" />
+  </Toc>
 </DocsGuidePage>

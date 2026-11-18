@@ -34,13 +34,6 @@ export const iconNameList = [
   'page',
   'component',
   'palette',
-  'pointer',
-  'textInput',
-  'bell',
-  'layers',
-  'layout',
-  'text',
-  'message',
 ] as const;
 
 export type IconName = (typeof iconNameList)[number];

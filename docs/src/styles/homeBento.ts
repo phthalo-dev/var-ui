@@ -360,9 +360,11 @@ export const homeBento = typestyles.recipe({
       chat: {
         display: 'flex',
         flexDirection: 'column',
-        flex: '1 1 auto',
-        minHeight: '24rem',
-        [belowMd]: { minHeight: '18rem' },
+        // A bounded basis, so the message list scrolls inside the card with the composer under
+        // it, instead of the card growing to the whole conversation.
+        flex: '1 1 24rem',
+        minHeight: 0,
+        [belowMd]: { flexBasis: '18rem' },
       },
     },
   }),

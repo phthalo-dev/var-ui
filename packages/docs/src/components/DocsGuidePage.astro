@@ -2,7 +2,8 @@
 /**
  * Renders a guide entry from configured `varDocs({ routes })` collections.
  * Pass the site layout and MDX shortcodes; use with injected routes or own pages. A `preview` slot
- * is forwarded to the hero showcase (`DocsPageHeader`), e.g. for section landing pages.
+ * is forwarded to the hero showcase (`DocsPageHeader`) and a `rail` slot to the top of the page rail,
+ * e.g. for section landing pages.
  */
 import { getEntry, render } from 'astro:content';
 import config from 'virtual:var-docs/config';
@@ -68,6 +69,7 @@ Astro.locals.varDocsRoute = {
 ---
 
 <Layout title={title} showToc={showToc}>
+  {Astro.slots.has('rail') ? <slot name="rail" slot="rail" /> : null}
   <DocsPageHeader title={data.title} eyebrow={eyebrow} lead={data.description}>
     {Astro.slots.has('preview') ? <slot name="preview" slot="preview" /> : null}
   </DocsPageHeader>

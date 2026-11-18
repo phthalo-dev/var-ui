@@ -13,6 +13,7 @@ import { colorField } from '@var-ui/core/components/colorField';
 import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps, ControlSize } from '@var-ui/core';
 import { isValidHex, normalizeHex, rgbToHex } from '../color/convert';
+import { colorValueLabel } from '@var-ui/core/shared/colorLabel';
 import { useColorValue } from '../color';
 import { ColorPicker } from './ColorPicker';
 import type { ColorPickerProps } from './ColorPicker';
@@ -206,7 +207,15 @@ export function ColorInput({
     }
   };
 
+  // `css` format: at rest the field shows a short label (`phthalo-7` for a token reference) with the
+  // full value in the tooltip; focused, it shows the raw value for editing.
+  const [editing, setEditing] = useState(false);
+  const shownValue = isCss && !editing ? colorValueLabel(textValue) : textValue;
+  const shownPlaceholder = isCss && placeholder ? colorValueLabel(placeholder) : placeholder;
+  const fullValue = isCss ? textValue || placeholder : undefined;
+
   const handleTextBlur = (event: FocusEvent<HTMLInputElement>) => {
+    setEditing(false);
     onBlur?.(event);
     if (!accepts(textValue)) {
       setTextValue(color);
@@ -262,6 +271,7 @@ export function ColorInput({
             </div>
           </NativePopover>
         </NativePopoverTrigger>
+        {isField && isCss && name ? <input type="hidden" name={name} value={color} /> : null}
         {isField ? (
           <input
             spellCheck={false}
@@ -271,14 +281,20 @@ export function ColorInput({
             {...frame.controlProps}
             ref={ref}
             type="text"
-            name={name}
-            value={textValue}
-            placeholder={placeholder}
+            // `css` format shows a label at rest, so the form value travels in a hidden input.
+            name={isCss ? undefined : name}
+            value={shownValue}
+            placeholder={shownPlaceholder}
+            title={rest.title ?? (fullValue || undefined)}
             disabled={disabled}
             required={required}
             aria-required={required || undefined}
             onChange={handleTextChange}
             onBlur={handleTextBlur}
+            onFocus={(event) => {
+              setEditing(true);
+              rest.onFocus?.(event);
+            }}
           />
         ) : name ? (
           <input type="hidden" name={name} value={color} />

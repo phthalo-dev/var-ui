@@ -64,14 +64,13 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
         </div>
       </ControlGroup>
 
-      <ControlGroup label="Preset">
-        <SegmentedControl
-          size="sm"
+      <ControlGroup label="Spacing">
+        <Select
           aria-label="Spacing preset"
           options={[...SPACING_PRESET_OPTIONS]}
           value={state.spacingPreset}
-          onValueChange={(next) => {
-            if (next) onChange({ spacingPreset: next as ThemePlaygroundSpacingPreset });
+          onValueChange={(key) => {
+            if (key) onChange({ spacingPreset: key as ThemePlaygroundSpacingPreset });
           }}
         />
       </ControlGroup>

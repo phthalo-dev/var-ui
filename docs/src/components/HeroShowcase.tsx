@@ -89,7 +89,7 @@ const showcases: Record<string, () => JSX.Element> = {
       <SegmentedControl
         aria-label="Color mode"
         size="sm"
-        defaultValue="light"
+        defaultValue="system"
         options={[
           { value: 'light', label: 'Light' },
           { value: 'dark', label: 'Dark' },

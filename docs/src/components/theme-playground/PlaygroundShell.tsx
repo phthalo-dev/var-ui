@@ -1,6 +1,14 @@
 'use client';
 
-import { Layout, LayoutContent, LayoutPanel, ResizeHandle, useResizable } from '@var-ui/react';
+import {
+  Button,
+  Drawer,
+  Layout,
+  LayoutContent,
+  LayoutPanel,
+  ResizeHandle,
+  useResizable,
+} from '@var-ui/react';
 import PlaygroundEditorSidebar from './PlaygroundEditorSidebar';
 import ThemePlayground from './ThemePlayground';
 import { playgroundShellStyles } from '@/styles/playgroundShell';
@@ -27,6 +35,7 @@ export default function PlaygroundShell() {
         start={
           <>
             <LayoutPanel
+              className={shell.sidePanel.className}
               resizable={start}
               hasDivider
               padding="none"
@@ -36,12 +45,39 @@ export default function PlaygroundShell() {
             >
               <PlaygroundEditorSidebar />
             </LayoutPanel>
-            <ResizeHandle {...start.handleProps} aria-label="Resize editor panel" />
+            <ResizeHandle
+              {...start.handleProps}
+              className={shell.sidePanel.className}
+              aria-label="Resize editor panel"
+            />
           </>
         }
         content={
           <LayoutContent padding="none">
-            <ThemePlayground />
+            <ThemePlayground
+              toolbarStart={
+                <Drawer aria-label="Theme controls">
+                  <Drawer.Trigger>
+                    <Button
+                      appearance="outline"
+                      size="sm"
+                      className={shell.controlsButton.className}
+                    >
+                      Theme controls
+                    </Button>
+                  </Drawer.Trigger>
+                  <Drawer.Popup placement="start" width={320}>
+                    <Drawer.Header>
+                      <Drawer.Title>Theme controls</Drawer.Title>
+                      <Drawer.Close />
+                    </Drawer.Header>
+                    <Drawer.Body>
+                      <PlaygroundEditorSidebar />
+                    </Drawer.Body>
+                  </Drawer.Popup>
+                </Drawer>
+              }
+            />
           </LayoutContent>
         }
       />

@@ -3,7 +3,6 @@ import type { IconName } from '@var-ui/core';
 import { arrowDown } from './icons/arrowDown';
 import { arrowUp } from './icons/arrowUp';
 import { arrowsUpDown } from './icons/arrowsUpDown';
-import { bell } from './icons/bell';
 import { check } from './icons/check';
 import { chevronDown } from './icons/chevronDown';
 import { chevronLeft } from './icons/chevronLeft';
@@ -19,20 +18,14 @@ import { error } from './icons/error';
 import { eye } from './icons/eye';
 import { eyeOff } from './icons/eyeOff';
 import { info } from './icons/info';
-import { layers } from './icons/layers';
-import { layout } from './icons/layout';
 import { menu } from './icons/menu';
-import { message } from './icons/message';
 import { moreHorizontal } from './icons/moreHorizontal';
 import { page } from './icons/page';
 import { palette } from './icons/palette';
-import { pointer } from './icons/pointer';
 import { search } from './icons/search';
 import { star } from './icons/star';
 import { stop } from './icons/stop';
 import { success } from './icons/success';
-import { text } from './icons/text';
-import { textInput } from './icons/textInput';
 import { warning } from './icons/warning';
 import { wrench } from './icons/wrench';
 
@@ -41,7 +34,6 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   arrowDown,
   arrowUp,
   arrowsUpDown,
-  bell,
   check,
   chevronDown,
   chevronLeft,
@@ -57,20 +49,14 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   eye,
   eyeOff,
   info,
-  layers,
-  layout,
   menu,
-  message,
   moreHorizontal,
   page,
   palette,
-  pointer,
   search,
   star,
   stop,
   success,
-  text,
-  textInput,
   warning,
   wrench,
 };
