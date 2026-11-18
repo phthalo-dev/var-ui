@@ -25,7 +25,7 @@ import {
   StatusDot,
   Table,
   Text,
-  cx,
+  combine,
 } from '@var-ui/react';
 import { useState } from 'react';
 import { homeBento } from '@/styles/homeBento';
@@ -89,7 +89,7 @@ export function AgentChatTile({ className }: TileProps) {
   const b = homeBento();
   const [value, setValue] = useState('');
   return (
-    <section aria-label="Agent chat" className={cx(className)}>
+    <section aria-label="Agent chat" {...combine(className)}>
       <div className={b.tileHeader.className}>
         <HStack align="center" gap="xs">
           <StatusDot aria-label="Online" tone="success" />

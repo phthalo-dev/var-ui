@@ -9,7 +9,7 @@
  * Slots: `brand` (custom brand content, e.g. a logo/wordmark), `tools` (extra controls before
  * the appearance menu, e.g. a framework switcher; moved into `DocsMobileMenu` below `md`).
  */
-import { cx, MobileNavToggle, TopNav, TopNavHeading, TopNavItem } from '@var-ui/astro';
+import { MobileNavToggle, TopNav, TopNavHeading, TopNavItem, combine } from '@var-ui/astro';
 import { docsTopNav } from '../styles/docsTopNav';
 import DocsAppearanceMenu from './DocsAppearanceMenu.astro';
 import DocsSearch from './DocsSearch.astro';
@@ -39,7 +39,7 @@ const hasToolsSlot = Astro.slots.has('tools');
 ---
 
 <TopNav
-  className={cx(nav.root)}
+  {...combine(nav.root)}
   data-docs-top-bar
   transition:persist="docs-top-bar"
   transition:animate="none"
@@ -63,16 +63,16 @@ const hasToolsSlot = Astro.slots.has('tools');
       />
     ))
   }
-  <div slot="end" class={cx(nav.tools)}>
+  <div slot="end" {...combine(nav.tools)}>
     <DocsSearch items={searchItems} />
     {
       hasToolsSlot ? (
-        <div class={cx(nav.toolbarExtra)}>
+        <div {...combine(nav.toolbarExtra)}>
           <slot name="tools" />
         </div>
       ) : null
     }
-    <span class={cx(nav.divider)} aria-hidden="true"></span>
+    <span {...combine(nav.divider)} aria-hidden="true"></span>
     <DocsAppearanceMenu />
     {mobileNav ? <MobileNavToggle /> : null}
   </div>

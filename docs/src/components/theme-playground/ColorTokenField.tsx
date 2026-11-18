@@ -1,6 +1,6 @@
 'use client';
 
-import { TextField } from '@var-ui/react';
+import { TextField, mergeProps } from '@var-ui/react';
 import { themePlaygroundStyles } from '@/styles/themePlayground';
 import type { PlaygroundColorField } from './themePlaygroundTokens';
 
@@ -21,9 +21,9 @@ export function ColorTokenField({ field, value, onChange }: ColorTokenFieldProps
   const s = themePlaygroundStyles();
 
   return (
-    <div className={s.colorRow.className}>
+    <div {...mergeProps(s.colorRow)}>
       <span
-        className={s.colorSwatch.className}
+        {...mergeProps(s.colorSwatch)}
         style={{ backgroundColor: swatchColor(value, field.defaultValue) }}
         aria-hidden
       />

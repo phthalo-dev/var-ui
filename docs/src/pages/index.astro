@@ -7,7 +7,7 @@ import homepagePreloads from 'virtual:homepage-preloads';
 import HeroAppWindow from '../components/homepage/HeroAppWindow.astro';
 import LiveInspector from '../components/homepage/LiveInspector';
 import KeyboardDemo from '../components/homepage/KeyboardDemo';
-import { Button, Code, Heading, Text, cx } from '@var-ui/astro';
+import { Button, Code, Heading, Text, combine } from '@var-ui/astro';
 import VariableRibbons from '../components/homepage/VariableRibbons.astro';
 import TokenCascade from '../components/homepage/TokenCascade.astro';
 import { SPECTRUM_STEPS, homeSpectrum } from '../styles/homeSpectrum';
@@ -39,17 +39,17 @@ const facts = [
     {homepagePreloads.map((href) => <link rel="modulepreload" href={href} crossorigin />)}
   </Fragment>
 
-  <div class={cx(hp.root)}>
-    <header class={cx(hp.hero)}>
-      <div class={cx(hp.container, hp.heroGrid)}>
+  <div {...combine(hp.root)}>
+    <header {...combine(hp.hero)}>
+      <div {...combine(hp.container, hp.heroGrid)}>
 
-        <div class={cx(hp.heroInner)}>
+        <div {...combine(hp.heroInner)}>
           <VarUiWordmark as="h1" size="hero" />
-          <Heading level={2} size="display-sm" weight="light" className={cx(hp.tagline)}>
+          <Heading level={2} size="display-sm" weight="light" {...combine(hp.tagline)}>
             <span>An open source design system that&apos;s</span>
-            <span class={cx(hp.taglineStrong)}>fully customizable and agent ready</span>
+            <span {...combine(hp.taglineStrong)}>fully customizable and agent ready</span>
           </Heading>
-          <div class={cx(hp.heroActions)}>
+          <div {...combine(hp.heroActions)}>
             <Button href="/docs/getting-started" tone="accent" appearance="filled" size="xl" pill>
               Get started
             </Button>
@@ -65,14 +65,14 @@ const facts = [
     </header>
 
 
-    <div class={cx(hp.band)}>
-    <section class={cx(hp.container, hp.section)} aria-labelledby="home-showcase-heading">
-      <div class={cx(hp.sectionHeader)}>
-        <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>themes</Text>
+    <div {...combine(hp.band)}>
+    <section {...combine(hp.container, hp.section)} aria-labelledby="home-showcase-heading">
+      <div {...combine(hp.sectionHeader)}>
+        <Text as="p" size="sm" weight="medium" mono {...combine(hp.eyebrow)}>themes</Text>
         <Heading level={2} size="display-md" id="home-showcase-heading">
           One system. Every theme.
         </Heading>
-        <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+        <Text size="lg" tone="secondary" {...combine(hp.sectionLead)}>
           Everything below is live <Code nowrap>@var-ui/react</Code>. Pick a theme and the whole product
           UI repaints from CSS variables alone, while the readout shows the values doing the
           work.
@@ -84,24 +84,24 @@ const facts = [
 
     <VariableRibbons facts={facts} />
 
-    <section class={cx(hp.container, hp.section)} aria-labelledby="home-why-heading">
-      <div class={cx(hp.sectionHeader)}>
-        <Heading level={2} size="display-md" id="home-why-heading" className={cx(hp.headingLines)}>
+    <section {...combine(hp.container, hp.section)} aria-labelledby="home-why-heading">
+      <div {...combine(hp.sectionHeader)}>
+        <Heading level={2} size="display-md" id="home-why-heading" {...combine(hp.headingLines)}>
           <span>Readable CSS. Real tokens.</span>
           <span>Any framework.</span>
         </Heading>
-        <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+        <Text size="lg" tone="secondary" {...combine(hp.sectionLead)}>
           Three proofs, all running on this page: read the rules a component emits, re-point
           the variable behind them, then drive the controls without a mouse.
         </Text>
       </div>
 
-      <div class={cx(hp.features)}>
-        <article class={cx(hp.feature, hp.featureWide)}>
-          <div class={cx(hp.featureCopyWide)}>
-            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>devtools</Text>
+      <div {...combine(hp.features)}>
+        <article {...combine(hp.feature, hp.featureWide)}>
+          <div {...combine(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono {...combine(hp.eyebrow)}>devtools</Text>
             <Heading level={3} size="display-sm">Inspect it and understand it.</Heading>
-            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" {...combine(hp.sectionLead)}>
               TypeStyles emits named classes and data attributes, not hashed atoms. Flip the props
               on this live button: the panel reads the rules that now match straight from the page&apos;s
               stylesheets.
@@ -110,11 +110,11 @@ const facts = [
           <LiveInspector client:idle />
         </article>
 
-        <article class={cx(hp.feature, hp.featureWide)}>
-          <div class={cx(hp.featureCopyWide)}>
-            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>cascade</Text>
+        <article {...combine(hp.feature, hp.featureWide)}>
+          <div {...combine(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono {...combine(hp.eyebrow)}>cascade</Text>
             <Heading level={3} size="display-sm">One variable, every component.</Heading>
-            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" {...combine(hp.sectionLead)}>
               A token feeds a rule you can read, and the rule paints every component that uses
               it. Re-point <Code nowrap>--color-accent</Code> and everything downstream follows, with the
               same names and props in <Code nowrap>@var-ui/react</Code>, <Code nowrap>@var-ui/astro</Code>, or
@@ -124,11 +124,11 @@ const facts = [
           <TokenCascade />
         </article>
 
-        <article class={cx(hp.feature, hp.featureWide)}>
-          <div class={cx(hp.featureCopyWide)}>
-            <Text as="p" size="sm" weight="medium" mono className={cx(hp.eyebrow)}>a11y</Text>
+        <article {...combine(hp.feature, hp.featureWide)}>
+          <div {...combine(hp.featureCopyWide)}>
+            <Text as="p" size="sm" weight="medium" mono {...combine(hp.eyebrow)}>a11y</Text>
             <Heading level={3} size="display-sm">Built for the keyboard.</Heading>
-            <Text size="lg" tone="secondary" className={cx(hp.sectionLead)}>
+            <Text size="lg" tone="secondary" {...combine(hp.sectionLead)}>
               Interactive components sit on React Aria, so focus order, arrow-key navigation,
               roles, names and states come built in. Drive these with the keyboard and watch
               what assistive tech is told.
@@ -139,17 +139,17 @@ const facts = [
       </div>
     </section>
 
-    <section class={cx(hp.closing)} aria-labelledby="home-closing-heading">
-      <div class={cx(sp.root)} aria-hidden="true">
-        <div class={cx(sp.anchor)}>
-          {SPECTRUM_STEPS.map(() => <span class={cx(sp.ring)} />)}
+    <section {...combine(hp.closing)} aria-labelledby="home-closing-heading">
+      <div {...combine(sp.root)} aria-hidden="true">
+        <div {...combine(sp.anchor)}>
+          {SPECTRUM_STEPS.map(() => <span {...combine(sp.ring)} />)}
         </div>
       </div>
-      <div class={cx(hp.container, hp.closingInner)}>
+      <div {...combine(hp.container, hp.closingInner)}>
         <Heading level={2} size="display-lg" id="home-closing-heading">
           Start with <VarUiWordmark size="inline" />
         </Heading>
-        <div class={cx(hp.heroActions)}>
+        <div {...combine(hp.heroActions)}>
           <Button href="/docs/getting-started" tone="accent" appearance="filled" size="xl" pill>
             Read the docs
           </Button>

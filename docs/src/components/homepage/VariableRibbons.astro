@@ -3,7 +3,7 @@
  * A single band of real custom properties (see `homeRibbons`). Token values are filled in
  * from the page's computed styles, so they always match the live theme and color mode.
  */
-import { cx } from '@var-ui/astro';
+import { combine } from '@var-ui/astro';
 import { homeRibbons } from '../../styles/homeRibbons';
 
 type Fact = { property: string; value: string };
@@ -19,27 +19,27 @@ const tokens = [
 ];
 ---
 
-<section class={cx(r.root)} aria-label="Var UI in numbers">
+<section {...combine(r.root)} aria-label="Var UI in numbers">
   {/* Two balanced lines: this page's live tokens, then the project's numbers. */}
-  <ul class={cx(r.list)} aria-label="Live tokens" data-tokens>
+  <ul {...combine(r.list)} aria-label="Live tokens" data-tokens>
     {
       tokens.map((token) => (
-        <li class={cx(r.item)}>
-          {token.swatch ? <span class={cx(r.swatch)} data-ribbon-swatch={token.name} /> : null}
-          <span class={cx(r.prop)}>{token.name}:</span>
-          <span class={cx(r.value)} data-ribbon-token={token.name}>
+        <li {...combine(r.item)}>
+          {token.swatch ? <span {...combine(r.swatch)} data-ribbon-swatch={token.name} /> : null}
+          <span {...combine(r.prop)}>{token.name}:</span>
+          <span {...combine(r.value)} data-ribbon-token={token.name}>
             …
           </span>
         </li>
       ))
     }
   </ul>
-  <ul class={cx(r.list)} aria-label="Project facts">
+  <ul {...combine(r.list)} aria-label="Project facts">
     {
       facts.map((fact) => (
-        <li class={cx(r.item)}>
-          <span class={cx(r.prop)}>{fact.property}:</span>
-          <span class={cx(r.value)}>{fact.value}</span>
+        <li {...combine(r.item)}>
+          <span {...combine(r.prop)}>{fact.property}:</span>
+          <span {...combine(r.value)}>{fact.value}</span>
         </li>
       ))
     }

@@ -15,33 +15,32 @@ import {
   SideNavItem,
   SideNavSection,
   Text,
-  cx,
-} from '@var-ui/astro';
+  combine } from '@var-ui/astro';
 import { homeAppWindow } from '../../styles/homeAppWindow';
 
 const w = homeAppWindow();
 ---
 
-<div class={cx(w.stage)} aria-hidden="true" inert>
-  <span class={cx(w.spec, w.specTopLeft)}>--radius-xl: <span class={cx(w.specValue)}>16px</span></span>
-  <span class={cx(w.spec, w.specRight)}>
-    <span class={cx(w.specSwatch)}></span>--color-accent
+<div {...combine(w.stage)} aria-hidden="true" inert>
+  <span {...combine(w.spec, w.specTopLeft)}>--radius-xl: <span {...combine(w.specValue)}>16px</span></span>
+  <span {...combine(w.spec, w.specRight)}>
+    <span {...combine(w.specSwatch)}></span>--color-accent
   </span>
-  <span class={cx(w.spec, w.specLeft)} data-side="left">
-    --space-lg: <span class={cx(w.specValue)}>24px</span>
-    <span class={cx(w.specLine)}></span>
+  <span {...combine(w.spec, w.specLeft)} data-side="left">
+    --space-lg: <span {...combine(w.specValue)}>24px</span>
+    <span {...combine(w.specLine)}></span>
   </span>
-  <span class={cx(w.spec, w.specBottom)}>--shadow-xl</span>
+  <span {...combine(w.spec, w.specBottom)}>--shadow-xl</span>
 
-  <div class={cx(w.window)}>
-    <div class={cx(w.titlebar)}>
-      <span class={cx(w.dots)}>
-        <span class={cx(w.dot)}></span><span class={cx(w.dot)}></span><span class={cx(w.dot)}></span>
+  <div {...combine(w.window)}>
+    <div {...combine(w.titlebar)}>
+      <span {...combine(w.dots)}>
+        <span {...combine(w.dot)}></span><span {...combine(w.dot)}></span><span {...combine(w.dot)}></span>
       </span>
-      <span class={cx(w.url)}>northwind.app/settings/billing</span>
-      <span class={cx(w.titlebarEnd)}><Avatar name="Maya Okafor" size="sm" /></span>
+      <span {...combine(w.url)}>northwind.app/settings/billing</span>
+      <span {...combine(w.titlebarEnd)}><Avatar name="Maya Okafor" size="sm" /></span>
     </div>
-    <div class={cx(w.body)}>
+    <div {...combine(w.body)}>
       <SideNav label="Workspace" className={w.sidebar.className}>
         <Text as="span" size="xs" tone="secondary" weight="semibold" eyebrow className={w.sidebarLabel.className}>
           Northwind
@@ -54,10 +53,10 @@ const w = homeAppWindow();
           <SideNavItem label="Settings" />
         </SideNavSection>
       </SideNav>
-      <div class={cx(w.main)}>
-        <div class={cx(w.mainHeader)}>
+      <div {...combine(w.main)}>
+        <div {...combine(w.mainHeader)}>
           <div>
-            <p class={cx(w.title)}>Billing</p>
+            <p {...combine(w.title)}>Billing</p>
             <Text size="sm" tone="secondary">Choose a plan for 12 seats</Text>
           </div>
           <SegmentedControl
@@ -70,21 +69,21 @@ const w = homeAppWindow();
             ]}
           />
         </div>
-        <div class={cx(w.plans)}>
-          <div class={cx(w.plan)}>
-            <span class={cx(w.planName)}>Starter</span>
-            <p class={cx(w.price)}>$0<span class={cx(w.priceUnit)}> / seat</span></p>
+        <div {...combine(w.plans)}>
+          <div {...combine(w.plan)}>
+            <span {...combine(w.planName)}>Starter</span>
+            <p {...combine(w.price)}>$0<span {...combine(w.priceUnit)}> / seat</span></p>
             <Text size="sm" tone="secondary">3 projects, community support</Text>
             <Button size="sm" appearance="outline" pill>Current plan</Button>
           </div>
-          <div class={cx(w.plan, w.planSelected)}>
-            <span class={cx(w.planName)}>Pro <Badge tone="accent" appearance="solid">Popular</Badge></span>
-            <p class={cx(w.price)}>$19<span class={cx(w.priceUnit)}> / seat</span></p>
+          <div {...combine(w.plan, w.planSelected)}>
+            <span {...combine(w.planName)}>Pro <Badge tone="accent" appearance="solid">Popular</Badge></span>
+            <p {...combine(w.price)}>$19<span {...combine(w.priceUnit)}> / seat</span></p>
             <Text size="sm" tone="secondary">Unlimited projects, custom themes</Text>
             <Button size="sm" tone="accent" appearance="filled" pill>Upgrade to Pro</Button>
           </div>
         </div>
-        <div class={cx(w.usage)}>
+        <div {...combine(w.usage)}>
           <ProgressBar label="Seats" value={8} maxValue={12} showValueText />
           <Meter label="Storage" value={64} valueLabel="64 GB" tone="accent" />
         </div>

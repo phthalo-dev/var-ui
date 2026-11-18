@@ -6,7 +6,8 @@ import {
   SearchInput,
   SegmentedControl,
   Tabs,
-  cx,
+  combine,
+  mergeProps,
 } from '@var-ui/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { HighlightedCodeBlock } from '@/components/HighlightedCodeBlock';
@@ -228,13 +229,13 @@ export default function LiveInspector() {
 
   const panel = (
     <Tabs
-      className={s.panel.className}
+      {...mergeProps(s.panel)}
       tabs={[
         {
           value: 'styles',
           label: 'Styles',
           content: (
-            <div className={s.styles.className}>
+            <div {...mergeProps(s.styles)}>
               <HighlightedCodeBlock code={markup} copyable={false} language="html" />
               <HighlightedCodeBlock
                 code={css || '/* reading stylesheets… */'}
@@ -248,7 +249,7 @@ export default function LiveInspector() {
           value: 'computed',
           label: 'Computed',
           content: (
-            <div className={s.computed.className}>
+            <div {...mergeProps(s.computed)}>
               <SearchInput
                 aria-label="Filter computed properties"
                 onValueChange={setFilter}
@@ -256,25 +257,25 @@ export default function LiveInspector() {
                 size="sm"
                 value={filter}
               />
-              <dl className={s.computedList.className}>
+              <dl {...mergeProps(s.computedList)}>
                 {visibleComputed.map(({ name, value, token }) => (
-                  <div className={s.computedRow.className} key={name}>
-                    <dt className={s.computedName.className}>{name}</dt>
-                    <dd className={s.computedValue.className}>
+                  <div {...mergeProps(s.computedRow)} key={name}>
+                    <dt {...mergeProps(s.computedName)}>{name}</dt>
+                    <dd {...mergeProps(s.computedValue)}>
                       {isColor(value) ? (
                         <span
                           aria-hidden="true"
-                          className={s.swatch.className}
+                          {...mergeProps(s.swatch)}
                           style={{ backgroundColor: value }}
                         />
                       ) : null}
                       {value}
-                      {token ? <span className={s.computedNote.className}>{token}</span> : null}
+                      {token ? <span {...mergeProps(s.computedNote)}>{token}</span> : null}
                     </dd>
                   </div>
                 ))}
                 {visibleComputed.length === 0 ? (
-                  <p className={s.empty.className}>No matching properties</p>
+                  <p {...mergeProps(s.empty)}>No matching properties</p>
                 ) : null}
               </dl>
             </div>
@@ -284,17 +285,17 @@ export default function LiveInspector() {
           value: 'layout',
           label: 'Layout',
           content: box ? (
-            <div className={s.boxModel.className} aria-label="Box model">
-              <div className={cx(s.boxLayer.className, s.boxMargin.className)}>
-                <span className={s.boxLabel.className}>margin</span>
-                <span className={s.boxEdges.className}>{box.margin.join(' ')}</span>
-                <div className={cx(s.boxLayer.className, s.boxBorder.className)}>
-                  <span className={s.boxLabel.className}>border</span>
-                  <span className={s.boxEdges.className}>{box.border.join(' ')}</span>
-                  <div className={cx(s.boxLayer.className, s.boxPadding.className)}>
-                    <span className={s.boxLabel.className}>padding</span>
-                    <span className={s.boxEdges.className}>{box.padding.join(' ')}</span>
-                    <div className={s.boxContent.className}>
+            <div {...mergeProps(s.boxModel)} aria-label="Box model">
+              <div {...combine(s.boxLayer.className, s.boxMargin.className)}>
+                <span {...mergeProps(s.boxLabel)}>margin</span>
+                <span {...mergeProps(s.boxEdges)}>{box.margin.join(' ')}</span>
+                <div {...combine(s.boxLayer.className, s.boxBorder.className)}>
+                  <span {...mergeProps(s.boxLabel)}>border</span>
+                  <span {...mergeProps(s.boxEdges)}>{box.border.join(' ')}</span>
+                  <div {...combine(s.boxLayer.className, s.boxPadding.className)}>
+                    <span {...mergeProps(s.boxLabel)}>padding</span>
+                    <span {...mergeProps(s.boxEdges)}>{box.padding.join(' ')}</span>
+                    <div {...mergeProps(s.boxContent)}>
                       {box.width} × {box.height}
                     </div>
                   </div>
@@ -309,9 +310,9 @@ export default function LiveInspector() {
 
   return (
     <IconProvider icons={defaultIcons}>
-      <div className={s.root.className}>
-        <div className={s.stage.className}>
-          <div className={s.controls.className}>
+      <div {...mergeProps(s.root)}>
+        <div {...mergeProps(s.stage)}>
+          <div {...mergeProps(s.controls)}>
             <SegmentedControl
               aria-label="Tone"
               onValueChange={(value) => value && setTone(value as Tone)}
@@ -335,16 +336,16 @@ export default function LiveInspector() {
               value={appearance}
             />
           </div>
-          <span ref={targetRef} className={s.target.className}>
-            <span aria-hidden="true" className={s.tag.className}>
+          <span ref={targetRef} {...mergeProps(s.target)}>
+            <span aria-hidden="true" {...mergeProps(s.tag)}>
               button.var-ui-button · {size}
             </span>
-            <span aria-hidden="true" className={s.outline.className} />
+            <span aria-hidden="true" {...mergeProps(s.outline)} />
             <Button appearance={appearance} pill size="lg" tone={tone}>
               Deploy to production
             </Button>
           </span>
-          <p className={s.cue.className}>
+          <p {...mergeProps(s.cue)}>
             Right-click → Inspect: your browser shows the same classes and rules.
           </p>
         </div>
