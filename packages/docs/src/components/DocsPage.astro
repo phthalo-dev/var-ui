@@ -2,14 +2,12 @@
 import { ClientRouter } from 'astro:transitions';
 import {
   AppShell,
-  cx,
   Layout,
   LayoutContent,
   LayoutPanel,
   mergeProps,
   SideNav,
-  ThemeScript,
-} from '@var-ui/astro';
+  ThemeScript, combine } from '@var-ui/astro';
 import { docsPage, docsPageContent } from '../styles/docsPage';
 import DocsMobileMenu from './DocsMobileMenu.astro';
 import DocsTopBar from './DocsTopBar.astro';
@@ -114,7 +112,7 @@ const markdownGlyph =
     <ClientRouter />
     <slot name="head" />
   </head>
-  <body class={cx('docs-body', bodyClassName)}>
+  <body {...combine('docs-body', bodyClassName)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <DocsTopBar
         slot="topNav"
@@ -142,7 +140,7 @@ const markdownGlyph =
 
       {
         sidebarSections ? (
-          <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
+          <Layout height="fill" padding="none" {...combine(page.siteLayout)}>
             <LayoutPanel
               slot="start"
               side="start"
@@ -150,7 +148,7 @@ const markdownGlyph =
               hasDivider
               padding="none"
               scrollable={false}
-              className={page.sidebar.className}
+              {...mergeProps(page.sidebar)}
             >
               <SideNav label="Section navigation" collapsible>
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
@@ -189,7 +187,7 @@ const markdownGlyph =
             </LayoutContent>
           </Layout>
         ) : (
-          <Layout height="fill" padding={showTocPanel ? 'none' : 'xl'} className={cx(page.siteLayout)}>
+          <Layout height="fill" padding={showTocPanel ? 'none' : 'xl'} {...combine(page.siteLayout)}>
             <LayoutContent label="Main content">
               {
                 showTocPanel ? (

@@ -41,35 +41,35 @@ const astroBound = framework === 'astro' ? hasAstroBinding(slug) : false;
       <div>
         {
           astroDoc.props.length > 0 ? (
-            <div class={pt.root.className}>
-              <table class={pt.table.className}>
+            <div {...mergeProps(pt.root)}>
+              <table {...mergeProps(pt.table)}>
                 <colgroup>
                   <col style="width: 26%" />
                   <col style="width: 54%" />
                   <col style="width: 20%" />
                 </colgroup>
-                <thead class={pt.head.className}>
+                <thead {...mergeProps(pt.head)}>
                   <tr>
-                    <th class={pt.headCell.className}>Prop</th>
-                    <th class={pt.headCell.className}>Type</th>
-                    <th class={pt.headCell.className}>Default</th>
+                    <th {...mergeProps(pt.headCell)}>Prop</th>
+                    <th {...mergeProps(pt.headCell)}>Type</th>
+                    <th {...mergeProps(pt.headCell)}>Default</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     astroDoc.props.map((prop) => (
-                      <tr class={pt.row.className} id={`prop-${prop.name}`}>
-                        <td class={pt.cell.className} data-col="name">
-                          <span class={pt.propName.className}>
+                      <tr {...mergeProps(pt.row)} id={`prop-${prop.name}`}>
+                        <td {...mergeProps(pt.cell)} data-col="name">
+                          <span {...mergeProps(pt.propName)}>
                             {prop.name}
-                            {prop.required ? <span class={pt.required.className}>Required</span> : null}
+                            {prop.required ? <span {...mergeProps(pt.required)}>Required</span> : null}
                           </span>
                         </td>
-                        <td class={pt.cell.className} data-col="type">
-                          <code class={pt.type.className}>{cleanType(prop.type)}</code>
+                        <td {...mergeProps(pt.cell)} data-col="type">
+                          <code {...mergeProps(pt.type)}>{cleanType(prop.type)}</code>
                         </td>
-                        <td class={pt.cell.className} data-col="default" data-empty={prop.default ? undefined : ''}>
-                          {prop.default ? <code class={pt.defaultValue.className}>{prop.default}</code> : <span class={pt.empty.className}>–</span>}
+                        <td {...mergeProps(pt.cell)} data-col="default" data-empty={prop.default ? undefined : ''}>
+                          {prop.default ? <code {...mergeProps(pt.defaultValue)}>{prop.default}</code> : <span {...mergeProps(pt.empty)}>–</span>}
                         </td>
                       </tr>
                     ))

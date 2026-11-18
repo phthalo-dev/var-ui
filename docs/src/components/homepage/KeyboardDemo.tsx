@@ -8,6 +8,7 @@ import {
   SegmentedControl,
   Switch,
   TextField,
+  mergeProps,
 } from '@var-ui/react';
 import { useCallback, useRef, useState, type KeyboardEvent } from 'react';
 import { homeKeyboard } from '@/styles/homeKeyboard';
@@ -150,9 +151,9 @@ export default function KeyboardDemo() {
 
   return (
     <IconProvider icons={defaultIcons}>
-      <div className={k.root.className}>
+      <div {...mergeProps(k.root)}>
         <div
-          className={k.demo.className}
+          {...mergeProps(k.demo)}
           onKeyUpCapture={onKeyUp}
           onFocusCapture={(event) => {
             focused.current = event.target;
@@ -162,11 +163,11 @@ export default function KeyboardDemo() {
           }}
         >
           <TextField
-            className={k.phoneHidden.className}
+            {...mergeProps(k.phoneHidden)}
             defaultValue="Spring launch notes"
             label="Post title"
           />
-          <div className={k.row.className}>
+          <div {...mergeProps(k.row)}>
             <Button appearance="filled" tone="accent">
               Publish
             </Button>
@@ -193,32 +194,32 @@ export default function KeyboardDemo() {
               { value: 'public', label: 'Public' },
             ]}
           />
-          <div className={k.row.className}>
+          <div {...mergeProps(k.row)}>
             <Switch defaultChecked>Notify subscribers</Switch>
             <Checkbox>Pin to top</Checkbox>
           </div>
         </div>
-        <div className={k.log.className} aria-live="polite" role="log" aria-label="Keyboard log">
-          <div className={k.logHeader.className}>
+        <div {...mergeProps(k.log)} aria-live="polite" role="log" aria-label="Keyboard log">
+          <div {...mergeProps(k.logHeader)}>
             <span>{entries.length > 0 ? 'Keyboard log' : 'Keyboard log · example run'}</span>
             <span>role · name · state</span>
           </div>
           {shown.map((entry) => (
             <div
               key={entry.id}
-              className={k.entry.className}
+              {...mergeProps(k.entry)}
               data-example={(entries.length > 0 && entry.id < 0) || undefined}
             >
-              <span className={k.keys.className}>
+              <span {...mergeProps(k.keys)}>
                 <Kbd>{entry.keys}</Kbd>
               </span>
-              <span className={k.target.className}>
+              <span {...mergeProps(k.target)}>
                 <b>{entry.role}</b> “{entry.name}”{entry.state ? ` · ${entry.state}` : ''}
               </span>
             </div>
           ))}
           {entries.length === 0 ? (
-            <p className={k.hint.className}>
+            <p {...mergeProps(k.hint)}>
               Try it: focus the panel and press <Kbd>Tab</Kbd>, arrows, <Kbd>Space</Kbd>.
             </p>
           ) : null}

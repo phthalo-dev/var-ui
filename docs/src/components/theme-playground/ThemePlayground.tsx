@@ -2,12 +2,13 @@
 
 import { defaultIcons } from '@var-ui/icons';
 import {
-  cx,
   Button,
   DesignSystemProvider,
   IconProvider,
   SegmentedControl,
   type ColorMode,
+  combine,
+  mergeProps,
 } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
@@ -81,10 +82,10 @@ export default function ThemePlayground() {
       storageKey={STORAGE_KEY}
     >
       <IconProvider icons={defaultIcons}>
-        <div className={s.root.className} data-theme-playground>
-          <div className={s.workspace.className}>
-            <div className={s.preview.className}>
-              <div className={s.toolbar.className}>
+        <div {...mergeProps(s.root)} data-theme-playground>
+          <div {...mergeProps(s.workspace)}>
+            <div {...mergeProps(s.preview)}>
+              <div {...mergeProps(s.toolbar)}>
                 <SegmentedControl
                   aria-label="Preview viewport"
                   options={VIEWPORT_OPTIONS}
@@ -97,9 +98,9 @@ export default function ThemePlayground() {
                   Export
                 </Button>
               </div>
-              <div className={s.previewInner.className}>
+              <div {...mergeProps(s.previewInner)}>
                 <div
-                  className={cx(
+                  {...combine(
                     (state.viewport === 'mobile' ? s.previewFrameMobile : s.previewFrame).className,
                   )}
                 >
@@ -108,7 +109,7 @@ export default function ThemePlayground() {
               </div>
             </div>
           </div>
-          <div className={s.code.className}>
+          <div {...mergeProps(s.code)}>
             <HighlightedCodeBlock
               code={codeOutput.code}
               language={codeOutput.language}

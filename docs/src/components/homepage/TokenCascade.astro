@@ -5,7 +5,7 @@
  * live components painted by them. The swatches re-point only the accent tokens on this
  * diagram (surfaces stay put), so everything downstream follows.
  */
-import { Avatar, Badge, Button, ProgressBar, cx } from '@var-ui/astro';
+import { Avatar, Badge, Button, ProgressBar, combine } from '@var-ui/astro';
 import { button } from '@var-ui/core';
 import { getRegisteredCss } from 'typestyles';
 import HighlightedCodeBlock from '../HighlightedCodeBlock.astro';
@@ -48,29 +48,29 @@ const ruleCss = [
 ].join('\n\n');
 ---
 
-<div class={cx(c.root)} data-cascade>
-  <span class={cx(c.label, c.step1)}>1 · token</span>
-  <div class={cx(c.cell, c.step1)}>
-    <div class={cx(c.token)}>
-      <span class={cx(c.tokenName)}>{TOKEN}</span>
-      <span class={cx(c.tokenRow)}>
-        <span class={cx(c.tokenSwatch)} aria-hidden="true"></span>
-        <span class={cx(c.tokenValue)} data-cascade-value>…</span>
+<div {...combine(c.root)} data-cascade>
+  <span {...combine(c.label, c.step1)}>1 · token</span>
+  <div {...combine(c.cell, c.step1)}>
+    <div {...combine(c.token)}>
+      <span {...combine(c.tokenName)}>{TOKEN}</span>
+      <span {...combine(c.tokenRow)}>
+        <span {...combine(c.tokenSwatch)} aria-hidden="true"></span>
+        <span {...combine(c.tokenValue)} data-cascade-value>…</span>
       </span>
     </div>
-    <div class={cx(c.pickers)} role="group" aria-label={`Value of ${TOKEN}`}>
+    <div {...combine(c.pickers)} role="group" aria-label={`Value of ${TOKEN}`}>
       {
         pickers.map((theme, index) => (
           <button
             type="button"
-            class={cx(c.picker)}
+            {...combine(c.picker)}
             aria-pressed={index === 0 ? 'true' : 'false'}
             aria-label={`${theme.label} accent`}
             data-cascade-theme={theme.id}
           >
             {/* Inline: beats the theme's unlayered `color-scheme: light dark` (var-ui#177). */}
             <span
-              class={cx(c.pickerSwatch, theme.className)}
+              {...combine(c.pickerSwatch, theme.className)}
               style="color-scheme: inherit"
               aria-hidden="true"
             />
@@ -78,20 +78,20 @@ const ruleCss = [
         ))
       }
     </div>
-    <p class={cx(c.caption)}>Pick a value. Only this one variable changes.</p>
+    <p {...combine(c.caption)}>Pick a value. Only this one variable changes.</p>
   </div>
 
-  <span class={cx(c.connector, c.connector1)} aria-hidden="true"></span>
+  <span {...combine(c.connector, c.connector1)} aria-hidden="true"></span>
 
-  <span class={cx(c.label, c.step2)}>2 · emitted CSS</span>
-  <div class={cx(c.cell, c.step2)}>
+  <span {...combine(c.label, c.step2)}>2 · emitted CSS</span>
+  <div {...combine(c.cell, c.step2)}>
     <HighlightedCodeBlock code={ruleCss} language="css" copyable={false} />
   </div>
 
-  <span class={cx(c.connector, c.connector2)} aria-hidden="true"></span>
+  <span {...combine(c.connector, c.connector2)} aria-hidden="true"></span>
 
-  <span class={cx(c.label, c.step3)}>3 · components</span>
-  <div class={cx(c.cell, c.step3, c.components)} data-cascade-components>
+  <span {...combine(c.label, c.step3)}>3 · components</span>
+  <div {...combine(c.cell, c.step3, c.components)} data-cascade-components>
     <Button tone="accent" appearance="filled" pill>Publish release</Button>
     <Badge tone="accent">Synced</Badge>
     <ProgressBar label="Rollout" value={64} showValueText />
