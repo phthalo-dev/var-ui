@@ -22,6 +22,8 @@ export default defineConfig({
       'src/components/toc/spy.ts',
       'src/shared/menuNavigation.ts',
       'src/shared/textMatch.ts',
+      'src/shared/commandSearch.ts',
+      'src/shared/pointer.ts',
       'src/theme/constants.ts',
       'src/theme/register-default.ts',
     ],

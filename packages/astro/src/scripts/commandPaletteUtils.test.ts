@@ -47,6 +47,31 @@ describe('filterCommandPaletteItems', () => {
   });
 });
 
+describe('filterCommandPaletteItems ranking', () => {
+  const docs: CommandPaletteItem[] = [
+    {
+      id: '/docs/overlays',
+      title: 'Overlay lifecycle',
+      meta: 'How dialogs open from a trigger button',
+      group: 'Docs',
+    },
+    { id: '/docs/css', title: 'Plain CSS', meta: 'Style a button without JS', group: 'Docs' },
+    { id: '/components/toolbar', title: 'Toolbar', group: 'Components', keywords: ['buttons'] },
+    { id: '/components/button', title: 'Button', group: 'Components' },
+  ];
+
+  it('"but" puts Button first and orders groups by their best hit', () => {
+    const ranked = filterCommandPaletteItems(docs, 'but');
+    expect(ranked.map((i) => i.id)).toEqual([
+      '/components/button',
+      '/components/toolbar',
+      '/docs/overlays',
+      '/docs/css',
+    ]);
+    expect(groupCommandPaletteResults(ranked).map((g) => g.label)).toEqual(['Components', 'Docs']);
+  });
+});
+
 describe('groupCommandPaletteResults', () => {
   it('groups items by group label in first-seen order', () => {
     const groups = groupCommandPaletteResults(items);

@@ -11,6 +11,11 @@ import {
 } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
+import {
+  commandMetaSnippet,
+  matchCommandItem,
+  rankCommandItems,
+} from '@var-ui/core/shared/commandSearch';
 import { findTextMatch } from '@var-ui/core/shared/textMatch';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import type { IconName } from '@var-ui/core';
@@ -39,7 +44,8 @@ export type CommandPaletteItem = {
   /**
    * Section heading. Consecutive items with the same `group` render together under that heading;
    * keyboard navigation still moves through all items in order. Items without a `group` render
-   * without a heading.
+   * without a heading. While filtering, items sharing a `group` are gathered and groups are ordered
+   * by their best match.
    */
   group?: string;
   /**
@@ -105,8 +111,11 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   /** Heading of the recent items group (see `recentKey`). @default 'Recent' */
   recentLabel?: string;
   /**
-   * Overrides the default case-insensitive title/meta/keywords match. Pass `false` to skip
-   * client-side filtering, e.g. when `items` already are the (remote) results for the query.
+   * Overrides the default case-insensitive title/meta/keywords match. Matches are ranked by
+   * relevance (exact title > title prefix > title word-start > title substring > keyword >
+   * description), groups by their best hit, and the top hit is active. Pass `false` to skip
+   * client-side filtering and ranking, e.g. when `items` already are the (remote) results for the
+   * query.
    */
   filter?: ((item: CommandPaletteItem, query: string) => boolean) | false;
   /** Called with the input value as it changes, and with `''` when the palette closes. */
@@ -120,12 +129,7 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
 };
 
 function defaultFilter(item: CommandPaletteItem, query: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  if (item.title.toLowerCase().includes(q)) return true;
-  if (item.meta?.toLowerCase().includes(q)) return true;
-  if (item.keywords?.some((keyword) => keyword.toLowerCase().includes(q))) return true;
-  return false;
+  return matchCommandItem(item, query);
 }
 
 const subscribeNever = () => () => {};
@@ -258,8 +262,12 @@ export function CommandPalette({
     if (!dialog.mounted) setQuery('');
   }, [dialog.mounted, setQuery]);
 
+  // Ranked so the first item is the top hit, which the Autocomplete focuses as the user types.
   const visibleItems = useMemo(
-    () => (filter ? items.filter((item) => filter(item, query)) : items),
+    () =>
+      filter
+        ? rankCommandItems(items, query, filter === defaultFilter ? undefined : filter)
+        : items,
     [items, filter, query],
   );
 
@@ -298,51 +306,55 @@ export function CommandPalette({
     setRecentIds(next);
   };
 
-  const renderItem = (item: CommandPaletteItem, keyPrefix = '') => (
-    <ListBoxItem
-      key={keyPrefix + item.id}
-      id={keyPrefix + item.id}
-      textValue={item.title}
-      {...mergeProps(cp.result)}
-      onAction={() => {
-        remember(item.id);
-        item.onSelect?.();
-        onAction?.(item.id);
-        if (closeOnAction) root.close({ reason: 'trigger-press' });
-      }}
-    >
-      {({ isFocused }) => (
-        <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
-          {item.icon ? (
-            <span {...mergeProps(cp.resultIcon)} aria-hidden="true">
-              {isIconName(item.icon) ? (
-                <Icon name={item.icon} size="sm" />
-              ) : (
-                <Icon size="sm">{item.icon}</Icon>
-              )}
+  const renderItem = (item: CommandPaletteItem, keyPrefix = '') => {
+    // A description-only match shows the snippet around it, not a truncated start.
+    const meta = filter ? commandMetaSnippet(item, query) : item.meta;
+    return (
+      <ListBoxItem
+        key={keyPrefix + item.id}
+        id={keyPrefix + item.id}
+        textValue={item.title}
+        {...mergeProps(cp.result)}
+        onAction={() => {
+          remember(item.id);
+          item.onSelect?.();
+          onAction?.(item.id);
+          if (closeOnAction) root.close({ reason: 'trigger-press' });
+        }}
+      >
+        {({ isFocused }) => (
+          <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
+            {item.icon ? (
+              <span {...mergeProps(cp.resultIcon)} aria-hidden="true">
+                {isIconName(item.icon) ? (
+                  <Icon name={item.icon} size="sm" />
+                ) : (
+                  <Icon size="sm">{item.icon}</Icon>
+                )}
+              </span>
+            ) : null}
+            <span {...mergeProps(cp.resultBody)}>
+              <span {...mergeProps(cp.resultTitle)}>
+                {highlightMatches ? renderHighlighted(item.title, query, cp) : item.title}
+              </span>
+              {meta ? (
+                <span {...mergeProps(cp.resultMeta)}>
+                  {highlightMatches ? renderHighlighted(meta, query, cp) : meta}
+                </span>
+              ) : null}
             </span>
-          ) : null}
-          <span {...mergeProps(cp.resultBody)}>
-            <span {...mergeProps(cp.resultTitle)}>
-              {highlightMatches ? renderHighlighted(item.title, query, cp) : item.title}
-            </span>
-            {item.meta ? (
-              <span {...mergeProps(cp.resultMeta)}>
-                {highlightMatches ? renderHighlighted(item.meta, query, cp) : item.meta}
+            {item.shortcut ? (
+              <span {...mergeProps(cp.resultShortcut)}>
+                {([] as string[]).concat(item.shortcut).map((key, index) => (
+                  <Kbd key={`${index}:${key}`}>{key}</Kbd>
+                ))}
               </span>
             ) : null}
           </span>
-          {item.shortcut ? (
-            <span {...mergeProps(cp.resultShortcut)}>
-              {([] as string[]).concat(item.shortcut).map((key, index) => (
-                <Kbd key={`${index}:${key}`}>{key}</Kbd>
-              ))}
-            </span>
-          ) : null}
-        </span>
-      )}
-    </ListBoxItem>
-  );
+        )}
+      </ListBoxItem>
+    );
+  };
 
   return (
     <dialog

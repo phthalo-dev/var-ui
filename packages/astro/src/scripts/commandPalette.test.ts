@@ -234,6 +234,60 @@ describe('command palette results (round 2)', () => {
     localStorage.removeItem('p3-recent');
   });
 
+  const ranked = JSON.stringify([
+    {
+      id: '/docs/overlays',
+      title: 'Overlay lifecycle',
+      meta: 'Opens, closes and restores focus for every dialog, popover and trigger button',
+      group: 'Docs',
+    },
+    { id: '/docs/css', title: 'Plain CSS', meta: 'Style a button without JS', group: 'Docs' },
+    { id: '/components/button', title: 'Button', meta: 'Actions', group: 'Components' },
+  ]);
+
+  function options(root: HTMLElement): HTMLElement[] {
+    return [...root.querySelectorAll<HTMLElement>('[data-var-ui-command-palette-item]')];
+  }
+
+  it('"but" lists Button first and makes it the active option', () => {
+    const root = mount('data-class-result-link-active="active"', ranked);
+    const input = type(root, 'but');
+    const [first] = options(root);
+    expect(first?.dataset.itemId).toBe('/components/button');
+    expect(first?.getAttribute('aria-selected')).toBe('true');
+    expect(first?.classList.contains('active')).toBe(true);
+    expect(input.getAttribute('aria-activedescendant')).toBe(first?.id);
+  });
+
+  it('shows the highlighted snippet around a description-only match', () => {
+    const root = mount('data-class-result-meta="result-meta"', ranked);
+    type(root, 'butt');
+    const overlay = root.querySelector('[data-item-id="/docs/overlays"] .result-meta');
+    expect(overlay?.textContent?.startsWith('…')).toBe(true);
+    expect(overlay?.textContent).toContain('trigger button');
+    expect(overlay?.querySelector('mark.mark')?.textContent).toBe('butt');
+    // A short description is left whole.
+    const css = root.querySelector('[data-item-id="/docs/css"] .result-meta');
+    expect(css?.textContent).toBe('Style a button without JS');
+  });
+
+  it('does not pre-highlight a row on a touch-first device until there is a query', () => {
+    const matchMedia = window.matchMedia;
+    window.matchMedia = ((query: string) =>
+      ({ matches: query.includes('coarse'), media: query }) as MediaQueryList) as typeof matchMedia;
+    try {
+      const root = mount('', ranked);
+      const input = root.querySelector('input')!;
+      expect(options(root)).toHaveLength(3);
+      expect(options(root).some((el) => el.getAttribute('aria-selected') === 'true')).toBe(false);
+      expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+      type(root, 'but');
+      expect(options(root)[0]?.getAttribute('aria-selected')).toBe('true');
+    } finally {
+      window.matchMedia = matchMedia;
+    }
+  });
+
   it('closes from the Cancel button', () => {
     const root = mount();
     const cancel = document.createElement('button');
