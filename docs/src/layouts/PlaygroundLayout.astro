@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript } from '@var-ui/astro';
+import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript, combine } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { playgroundLayout } from '@/styles/playgroundLayout';
 import { defaultThemeClassName } from '@var-ui/core';
@@ -40,7 +40,7 @@ const frame = playgroundLayout({ bleed });
     <link rel="stylesheet" href="/typestyles.css" />
     <ClientRouter />
   </head>
-  <body class={cx('docs-body', 'docs-body--playground', hljsScopeClass)}>
+  <body {...combine('docs-body', 'docs-body--playground', hljsScopeClass)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <DocsTopBar
         slot="topNav"

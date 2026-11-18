@@ -1,6 +1,6 @@
 'use client';
 
-import { cx } from '@var-ui/react';
+import { combine, mergeProps } from '@var-ui/react';
 import type { CSSProperties, Ref } from 'react';
 import { homeBento } from '@/styles/homeBento';
 import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
@@ -28,18 +28,18 @@ export function BentoShowcase({ themeId, previewStyle, ref }: BentoShowcaseProps
 
   return (
     <div
-      className={cx(b.showcase.className, theme.className)}
+      {...combine(b.showcase.className, theme.className)}
       data-testid="bento-showcase"
       ref={ref}
       style={{ ...previewStyle }}
     >
-      <div className={b.grid.className}>
-        <RevenueTile className={cx(tile, b.spanWide.className)} />
-        <KudosTile className={cx(tile, b.spanNarrow.className, b.tileWide.className)} />
-        <AgentChatTile className={cx(tile, b.spanHalf.className, b.tileRowSpan2.className)} />
-        <PreferencesTile className={cx(tile, b.spanHalf.className)} />
-        <LaunchCalendarTile className={cx(tile, b.spanHalf.className)} />
-        <MembersTile className={cx(tile, b.spanFull.className, b.tileWide.className)} />
+      <div {...mergeProps(b.grid)}>
+        <RevenueTile {...combine(tile, b.spanWide.className)} />
+        <KudosTile {...combine(tile, b.spanNarrow, b.tileWide)} />
+        <AgentChatTile {...combine(tile, b.spanHalf.className, b.tileRowSpan2.className)} />
+        <PreferencesTile {...combine(tile, b.spanHalf.className)} />
+        <LaunchCalendarTile {...combine(tile, b.spanHalf.className)} />
+        <MembersTile {...combine(tile, b.spanFull.className, b.tileWide.className)} />
       </div>
     </div>
   );

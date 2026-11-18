@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import type { ComponentPropsDoc } from '@/lib/extract-component-props';
 import { commonPropDescriptions } from '@/lib/prop-descriptions';
 import { docsPropsTable } from '@var-ui/docs/styles';
+import { mergeProps } from '@var-ui/react';
 
 type PropDoc = ComponentPropsDoc['props'][number];
 
@@ -63,34 +64,30 @@ function PropRow({
   const defaultValue = prop.default ?? fallbackDefault;
   const description = prop.description ?? commonPropDescriptions[prop.name];
   return (
-    <tr className={s.row.className} id={anchored ? `prop-${prop.name}` : undefined}>
-      <td className={s.cell.className} data-col="name">
-        <span className={s.propName.className}>
+    <tr {...mergeProps(s.row)} id={anchored ? `prop-${prop.name}` : undefined}>
+      <td {...mergeProps(s.cell)} data-col="name">
+        <span {...mergeProps(s.propName)}>
           {prop.name}
-          {prop.required ? <span className={s.required.className}>Required</span> : null}
+          {prop.required ? <span {...mergeProps(s.required)}>Required</span> : null}
         </span>
       </td>
-      <td className={s.cell.className} data-col="type">
+      <td {...mergeProps(s.cell)} data-col="type">
         {type.length > LONG_TYPE ? (
-          <details className={s.typeDetails.className}>
+          <details {...mergeProps(s.typeDetails)}>
             <summary>Show type</summary>
-            <code className={s.type.className}>{renderType(type, s.literal.className)}</code>
+            <code {...mergeProps(s.type)}>{renderType(type, s.literal.className)}</code>
           </details>
         ) : (
-          <code className={s.type.className}>{renderType(type, s.literal.className)}</code>
+          <code {...mergeProps(s.type)}>{renderType(type, s.literal.className)}</code>
         )}
       </td>
-      <td
-        className={s.cell.className}
-        data-col="default"
-        data-empty={defaultValue ? undefined : ''}
-      >
+      <td {...mergeProps(s.cell)} data-col="default" data-empty={defaultValue ? undefined : ''}>
         {defaultValue ? (
-          <code className={s.defaultValue.className}>
+          <code {...mergeProps(s.defaultValue)}>
             {renderType(defaultValue, s.literal.className)}
           </code>
         ) : (
-          <span className={s.empty.className} aria-label="No default">
+          <span {...mergeProps(s.empty)} aria-label="No default">
             –
           </span>
         )}
@@ -99,7 +96,7 @@ function PropRow({
         {description ? (
           renderInline(description.replace(/\n/g, ' '))
         ) : (
-          <span className={s.empty.className}>–</span>
+          <span {...mergeProps(s.empty)}>–</span>
         )}
       </td>
     </tr>
@@ -129,24 +126,24 @@ function PropsTableSection({
   return (
     <section>
       {title ? (
-        <h3 id={id} className={s.heading.className}>
+        <h3 id={id} {...mergeProps(s.heading)}>
           {title}
         </h3>
       ) : null}
-      <div className={s.root.className}>
-        <table className={s.table.className}>
+      <div {...mergeProps(s.root)}>
+        <table {...mergeProps(s.table)}>
           <colgroup>
             <col style={{ width: '24%' }} />
             <col style={{ width: '32%' }} />
             <col style={{ width: '14%' }} />
             <col style={{ width: '30%' }} />
           </colgroup>
-          <thead className={s.head.className}>
+          <thead {...mergeProps(s.head)}>
             <tr>
-              <th className={s.headCell.className}>Prop</th>
-              <th className={s.headCell.className}>Type</th>
-              <th className={s.headCell.className}>Default</th>
-              <th className={s.headCell.className}>Description</th>
+              <th {...mergeProps(s.headCell)}>Prop</th>
+              <th {...mergeProps(s.headCell)}>Type</th>
+              <th {...mergeProps(s.headCell)}>Default</th>
+              <th {...mergeProps(s.headCell)}>Description</th>
             </tr>
           </thead>
           <tbody>
@@ -189,7 +186,7 @@ export function PropsTable({ slug, doc, recipeDefaults }: PropsTableProps) {
   const domProps = doc.props.filter((prop) => prop.source === 'dom' && prop.description);
   const domDisclosure =
     domProps.length > 0 ? (
-      <details className={s.more.className}>
+      <details {...mergeProps(s.more)}>
         <summary>DOM props ({domProps.length})</summary>
         <PropsTableSection props={domProps} id="dom-props" />
       </details>

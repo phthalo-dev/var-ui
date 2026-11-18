@@ -1,6 +1,6 @@
 ---
 import { codeBlock, stage, tabs as tabsRecipe } from '@var-ui/core';
-import { combine, cx, mergeProps } from '@var-ui/astro';
+import { combine, mergeProps } from '@var-ui/astro';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { docsPageBar, docsPageHeader } from '../styles/docsPageHeader';
 
@@ -112,14 +112,14 @@ const hasPreview = Astro.slots.has('preview');
   data-docs-page-hero
   data-has-preview={hasPreview || undefined}
 >
-  <div class={cx(s.content)}>
-  {eyebrow ? <p class={cx(s.eyebrow)}>{eyebrow}</p> : null}
-  <h1 class={cx(s.title)}>{title}</h1>
-  {lead ? <p class={cx(s.lead)}>{lead}</p> : null}
+  <div {...combine(s.content)}>
+  {eyebrow ? <p {...combine(s.eyebrow)}>{eyebrow}</p> : null}
+  <h1 {...combine(s.title)}>{title}</h1>
+  {lead ? <p {...combine(s.lead)}>{lead}</p> : null}
   {
     importCode ? (
-      <div class={cx(s.importRow)}>
-        <code class={cx(s.importCode)}>{importCode}</code>
+      <div {...combine(s.importRow)}>
+        <code {...combine(s.importCode)}>{importCode}</code>
         <button
           type="button"
           {...mergeProps(cb.copyButton)}
@@ -138,13 +138,13 @@ const hasPreview = Astro.slots.has('preview');
   }
   {
     meta.length > 0 ? (
-      <ul class={cx(s.meta)}>
+      <ul {...combine(s.meta)}>
         {meta.map((row) => (
-          <li class={cx(s.metaItem)}>
-            {row.icon ? <span class={cx(s.metaIcon)} aria-hidden="true" set:html={row.icon} /> : null}
-            {row.label ? <span class={cx(s.metaLabel)}>{row.label}</span> : null}
-            <span class={cx(s.metaValue)}>
-              {row.code ? <code class={cx(s.metaCode)}>{row.code}</code> : null}
+          <li {...combine(s.metaItem)}>
+            {row.icon ? <span {...combine(s.metaIcon)} aria-hidden="true" set:html={row.icon} /> : null}
+            {row.label ? <span {...combine(s.metaLabel)}>{row.label}</span> : null}
+            <span {...combine(s.metaValue)}>
+              {row.code ? <code {...combine(s.metaCode)}>{row.code}</code> : null}
               {row.links?.map((link) => (
                 <a href={link.href} target={/^https?:/.test(link.href) ? '_blank' : undefined} rel="noreferrer">
                   {link.label}

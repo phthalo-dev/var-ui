@@ -4,7 +4,7 @@
  * Use for homepages, landing pages, and other full-width marketing content.
  */
 import { ClientRouter } from 'astro:transitions';
-import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript } from '@var-ui/astro';
+import { AppShell, Layout, LayoutContent, mergeProps, ThemeScript, combine } from '@var-ui/astro';
 import { docsMarketingPage } from '../styles/docsMarketingPage';
 import DocsFavicon from './DocsFavicon.astro';
 import DocsMobileMenu from './DocsMobileMenu.astro';
@@ -62,7 +62,7 @@ const hasFooterSlot = Astro.slots.has('footer');
     <ClientRouter />
     <slot name="head" />
   </head>
-  <body class={cx('docs-body', bodyClassName)}>
+  <body {...combine('docs-body', bodyClassName)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
       <DocsTopBar
         slot="topNav"
@@ -85,7 +85,7 @@ const hasFooterSlot = Astro.slots.has('footer');
         ) : null
       }
 
-      <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
+      <Layout height="fill" padding="none" {...combine(page.siteLayout)}>
         <LayoutContent label="Main content">
           <main {...mergeProps(page.main)}>
             <slot />
