@@ -18,7 +18,7 @@ export default function Preview() {
             <Button>Keep editing</Button>
           </AlertDialog.Close>
           <AlertDialog.Close>
-            <Button tone="accent" appearance="filled" onClick={() => {}}>
+            <Button tone="accent" appearance="solid" onClick={() => {}}>
               Publish
             </Button>
           </AlertDialog.Close>

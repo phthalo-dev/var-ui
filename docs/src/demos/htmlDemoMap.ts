@@ -21,6 +21,8 @@ import { render as renderEmptyStateDefault } from './empty-state/default/html';
 import { render as renderGridDefault } from './grid/default/html';
 import { render as renderHeadingDefault } from './heading/default/html';
 import { render as renderLinkDefault } from './link/default/html';
+import { render as renderLinkQuiet } from './link/quiet/html';
+import { render as renderUnstyledButtonDefault } from './unstyled-button/default/html';
 import { render as renderProgressBarDefault } from './progress-bar/default/html';
 import { render as renderSectionDefault } from './section/default/html';
 import { render as renderSpinnerDefault } from './spinner/default/html';
@@ -99,6 +101,8 @@ const htmlDemos = {
   'text.emphasis': renderTextEmphasis,
   'text.clamp': renderTextClamp,
   'link.default': renderLinkDefault,
+  'link.quiet': renderLinkQuiet,
+  'unstyled-button.default': renderUnstyledButtonDefault,
   'code-block.default': renderCodeBlockDefault,
   'alert.default': renderAlertDefault,
   'banner.default': renderBannerDefault,

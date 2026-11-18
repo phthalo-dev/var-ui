@@ -22,6 +22,8 @@ import EmptyStateDefault from './empty-state/default/react';
 import GridDefault from './grid/default/react';
 import HeadingDefault from './heading/default/react';
 import LinkDefault from './link/default/react';
+import LinkQuiet from './link/quiet/react';
+import UnstyledButtonDefault from './unstyled-button/default/react';
 import ProgressBarDefault from './progress-bar/default/react';
 import ProgressCircleDefault from './progress-circle/default/react';
 import ProgressCircleIndeterminate from './progress-circle/indeterminate/react';
@@ -244,6 +246,8 @@ export const reactDemoMap = {
   'text.emphasis': TextEmphasis,
   'text.clamp': TextClamp,
   'link.default': LinkDefault,
+  'link.quiet': LinkQuiet,
+  'unstyled-button.default': UnstyledButtonDefault,
   'code-block.default': CodeBlockDefault,
   'alert.default': AlertDefault,
   'banner.default': BannerDefault,

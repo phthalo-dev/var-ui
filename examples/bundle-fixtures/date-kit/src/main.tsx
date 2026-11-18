@@ -8,7 +8,7 @@ createRoot(document.getElementById('root')!).render(
   <DesignSystemProvider>
     <DateInput label="Start date" defaultValue={now} />
     <Calendar aria-label="Events" />
-    <Button tone="accent" appearance="filled">
+    <Button tone="accent" appearance="solid">
       Apply
     </Button>
   </DesignSystemProvider>,

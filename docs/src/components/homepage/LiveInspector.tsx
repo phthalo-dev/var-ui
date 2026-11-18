@@ -15,7 +15,7 @@ import { formatOklch } from '@/lib/formatOklch';
 import { homeInspector } from '@/styles/homeInspector';
 
 type Tone = 'accent' | 'neutral' | 'danger';
-type Appearance = 'filled' | 'outline' | 'subtle';
+type Appearance = 'solid' | 'outline' | 'subtle';
 
 type MatchedRule = { selector: string; declarations: [string, string][] };
 
@@ -182,7 +182,7 @@ function readBox(style: CSSStyleDeclaration): Box {
 export default function LiveInspector() {
   const s = homeInspector();
   const [tone, setTone] = useState<Tone>('accent');
-  const [appearance, setAppearance] = useState<Appearance>('filled');
+  const [appearance, setAppearance] = useState<Appearance>('solid');
   const targetRef = useRef<HTMLSpanElement>(null);
   const [rules, setRules] = useState<MatchedRule[]>([]);
   const [markup, setMarkup] = useState('<button class="var-ui-button">');
@@ -328,7 +328,7 @@ export default function LiveInspector() {
               aria-label="Appearance"
               onValueChange={(value) => value && setAppearance(value as Appearance)}
               options={[
-                { value: 'filled', label: 'Filled' },
+                { value: 'solid', label: 'Solid' },
                 { value: 'outline', label: 'Outline' },
                 { value: 'subtle', label: 'Subtle' },
               ]}

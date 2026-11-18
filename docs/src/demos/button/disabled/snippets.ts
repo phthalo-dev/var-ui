@@ -5,7 +5,7 @@ export const snippets = {
 
 <HStack gap="sm" wrap>
   <Button disabled>Disabled</Button>
-  <Button tone="accent" appearance="filled" disabled>
+  <Button tone="accent" appearance="solid" disabled>
     Disabled primary
   </Button>
 </HStack>`,
@@ -15,10 +15,10 @@ import { Button, HStack } from '@var-ui/astro';
 
 <HStack gap="sm" wrap>
   <Button disabled>Disabled</Button>
-  <Button tone="accent" appearance="filled" disabled>Disabled primary</Button>
+  <Button tone="accent" appearance="solid" disabled>Disabled primary</Button>
 </HStack>`,
   html: `<div class="var-ui-stack" data-direction="row" data-gap="sm" data-align="center" data-justify="start" data-wrap="wrap">
   <button type="button" class="var-ui-button" data-tone="neutral" data-appearance="subtle" data-size="md" data-layout="default" disabled>Disabled</button>
-  <button type="button" class="var-ui-button" data-tone="accent" data-appearance="filled" data-size="md" data-layout="default" disabled>Disabled primary</button>
+  <button type="button" class="var-ui-button" data-tone="accent" data-appearance="solid" data-size="md" data-layout="default" disabled>Disabled primary</button>
 </div>`,
 } satisfies DemoSnippets;

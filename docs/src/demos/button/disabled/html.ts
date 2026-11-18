@@ -16,7 +16,7 @@ export function render(): string {
     {
       type: 'button',
       disabled: true,
-      ...mergeProps(button({ tone: 'accent', appearance: 'filled' })),
+      ...mergeProps(button({ tone: 'accent', appearance: 'solid' })),
     },
     'Disabled primary',
   );

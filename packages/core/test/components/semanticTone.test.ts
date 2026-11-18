@@ -28,7 +28,7 @@ describe('semanticTone resolver', () => {
         foreground: { name: '--foreground' },
       },
       'accent',
-      'filled',
+      'solid',
     );
     expect(paint['--background']).toBeDefined();
     expect(paint['&:hover:not([disabled])']).toBeDefined();

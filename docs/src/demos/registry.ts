@@ -21,6 +21,8 @@ import { snippets as emptyStateDefaultSnippets } from './empty-state/default/sni
 import { snippets as gridDefaultSnippets } from './grid/default/snippets';
 import { snippets as headingDefaultSnippets } from './heading/default/snippets';
 import { snippets as linkDefaultSnippets } from './link/default/snippets';
+import { snippets as linkQuietSnippets } from './link/quiet/snippets';
+import { snippets as unstyledButtonDefaultSnippets } from './unstyled-button/default/snippets';
 import { snippets as progressBarDefaultSnippets } from './progress-bar/default/snippets';
 import { snippets as progressCircleDefaultSnippets } from './progress-circle/default/snippets';
 import { snippets as progressCircleIndeterminateSnippets } from './progress-circle/indeterminate/snippets';
@@ -244,6 +246,8 @@ export const DEMO_IDS = [
   'text.emphasis',
   'text.clamp',
   'link.default',
+  'link.quiet',
+  'unstyled-button.default',
   'code-block.default',
   'alert.default',
   'banner.default',
@@ -469,6 +473,8 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'text.emphasis': textEmphasisSnippets,
   'text.clamp': textClampSnippets,
   'link.default': linkDefaultSnippets,
+  'link.quiet': linkQuietSnippets,
+  'unstyled-button.default': unstyledButtonDefaultSnippets,
   'code-block.default': codeBlockDefaultSnippets,
   'alert.default': alertDefaultSnippets,
   'banner.default': bannerDefaultSnippets,
@@ -694,6 +700,8 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'text.emphasis': () => import('./text/emphasis/react'),
   'text.clamp': () => import('./text/clamp/react'),
   'link.default': () => import('./link/default/react'),
+  'link.quiet': () => import('./link/quiet/react'),
+  'unstyled-button.default': () => import('./unstyled-button/default/react'),
   'code-block.default': () => import('./code-block/default/react'),
   'alert.default': () => import('./alert/default/react'),
   'banner.default': () => import('./banner/default/react'),
@@ -994,6 +1002,16 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'link.default',
     snippets: demoSnippets['link.default'],
     react: reactDemoLoaders['link.default'],
+  },
+  'link.quiet': {
+    id: 'link.quiet',
+    snippets: demoSnippets['link.quiet'],
+    react: reactDemoLoaders['link.quiet'],
+  },
+  'unstyled-button.default': {
+    id: 'unstyled-button.default',
+    snippets: demoSnippets['unstyled-button.default'],
+    react: reactDemoLoaders['unstyled-button.default'],
   },
   'code-block.default': {
     id: 'code-block.default',

@@ -3,7 +3,7 @@ import { button } from '@var-ui/core';
 import { mergeProps } from '../../../lib/mergeProps';
 
 // No @var-ui/astro ChatSendButton — static Button chrome (send state only).
-const send = button({ tone: 'accent', appearance: 'filled' });
+const send = button({ tone: 'accent', appearance: 'solid' });
 ---
 
 <button type="button" {...mergeProps(send)} aria-label="Send message">

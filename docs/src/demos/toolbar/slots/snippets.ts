@@ -12,7 +12,7 @@ export const snippets = {
     </>
   }
   centerContent={<Button>Untitled</Button>}
-  endContent={<Button tone="accent" appearance="filled">Share</Button>}
+  endContent={<Button tone="accent" appearance="solid">Share</Button>}
 />`,
   astro: `<!-- No Astro binding yet — use @var-ui/react -->`,
   html: `<!-- No HTML demo yet — use @var-ui/react -->`,

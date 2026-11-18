@@ -7,37 +7,44 @@ import { mergeProps } from '../utils';
 type Props = Omit<HTMLAttributes<'div'>, 'children'> &
   ProgressBarVariantProps & {
   value?: number;
-  minValue?: number;
-  maxValue?: number;
+  /** @default 0 */
+  min?: number;
+  /** @default 100 */
+  max?: number;
   indeterminate?: boolean;
+  /** Label above the track; also the accessible name (else pass `aria-label`). */
   label?: string;
-  /** Show the formatted value beside the label. @default true */
+  /** Show the formatted value beside the label. @default true when `label` is set */
   showValueText?: boolean;
+  /** Spoken and displayed value, replacing the formatted percentage. */
+  valueLabel?: string;
   className?: string;
 };
 
 const {
   value = 0,
-  minValue = 0,
-  maxValue = 100,
+  min = 0,
+  max = 100,
   indeterminate = false,
   label,
+  size = 'md',
   tone = 'accent',
   appearance = 'solid',
-  showValueText = true,
+  showValueText = Boolean(label),
+  valueLabel,
   className,
   ...rest
 } = Astro.props;
 
 const p = progressBar({
+  size,
   tone,
   appearance,
   indeterminate,
 });
 const showValue = showValueText && !indeterminate;
-const percentage =
-  maxValue === minValue ? 0 : ((value - minValue) / (maxValue - minValue)) * 100;
-const valueText = `${Math.round(percentage)}%`;
+const percentage = max === min ? 0 : ((Math.min(max, Math.max(min, value)) - min) / (max - min)) * 100;
+const valueText = valueLabel ?? `${Math.round(percentage)}%`;
 const showHeader = Boolean(label) || showValue;
 ---
 <div
@@ -45,9 +52,10 @@ const showHeader = Boolean(label) || showValue;
   {...mergeProps(p.root, className)}
   role="progressbar"
   aria-label={label}
-  aria-valuemin={indeterminate ? undefined : minValue}
-  aria-valuemax={indeterminate ? undefined : maxValue}
+  aria-valuemin={indeterminate ? undefined : min}
+  aria-valuemax={indeterminate ? undefined : max}
   aria-valuenow={indeterminate ? undefined : value}
+  aria-valuetext={indeterminate ? undefined : valueText}
 >
   {
     showHeader ? (

@@ -17,7 +17,7 @@ export const snippets = {
         <Button autoFocus>Cancel</Button>
       </AlertDialog.Close>
       <AlertDialog.Close>
-        <Button tone="danger" appearance="filled" onClick={() => {}}>
+        <Button tone="danger" appearance="solid" onClick={() => {}}>
           Delete
         </Button>
       </AlertDialog.Close>

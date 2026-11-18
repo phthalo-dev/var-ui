@@ -10,9 +10,9 @@ export default function Preview() {
       </HStack>
       <HStack gap="sm">
         <IconButton icon="close" aria-label="Close" />
-        <IconButton icon="search" aria-label="Search" tone="accent" appearance="filled" />
+        <IconButton icon="search" aria-label="Search" tone="accent" appearance="solid" />
         <IconButton icon="menu" aria-label="Menu" tone="accent" appearance="ghost" />
-        <IconButton icon="close" aria-label="Delete" tone="danger" appearance="filled" />
+        <IconButton icon="close" aria-label="Delete" tone="danger" appearance="solid" />
       </HStack>
     </Stack>
   );

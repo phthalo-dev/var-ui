@@ -12,7 +12,7 @@ export default function Preview() {
       }
       centerContent={<Button>Untitled</Button>}
       endContent={
-        <Button tone="accent" appearance="filled">
+        <Button tone="accent" appearance="solid">
           Share
         </Button>
       }

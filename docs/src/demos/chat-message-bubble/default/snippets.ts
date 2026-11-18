@@ -12,8 +12,8 @@ export const snippets = {
 import { chatMessage, chatMessageBubble } from '@var-ui/core';
 
 const m = chatMessage({ sender: 'assistant' });
-const first = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'first' });
-const last = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'last' });
+const first = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'first' });
+const last = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'last' });
 ---
 
 <div class:list={[m.root]}>
@@ -23,5 +23,5 @@ const last = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 
     <div class:list={[last.root]}>Second part.</div>
   </div>
 </div>`,
-  html: `<div data-sender="assistant" class="var-ui-chat-message"><div data-sender="assistant" class="var-ui-chat-message__content"><div data-sender="assistant" class="var-ui-chat-message__header"><span data-sender="assistant" class="var-ui-chat-message__name">Navi</span></div><div data-sender="assistant" data-variant="filled" data-group="first" class="var-ui-chat-message-bubble">First part of a multi-part reply.</div><div data-sender="assistant" data-variant="filled" data-group="last" class="var-ui-chat-message-bubble">Second part.</div></div></div>`,
+  html: `<div data-sender="assistant" class="var-ui-chat-message"><div data-sender="assistant" class="var-ui-chat-message__content"><div data-sender="assistant" class="var-ui-chat-message__header"><span data-sender="assistant" class="var-ui-chat-message__name">Navi</span></div><div data-sender="assistant" data-appearance="solid" data-group="first" class="var-ui-chat-message-bubble">First part of a multi-part reply.</div><div data-sender="assistant" data-appearance="solid" data-group="last" class="var-ui-chat-message-bubble">Second part.</div></div></div>`,
 } satisfies DemoSnippets;

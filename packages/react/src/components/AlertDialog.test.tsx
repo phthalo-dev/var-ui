@@ -46,11 +46,7 @@ function Confirm({
             <Button autoFocus={destructive}>{cancelLabel}</Button>
           </AlertDialog.Close>
           <AlertDialog.Close>
-            <Button
-              tone={destructive ? 'danger' : 'accent'}
-              appearance="filled"
-              onClick={onConfirm}
-            >
+            <Button tone={destructive ? 'danger' : 'accent'} appearance="solid" onClick={onConfirm}>
               {confirmLabel}
             </Button>
           </AlertDialog.Close>
