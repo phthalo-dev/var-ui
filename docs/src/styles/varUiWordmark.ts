@@ -2,13 +2,13 @@ import { designTokens as t, registerFontFace, typestyles } from '@var-ui/core';
 import { variant } from 'typestyles';
 
 /**
- * Brand face for the wordmark only (code keeps the theme's mono). Inconsolata is the font the
- * `(-)` mark is drawn from, so the parens and dashes match the icon. OFL, latin subset.
+ * Brand face for the wordmark only (code keeps the theme's mono): Geist Mono, crisp at hero
+ * size. OFL, latin subset.
  */
 registerFontFace({
-  family: 'Inconsolata',
-  src: "url('/fonts/inconsolata-latin.woff2') format('woff2')",
-  fontWeight: '400 700',
+  family: 'Geist Mono',
+  src: "url('/fonts/geist-mono-latin.woff2') format('woff2')",
+  fontWeight: '100 900',
   fontStyle: 'normal',
   fontDisplay: 'swap',
   unicodeRange:
@@ -32,7 +32,7 @@ export const varUiWordmark = typestyles.recipe({
         alignItems: 'baseline',
         maxWidth: '100%',
         margin: 0,
-        fontFamily: `Inconsolata, ${t.fontFamily.mono.var}`,
+        fontFamily: `'Geist Mono', ${t.fontFamily.mono.var}`,
         fontWeight: t.fontWeight.semibold.var,
         lineHeight: 1,
         whiteSpace: 'nowrap',
@@ -92,7 +92,7 @@ export const varUiWordmark = typestyles.recipe({
         inline: {
           root: {
             display: 'inline',
-            fontSize: '1em',
+            fontSize: '0.92em',
             letterSpacing: '-0.06em',
           },
         },
