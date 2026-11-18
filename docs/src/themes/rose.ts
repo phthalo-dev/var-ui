@@ -11,6 +11,7 @@ import {
 import {
   neoBrutalistBorderDarkDefault,
   neoBrutalistBorderDarkStrong,
+  neoBrutalistBorderDarkSubtle,
   neoBrutalistShadowOffsetDark,
   neoBrutalistShadowOffsetLight,
   neoBrutalistShadowValues,
@@ -128,6 +129,11 @@ export const roseThemeTokens = {
     },
     tone: roseTone,
     border: {
+      // Quiet hairlines take the theme's hue too (the default's are warm neutral).
+      subtle: {
+        light: p.color.palette['rose-3'].var,
+        dark: neoBrutalistBorderDarkSubtle(roseDarkHue),
+      },
       default: {
         light: '#000',
         dark: neoBrutalistBorderDarkDefault(roseDarkHue),

@@ -48,6 +48,8 @@ export type SegmentedControlProps = Omit<
   size?: ControlSize;
   /** `icon` renders square, icon-only segments (give each option an `aria-label`). @default 'default' */
   layout?: 'default' | 'icon';
+  /** Fills the container's width, with equal-width segments. @default false */
+  fullWidth?: boolean;
   /**
    * Ref to the `role="radiogroup"` element. A segmented control has no single native control, so
    * this is the nearest real element; each segment is a radio.
@@ -67,6 +69,7 @@ export function SegmentedControl({
   className,
   size,
   layout = 'default',
+  fullWidth = false,
   value,
   defaultValue,
   onValueChange,
@@ -75,7 +78,7 @@ export function SegmentedControl({
   ...props
 }: SegmentedControlProps): JSX.Element {
   const contextSize = useControlSize();
-  const s = segmentedControl({ size: size ?? contextSize ?? 'md', layout });
+  const s = segmentedControl({ size: size ?? contextSize ?? 'md', layout, fullWidth });
   const t = toggleButton({ segmented: true });
   const rootRef = useRef<HTMLDivElement>(null);
   const setRoot = useMemo(() => mergeRefs(rootRef, ref), [ref]);

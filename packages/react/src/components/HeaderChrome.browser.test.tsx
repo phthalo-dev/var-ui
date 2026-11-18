@@ -43,12 +43,60 @@ describe('SideNav parts outside a SideNav root', () => {
   });
 });
 
+describe('SideNav.Section selectionStyle', () => {
+  test('"text" marks the current item by colour only: no fill, no leading bar', async () => {
+    const { getByText } = render(
+      <Shell>
+        <SideNavSection selectionStyle="text">
+          <SideNavItem label="Components" href="#c" selected />
+        </SideNavSection>
+        <SideNavSection>
+          <SideNavItem label="Button" href="#b" selected />
+        </SideNavSection>
+      </Shell>,
+    );
+    await raf();
+    const quiet = getByText('Components').closest('a') as HTMLElement;
+    const filled = getByText('Button').closest('a') as HTMLElement;
+    // Any fully transparent colour (`oklab(0 0 0 / 0)` included).
+    expect(getComputedStyle(quiet).backgroundColor).toMatch(
+      /transparent|rgba\(0, 0, 0, 0\)|\/ 0\)$/,
+    );
+    expect(getComputedStyle(quiet, '::before').display).toBe('none');
+    expect(getComputedStyle(quiet).color).toBe(getComputedStyle(filled).color);
+    expect(transparent(getComputedStyle(filled).backgroundColor)).toBe(false);
+  });
+});
+
 describe('SegmentedControl header metrics', () => {
   const options = [
     { value: 'react', label: 'R', 'aria-label': 'React' },
     { value: 'astro', label: 'A', 'aria-label': 'Astro' },
     { value: 'html', label: 'H', 'aria-label': 'HTML' },
   ];
+
+  test('fullWidth fills the container with equal segments', async () => {
+    const { getByRole } = render(
+      <Shell>
+        <div style={{ width: 300 }}>
+          <SegmentedControl
+            aria-label="Framework"
+            fullWidth
+            options={[
+              { value: 'react', label: 'React' },
+              { value: 'astro', label: 'Astro' },
+              { value: 'html', label: 'HyperText' },
+            ]}
+          />
+        </div>
+      </Shell>,
+    );
+    await raf();
+    const group = getByRole('radiogroup');
+    expect(group.getBoundingClientRect().width).toBe(300);
+    const widths = [...group.children].map((el) => el.getBoundingClientRect().width);
+    expect(Math.max(...widths) - Math.min(...widths)).toBeLessThan(0.5);
+  });
 
   test('layout="icon" segments are square and the track matches the control height', async () => {
     const { getByRole } = render(

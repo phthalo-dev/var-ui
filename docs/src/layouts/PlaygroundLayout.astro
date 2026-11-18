@@ -49,7 +49,7 @@ const frame = playgroundLayout({ bleed });
         brand={{ heading: 'Var UI', href: '/' }}
         currentPath={currentPath}
       >
-        <VarUiWordmark slot="brand" size="mark" />
+        <VarUiWordmark slot="brand" size="bar" />
         <FrameworkSwitcher slot="tools" />
       </DocsTopBar>
 
@@ -60,7 +60,7 @@ const frame = playgroundLayout({ bleed });
         brand={{ heading: 'Var UI', href: '/' }}
       >
         <VarUiWordmark slot="brand" size="mark" />
-        <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" />
+        <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" fullWidth />
       </DocsMobileMenu>
 
       <Layout height="fill" padding="none" className={frame.layout.className}>

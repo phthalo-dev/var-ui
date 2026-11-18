@@ -1,5 +1,5 @@
 import type { IconName } from '@var-ui/core';
-import { MENU_ROW_SELECTOR, menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
+import { menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
  * (trigger + popup list) with roving focus and typeahead. The popup is a native
@@ -66,6 +66,12 @@ export type MenuSectionDefinition = {
    * @default 'list'
    */
   layout?: 'list' | 'row';
+  /**
+   * Whether choosing an item in this section closes the menu. Set `false` for settings the user
+   * may try in turn (e.g. a "Theme" list beside a Mode row), so the menu stays open on a pick.
+   * @default true (`false` for `layout: 'row'`)
+   */
+  closeOnSelect?: boolean;
 };
 
 export type MenuController = {
@@ -78,6 +84,8 @@ export type MenuController = {
 };
 
 const ROOT_SELECTOR = '[data-var-ui-menu-root]';
+/** Sections whose picks keep the menu open (`Menu.astro` marks rows and `closeOnSelect: false`). */
+const KEEP_OPEN_SELECTOR = '[data-var-ui-menu-keep-open]';
 const INITIALIZED_ATTR = 'data-var-ui-menu-initialized';
 const TRIGGER_SELECTOR = '[data-var-ui-menu-trigger]';
 const POPOVER_SELECTOR = '[data-var-ui-menu-popover]';
@@ -360,9 +368,10 @@ export function initMenu(root: Element): void {
           detail: { id: item.getAttribute('data-item-id') },
         }),
       );
-      // A row (Light / Dark / System) is a setting beside the rest of the menu, not a command:
-      // the menu stays open so the next choice is one step away.
-      if (item.closest(MENU_ROW_SELECTOR)) return;
+      // A row (Light / Dark / System) or a `closeOnSelect: false` section is a setting beside
+      // the rest of the menu, not a command: the menu stays open so the next choice is one
+      // step away.
+      if (item.closest(KEEP_OPEN_SELECTOR)) return;
       hideMenu({ restoreFocus: !isLink });
     });
   }

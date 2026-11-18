@@ -27,10 +27,10 @@ const searchItems = buildDocsSearchIndex();
   htmlAttributes={{ 'data-framework': framework }}
   bleed={bleed}
 >
-  <VarUiWordmark slot="brand" size="mark" />
+  <VarUiWordmark slot="brand" size="bar" />
   <DocsThemeScript slot="themeScript" />
   <FrameworkSwitcher slot="tools" />
-  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" />
+  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" fullWidth />
   <slot name="head" slot="head" />
   <slot />
   <SiteFooter slot="footer" />

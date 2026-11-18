@@ -148,6 +148,7 @@ const itemContents = await Promise.all(
           {(() => {
             const sectionSelection = section.defaultValue !== undefined;
             const row = section.layout === "row";
+            const keepOpen = !(section.closeOnSelect ?? !row);
             const radio = singleSelection || sectionSelection;
             const checkedId = sectionSelection ? section.defaultValue : defaultValue;
             const rendered = section.items.map((item) => {
@@ -235,12 +236,13 @@ const itemContents = await Promise.all(
               </button>
             );
           });
-            return sectionSelection || row ? (
+            return sectionSelection || row || keepOpen ? (
               <div
                 role="group"
                 aria-label={section.label}
                 data-var-ui-menu-group
                 data-layout={row ? "row" : undefined}
+                data-var-ui-menu-keep-open={keepOpen ? "" : undefined}
                 {...(row ? sectionRowRecipe : sectionRecipe)}
               >
                 {rendered}

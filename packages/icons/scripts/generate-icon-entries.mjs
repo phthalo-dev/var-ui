@@ -80,7 +80,7 @@ const reexports = names.map((name) => `export { ${name} } from './icons/${name}'
 writeFileSync(
   join(pkgRoot, 'src/index.ts'),
   `export { defaultIcons } from './default-icons';
-export { varUiMark } from './brand-mark';
+export { varUiMark, varUiMarkSmall } from './brand-mark';
 ${reexports}
 `,
 );

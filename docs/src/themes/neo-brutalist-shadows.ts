@@ -13,6 +13,14 @@ export function neoBrutalistBorderDarkDefault(hue: number): string {
   return color.oklch('40%', 0.02, hue);
 }
 
+/**
+ * Quiet hairline (`border.subtle`: search tray, segmented track, dividers) in the theme's hue, a
+ * step above the dark `background.subtle` (31%) so it reads on a filled tray.
+ */
+export function neoBrutalistBorderDarkSubtle(hue: number): string {
+  return color.oklch('36%', 0.02, hue);
+}
+
 export function neoBrutalistBorderDarkStrong(hue: number): string {
   return color.oklch('54%', 0.026, hue);
 }

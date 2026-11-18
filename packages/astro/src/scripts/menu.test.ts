@@ -543,7 +543,7 @@ describe('row sections (layout: row)', () => {
     expect(document.activeElement).toBe(item(root, 'other'));
   });
   let appearanceCount = 0;
-  function mountAppearance(): HTMLElement {
+  function mountAppearance({ themeKeepsOpen = false } = {}): HTMLElement {
     appearanceCount += 1;
     const id = `menu-a${appearanceCount}`;
     const radio = (itemId: string, checked: boolean) =>
@@ -556,11 +556,11 @@ describe('row sections (layout: row)', () => {
           aria-controls="${id}" popovertarget="${id}-popover">Appearance</button>
         <div data-var-ui-menu-popover id="${id}-popover" popover="auto">
           <div role="menu" id="${id}" aria-label="Appearance">
-            <div role="group" aria-label="Mode" data-var-ui-menu-group data-layout="row">
+            <div role="group" aria-label="Mode" data-var-ui-menu-group data-layout="row" data-var-ui-menu-keep-open>
               ${radio('light', false)}${radio('dark', false)}${radio('system', true)}
             </div>
             <div role="separator"></div>
-            <div role="group" aria-label="Theme" data-var-ui-menu-group>
+            <div role="group" aria-label="Theme" data-var-ui-menu-group ${themeKeepsOpen ? 'data-var-ui-menu-keep-open' : ''}>
               <button type="button" role="menuitemradio" aria-checked="true" data-var-ui-menu-item data-item-id="teal" tabindex="-1">Teal</button>
               <button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-item-id="rose" tabindex="-1">Rose</button>
             </div>
@@ -612,5 +612,16 @@ describe('row sections (layout: row)', () => {
     item(root, 'rose').click();
     expect(isOpen(root)).toBe(false);
     expect(actions).toEqual(['dark', 'rose']);
+  });
+
+  it('stays open after a pick in a closeOnSelect: false list section', () => {
+    const root = mountAppearance({ themeKeepsOpen: true });
+    const actions = collectActions(root);
+    trigger(root).click();
+    item(root, 'rose').click();
+    expect(isOpen(root)).toBe(true);
+    expect(item(root, 'rose').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'teal').getAttribute('aria-checked')).toBe('false');
+    expect(actions).toEqual(['rose']);
   });
 });

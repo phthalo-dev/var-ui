@@ -30,11 +30,12 @@ const topNavVarDefinitions = {
     ...atProperty.color,
     value: t.color.text.primary.var,
   },
-  // Quieter than the selected pill: hover previews, selection states. A 5% ink wash reads on
-  // any bar colour; a neutral surface step (`background.subtle`) all but vanishes on white.
+  // Quieter than the selected pill: hover previews, selection states. The neutral hover step
+  // (`navItem.hoverBackground`) firmed with a touch of ink: alone it all but vanishes on white,
+  // and an ink wash over `transparent` loses the palette's hue (a cool grey on warm chrome).
   itemHoverBackground: {
     ...atProperty.color,
-    value: `color-mix(in oklch, ${t.color.text.primary.var} 5%, transparent)`,
+    value: `color-mix(in oklch, ${t.color.navItem.hoverBackground.var}, ${t.color.text.primary.var} 4%)`,
   },
   itemSelectedBackground: {
     ...atProperty.color,

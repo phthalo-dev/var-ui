@@ -307,11 +307,12 @@ export const commandPalette = typestyles.recipe({
           color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
           lineHeight: 1.3,
         },
-        // Matched text, in titles and subtitles alike: accent ink and weight, no padding (the
-        // text must not shift).
+        // Matched text, in titles and subtitles alike: accent ink only. The weight is the
+        // line's own (a bump read as bold in the 400-weight subtitle but barely showed in the
+        // 500-weight title) and there is no padding, so the text never shifts.
         mark: {
           fontFamily: 'inherit',
-          fontWeight: t.fontWeight.semibold.var,
+          fontWeight: 'inherit',
           backgroundColor: vars.markBackground.var,
           color: vars.markForeground.var,
           borderRadius: '0.125rem',

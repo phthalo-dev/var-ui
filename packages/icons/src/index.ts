@@ -1,5 +1,5 @@
 export { defaultIcons } from './default-icons';
-export { varUiMark } from './brand-mark';
+export { varUiMark, varUiMarkSmall } from './brand-mark';
 export { arrowDown } from './icons/arrowDown';
 export { arrowUp } from './icons/arrowUp';
 export { arrowsUpDown } from './icons/arrowsUpDown';

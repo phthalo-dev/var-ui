@@ -10,10 +10,12 @@ type Props = {
   size?: ControlSize;
   /** `labels` adds the framework name beside each icon (e.g. in a mobile drawer). @default 'icons' */
   appearance?: 'icons' | 'iconsAndLabels';
+  /** Fills the container's width, with equal-width segments (e.g. a drawer footer). @default false */
+  fullWidth?: boolean;
   className?: string;
 };
 
-const { size = 'md', appearance = 'icons', className } = Astro.props;
+const { size = 'md', appearance = 'icons', fullWidth = false, className } = Astro.props;
 const framework = Astro.locals.framework;
 const iconOnly = appearance === 'icons';
 const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md' }));
@@ -31,6 +33,7 @@ const options = DOCS_FRAMEWORKS.map((value) => ({
   defaultValue={framework}
   size={size}
   layout={iconOnly ? 'icon' : 'default'}
+  fullWidth={fullWidth}
   className={className}
   aria-label="Documentation framework"
   data-framework-switcher

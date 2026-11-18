@@ -1,6 +1,6 @@
 ---
 import { mergeProps } from '@var-ui/astro';
-import { varUiMarkSvg } from '@var-ui/icons/brand';
+import { varUiMarkSmallSvg, varUiMarkSvg } from '@var-ui/icons/brand';
 import { varUiWordmark } from '../styles/varUiWordmark';
 
 type Props = {
@@ -8,27 +8,29 @@ type Props = {
   className?: string;
   /**
    * `hero` and `inline`: the `var(--ui)` wordmark alone. `header`: tile + wordmark lockup.
-   * `mark`: the tile alone (app bar, drawer header).
+   * `bar`: the lockup from `md` up, the tile alone below (app bar). `mark`: the tile alone.
    */
-  size?: 'hero' | 'header' | 'mark' | 'inline';
+  size?: 'hero' | 'header' | 'bar' | 'mark' | 'inline';
 };
 
 const { as = 'span', className, size = 'hero' } = Astro.props;
 const wordmark = varUiWordmark({ size });
 const Tag = as;
-const showMark = size === 'header' || size === 'mark';
+const showMark = size === 'header' || size === 'bar' || size === 'mark';
 const showText = size !== 'mark';
+// The footer lockup's 20px tile takes the 16px optical size; the 24px tiles the regular mark.
+const markSvg = size === 'header' ? varUiMarkSmallSvg : varUiMarkSvg;
 ---
 
 <Tag {...mergeProps(wordmark.root, className)} aria-label="Var UI">
   {
     showMark ? (
-      <span {...mergeProps(wordmark.mark)} aria-hidden="true" set:html={varUiMarkSvg} />
+      <span {...mergeProps(wordmark.mark)} aria-hidden="true" set:html={markSvg} />
     ) : null
   }
   {
     showText ? (
-      <>
+      <span {...mergeProps(wordmark.text)}>
         <span {...mergeProps(wordmark.keyword)} aria-hidden="true">var</span><span
           {...mergeProps(wordmark.punctuation)}
           aria-hidden="true"
@@ -36,7 +38,7 @@ const showText = size !== 'mark';
           {...mergeProps(wordmark.punctuation)}
           aria-hidden="true"
         >)</span>
-      </>
+      </span>
     ) : null
   }
 </Tag>

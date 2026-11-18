@@ -27,6 +27,8 @@ type Props = Omit<HTMLAttributes<'div'>, 'class' | 'role'> & {
   size?: ControlSize;
   /** `icon` renders square, icon-only segments (give each option an `aria-label`). */
   layout?: "default" | "icon";
+  /** Fills the container's width, with equal-width segments. @default false */
+  fullWidth?: boolean;
   className?: string;
   /** Accessible name for the group. */
   "aria-label"?: string;
@@ -39,12 +41,13 @@ const {
   disabled = false,
   size = "md",
   layout = "default",
+  fullWidth = false,
   className,
   "aria-label": ariaLabel,
   ...rest
 } = Astro.props;
 
-const s = segmentedControl({ size, layout });
+const s = segmentedControl({ size, layout, fullWidth });
 const segmentRecipe = mergeProps(toggleButton({ segmented: true }));
 
 const optionContent = await Promise.all(
