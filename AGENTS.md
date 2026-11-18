@@ -64,6 +64,8 @@ All three repos (`typestyles`, `var-ui`, `homeslate`) use the same pipeline. Eve
 3. Publishing uses **npm trusted publishing (OIDC)** with provenance. There is no `NPM_TOKEN`. Each package's trusted publisher is `phthalo-dev/var-ui` with workflow **`ci.yml`**, so do not rename that file or move the release job.
 4. A **new package** needs one manual first publish, then: `npm trust github <pkg> --repo phthalo-dev/var-ui --file ci.yml --allow-publish --allow-stage-publish -y`.
 
+All published packages share one version (`fixed` group in `.changeset/config.json`): a changeset for any one of them bumps and republishes all seven. This is what keeps `@var-ui/cli`'s generated docs catalog in lockstep with the packages it snapshots (issue #129) — no separate CLI bump is ever needed. `@var-ui/docs-site` is not published and stays outside the group.
+
 ### Things that bite
 
 - Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit). There is no pre-push hook — `vp run ci` runs in GitHub Actions on the PR. The pre-commit hook exits early when `CI` is set; the release job commits version bumps and pushes tags, and must not re-run it.
