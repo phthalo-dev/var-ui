@@ -30,6 +30,25 @@ function fontFaceCssKey(block: string): string {
   ].join('\0');
 }
 
+/**
+ * A lazy theme stylesheet shares the `tokens` layer with the base `:root` token rules, and it
+ * can load before or after them, so a bare `.theme-x` (0,1,0) would tie with `:root` and lose
+ * whenever it comes first. The plain theme rule also matches `:root.theme-x` (0,2,0) so the
+ * theme's tokens always win on the document root; nested surfaces still use `.theme-x`.
+ *
+ * Its `color-scheme: light dark` is dropped: base styles already set `color-scheme` for every
+ * theme class (root, nested and `data-color-mode` pins), and a copy at (0,2,0) would tie with
+ * the pin and could override Light/Dark again depending on load order.
+ */
+function rootThemeRules(css: string, themeClass: string): string {
+  const escaped = themeClass.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const plainRule = new RegExp(`(^|[{};]\\s*)${escaped}(\\s*)\\{([^}]*)\\}`, 'g');
+  return css.replace(plainRule, (_match, before: string, space: string, body: string) => {
+    const declarations = body.replace(/(^|;)\s*color-scheme\s*:[^;]*;?/i, '$1');
+    return `${before}:root${themeClass}, ${themeClass}${space}{${declarations}}`;
+  });
+}
+
 /** `prelude {` openers for the blocks still open at `index` (outermost first). */
 function enclosingBlockOpeners(css: string, index: number): string {
   const open: string[] = [];
@@ -86,7 +105,10 @@ export function extractThemeOnlyCss(
   // The slice can begin mid-block (TypeStyles nests a whole layer in one `@layer x { … }`).
   // Re-open the enclosing at-rule blocks so their closing braces still pair up and the theme
   // rules keep their cascade layer — an unlayered `color-scheme` beats the layered color-mode pin.
-  let extracted = `${enclosingBlockOpeners(css, start)}${css.slice(start)}`.trim();
+  let extracted = rootThemeRules(
+    `${enclosingBlockOpeners(css, start)}${css.slice(start)}`.trim(),
+    themeClass,
+  );
 
   if (options.baseFontFaces?.length) {
     const baseKeys = new Set(options.baseFontFaces.map(fontFaceCssKey));

@@ -76,10 +76,25 @@ describe('extractThemeOnlyCss', () => {
       '',
     );
     expect(body.trim().startsWith('@layer tokens {')).toBe(true);
-    expect(body).not.toContain(':root');
+    expect(body).not.toMatch(/:root\s*\{/);
     const opens = (body.match(/\{/g) ?? []).length;
     const closes = (body.match(/\}/g) ?? []).length;
     expect(opens).toBe(closes);
+  });
+
+  it('lets the theme tokens beat :root on the document root, whatever the load order', () => {
+    const css = `@layer tokens { :root { --c: 0; }
+.theme-var-ui-forest { color-scheme: light dark; --c: 1; }
+@media (prefers-color-scheme: dark) { .theme-var-ui-forest:not([data-color-mode="light"]) { --c: 2; } }
+}`;
+    const extracted = extractThemeOnlyCss(css, 'forest');
+    expect(extracted).toContain(':root.theme-var-ui-forest, .theme-var-ui-forest {');
+    expect(extracted).toContain('--c: 1;');
+    // Base styles own color-scheme; a (0,2,0) copy here would tie with the color-mode pin.
+    expect(extracted).not.toContain('color-scheme: light dark');
+    // Compound selectors are left alone.
+    expect(extracted).toContain('.theme-var-ui-forest:not([data-color-mode="light"]) { --c: 2; }');
+    expect(extracted).not.toContain(':root.theme-var-ui-forest:not');
   });
 
   it('throws when theme class missing', () => {

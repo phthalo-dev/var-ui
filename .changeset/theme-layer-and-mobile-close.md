@@ -5,5 +5,5 @@
 '@var-ui/cli': patch
 ---
 
-- `@var-ui/docs`: lazy theme stylesheets (`/themes/<id>.css`) keep the cascade layer their rules were emitted in. The extract sliced from the theme class mid-`@layer tokens { … }` block, dropping the opener, so the theme's `color-scheme: light dark` became unlayered and overrode the `data-color-mode` pin: Light/Dark did nothing on every non-default theme.
+- `@var-ui/docs`: lazy theme stylesheets (`/themes/<id>.css`) keep the cascade layer their rules were emitted in. The extract sliced from the theme class mid-`@layer tokens { … }` block, dropping the opener, so the theme's `color-scheme: light dark` became unlayered and overrode the `data-color-mode` pin: Light/Dark did nothing on every non-default theme. The plain theme rule also matches `:root.theme-<id>` so its tokens beat the base `:root` tokens in that layer whatever order the stylesheets load in, and its redundant `color-scheme` is dropped (base styles set it for every theme class).
 - `MobileNav`: the close button has a 32px control-sized box and sizes its icon (core), and the Astro `MobileNav` now renders the close icon (it rendered an empty 8px button).
