@@ -34,7 +34,8 @@ export const inlineCode = typestyles.recipe({
         display: 'inline',
         padding: `0.0625rem ${t.space.xxs.var}`,
         fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.xs.var,
+        // Relative, so code in a heading, a caption or a chat bubble scales with its text.
+        fontSize: '0.875em',
         color: t.color.text.secondary.var,
         backgroundColor: vars.background.var,
         ...border(vars.border.var),

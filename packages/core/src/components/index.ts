@@ -62,6 +62,7 @@ export * from './pinInput';
 export * from './popover';
 export * from './progressBar';
 export * from './progressCircle';
+export * from './prose';
 export * from './proseContent';
 export * from './radio';
 export * from './rating';

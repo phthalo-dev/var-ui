@@ -22,6 +22,7 @@ export type DemoId =
   | 'text.clamp'
   | 'link.default'
   | 'code-block.default'
+  | 'prose.compact'
   | 'alert.default'
   | 'banner.default'
   | 'badge.default'

@@ -16,6 +16,7 @@ import HiddenShowMd from './hidden/show-md/astro.astro';
 import DirectionRtl from './direction/rtl/astro.astro';
 import CardLink from './card/link/astro.astro';
 import CodeBlockDefault from './code-block/default/astro.astro';
+import ProseCompact from './prose/compact/astro.astro';
 import DividerDefault from './divider/default/astro.astro';
 import EmptyStateDefault from './empty-state/default/astro.astro';
 import GridDefault from './grid/default/astro.astro';
@@ -100,6 +101,7 @@ const astroDemos = {
   'text.clamp': TextClamp,
   'link.default': LinkDefault,
   'code-block.default': CodeBlockDefault,
+  'prose.compact': ProseCompact,
   'alert.default': AlertDefault,
   'banner.default': BannerDefault,
   'badge.default': BadgeDefault,

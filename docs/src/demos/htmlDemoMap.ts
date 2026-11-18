@@ -16,6 +16,7 @@ import { render as renderHiddenShowMd } from './hidden/show-md/html';
 import { render as renderDirectionRtl } from './direction/rtl/html';
 import { render as renderCardLink } from './card/link/html';
 import { render as renderCodeBlockDefault } from './code-block/default/html';
+import { render as renderProseCompact } from './prose/compact/html';
 import { render as renderDividerDefault } from './divider/default/html';
 import { render as renderEmptyStateDefault } from './empty-state/default/html';
 import { render as renderGridDefault } from './grid/default/html';
@@ -100,6 +101,7 @@ const htmlDemos = {
   'text.clamp': renderTextClamp,
   'link.default': renderLinkDefault,
   'code-block.default': renderCodeBlockDefault,
+  'prose.compact': renderProseCompact,
   'alert.default': renderAlertDefault,
   'banner.default': renderBannerDefault,
   'badge.default': renderBadgeDefault,

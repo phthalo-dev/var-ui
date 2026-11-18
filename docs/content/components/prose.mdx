@@ -1,0 +1,63 @@
+---
+title: Prose
+description: Rendered markdown or rich text, sized to fit chat bubbles, panels and reading views.
+---
+
+# Prose
+
+Styles the bare HTML a markdown renderer emits (headings, paragraphs, lists, links, inline and fenced code, blockquotes, tables, rules) for use inside app UI: an agent reply in a chat bubble, a trace panel, a note, a description field.
+
+Everything is relative to the surrounding font size, so `Prose` takes the size of whatever it sits in. Headings use the body font at a modest scale.
+
+## Examples
+
+### Compact, in a chat bubble
+
+<Demo id="prose.compact" />
+
+## Density
+
+`density` sets the vertical rhythm and heading scale:
+
+- `compact`: chat bubbles, cards, table cells. Tight gaps; headings barely larger than text.
+- `balanced` (default): side panels and detail views.
+- `spacious`: reading views and long notes. Roomier gaps, larger headings, relaxed line height.
+
+## Markdown renderers
+
+`proseComponents` maps elements to Var UI components for any renderer that takes a `components` prop (react-markdown, MDX):
+
+| Element                                     | Renders       | Why                                                                      |
+| ------------------------------------------- | ------------- | ------------------------------------------------------------------------ |
+| `pre` (fenced code)                         | `CodeBlock`   | Copy button; the language comes from the `language-*` class.             |
+| `code` (inline)                             | `Code`        | Same chip as the rest of the app.                                        |
+| `a`                                         | `Link`        | Client-side routing through `RouterProvider`.                            |
+| `table`, `thead`, `tbody`, `tr`, `th`, `td` | `Table` parts | Horizontal scrolling, Table styles, and GFM column alignment as `align`. |
+
+```tsx
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prose, proseComponents } from '@var-ui/react';
+
+<Prose density="compact">
+  <Markdown remarkPlugins={[remarkGfm]} components={proseComponents}>
+    {reply}
+  </Markdown>
+</Prose>;
+```
+
+Override one entry by spreading: `components={{ ...proseComponents, a: MyLink }}`. The mapping is optional: without it, `Prose` still styles the bare elements, so HTML rendered on a server works as is.
+
+## How it composes
+
+`Prose`'s element rules live in the `base` [cascade layer](/theming/plain-css#cascade-layers-and-specificity), below `components`. A Var UI component inside `Prose` (mapped by `proseComponents` or placed by hand) always keeps its own styles. There's no `not-prose` escape hatch to remember, and no specificity contest with your own classes.
+
+## Astro
+
+`Prose` from `@var-ui/astro` renders the same `<div>` and class; wrap rendered markdown (`<Content />`) in it. In plain HTML, put `class="var-ui-prose"` and `data-density="compact"` on the wrapper.
+
+## Props
+
+<PropsTable slug="prose" />
+
+All native `<div>` attributes are passed through, and `ref` is the div.
