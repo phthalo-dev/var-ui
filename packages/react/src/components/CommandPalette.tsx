@@ -1,5 +1,13 @@
 import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import {
   Autocomplete,
   Header,
@@ -7,6 +15,7 @@ import {
   ListBox,
   ListBoxItem,
   ListBoxSection,
+  ListStateContext,
   TextField,
 } from 'react-aria-components';
 import type { ComponentAttrsResult } from 'typestyles';
@@ -178,6 +187,33 @@ function isIconName(value: unknown): value is IconName {
   return typeof value === 'string' && (iconNameList as readonly string[]).includes(value);
 }
 
+/**
+ * A result row's content. Moving the pointer over it makes it the active (virtually focused) row,
+ * so keyboard and pointer share one highlight instead of painting two rows.
+ */
+function ResultRow({
+  id,
+  attrs,
+  children,
+}: {
+  id: string;
+  attrs: ReturnType<typeof mergeProps>;
+  children: ReactNode;
+}): JSX.Element {
+  const state = useContext(ListStateContext);
+  const activate = () => {
+    const manager = state?.selectionManager;
+    if (!manager || manager.focusedKey === id) return;
+    manager.setFocused(true);
+    manager.setFocusedKey(id);
+  };
+  return (
+    <span {...attrs} onPointerMove={activate}>
+      {children}
+    </span>
+  );
+}
+
 type ItemBlock = { group?: string; items: CommandPaletteItem[] };
 
 /** Splits `items` into runs of consecutive items sharing a `group`, preserving order. */
@@ -328,7 +364,10 @@ export function CommandPalette({
         }}
       >
         {({ isFocused }) => (
-          <span {...mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}>
+          <ResultRow
+            id={keyPrefix + item.id}
+            attrs={mergeProps(cp.resultLink, cx(isFocused && cp.resultLinkActive))}
+          >
             {item.icon ? (
               <span {...mergeProps(cp.resultIcon)} aria-hidden="true">
                 {isIconName(item.icon) ? (
@@ -355,7 +394,7 @@ export function CommandPalette({
                 ))}
               </span>
             ) : null}
-          </span>
+          </ResultRow>
         )}
       </ListBoxItem>
     );

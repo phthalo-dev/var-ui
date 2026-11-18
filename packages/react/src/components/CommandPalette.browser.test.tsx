@@ -195,4 +195,21 @@ describe('CommandPalette (browser)', () => {
     expect(document.querySelector('input')).toBeNull();
     expect(getComputedStyle(dlg()).display).toBe('none');
   });
+  test('pointer movement moves the one active row (no second hover highlight)', async () => {
+    render(<CommandPalette defaultOpen items={items} onAction={() => {}} />);
+    await settled(dlg());
+    const activeClass = commandPalette().resultLinkActive.className;
+    const activeRows = () =>
+      [...document.querySelectorAll('[role="option"] > span')].filter((el) =>
+        el.classList.contains(activeClass),
+      );
+    await userEvent.keyboard('{ArrowDown}');
+    await raf();
+    expect(activeRows()).toHaveLength(1);
+    const last = document.querySelectorAll<HTMLElement>('[role="option"] > span')[2]!;
+    await userEvent.hover(last);
+    await raf();
+    expect(activeRows()).toEqual([last]);
+    expect(getComputedStyle(last).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  });
 });

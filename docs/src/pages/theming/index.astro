@@ -3,6 +3,9 @@ export const prerender = false;
 import DocsGuidePage from '@var-ui/docs/DocsGuidePage';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import * as mdxComponents from '../../lib/guide-mdx-components';
+import HeroShowcase from '../../components/HeroShowcase';
 ---
 
-<DocsGuidePage layout={BaseLayout} mdxComponents={mdxComponents} />
+<DocsGuidePage layout={BaseLayout} mdxComponents={mdxComponents}>
+  <HeroShowcase slot="preview" slug="theming-index" />
+</DocsGuidePage>

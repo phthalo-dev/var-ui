@@ -111,6 +111,7 @@ const hasPreview = Astro.slots.has('preview');
   {...mergeProps(s.root)}
   data-docs-page-hero
   data-has-preview={hasPreview || undefined}
+  data-overhang={(hasPreview && tabs.length > 0) || undefined}
 >
   <div {...combine(s.content)}>
   {eyebrow ? <p {...combine(s.eyebrow)}>{eyebrow}</p> : null}

@@ -1,6 +1,7 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
+import { atDarkMode } from '../theme/conditions';
 
 const stagePattern = variant.enum(['dots', 'grid', 'none'], { default: 'dots' });
 const stageTone = variant.enum(['neutral', 'accent'], { default: 'neutral' });
@@ -68,7 +69,11 @@ export const stage = typestyles.recipe({
         },
       },
       tone: {
-        neutral: {},
+        // Light pages wash faint ink out, so the neutral field is a step stronger there.
+        neutral: {
+          [vars.inkStrength.name]: '19%',
+          ...atDarkMode({ [vars.inkStrength.name]: '13%' }),
+        },
         accent: {
           [vars.ink.name]: t.color.tone.accent.foreground.var,
           [vars.inkStrength.name]: '32%',

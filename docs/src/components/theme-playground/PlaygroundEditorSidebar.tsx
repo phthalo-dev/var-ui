@@ -83,11 +83,11 @@ export default function PlaygroundEditorSidebar() {
           </ControlGroup>
 
           <Tabs
-            // className={(s.editorTabs).className}
+            size="sm"
             tabs={[
               {
                 value: 'base',
-                label: 'Base Styles',
+                label: 'Base',
                 content: <ThemePlaygroundBaseStyles state={state} onChange={patchState} />,
               },
               {

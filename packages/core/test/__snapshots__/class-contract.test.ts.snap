@@ -477,7 +477,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "axes": [
       "appearance",
       "data-appearance",
+      "data-format",
       "data-size",
+      "format",
       "size",
     ],
     "slots": {
@@ -630,7 +632,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-command-palette-markbackground",
       "--var-ui-command-palette-markforeground",
       "--var-ui-command-palette-resultforeground",
-      "--var-ui-command-palette-resulthoverbackground",
       "--var-ui-command-palette-resultmetacolor",
       "--var-ui-command-palette-resultselectedbackground",
       "--var-ui-command-palette-resultselectedforeground",
@@ -1909,6 +1910,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "axes": [
       "appearance",
       "data-appearance",
+      "data-size",
+      "size",
     ],
     "slots": {
       "list": "var-ui-tabs__list",

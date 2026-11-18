@@ -78,6 +78,8 @@ const showAutoToc =
         });
 const showTocPanel = hasTocSlot || showAutoToc;
 const hasToolsSlot = Astro.slots.has('tools');
+// Extra rail content above the TOC (e.g. a landing page's "Start here" links).
+const hasRailSlot = Astro.slots.has('rail');
 const hasDrawerToolsSlot = Astro.slots.has('drawerTools');
 const hasBrandSlot = Astro.slots.has('brand');
 /** `drawerBrand`: the drawer header's brand (e.g. a full lockup where the bar shows a mark); falls back to `brand`. */
@@ -117,7 +119,12 @@ const markdownGlyph =
     <slot name="head" />
   </head>
   <body {...combine('docs-body', bodyClassName)}>
-    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
+    <AppShell
+      variant="wash"
+      height="fill"
+      contentPadding="none"
+      mobileBreakpoint={sidebarSections ? 'lg' : 'md'}
+    >
       <DocsTopBar
         slot="topNav"
         topNav={topNav}
@@ -162,7 +169,7 @@ const markdownGlyph =
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
               </SideNav>
             </LayoutPanel>
-            <LayoutContent label="Main content">
+            <LayoutContent label="Main content" className={page.main.className}>
               {
                 showTocPanel ? (
                   <div {...mergeProps(page.pageBody)}>
@@ -175,6 +182,7 @@ const markdownGlyph =
                       data-docs-toc-slot
                       hidden={tocHidden || undefined}
                     >
+                      {hasRailSlot ? <slot name="rail" /> : null}
                       {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
                       {mdHref && !hasTocSlot ? (
                         <div {...mergeProps(page.tocActions)}>
@@ -196,7 +204,7 @@ const markdownGlyph =
           </Layout>
         ) : (
           <Layout height="fill" padding={showTocPanel ? 'none' : 'xl'} {...combine(page.siteLayout)}>
-            <LayoutContent label="Main content">
+            <LayoutContent label="Main content" className={page.main.className}>
               {
                 showTocPanel ? (
                   <div {...mergeProps(page.pageBody)}>
@@ -209,6 +217,7 @@ const markdownGlyph =
                       data-docs-toc-slot
                       hidden={tocHidden || undefined}
                     >
+                      {hasRailSlot ? <slot name="rail" /> : null}
                       {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
                       {mdHref && !hasTocSlot ? (
                         <div {...mergeProps(page.tocActions)}>

@@ -49,6 +49,11 @@ export const docsTopNav = typestyles.recipe({
           [belowMd]: {
             display: 'inline-flex',
           },
+          // Pages with a section sidebar move it into the drawer below `lg` (the shell's
+          // `mobileBreakpoint`), so the hamburger shows from there.
+          '[data-mobile-breakpoint="lg"] &': {
+            [belowLg]: { display: 'inline-flex' },
+          },
         },
       },
       tools: {

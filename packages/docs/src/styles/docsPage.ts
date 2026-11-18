@@ -1,8 +1,18 @@
-import { atProperty, variant } from 'typestyles';
+import { atProperty, container, variant } from 'typestyles';
 import { designTokens as t, typestyles } from '@var-ui/core';
 
-const belowXl = typestyles.breakpoint('xl', 'max');
+/**
+ * The main content area (`LayoutContent`) is a size container, so the frame responds to the room
+ * it actually has (sidebar shown, collapsed or in the drawer), not to the viewport.
+ */
+export const docsMainContainer = typestyles.containerRef('docs-main');
+/**
+ * Below this content width the rail (TOC) and the hero showcase drop out. With the 280px sidebar
+ * that is a 1200px viewport; the main column's left edge does not move at the switch.
+ */
+export const narrowMain = container(docsMainContainer, { maxWidth: '57.4rem' });
 const belowMd = typestyles.breakpoint('md', 'max');
+const belowLg = typestyles.breakpoint('lg', 'max');
 const contentWidth = variant.enum(['default', 'full'], { default: 'default' });
 const contentPlacement = variant.enum(['standalone', 'inPageBody'], { default: 'standalone' });
 
@@ -35,7 +45,7 @@ const gutters = {
 export const docsPage = typestyles.recipe({
   name: 'docs-page',
   layer: 'components',
-  slots: ['siteLayout', 'sidebar', 'pageBody', 'content', 'toc', 'tocActions', 'tocAction'],
+  slots: ['siteLayout', 'sidebar', 'main', 'pageBody', 'content', 'toc', 'tocActions', 'tocAction'],
   variants: { contentWidth, contentPlacement },
   vars: {
     headerHeight: {
@@ -55,11 +65,16 @@ export const docsPage = typestyles.recipe({
         minHeight: 0,
         minWidth: 0,
       },
-      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `md`.
+      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `lg`: under
+      // 1024px a 280px rail leaves the page too narrow for its hero and demos.
       sidebar: {
-        [belowMd]: {
+        [belowLg]: {
           display: 'none',
         },
+      },
+      main: {
+        containerType: 'inline-size',
+        containerName: docsMainContainer,
       },
       /**
        * Page frame. The main column's wrapper is `display: contents`, so its children are grid
@@ -82,6 +97,9 @@ export const docsPage = typestyles.recipe({
         columnGap,
         rowGap: 0,
         alignItems: 'start',
+        // Rows keep their content height: on a short page the frame's min-height must not be
+        // shared out between the hero rows as blank bands.
+        alignContent: 'start',
         boxSizing: 'border-box',
         minHeight: '100%',
         '& > [data-docs-content]': { display: 'contents' },
@@ -111,8 +129,10 @@ export const docsPage = typestyles.recipe({
         '&:has(> [data-docs-content] > [data-docs-page-tabs]) > aside': {
           gridRow: '4 / span 60',
         },
-        [belowXl]: {
+        // One column: it starts where the two-column frame starts (no re-centring jump).
+        [narrowMain]: {
           gridTemplateColumns: `minmax(0, ${mainColumn})`,
+          justifyContent: 'start',
         },
         [belowMd]: {
           paddingInline: t.space.md.var,
@@ -147,7 +167,7 @@ export const docsPage = typestyles.recipe({
         '&[hidden]': {
           display: 'flex',
           visibility: 'hidden',
-          [belowXl]: { display: 'none' },
+          [narrowMain]: { display: 'none' },
         },
         '& [data-var-ui-toc]': {
           position: 'static',
@@ -155,7 +175,7 @@ export const docsPage = typestyles.recipe({
           maxHeight: 'none',
           overflow: 'visible',
         },
-        [belowXl]: {
+        [narrowMain]: {
           display: 'none',
         },
       },
@@ -166,7 +186,8 @@ export const docsPage = typestyles.recipe({
         paddingBlockStart: t.space.md.var,
         borderBlockStart: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
         // No hairline when it would sit under nothing (the auto TOC found too few headings).
-        '[data-var-ui-toc][hidden] + &, &:first-child': {
+        // `~`, not `+`: Astro puts the Toc's module script between the two.
+        '[data-var-ui-toc][hidden] ~ &, &:first-child': {
           borderBlockStart: 'none',
           paddingBlockStart: 0,
         },

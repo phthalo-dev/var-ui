@@ -10,7 +10,7 @@ import {
   combine,
   mergeProps,
 } from '@var-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
 import { readStoredColorMode } from '@/lib/storedColorMode';
 import { docsThemePresetMeta } from '@/themes/presetMeta';
@@ -29,7 +29,12 @@ const VIEWPORT_OPTIONS = [
   { value: 'mobile' as const, label: 'Mobile' },
 ];
 
-export default function ThemePlayground() {
+export default function ThemePlayground({
+  toolbarStart,
+}: {
+  /** Leading toolbar content (the shell's Theme controls drawer below `lg`). */
+  toolbarStart?: ReactNode;
+} = {}) {
   const { state, patchState } = useThemePlaygroundState();
   const [colorMode, setColorMode] = useState<ColorMode>(
     () => readStoredColorMode(STORAGE_KEY) ?? 'system',
@@ -86,6 +91,7 @@ export default function ThemePlayground() {
           <div {...mergeProps(s.workspace)}>
             <div {...mergeProps(s.preview)}>
               <div {...mergeProps(s.toolbar)}>
+                {toolbarStart}
                 <SegmentedControl
                   aria-label="Preview viewport"
                   options={VIEWPORT_OPTIONS}

@@ -345,6 +345,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "TabListVariantProps",
     "TableVariantProps",
     "TabsAppearance",
+    "TabsSize",
     "TextAreaFieldVariantProps",
     "TextBlockVariantProps",
     "TextFieldVariantProps",

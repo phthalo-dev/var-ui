@@ -24,6 +24,7 @@ export default defineConfig({
       'src/shared/textMatch.ts',
       'src/shared/commandSearch.ts',
       'src/shared/pointer.ts',
+      'src/shared/colorLabel.ts',
       'src/theme/constants.ts',
       'src/theme/register-default.ts',
     ],

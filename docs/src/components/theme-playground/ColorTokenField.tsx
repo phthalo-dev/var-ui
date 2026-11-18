@@ -1,7 +1,6 @@
 'use client';
 
-import { TextField, mergeProps } from '@var-ui/react';
-import { themePlaygroundStyles } from '@/styles/themePlayground';
+import { ColorInput } from '@var-ui/react';
 import type { PlaygroundColorField } from './themePlaygroundTokens';
 
 type ColorTokenFieldProps = {
@@ -10,30 +9,24 @@ type ColorTokenFieldProps = {
   onChange: (path: string, value: string) => void;
 };
 
-function swatchColor(value: string | undefined, fallback: string): string {
-  if (value && value.trim()) return value.trim();
-  const resolved = typeof fallback === 'string' ? fallback : '';
-  if (resolved.startsWith('var(')) return 'transparent';
-  return resolved;
-}
-
+/**
+ * One theme color override: a `css`-format `ColorInput`, so token references (`var(--…)`) and
+ * `oklch()` values are accepted as typed. Unset, the swatch paints the live token and the
+ * placeholder names its default (as a token name; the full value is in the tooltip and on focus).
+ */
 export function ColorTokenField({ field, value, onChange }: ColorTokenFieldProps) {
-  const s = themePlaygroundStyles();
-
   return (
-    <div {...mergeProps(s.colorRow)}>
-      <span
-        {...mergeProps(s.colorSwatch)}
-        style={{ backgroundColor: swatchColor(value, field.defaultValue) }}
-        aria-hidden
-      />
-      <TextField
-        aria-label={field.label}
-        size="sm"
-        value={value ?? ''}
-        placeholder={field.defaultValue}
-        onValueChange={(next) => onChange(field.path, next)}
-      />
-    </div>
+    <ColorInput
+      format="css"
+      size="sm"
+      label={field.label}
+      value={value ?? ''}
+      defaultValue={field.cssVar}
+      // Light value as the placeholder (`phthalo-7`); the light / dark pair is in the tooltip.
+      placeholder={field.defaultValue.split(' / ')[0]}
+      title={value || field.defaultValue}
+      swatchLabel={`Pick ${field.label.toLowerCase()} color`}
+      onValueChange={(next) => onChange(field.path, next)}
+    />
   );
 }

@@ -114,6 +114,12 @@ export const segmentedControl = typestyles.recipe({
           backgroundColor: vars.trackBackground.var,
           boxShadow: `inset 0 0 0 0.0625rem ${vars.trackBorder.var}`,
           isolation: 'isolate',
+          // Too narrow for every segment at its natural width: the row scrolls sideways rather
+          // than squeezing labels into their padding.
+          maxWidth: '100%',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollbarWidth: 'none',
           ...atForcedColors(forced.boundary),
           // Dark mode: the thumb lifts (clearly lighter than the track, with a lit top edge)
           // instead of sinking into it. `elevated` equals the track colour in dark.
@@ -147,7 +153,9 @@ export const segmentedControl = typestyles.recipe({
           '& > *': {
             position: 'relative',
             zIndex: t.zIndex.raised.var,
-            flex: '1 1 auto',
+            // Segments grow to share spare room but never shrink below label + padding.
+            flex: '1 0 auto',
+            whiteSpace: 'nowrap',
             boxSizing: 'border-box',
             border: 'none',
             borderRadius: segmentRadius,
