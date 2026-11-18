@@ -122,6 +122,19 @@ describe('CommandPalette', () => {
     expect(onAction).toHaveBeenCalledWith('c');
   });
 
+  it('shows keyboard hints in a footer unless hints={false}', () => {
+    const { rerender } = wrap(
+      <CommandPalette open onOpenChange={() => {}} hotkey={false} items={[]} />,
+    );
+    const footer = document.querySelector('.var-ui-command-palette__footer');
+    expect(footer?.textContent).toContain('to navigate');
+    expect(footer?.getAttribute('aria-hidden')).toBe('true');
+    rerender(
+      <CommandPalette open onOpenChange={() => {}} hotkey={false} items={[]} hints={false} />,
+    );
+    expect(document.querySelector('.var-ui-command-palette__footer')).toBeNull();
+  });
+
   it('hides the heading of a group with no matching items', async () => {
     wrap(
       <CommandPalette
@@ -418,7 +431,9 @@ describe('CommandPalette item actions and chrome', () => {
       />,
     );
     expect(screen.getByTestId('item-icon')).toBeTruthy();
-    const keys = Array.from(document.querySelectorAll('kbd')).map((k) => k.textContent);
+    const keys = Array.from(document.querySelectorAll('[role="option"] kbd')).map(
+      (k) => k.textContent,
+    );
     expect(keys).toEqual(['⌘', 'K', 'G P']);
   });
 

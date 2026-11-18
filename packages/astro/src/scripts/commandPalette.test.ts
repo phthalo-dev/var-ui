@@ -26,7 +26,7 @@ describe('initCommandPalette', () => {
         data-class-result-meta="result-meta"
         data-class-empty="empty"
         data-class-group="group"
-        data-class-group-label="group-label"
+        data-class-group-heading="group-heading"
         data-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
@@ -53,7 +53,8 @@ describe('initCommandPalette', () => {
     const dialog = root.querySelector('dialog');
     expect(dialog?.open).toBe(true);
     expect(root.querySelectorAll('[data-var-ui-command-palette-item]')).toHaveLength(2);
-    expect(root.querySelector('.group-label')?.textContent).toBe('Docs');
+    expect(root.querySelector('.group-heading')?.textContent).toBe('Docs');
+    expect(root.querySelector('h2')).toBeNull();
 
     const body = root.querySelector('[data-var-ui-command-palette-item] > .result-body');
     expect(body?.querySelector('.result-title')?.textContent).toBe('Docs');

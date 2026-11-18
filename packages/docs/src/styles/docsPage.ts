@@ -2,6 +2,7 @@ import { atProperty, variant } from 'typestyles';
 import { designTokens as t, typestyles } from '@var-ui/core';
 
 const belowLg = typestyles.breakpoint('lg', 'max');
+const belowMd = typestyles.breakpoint('md', 'max');
 const contentWidth = variant.enum(['default', 'full'], { default: 'default' });
 const contentPlacement = variant.enum(['standalone', 'inPageBody'], { default: 'standalone' });
 
@@ -9,7 +10,7 @@ const contentPlacement = variant.enum(['standalone', 'inPageBody'], { default: '
 export const docsPage = typestyles.recipe({
   name: 'docs-page',
   layer: 'components',
-  slots: ['siteLayout', 'pageBody', 'content', 'toc'],
+  slots: ['siteLayout', 'sidebar', 'pageBody', 'content', 'toc'],
   variants: { contentWidth, contentPlacement },
   vars: {
     headerHeight: {
@@ -24,6 +25,12 @@ export const docsPage = typestyles.recipe({
         minHeight: 0,
         minWidth: 0,
       },
+      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `md`.
+      sidebar: {
+        [belowMd]: {
+          display: 'none',
+        },
+      },
       pageBody: {
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1fr) 13.75rem',
@@ -36,6 +43,10 @@ export const docsPage = typestyles.recipe({
         minHeight: '100%',
         [belowLg]: {
           gridTemplateColumns: 'minmax(0, 1fr)',
+        },
+        [belowMd]: {
+          paddingInline: t.space.md.var,
+          paddingBlock: t.space.lg.var,
         },
         '& .docs-page-toc-nav': {
           position: 'static',

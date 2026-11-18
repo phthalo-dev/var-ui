@@ -3,9 +3,9 @@ import DocsPage from '../../../packages/docs/src/components/DocsPage.astro';
 import { cx } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
-import DocsThemePicker from '../components/DocsThemePicker.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
+import VarUiWordmark from '../components/VarUiWordmark.astro';
 import {
   componentSidebarSections,
   docsSidebarSections,
@@ -55,9 +55,10 @@ const searchItems = buildDocsSearchIndex();
   tocExtraPaths={['/components']}
   htmlAttributes={{ 'data-framework': framework }}
 >
+  <VarUiWordmark slot="brand" size="header" />
   <DocsThemeScript slot="themeScript" />
   <FrameworkSwitcher slot="tools" />
-  <DocsThemePicker slot="themePicker" />
+  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" />
   <slot name="head" slot="head" />
   <slot name="toc" slot="toc" />
   <slot />

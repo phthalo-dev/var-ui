@@ -37,7 +37,7 @@ export default defineConfig({
 });
 ```
 
-Guide-only sites do **not** need React. `DocsThemePicker` is plain Astro + JS, like the rest of the kit chrome. `theme.presets` CSS extraction does not require React either.
+Guide-only sites do **not** need React. The header (`DocsTopBar`: brand, section links, search, a `tools` slot and the `DocsAppearanceMenu` for colour mode and `theme.presets`) is plain Astro + JS, like the rest of the kit chrome, and is shared by `DocsPage` and `DocsMarketingPage` (or use it directly in a custom layout with `DocsMobileMenu`). It persists across view transitions, so it never jumps or cross-fades between pages. `theme.presets` CSS extraction does not require React either.
 
 `output: 'static'` is supported. Injected `/docs` routes prerender, including when Astro `base` is set. Static injected routes accept **exactly one** `routes` prefix in this release (default `/docs`). Sites with several prefixes should use `output: 'server'`, or `disableGuideRoutes` plus `DocsGuidePage` in their own pages:
 

@@ -1,0 +1,47 @@
+---
+/**
+ * The docs mobile drawer (`MobileNav`): section links, the page's own navigation (default slot,
+ * e.g. `DocsSidebar`) and, under "Preferences", the `tools` slot (controls the header hides
+ * below `md`, such as a framework switcher).
+ */
+import { cx, MobileNav, SideNavItem, SideNavSection } from '@var-ui/astro';
+import { docsTopNav } from '../styles/docsTopNav';
+import type { TopNavItem as TopNavItemType } from '../types';
+
+type Props = {
+  topNav: readonly TopNavItemType[];
+  /** Normalized current path (without base) used for the selected link. */
+  currentPath: string;
+};
+
+const { topNav, currentPath } = Astro.props;
+const nav = docsTopNav();
+const hasToolsSlot = Astro.slots.has('tools');
+---
+
+<MobileNav header="Menu">
+  <div class={cx(nav.mobileNavBody)}>
+    {
+      topNav.length > 0 ? (
+        <SideNavSection>
+          {topNav.map((item) => (
+            <SideNavItem
+              label={item.text}
+              href={item.link}
+              selected={currentPath.startsWith(item.match)}
+            />
+          ))}
+        </SideNavSection>
+      ) : null
+    }
+    <slot />
+    {
+      hasToolsSlot ? (
+        <section class={cx(nav.mobileNavSection)} aria-label="Preferences">
+          <p class={cx(nav.mobileNavSectionTitle)}>Preferences</p>
+          <slot name="tools" />
+        </section>
+      ) : null
+    }
+  </div>
+</MobileNav>

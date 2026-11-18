@@ -37,6 +37,8 @@ export const commandPalette = typestyles.recipe({
     'resultMeta',
     'mark',
     'empty',
+    'footer',
+    'footerHint',
   ],
   vars: {
     backdropBackground: {
@@ -198,6 +200,8 @@ export const commandPalette = typestyles.recipe({
           color: vars.inputForeground.var,
           outline: 'none',
           '&::placeholder': { color: vars.inputPlaceholder.var },
+          // Esc clears and closes; the UA clear button only adds noise.
+          '&::-webkit-search-cancel-button': { display: 'none' },
         },
         results: {
           flex: 1,
@@ -212,6 +216,7 @@ export const commandPalette = typestyles.recipe({
           padding: 0,
         },
         groupHeading: {
+          margin: 0,
           padding: `${t.space.xs.var} ${t.space.md.var} ${t.space.xxs.var}`,
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.semibold.var,
@@ -277,6 +282,25 @@ export const commandPalette = typestyles.recipe({
           color: vars.markForeground.var,
           borderRadius: t.radius.sm.var,
           padding: `0 ${t.space.xxs.var}`,
+        },
+        // Keyboard hints under the results (↑↓ navigate, ↵ open, esc close).
+        footer: {
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: `${t.space.xxs.var} ${t.space.md.var}`,
+          paddingBlock: t.space.xs.var,
+          paddingInline: t.space.md.var,
+          ...borderSide('block-start', vars.inputRowBorder.var),
+          fontSize: t.fontSize.xs.var,
+          color: vars.resultMetaColor.var,
+        },
+        footerHint: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: t.space.xxs.var,
+          whiteSpace: 'nowrap',
         },
         empty: {
           padding: `${t.space.md.var} ${t.space.md.var}`,

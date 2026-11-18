@@ -83,7 +83,8 @@ export function initCommandPalette(root: HTMLElement): () => void {
   const resultMetaClass = root.dataset.classResultMeta ?? 'var-ui-command-palette__resultMeta';
   const emptyClass = root.dataset.classEmpty ?? 'var-ui-command-palette__empty';
   const groupClass = root.dataset.classGroup ?? 'var-ui-command-palette__group';
-  const groupLabelClass = root.dataset.classGroupLabel ?? 'var-ui-command-palette__groupLabel';
+  const groupHeadingClass =
+    root.dataset.classGroupHeading ?? 'var-ui-command-palette__groupHeading';
   const paletteId = root.id || root.dataset.commandPaletteId || '';
 
   function setOpen(open: boolean): void {
@@ -143,10 +144,11 @@ export function initCommandPalette(root: HTMLElement): () => void {
           return `<div class="${groupClass}" data-group="${escapeAttr(group.id)}">${itemsHtml}</div>`;
         }
 
-        return `<section class="${groupClass}" data-group="${escapeAttr(group.id)}">
-            <h2 class="${groupLabelClass}">${escapeHtml(group.label)}</h2>
+        // The heading is presentational: the group's `aria-label` names it for the listbox.
+        return `<div class="${groupClass}" data-group="${escapeAttr(group.id)}">
+            <div class="${groupHeadingClass}" role="presentation" aria-hidden="true">${escapeHtml(group.label)}</div>
             <div role="group" aria-label="${escapeAttr(group.label)}">${itemsHtml}</div>
-          </section>`;
+          </div>`;
       })
       .join('');
 

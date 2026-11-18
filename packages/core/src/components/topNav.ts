@@ -5,6 +5,7 @@ import { borderSide, border } from '../internal/border';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
+import { transitionOf } from '../internal/motion';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
   background: {
@@ -13,7 +14,7 @@ const topNavVarDefinitions = {
   },
   border: {
     ...atProperty.color,
-    value: t.color.border.strong.var,
+    value: t.color.border.subtle.var,
   },
   headingColor: {
     ...atProperty.color,
@@ -23,9 +24,14 @@ const topNavVarDefinitions = {
     ...atProperty.color,
     value: t.color.navItem.foreground.var,
   },
+  itemHoverColor: {
+    ...atProperty.color,
+    value: t.color.text.primary.var,
+  },
+  // Quieter than the selected pill: hover previews, selection states.
   itemHoverBackground: {
     ...atProperty.color,
-    value: t.color.navItem.hoverBackground.var,
+    value: `color-mix(in oklch, ${t.color.navItem.hoverBackground.var} 45%, transparent)`,
   },
   itemSelectedBackground: {
     ...atProperty.color,
@@ -100,6 +106,7 @@ export const topNav = typestyles.recipe({
     'center',
     'end',
     'item',
+    'itemLabel',
     'menuTrigger',
     'menuList',
     'richBody',
@@ -124,7 +131,6 @@ export const topNav = typestyles.recipe({
           paddingInline: t.space.md.var,
           backgroundColor: vars.background.var,
           ...borderSide('block-end', vars.border.var),
-          boxShadow: t.shadow.sm.var,
           '&[data-layout="grid"]': {
             display: 'grid',
             gridTemplateColumns: '1fr auto 1fr',
@@ -181,18 +187,25 @@ export const topNav = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xs.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          boxSizing: 'border-box',
+          // Same height as the bar's controls (search, buttons) so every pill lines up.
+          minHeight: t.size.control.md.var,
+          paddingBlock: 0,
+          paddingInline: t.space.sm.var,
           borderRadius: t.radius.navItem.var,
           border: 'none',
           backgroundColor: 'transparent',
           color: vars.itemColor.var,
           fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
           textDecoration: 'none',
           cursor: 'pointer',
           outline: 'none',
           whiteSpace: 'nowrap',
-          '&:hover': {
+          transition: transitionOf(['background-color', 'color'], 'fast'),
+          '&:hover:not([data-selected])': {
             backgroundColor: vars.itemHoverBackground.var,
+            color: vars.itemHoverColor.var,
           },
           '&:focus-visible': {
             ...focusRing,
@@ -200,7 +213,7 @@ export const topNav = typestyles.recipe({
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,
-            fontWeight: t.fontWeight.medium.var,
+            fontWeight: t.fontWeight.semibold.var,
             ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': {
@@ -210,11 +223,32 @@ export const topNav = typestyles.recipe({
             pointerEvents: 'none',
           },
         },
+        // Reserves the semibold width (hidden `::after` copy of `data-label`) so selecting an
+        // item never shifts its neighbours.
+        itemLabel: {
+          display: 'inline-flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          '&::after': {
+            // Empty alt text keeps the duplicate out of the accessibility tree.
+            content: 'attr(data-label) / ""',
+            height: 0,
+            overflow: 'hidden',
+            visibility: 'hidden',
+            userSelect: 'none',
+            pointerEvents: 'none',
+            fontWeight: t.fontWeight.semibold.var,
+          },
+        },
         menuTrigger: {
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xxs.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          boxSizing: 'border-box',
+          minHeight: t.size.control.md.var,
+          paddingBlock: 0,
+          paddingInline: t.space.sm.var,
+          fontWeight: t.fontWeight.medium.var,
           borderRadius: t.radius.navItem.var,
           border: 'none',
           backgroundColor: 'transparent',
@@ -225,6 +259,7 @@ export const topNav = typestyles.recipe({
           whiteSpace: 'nowrap',
           '&:hover': {
             backgroundColor: vars.itemHoverBackground.var,
+            color: vars.itemHoverColor.var,
           },
           '&:focus-visible': {
             ...focusRing,

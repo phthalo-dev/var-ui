@@ -1,0 +1,84 @@
+---
+/**
+ * The docs header: one component for every docs layout (marketing, guide, playground) so the
+ * brand, links and controls sit in the same place on every page.
+ *
+ * It is persisted across view transitions (`transition:persist`): navigating does not re-render
+ * or cross-fade it; `docsTopBarClient` moves the selected link instead.
+ *
+ * Slots: `brand` (custom brand content, e.g. a logo/wordmark), `tools` (extra controls before
+ * the appearance menu, e.g. a framework switcher; moved into `DocsMobileMenu` below `md`).
+ */
+import { cx, MobileNavToggle, TopNav, TopNavHeading, TopNavItem } from '@var-ui/astro';
+import { docsTopNav } from '../styles/docsTopNav';
+import DocsAppearanceMenu from './DocsAppearanceMenu.astro';
+import DocsSearch from './DocsSearch.astro';
+import type { DocsBrand, DocsSearchItem, TopNavItem as TopNavItemType } from '../types';
+
+type Props = {
+  topNav: readonly TopNavItemType[];
+  searchItems?: readonly DocsSearchItem[];
+  brand?: DocsBrand;
+  /** Normalized current path (without base) used for the selected link. */
+  currentPath: string;
+  /** Renders the hamburger for `DocsMobileMenu`. @default true */
+  mobileNav?: boolean;
+};
+
+const {
+  topNav,
+  searchItems = [],
+  brand = { heading: 'Docs', href: '/' },
+  currentPath,
+  mobileNav = true,
+} = Astro.props;
+
+const nav = docsTopNav();
+const hasBrandSlot = Astro.slots.has('brand');
+const hasToolsSlot = Astro.slots.has('tools');
+---
+
+<TopNav
+  className={cx(nav.root)}
+  data-docs-top-bar
+  transition:persist="docs-top-bar"
+  transition:animate="none"
+>
+  {
+    hasBrandSlot ? (
+      <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} aria-label={brand.heading}>
+        <slot name="brand" />
+      </TopNavHeading>
+    ) : (
+      <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} />
+    )
+  }
+  {
+    topNav.map((item) => (
+      <TopNavItem
+        label={item.text}
+        href={item.link}
+        selected={currentPath.startsWith(item.match)}
+        data-docs-top-nav-match={item.match}
+      />
+    ))
+  }
+  <div slot="end" class={cx(nav.tools)}>
+    <DocsSearch items={searchItems} />
+    {
+      hasToolsSlot ? (
+        <div class={cx(nav.toolbarExtra)}>
+          <slot name="tools" />
+        </div>
+      ) : null
+    }
+    <span class={cx(nav.divider)} aria-hidden="true"></span>
+    <DocsAppearanceMenu />
+    {mobileNav ? <MobileNavToggle /> : null}
+  </div>
+</TopNav>
+
+<script>
+  import { initDocsTopBar } from '../scripts/docsTopBarClient';
+  initDocsTopBar();
+</script>

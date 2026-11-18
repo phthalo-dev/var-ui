@@ -95,6 +95,8 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   loading?: boolean;
   /** Message shown while `loading` and no items are listed. @default 'Loading…' */
   loadingLabel?: string;
+  /** Keyboard hints under the results (↑↓ navigate, ↵ open, esc close). @default true */
+  hints?: boolean;
 };
 
 function defaultFilter(item: CommandPaletteItem, query: string): boolean {
@@ -179,6 +181,7 @@ export function CommandPalette({
   onQueryChange,
   loading = false,
   loadingLabel = 'Loading…',
+  hints = true,
   className,
   style,
   'aria-label': ariaLabel,
@@ -320,6 +323,20 @@ export function CommandPalette({
               )}
             </ListBox>
           </Autocomplete>
+          {hints ? (
+            <div {...mergeProps(cp.footer)} aria-hidden="true">
+              <span {...mergeProps(cp.footerHint)}>
+                <Kbd>↑</Kbd>
+                <Kbd>↓</Kbd> to navigate
+              </span>
+              <span {...mergeProps(cp.footerHint)}>
+                <Kbd>↵</Kbd> to open
+              </span>
+              <span {...mergeProps(cp.footerHint)}>
+                <Kbd>esc</Kbd> to close
+              </span>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </dialog>

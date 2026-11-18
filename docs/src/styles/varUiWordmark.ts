@@ -49,8 +49,8 @@ export const varUiWordmark = typestyles.recipe({
         header: {
           root: {
             flexShrink: 0,
-            fontSize: t.fontSize.md.var,
-            letterSpacing: '-0.06em',
+            fontSize: t.fontSize.lg.var,
+            letterSpacing: '-0.05em',
           },
         },
         inline: {

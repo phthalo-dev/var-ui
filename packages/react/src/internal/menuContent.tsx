@@ -1,5 +1,10 @@
 import type { JSX } from 'react';
-import { Header, MenuItem as AriaMenuItem, Separator } from 'react-aria-components';
+import {
+  Header,
+  MenuItem as AriaMenuItem,
+  MenuSection as AriaMenuSection,
+  Separator,
+} from 'react-aria-components';
 import { menu } from '@var-ui/core/components/menu';
 import { Icon } from '../icons';
 import { MenuSubmenu } from './menuParts';
@@ -22,10 +27,22 @@ export type MenuItemDefinition = {
 export type MenuSectionDefinition = {
   label?: string;
   items: MenuItemDefinition[];
+  /**
+   * Initially checked item id of this section. Passing it (even `null`) makes the section its
+   * own single-choice group, independent of other sections (e.g. "Mode" and "Theme" groups in
+   * one preferences menu). Same as the Astro `Menu` section `defaultValue`.
+   */
+  defaultValue?: string | null;
 };
 
 export type MenuContentProps = {
   sections: MenuSectionDefinition[];
+  /**
+   * Checked id per section index for sections with a `defaultValue`. The popup unmounts when it
+   * closes, so a component that stays mounted (e.g. `Menu.FromSections`) holds the state.
+   */
+  sectionValues?: Record<number, string | null>;
+  onSectionValueChange?: (sectionIndex: number, value: string | null) => void;
 };
 
 /**
@@ -38,19 +55,47 @@ export type MenuContentProps = {
  * </Menu.Popup>
  * ```
  */
-export function MenuContent({ sections }: MenuContentProps): JSX.Element {
+export function MenuContent({
+  sections,
+  sectionValues,
+  onSectionValueChange,
+}: MenuContentProps): JSX.Element {
   const m = menu();
   const nodes: JSX.Element[] = [];
 
   sections.forEach((section, sectionIndex) => {
-    if (section.label) {
+    if (section.defaultValue !== undefined) {
+      const checked =
+        sectionValues && sectionIndex in sectionValues
+          ? sectionValues[sectionIndex]
+          : section.defaultValue;
       nodes.push(
-        <Header key={`header-${sectionIndex}`} {...mergeProps(m.sectionHeader)}>
-          {section.label}
-        </Header>,
+        <AriaMenuSection
+          key={`section-${sectionIndex}`}
+          aria-label={section.label}
+          selectionMode="single"
+          disallowEmptySelection={checked !== null}
+          selectedKeys={checked === null ? [] : [checked]}
+          onSelectionChange={(keys) => {
+            const next = keys === 'all' ? null : ([...keys][0] ?? null);
+            onSectionValueChange?.(sectionIndex, next === null ? null : String(next));
+          }}
+          {...mergeProps(m.section)}
+        >
+          {section.label ? <Header {...mergeProps(m.sectionHeader)}>{section.label}</Header> : null}
+          {section.items.map((item) => renderItem(item, m))}
+        </AriaMenuSection>,
       );
+    } else {
+      if (section.label) {
+        nodes.push(
+          <Header key={`header-${sectionIndex}`} {...mergeProps(m.sectionHeader)}>
+            {section.label}
+          </Header>,
+        );
+      }
+      section.items.forEach((item) => nodes.push(renderItem(item, m)));
     }
-    section.items.forEach((item) => nodes.push(renderItem(item, m)));
     if (sectionIndex < sections.length - 1) {
       nodes.push(<Separator key={`sep-${sectionIndex}`} {...mergeProps(m.separator)} />);
     }

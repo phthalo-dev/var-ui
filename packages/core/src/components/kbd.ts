@@ -26,12 +26,21 @@ export const kbd = typestyles.recipe({
   styles: ({ vars }) => {
     return {
       base: {
-        display: 'inline-block',
-        padding: `0.0625rem ${t.space.xxs.var}`,
+        // A centered cap: one glyph is a square, longer labels grow with even side padding.
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.125rem',
+        boxSizing: 'border-box',
+        minWidth: '1.25rem',
+        height: '1.25rem',
+        paddingBlock: 0,
+        paddingInline: '0.3125rem',
         fontFamily: t.fontFamily.mono.var,
-        fontSize: t.fontSize.xs.var,
+        fontSize: '0.6875rem',
         fontWeight: t.fontWeight.medium.var,
-        lineHeight: t.lineHeight.normal.var,
+        lineHeight: 1,
+        verticalAlign: 'middle',
         color: t.color.text.secondary.var,
         backgroundColor: vars.background.var,
         ...border(vars.border.var),

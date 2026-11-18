@@ -193,7 +193,11 @@ export function TopNavItem({
   const content = (
     <>
       {iconNode}
-      {!iconOnly ? <span>{label}</span> : null}
+      {!iconOnly ? (
+        <span data-label={label} {...mergeProps(s.itemLabel)}>
+          {label}
+        </span>
+      ) : null}
       {!iconOnly && endContent != null ? endContent : null}
     </>
   );

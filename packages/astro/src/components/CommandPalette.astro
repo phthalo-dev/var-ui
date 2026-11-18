@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 import type { ComponentAttrsResult } from 'typestyles';
 import { commandPalette } from '@var-ui/core/components/commandPalette';
 import { mergeProps } from '../utils';
+import Kbd from './Kbd.astro';
 import type { CommandPaletteItem } from '../scripts/commandPaletteUtils';
 
 type CommandPaletteSlot =
@@ -17,6 +18,10 @@ type CommandPaletteSlot =
   | 'resultBody'
   | 'resultTitle'
   | 'resultMeta'
+  | 'group'
+  | 'groupHeading'
+  | 'footer'
+  | 'footerHint'
   | 'empty';
 type CommandPaletteSlots = Record<CommandPaletteSlot, ComponentAttrsResult>;
 type CommandPaletteRecipeFn = () => CommandPaletteSlots;
@@ -28,6 +33,8 @@ type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   placeholder?: string;
   'aria-label'?: string;
   hotkey?: boolean;
+  /** Keyboard hints under the results (↑↓ navigate, ↵ open, esc close). @default true */
+  hints?: boolean;
   className?: string;
 };
 
@@ -37,6 +44,7 @@ const {
   placeholder = 'Search…',
   'aria-label': ariaLabel = placeholder,
   hotkey = true,
+  hints = true,
   className,
   ...rest
 } = Astro.props;
@@ -55,6 +63,10 @@ const resultBodyClass = (cp.resultBody).className;
 const resultTitleClass = (cp.resultTitle).className;
 const resultMetaClass = (cp.resultMeta).className;
 const emptyClass = (cp.empty).className;
+const groupClass = cp.group.className;
+const groupHeadingClass = cp.groupHeading.className;
+const footerRecipe = mergeProps(cp.footer);
+const footerHintRecipe = mergeProps(cp.footerHint);
 ---
 
 <div
@@ -69,8 +81,8 @@ const emptyClass = (cp.empty).className;
   data-class-result-title={resultTitleClass}
   data-class-result-meta={resultMetaClass}
   data-class-empty={emptyClass}
-  data-class-group="var-ui-command-palette__group"
-  data-class-group-label="var-ui-command-palette__groupLabel"
+  data-class-group={groupClass}
+  data-class-group-heading={groupHeadingClass}
 >
   <dialog
     {...rest}
@@ -116,6 +128,13 @@ const emptyClass = (cp.empty).className;
         role="listbox"
       >
       </div>
+      {hints ? (
+        <div {...footerRecipe} aria-hidden="true">
+          <span {...footerHintRecipe}><Kbd>↑</Kbd><Kbd>↓</Kbd> to navigate</span>
+          <span {...footerHintRecipe}><Kbd>↵</Kbd> to open</span>
+          <span {...footerHintRecipe}><Kbd>esc</Kbd> to close</span>
+        </div>
+      ) : null}
     </div>
   </dialog>
 

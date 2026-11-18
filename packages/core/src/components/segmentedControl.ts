@@ -1,4 +1,4 @@
-import { atProperty, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { typestyles } from '../runtime';
 import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
@@ -9,15 +9,22 @@ import { controlSizeMetrics, controlSizeVariants } from '../internal/controlSize
 import { controlSize, type ControlSize } from '../shared/variantAxes';
 
 const segmentedSegmentPaddingInline: Record<ControlSize, string> = {
-  sm: t.space.sm.var,
-  md: t.space.md.var,
+  sm: t.space.xs.var,
+  md: t.space.sm.var,
   lg: t.space.md.var,
 };
 
-/** Track + segment metrics for segmented controls (icon-friendly square segments). */
+/** Gap between the track edge and the indicator / segments. */
+const trackPadding = `calc(${t.space.xxs.var} / 2)`;
+/** Nested radius: the indicator (and each segment's focus ring) is the track radius minus its inset. */
+const segmentRadius = `calc(${t.radius.md.var} - ${trackPadding})`;
+
+/** `default` — text (or icon + text) segments; `icon` — square, icon-only segments. */
+const segmentedControlLayout = variant.enum(['default', 'icon'], { default: 'default' });
+
+/** Track + segment metrics for segmented controls. */
 function segmentedControlSize(size: ControlSize) {
   const height = controlSizeMetrics[size].height;
-  const trackPadding = t.space.xxs.var;
   return {
     root: {
       boxSizing: 'border-box' as const,
@@ -28,27 +35,35 @@ function segmentedControlSize(size: ControlSize) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
+      gap: t.space.xxs.var,
       height: '100%',
       minHeight: 0,
       paddingInline: segmentedSegmentPaddingInline[size],
       fontSize: controlSizeMetrics[size].fontSize,
       lineHeight: 1,
     },
-    indicatorInset: trackPadding,
     segmentMinWidth: `calc(${height} - 2 * ${trackPadding})`,
   };
 }
 
 /**
- * Segmented toggle group with a sliding surface indicator behind the active segment.
+ * Single-choice segmented control: a track with a sliding indicator behind the checked segment.
+ *
+ * Segments are direct children of `root`. React renders them as radios (`RadioGroup`), Astro as
+ * `<label>`s wrapping native radio inputs; `data-selected` marks the checked one and positions
+ * the indicator (see `observeSegmentedControlIndicator`).
  */
 export const segmentedControl = typestyles.recipe({
   name: 'segmented-control',
   layer: 'components',
   slots: ['root'],
-  variants: { size: controlSize },
+  variants: { size: controlSize, layout: segmentedControlLayout },
   vars: {
     trackBackground: {
+      ...atProperty.color,
+      value: t.color.background.subtle.var,
+    },
+    trackBorder: {
       ...atProperty.color,
       value: t.color.border.subtle.var,
     },
@@ -56,7 +71,12 @@ export const segmentedControl = typestyles.recipe({
       ...atProperty.color,
       value: t.color.background.surface.var,
     },
+    indicatorBorder: {
+      ...atProperty.color,
+      value: t.color.border.subtle.var,
+    },
     segmentColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    segmentHoverColor: { ...atProperty.color, value: t.color.text.primary.var },
     segmentSelectedColor: {
       ...atProperty.color,
       value: t.color.text.primary.var,
@@ -73,28 +93,29 @@ export const segmentedControl = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'stretch',
           boxSizing: 'border-box',
-          padding: t.space.xxs.var,
+          padding: trackPadding,
           gap: 0,
           borderRadius: t.radius.md.var,
           border: 'none',
           backgroundColor: vars.trackBackground.var,
+          boxShadow: `inset 0 0 0 0.0625rem ${vars.trackBorder.var}`,
           isolation: 'isolate',
           ...atForcedColors(forced.boundary),
+          // Dark mode: the thumb lifts (lighter than the track) instead of sinking into it.
           ...atDarkMode({
-            '&::after': {
-              boxShadow: 'none',
-            },
+            [vars.indicatorBackground.name]: t.color.background.elevated.var,
+            [vars.indicatorBorder.name]: t.color.border.default.var,
           }),
           '&::after': {
             content: '""',
             position: 'absolute',
-            top: t.space.xxs.var,
-            bottom: t.space.xxs.var,
+            top: trackPadding,
+            bottom: trackPadding,
             insetInlineStart: 0,
             width: vars.indicatorWidth.var,
-            borderRadius: t.radius.md.var,
+            borderRadius: segmentRadius,
             backgroundColor: vars.indicatorBackground.var,
-            boxShadow: t.shadow.xs.var,
+            boxShadow: `0 0 0 0.0625rem ${vars.indicatorBorder.var}, ${t.shadow.xs.var}`,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
             zIndex: t.zIndex.base.var,
@@ -105,23 +126,31 @@ export const segmentedControl = typestyles.recipe({
             position: 'relative',
             zIndex: t.zIndex.raised.var,
             flex: '1 1 auto',
+            boxSizing: 'border-box',
             border: 'none',
-            borderRadius: t.radius.md.var,
+            borderRadius: segmentRadius,
             backgroundColor: 'transparent',
             color: vars.segmentColor.var,
-            fontWeight: t.fontWeight.normal.var,
+            fontWeight: t.fontWeight.medium.var,
             boxShadow: 'none',
-            transition: transitionOf(['color', 'font-weight'], 'fast'),
+            cursor: 'pointer',
+            userSelect: 'none',
+            transition: transitionOf('color', 'fast'),
             '&:hover': {
               backgroundColor: 'transparent',
               borderColor: 'transparent',
+              color: vars.segmentHoverColor.var,
             },
-            '&:focus-visible, &[data-focus-visible]': {
+            // React Aria marks the radio label; Astro segments are labels around a native radio.
+            '&:focus-visible, &[data-focus-visible], &:has(:focus-visible)': {
               ...focusRing,
+            },
+            '&[data-disabled], &:has(:disabled)': {
+              opacity: t.opacity.disabled.var,
+              cursor: 'not-allowed',
             },
             '&[data-selected], &[aria-pressed="true"]': {
               color: vars.segmentSelectedColor.var,
-              fontWeight: t.fontWeight.semibold.var,
               backgroundColor: 'transparent',
               borderColor: 'transparent',
               boxShadow: 'none',
@@ -131,22 +160,49 @@ export const segmentedControl = typestyles.recipe({
                 borderColor: 'transparent',
               },
             },
+            '& svg': {
+              flexShrink: 0,
+            },
+          },
+          // Native radio inside an Astro segment: visually hidden, still focusable and announced.
+          '& > * > input[type="radio"]': {
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            margin: 0,
+            opacity: 0,
+            cursor: 'inherit',
+            appearance: 'none',
           },
         },
       },
       variants: {
         size: controlSizeVariants((size) => {
           const metrics = segmentedControlSize(size);
+          const segment = { ...metrics.segment, minWidth: metrics.segmentMinWidth };
           return {
             root: {
               ...metrics.root,
-              '& > *': {
-                ...metrics.segment,
-                minWidth: metrics.segmentMinWidth,
-              },
+              '& > *': segment,
+              // Segments usually carry `toggleButton` classes whose size padding would win on
+              // order; the attribute lifts the track's metrics above them.
+              '& > [class]': segment,
             },
           };
         }),
+        layout: {
+          default: {},
+          icon: {
+            root: {
+              '& > *, & > [class]': {
+                flex: '0 0 auto',
+                aspectRatio: '1 / 1',
+                paddingInline: 0,
+              },
+            },
+          },
+        },
       },
     };
   },

@@ -140,6 +140,33 @@ function mountRadioMenu(): HTMLElement {
   return host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
 }
 
+/** Two independent radio groups in one menu (sections with their own `defaultValue`). */
+function mountGroupedRadioMenu(): HTMLElement {
+  const radio = (id: string, checked: boolean) => `
+    <button type="button" role="menuitemradio" aria-checked="${checked}" data-var-ui-menu-item
+      data-item-id="${id}" tabindex="-1"><span>${id}</span></button>`;
+  const host = document.createElement('div');
+  host.innerHTML = `
+    <div data-var-ui-menu-root data-selection-mode="none">
+      <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+        aria-controls="menu-3" popovertarget="menu-3-popover">Appearance</button>
+      <div data-var-ui-menu-popover data-placement="bottom end" id="menu-3-popover" popover="auto">
+        <div role="menu" id="menu-3" aria-label="Appearance">
+          <div role="group" aria-label="Mode" data-var-ui-menu-group>
+            ${radio('light', false)}${radio('dark', true)}
+          </div>
+          <div role="separator"></div>
+          <div role="group" aria-label="Theme" data-var-ui-menu-group>
+            ${radio('teal', true)}${radio('rose', false)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(host);
+  return host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+}
+
 function trigger(root: HTMLElement): HTMLElement {
   return root.querySelector('[data-var-ui-menu-trigger]') as HTMLElement;
 }
@@ -438,6 +465,33 @@ describe('initMenu', () => {
 
     expect(item(root, 'default').getAttribute('aria-checked')).toBe('true');
     expect(item(root, 'forest').getAttribute('aria-checked')).toBe('false');
+  });
+});
+
+describe('menu with per-section radio groups', () => {
+  it('checks within the item group only', () => {
+    const root = mountGroupedRadioMenu();
+    initMenu(root);
+    trigger(root).click();
+
+    item(root, 'rose').click();
+
+    expect(item(root, 'rose').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'teal').getAttribute('aria-checked')).toBe('false');
+    // The other group keeps its choice.
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'light').getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('controller.select() moves the check within that group', () => {
+    const root = mountGroupedRadioMenu();
+    initMenu(root);
+
+    getMenuController(root)?.select('light');
+
+    expect(item(root, 'light').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('false');
+    expect(item(root, 'teal').getAttribute('aria-checked')).toBe('true');
   });
 });
 

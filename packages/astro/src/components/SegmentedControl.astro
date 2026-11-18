@@ -4,6 +4,7 @@ import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from "../utils";
+import { nextSegmentedControlName } from "../scripts/segmentedControl";
 
 type SegmentOption = {
   /** Unique value; also the name of the optional slot that renders rich content. */
@@ -14,12 +15,18 @@ type SegmentOption = {
   "aria-label"?: string;
 };
 
-type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
+type Props = Omit<HTMLAttributes<'div'>, 'class' | 'role'> & {
   /** Segment definitions. Render rich content (e.g. icons) via a named slot matching each `value`. */
   options: SegmentOption[];
   /** Initially selected segment value. Defaults to the first option. */
   defaultValue?: string;
+  /** Radio group name (also submitted with a form). Defaults to a unique generated name. */
+  name?: string;
+  /** Disables every segment. */
+  disabled?: boolean;
   size?: ControlSize;
+  /** `icon` renders square, icon-only segments (give each option an `aria-label`). */
+  layout?: "default" | "icon";
   className?: string;
   /** Accessible name for the group. */
   "aria-label"?: string;
@@ -28,13 +35,16 @@ type Props = Omit<HTMLAttributes<'div'>, 'class'> & {
 const {
   options,
   defaultValue = options[0]?.value,
+  name = nextSegmentedControlName(),
+  disabled = false,
   size = "md",
+  layout = "default",
   className,
   "aria-label": ariaLabel,
   ...rest
 } = Astro.props;
 
-const s = segmentedControl({ size });
+const s = segmentedControl({ size, layout });
 const segmentRecipe = mergeProps(toggleButton({ segmented: true }));
 
 const optionContent = await Promise.all(
@@ -47,30 +57,42 @@ const optionContent = await Promise.all(
 );
 ---
 
+{/*
+  A radio group (APG): Tab lands on the checked segment, arrow keys move and check. Each segment
+  is a <label> around a native radio, so the browser provides the roving focus and form value.
+*/}
 <div
-  role="group"
+  role="radiogroup"
   {...rest}
   aria-label={ariaLabel}
+  aria-disabled={disabled ? "true" : undefined}
   data-var-ui-segmented-control
   {...mergeProps(s.root, className)}
 >
   {options.map((option) => {
     const selected = option.value === defaultValue;
+    const optionDisabled = disabled || option.disabled === true;
     const content = optionContent.find(
       (entry) => entry.value === option.value,
     )?.content;
     return (
-      <button
-        type="button"
+      <label
         data-segment-id={option.value}
-        disabled={option.disabled}
-        aria-pressed={selected ? "true" : "false"}
         data-selected={selected ? "" : undefined}
-        aria-label={option["aria-label"]}
+        data-disabled={optionDisabled ? "" : undefined}
+        title={layout === "icon" ? (option["aria-label"] ?? option.label) : undefined}
         {...segmentRecipe}
       >
+        <input
+          type="radio"
+          name={name}
+          value={option.value}
+          checked={selected}
+          disabled={optionDisabled}
+          aria-label={option["aria-label"]}
+        />
         {content ? <Fragment set:html={content} /> : option.label}
-      </button>
+      </label>
     );
   })}
 </div>
@@ -78,4 +100,5 @@ const optionContent = await Promise.all(
 <script>
   import { initSegmentedControls } from "../scripts/segmentedControl";
   initSegmentedControls();
+  document.addEventListener("astro:page-load", () => initSegmentedControls());
 </script>

@@ -3,7 +3,6 @@ import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
 import { cx } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
-import DocsThemePicker from '../components/DocsThemePicker.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -31,7 +30,7 @@ const searchItems = buildDocsSearchIndex();
   <VarUiWordmark slot="brand" size="header" />
   <DocsThemeScript slot="themeScript" />
   <FrameworkSwitcher slot="tools" />
-  <DocsThemePicker slot="themePicker" />
+  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" />
   <slot name="head" slot="head" />
   <slot />
   <SiteFooter slot="footer" />

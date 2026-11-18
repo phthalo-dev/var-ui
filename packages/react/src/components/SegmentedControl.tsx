@@ -27,7 +27,7 @@ export type SegmentedControlProps = Omit<
   ComponentPropsWithRef<'div'>,
   'children' | 'className' | 'style' | 'onChange' | 'defaultValue' | 'ref'
 > & {
-  /** Segment definitions rendered as toggle buttons. */
+  /** Segment definitions, rendered as radios. */
   options: SegmentedControlOption[];
   /** Controlled selected value (`null` = controlled, nothing selected). */
   value?: string | null;
@@ -46,9 +46,11 @@ export type SegmentedControlProps = Omit<
   style?: CSSProperties;
   /** Control density. Falls back to the surrounding control size, then `md`. */
   size?: ControlSize;
+  /** `icon` renders square, icon-only segments (give each option an `aria-label`). @default 'default' */
+  layout?: 'default' | 'icon';
   /**
-   * Ref to the `role="group"` element. A segmented control has no single native control, so
-   * this is the nearest real element; each segment is a toggle button.
+   * Ref to the `role="radiogroup"` element. A segmented control has no single native control, so
+   * this is the nearest real element; each segment is a radio.
    */
   ref?: Ref<HTMLDivElement>;
 };
@@ -64,6 +66,7 @@ export function SegmentedControl({
   options,
   className,
   size,
+  layout = 'default',
   value,
   defaultValue,
   onValueChange,
@@ -72,7 +75,7 @@ export function SegmentedControl({
   ...props
 }: SegmentedControlProps): JSX.Element {
   const contextSize = useControlSize();
-  const s = segmentedControl({ size: size ?? contextSize ?? 'md' });
+  const s = segmentedControl({ size: size ?? contextSize ?? 'md', layout });
   const t = toggleButton({ segmented: true });
   const rootRef = useRef<HTMLDivElement>(null);
   const setRoot = useMemo(() => mergeRefs(rootRef, ref), [ref]);

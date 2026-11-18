@@ -100,8 +100,11 @@ export {
   applyColorModeToDocument,
   applyThemeBoot,
   bootTheme,
+  COLOR_MODE_CHANGE_EVENT,
+  colorModeToggleValue,
   initColorModeToggle,
   persistColorMode,
+  readColorModePreference,
   readStoredColorMode,
   resolveColorMode,
   setColorMode,
@@ -135,9 +138,11 @@ export {
   type MenuSectionDefinition,
 } from './src/scripts/menu';
 export {
+  getSegmentedControlValue,
   initSegmentedControl,
   initSegmentedControls,
   SEGMENTED_CONTROL_CHANGE_EVENT,
+  setSegmentedControlValue,
 } from './src/scripts/segmentedControl';
 export {
   initToggleButton,

@@ -10,11 +10,50 @@ import {
 } from '../internal/controlSize';
 import { controlSize } from '../shared/variantAxes';
 
-/** Command-trigger chrome collapses to an icon button below this width. */
-const belowXl = breakpoint('xl', 'max');
-
 /** `default` — inline search input; `command` — read-only command-palette trigger. */
 const searchInputVariant = variant.enum(['default', 'command'], { default: 'default' });
+
+/**
+ * Width below which the `command` trigger (`data-variant="command"` on the root) collapses to a square icon button (label and shortcut
+ * hidden). `none` never collapses. Pick it to fit the bar the trigger lives in.
+ */
+const collapseBelow = variant.enum(['none', 'sm', 'md', 'lg', 'xl'], { default: 'md' });
+
+/** Height of the shortcut key cap inside the command trigger (see `kbd`). */
+const shortcutHeight = '1.25rem';
+
+/** Collapsed command trigger: a square icon button the size of the control. */
+const collapsedCommand = {
+  root: {
+    position: 'relative',
+    minWidth: 0,
+    width: 'auto',
+    justifyContent: 'center',
+    aspectRatio: '1 / 1',
+    paddingInline: 0,
+    flexShrink: 0,
+    // Collapsed, it is an icon button: quiet like its neighbours until hovered.
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+    '&:hover': {
+      borderColor: 'transparent',
+      backgroundColor: t.color.background.subtle.var,
+    },
+  },
+  trigger: { position: 'absolute', inset: 0 },
+  triggerLabel: { display: 'none' },
+  shortcut: { display: 'none' },
+} as const;
+
+function collapseAt(bp: 'sm' | 'md' | 'lg' | 'xl') {
+  const query = breakpoint(bp, 'max');
+  return {
+    root: { '&[data-variant="command"]': { [query]: collapsedCommand.root } },
+    trigger: { [query]: collapsedCommand.trigger },
+    triggerLabel: { [query]: collapsedCommand.triggerLabel },
+    shortcut: { [query]: collapsedCommand.shortcut },
+  };
+}
 
 /**
  * Compact search field for toolbars and nav chrome.
@@ -27,7 +66,7 @@ export const searchInput = typestyles.recipe({
   name: 'search-input',
   layer: 'components',
   slots: ['root', 'icon', 'input', 'trigger', 'triggerLabel', 'shortcut'],
-  variants: { variant: searchInputVariant, size: controlSize },
+  variants: { variant: searchInputVariant, size: controlSize, collapseBelow },
   vars: {
     background: {
       ...atProperty.color,
@@ -69,11 +108,12 @@ export const searchInput = typestyles.recipe({
           borderRadius: t.radius.md.var,
           backgroundColor: vars.background.var,
           color: vars.foreground.var,
-          transition: t.transition.border.var,
+          transition: t.transition.controlSurface.var,
           '&:hover': {
             borderColor: t.color.border.strong.var,
           },
-          '&:focus-within': focusRing,
+          // One ring on the field: the inner input/trigger draws none of its own.
+          '&:has(:focus-visible)': focusRing,
         },
         icon: {
           flexShrink: 0,
@@ -93,6 +133,7 @@ export const searchInput = typestyles.recipe({
           fontFamily: t.fontFamily.body.var,
           color: vars.foreground.var,
           outline: 'none',
+          '&:focus-visible': { outline: 'none' },
           '&::placeholder': {
             color: vars.placeholder.var,
           },
@@ -113,6 +154,8 @@ export const searchInput = typestyles.recipe({
           color: 'inherit',
           textAlign: 'start',
           cursor: 'pointer',
+          outline: 'none',
+          '&:focus-visible': { outline: 'none' },
         },
         triggerLabel: {
           flex: 1,
@@ -124,6 +167,10 @@ export const searchInput = typestyles.recipe({
         },
         shortcut: {
           flexShrink: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+          // Sits in the trigger's hit area; clicks fall through to the field.
+          pointerEvents: 'none',
         },
       },
       variants: {
@@ -132,40 +179,34 @@ export const searchInput = typestyles.recipe({
           command: {
             root: {
               cursor: 'pointer',
-              [belowXl]: {
-                position: 'relative',
-                minWidth: 0,
-                width: 'auto',
-                justifyContent: 'center',
-                aspectRatio: '1 / 1',
-                paddingInline: t.space.xs.var,
-                flexShrink: 0,
+              '&:hover': {
+                backgroundColor: t.color.background.subtle.var,
               },
             },
             trigger: {
               width: '100%',
-              [belowXl]: {
-                position: 'absolute',
-                inset: 0,
-              },
-            },
-            triggerLabel: {
-              [belowXl]: {
-                display: 'none',
-              },
-            },
-            shortcut: {
-              [belowXl]: {
-                display: 'none',
-              },
             },
           },
         },
         size: controlSizeVariants((size) => ({
-          root: controlSurfaceSize(size, { inset: 'compact' }),
+          root: {
+            ...controlSurfaceSize(size, { inset: 'compact' }),
+            // The shortcut key cap gets the same inset on every side (centered vertically).
+            '&[data-variant="command"]': {
+              paddingInlineEnd: `calc((${controlSizeMetrics[size].height} - ${shortcutHeight}) / 2)`,
+            },
+          },
           input: { fontSize: controlSizeMetrics[size].fontSize },
           triggerLabel: { fontSize: controlSizeMetrics[size].fontSize },
         })),
+        // After `size` so the collapsed square wins over the size insets.
+        collapseBelow: {
+          none: {},
+          sm: collapseAt('sm'),
+          md: collapseAt('md'),
+          lg: collapseAt('lg'),
+          xl: collapseAt('xl'),
+        },
       },
     };
   },

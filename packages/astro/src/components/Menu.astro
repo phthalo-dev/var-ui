@@ -81,6 +81,7 @@ const itemLabelRecipe = mergeProps(m.itemLabel);
 const itemShortcutRecipe = mergeProps(m.itemShortcut);
 
 const singleSelection = defaultValue !== undefined;
+const sectionRecipe = mergeProps(m.section);
 
 const hasTriggerSlot = Astro.slots.has("trigger");
 
@@ -140,7 +141,11 @@ const itemContents = await Promise.all(
               {section.label}
             </div>
           ) : null}
-          {section.items.map((item) => {
+          {(() => {
+            const sectionSelection = section.defaultValue !== undefined;
+            const radio = singleSelection || sectionSelection;
+            const checkedId = sectionSelection ? section.defaultValue : defaultValue;
+            const rendered = section.items.map((item) => {
             const content = itemContents.find(
               (entry) => entry.id === item.id,
             )?.content;
@@ -148,7 +153,7 @@ const itemContents = await Promise.all(
             const itemRecipe = combine(m.item, item.danger && m.itemDanger);
             const inner = (
               <>
-                {singleSelection ? (
+                {radio ? (
                   <span
                     {...itemCheckRecipe}
                     data-var-ui-menu-item-check
@@ -179,7 +184,7 @@ const itemContents = await Promise.all(
                 )}
               </>
             );
-            return item.href && !singleSelection ? (
+            return item.href && !radio ? (
               <a
                 role="menuitem"
                 href={disabled ? undefined : item.href}
@@ -194,13 +199,9 @@ const itemContents = await Promise.all(
             ) : (
               <button
                 type="button"
-                role={singleSelection ? "menuitemradio" : "menuitem"}
+                role={radio ? "menuitemradio" : "menuitem"}
                 aria-checked={
-                  singleSelection
-                    ? item.id === defaultValue
-                      ? "true"
-                      : "false"
-                    : undefined
+                  radio ? (item.id === checkedId ? "true" : "false") : undefined
                 }
                 aria-disabled={disabled || undefined}
                 data-var-ui-menu-item
@@ -211,7 +212,20 @@ const itemContents = await Promise.all(
                 {inner}
               </button>
             );
-          })}
+          });
+            return sectionSelection ? (
+              <div
+                role="group"
+                aria-label={section.label}
+                data-var-ui-menu-group
+                {...sectionRecipe}
+              >
+                {rendered}
+              </div>
+            ) : (
+              rendered
+            );
+          })()}
           {sectionIndex < sections.length - 1 ? (
             <div role="separator" {...separatorRecipe} />
           ) : null}

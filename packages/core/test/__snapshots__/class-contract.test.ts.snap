@@ -588,6 +588,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "axes": [],
     "slots": {
       "empty": "var-ui-command-palette__empty",
+      "footer": "var-ui-command-palette__footer",
+      "footerHint": "var-ui-command-palette__footerHint",
       "frame": "var-ui-command-palette__frame",
       "group": "var-ui-command-palette__group",
       "groupHeading": "var-ui-command-palette__groupHeading",
@@ -1515,6 +1517,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "search-input": {
     "axes": [
+      "collapseBelow",
+      "data-collapse-below",
       "data-size",
       "data-variant",
       "size",
@@ -1549,7 +1553,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "segmented-control": {
     "axes": [
+      "data-layout",
       "data-size",
+      "layout",
       "size",
     ],
     "slots": {
@@ -1557,12 +1563,15 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     },
     "vars": [
       "--var-ui-segmented-control-indicatorbackground",
+      "--var-ui-segmented-control-indicatorborder",
       "--var-ui-segmented-control-indicatoropacity",
       "--var-ui-segmented-control-indicatorwidth",
       "--var-ui-segmented-control-indicatorx",
       "--var-ui-segmented-control-segmentcolor",
+      "--var-ui-segmented-control-segmenthovercolor",
       "--var-ui-segmented-control-segmentselectedcolor",
       "--var-ui-segmented-control-trackbackground",
+      "--var-ui-segmented-control-trackborder",
     ],
   },
   "select": {
@@ -2169,6 +2178,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "featuredCard": "var-ui-top-nav__featuredCard",
       "heading": "var-ui-top-nav__heading",
       "item": "var-ui-top-nav__item",
+      "itemLabel": "var-ui-top-nav__itemLabel",
       "megaItem": "var-ui-top-nav__megaItem",
       "megaItems": "var-ui-top-nav__megaItems",
       "megaPanel": "var-ui-top-nav__megaPanel",
@@ -2187,6 +2197,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-top-nav-headingcolor",
       "--var-ui-top-nav-itemcolor",
       "--var-ui-top-nav-itemhoverbackground",
+      "--var-ui-top-nav-itemhovercolor",
       "--var-ui-top-nav-itemselectedbackground",
       "--var-ui-top-nav-itemselectedcolor",
       "--var-ui-top-nav-megaitemcolor",

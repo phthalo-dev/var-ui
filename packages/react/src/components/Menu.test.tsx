@@ -412,6 +412,60 @@ describe('Menu single choice (value / defaultValue / onValueChange)', () => {
   });
 });
 
+describe('Menu.FromSections per-section choice (section defaultValue)', () => {
+  it('keeps each section an independent single-choice group', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>Appearance</Button>}
+        aria-label="Appearance"
+        sections={[
+          {
+            label: 'Mode',
+            defaultValue: 'dark',
+            items: [
+              { id: 'light', label: 'Light' },
+              { id: 'dark', label: 'Dark' },
+            ],
+          },
+          {
+            label: 'Theme',
+            defaultValue: 'teal',
+            items: [
+              { id: 'teal', label: 'Teal' },
+              { id: 'rose', label: 'Rose' },
+            ],
+          },
+        ]}
+      />,
+    );
+    const openMenu = async () => {
+      await userEvent.click(screen.getByRole('button', { name: 'Appearance' }));
+      await screen.findByRole('menu', { name: 'Appearance' });
+    };
+    await openMenu();
+    expect(screen.getByRole('group', { name: 'Mode' })).toBeTruthy();
+    expect(screen.getByRole('menuitemradio', { name: 'Dark' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Teal' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Rose' }));
+    await openMenu();
+    // Choosing a theme leaves the mode group untouched.
+    expect(screen.getByRole('menuitemradio', { name: 'Rose' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Teal' }).getAttribute('aria-checked')).toBe(
+      'false',
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Dark' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+});
+
 describe('Menu.Submenu (API shape)', () => {
   function renderSubmenu(onAction = vi.fn()) {
     return wrap(
