@@ -11,7 +11,12 @@ import { text } from './text';
 import { tone } from './tone';
 import { track } from './track';
 
-export { lightSyntaxValues, darkSyntaxValues, type SyntaxFaceValues } from './code';
+export {
+  lightSyntaxValues,
+  darkSyntaxValues,
+  syntaxCodeTokens,
+  type SyntaxFaceValues,
+} from './code';
 
 /** Default semantic colors with mode-aware `{ light, dark }` leaves. */
 export const color = {

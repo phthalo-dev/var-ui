@@ -23,7 +23,12 @@ export {
 /** Declared design token refs (`declare.ts` exports `tokens` internally). */
 export { tokens as designTokens } from './declare';
 export { tokenValues } from './preset';
-export { darkSyntaxValues, lightSyntaxValues, type SyntaxFaceValues } from './defaults/color';
+export {
+  darkSyntaxValues,
+  lightSyntaxValues,
+  syntaxCodeTokens,
+  type SyntaxFaceValues,
+} from './defaults/color';
 export { generateColors } from './generate-colors';
 export {
   createToneFace,

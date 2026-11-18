@@ -4,7 +4,7 @@ import {
   createToneFace,
   defaultTheme,
   designTokens as t,
-  lightSyntaxValues,
+  syntaxCodeTokens,
   type DesignThemeTokenValues,
   segmentedControl,
   tabs,
@@ -234,7 +234,7 @@ export const classicSystemThemeTokens = {
         dark: '#E0E0E0',
       },
     },
-    code: lightSyntaxValues,
+    code: syntaxCodeTokens(),
   },
 } satisfies DesignThemeTokenValues;
 

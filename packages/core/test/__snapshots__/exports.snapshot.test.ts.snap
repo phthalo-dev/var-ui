@@ -64,6 +64,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "sideNav",
       "statusDot",
       "styleVars",
+      "syntaxCodeTokens",
       "tabList",
       "textAreaField",
       "textBlock",
@@ -201,7 +202,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByCategory": {
       "constant": 3,
       "fonts": 4,
-      "helper": 57,
+      "helper": 58,
       "icons": 1,
       "layout": 5,
       "object": 5,
@@ -212,12 +213,12 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tokens": 16,
     },
     "runtimeByKind": {
-      "function": 141,
+      "function": 142,
       "number": 4,
       "object": 20,
       "string": 6,
     },
-    "runtimeExports": 171,
+    "runtimeExports": 172,
     "typeOnlyExports": 144,
   },
   "typeOnlyExports": [
