@@ -119,6 +119,12 @@ export const prose = typestyles.recipe({
         backgroundColor: 'transparent',
       },
       '& :where(th)': { fontWeight: t.fontWeight.semibold.var },
+      '& :where(caption)': {
+        captionSide: 'bottom',
+        paddingBlockStart: '0.375em',
+        textAlign: 'start',
+        color: vars.secondaryColor.var,
+      },
       '& :where(img, video)': { maxInlineSize: '100%', blockSize: 'auto' },
     },
     variants: {
