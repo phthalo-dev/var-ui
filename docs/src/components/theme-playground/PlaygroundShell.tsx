@@ -9,7 +9,7 @@ export default function PlaygroundShell() {
   const { start } = useResizable({
     regions: {
       start: {
-        defaultWidth: 300,
+        defaultWidth: 280,
         minWidth: 240,
         maxWidth: 420,
         autoSaveId: 'playground-editor',

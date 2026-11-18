@@ -46,22 +46,20 @@ export function ThemePlaygroundBaseStyles({ state, onChange }: ThemePlaygroundBa
       <ControlGroup label="Colors">
         <div className={s.colorList.className}>
           {PLAYGROUND_COLOR_FIELDS.map((field) => (
-            <div key={field.path} className={s.colorField.className}>
-              <span className={s.colorFieldLabel.className}>{field.label}</span>
-              <ColorTokenField
-                field={field}
-                value={state.colors[field.path]}
-                onChange={(path, value) => {
-                  const colors = { ...state.colors };
-                  if (!value.trim()) {
-                    delete colors[path];
-                  } else {
-                    colors[path] = value.trim();
-                  }
-                  onChange({ colors });
-                }}
-              />
-            </div>
+            <ColorTokenField
+              key={field.path}
+              field={field}
+              value={state.colors[field.path]}
+              onChange={(path, value) => {
+                const colors = { ...state.colors };
+                if (!value.trim()) {
+                  delete colors[path];
+                } else {
+                  colors[path] = value.trim();
+                }
+                onChange({ colors });
+              }}
+            />
           ))}
         </div>
       </ControlGroup>

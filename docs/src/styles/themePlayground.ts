@@ -17,10 +17,6 @@ export const themePlaygroundStyles = typestyles.recipe({
     'controlTabs',
     'baseStyles',
     'colorList',
-    'colorField',
-    'colorFieldLabel',
-    'colorRow',
-    'colorSwatch',
     'deferredTab',
   ],
   styles: () => ({
@@ -96,29 +92,6 @@ export const themePlaygroundStyles = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         gap: t.space.sm.var,
-      },
-      colorField: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: t.space.xxs.var,
-      },
-      colorFieldLabel: {
-        fontSize: t.fontSize.xs.var,
-        color: t.color.text.secondary.var,
-      },
-      colorRow: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: t.space.xs.var,
-      },
-      colorSwatch: {
-        width: '1.5rem',
-        height: '1.5rem',
-        borderRadius: t.radius.sm.var,
-        borderWidth: t.borderWidth.default.var,
-        borderStyle: 'solid',
-        borderColor: t.color.border.default.var,
-        flexShrink: 0,
       },
       deferredTab: {
         fontSize: t.fontSize.sm.var,

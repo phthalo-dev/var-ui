@@ -63,6 +63,8 @@ export const textField = typestyles.recipe({
           backgroundColor: vars.inputBackground.var,
           color: vars.inputForeground.var,
           boxSizing: 'border-box',
+          // A value wider than the field ends in an ellipsis at rest (not a hard cut).
+          textOverflow: 'ellipsis',
           '&:focus': {
             ...focusRing,
             [vars.inputBorder.name]: t.color.border.focus.var,
