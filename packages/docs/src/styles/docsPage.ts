@@ -84,6 +84,9 @@ export const docsPage = typestyles.recipe({
         columnGap,
         rowGap: 0,
         alignItems: 'start',
+        // Rows keep their content height: on a short page the frame's min-height must not be
+        // shared out between the hero rows as blank bands.
+        alignContent: 'start',
         boxSizing: 'border-box',
         minHeight: '100%',
         '& > [data-docs-content]': { display: 'contents' },
@@ -168,7 +171,8 @@ export const docsPage = typestyles.recipe({
         paddingBlockStart: t.space.md.var,
         borderBlockStart: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
         // No hairline when it would sit under nothing (the auto TOC found too few headings).
-        '[data-var-ui-toc][hidden] + &, &:first-child': {
+        // `~`, not `+`: Astro puts the Toc's module script between the two.
+        '[data-var-ui-toc][hidden] ~ &, &:first-child': {
           borderBlockStart: 'none',
           paddingBlockStart: 0,
         },
