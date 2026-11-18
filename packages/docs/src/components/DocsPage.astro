@@ -115,7 +115,12 @@ const markdownGlyph =
     <slot name="head" />
   </head>
   <body {...combine('docs-body', bodyClassName)}>
-    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
+    <AppShell
+      variant="wash"
+      height="fill"
+      contentPadding="none"
+      mobileBreakpoint={sidebarSections ? 'lg' : 'md'}
+    >
       <DocsTopBar
         slot="topNav"
         topNav={topNav}

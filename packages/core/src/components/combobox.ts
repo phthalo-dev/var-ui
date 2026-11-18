@@ -3,7 +3,7 @@ import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
-import { dropdownPopoverChrome, fieldChrome } from '../internal/fieldChrome';
+import { dropdownPopoverChrome, dropdownSelectedCheck, fieldChrome } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
@@ -135,7 +135,7 @@ export const combobox = typestyles.recipe({
         },
         popover: panel.popover,
         listbox: panel.listbox,
-        item: panel.item,
+        item: { ...panel.item, ...dropdownSelectedCheck },
         empty: {
           fontSize: t.fontSize.sm.var,
           color: t.color.text.secondary.var,

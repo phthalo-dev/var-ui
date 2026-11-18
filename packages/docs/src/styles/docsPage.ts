@@ -3,6 +3,7 @@ import { designTokens as t, typestyles } from '@var-ui/core';
 
 const belowXl = typestyles.breakpoint('xl', 'max');
 const belowMd = typestyles.breakpoint('md', 'max');
+const belowLg = typestyles.breakpoint('lg', 'max');
 const contentWidth = variant.enum(['default', 'full'], { default: 'default' });
 const contentPlacement = variant.enum(['standalone', 'inPageBody'], { default: 'standalone' });
 
@@ -55,9 +56,10 @@ export const docsPage = typestyles.recipe({
         minHeight: 0,
         minWidth: 0,
       },
-      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `md`.
+      // The section sidebar moves into the mobile drawer (`DocsMobileMenu`) below `lg`: under
+      // 1024px a 280px rail leaves the page too narrow for its hero and demos.
       sidebar: {
-        [belowMd]: {
+        [belowLg]: {
           display: 'none',
         },
       },

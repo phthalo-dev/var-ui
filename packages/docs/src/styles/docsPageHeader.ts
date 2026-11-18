@@ -15,6 +15,8 @@ const bleed = `calc((100cqw - 100%) / 2 + ${gutter})`;
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowLg = typestyles.breakpoint('lg', 'max');
 const belowXl = typestyles.breakpoint('xl', 'max');
+/** Height of the hero showcase slot (wide screens): every component page's hero is this tall. */
+const heroSlot = '17.5rem';
 
 /**
  * Docs page hero band: a softly tinted accent panel with a fading dot field (the Var UI stage
@@ -47,12 +49,16 @@ export const docsPageHeader = typestyles.recipe({
       root: {
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1fr)',
-        alignItems: 'center',
+        // Text hangs from the top so the H1 lands at the same y on every page, whatever the lead
+        // length or the showcase height.
+        alignItems: 'start',
         columnGap: t.space.xxl.var,
-        // With a showcase the hero splits; below `md` it is the text column alone.
+        // With a showcase (wide screens only) the hero is a fixed-height slot: text at the top,
+        // the scene centred in it, so the page tabs below also land at one y. Below `xl` the
+        // showcase is dropped and the text takes the whole frame.
         '&[data-has-preview]': {
           gridTemplateColumns: 'minmax(0, 1fr) auto',
-          [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+          [belowXl]: { gridTemplateColumns: 'minmax(0, 1fr)' },
         },
         marginBlockEnd: t.space.lg.var,
         paddingBlock: `${t.space.lg.var} ${t.space.md.var}`,
@@ -67,30 +73,26 @@ export const docsPageHeader = typestyles.recipe({
         gap: t.space.sm.var,
         minWidth: 0,
       },
-      // The hero showcase: the live component on a plate set into the band (same border
-      // family, one surface step up, no floating shadow).
-      // The showcase scene sits directly on the band: no plate, border or surface.
+      // The showcase scene sits directly on the page: no plate, border or surface; only the dot
+      // field, fading out on all sides.
       preview: {
         display: 'grid',
         placeItems: 'center',
-        alignSelf: 'center',
+        alignSelf: 'stretch',
         justifySelf: 'end',
         boxSizing: 'border-box',
+        height: heroSlot,
         minWidth: '17rem',
         maxWidth: '26rem',
-        maxHeight: '22rem',
-        // The dot field haloes past the scene and fades out before any edge.
-        [stage.vars.bleed.name]: t.space.xxl.var,
-        paddingInline: t.space.xl.var,
-        paddingBlock: t.space.lg.var,
+        // The dot field haloes past the scene; the end margin keeps the halo inside the frame.
+        [stage.vars.bleed.name]: t.space.xl.var,
+        marginInlineEnd: t.space.xl.var,
+        paddingInline: t.space.lg.var,
+        paddingBlock: t.space.md.var,
         overflow: 'visible',
-        // Showcases render a touch larger than life where there is room.
-        '& > *': { zoom: 1.2 },
-        [belowXl]: {
-          paddingInline: t.space.xl.var,
-          '& > *': { zoom: 1 },
-        },
-        [belowMd]: { display: 'none' },
+        // Showcases render a touch larger than life.
+        '& > *': { zoom: 1.15 },
+        [belowXl]: { display: 'none' },
       },
       eyebrow: {
         margin: 0,
