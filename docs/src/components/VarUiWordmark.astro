@@ -6,25 +6,37 @@ import { varUiWordmark } from '../styles/varUiWordmark';
 type Props = {
   as?: 'h1' | 'span';
   className?: string;
-  size?: 'hero' | 'header' | 'inline';
+  /**
+   * `hero` and `inline`: the `var(--ui)` wordmark alone. `header`: tile + wordmark lockup.
+   * `mark`: the tile alone (app bar, drawer header).
+   */
+  size?: 'hero' | 'header' | 'mark' | 'inline';
 };
 
 const { as = 'span', className, size = 'hero' } = Astro.props;
 const wordmark = varUiWordmark({ size });
 const Tag = as;
+const showMark = size === 'header' || size === 'mark';
+const showText = size !== 'mark';
 ---
 
 <Tag {...mergeProps(wordmark.root, className)} aria-label="Var UI">
   {
-    size === 'inline' ? null : (
+    showMark ? (
       <span {...mergeProps(wordmark.mark)} aria-hidden="true" set:html={varUiMarkSvg} />
-    )
+    ) : null
   }
-  <span {...mergeProps(wordmark.keyword)} aria-hidden="true">var</span><span
-    {...mergeProps(wordmark.punctuation)}
-    aria-hidden="true"
-  >(</span><span {...mergeProps(wordmark.customProperty)} aria-hidden="true">--ui</span><span
-    {...mergeProps(wordmark.punctuation)}
-    aria-hidden="true"
-  >)</span>
+  {
+    showText ? (
+      <>
+        <span {...mergeProps(wordmark.keyword)} aria-hidden="true">var</span><span
+          {...mergeProps(wordmark.punctuation)}
+          aria-hidden="true"
+        >(</span><span {...mergeProps(wordmark.customProperty)} aria-hidden="true">--ui</span><span
+          {...mergeProps(wordmark.punctuation)}
+          aria-hidden="true"
+        >)</span>
+      </>
+    ) : null
+  }
 </Tag>

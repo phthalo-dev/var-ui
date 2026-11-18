@@ -1,7 +1,7 @@
 import { designTokens as t, typestyles } from '@var-ui/core';
 import { variant } from 'typestyles';
 
-const wordmarkSize = variant.enum(['hero', 'header', 'inline'], { default: 'hero' });
+const wordmarkSize = variant.enum(['hero', 'header', 'mark', 'inline'], { default: 'hero' });
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
 export const varUiWordmark = typestyles.recipe({
@@ -55,14 +55,7 @@ export const varUiWordmark = typestyles.recipe({
     variants: {
       size: {
         hero: {
-          // Hero tile tracks the wordmark's size, a little under the cap height.
-          mark: {
-            width: '0.72em',
-            height: '0.72em',
-            marginInlineEnd: '0.16em',
-          },
           root: {
-            alignItems: 'center',
             fontSize: 'clamp(3.5rem, 14vw, 9rem)',
             letterSpacing: '-0.08em',
             textShadow: `0 0 64px color-mix(in oklch, ${t.color.tone.accent.foreground.var} 35%, transparent)`,
@@ -76,6 +69,11 @@ export const varUiWordmark = typestyles.recipe({
             fontSize: t.fontSize.lg.var,
             letterSpacing: '-0.05em',
           },
+        },
+        // Icon only (app bar and drawer header): the tile alone, a touch larger than in the lockup.
+        mark: {
+          root: { flexShrink: 0, alignItems: 'center' },
+          mark: { width: '1.5rem', height: '1.5rem', marginInlineEnd: 0 },
         },
         inline: {
           root: {
