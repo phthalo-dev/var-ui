@@ -30,6 +30,35 @@ function fontFaceCssKey(block: string): string {
   ].join('\0');
 }
 
+/** `prelude {` openers for the blocks still open at `index` (outermost first). */
+function enclosingBlockOpeners(css: string, index: number): string {
+  const open: string[] = [];
+  let preludeStart = 0;
+  let quote: string | null = null;
+  for (let i = 0; i < index; i += 1) {
+    const ch = css[i];
+    if (quote) {
+      if (ch === '\\') i += 1;
+      else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'") quote = ch;
+    else if (ch === '/' && css[i + 1] === '*') {
+      const end = css.indexOf('*/', i + 2);
+      i = end < 0 ? index : end + 1;
+    } else if (ch === '{') {
+      open.push(css.slice(preludeStart, i).trim());
+      preludeStart = i + 1;
+    } else if (ch === '}') {
+      open.pop();
+      preludeStart = i + 1;
+    } else if (ch === ';') {
+      preludeStart = i + 1;
+    }
+  }
+  return open.map((prelude) => `${prelude} {\n`).join('');
+}
+
 /** Extract full `@font-face` blocks from generated TypeStyles CSS. */
 export function extractFontFaces(css: string): string[] {
   return css.match(new RegExp(FONT_FACE_BLOCK, 'gi')) ?? [];
@@ -54,7 +83,10 @@ export function extractThemeOnlyCss(
     throw new Error(`No theme CSS found for "${themeId}"`);
   }
   const start = Math.min(...candidates);
-  let extracted = css.slice(start).trim();
+  // The slice can begin mid-block (TypeStyles nests a whole layer in one `@layer x { … }`).
+  // Re-open the enclosing at-rule blocks so their closing braces still pair up and the theme
+  // rules keep their cascade layer — an unlayered `color-scheme` beats the layered color-mode pin.
+  let extracted = `${enclosingBlockOpeners(css, start)}${css.slice(start)}`.trim();
 
   if (options.baseFontFaces?.length) {
     const baseKeys = new Set(options.baseFontFaces.map(fontFaceCssKey));

@@ -142,9 +142,18 @@ export const mobileNav = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
+          flexShrink: 0,
+          // Same 32px hit box as the header controls; the icon is centred inside it.
+          minWidth: t.size.control.md.var,
+          minHeight: t.size.control.md.var,
           padding: t.space.xxs.var,
           marginInlineEnd: `calc(${t.space.xxs.var} * -1)`,
           borderRadius: t.radius.sm.var,
+          '& svg': {
+            display: 'block',
+            width: t.size.icon.md.var,
+            height: t.size.icon.md.var,
+          },
           '&:hover': {
             backgroundColor: vars.toggleHoverBackground.var,
             color: vars.headerColor.var,

@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { getRegisteredCss } from 'typestyles';
+import { mobileNav } from '../src/components/mobileNav';
 import { searchInput } from '../src/components/searchInput';
 import { segmentedControl } from '../src/components/segmentedControl';
 import { sideNav } from '../src/components/sideNav';
 import { topNav } from '../src/components/topNav';
 
 describe('app header chrome recipes', () => {
+  it('mobileNav close button has a control-sized box and sizes its icon', () => {
+    mobileNav();
+    const css = getRegisteredCss();
+    const rule = css.match(/\.var-ui-mobile-nav__closeButton\s*\{[^}]*\}/)?.[0] ?? '';
+    expect(rule).toContain('min-width: var(--var-ui-size-control-md)');
+    expect(rule).toContain('min-height: var(--var-ui-size-control-md)');
+    expect(css).toMatch(
+      /\.var-ui-mobile-nav__closeButton svg\s*\{[^}]*width: var\(--var-ui-size-icon-md\)/,
+    );
+  });
+
   it('sideNav re-declares var defaults on sections/items outside a SideNav root', () => {
     sideNav();
     const css = getRegisteredCss();

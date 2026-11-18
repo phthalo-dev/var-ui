@@ -62,6 +62,26 @@ describe('extractThemeOnlyCss', () => {
     expect(extracted.indexOf('@layer tokens')).toBeGreaterThan(extracted.indexOf('@layer reset,'));
   });
 
+  it('keeps the theme class inside the @layer block it was emitted in', () => {
+    // TypeStyles nests every rule of a layer in one block, so the theme class can sit
+    // mid-block. Slicing from it used to drop `@layer tokens {` but keep its `}`, leaving
+    // `color-scheme: light dark` unlayered so it beat the layered `data-color-mode` pin.
+    const css = `@layer tokens { :root { color-scheme: light dark; }
+.theme-var-ui-forest { color-scheme: light dark; --c: 1; }
+}
+@layer overrides { .theme-var-ui-forest .var-ui-top-nav { margin: 8px } }`;
+    const extracted = extractThemeOnlyCss(css, 'forest');
+    const body = extracted.replace(
+      '@layer reset, base, tokens, components, overrides, utilities;',
+      '',
+    );
+    expect(body.trim().startsWith('@layer tokens {')).toBe(true);
+    expect(body).not.toContain(':root');
+    const opens = (body.match(/\{/g) ?? []).length;
+    const closes = (body.match(/\}/g) ?? []).length;
+    expect(opens).toBe(closes);
+  });
+
   it('throws when theme class missing', () => {
     expect(() => extractThemeOnlyCss('.other{}', 'forest')).toThrow(/No theme CSS/);
   });
