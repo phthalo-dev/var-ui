@@ -103,6 +103,34 @@ export function dropdownPopoverChrome(v: DropdownPopoverVars) {
   } as const;
 }
 
+const checkMask = `url("data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>',
+)}")`;
+
+/**
+ * Trailing check mark on the selected option of a single-select list (Select, Combobox), so the
+ * selection reads without relying on colour alone, next to a hovered or focused row. Spread into
+ * the `item` slot after `dropdownPopoverChrome().item`.
+ */
+export const dropdownSelectedCheck = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: t.space.xs.var,
+  '&[data-selected]::after': {
+    content: '""',
+    flexShrink: 0,
+    width: t.size.icon.sm.var,
+    height: t.size.icon.sm.var,
+    marginInlineStart: 'auto',
+    backgroundColor: 'currentColor',
+    maskImage: checkMask,
+    maskRepeat: 'no-repeat',
+    maskPosition: 'center',
+    maskSize: 'contain',
+    forcedColorAdjust: 'none',
+  },
+} as const;
+
 export type DateFieldChromeColors = FieldChromeColors & {
   groupBackground: string;
   groupBorder: string;

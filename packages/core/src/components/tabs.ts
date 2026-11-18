@@ -64,6 +64,11 @@ const tabsAppearance = variant.enum(['underline', 'pill'], { default: 'underline
 /** `tabs` `appearance`: a sliding underline on a rail, or a row of pill buttons. */
 export type TabsAppearance = VariantOptions<typeof tabsAppearance>;
 
+const tabsSize = variant.enum(['sm', 'md'], { default: 'md' });
+
+/** `tabs` `size`: `sm` is a compact row for side panels and toolbars. */
+export type TabsSize = VariantOptions<typeof tabsSize>;
+
 /**
  * Tab panels for in-page content switching. Pair with the React `Tabs` compound
  * or Astro `Tabs` binding. Active tabs use `data-selected` and
@@ -74,7 +79,7 @@ export const tabs = typestyles.recipe({
   name: 'tabs',
   layer: 'components',
   slots: ['root', 'list', 'tab', 'panel'],
-  variants: { appearance: tabsAppearance },
+  variants: { appearance: tabsAppearance, size: tabsSize },
   vars: tabsVarDefinitions,
   styles: ({ vars }) => {
     return {
@@ -187,6 +192,16 @@ export const tabs = typestyles.recipe({
         },
       },
       variants: {
+        size: {
+          sm: {
+            tab: {
+              minHeight: '2.25rem',
+              paddingInline: t.space.xs.var,
+              fontSize: t.fontSize.sm.var,
+            },
+          },
+          md: {},
+        },
         appearance: {
           underline: {},
           // Pill tabs: a row of bordered buttons; the selected one is an inverse (ink) fill.
@@ -238,6 +253,12 @@ export const tabs = typestyles.recipe({
                   borderColor: `color-mix(in oklab, ${t.color.tone.accent.foreground.var} 55%, transparent)`,
                 }),
                 ...atForcedColors(forced.selected),
+              },
+              // On the light-mode ink fill the icon follows the label (accent green on near-black
+              // reads as a stray colour); dark mode keeps the accent icon on its raised surface.
+              '&[data-selected] svg': {
+                color: 'currentColor',
+                ...atDarkMode({ color: vars.tabIndicatorColor.var }),
               },
             },
           },

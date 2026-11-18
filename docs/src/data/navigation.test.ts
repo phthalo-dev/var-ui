@@ -22,6 +22,7 @@ describe('navigation', () => {
 
   it('lists all component registry entries in grouped sidebar sections', () => {
     expect(docsSidebar.map((item) => item.link)).toEqual([
+      '/docs',
       '/docs/getting-started',
       '/docs/installation',
       '/docs/overlay-lifecycle',

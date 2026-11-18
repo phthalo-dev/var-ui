@@ -1,11 +1,10 @@
 import { atProperty } from 'typestyles';
-import { breakpoint, typestyles } from '../runtime';
+import { typestyles } from '../runtime';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { transitionOf } from '../internal/motion';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
-const belowXl = breakpoint('xl', 'max');
 const listIndent = t.space.sm.var;
 const nestedIndent = t.space.xs.var;
 const indicatorTransition = `${transitionOf('transform')}, ${transitionOf(['height', 'opacity'], 'fast')}`;
@@ -89,9 +88,8 @@ export const toc = typestyles.recipe({
           paddingInlineEnd: t.space.lg.var,
           maxHeight: `calc(100dvh - ${vars.stickyTop.var} - ${vars.stickyMaxHeightOffset.var})`,
           overflow: 'auto',
-          [belowXl]: {
-            display: 'none',
-          },
+          // No viewport breakpoint of its own: the layout that holds the rail decides when it
+          // shows (an `AppShell` aside below its mobile breakpoint, a docs frame by its width).
         },
         title: {
           margin: `0 0 ${t.space.sm.var}`,

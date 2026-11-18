@@ -79,10 +79,6 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.primary.var,
     },
-    resultHoverBackground: {
-      ...atProperty.color,
-      value: t.color.navItem.hoverBackground.var,
-    },
     resultSelectedBackground: {
       ...atProperty.color,
       value: t.color.navItem.selectedBackground.var,
@@ -125,7 +121,6 @@ export const commandPalette = typestyles.recipe({
           [vars.inputForeground.name]: t.color.text.primary.var,
           [vars.inputPlaceholder.name]: t.color.text.placeholder.var,
           [vars.resultForeground.name]: t.color.text.primary.var,
-          [vars.resultHoverBackground.name]: t.color.navItem.hoverBackground.var,
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
           [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
@@ -248,9 +243,8 @@ export const commandPalette = typestyles.recipe({
           color: vars.resultForeground.var,
           transition: t.transition.surfaceFast.var,
           borderRadius: t.radius.navItem.var,
-          '&:hover': {
-            backgroundColor: vars.resultHoverBackground.var,
-          },
+          // No separate hover paint: moving the pointer over a row makes it the active row, so
+          // only one row is ever highlighted (keyboard and pointer share it).
         },
         resultLinkActive: {
           backgroundColor: vars.resultSelectedBackground.var,

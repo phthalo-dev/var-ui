@@ -59,7 +59,7 @@ describe('PlaygroundEditorSidebar', () => {
 
   it('shows editor tabs and preset controls', () => {
     render(<PlaygroundEditorSidebar />);
-    expect(screen.getByRole('tab', { name: 'Base Styles' })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'Base' })).toBeTruthy();
     expect(screen.getByLabelText('Heading font')).toBeTruthy();
     expect(screen.getByLabelText('Spacing preset')).toBeTruthy();
     expect(screen.getByLabelText('Theme preset')).toBeTruthy();

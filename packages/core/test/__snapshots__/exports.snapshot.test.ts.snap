@@ -218,7 +218,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "string": 6,
     },
     "runtimeExports": 171,
-    "typeOnlyExports": 144,
+    "typeOnlyExports": 145,
   },
   "typeOnlyExports": [
     "AccordionGroupVariant",
@@ -344,6 +344,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "TabListVariantProps",
     "TableVariantProps",
     "TabsAppearance",
+    "TabsSize",
     "TextAreaFieldVariantProps",
     "TextBlockVariantProps",
     "TextFieldVariantProps",

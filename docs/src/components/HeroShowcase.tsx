@@ -1,12 +1,16 @@
 import type { JSX, ReactNode } from 'react';
 import { card, select } from '@var-ui/core';
 import { defaultIcons } from '@var-ui/icons';
+import { highlightCode, highlightCodeClassName } from '../lib/highlightCode';
 import {
   Alert,
   Avatar,
   Badge,
   Button,
   Checkbox,
+  CodeBlock,
+  ColorInput,
+  ColorSwatch,
   HStack,
   Icon,
   IconButton,
@@ -59,6 +63,61 @@ const showcases: Record<string, () => JSX.Element> = {
         </Button>
         <Button tone="accent" appearance="filled" size="sm">
           Ship it
+        </Button>
+      </HStack>
+    </Stack>
+  ),
+  // Guides index: the first two steps of getting started, as the page's own code blocks.
+  'docs-index': () => {
+    const app = '<Button tone="accent">Ship it</Button>';
+    return (
+      <Stack gap="sm">
+        <CodeBlock code="pnpm add @var-ui/react" language="bash" filename="Terminal" />
+        <CodeBlock
+          code={app}
+          language="tsx"
+          filename="App.tsx"
+          codeHtml={highlightCode(app, 'tsx')}
+          codeClassName={highlightCodeClassName('tsx')}
+        />
+      </Stack>
+    );
+  },
+  // Theming index: a theme being edited: mode, accent presets and a token value.
+  'theming-index': () => (
+    <Stack gap="md">
+      <SegmentedControl
+        aria-label="Color mode"
+        size="sm"
+        defaultValue="system"
+        options={[
+          { value: 'light', label: 'Light' },
+          { value: 'dark', label: 'Dark' },
+          { value: 'system', label: 'Auto' },
+        ]}
+      />
+      <HStack gap="xs" align="center">
+        {['phthalo', 'grass', 'indigo', 'rose', 'amber', 'stone'].map((name) => (
+          <ColorSwatch
+            key={name}
+            color={`var(--var-ui-color-palette-${name}-7)`}
+            selected={name === 'phthalo'}
+            aria-label={name}
+          />
+        ))}
+      </HStack>
+      <ColorInput
+        format="css"
+        size="sm"
+        label="Accent"
+        defaultValue="var(--var-ui-color-palette-phthalo-7)"
+      />
+      <HStack gap="sm" justify="end">
+        <Button appearance="ghost" size="sm">
+          Reset
+        </Button>
+        <Button tone="accent" appearance="filled" size="sm">
+          Save theme
         </Button>
       </HStack>
     </Stack>

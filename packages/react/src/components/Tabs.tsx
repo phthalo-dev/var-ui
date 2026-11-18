@@ -7,7 +7,11 @@ import {
   Tabs as AriaTabs,
   type TabsProps as RACTabsProps,
 } from 'react-aria-components';
-import { tabs as tabsStyles, type TabsAppearance } from '@var-ui/core/components/tabs';
+import {
+  tabs as tabsStyles,
+  type TabsAppearance,
+  type TabsSize,
+} from '@var-ui/core/components/tabs';
 import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
 import { mergeProps } from 'typestyles';
 import { keyToValue, toRacProps } from '../internal/racProps';
@@ -46,6 +50,8 @@ export type TabsProps = Omit<
   keyboardActivation?: RACTabsProps['keyboardActivation'];
   /** Underline rail or pill buttons. @default 'underline' */
   appearance?: TabsAppearance;
+  /** `sm` is a compact row for side panels and toolbars. @default 'md' */
+  size?: TabsSize;
 };
 
 export function Tabs({
@@ -55,11 +61,12 @@ export function Tabs({
   onValueChange,
   disabled,
   appearance = 'underline',
+  size = 'md',
   className,
   ref,
   ...props
 }: TabsProps): JSX.Element {
-  const t = tabsStyles({ appearance });
+  const t = tabsStyles({ appearance, size });
   const listRef = useRef<HTMLDivElement>(null);
   const isControlled = value !== undefined;
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue ?? tabs[0]?.value);

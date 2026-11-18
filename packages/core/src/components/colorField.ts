@@ -30,6 +30,8 @@ export const colorField = typestyles.recipe({
   variants: {
     size: controlSize,
     appearance: variant.enum(['field', 'swatch'], { default: 'field' }),
+    /** `hex` upper-cases the typed value; `css` keeps any CSS color (`var()`, `oklch()`) as typed. */
+    format: variant.enum(['hex', 'css'], { default: 'hex' }),
   },
   vars: {
     labelColor: {
@@ -150,7 +152,8 @@ export const colorField = typestyles.recipe({
           fontFamily: t.fontFamily.mono.var,
           color: vars.inputForeground.var,
           outline: 'none',
-          textTransform: 'uppercase',
+          // Long values (a `var()` or `oklch()` color) end in an ellipsis at rest.
+          textOverflow: 'ellipsis',
           '&:disabled': {
             cursor: 'not-allowed',
           },
@@ -160,6 +163,10 @@ export const colorField = typestyles.recipe({
         size: controlSizeVariants((size) => ({
           inputWrapper: controlSurfaceSize(size, { inset: 'compact' }),
         })),
+        format: {
+          hex: { input: { textTransform: 'uppercase' } },
+          css: {},
+        },
         appearance: {
           field: {},
           swatch: {

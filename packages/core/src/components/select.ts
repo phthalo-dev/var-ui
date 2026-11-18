@@ -3,7 +3,7 @@ import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { border } from '../internal/border';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
-import { fieldChrome, dropdownPopoverChrome } from '../internal/fieldChrome';
+import { fieldChrome, dropdownPopoverChrome, dropdownSelectedCheck } from '../internal/fieldChrome';
 import { controlSize } from '../shared/variantAxes';
 import { atProperty, type RecipeVariants } from 'typestyles';
 
@@ -140,7 +140,7 @@ export const select = typestyles.recipe({
         },
         popover: panel.popover,
         listbox: panel.listbox,
-        item: panel.item,
+        item: { ...panel.item, ...dropdownSelectedCheck },
         group: { margin: 0, padding: 0 },
         groupHeading: {
           padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.xxs.var}`,
