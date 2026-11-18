@@ -1,4 +1,5 @@
 import type { IconName } from '@var-ui/core';
+import { matchCommandItem, rankCommandItems } from '@var-ui/core/shared/commandSearch';
 
 export type CommandPaletteItem = {
   /** Destination URL (the result is a link). */
@@ -25,18 +26,18 @@ export function matchCommandPaletteItem(
   item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords'>,
   query: string,
 ): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  if (item.title.toLowerCase().includes(q)) return true;
-  if (item.meta?.toLowerCase().includes(q)) return true;
-  if (item.keywords?.some((keyword) => keyword.toLowerCase().includes(q))) return true;
-  return false;
+  return matchCommandItem(item, query);
 }
 
+/**
+ * Items matching `query`, ranked by relevance (exact title > title prefix > title word-start >
+ * title substring > keyword > description); groups are ordered by their best hit, so the first
+ * item is the top hit. An empty query keeps the original order.
+ */
 export function filterCommandPaletteItems<
-  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords'>,
+  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'group'>,
 >(items: ReadonlyArray<T>, query: string): T[] {
-  return items.filter((item) => matchCommandPaletteItem(item, query));
+  return rankCommandItems(items, query);
 }
 
 export function groupCommandPaletteResults<T extends Pick<CommandPaletteItem, 'group' | 'title'>>(

@@ -1,3 +1,5 @@
+import { commandMetaSnippet } from '@var-ui/core/shared/commandSearch';
+import { isCoarsePointer } from '@var-ui/core/shared/pointer';
 import { findTextMatch } from '@var-ui/core/shared/textMatch';
 import {
   filterCommandPaletteItems,
@@ -155,7 +157,10 @@ export function initCommandPalette(root: HTMLElement): () => void {
     const filtered = filterCommandPaletteItems(index, query);
     const groups = [...recentGroup(query), ...groupCommandPaletteResults(filtered)];
     flatItems = flattenCommandPaletteGroups(groups);
-    activeIndex = flatItems.length > 0 ? 0 : -1;
+    // The top hit is active so Enter opens it. With no query on a touch-first device there is no
+    // Enter key to aim, and a pre-highlighted row reads as already chosen.
+    const preselect = query.trim() !== '' || !isCoarsePointer();
+    activeIndex = flatItems.length > 0 && preselect ? 0 : -1;
 
     const empty = groups.length === 0 || flatItems.length === 0;
     frame?.toggleAttribute('data-empty', empty);
@@ -184,8 +189,10 @@ export function initCommandPalette(root: HTMLElement): () => void {
             const icon = item.iconSvg
               ? `<span class="${resultIconClass}" aria-hidden="true">${item.iconSvg}</span>`
               : '';
-            const meta = item.meta
-              ? `<span class="${resultMetaClass}">${text(item.meta)}</span>`
+            // A description-only match shows the snippet around it, not a truncated start.
+            const metaText = commandMetaSnippet(item, query);
+            const meta = metaText
+              ? `<span class="${resultMetaClass}">${text(metaText)}</span>`
               : '';
             return `<a
                 class="${resultLinkClass}${active}"

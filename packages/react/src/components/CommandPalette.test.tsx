@@ -99,6 +99,75 @@ describe('CommandPalette', () => {
     expect(onAction).toHaveBeenCalledWith('a');
   });
 
+  const ranked = [
+    {
+      id: 'overlays',
+      title: 'Overlay lifecycle',
+      meta: 'Opens, closes and restores focus for every dialog, popover and trigger button',
+      group: 'Docs',
+    },
+    { id: 'css', title: 'Plain CSS', meta: 'Style a button without JS', group: 'Docs' },
+    { id: 'button', title: 'Button', meta: 'Actions', group: 'Components' },
+  ];
+
+  it('ranks "but": Button first and active, groups ordered by their best hit', async () => {
+    const onAction = vi.fn();
+    wrap(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        hotkey={false}
+        items={ranked}
+        onAction={onAction}
+      />,
+    );
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'but');
+    const options = screen.getAllByRole('option');
+    expect(options.map((o) => o.getAttribute('data-key'))).toEqual(['button', 'overlays', 'css']);
+    expect([...document.querySelectorAll('[role=group] header')].map((h) => h.textContent)).toEqual(
+      ['Components', 'Docs'],
+    );
+    expect(options[0]?.hasAttribute('data-focused')).toBe(true);
+    await userEvent.keyboard('{Enter}');
+    expect(onAction).toHaveBeenCalledWith('button');
+  });
+
+  it('shows the highlighted snippet around a description-only match', async () => {
+    wrap(<CommandPalette open onOpenChange={() => {}} hotkey={false} items={ranked} />);
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'butt');
+    const overlay = screen.getByText(
+      (_, el) => el?.textContent?.startsWith('…') === true && el.tagName === 'SPAN',
+    );
+    expect(overlay.textContent).toContain('trigger button');
+    expect(overlay.querySelector('mark')?.textContent).toBe('butt');
+    expect(
+      screen.getByText(
+        (_, el) => el?.textContent === 'Style a button without JS' && el.tagName === 'SPAN',
+      ),
+    ).toBeTruthy();
+  });
+
+  it('does not pre-highlight a row while the query is empty (touch-first devices)', async () => {
+    const matchMedia = window.matchMedia;
+    window.matchMedia = ((query: string) =>
+      ({
+        matches: query.includes('coarse'),
+        media: query,
+        addEventListener() {},
+        removeEventListener() {},
+      }) as unknown as MediaQueryList) as typeof matchMedia;
+    try {
+      wrap(<CommandPalette open onOpenChange={() => {}} hotkey={false} items={ranked} />);
+      expect(screen.getAllByRole('option')).toHaveLength(3);
+      expect(document.querySelector('[role=option][data-focused]')).toBeNull();
+      expect(screen.getByPlaceholderText('Search…').hasAttribute('aria-activedescendant')).toBe(
+        false,
+      );
+    } finally {
+      window.matchMedia = matchMedia;
+    }
+  });
+
   it('renders group headings and keeps keyboard navigation in order', async () => {
     const onAction = vi.fn();
     wrap(
