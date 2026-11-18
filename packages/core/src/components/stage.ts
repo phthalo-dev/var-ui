@@ -4,7 +4,8 @@ import { designTokens as t } from '../tokens';
 
 const stagePattern = variant.enum(['dots', 'grid', 'none'], { default: 'dots' });
 const stageTone = variant.enum(['neutral', 'accent'], { default: 'neutral' });
-const stageFade = variant.enum(['none', 'start', 'end'], { default: 'none' });
+const stageFade = variant.enum(['none', 'start', 'end', 'radial'], { default: 'none' });
+const stageSurface = variant.enum(['tint', 'none'], { default: 'tint' });
 
 /**
  * Showcase surface for live examples: a barely tinted plane with a faint dot (or line) field,
@@ -12,7 +13,9 @@ const stageFade = variant.enum(['none', 'start', 'end'], { default: 'none' });
  * frames, playgrounds and page hero bands.
  *
  * `fade` masks the pattern toward an edge (`start` keeps it at the start edge, `end` at the end),
- * so text can sit on the quiet side.
+ * so text can sit on the quiet side; `radial` keeps it around the centre and fades it out on every
+ * side. `surface: 'none'` drops the tinted plane, leaving only the pattern on the page background
+ * (with `fade: 'radial'` the stage then has no visible edge at all).
  *
  * ```tsx
  * <div {...mergeProps(stage({ tone: 'accent', fade: 'end' }))}>…</div>
@@ -21,7 +24,7 @@ const stageFade = variant.enum(['none', 'start', 'end'], { default: 'none' });
 export const stage = typestyles.recipe({
   name: 'stage',
   layer: 'components',
-  variants: { pattern: stagePattern, tone: stageTone, fade: stageFade },
+  variants: { pattern: stagePattern, tone: stageTone, fade: stageFade, surface: stageSurface },
   vars: {
     ink: { ...atProperty.color, value: t.color.text.primary.var },
     inkStrength: { syntax: '*', initial: '13%', value: '13%' },
@@ -30,6 +33,8 @@ export const stage = typestyles.recipe({
       value: `color-mix(in oklab, ${t.color.background.subtle.var} 55%, ${t.color.background.surface.var})`,
     },
     spacing: { ...atProperty.length, value: '1rem' },
+    /** How far the pattern extends past the stage box (with `fade: 'radial'`, a soft halo). */
+    bleed: { ...atProperty.length, value: '0rem' },
   },
   styles: ({ vars }) => ({
     base: {
@@ -39,7 +44,7 @@ export const stage = typestyles.recipe({
       '&::before': {
         content: '""',
         position: 'absolute',
-        inset: 0,
+        inset: `calc(-1 * ${vars.bleed.var})`,
         zIndex: -1,
         pointerEvents: 'none',
         backgroundSize: `${vars.spacing.var} ${vars.spacing.var}`,
@@ -82,6 +87,18 @@ export const stage = typestyles.recipe({
           '&::before': {
             maskImage: 'linear-gradient(to left, black, rgb(0 0 0 / 55%) 35%, transparent 75%)',
           },
+        },
+        radial: {
+          '&::before': {
+            maskImage:
+              'radial-gradient(closest-side, black 45%, rgb(0 0 0 / 55%) 70%, transparent 100%)',
+          },
+        },
+      },
+      surface: {
+        tint: {},
+        none: {
+          backgroundColor: 'transparent',
         },
       },
     },

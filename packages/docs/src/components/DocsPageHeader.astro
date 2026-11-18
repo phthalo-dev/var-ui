@@ -1,5 +1,5 @@
 ---
-import { codeBlock, stage } from '@var-ui/core';
+import { codeBlock, stage, tabs as tabsRecipe } from '@var-ui/core';
 import { combine, cx, mergeProps } from '@var-ui/astro';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { docsPageBar, docsPageHeader } from '../styles/docsPageHeader';
@@ -38,6 +38,9 @@ type Props = {
 const { title, eyebrow, lead, importCode, meta = [], tabs = [], selectedTab } = Astro.props;
 const s = docsPageHeader();
 const bar = docsPageBar();
+// The bar's tab row takes the tabs `root` class too: the recipe defines its color and indicator
+// vars on its root class.
+const barTabs = tabsRecipe({ appearance: 'underline' });
 const barLinks = meta.flatMap((row) =>
   (row.links ?? []).map((link) => ({ ...link, icon: row.icon, secondary: Boolean(row.label) })),
 );
@@ -52,13 +55,14 @@ const hasPreview = Astro.slots.has('preview');
   </div>
   {
     tabs.length > 0 ? (
-      <div {...mergeProps(bar.tabs)}>
+      <div {...combine(barTabs.root, barTabs.list, bar.tabs)} data-docs-bar-tabs>
         {tabs.map((tab) => (
           <button
             type="button"
             tabindex="-1"
-            {...mergeProps(bar.tab)}
+            {...mergeProps(barTabs.tab)}
             data-docs-bar-tab={tab.id}
+            data-selected={tab.id === (selectedTab ?? tabs[0]?.id) ? '' : undefined}
             aria-current={tab.id === (selectedTab ?? tabs[0]?.id) ? 'true' : undefined}
           >
             {tab.label}
@@ -78,7 +82,7 @@ const hasPreview = Astro.slots.has('preview');
         rel="noreferrer"
       >
         {!link.secondary && link.icon ? <span {...mergeProps(bar.icon)} set:html={link.icon} /> : null}
-        {link.label}
+        {link.secondary ? link.label : <span {...mergeProps(bar.linkLabel)}>{link.label}</span>}
       </a>
     ))}
     {
@@ -104,7 +108,7 @@ const hasPreview = Astro.slots.has('preview');
   </div>
 </div>
 <header
-  {...combine(stage({ tone: 'accent', fade: 'end' }), s.root)}
+  {...mergeProps(s.root)}
   data-docs-page-hero
   data-has-preview={hasPreview || undefined}
 >
@@ -156,7 +160,7 @@ const hasPreview = Astro.slots.has('preview');
   </div>
   {
     hasPreview ? (
-      <div class={cx(s.preview)} data-prose-isolate>
+      <div {...combine(stage({ fade: 'radial', surface: 'none' }), s.preview)} data-prose-isolate>
         <slot name="preview" />
       </div>
     ) : null

@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   HStack,
+  Icon,
   IconButton,
   IconProvider,
   Kbd,
@@ -30,6 +31,38 @@ import {
  * in the component page hero. Server-rendered; not the API demos (those live in the page body).
  */
 const showcases: Record<string, () => JSX.Element> = {
+  // Index collage: a few components composed into one small working surface.
+  'components-index': () => (
+    <Stack gap="md">
+      <HStack gap="sm" align="center" justify="between">
+        <SegmentedControl
+          aria-label="View"
+          size="sm"
+          defaultValue="grid"
+          options={[
+            { value: 'list', label: 'List' },
+            { value: 'grid', label: 'Grid' },
+          ]}
+        />
+        <HStack gap="xs" align="center">
+          <Badge tone="success">Live</Badge>
+          <Badge tone="accent" appearance="solid">
+            v2.4
+          </Badge>
+        </HStack>
+      </HStack>
+      <Switch defaultChecked>Preview deployments</Switch>
+      <Slider label="Traffic split" defaultValue={64} />
+      <HStack gap="sm" justify="end">
+        <Button appearance="ghost" size="sm">
+          Cancel
+        </Button>
+        <Button tone="accent" appearance="filled" size="sm">
+          Ship it
+        </Button>
+      </HStack>
+    </Stack>
+  ),
   button: () => (
     <Stack gap="md" align="center">
       <HStack gap="sm" align="center">
@@ -46,8 +79,8 @@ const showcases: Record<string, () => JSX.Element> = {
         <Button tone="danger" appearance="ghost" size="sm">
           Delete
         </Button>
-        <Button tone="accent" appearance="filled" size="sm" pill>
-          New
+        <Button appearance="subtle" size="sm" pill>
+          Draft
         </Button>
       </HStack>
     </Stack>
@@ -207,7 +240,7 @@ const showcases: Record<string, () => JSX.Element> = {
         <div {...mergeProps(s.trigger)} data-pressed="">
           <span {...mergeProps(s.selectValue)}>Plum</span>
           <span {...mergeProps(s.triggerIcon)} aria-hidden="true">
-            ▾
+            <Icon name="chevronDown" size="sm" />
           </span>
         </div>
         {/* A still: the popup's closed-state motion (opacity 0) applies to live popovers only. */}

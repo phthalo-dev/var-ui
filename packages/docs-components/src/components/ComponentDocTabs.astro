@@ -13,7 +13,7 @@ type Props = {
 
 const { tabs, defaultSelectedId, className } = Astro.props;
 const selected = defaultSelectedId ?? tabs[0]?.id;
-const t = tabsRecipe({ appearance: "underline" });
+const t = tabsRecipe({ appearance: "pill" });
 const page = docsPageTabs();
 
 const ICON_ATTRS =

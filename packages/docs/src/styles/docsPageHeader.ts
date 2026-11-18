@@ -1,15 +1,20 @@
 import {
-  atDarkMode,
   atReducedMotion,
   codeBlock,
   designTokens as t,
+  stage,
+  tabs,
   typestyles,
 } from '@var-ui/core';
-import { keyframes } from 'typestyles';
-import { pageBarHeight } from './docsPage';
+import { docsPage, pageBarHeight } from './docsPage';
+
+const gutter = docsPage.vars.gutter.var;
+/** Distance from the page frame's edge to the content area's edge (gutter + centring slack). */
+const bleed = `calc((100cqw - 100%) / 2 + ${gutter})`;
 
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowLg = typestyles.breakpoint('lg', 'max');
+const belowXl = typestyles.breakpoint('xl', 'max');
 
 /**
  * Docs page hero band: a softly tinted accent panel with a fading dot field (the Var UI stage
@@ -37,29 +42,23 @@ export const docsPageHeader = typestyles.recipe({
   ],
   styles: () => ({
     base: {
+      // The hero sits on the plain page background: no band, tint or edge. Only the showcase
+      // carries the dot texture (a core `stage` with `fade: 'radial'`), fading out on all sides.
       root: {
-        overflow: 'hidden',
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1fr)',
         alignItems: 'center',
-        columnGap: t.space.xl.var,
-        // With a live preview the band splits: copy on the left, the component on the right.
+        columnGap: t.space.xxl.var,
+        // With a showcase the hero splits; below `md` it is the text column alone.
         '&[data-has-preview]': {
-          gridTemplateColumns: 'minmax(0, 1.12fr) minmax(0, 1fr)',
-          [belowLg]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+          gridTemplateColumns: 'minmax(0, 1fr) auto',
+          [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
         },
-        // The collapsed page bar animates on this element's scroll exit.
-        viewTimelineName: '--docs-page-hero',
-        viewTimelineAxis: 'block',
-        marginBlockEnd: t.space.md.var,
-        padding: `${t.space.xl.var} ${t.space.xl.var} ${t.space.lg.var}`,
+        marginBlockEnd: t.space.lg.var,
+        paddingBlock: `${t.space.lg.var} ${t.space.md.var}`,
         minWidth: 0,
-        borderRadius: t.radius.xl.var,
-        border: `${t.borderWidth.default.var} solid color-mix(in oklab, ${t.color.tone.accent.foreground.var} 16%, ${t.color.border.subtle.var})`,
-        // Surface + accent dot field fading under the text come from core `stage`.
         [belowMd]: {
-          padding: `${t.space.lg.var} ${t.space.md.var} ${t.space.md.var}`,
-          borderRadius: t.radius.lg.var,
+          paddingBlock: `${t.space.sm.var} 0`,
         },
       },
       content: {
@@ -70,25 +69,28 @@ export const docsPageHeader = typestyles.recipe({
       },
       // The hero showcase: the live component on a plate set into the band (same border
       // family, one surface step up, no floating shadow).
+      // The showcase scene sits directly on the band: no plate, border or surface.
       preview: {
         display: 'grid',
         placeItems: 'center',
-        alignSelf: 'stretch',
+        alignSelf: 'center',
+        justifySelf: 'end',
         boxSizing: 'border-box',
-        minHeight: '15rem',
-        maxHeight: '18rem',
-        padding: t.space.lg.var,
-        overflow: 'hidden',
-        // Showcases render a touch larger than life inside the plate.
-        '& > *': { zoom: 1.15 },
-        borderRadius: t.radius.lg.var,
-        border: `${t.borderWidth.default.var} solid color-mix(in oklab, ${t.color.tone.accent.foreground.var} 16%, ${t.color.border.subtle.var})`,
-        backgroundColor: `color-mix(in oklab, ${t.color.background.surface.var} 72%, transparent)`,
-        ...atDarkMode({
-          backgroundColor: `color-mix(in oklab, ${t.color.background.surface.var} 60%, ${t.color.background.secondary.var})`,
-          borderColor: 'oklch(1 0 0 / 9%)',
-        }),
-        [belowLg]: { display: 'none' },
+        minWidth: '17rem',
+        maxWidth: '26rem',
+        maxHeight: '22rem',
+        // The dot field haloes past the scene and fades out before any edge.
+        [stage.vars.bleed.name]: t.space.xxl.var,
+        paddingInline: t.space.xl.var,
+        paddingBlock: t.space.lg.var,
+        overflow: 'visible',
+        // Showcases render a touch larger than life where there is room.
+        '& > *': { zoom: 1.2 },
+        [belowXl]: {
+          paddingInline: t.space.xl.var,
+          '& > *': { zoom: 1 },
+        },
+        [belowMd]: { display: 'none' },
       },
       eyebrow: {
         margin: 0,
@@ -229,6 +231,8 @@ export const docsPageTabs = typestyles.recipe({
       panel: {
         minWidth: 0,
         padding: 0,
+        // Bar-tab jumps land the panel 24px under the collapsed page bar.
+        scrollMarginTop: `calc(${pageBarHeight} + ${t.space.lg.var})`,
         '&[hidden]': { display: 'none' },
       },
     },
@@ -265,43 +269,47 @@ export const docsGuideArticle = typestyles.recipe({
   }),
 });
 
-const barReveal = keyframes.create('docs-page-bar-reveal', {
-  from: { opacity: '0', transform: 'translateY(-0.5rem)', visibility: 'hidden' },
-  '1%': { visibility: 'visible' },
-  to: { opacity: '1', transform: 'translateY(0)', visibility: 'visible' },
-});
-
-/** Reduced motion: the same reveal without the slide. */
-const barRevealFade = keyframes.create('docs-page-bar-reveal-fade', {
-  from: { opacity: '0', visibility: 'hidden' },
-  '1%': { visibility: 'visible' },
-  to: { opacity: '1', visibility: 'visible' },
-});
-
 const barHidden = {
   opacity: 0,
-  transform: 'translateY(-0.5rem)',
+  transform: 'translateY(-0.25rem)',
   visibility: 'hidden',
+  // Hide: fade, then drop visibility once the fade has finished.
+  transition: `opacity ${t.duration.medium.var} ${t.easing.standard.var}, transform ${t.duration.medium.var} ${t.easing.standard.var}, visibility 0s linear ${t.duration.medium.var}`,
 } as const;
 
 const barShown = {
   opacity: 1,
   transform: 'translateY(0)',
   visibility: 'visible',
+  // Show: visibility flips at once; opacity and the 4px settle run over 140ms.
+  transition: `opacity ${t.duration.medium.var} ${t.easing.standard.var}, transform ${t.duration.medium.var} ${t.easing.standard.var}, visibility 0s`,
 } as const;
 
 /**
  * Collapsed page bar: once the hero scrolls away, a compact bar pins to the top of the content
  * area with the page name, the page tabs and the hero's links and copy action.
  *
- * Reveal is a CSS scroll-driven animation on the hero's view timeline (`--docs-page-hero`,
- * exit range) where supported; elsewhere a small IntersectionObserver sets `data-stuck` and a
- * transition runs. The bar overlays (negative margin), so it never shifts the layout.
+ * Reveal is a discrete state, not a scroll-scrubbed fade: an IntersectionObserver sets
+ * `data-stuck` once the page's real tab row (or the hero, on pages without tabs) has passed fully
+ * under the bar, and a 140ms fade runs. So the bar's labels and the hero's never show at once,
+ * and the two tab rows never stack. The bar is opaque and overlays (negative margin), so it
+ * never shifts the layout.
  */
 export const docsPageBar = typestyles.recipe({
   name: 'docs-page-bar',
   layer: 'components',
-  slots: ['root', 'identity', 'eyebrow', 'title', 'tabs', 'tab', 'end', 'link', 'icon', 'copy'],
+  slots: [
+    'root',
+    'identity',
+    'eyebrow',
+    'title',
+    'tabs',
+    'end',
+    'link',
+    'linkLabel',
+    'icon',
+    'copy',
+  ],
   styles: () => ({
     base: {
       root: {
@@ -319,43 +327,28 @@ export const docsPageBar = typestyles.recipe({
         display: 'flex',
         alignItems: 'center',
         gap: t.space.lg.var,
-        paddingInline: t.space.md.var,
-        borderEndStartRadius: t.radius.lg.var,
-        borderEndEndRadius: t.radius.lg.var,
-        border: `${t.borderWidth.default.var} solid color-mix(in oklab, ${t.color.tone.accent.foreground.var} 16%, ${t.color.border.subtle.var})`,
-        borderBlockStart: 'none',
-        backgroundColor: `color-mix(in oklab, color-mix(in oklab, ${t.color.tone.accent.foreground.var} 5%, ${t.color.background.surface.var}) 94%, transparent)`,
-        backdropFilter: 'blur(12px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
-        boxShadow: t.shadow.sm.var,
+        // Full-bleed sub-header: edge to edge across the content area, with its content inset back
+        // onto the page frame so it lines up with the hero, tabs and columns below.
+        marginInline: `calc(-1 * ${bleed})`,
+        paddingInline: bleed,
+        borderBlockEnd: `${t.borderWidth.default.var} solid ${t.color.border.default.var}`,
+        // Opaque: nothing scrolling underneath may print through the bar.
+        backgroundColor: t.color.background.surface.var,
         ...barHidden,
-        transition: `opacity ${t.duration.slow.var} ${t.easing.standard.var}, transform ${t.duration.slow.var} ${t.easing.standard.var}, visibility ${t.duration.slow.var}`,
         '&[data-stuck]': barShown,
-        '@supports (animation-timeline: view())': {
-          transition: 'none',
-          animationName: barReveal,
-          animationDuration: '1ms',
-          animationTimingFunction: 'linear',
-          animationFillMode: 'both',
-          animationTimeline: '--docs-page-hero',
-          animationRange: 'exit 78% exit 96%',
-        },
-        // Reduced motion: the bar still fades (durations collapse) but never slides.
-        ...atReducedMotion({ transform: 'none', animationName: barRevealFade }),
+        // Reduced motion: no settle movement; the fade collapses with the duration tokens.
+        ...atReducedMotion({ transform: 'none', '&[data-stuck]': { transform: 'none' } }),
         [belowMd]: {
           gap: t.space.sm.var,
-          paddingInline: t.space.sm.var,
-          marginInline: `calc(-1 * ${t.space.md.var})`,
-          borderRadius: 0,
-          borderInline: 'none',
         },
       },
+      // The name never truncates: as space runs out the bar sheds, in order, the source links,
+      // the Markdown label (icon stays), then the eyebrow.
       identity: {
         display: 'flex',
         alignItems: 'baseline',
-        gap: t.space.xs.var,
-        minWidth: 0,
-        flexShrink: 1,
+        gap: t.space.sm.var,
+        flexShrink: 0,
       },
       eyebrow: {
         fontSize: t.fontSize.xs.var,
@@ -364,7 +357,7 @@ export const docsPageBar = typestyles.recipe({
         textTransform: 'uppercase',
         color: t.color.tone.accent.foreground.var,
         whiteSpace: 'nowrap',
-        [belowMd]: { display: 'none' },
+        [belowLg]: { display: 'none' },
       },
       title: {
         margin: 0,
@@ -375,44 +368,20 @@ export const docsPageBar = typestyles.recipe({
         letterSpacing: '-0.01em',
         color: t.color.text.primary.var,
         whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
       },
-      // Mini tab row: plain text items with an accent underline on the current tab.
+      // The bar's tabs are the core underline tabs (`tabs({ appearance: 'underline' })` on this
+      // row and its buttons): the indicator sits on the bar's bottom hairline, so the row drops
+      // its own rail.
       tabs: {
-        display: 'flex',
-        alignSelf: 'stretch',
-        gap: t.space.xxs.var,
+        alignSelf: 'flex-end',
         minWidth: 0,
+        flexShrink: 1,
+        [tabs.vars.railColor.name]: 'transparent',
+        '& > button': {
+          minHeight: `calc(${pageBarHeight} - 0.1875rem)`,
+          fontSize: t.fontSize.sm.var,
+        },
         [belowMd]: { display: 'none' },
-      },
-      tab: {
-        appearance: 'none',
-        display: 'inline-flex',
-        alignItems: 'center',
-        paddingInline: t.space.xs.var,
-        border: 'none',
-        backgroundColor: 'transparent',
-        fontFamily: 'inherit',
-        fontSize: t.fontSize.sm.var,
-        fontWeight: t.fontWeight.medium.var,
-        color: t.color.text.secondary.var,
-        cursor: 'pointer',
-        boxShadow: 'inset 0 -2px 0 transparent',
-        transition: t.transition.colorShift.var,
-        '&:hover': {
-          color: t.color.text.primary.var,
-          boxShadow: `inset 0 -2px 0 ${t.color.border.strong.var}`,
-        },
-        '&:focus-visible': {
-          outline: `2px solid ${t.color.border.focus.var}`,
-          outlineOffset: '-2px',
-          borderRadius: t.radius.sm.var,
-        },
-        '&[aria-current="true"]': {
-          color: t.color.text.primary.var,
-          boxShadow: `inset 0 -2px 0 ${t.color.tone.accent.foreground.var}`,
-        },
       },
       end: {
         display: 'flex',
@@ -432,14 +401,23 @@ export const docsPageBar = typestyles.recipe({
         whiteSpace: 'nowrap',
         '&:hover': { color: t.color.text.primary.var, textDecoration: 'underline' },
         '&[data-bar-secondary]': {
-          [belowMd]: { display: 'none' },
+          [belowXl]: { display: 'none' },
+        },
+      },
+      linkLabel: {
+        [belowXl]: {
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
         },
       },
       icon: {
         display: 'inline-flex',
         color: t.color.text.secondary.var,
-        '& svg': { width: '0.875rem', height: '0.875rem' },
-        [belowMd]: { display: 'none' },
+        '& svg': { width: '1rem', height: '1rem' },
       },
       copy: {
         display: 'inline-flex',

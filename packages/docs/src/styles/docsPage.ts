@@ -14,16 +14,18 @@ const columnGap = t.space.xxxl.var;
 /** Height of the collapsed page bar that replaces the hero once it scrolls away. */
 export const pageBarHeight = '3.5rem';
 
+const phoneGutters = {
+  paddingInline: t.space.md.var,
+  paddingBlockStart: t.space.lg.var,
+  paddingBlockEnd: t.space.xxxl.var,
+} as const;
+
 /** Page gutters: generous on desktop, 16px on phones. */
 const gutters = {
   paddingInline: t.space.xxl.var,
   paddingBlockStart: t.space.xxl.var,
   paddingBlockEnd: t.space.xxxxl.var,
-  [belowMd]: {
-    paddingInline: t.space.md.var,
-    paddingBlockStart: t.space.lg.var,
-    paddingBlockEnd: t.space.xxxl.var,
-  },
+  [belowMd]: phoneGutters,
 } as const;
 
 /**
@@ -49,8 +51,13 @@ export const docsPage = typestyles.recipe({
       ...atProperty.length,
       value: t.size.nav.bar.var,
     },
+    /** Page side gutter; full-bleed children (the collapsed page bar) bleed back over it. */
+    gutter: {
+      ...atProperty.length,
+      value: t.space.xxl.var,
+    },
   },
-  styles: () => ({
+  styles: ({ vars }) => ({
     base: {
       siteLayout: {
         flex: '1 1 auto',
@@ -70,10 +77,16 @@ export const docsPage = typestyles.recipe({
        * items here: a page hero (`data-docs-page-hero`), its collapsed bar (`data-docs-page-bar`)
        * and the page tab list span the full frame (main + rail); everything else flows into the
        * main column, and the rail starts on the row after the tabs and sticks below the bar.
-       * `timeline-scope` lets the bar animate on the hero's view timeline.
        */
       pageBody: {
         ...gutters,
+        [vars.gutter.name]: t.space.xxl.var,
+        [belowMd]: {
+          ...phoneGutters,
+          [vars.gutter.name]: t.space.md.var,
+        },
+        // Container for `cqw`: full-bleed children size against the whole content area.
+        containerType: 'inline-size',
         display: 'grid',
         gridTemplateColumns: `minmax(0, ${mainColumn}) ${tocColumn}`,
         justifyContent: 'center',
@@ -82,7 +95,6 @@ export const docsPage = typestyles.recipe({
         alignItems: 'start',
         boxSizing: 'border-box',
         minHeight: '100%',
-        timelineScope: '--docs-page-hero',
         '& > [data-docs-content]': { display: 'contents' },
         '& > [data-docs-content] > *': { gridColumn: '1', minWidth: 0 },
         '& > [data-docs-content] > [data-docs-page-bar]': {
@@ -94,10 +106,12 @@ export const docsPage = typestyles.recipe({
           gridRow: '2',
         },
         '& > [data-docs-content] > [data-docs-page-tabs]': { display: 'contents' },
+        // 40px to the panel: a bar-tab jump lands the panel 24px under the bar with the tab row
+        // already fully above the bar's reveal line, so the bar is shown on landing.
         '& [data-docs-page-tabs] > [role="tablist"]': {
           gridColumn: '1 / -1',
           gridRow: '3',
-          marginBlockEnd: t.space.xl.var,
+          marginBlockEnd: t.space.xxl.var,
         },
         '& [data-docs-page-tabs] > [role="tabpanel"]': { gridColumn: '1' },
         // The rail spans every row below the tabs (or the whole page without a hero).

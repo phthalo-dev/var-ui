@@ -107,11 +107,13 @@ export const tabs = typestyles.recipe({
           [vars.indicatorX.name]: '0rem',
           [vars.indicatorWidth.name]: '0rem',
           [vars.indicatorOpacity.name]: '0',
+          // The rail spans the content box (inside the focus-ring padding), so it ends flush
+          // with the container edge rather than 3px past it.
           '&::before': {
             content: '""',
             position: 'absolute',
-            insetInlineStart: 0,
-            insetInlineEnd: 0,
+            insetInlineStart: '0.1875rem',
+            insetInlineEnd: '0.1875rem',
             bottom: 0,
             height: t.borderWidth.default.var,
             backgroundColor: vars.railColor.var,

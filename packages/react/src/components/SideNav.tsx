@@ -217,6 +217,15 @@ export type SideNavSectionProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & 
   title?: ReactNode;
   subtitle?: ReactNode;
   endContent?: ReactNode;
+  /**
+   * Render the section as a disclosure (`<details>`): the title row toggles the items and sticks
+   * to the top of the scroll area. Needs a `title`. @default false
+   */
+  collapsible?: boolean;
+  /** Initial open state of a collapsible section. @default true */
+  defaultOpen?: boolean;
+  /** Item count shown after the title of a collapsible section. */
+  count?: number;
 };
 
 /** Groups `SideNav.Item`s under an optional title/subtitle/endContent header. */
@@ -224,6 +233,9 @@ export function SideNavSection({
   title,
   subtitle,
   endContent,
+  collapsible = false,
+  defaultOpen = true,
+  count,
   children,
   className,
   ref,
@@ -231,6 +243,26 @@ export function SideNavSection({
 }: SideNavSectionProps): JSX.Element {
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
+  if (collapsible && title != null) {
+    return (
+      <details
+        {...(rest as ComponentPropsWithRef<'details'>)}
+        {...mergeProps(s.section, className)}
+        ref={ref as Ref<HTMLDetailsElement>}
+        open={defaultOpen}
+        data-collapsible=""
+      >
+        <summary {...mergeProps(s.sectionSummary)}>
+          <div {...mergeProps(s.sectionTitle)}>{title}</div>
+          {count != null ? <span {...mergeProps(s.sectionCount)}>{count}</span> : null}
+          <span {...mergeProps(s.sectionChevron)} aria-hidden="true">
+            <Icon name="chevronDown" size="sm" />
+          </span>
+        </summary>
+        <div {...mergeProps(s.sectionItems)}>{children}</div>
+      </details>
+    );
+  }
   const showHeader = !isCollapsed && (title != null || subtitle != null || endContent != null);
 
   return (

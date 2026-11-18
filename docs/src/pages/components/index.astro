@@ -3,6 +3,7 @@ export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocsPageHeader from '@var-ui/docs/DocsPageHeader';
+import HeroShowcase from '../../components/HeroShowcase';
 import { clampWords } from '../../lib/clamp-words';
 import { Card, mergeProps } from '@var-ui/astro';
 import { categoryLabels, componentRegistry, type ComponentCategory } from '../../data/components';
@@ -33,7 +34,9 @@ const catalog = componentCatalog();
     title="Components"
     eyebrow={`${componentRegistry.length} components`}
     lead={frontmatter.description}
-  />
+  >
+    <HeroShowcase slot="preview" slug="components-index" />
+  </DocsPageHeader>
   <article {...mergeProps(catalog.root, 'docs-article')}>
     {
       categories.map((group) => (
