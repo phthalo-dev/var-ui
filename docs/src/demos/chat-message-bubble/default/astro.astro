@@ -4,8 +4,8 @@ import { mergeProps } from '../../../lib/mergeProps';
 
 // No @var-ui/astro ChatMessageBubble — core recipe markup with group corners.
 const m = chatMessage({ sender: 'assistant' });
-const first = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'first' });
-const last = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'last' });
+const first = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'first' });
+const last = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'last' });
 ---
 
 <div {...mergeProps(m.root)}>

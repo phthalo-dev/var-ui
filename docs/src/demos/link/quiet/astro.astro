@@ -1,0 +1,9 @@
+---
+import { Link } from '@var-ui/astro';
+import { svg as chevronLeftSvg } from '@var-ui/icons/glyphs/chevronLeft';
+---
+
+<Link href="#" tone="secondary" size="sm">
+  <Fragment slot="start-icon" set:html={chevronLeftSvg} />
+  Back to runs
+</Link>

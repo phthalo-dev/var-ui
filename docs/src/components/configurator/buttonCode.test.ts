@@ -22,12 +22,12 @@ describe('generateButtonCode', () => {
     const { code } = generateButtonCode('react', {
       ...base,
       tone: 'accent',
-      appearance: 'filled',
+      appearance: 'solid',
       size: 'lg',
       disabled: true,
     });
     expect(code).toContain('tone="accent"');
-    expect(code).toContain('appearance="filled"');
+    expect(code).toContain('appearance="solid"');
     expect(code).toContain('size="lg"');
     expect(code).toMatch(/ disabled/);
   });
@@ -49,12 +49,12 @@ describe('generateButtonCode', () => {
     const { code, language } = generateButtonCode('html', {
       ...base,
       tone: 'success',
-      appearance: 'filled',
+      appearance: 'solid',
       size: 'sm',
     });
     expect(language).toBe('html');
     expect(code).toContain('data-tone="success"');
-    expect(code).toContain('data-appearance="filled"');
+    expect(code).toContain('data-appearance="solid"');
     expect(code).toContain('data-size="sm"');
   });
 

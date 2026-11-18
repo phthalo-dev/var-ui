@@ -1,0 +1,9 @@
+---
+import { UnstyledButton } from '@var-ui/astro';
+import { svg as chevronRightSvg } from '@var-ui/icons/glyphs/chevronRight';
+---
+
+<UnstyledButton aria-expanded="false">
+  <Fragment set:html={chevronRightSvg} />
+  Build details
+</UnstyledButton>

@@ -7,14 +7,14 @@ import { Button } from './Button';
 describe('Button', () => {
   it('renders children and applies the tone recipe attrs', () => {
     render(
-      <Button tone="accent" appearance="filled">
+      <Button tone="accent" appearance="solid">
         Save
       </Button>,
     );
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button.className).toContain('var-ui-button');
     expect(button.getAttribute('data-tone')).toBe('accent');
-    expect(button.getAttribute('data-appearance')).toBe('filled');
+    expect(button.getAttribute('data-appearance')).toBe('solid');
   });
 
   it('applies explicit tone and appearance', () => {

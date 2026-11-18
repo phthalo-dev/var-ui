@@ -30,11 +30,11 @@ The full inventory (every slot, variable and axis of every component) is the sna
 ### Variant attributes
 
 Variant axes are written as data attributes on the slot that carries them, for example
-`data-tone="danger"`, `data-appearance="filled"`, `data-size="lg"`, `data-layout="icon"`,
+`data-tone="danger"`, `data-appearance="solid"`, `data-size="lg"`, `data-layout="icon"`,
 `data-orientation="vertical"`. Select on them instead of on generated or positional classes:
 
 ```css
-.var-ui-button[data-tone='danger'][data-appearance='filled'] {
+.var-ui-button[data-tone='danger'][data-appearance='solid'] {
 }
 ```
 
@@ -117,7 +117,7 @@ put rules in it.
 
 One consequence for variables: an unlayered `--var-ui-button-background` assignment also beats the
 recipe's hover and tone rules, which set the same variable inside `components`. Scope it with the
-state you want (`:hover`, `[data-appearance='filled']`) if it should only apply there.
+state you want (`:hover`, `[data-appearance='solid']`) if it should only apply there.
 
 ## Tokens as CSS custom properties
 
@@ -231,11 +231,11 @@ or attribute listed in the contract.
   border-radius: 62.4375rem;
   font-weight: 600;
 }
-.var-ui-button[data-appearance='filled'][data-tone='accent'] {
+.var-ui-button[data-appearance='solid'][data-tone='accent'] {
   --var-ui-button-background: #0b6b57;
   --var-ui-button-foreground: white;
 }
-.var-ui-button[data-appearance='filled'][data-tone='accent']:hover:not([disabled]) {
+.var-ui-button[data-appearance='solid'][data-tone='accent']:hover:not([disabled]) {
   --var-ui-button-background: #08503f;
 }
 
@@ -285,7 +285,7 @@ export function Example() {
   return (
     <Dialog>
       <Dialog.Trigger>
-        <Button appearance="filled" tone="accent">
+        <Button appearance="solid" tone="accent">
           Rename
         </Button>
       </Dialog.Trigger>
@@ -313,7 +313,7 @@ import '../styles/brand.css';
 import { Button } from '@var-ui/astro';
 ---
 
-<Button appearance="filled" tone="accent">Rename</Button>
+<Button appearance="solid" tone="accent">Rename</Button>
 ```
 
 ## What is stable

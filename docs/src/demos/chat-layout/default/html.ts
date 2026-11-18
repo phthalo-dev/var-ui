@@ -20,7 +20,7 @@ function messageRow(
   initial: string,
 ): string {
   const m = chatMessage({ sender });
-  const bubble = chatMessageBubble({ sender, variant: 'filled', group: 'none' });
+  const bubble = chatMessageBubble({ sender, appearance: 'solid', group: 'none' });
   const a = avatar({ size: 'sm' });
   const initials = serializeHtmlTag(
     'span',
@@ -78,7 +78,7 @@ export function render(): string {
     'button',
     {
       type: 'button',
-      ...mergeProps(button({ tone: 'accent', appearance: 'filled' })),
+      ...mergeProps(button({ tone: 'accent', appearance: 'solid' })),
       'aria-label': 'Send message',
       disabled: true,
     },

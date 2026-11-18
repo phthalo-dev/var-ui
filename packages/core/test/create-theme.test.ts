@@ -275,7 +275,7 @@ describe('createDesignTheme', () => {
   });
 
   it('components emits overrides under the theme class', () => {
-    button({ tone: 'accent', appearance: 'filled', size: 'md' });
+    button({ tone: 'accent', appearance: 'solid', size: 'md' });
 
     defaultTheme.override({
       name: 'acme-components',
@@ -290,7 +290,7 @@ describe('createDesignTheme', () => {
                 accent: { textTransform: 'uppercase' },
               },
               appearance: {
-                filled: {},
+                solid: {},
               },
             },
           }),
@@ -339,7 +339,7 @@ describe('createDesignTheme', () => {
   });
 
   it('components accepts plain objects and per-key factories', () => {
-    button({ tone: 'accent', appearance: 'filled', size: 'md' });
+    button({ tone: 'accent', appearance: 'solid', size: 'md' });
     badge({});
 
     createDesignTheme({

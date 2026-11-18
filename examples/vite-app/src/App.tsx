@@ -103,7 +103,7 @@ function PaletteSwitcher({
     <HStack gap="xs">
       <Button
         tone={selected === 'default' ? 'accent' : 'neutral'}
-        appearance={selected === 'default' ? 'filled' : 'subtle'}
+        appearance={selected === 'default' ? 'solid' : 'subtle'}
         onClick={() => onSelect('default')}
         aria-pressed={selected === 'default'}
       >
@@ -111,7 +111,7 @@ function PaletteSwitcher({
       </Button>
       <Button
         tone={selected === 'acme' ? 'accent' : 'neutral'}
-        appearance={selected === 'acme' ? 'filled' : 'subtle'}
+        appearance={selected === 'acme' ? 'solid' : 'subtle'}
         onClick={() => onSelect('acme')}
         aria-pressed={selected === 'acme'}
       >
@@ -199,7 +199,7 @@ function LayoutSection() {
                   <Button
                     key={item.id}
                     tone={item.id === selectedId ? 'accent' : 'neutral'}
-                    appearance={item.id === selectedId ? 'filled' : 'subtle'}
+                    appearance={item.id === selectedId ? 'solid' : 'subtle'}
                     onClick={() => setSelectedId(item.id)}
                   >
                     {item.label}
@@ -275,7 +275,7 @@ function ContentSection() {
         title="No results"
         description="Try a different filter, or clear the search."
         action={
-          <Button tone="accent" appearance="filled">
+          <Button tone="accent" appearance="solid">
             Clear filters
           </Button>
         }
@@ -1218,11 +1218,7 @@ function ConfirmDialog({
             <Button autoFocus={destructive}>Cancel</Button>
           </AlertDialog.Close>
           <AlertDialog.Close>
-            <Button
-              tone={destructive ? 'danger' : 'accent'}
-              appearance="filled"
-              onClick={onConfirm}
-            >
+            <Button tone={destructive ? 'danger' : 'accent'} appearance="solid" onClick={onConfirm}>
               {confirmLabel}
             </Button>
           </AlertDialog.Close>

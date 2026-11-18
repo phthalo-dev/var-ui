@@ -20,7 +20,7 @@ export function render(): string {
   );
   const btn = serializeHtmlTag(
     'button',
-    { type: 'button', ...mergeProps(button({ tone: 'accent', appearance: 'filled' })) },
+    { type: 'button', ...mergeProps(button({ tone: 'accent', appearance: 'solid' })) },
     'Clear filters',
   );
   const action = serializeHtmlTag('div', mergeProps(e.action), btn);

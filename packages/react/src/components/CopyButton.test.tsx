@@ -40,4 +40,36 @@ describe('CopyButton', () => {
 
     vi.unstubAllGlobals();
   });
+
+  it('calls onCopied with the value after a successful write', async () => {
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
+    const onCopied = vi.fn();
+    const onCopyError = vi.fn();
+    render(
+      <IconProvider icons={{}}>
+        <CopyButton value="secret" onCopied={onCopied} onCopyError={onCopyError} />
+      </IconProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(onCopied).toHaveBeenCalledWith('secret');
+    expect(onCopyError).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
+  it('calls onCopyError with the error and value when the write fails', async () => {
+    const denied = new Error('denied');
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockRejectedValue(denied) } });
+    const onCopied = vi.fn();
+    const onCopyError = vi.fn();
+    render(
+      <IconProvider icons={{}}>
+        <CopyButton value="secret" onCopied={onCopied} onCopyError={onCopyError} />
+      </IconProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(onCopyError).toHaveBeenCalledWith(denied, 'secret');
+    expect(onCopied).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Error' })).toBeTruthy();
+    vi.unstubAllGlobals();
+  });
 });

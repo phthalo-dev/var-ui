@@ -13,6 +13,12 @@ Navigates to a URL or route. Renders React Aria's `Link`, so it honours [`Router
 
 <Demo id="link.default" />
 
+### Quiet navigation link
+
+A link inherits the surrounding font size, so it fits whatever sentence it sits in. For a standalone navigation link ("Back to runs", "View raw"), set a `size`, a quieter `tone` (`primary` or `secondary` text instead of the accent link colour) and a `startIcon` or `endIcon`. Icons are sized to the text and hidden from assistive tech: the link text names the link. In Astro, pass the icon in the `start-icon` or `end-icon` slot.
+
+<Demo id="link.quiet" />
+
 ## Props
 
 <PropsTable slug="link" />

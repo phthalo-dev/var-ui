@@ -33,7 +33,7 @@ export function App() {
     <DesignSystemProvider applyToDocument>
       <Stack>
         <Text>Hello</Text>
-        <Button tone="accent" appearance="filled">
+        <Button tone="accent" appearance="solid">
           Click me
         </Button>
       </Stack>

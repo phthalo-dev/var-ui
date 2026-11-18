@@ -8,7 +8,7 @@ const DEMO_TITLE = 'Jul 19, 2026, 2:35 PM';
 
 export function render(): string {
   const m = chatMessage({ sender: 'assistant' });
-  const bubble = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'none' });
+  const bubble = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'none' });
   const a = avatar({ size: 'sm' });
   const initials = serializeHtmlTag(
     'span',

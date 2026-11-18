@@ -50,7 +50,7 @@ export function ChatSendButton({
       aria-label={streaming ? 'Stop generating' : 'Send message'}
       {...rest}
       tone="accent"
-      appearance="filled"
+      appearance="solid"
       className={className}
       ref={ref}
       disabled={streaming ? false : disabled || loading}

@@ -7,6 +7,13 @@ const SELECTOR = '[data-var-ui-copy-button]';
 const INITIALIZED_ATTR = 'data-var-ui-copy-button-initialized';
 const DEFAULT_TIMEOUT_MS = 2000;
 
+/** Fired on a `CopyButton` after a successful copy; bubbles. `detail: { value }`. */
+export const COPY_BUTTON_COPIED_EVENT = 'var-ui:copy-button-copied';
+/** Fired on a `CopyButton` when the clipboard write fails; bubbles. `detail: { value }`. */
+export const COPY_BUTTON_ERROR_EVENT = 'var-ui:copy-button-error';
+
+export type CopyButtonEventDetail = { value: string };
+
 const COPY_ICON = copySvg;
 const CHECK_ICON = checkSvg;
 const ERROR_ICON = errorSvg;
@@ -70,6 +77,12 @@ export function initCopyButton(btn: HTMLButtonElement): void {
     } else {
       setState(btn, 'error', errorLabel, ERROR_ICON);
     }
+    btn.dispatchEvent(
+      new CustomEvent<CopyButtonEventDetail>(
+        ok ? COPY_BUTTON_COPIED_EVENT : COPY_BUTTON_ERROR_EVENT,
+        { bubbles: true, detail: { value } },
+      ),
+    );
 
     window.setTimeout(() => setState(btn, 'idle', copyLabel, COPY_ICON), timeout);
   });

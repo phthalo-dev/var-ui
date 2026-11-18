@@ -40,7 +40,7 @@ export default function Preview() {
                 <Button
                   key={item.id}
                   tone={item.id === selectedId ? 'accent' : 'neutral'}
-                  appearance={item.id === selectedId ? 'filled' : 'subtle'}
+                  appearance={item.id === selectedId ? 'solid' : 'subtle'}
                   onClick={() => setSelectedId(item.id)}
                 >
                   {item.label}

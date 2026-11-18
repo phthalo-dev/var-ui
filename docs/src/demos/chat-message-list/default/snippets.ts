@@ -18,8 +18,8 @@ import { chatMessage, chatMessageBubble, chatMessageList } from '@var-ui/core';
 const l = chatMessageList({ density: 'balanced' });
 const assistant = chatMessage({ sender: 'assistant' });
 const user = chatMessage({ sender: 'user' });
-const assistantBubble = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'none' });
-const userBubble = chatMessageBubble({ sender: 'user', variant: 'filled', group: 'none' });
+const assistantBubble = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'none' });
+const userBubble = chatMessageBubble({ sender: 'user', appearance: 'solid', group: 'none' });
 ---
 
 <div class:list={[l.root]} role="log" aria-live="polite">
@@ -36,5 +36,5 @@ const userBubble = chatMessageBubble({ sender: 'user', variant: 'filled', group:
     </div>
   </div>
 </div>`,
-  html: `<div data-density="balanced" class="var-ui-chat-message-list" role="log" aria-live="polite"><div data-density="balanced" class="var-ui-chat-message-list__inner"><div data-sender="assistant" class="var-ui-chat-message"><div data-sender="assistant" class="var-ui-chat-message__content"><div data-sender="assistant" data-variant="filled" data-group="none" class="var-ui-chat-message-bubble">Hello! How can I help?</div></div></div><div data-sender="user" class="var-ui-chat-message"><div data-sender="user" class="var-ui-chat-message__content"><div data-sender="user" data-variant="filled" data-group="none" class="var-ui-chat-message-bubble">What components ship in var-ui?</div></div></div></div></div>`,
+  html: `<div data-density="balanced" class="var-ui-chat-message-list" role="log" aria-live="polite"><div data-density="balanced" class="var-ui-chat-message-list__inner"><div data-sender="assistant" class="var-ui-chat-message"><div data-sender="assistant" class="var-ui-chat-message__content"><div data-sender="assistant" data-appearance="solid" data-group="none" class="var-ui-chat-message-bubble">Hello! How can I help?</div></div></div><div data-sender="user" class="var-ui-chat-message"><div data-sender="user" class="var-ui-chat-message__content"><div data-sender="user" data-appearance="solid" data-group="none" class="var-ui-chat-message-bubble">What components ship in var-ui?</div></div></div></div></div>`,
 } satisfies DemoSnippets;

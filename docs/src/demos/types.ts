@@ -21,6 +21,8 @@ export type DemoId =
   | 'text.emphasis'
   | 'text.clamp'
   | 'link.default'
+  | 'link.quiet'
+  | 'unstyled-button.default'
   | 'code-block.default'
   | 'alert.default'
   | 'banner.default'

@@ -62,11 +62,11 @@ const tabDefs = [
 
     <Section title="Actions">
       <HStack gap="sm" wrap>
-        <Button tone="accent" appearance="filled">Primary</Button>
+        <Button tone="accent" appearance="solid">Primary</Button>
         <Button>Secondary</Button>
         <Button tone="accent" appearance="ghost">Ghost</Button>
-        <Button tone="danger" appearance="filled">Danger</Button>
-        <Button tone="accent" appearance="filled" size="sm">Small</Button>
+        <Button tone="danger" appearance="solid">Danger</Button>
+        <Button tone="accent" appearance="solid" size="sm">Small</Button>
         <Button disabled>Disabled</Button>
       </HStack>
       <HStack gap="sm" wrap>
@@ -129,13 +129,13 @@ const tabDefs = [
           <li>Compose components — no React runtime required.</li>
         </Steps>
         <CodeBlock
-          code={`import { Button } from '@var-ui/astro';\n\n<Button tone="accent" appearance="filled">Launch</Button>`}
+          code={`import { Button } from '@var-ui/astro';\n\n<Button tone="accent" appearance="solid">Launch</Button>`}
           language="astro"
           filename="index.astro"
         />
         <Divider />
         <EmptyState title="No results" description="Try a different filter or clear the search.">
-          <Button slot="action" tone="accent" appearance="filled">Clear filters</Button>
+          <Button slot="action" tone="accent" appearance="solid">Clear filters</Button>
         </EmptyState>
       </Stack>
     </Section>

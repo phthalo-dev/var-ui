@@ -23,7 +23,7 @@ export function toneWithDefault<const Default extends Tone>(defaultTone: Default
 export type SemanticToneKey = Exclude<Tone, 'neutral'>;
 
 /** Cross-component appearance axis (Mantine-style variants mapped to var-ui naming). */
-export type ToneAppearance = 'filled' | 'outline' | 'subtle' | 'ghost';
+export type ToneAppearance = 'solid' | 'outline' | 'subtle' | 'ghost';
 
 /** Default subtle tint (matches `tone.*.subtleBackground` token generation). */
 export const subtleMix = {
@@ -39,7 +39,7 @@ export const subtleHoverMix = {
 /** Hover paint only when the control is not disabled (pairs with button `&[disabled]`). */
 const hoverWhenEnabled = '&:hover:not([disabled])';
 
-export function filledHoverColor(background: string): string {
+export function solidHoverColor(background: string): string {
   return `color-mix(in oklch, ${background} 88%, black)`;
 }
 
@@ -51,7 +51,7 @@ export function subtleBorderColor(foreground: string): string {
   return `color-mix(in srgb, ${foreground} ${subtleMix.border}, ${t.color.border.default.var})`;
 }
 
-/** Darken an existing subtle wash — mirrors filled hover (mix toward black). */
+/** Darken an existing subtle wash — mirrors solid hover (mix toward black). */
 export function subtleHoverBackground(foreground: string): string {
   return `color-mix(in oklch, ${subtleBackgroundColor(foreground)} 88%, black)`;
 }
@@ -186,14 +186,14 @@ export function mapTone<Style>(paint: (key: Tone) => Style): Record<Tone, Style>
  */
 export function controlAppearancePaint(v: ControlPaintRefs, appearance: ToneAppearance) {
   switch (appearance) {
-    case 'filled':
+    case 'solid':
       return {
         [v.border.name]: v.solidBg.var,
         [v.background.name]: v.solidBg.var,
         [v.foreground.name]: v.solidFg.var,
         [hoverWhenEnabled]: {
-          [v.background.name]: filledHoverColor(v.solidBg.var),
-          [v.border.name]: filledHoverColor(v.solidBg.var),
+          [v.background.name]: solidHoverColor(v.solidBg.var),
+          [v.border.name]: solidHoverColor(v.solidBg.var),
         },
       };
     case 'outline':
@@ -266,14 +266,14 @@ function toneBorderFor(foregroundVar: string): string {
 export function tonePaint(v: TonePaintRefs, key: SemanticToneKey, appearance: ToneAppearance) {
   const ch = semanticTone[key];
   switch (appearance) {
-    case 'filled':
+    case 'solid':
       return {
         [v.border.name]: ch.background,
         [v.background.name]: ch.background,
         [v.foreground.name]: ch.foregroundOnBackground,
         [hoverWhenEnabled]: {
-          [v.background.name]: filledHoverColor(ch.background),
-          [v.border.name]: filledHoverColor(ch.background),
+          [v.background.name]: solidHoverColor(ch.background),
+          [v.border.name]: solidHoverColor(ch.background),
         },
       };
     case 'outline':
