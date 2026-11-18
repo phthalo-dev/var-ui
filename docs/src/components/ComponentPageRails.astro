@@ -1,0 +1,85 @@
+---
+/**
+ * Right-rail content per component-page tab: the section TOC (Documentation), a prop jump-list
+ * (Props), recipe parts and attributes (Styles), and quick actions (Playground). The tabs script
+ * shows the rail for the selected tab, so the column is never blank.
+ */
+import { Toc } from '@var-ui/astro';
+import type { TocHeading } from '@var-ui/core/components/toc/spy';
+import { getAstroComponentDoc } from '../lib/astro-component-docs';
+import { getHtmlApiDoc } from '../lib/html-api-docs';
+import { loadReactPropsDoc } from '../lib/load-react-props';
+import { componentRail } from '../styles/componentPage';
+import type { ComponentDocTab } from '../lib/component-page';
+
+type Props = {
+  slug: string;
+  initialTab: ComponentDocTab;
+  hasPlayground: boolean;
+  tocContentSelector: string;
+};
+
+const { slug, initialTab, hasPlayground, tocContentSelector } = Astro.props;
+const framework = Astro.locals.framework;
+
+const propNames =
+  framework === 'react'
+    ? (loadReactPropsDoc(slug)?.props ?? [])
+        .filter((prop) => prop.source === 'var-ui')
+        .map((prop) => prop.name)
+    : framework === 'astro'
+      ? (getAstroComponentDoc(slug)?.props ?? []).map((prop) => prop.name)
+      : [];
+const propItems: TocHeading[] = propNames.map((name) => ({
+  id: `prop-${name}`,
+  text: name,
+  level: 2,
+}));
+
+const htmlDoc = getHtmlApiDoc(slug);
+const styleItems: TocHeading[] = (htmlDoc?.parts ?? []).flatMap((part) => [
+  ...(part.className ? [{ id: `style-${part.part}-class`, text: `.${part.className}`, level: 2 as const }] : []),
+  ...part.attributes.map((attr) => ({
+    id: `style-${part.part}-${attr.name}`,
+    text: attr.name,
+    level: 3 as const,
+  })),
+]);
+const rail = componentRail();
+---
+
+<div data-rail="documentation" hidden={initialTab !== 'documentation' || undefined}>
+  <Toc
+    title="On this page"
+    label="On this page"
+    auto
+    contentSelector={tocContentSelector}
+    headingSelector="h2[id]:not(#props):not([data-prose-isolate] *), h3[id]:not([data-prose-isolate] *)"
+  />
+</div>
+{
+  propItems.length > 0 ? (
+    <div data-rail="props" hidden={initialTab !== 'props' || undefined}>
+      <Toc title="Props" label="Props" items={propItems} className={rail.mono.className} />
+    </div>
+  ) : null
+}
+{
+  styleItems.length > 0 ? (
+    <div data-rail="styles" hidden={initialTab !== 'styles' || undefined}>
+      <Toc title="Class and attributes" label="Styling hooks" items={styleItems} className={rail.mono.className} />
+    </div>
+  ) : null
+}
+{
+  hasPlayground ? (
+    <div data-rail="playground" hidden={initialTab !== 'playground' || undefined}>
+      <nav class={rail.actions.className} aria-label="Playground actions">
+        <p class={rail.title.className}>Playground</p>
+        <a class={rail.action.className} href="?tab=playground" data-astro-reload>Reset controls</a>
+        <a class={rail.action.className} href="?tab=props">Props reference</a>
+        <a class={rail.action.className} href="?tab=styles">Styling hooks</a>
+      </nav>
+    </div>
+  ) : null
+}

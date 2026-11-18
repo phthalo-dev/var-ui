@@ -140,7 +140,10 @@ export function semanticChannelAssignments(v: SemanticChannelRefs, key: Semantic
 export function neutralChannelAssignments(v: SemanticChannelRefs) {
   return {
     [v.semantic.name]: t.color.text.primary.var,
-    [v.solidBg.name]: t.color.text.primary.var,
+    // Ink fill pulled slightly toward the surface: deep charcoal in light mode, and a soft
+    // warm off-white (not a glaring pure-white block) in dark mode.
+    [v.solidBg.name]:
+      `color-mix(in oklab, ${t.color.text.primary.var} 86%, ${t.color.background.surface.var})`,
     [v.solidFg.name]: t.color.background.surface.var,
   };
 }

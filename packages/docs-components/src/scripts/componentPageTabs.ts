@@ -36,15 +36,25 @@ function syncLocation(tabId: string): void {
 }
 
 function syncTocVisibility(root: HTMLElement): void {
-  const docPanel = root.querySelector<HTMLElement>('#panel-documentation');
-  const toc = root.querySelector<HTMLElement>('[data-component-doc-toc]');
-  if (!docPanel || !toc) return;
-
-  if (docPanel.hasAttribute('hidden')) {
-    toc.setAttribute('hidden', '');
-  } else {
-    toc.removeAttribute('hidden');
+  // The DocsPage rail holds one block per tab (`data-rail="<tab id>"`): show the selected tab's
+  // block; with none for that tab, hide the rail's contents but keep its column.
+  const selected = root.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
+  const tabId = selected?.id.replace(/^tab-/, '') ?? 'documentation';
+  const aside = document.querySelector<HTMLElement>('[data-docs-toc-slot]');
+  if (!aside) return;
+  const rails = aside.querySelectorAll<HTMLElement>('[data-rail]');
+  let shown = false;
+  rails.forEach((rail) => {
+    const match = rail.dataset.rail === tabId;
+    rail.hidden = !match;
+    shown ||= match;
+  });
+  if (rails.length > 0) {
+    aside.toggleAttribute('hidden', !shown);
+    return;
   }
+  const docPanel = root.querySelector<HTMLElement>('#panel-documentation');
+  aside.toggleAttribute('hidden', Boolean(docPanel?.hasAttribute('hidden')));
 }
 
 export function initComponentDocTabs(): void {

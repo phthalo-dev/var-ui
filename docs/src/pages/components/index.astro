@@ -2,7 +2,12 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { componentSidebarSections } from '../../data/navigation';
+import DocsPageHeader from '@var-ui/docs/DocsPageHeader';
+import HeroShowcase from '../../components/HeroShowcase';
+import { clampWords } from '../../lib/clamp-words';
+import { Card, mergeProps } from '@var-ui/astro';
+import { categoryLabels, componentRegistry, type ComponentCategory } from '../../data/components';
+import { componentCatalog } from '../../styles/componentPage';
 import { findMdxModule } from '../../lib/loadMdx';
 
 const modules = import.meta.glob('../../../content/components/*.mdx');
@@ -11,57 +16,48 @@ if (!loader) {
   return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
-const { Content, frontmatter } = await loader();
+const { frontmatter } = await loader();
+const categories = (Object.keys(categoryLabels) as ComponentCategory[])
+  .map((category) => ({
+    id: category,
+    label: categoryLabels[category],
+    entries: componentRegistry
+      .filter((entry) => entry.category === category)
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  }))
+  .filter((group) => group.entries.length > 0);
+const catalog = componentCatalog();
 ---
 
-<BaseLayout title={`${frontmatter.title} · Var UI`}>
-  <article class="docs-article">
-    <Content />
-    <h2>All components</h2>
-    <ul class="component-list">
-      {componentSidebarSections.flatMap((section) => section.items).map((item) => (
-        <li>
-          <a href={item.link}>{item.text}</a>
-        </li>
-      ))}
-    </ul>
+<BaseLayout title={`${frontmatter.title} · Var UI`} showToc>
+  <DocsPageHeader
+    title="Components"
+    eyebrow={`${componentRegistry.length} components`}
+    lead={frontmatter.description}
+  >
+    <HeroShowcase slot="preview" slug="components-index" />
+  </DocsPageHeader>
+  <article {...mergeProps(catalog.root, 'docs-article')}>
+    {
+      categories.map((group) => (
+        <section {...mergeProps(catalog.section)}>
+          <header {...mergeProps(catalog.header)}>
+            <h2 id={group.id} {...mergeProps(catalog.heading)}>
+              {group.label}
+            </h2>
+            <span {...mergeProps(catalog.count)}>{group.entries.length}</span>
+          </header>
+          <div {...mergeProps(catalog.grid)}>
+            {group.entries.map((entry) => (
+              <Card
+                href={`/components/${entry.slug}`}
+                title={entry.name}
+                description={clampWords(entry.description, 72)}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
   </article>
 </BaseLayout>
-
-<style>
-  .docs-article {
-    max-width: 48rem;
-  }
-
-  .docs-article :global(h1) {
-    margin-block: 0 0.5rem;
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  .docs-article :global(h2) {
-    margin-block: 2rem 0.75rem;
-    font-size: 1.35rem;
-  }
-
-  .docs-article :global(p) {
-    margin-block: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .component-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    columns: 2;
-    column-gap: 2rem;
-  }
-
-  .component-list li {
-    margin-block: 0.35rem;
-  }
-
-  .component-list a {
-    color: inherit;
-  }
-</style>

@@ -98,6 +98,10 @@ export const sideNav = typestyles.recipe({
     'sectionHeader',
     'sectionTitles',
     'sectionTitle',
+    'sectionSummary',
+    'sectionCount',
+    'sectionChevron',
+    'sectionItems',
     'item',
     'itemLabel',
     'itemRow',
@@ -179,6 +183,10 @@ export const sideNav = typestyles.recipe({
           flexDirection: 'column',
           gap: t.space.md.var,
           padding: t.space.sm.var,
+          // Collapsible groups read as a list of disclosures: their summary rows set the rhythm.
+          '&:has(> [data-collapsible])': {
+            gap: t.space.xxs.var,
+          },
           '[data-collapsed] &': {
             gap: t.space.xs.var,
             padding: t.space.xs.var,
@@ -252,9 +260,12 @@ export const sideNav = typestyles.recipe({
           ...orphan,
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space.xxs.var,
+          gap: '0.125rem',
           '&:not(:first-child)': {
-            marginTop: t.space.xs.var,
+            marginTop: t.space.sm.var,
+          },
+          '&[data-collapsible]:not(:first-child)': {
+            marginTop: 0,
           },
         },
         sectionHeader: {
@@ -263,14 +274,75 @@ export const sideNav = typestyles.recipe({
           justifyContent: 'space-between',
           gap: t.space.xs.var,
         },
+        // Collapsible section (`<details>`): the summary is the disclosure button and sticks to
+        // the top of the scroll area while its items scroll beneath it.
+        sectionSummary: {
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: t.space.xs.var,
+          minHeight: '2rem',
+          paddingInline: t.space.sm.var,
+          listStyle: 'none',
+          cursor: 'pointer',
+          borderRadius: t.radius.navItem.var,
+          backgroundColor: vars.background.var,
+          outline: 'none',
+          '&::-webkit-details-marker': { display: 'none' },
+          '&::marker': { content: '""' },
+          '&:hover': {
+            color: vars.headingColor.var,
+          },
+          '&:focus-visible': {
+            ...focusRing,
+          },
+          '& > [class*="sectionTitle"]': {
+            flex: '1 1 auto',
+            paddingInline: 0,
+          },
+          '[data-collapsed] &': {
+            display: 'none',
+          },
+        },
+        sectionCount: {
+          fontSize: t.fontSize.xs.var,
+          fontVariantNumeric: 'tabular-nums',
+          color: vars.sectionTitleColor.var,
+          opacity: 0.8,
+        },
+        sectionChevron: {
+          display: 'inline-flex',
+          flexShrink: 0,
+          color: vars.sectionTitleColor.var,
+          transform: 'rotate(-90deg)',
+          transition: transitionOf('transform', 'fast'),
+          '[open] > summary > &': {
+            transform: 'none',
+          },
+          '[dir="rtl"] &': {
+            transform: 'rotate(90deg)',
+          },
+          '[dir="rtl"] [open] > summary > &': {
+            transform: 'none',
+          },
+          '& svg': { width: '0.875rem', height: '0.875rem' },
+        },
+        sectionItems: {
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.125rem',
+          paddingBlockStart: '0.125rem',
+        },
         sectionTitles: {
           minWidth: 0,
         },
         sectionTitle: {
-          padding: `${t.space.xxs.var} ${t.space.xs.var}`,
+          padding: `${t.space.xxs.var} ${t.space.sm.var}`,
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.semibold.var,
-          letterSpacing: '0.06em',
+          letterSpacing: t.letterSpacing.caps.var,
           textTransform: 'uppercase',
           color: vars.sectionTitleColor.var,
           '[data-collapsed] &': {
@@ -292,7 +364,13 @@ export const sideNav = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           gap: t.space.xs.var,
-          padding: `${t.space.xs.var} ${t.space.xs.var}`,
+          // 14/20 on a 32px row: dense enough for long catalogs, still a comfortable target.
+          position: 'relative',
+          minHeight: '2rem',
+          paddingBlock: '0.375rem',
+          paddingInline: t.space.sm.var,
+          fontSize: t.fontSize.md.var,
+          lineHeight: '1.25rem',
           borderRadius: t.radius.navItem.var,
           color: vars.itemColor.var,
           textDecoration: 'none',
@@ -309,8 +387,21 @@ export const sideNav = typestyles.recipe({
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,
-            fontWeight: t.fontWeight.medium.var,
+            fontWeight: t.fontWeight.semibold.var,
             ...atForcedColors(forced.selected),
+          },
+          // Active marker: a 2px accent bar on the leading edge, inset from the row's radius.
+          '&[data-selected]::before': {
+            content: '""',
+            position: 'absolute',
+            insetInlineStart: 0,
+            insetBlock: '0.375rem',
+            width: '0.125rem',
+            borderRadius: t.radius.full.var,
+            backgroundColor: vars.itemSelectedColor.var,
+          },
+          '[data-collapsed] &[data-selected]::before': {
+            display: 'none',
           },
           '&[data-selected]:hover': {
             backgroundColor: vars.itemSelectedBackground.var,

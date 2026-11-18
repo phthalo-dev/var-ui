@@ -4,6 +4,9 @@ export const prerender = false;
 import PlaygroundLayout from '../../layouts/PlaygroundLayout.astro';
 import ColorSwatches from '../../components/ColorSwatches.astro';
 import { findMdxModule } from '../../lib/loadMdx';
+import { proseContent } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
+import { playgroundShellStyles } from '../../styles/playgroundShell';
 
 const slug = Astro.params.slug;
 if (!slug || slug === 'index') {
@@ -17,43 +20,12 @@ if (!loader) {
 }
 
 const { Content, frontmatter } = await loader();
+const prose = proseContent();
+const shell = playgroundShellStyles();
 ---
 
 <PlaygroundLayout title={`${frontmatter.title} · Var UI`}>
-  <article class="docs-article docs-article--colors">
+  <article {...mergeProps(prose.root, shell.article.className, 'docs-article')}>
     <Content components={{ ColorSwatches }} />
   </article>
 </PlaygroundLayout>
-
-<style>
-  .docs-article--colors {
-    max-width: 72rem;
-    margin: 0 auto;
-  }
-
-  .docs-article :global(h1) {
-    margin-block: 0 0.5rem;
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  .docs-article :global(h2) {
-    margin-block: 2rem 0.75rem;
-    font-size: 1.35rem;
-  }
-
-  .docs-article :global(h3) {
-    margin-block: 1.5rem 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .docs-article :global(p),
-  .docs-article :global(li) {
-    margin-block: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .docs-article :global(code) {
-    font-size: 0.9em;
-  }
-</style>

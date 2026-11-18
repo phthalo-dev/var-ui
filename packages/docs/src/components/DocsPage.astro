@@ -29,6 +29,7 @@ const {
   title = 'Docs',
   contentWidth = 'default',
   showToc: showTocProp,
+  tocHidden = false,
   tocContentSelector = DOCS_TOC_CONTENT_SELECTOR,
   tocExtraPaths = [],
   themeClassName,
@@ -42,6 +43,8 @@ const {
   title?: string;
   contentWidth?: 'default' | 'full';
   showToc?: boolean;
+  /** Render the TOC rail hidden at first paint (a script reveals it; e.g. non-default tabs). */
+  tocHidden?: boolean;
   tocContentSelector?: string;
   /** Exact paths that should show auto TOC beyond configured guide prefixes. */
   tocExtraPaths?: readonly string[];
@@ -60,7 +63,9 @@ const currentPath = normalizeDocsPath(pathname);
 const views = resolveMarkdownViews(config.markdownViews);
 const prefixes = markdownPrefixes(config.routes, views.extraPrefixes);
 const mdHref = views.enabled ? markdownHref(currentPath, prefixes) : null;
-const hasTocSlot = Astro.slots.has('toc');
+// Layouts forward `toc` unconditionally, so judge the slot by what it renders, not by presence.
+const tocSlotHtml = Astro.slots.has('toc') ? (await Astro.slots.render('toc')).trim() : '';
+const hasTocSlot = tocSlotHtml.length > 0;
 const guidePrefixes = resolveGuideRouteConfig(config.routes).map((route) => route.prefix);
 const showAutoToc =
   showTocProp === false
@@ -94,6 +99,8 @@ const pageBodyContent = docsPageContent({
 });
 const pageBodyDefaultContent = docsPageContent({ placement: 'inPageBody' });
 const defaultContent = docsPageContent();
+const markdownGlyph =
+  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="9" rx="2"/><path d="M4 10V6l2 2 2-2v4M11 6v4m-1.5-1.5L11 10l1.5-1.5"/></svg>';
 ---
 
 <html lang="en" class={themeClassName} {...htmlAttributes}>
@@ -152,26 +159,29 @@ const defaultContent = docsPageContent();
             <LayoutContent label="Main content">
               {
                 showTocPanel ? (
-                  <div class={cx(page.pageBody)}>
-                    <div {...mergeProps(pageBodyContent)}>
-                      {mdHref ? (
-                        <p>
-                          <a href={mdHref}>Also available as Markdown</a>
-                        </p>
-                      ) : null}
+                  <div {...mergeProps(page.pageBody)}>
+                    <div {...mergeProps(pageBodyContent)} data-docs-content>
                       <slot />
                     </div>
-                    <aside class={cx(page.toc)} aria-label="On this page">
-                      {hasTocSlot ? <slot name="toc" /> : <DocsToc contentSelector={tocContentSelector} />}
+                    <aside
+                      {...mergeProps(page.toc)}
+                      aria-label="On this page"
+                      data-docs-toc-slot
+                      hidden={tocHidden || undefined}
+                    >
+                      {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
+                      {mdHref && !hasTocSlot ? (
+                        <div {...mergeProps(page.tocActions)}>
+                          <a {...mergeProps(page.tocAction)} href={mdHref}>
+                            <span aria-hidden="true" set:html={markdownGlyph} />
+                            View as Markdown
+                          </a>
+                        </div>
+                      ) : null}
                     </aside>
                   </div>
                 ) : (
                   <div {...mergeProps(sidebarContent)}>
-                    {mdHref ? (
-                      <p>
-                        <a href={mdHref}>Also available as Markdown</a>
-                      </p>
-                    ) : null}
                     <slot />
                   </div>
                 )
@@ -183,26 +193,29 @@ const defaultContent = docsPageContent();
             <LayoutContent label="Main content">
               {
                 showTocPanel ? (
-                  <div class={cx(page.pageBody)}>
-                    <div {...mergeProps(pageBodyDefaultContent)}>
-                      {mdHref ? (
-                        <p>
-                          <a href={mdHref}>Also available as Markdown</a>
-                        </p>
-                      ) : null}
+                  <div {...mergeProps(page.pageBody)}>
+                    <div {...mergeProps(pageBodyDefaultContent)} data-docs-content>
                       <slot />
                     </div>
-                    <aside class={cx(page.toc)} aria-label="On this page">
-                      {hasTocSlot ? <slot name="toc" /> : <DocsToc contentSelector={tocContentSelector} />}
+                    <aside
+                      {...mergeProps(page.toc)}
+                      aria-label="On this page"
+                      data-docs-toc-slot
+                      hidden={tocHidden || undefined}
+                    >
+                      {hasTocSlot ? <Fragment set:html={tocSlotHtml} /> : <DocsToc contentSelector={tocContentSelector} />}
+                      {mdHref && !hasTocSlot ? (
+                        <div {...mergeProps(page.tocActions)}>
+                          <a {...mergeProps(page.tocAction)} href={mdHref}>
+                            <span aria-hidden="true" set:html={markdownGlyph} />
+                            View as Markdown
+                          </a>
+                        </div>
+                      ) : null}
                     </aside>
                   </div>
                 ) : (
                   <div {...mergeProps(defaultContent)}>
-                    {mdHref ? (
-                      <p>
-                        <a href={mdHref}>Also available as Markdown</a>
-                      </p>
-                    ) : null}
                     <slot />
                   </div>
                 )

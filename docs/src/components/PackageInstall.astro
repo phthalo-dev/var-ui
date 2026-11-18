@@ -1,0 +1,7 @@
+---
+import PackageInstall from '@var-ui/docs/PackageInstall';
+
+type Props = { packages: string; dev?: boolean };
+---
+
+<PackageInstall {...(Astro.props as Props)} />

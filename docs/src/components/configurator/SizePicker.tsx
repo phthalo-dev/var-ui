@@ -1,39 +1,29 @@
-import { configuratorStyles } from '@/styles/configurator';
+import { SegmentedControl } from '@var-ui/react';
 import { SIZE_OPTIONS } from './buttonCode';
 
+type Size = (typeof SIZE_OPTIONS)[number];
+
 export type SizePickerProps = {
-  value: (typeof SIZE_OPTIONS)[number];
-  onChange: (size: (typeof SIZE_OPTIONS)[number]) => void;
+  value: Size;
+  onChange: (size: Size) => void;
 };
 
-const SIZE_LABELS: Record<(typeof SIZE_OPTIONS)[number], string> = {
-  sm: 'S',
-  md: 'M',
-  lg: 'L',
+const SIZE_LABELS: Record<Size, string> = {
+  sm: 'Small',
+  md: 'Medium',
+  lg: 'Large',
 };
 
 export function SizePicker({ value, onChange }: SizePickerProps) {
-  const c = configuratorStyles();
-
   return (
-    <div className={c.sizeGrid.className} role="radiogroup" aria-label="Size">
-      {SIZE_OPTIONS.map((size) => {
-        const isActive = size === value;
-        return (
-          <button
-            key={size}
-            type="button"
-            role="radio"
-            aria-checked={isActive}
-            aria-label={size}
-            title={size}
-            className={(isActive ? c.optionButtonActive : c.optionButton).className}
-            onClick={() => onChange(size)}
-          >
-            {SIZE_LABELS[size]}
-          </button>
-        );
-      })}
-    </div>
+    <SegmentedControl
+      aria-label="Size"
+      size="sm"
+      options={SIZE_OPTIONS.map((size) => ({ value: size, label: SIZE_LABELS[size] }))}
+      value={value}
+      onValueChange={(next) => {
+        if (next) onChange(next as Size);
+      }}
+    />
   );
 }

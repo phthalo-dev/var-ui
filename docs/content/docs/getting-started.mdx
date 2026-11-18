@@ -1,5 +1,6 @@
 ---
 title: Getting started
+eyebrow: Guides
 description: Create a project and render your first var-ui component.
 ---
 
@@ -9,13 +10,7 @@ This guide is the happy path for a **Vite + React 19** app: install from npm, im
 
 ## Install
 
-```bash
-pnpm add @var-ui/react @var-ui/core @var-ui/icons react react-dom react-aria-components
-```
-
-```bash
-npm install @var-ui/react @var-ui/core @var-ui/icons react react-dom react-aria-components
-```
+<PackageInstall packages="@var-ui/react @var-ui/core @var-ui/icons react react-dom react-aria-components" />
 
 `@var-ui/icons` is optional. Without it, pass `icons={{}}` to `IconProvider`.
 
@@ -118,9 +113,7 @@ Caveats:
 
 ## Astro without React
 
-```bash
-pnpm add @var-ui/astro @var-ui/core
-```
+<PackageInstall packages="@var-ui/astro @var-ui/core" />
 
 Import the same stylesheet in a layout, then import Astro components:
 

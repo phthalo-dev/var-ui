@@ -1,0 +1,23 @@
+---
+/**
+ * Live preview of one demo, without its code: the component in the current framework
+ * (React island, Astro component, or HTML recipe markup). Used for the component hero.
+ */
+import DemoReactIsland from './DemoReactIsland';
+import { astroDemoMap } from '../demos/astroDemoMap';
+import { htmlDemoMap } from '../demos/htmlDemoMap';
+import type { DemoId } from '../demos/registry';
+
+type Props = { id: DemoId };
+
+const { id } = Astro.props;
+const framework = Astro.locals.framework;
+const AstroPreview = framework === 'astro' ? astroDemoMap[id] : undefined;
+const htmlMarkup = framework === 'html' ? htmlDemoMap[id]?.() : undefined;
+// Frameworks without a static demo for this id fall back to the React island.
+const useReact = framework === 'react' || (!AstroPreview && htmlMarkup == null);
+---
+
+{useReact ? <DemoReactIsland client:load id={id} /> : null}
+{!useReact && AstroPreview ? <AstroPreview /> : null}
+{!useReact && !AstroPreview && htmlMarkup != null ? <Fragment set:html={htmlMarkup} /> : null}

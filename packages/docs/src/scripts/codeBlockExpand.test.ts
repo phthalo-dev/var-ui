@@ -40,7 +40,7 @@ describe('initCodeBlockExpand', () => {
     button.click();
     expect(section.hasAttribute('data-demo-collapsed')).toBe(false);
     expect(body.style.maxHeight).toBe('');
-    expect(button.textContent).toBe('Collapse code');
+    expect(button.textContent).toBe('Collapse');
 
     button.click();
     expect(section.hasAttribute('data-demo-collapsed')).toBe(true);

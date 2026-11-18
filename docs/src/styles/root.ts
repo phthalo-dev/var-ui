@@ -7,3 +7,8 @@ import { typestyles } from '@var-ui/core';
 typestyles.global.rule('article :is(h2, h3)[id]', {
   scrollMarginTop: 'calc(var(--docs-header-height, 3.5rem) + 1rem)',
 });
+
+// Rail jump-list targets (prop and styling-hook rows) clear the sticky header too.
+typestyles.global.rule('tr[id]', {
+  scrollMarginTop: 'calc(var(--docs-header-height, 3.5rem) + 1rem)',
+});

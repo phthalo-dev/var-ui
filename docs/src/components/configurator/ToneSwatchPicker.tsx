@@ -28,7 +28,11 @@ export function ToneSwatchPicker({ value, onChange }: ToneSwatchPickerProps) {
             onClick={() => onChange(tone.id)}
           >
             {isActive ? (
-              <span className={c.toneCheck.className} aria-hidden="true">
+              <span
+                className={c.toneCheck.className}
+                style={{ color: tone.check }}
+                aria-hidden="true"
+              >
                 <Icon name="check" size="sm" />
               </span>
             ) : null}

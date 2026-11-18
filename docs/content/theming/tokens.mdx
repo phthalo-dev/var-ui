@@ -9,6 +9,8 @@ var-ui exposes semantic tokens for color, spacing, typography, motion, and
 elevation. Components reference tokens (e.g. `t.color.tone.accent.foreground`) instead
 of hard-coded values so themes can swap palettes without touching recipes.
 
+## Using tokens
+
 Import the shared refs from core:
 
 ```ts
@@ -20,6 +22,26 @@ designTokens.fontSize.md;
 ```
 
 Default registered values live in `tokenValues` (used as the built-in `from` preset base).
+
+## Spacing
+
+`designTokens.space.*`: the gap and padding scale, in rem.
+
+<TokenSpecimens group="space" />
+
+## Radius
+
+`designTokens.radius.*`: `sm` and `md` for controls, `lg` and `xl` for surfaces, `full` for pills.
+
+<TokenSpecimens group="radius" />
+
+## Type scale
+
+`designTokens.fontSize.*`: the control and UI text scale (the `display` steps are fluid).
+
+<TokenSpecimens group="fontSize" />
+
+## Theme overrides
 
 Theme overrides use two layers:
 
@@ -34,7 +56,7 @@ Custom namespaces from `createDesignTheme({ tokens })` appear on the theme's
 Syntax-highlighting colors live under `color.code` (`designTokens.color.code`).
 `lightSyntaxValues` / `darkSyntaxValues` are exported aliases for theme presets.
 
-### Syntax highlighting
+## Syntax highlighting
 
 var-ui defines semantic **code colors** but does not ship highlighter-specific CSS.
 Map `color.code` to your toolchain:

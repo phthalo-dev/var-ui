@@ -7,21 +7,35 @@ type Props = {
   isLinkActive: (link: string) => boolean;
 };
 
+/** Past this many links the sidebar collapses every group except the current one. */
+const COLLAPSE_THRESHOLD = 40;
+
 const { sections, isLinkActive } = Astro.props;
+const total = sections.reduce((sum, section) => sum + section.items.length, 0);
+const collapsible = sections.length > 1;
 ---
 
 {
-  sections.map((section) => (
-    <SideNavSection title={section.title}>
-      {
-        section.items.map((item) => (
-          <SideNavItem
-            label={item.text}
-            href={item.link}
-            selected={isLinkActive(item.link)}
-          />
-        ))
-      }
-    </SideNavSection>
-  ))
+  sections.map((section) => {
+    const current = section.items.some((item) => isLinkActive(item.link));
+    return (
+      <SideNavSection
+        title={section.title}
+        collapsible={collapsible && section.title != null}
+        count={section.items.length}
+        defaultOpen={current || total <= COLLAPSE_THRESHOLD}
+        data-docs-sidebar-section={section.title}
+        data-current={current || undefined}
+      >
+        {section.items.map((item) => (
+          <SideNavItem label={item.text} href={item.link} selected={isLinkActive(item.link)} />
+        ))}
+      </SideNavSection>
+    );
+  })
 }
+
+<script>
+  import { initDocsSidebarState } from '../scripts/docsSidebarState';
+  initDocsSidebarState();
+</script>

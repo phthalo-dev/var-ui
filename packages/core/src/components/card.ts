@@ -7,7 +7,17 @@ import { border } from '../internal/border';
 export const card = typestyles.recipe({
   name: 'card',
   layer: 'components',
-  slots: ['root', 'title', 'body', 'grid', 'linkRoot', 'linkTitle', 'linkDescription', 'linkHint'],
+  slots: [
+    'root',
+    'media',
+    'title',
+    'body',
+    'grid',
+    'linkRoot',
+    'linkTitle',
+    'linkDescription',
+    'linkHint',
+  ],
   vars: {
     border: {
       ...atProperty.color,
@@ -65,13 +75,28 @@ export const card = typestyles.recipe({
             gridTemplateColumns: 'repeat(2, 1fr)',
           }),
         },
+        // Full-bleed media (thumbnail, preview) above the card text; the card clips it.
+        media: {
+          marginBlockStart: `calc(-1 * ${t.space.lg.var})`,
+          marginInline: `calc(-1 * ${t.space.lg.var})`,
+          marginBlockEnd: t.space.xs.var,
+          minHeight: 0,
+          overflow: 'hidden',
+          borderBlockEnd: `${t.borderWidth.default.var} solid ${vars.border.var}`,
+          borderStartStartRadius: 'inherit',
+          borderStartEndRadius: 'inherit',
+        },
         linkRoot: {
           textDecoration: 'none',
           color: 'inherit',
           cursor: 'pointer',
+          overflow: 'hidden',
+          transition: `${t.transition.borderShadow.var}, transform ${t.duration.fast.var} ${t.easing.standard.var}`,
           '&:hover': {
-            [vars.border.name]: t.color.border.strong.var,
-            boxShadow: t.shadow.xs.var,
+            [vars.border.name]:
+              `color-mix(in oklab, ${t.color.tone.accent.foreground.var} 45%, ${t.color.border.default.var})`,
+            boxShadow: t.shadow.md.var,
+            transform: 'translateY(-1px)',
           },
           '&:focus-visible': {
             ...focusRing,

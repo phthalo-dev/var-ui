@@ -1,4 +1,3 @@
-import { color } from 'typestyles/color';
 import { tokens } from '../../declare';
 import type { ColorTokenPatch } from '../../types';
 
@@ -9,7 +8,8 @@ export const navItem = {
   activeBackground: tokens.color.tone.accent.subtleBackground.var,
   selectedBackground: {
     light: tokens.color.tone.accent.subtleBackground.var,
-    dark: color.alpha(tokens.color.tone.accent.subtleBackground.var, 0.5),
+    // A real accent tint on dark chrome (≈14%), not a half-transparent wash that disappears.
+    dark: `color-mix(in oklab, ${tokens.color.tone.accent.foreground.var} 14%, transparent)`,
   },
   selectedForeground: tokens.color.tone.accent.foreground.var,
 } satisfies ColorTokenPatch['navItem'];

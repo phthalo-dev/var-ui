@@ -9,6 +9,10 @@ import ComponentStylesPanel from '../../components/ComponentStylesPanel.astro';
 import DemoHost from '../../components/DemoHost.astro';
 import HiddenPropsTable from '@var-ui/docs-components/HiddenPropsTable';
 import PropsTable from '../../components/PropsTable.astro';
+import { mergeProps, combine } from '@var-ui/astro';
+import ComponentPageRails from '../../components/ComponentPageRails.astro';
+import { proseContent } from '@var-ui/core';
+import { componentDocArticle } from '../../styles/componentPage';
 import {
   getComponentCategoryLabel,
   getComponentDocTabs,
@@ -43,99 +47,60 @@ const initialTab = parseComponentDocTab(
   Astro.url.searchParams.get('tab') ?? Astro.url.hash.replace(/^#/, ''),
   slug,
 );
+const prose = proseContent();
+const article = componentDocArticle();
+const tocContentSelector = "[data-panel='documentation']";
 ---
 
-<BaseLayout title={`${frontmatter.title} · Var UI`} contentWidth="full">
-  <div class="component-doc-page">
-    <ComponentPageHeader entry={entry} categoryLabel={categoryLabel} sourceLinks={sourceLinks} />
+<BaseLayout
+  title={`${frontmatter.title} · Var UI`}
+  showToc
+  tocContentSelector={tocContentSelector}
+>
+  <ComponentPageHeader
+    entry={entry}
+    categoryLabel={categoryLabel}
+    sourceLinks={sourceLinks}
+    tabs={docTabs}
+    selectedTab={initialTab}
+  />
 
-    <ComponentDocTabs
-      className="component-doc-tabs"
-      tabs={docTabs}
-      defaultSelectedId={initialTab}
-      tocContentSelector=".component-doc-panel[data-panel='documentation']"
-    >
-      <div slot="documentation">
-        <article class="docs-article docs-article--documentation component-doc-panel" data-panel="documentation">
-          <Content components={{ Demo: DemoHost, PropsTable: HiddenPropsTable }} />
-        </article>
-      </div>
-      {
-        hasComponentPlayground(slug) ? (
-          <div slot="playground">
-            <section
-              class="docs-article component-doc-panel"
-              data-panel="playground"
-              aria-label="Playground"
-            >
-              {slug === 'button' ? <ButtonConfigurator /> : null}
-            </section>
-          </div>
-        ) : null
-      }
-      <div slot="props">
-        <section class="docs-article component-doc-panel" data-panel="props" aria-label="Props">
-          <PropsTable slug={slug} />
-        </section>
-      </div>
-      <div slot="styles">
-        <section class="docs-article component-doc-panel" data-panel="styles" aria-label="Styles">
-          <ComponentStylesPanel slug={slug} />
-        </section>
-      </div>
-    </ComponentDocTabs>
-  </div>
+  <ComponentDocTabs tabs={docTabs} defaultSelectedId={initialTab}>
+    <div slot="documentation">
+      <article {...combine(prose.root, article.root)} data-panel="documentation">
+        <Content components={{ Demo: DemoHost, PropsTable: HiddenPropsTable }} />
+      </article>
+    </div>
+    {
+      hasComponentPlayground(slug) ? (
+        <div slot="playground">
+          <section {...mergeProps(article.panel)} data-panel="playground" aria-label="Playground">
+            {slug === 'button' ? <ButtonConfigurator /> : null}
+          </section>
+        </div>
+      ) : null
+    }
+    <div slot="props">
+      <section {...mergeProps(article.panel)} data-panel="props" aria-label="Props">
+        <PropsTable slug={slug} />
+      </section>
+    </div>
+    <div slot="styles">
+      <section {...combine(prose.root, article.panel)} data-panel="styles" aria-label="Styles">
+        <ComponentStylesPanel slug={slug} />
+      </section>
+    </div>
+  </ComponentDocTabs>
+
+  <ComponentPageRails
+    slot="toc"
+    slug={slug}
+    initialTab={initialTab}
+    hasPlayground={hasComponentPlayground(slug)}
+    tocContentSelector={tocContentSelector}
+  />
 </BaseLayout>
 
 <script>
   import '@var-ui/docs-components/scripts/componentPageTabs';
 </script>
-
-<style>
-  .component-doc-page {
-    width: 100%;
-  }
-
-  .component-doc-tabs {
-    margin-block-start: 0.25rem;
-  }
-
-  .docs-article {
-    min-width: 0;
-  }
-
-  .docs-article :global(h1) {
-    margin-block: 0 0.5rem;
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  .docs-article :global(h2) {
-    margin-block: 2rem 0.75rem;
-    font-size: 1.35rem;
-  }
-
-  .docs-article :global(h3) {
-    margin-block: 1.5rem 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .docs-article :global(p) {
-    margin-block: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .docs-article :global(code) {
-    font-size: 0.9em;
-  }
-
-  .docs-article--documentation :global(h1:first-of-type),
-  .docs-article--documentation :global(h1:first-of-type + p) {
-    display: none;
-  }
-
-  .docs-article--documentation :global(h2#props),
-  .docs-article--documentation :global(h2#props + *) {
-    display: none;
-  }
-</style>

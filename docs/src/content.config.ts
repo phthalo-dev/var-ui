@@ -6,6 +6,7 @@ import { z } from 'astro/zod';
 const guideFrontmatterSchema = z.object({
   title: z.string().min(1),
   description: z.string().optional(),
+  eyebrow: z.string().optional(),
   template: z.enum(['guide', 'splash']).default('guide'),
   tableOfContents: z.boolean().optional().default(true),
   wide: z.boolean().optional().default(false),

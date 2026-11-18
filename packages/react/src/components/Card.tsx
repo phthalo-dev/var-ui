@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, JSX } from 'react';
+import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
 import { card } from '@var-ui/core/components/card';
 import { combine, mergeProps } from 'typestyles';
 
@@ -21,6 +21,8 @@ export type CardAsLinkProps = Omit<ComponentPropsWithRef<'a'>, 'title' | 'href'>
   description?: string;
   /** Trailing hint line (e.g. reading time, "Learn more →"). */
   hint?: string;
+  /** Full-bleed media (thumbnail, preview) above the title. */
+  media?: ReactNode;
 };
 
 export type CardProps = CardAsDivProps | CardAsLinkProps;
@@ -37,9 +39,10 @@ export type CardProps = CardAsDivProps | CardAsLinkProps;
 export function Card(props: CardProps): JSX.Element {
   const c = card();
   if (props.href !== undefined) {
-    const { title, description, hint, className, children, ref, ...rest } = props;
+    const { title, description, hint, media, className, children, ref, ...rest } = props;
     return (
       <a {...rest} {...combine(c.root, c.linkRoot, className)} ref={ref}>
+        {media ? <div {...mergeProps(c.media)}>{media}</div> : null}
         <span {...mergeProps(c.linkTitle)}>{title}</span>
         {description ? <p {...mergeProps(c.linkDescription)}>{description}</p> : null}
         {children}

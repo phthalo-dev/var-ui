@@ -19,11 +19,13 @@ const {
   title = 'Var UI',
   contentWidth = 'default',
   showToc: showTocProp,
+  tocHidden,
   tocContentSelector,
 } = Astro.props as {
   title?: string;
   contentWidth?: 'default' | 'full';
   showToc?: boolean;
+  tocHidden?: boolean;
   tocContentSelector?: string;
 };
 
@@ -45,6 +47,7 @@ const searchItems = buildDocsSearchIndex();
   title={title}
   contentWidth={contentWidth}
   showToc={showTocProp}
+  tocHidden={tocHidden}
   tocContentSelector={tocContentSelector}
   themeClassName={defaultThemeClassName}
   bodyClassName={hljsScopeClass}

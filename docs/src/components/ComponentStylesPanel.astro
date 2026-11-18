@@ -3,6 +3,7 @@ import { proseContent } from '@var-ui/core';
 import { mergeProps } from '../lib/mergeProps';
 import StylingHooks from './StylingHooks.astro';
 import { getHtmlApiDoc } from '../lib/html-api-docs';
+import { inlineCodeHtml } from '../lib/inline-code';
 
 type Props = {
   slug: string;
@@ -42,7 +43,7 @@ const tableWrap = mergeProps(proseContent().tableWrap);
                   <tbody>
                     {
                       part.className ? (
-                        <tr>
+                        <tr id={`style-${part.part}-class`}>
                           <td>
                             <code>class</code>
                           </td>
@@ -55,12 +56,12 @@ const tableWrap = mergeProps(proseContent().tableWrap);
                     }
                     {
                       part.attributes.map((attr) => (
-                        <tr>
+                        <tr id={`style-${part.part}-${attr.name}`}>
                           <td>
                             <code>{attr.name}</code>
                           </td>
                           <td>{attr.example ? <code>{attr.example}</code> : '—'}</td>
-                          <td>{attr.description ?? '—'}</td>
+                          <td set:html={attr.description ? inlineCodeHtml(attr.description) : '—'} />
                         </tr>
                       ))
                     }
@@ -72,9 +73,7 @@ const tableWrap = mergeProps(proseContent().tableWrap);
         }
         {
           htmlDoc.note ? (
-            <p>
-              <em>{htmlDoc.note}</em>
-            </p>
+            <p set:html={inlineCodeHtml(htmlDoc.note)} />
           ) : null
         }
       </>
@@ -87,19 +86,3 @@ const tableWrap = mergeProps(proseContent().tableWrap);
     )
   }
 </div>
-
-<style>
-  .component-styles-panel :global(h2) {
-    margin-block: 1.75rem 0.75rem;
-    font-size: 1.15rem;
-  }
-
-  .component-styles-panel :global(p) {
-    margin-block: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .component-styles-panel :global(code) {
-    font-size: 0.9em;
-  }
-</style>

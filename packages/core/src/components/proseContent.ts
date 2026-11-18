@@ -1,6 +1,5 @@
 import { atProperty } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
-import { atDarkMode } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { border, borderSide } from '../internal/border';
@@ -8,6 +7,46 @@ import { transitionOf } from '../internal/motion';
 
 /** Mobile prose density — uses TypeStyles breakpoint map from `runtime.ts`. */
 const belowMd = breakpoint('md', 'max');
+
+/** Marks a subtree (a live demo stage, an embedded widget) that prose element styles skip. */
+export const PROSE_ISOLATE_ATTRIBUTE = 'data-prose-isolate';
+
+const outsideIsolated = `:not(:where([${PROSE_ISOLATE_ATTRIBUTE}], [${PROSE_ISOLATE_ATTRIBUTE}] *))`;
+
+/** Split a selector list on top-level commas (not the ones inside `:is(…)` / `:not(…)`). */
+function splitSelectorList(list: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const char of list) {
+    if (char === '(') depth += 1;
+    if (char === ')') depth -= 1;
+    if (char === ',' && depth === 0) {
+      parts.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  parts.push(current.trim());
+  return parts;
+}
+
+/**
+ * Scope every descendant rule (`& h2`, `& a, & code`, …) so it stops at an isolated subtree:
+ * components rendered inside a demo keep their own typography instead of the docs prose ramp.
+ */
+function isolateDescendantRules<T extends Record<string, unknown>>(styles: T): T {
+  return Object.fromEntries(
+    Object.entries(styles).map(([key, value]) => {
+      if (!key.startsWith('& ')) return [key, value];
+      const scoped = splitSelectorList(key)
+        .map((part) => `${part}${outsideIsolated}`)
+        .join(', ');
+      return [scoped, value];
+    }),
+  ) as T;
+}
 
 /**
  * Long-form / markdown prose primitives: blockquote, kbd, inline badges, tables, dividers,
@@ -50,11 +89,11 @@ export const proseContent = typestyles.recipe({
     },
     inlineCodeBackground: {
       ...atProperty.color,
-      value: `color-mix(in srgb, ${t.color.tone.accent.foreground.var} 10%, ${t.color.background.subtle.var})`,
+      value: `color-mix(in srgb, ${t.color.text.primary.var} 6%, transparent)`,
     },
     tableBorder: {
       ...atProperty.color,
-      value: t.color.border.strong.var,
+      value: t.color.border.default.var,
     },
     tableHeaderBackground: {
       ...atProperty.color,
@@ -62,116 +101,114 @@ export const proseContent = typestyles.recipe({
     },
     tableCellBorder: {
       ...atProperty.color,
-      value: t.color.border.default.var,
+      value: t.color.border.subtle.var,
     },
   },
   styles: ({ vars }) => {
     return {
       base: {
-        root: {
+        root: isolateDescendantRules({
           fontFamily: t.fontFamily.body.var,
-          fontSize: t.fontSize.md.var,
-          lineHeight: 1.75,
-          ...atDarkMode({ lineHeight: 1.82 }),
+          // Long-form reading size: 16/26, independent of the 14px control scale.
+          fontSize: '1rem',
+          lineHeight: '1.625rem',
           color: vars.foreground.var,
+          overflowWrap: 'break-word',
+          '& > :first-child': {
+            marginTop: 0,
+          },
           '& h1': {
             fontFamily: t.fontFamily.display.var,
-            fontStyle: 'italic',
-            fontSize: t.fontSize.xxxl.var,
+            fontSize: '2.75rem',
             fontWeight: t.fontWeight.bold.var,
-            letterSpacing: t.letterSpacing.tight.var,
-            lineHeight: 1.25,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.1,
             marginTop: 0,
-            marginBottom: t.space.sm.var,
+            marginBottom: t.space.md.var,
             color: t.color.text.primary.var,
             [belowMd]: {
-              fontSize: t.fontSize.xxl.var,
-              marginBottom: t.space.xs.var,
+              fontSize: '2rem',
             },
           },
-          /**
-           * H2 as editorial section break — italic Fraunces with a full-width hairline rule above it.
-           * First H2 after an intro gets no rule (description block already provides one).
-           */
+          // The paragraph right after the page title is the lead: larger and muted.
+          '& > h1 + p': {
+            fontSize: '1.1875rem',
+            lineHeight: '1.75rem',
+            color: vars.secondaryColor.var,
+            marginBottom: t.space.lg.var,
+            [belowMd]: {
+              fontSize: '1.0625rem',
+              lineHeight: '1.625rem',
+            },
+          },
+          // H2 opens a major section: 28/34 at 650, 56px of air above it.
           '& h2': {
             fontFamily: t.fontFamily.display.var,
-            fontStyle: 'italic',
-            fontSize: t.fontSize.xxl.var,
-            fontWeight: t.fontWeight.bold.var,
-            letterSpacing: t.letterSpacing.tight.var,
-            lineHeight: 1.25,
-            marginTop: t.space.xxxl.var,
-            marginBottom: t.space.sm.var,
-            paddingTop: t.space.lg.var,
-            borderTop: t.stroke.strong.var,
+            fontSize: '1.75rem',
+            fontWeight: 650,
+            letterSpacing: '-0.015em',
+            lineHeight: '2.125rem',
+            marginTop: '3.5rem',
+            marginBottom: t.space.md.var,
             color: t.color.text.primary.var,
             [belowMd]: {
-              fontSize: t.fontSize['xl'].var,
-              marginTop: t.space.xl.var,
-              paddingTop: t.space.md.var,
+              fontSize: '1.5rem',
+              lineHeight: '1.875rem',
+              marginTop: t.space.xxl.var,
             },
-          },
-          '& > h2:first-of-type, & > h2:first-child': {
-            marginTop: t.space.md.var,
-            paddingTop: 0,
-            borderTop: 'none',
-          },
-          '& h2:first-child': {
-            marginTop: 0,
           },
           '& h3': {
             fontFamily: t.fontFamily.display.var,
-            fontSize: t.fontSize['lg'].var,
+            fontSize: '1.25rem',
             fontWeight: t.fontWeight.semibold.var,
-            lineHeight: 1.35,
-            marginTop: t.space.lg.var,
+            letterSpacing: '-0.01em',
+            lineHeight: '1.75rem',
+            marginTop: t.space.xl.var,
             marginBottom: t.space.xs.var,
             color: t.color.text.primary.var,
-            [belowMd]: {
-              marginTop: t.space.md.var,
-            },
+          },
+          // An H3 that directly follows its H2 sits closer: they read as one heading group.
+          '& h2 + h3': {
+            marginTop: t.space.lg.var,
           },
           '& h4, & h5, & h6': {
             fontFamily: t.fontFamily.display.var,
-            fontSize: t.fontSize.md.var,
+            fontSize: '1rem',
             fontWeight: t.fontWeight.semibold.var,
-            marginTop: t.space.md.var,
+            lineHeight: '1.5rem',
+            marginTop: t.space.lg.var,
             marginBottom: t.space.xxs.var,
             color: t.color.text.primary.var,
-            [belowMd]: {
-              marginTop: t.space.sm.var,
-            },
           },
           '& h2, & h3, & h4, & h5, & h6': {
             position: 'relative',
           },
           '& p': {
+            marginTop: 0,
             marginBottom: t.space.md.var,
-            [belowMd]: {
-              marginBottom: t.space.sm.var,
-            },
           },
           '& ul, & ol': {
-            marginBottom: t.space.sm.var,
-            paddingInlineStart: t.space.md.var,
-            [belowMd]: {
-              marginBottom: t.space.xs.var,
-              paddingInlineStart: t.space.sm.var,
-            },
+            marginTop: 0,
+            marginBottom: t.space.md.var,
+            paddingInlineStart: '1.25rem',
           },
           '& li': {
-            marginBottom: t.space.xxs.var,
+            marginBottom: '0.375rem',
+            paddingInlineStart: t.space.xxs.var,
           },
-          /**
-           * Links carry an always-on tinted underline so they're distinguishable from inline `code`
-           * (mono pill on a tinted background). On hover the underline snaps to full accent.
-           */
+          '& li::marker': {
+            color: t.color.text.secondary.var,
+          },
+          '& strong': {
+            fontWeight: t.fontWeight.semibold.var,
+          },
+          // Links: accent text with a quiet 30% underline that firms up on hover.
           '& a': {
-            color: t.color.tone.accent.foreground.var,
+            color: t.color.link.default.var,
             textDecoration: 'underline',
             textDecorationThickness: '0.0625rem',
             textUnderlineOffset: '0.1875rem',
-            textDecorationColor: `color-mix(in srgb, ${t.color.tone.accent.foreground.var} 40%, transparent)`,
+            textDecorationColor: `color-mix(in srgb, currentColor 30%, transparent)`,
             fontWeight: t.fontWeight.medium.var,
             transition: t.transition.colorShift.var,
             '&:hover': {
@@ -183,28 +220,33 @@ export const proseContent = typestyles.recipe({
               borderRadius: t.radius.sm.var,
             },
           },
-          /**
-           * Inline `code` — mono pill on a tinted surface. Background + font differentiate it from
-           * anchors (underline only).
-           */
-          '& code': {
+          // Inline `code`: a quiet neutral chip in body color (tight 4px sides, so punctuation
+          // sits against it), never competing with links.
+          '& :not(pre) > code': {
             fontFamily: t.fontFamily.mono.var,
-            fontSize: '0.92em',
-            fontWeight: t.fontWeight.medium.var,
-            color: t.color.link.hover.var,
+            fontSize: '0.875em',
+            fontWeight: t.fontWeight.normal.var,
+            color: t.color.text.primary.var,
             backgroundColor: vars.inlineCodeBackground.var,
-            padding: `0.0625rem ${t.space.xxs.var}`,
+            paddingBlock: '0.0625rem',
+            paddingInline: '0.25rem',
             borderRadius: t.radius.sm.var,
-            whiteSpace: 'nowrap',
+            boxDecorationBreak: 'clone',
+            WebkitBoxDecorationBreak: 'clone',
           },
-          '& a code': {
-            color: 'inherit',
+          // Table cells carry mono text only; the first column keeps the chip because it names
+          // the thing the row is about. Everywhere else (prose, lists, leads) code is a chip.
+          '& td > code': {
+            backgroundColor: 'transparent',
+            paddingInline: 0,
+          },
+          '& td:first-child > code': {
             backgroundColor: vars.inlineCodeBackground.var,
+            paddingInline: '0.25rem',
           },
-          /**
-           * Alert / callout anchor links inherit the callout's color and invert the underline behavior
-           * (always present, removed on hover) so they read as integrated copy, not detached CTAs.
-           */
+          '& a > code': {
+            color: 'inherit',
+          },
           '& a[data-alert-action]': {
             color: 'inherit',
             fontWeight: 'inherit',
@@ -217,18 +259,14 @@ export const proseContent = typestyles.recipe({
           },
           '& pre:not([data-codeblock-pre])': {
             fontFamily: t.fontFamily.mono.var,
-            fontSize: t.fontSize.sm.var,
-            lineHeight: 1.6,
+            fontSize: '0.8125rem',
+            lineHeight: '1.375rem',
             backgroundColor: vars.preBackground.var,
-            padding: t.space.sm.var,
-            borderRadius: t.radius.md.var,
+            padding: `${t.space.md.var} ${t.space.lg.var}`,
+            borderRadius: t.radius.lg.var,
             ...border(vars.preBorder.var),
             overflow: 'auto',
-            marginBottom: t.space.sm.var,
-            [belowMd]: {
-              padding: t.space.xs.var,
-              marginBottom: t.space.xs.var,
-            },
+            marginBottom: t.space.md.var,
           },
           '& pre code': {
             backgroundColor: 'transparent',
@@ -240,39 +278,27 @@ export const proseContent = typestyles.recipe({
             color: 'inherit',
             whiteSpace: 'pre',
           },
-          /**
-           * Fenced code blocks (rendered via `markdownCodeBlockHtml`) sit as siblings of prose.
-           * Give them generous breathing room from surrounding prose, but collapse the gap when two
-           * blocks sit adjacent — consecutive examples should read as a pair, not two islands.
-           */
-          '& [data-codeblock]': {
+          // Code blocks and demos sit as siblings of prose: 24px from text, 12px between a pair.
+          '& > :is([data-codeblock], [data-code-block])': {
             marginBlock: t.space.lg.var,
-            [belowMd]: {
-              marginBlock: t.space.md.var,
+          },
+          '& > :is([data-codeblock], [data-code-block]) + :is([data-codeblock], [data-code-block])':
+            {
+              marginTop: t.space.sm.var,
             },
-          },
-          '& [data-codeblock] + [data-codeblock]': {
-            marginTop: t.space.sm.var,
-          },
-          '& [data-codeblock]:first-child': {
+          '& > :is([data-codeblock], [data-code-block]):first-child': {
             marginTop: 0,
           },
-          '& [data-codeblock]:last-child': {
+          '& > :is([data-codeblock], [data-code-block]):last-child': {
             marginBottom: 0,
           },
-          /** Brutalist callout — full ink border + hard shadow offset, no side stripe. */
           '& blockquote': {
             margin: `${t.space.lg.var} 0`,
-            padding: `${t.space.md.var} ${t.space.lg.var}`,
-            ...border(vars.blockquoteBorder.var),
-            backgroundColor: vars.blockquoteBackground.var,
-            boxShadow: t.shadow.sm.var,
-            color: vars.foreground.var,
+            paddingBlock: t.space.xxs.var,
+            paddingInline: `${t.space.md.var} 0`,
+            ...borderSide('inline-start', vars.blockquoteBorder.var, t.borderWidth.thick.var),
+            color: vars.secondaryColor.var,
             fontStyle: 'normal',
-            [belowMd]: {
-              margin: `${t.space.md.var} 0`,
-              padding: `${t.space.sm.var} ${t.space.md.var}`,
-            },
           },
           '& blockquote p': {
             marginBottom: t.space.xs.var,
@@ -338,26 +364,32 @@ export const proseContent = typestyles.recipe({
             width: '100%',
             borderCollapse: 'collapse',
             marginBlock: `${t.space.md.var} ${t.space.lg.var}`,
-            fontSize: t.fontSize.sm.var,
-            ...border(vars.tableBorder.var),
+            fontSize: t.fontSize.md.var,
+            lineHeight: '1.25rem',
+            border: 'none',
           },
           '& thead': {
-            backgroundColor: vars.tableHeaderBackground.var,
-            ...borderSide('block-end', vars.tableBorder.var, t.borderWidth.thick.var),
+            ...borderSide('block-end', vars.tableBorder.var),
           },
           '& th, & td': {
             textAlign: 'start',
-            padding: `${t.space.xs.var} ${t.space.sm.var}`,
+            paddingBlock: t.space.sm.var,
+            paddingInline: `0 ${t.space.lg.var}`,
             ...borderSide('block-end', vars.tableCellBorder.var),
             verticalAlign: 'top',
           },
+          '& :is(th, td):last-child': {
+            paddingInlineEnd: 0,
+          },
           '& th': {
-            fontWeight: t.fontWeight.bold.var,
+            paddingBlock: t.space.xs.var,
+            fontWeight: t.fontWeight.semibold.var,
             fontSize: t.fontSize.xs.var,
-            color: t.color.text.primary.var,
+            color: vars.secondaryColor.var,
             textTransform: 'uppercase',
             letterSpacing: t.letterSpacing.caps.var,
-            fontFamily: t.fontFamily.mono.var,
+            whiteSpace: 'nowrap',
+            backgroundColor: 'transparent',
           },
           '& tr:last-child td': {
             borderBottom: 'none',
@@ -389,7 +421,7 @@ export const proseContent = typestyles.recipe({
             ...focusRing,
             borderRadius: t.radius.sm.var,
           },
-        },
+        }),
         /** Scroll container for wide GFM tables (wrap HTML manually). */
         tableWrap: {
           overflowX: 'auto',

@@ -35,9 +35,9 @@ describe('CodeBlock', () => {
     }
   });
 
-  it('renders code with a language tag', () => {
+  it('renders code with a display language label', () => {
     render(<CodeBlock code={'const x = 1'} language="tsx" />);
-    expect(screen.getByText('tsx')).toBeTruthy();
+    expect(screen.getByText('TSX')).toBeTruthy();
   });
 
   it('marks highlighted lines and wrap mode with data attributes', () => {

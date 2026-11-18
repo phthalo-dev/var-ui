@@ -1,0 +1,52 @@
+---
+/**
+ * Visual reference for one token group, drawn from the live default theme: spacing as bars,
+ * radius as tiles, font sizes as type specimens. `<TokenSpecimens group="space" />`.
+ */
+import { designTokens, tokenValues } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
+import { tokenSpecimens } from '../styles/tokenSpecimens';
+
+type Props = { group: 'space' | 'radius' | 'fontSize' };
+
+const { group } = Astro.props;
+const s = tokenSpecimens();
+
+type Ref = { var: string };
+const refs = designTokens[group] as unknown as Record<string, Ref>;
+const values = tokenValues[group] as unknown as Record<string, unknown>;
+const entries = Object.entries(values)
+  .filter(([key, value]) => typeof value === 'string' && refs[key]?.var)
+  .filter(([key]) => !(group === 'radius' && (key === 'full' || key === 'navItem')))
+  .map(([key, value]) => ({ key, value: value as string, ref: refs[key]!.var }));
+---
+
+{
+  group === 'radius' ? (
+    <div {...mergeProps(s.tiles)} data-prose-isolate>
+      {entries.map((entry) => (
+        <div {...mergeProps(s.tile)}>
+          <div {...mergeProps(s.tileShape)} style={{ borderRadius: entry.ref }} />
+          <span {...mergeProps(s.tokenName)}>{entry.key}</span>
+          <span {...mergeProps(s.tokenValue)}>{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div {...mergeProps(s.list)} data-prose-isolate>
+      {entries.map((entry) => (
+        <div {...mergeProps(s.row)}>
+          <span {...mergeProps(s.tokenName)}>{entry.key}</span>
+          <span {...mergeProps(s.tokenValue)}>{entry.value}</span>
+          {group === 'space' ? (
+            <div {...mergeProps(s.bar)} style={{ width: entry.ref }} />
+          ) : (
+            <span {...mergeProps(s.sample)} style={{ fontSize: entry.ref }}>
+              Precise, calm, confident
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}

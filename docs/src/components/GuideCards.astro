@@ -1,0 +1,42 @@
+---
+/**
+ * Card grid of the guides in the current section (from the sidebar navigation and each entry's
+ * frontmatter description). Wrap the MDX list it replaces: the list stays in the source for the
+ * Markdown views, and the HTML page shows cards instead.
+ */
+import { getEntry } from 'astro:content';
+import { Card, mergeProps } from '@var-ui/astro';
+import { docsSidebarSections, themingSidebarSections } from '../data/navigation';
+import { componentCatalog } from '../styles/componentPage';
+import { clampWords } from '../lib/clamp-words';
+
+const section = Astro.url.pathname.startsWith('/theming') ? 'theming' : 'docs';
+const items = (section === 'theming' ? themingSidebarSections : docsSidebarSections)
+  .flatMap((group) => group.items)
+  .filter((item) => item.link !== `/${section}`);
+
+const cards = await Promise.all(
+  items.map(async (item) => {
+    const id = item.link.replace(`/${section}/`, '');
+    const entry = await getEntry(section, id);
+    return {
+      title: item.text,
+      href: item.link,
+      description: (entry?.data as { description?: string } | undefined)?.description,
+    };
+  }),
+);
+const catalog = componentCatalog();
+---
+
+<div {...mergeProps(catalog.grid)} data-prose-isolate>
+  {
+    cards.map((card) => (
+      <Card
+        href={card.href}
+        title={card.title}
+        description={card.description ? clampWords(card.description, 96) : undefined}
+      />
+    ))
+  }
+</div>

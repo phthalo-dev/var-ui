@@ -4,8 +4,10 @@ import { z } from 'astro/zod';
 export const guideFrontmatterSchema = z.object({
   /** Page title — required. */
   title: z.string().min(1),
-  /** Short description for SEO / cards. */
+  /** Short description for SEO / cards; also the hero lead. */
   description: z.string().optional(),
+  /** Hero eyebrow above the title. Defaults to the route's section name. */
+  eyebrow: z.string().optional(),
   /**
    * Layout template.
    * - `guide` — standard article with optional sidebar/TOC (default)

@@ -7,7 +7,7 @@ import {
   Tabs as AriaTabs,
   type TabsProps as RACTabsProps,
 } from 'react-aria-components';
-import { tabs as tabsStyles } from '@var-ui/core/components/tabs';
+import { tabs as tabsStyles, type TabsAppearance } from '@var-ui/core/components/tabs';
 import { positionTabsIndicator } from '@var-ui/core/components/indicators/tabs';
 import { mergeProps } from 'typestyles';
 import { keyToValue, toRacProps } from '../internal/racProps';
@@ -44,6 +44,8 @@ export type TabsProps = Omit<
   orientation?: 'horizontal' | 'vertical';
   /** `automatic` selects a tab on focus; `manual` requires Enter/Space. @default 'automatic' */
   keyboardActivation?: RACTabsProps['keyboardActivation'];
+  /** Underline rail or pill buttons. @default 'underline' */
+  appearance?: TabsAppearance;
 };
 
 export function Tabs({
@@ -52,11 +54,12 @@ export function Tabs({
   defaultValue,
   onValueChange,
   disabled,
+  appearance = 'underline',
   className,
   ref,
   ...props
 }: TabsProps): JSX.Element {
-  const t = tabsStyles();
+  const t = tabsStyles({ appearance });
   const listRef = useRef<HTMLDivElement>(null);
   const isControlled = value !== undefined;
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue ?? tabs[0]?.value);

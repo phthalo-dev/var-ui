@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, JSX, Ref } from 'react';
 import { useMemo, useState } from 'react';
-import { codeBlock } from '@var-ui/core/components/codeBlock';
+import { codeBlock, codeLanguageLabel } from '@var-ui/core/components/codeBlock';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { Icon } from '../icons';
@@ -152,7 +152,9 @@ export function CodeBlock({
       <div {...mergeProps(cb.header)} data-codeblock-header>
         <div {...mergeProps(cb.title)}>
           {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? <span {...mergeProps(cb.language)}>{language}</span> : null}
+          {language ? (
+            <span {...mergeProps(cb.language)}>{codeLanguageLabel(language)}</span>
+          ) : null}
         </div>
         {copyable ? (
           <div {...mergeProps(cb.actions)}>
@@ -164,8 +166,13 @@ export function CodeBlock({
               onClick={onCopy}
               aria-label={isCopied ? copiedLabel : copyLabel}
             >
-              <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
-              {isCopied ? copiedLabel : hasError ? errorText : copyText}
+              <span data-codeblock-copy-icon>
+                <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
+              </span>
+              {/* Icon-only button: the recipe keeps this label for screen readers only. */}
+              <span data-codeblock-copy-text>
+                {isCopied ? copiedLabel : hasError ? errorText : copyText}
+              </span>
             </button>
             <span
               {...mergeProps(cb.feedback)}

@@ -1,5 +1,9 @@
 ---
-import { Badge, Heading, Text } from '@var-ui/astro';
+import DocsPageHeader, { type DocsPageHeaderMeta } from '@var-ui/docs/DocsPageHeader';
+import { markdownHref } from '@var-ui/docs/utils';
+import DemoPreview from './DemoPreview.astro';
+import HeroShowcase, { hasHeroShowcase } from './HeroShowcase';
+import { heroDemoId } from '../lib/hero-demo';
 import type { ComponentEntry } from '../data/components';
 import type { ComponentSourceLink } from '../lib/component-page';
 
@@ -7,83 +11,57 @@ type Props = {
   entry: ComponentEntry;
   categoryLabel?: string;
   sourceLinks: ComponentSourceLink[];
+  /** Page tabs, mirrored in the collapsed header bar. */
+  tabs?: readonly { id: string; label: string }[];
+  selectedTab?: string;
 };
 
-const { entry, categoryLabel, sourceLinks } = Astro.props;
+const { entry, categoryLabel, sourceLinks, tabs, selectedTab } = Astro.props;
+const framework = Astro.locals.framework;
+
+const ICON =
+  'viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+const icons = {
+  source: `<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 .2a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .2Z"/></svg>`,
+  package: `<svg ${ICON}><path d="M8 1.5 14 4.75v6.5L8 14.5l-6-3.25v-6.5z"/><path d="M2 4.75 8 8l6-3.25M8 8v6.5M5 3.12l6 3.26"/></svg>`,
+  markdown: `<svg ${ICON}><rect x="1.5" y="3.5" width="13" height="9" rx="2"/><path d="M4 10V6l2 2 2-2v4M11 6v4m-1.5-1.5L11 10l1.5-1.5"/></svg>`,
+};
+
+const packageName =
+  framework === 'astro' ? '@var-ui/astro' : framework === 'html' ? '@var-ui/core' : '@var-ui/react';
+const mdHref = markdownHref(Astro.url.pathname, ['/components']);
+const heroId = heroDemoId(entry.slug);
+
+const importCode = framework !== 'html' ? `import { ${entry.name} } from '${packageName}';` : undefined;
+const meta: DocsPageHeaderMeta[] = [];
+if (sourceLinks.length > 0) {
+  meta.push({
+    label: 'Source',
+    icon: icons.source,
+    links: sourceLinks.map((link) => ({ label: link.label, href: link.href })),
+  });
+}
+// The package icon labels this item; dropping the word keeps the row on one line.
+meta.push({ icon: icons.package, code: packageName });
+if (mdHref) {
+  meta.push({ icon: icons.markdown, links: [{ label: 'View as Markdown', href: mdHref }] });
+}
 ---
 
-<header class="component-page-header">
-  <div class="component-page-header__meta">
-    {categoryLabel ? <Badge tone="neutral">{categoryLabel}</Badge> : null}
-  </div>
-  <Heading level={1} size="display-sm" className="component-page-header__title">
-    {entry.name}
-  </Heading>
-  <Text tone="secondary" className="component-page-header__description">
-    {entry.description}
-  </Text>
+<DocsPageHeader
+  title={entry.name}
+  eyebrow={categoryLabel}
+  lead={entry.description}
+  importCode={importCode}
+  meta={meta}
+  tabs={tabs}
+  selectedTab={selectedTab}
+>
   {
-    sourceLinks.length > 0 ? (
-      <div class="component-page-header__links">
-        {
-          sourceLinks.map((link) => (
-            <a class="component-page-header__link" href={link.href} target="_blank" rel="noreferrer">
-              {link.label} source
-              <span class="component-page-header__link-icon" aria-hidden="true">
-                ↗
-              </span>
-            </a>
-          ))
-        }
-      </div>
+    hasHeroShowcase(entry.slug) ? (
+      <HeroShowcase slot="preview" slug={entry.slug} />
+    ) : heroId ? (
+      <DemoPreview slot="preview" id={heroId} />
     ) : null
   }
-</header>
-
-<style>
-  .component-page-header {
-    margin-block-end: 1.5rem;
-  }
-
-  .component-page-header__meta {
-    margin-block-end: 0.75rem;
-  }
-
-  .component-page-header__title {
-    margin: 0;
-  }
-
-  .component-page-header__description {
-    margin-block: 0.5rem 0;
-    max-width: 42rem;
-  }
-
-  .component-page-header__links {
-    display: none;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-block-start: 1rem;
-  }
-
-  .component-page-header__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.875rem;
-    color: inherit;
-    text-decoration: none;
-    border: 0.0625rem solid color-mix(in oklab, currentColor 18%, transparent);
-    border-radius: 62.4375rem;
-    padding: 0.3rem 0.75rem;
-    transition: background-color 120ms ease;
-  }
-
-  .component-page-header__link:hover {
-    background: color-mix(in oklab, currentColor 8%, transparent);
-  }
-
-  .component-page-header__link-icon {
-    font-size: 0.8em;
-    opacity: 0.7;
-  }
-</style>
+</DocsPageHeader>

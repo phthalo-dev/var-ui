@@ -1,43 +1,17 @@
 ---
+import { proseContent } from '@var-ui/core';
+import { mergeProps } from '@var-ui/astro';
+import { docsGuideArticle } from '../styles/docsPageHeader';
+
 const { wide = false } = Astro.props as { wide?: boolean };
+const prose = proseContent();
+const article = docsGuideArticle();
 ---
 
-<article class:list={['docs-article', wide && 'docs-article--wide']}>
+<article
+  {...mergeProps(prose.root, article.root.className, 'docs-article')}
+  data-docs-article
+  data-wide={wide || undefined}
+>
   <slot />
 </article>
-
-<style>
-  .docs-article {
-    max-width: 48rem;
-  }
-
-  .docs-article--wide {
-    max-width: 72rem;
-  }
-
-  .docs-article :global(h1) {
-    margin-block: 0 0.5rem;
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  .docs-article :global(h2) {
-    margin-block: 2rem 0.75rem;
-    font-size: 1.35rem;
-  }
-
-  .docs-article :global(h3) {
-    margin-block: 1.5rem 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .docs-article :global(p),
-  .docs-article :global(li) {
-    margin-block: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .docs-article :global(code) {
-    font-size: 0.9em;
-  }
-</style>

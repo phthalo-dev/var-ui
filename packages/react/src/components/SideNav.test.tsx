@@ -197,3 +197,32 @@ describe('SideNav', () => {
     expect(expand.querySelector('[data-mirror]')).toBeTruthy();
   });
 });
+
+describe('SideNav.Section collapsible', () => {
+  it('renders a disclosure with a count that starts open by default', () => {
+    const { container } = wrap(
+      <SideNav>
+        <SideNav.Section title="Action" collapsible count={2}>
+          <SideNav.Item label="Button" href="/button" />
+          <SideNav.Item label="Link" href="/link" />
+        </SideNav.Section>
+      </SideNav>,
+    );
+    const details = container.querySelector('details[data-collapsible]')!;
+    expect(details).toBeTruthy();
+    expect(details.hasAttribute('open')).toBe(true);
+    expect(details.querySelector('summary')!.textContent).toContain('Action');
+    expect(details.querySelector('summary')!.textContent).toContain('2');
+  });
+
+  it('starts closed with defaultOpen={false}', () => {
+    const { container } = wrap(
+      <SideNav>
+        <SideNav.Section title="Layout" collapsible defaultOpen={false}>
+          <SideNav.Item label="Grid" href="/grid" />
+        </SideNav.Section>
+      </SideNav>,
+    );
+    expect(container.querySelector('details')!.hasAttribute('open')).toBe(false);
+  });
+});

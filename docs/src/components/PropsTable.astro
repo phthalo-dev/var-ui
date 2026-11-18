@@ -2,9 +2,10 @@
 import { proseContent } from '@var-ui/core';
 import { PropsTable as ReactPropsTable } from './PropsTable';
 import { getAstroComponentDoc, hasAstroBinding } from '../lib/astro-component-docs';
-import { getHtmlApiDoc } from '../lib/html-api-docs';
+import { getHtmlApiDoc, getRecipeDefaults } from '../lib/html-api-docs';
 import { loadReactPropsDoc } from '../lib/load-react-props';
 import { mergeProps } from '../lib/mergeProps';
+import { docsPropsTable } from '@var-ui/docs/styles';
 
 type Props = {
   /** Component slug from the docs registry, e.g. `button`. */
@@ -14,6 +15,8 @@ type Props = {
 const { slug } = Astro.props;
 const framework = Astro.locals.framework;
 const tableWrap = mergeProps(proseContent().tableWrap);
+const pt = docsPropsTable();
+const cleanType = (type: string) => type.replace(/\s*\|\s*undefined\b/g, '').trim();
 
 const reactDoc = framework === 'react' ? loadReactPropsDoc(slug) : null;
 const astroDoc = framework === 'astro' ? getAstroComponentDoc(slug) : null;
@@ -22,7 +25,9 @@ const astroBound = framework === 'astro' ? hasAstroBinding(slug) : false;
 ---
 
 {
-  framework === 'react' && <ReactPropsTable slug={slug} doc={reactDoc} />
+  framework === 'react' && (
+    <ReactPropsTable slug={slug} doc={reactDoc} recipeDefaults={getRecipeDefaults(slug)} />
+  )
 }
 
 {
@@ -36,27 +41,36 @@ const astroBound = framework === 'astro' ? hasAstroBinding(slug) : false;
       <div>
         {
           astroDoc.props.length > 0 ? (
-            <div {...tableWrap}>
-              <table>
-                <thead>
+            <div class={pt.root.className}>
+              <table class={pt.table.className}>
+                <colgroup>
+                  <col style="width: 26%" />
+                  <col style="width: 54%" />
+                  <col style="width: 20%" />
+                </colgroup>
+                <thead class={pt.head.className}>
                   <tr>
-                    <th>Prop</th>
-                    <th>Type</th>
-                    <th>Default</th>
+                    <th class={pt.headCell.className}>Prop</th>
+                    <th class={pt.headCell.className}>Type</th>
+                    <th class={pt.headCell.className}>Default</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     astroDoc.props.map((prop) => (
-                      <tr>
-                        <td>
-                          <code>{prop.name}</code>
-                          {prop.required ? null : <span aria-hidden="true"> ?</span>}
+                      <tr class={pt.row.className} id={`prop-${prop.name}`}>
+                        <td class={pt.cell.className} data-col="name">
+                          <span class={pt.propName.className}>
+                            {prop.name}
+                            {prop.required ? <span class={pt.required.className}>Required</span> : null}
+                          </span>
                         </td>
-                        <td>
-                          <code>{prop.type}</code>
+                        <td class={pt.cell.className} data-col="type">
+                          <code class={pt.type.className}>{cleanType(prop.type)}</code>
                         </td>
-                        <td>{prop.default ? <code>{prop.default}</code> : '—'}</td>
+                        <td class={pt.cell.className} data-col="default" data-empty={prop.default ? undefined : ''}>
+                          {prop.default ? <code class={pt.defaultValue.className}>{prop.default}</code> : <span class={pt.empty.className}>–</span>}
+                        </td>
                       </tr>
                     ))
                   }
