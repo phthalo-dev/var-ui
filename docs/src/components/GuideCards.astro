@@ -5,10 +5,10 @@
  * Markdown views, and the HTML page shows cards instead.
  */
 import { getEntry } from 'astro:content';
-import { Card, Grid } from '@var-ui/astro';
+import { Card, mergeProps } from '@var-ui/astro';
 import { docsSidebarSections, themingSidebarSections } from '../data/navigation';
 import { componentCatalog } from '../styles/componentPage';
-import ComponentThumb from './ComponentThumb.astro';
+import { clampWords } from '../lib/clamp-words';
 
 const section = Astro.url.pathname.startsWith('/theming') ? 'theming' : 'docs';
 const items = (section === 'theming' ? themingSidebarSections : docsSidebarSections)
@@ -29,12 +29,14 @@ const cards = await Promise.all(
 const catalog = componentCatalog();
 ---
 
-<Grid columns="auto" minColumnWidth="15rem" gap="sm" className={catalog.guideGrid.className} data-prose-isolate>
+<div {...mergeProps(catalog.grid)} data-prose-isolate>
   {
     cards.map((card) => (
-      <Card href={card.href} title={card.title} description={card.description} className={catalog.card.className}>
-        <ComponentThumb slot="media" name={card.title} />
-      </Card>
+      <Card
+        href={card.href}
+        title={card.title}
+        description={card.description ? clampWords(card.description, 96) : undefined}
+      />
     ))
   }
-</Grid>
+</div>

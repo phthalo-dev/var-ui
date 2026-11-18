@@ -1,6 +1,8 @@
 ---
 import DocsPageHeader, { type DocsPageHeaderMeta } from '@var-ui/docs/DocsPageHeader';
 import { markdownHref } from '@var-ui/docs/utils';
+import DemoPreview from './DemoPreview.astro';
+import { heroDemoId } from '../lib/hero-demo';
 import type { ComponentEntry } from '../data/components';
 import type { ComponentSourceLink } from '../lib/component-page';
 
@@ -24,6 +26,7 @@ const icons = {
 const packageName =
   framework === 'astro' ? '@var-ui/astro' : framework === 'html' ? '@var-ui/core' : '@var-ui/react';
 const mdHref = markdownHref(Astro.url.pathname, ['/components']);
+const heroId = heroDemoId(entry.slug);
 
 const importCode = framework !== 'html' ? `import { ${entry.name} } from '${packageName}';` : undefined;
 const meta: DocsPageHeaderMeta[] = [];
@@ -36,7 +39,7 @@ if (sourceLinks.length > 0) {
 }
 meta.push({ label: 'Package', icon: icons.package, code: packageName });
 if (mdHref) {
-  meta.push({ label: 'Docs', icon: icons.markdown, links: [{ label: 'Markdown', href: mdHref }] });
+  meta.push({ icon: icons.markdown, links: [{ label: 'View as Markdown', href: mdHref }] });
 }
 ---
 
@@ -46,4 +49,6 @@ if (mdHref) {
   lead={entry.description}
   importCode={importCode}
   meta={meta}
-/>
+>
+  {heroId ? <DemoPreview slot="preview" id={heroId} /> : null}
+</DocsPageHeader>

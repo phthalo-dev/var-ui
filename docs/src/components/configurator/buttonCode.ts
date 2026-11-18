@@ -17,14 +17,44 @@ const APPEARANCE_OPTIONS: { id: ToneAppearance; label: string }[] = [
   { id: 'ghost', label: 'Ghost' },
 ];
 
-const TONE_OPTIONS: { id: Tone; label: string; swatch: string }[] = [
+const TONE_OPTIONS: { id: Tone; label: string; swatch: string; check: string }[] = [
   // Swatches show the filled-button fill each tone produces, in both color modes.
-  { id: 'neutral', label: 'Neutral', swatch: t.color.text.primary.var },
-  { id: 'accent', label: 'Accent', swatch: t.color.tone.accent.background.var },
-  { id: 'success', label: 'Success', swatch: t.color.tone.success.background.var },
-  { id: 'warning', label: 'Warning', swatch: t.color.tone.warning.background.var },
-  { id: 'danger', label: 'Danger', swatch: t.color.tone.danger.background.var },
-  { id: 'info', label: 'Info', swatch: t.color.tone.info.background.var },
+  {
+    id: 'neutral',
+    label: 'Neutral',
+    swatch: t.color.text.primary.var,
+    check: t.color.background.surface.var,
+  },
+  {
+    id: 'accent',
+    label: 'Accent',
+    swatch: t.color.tone.accent.background.var,
+    check: t.color.tone.accent.foregroundOnBackground.var,
+  },
+  {
+    id: 'success',
+    label: 'Success',
+    swatch: t.color.tone.success.background.var,
+    check: t.color.tone.success.foregroundOnBackground.var,
+  },
+  {
+    id: 'warning',
+    label: 'Warning',
+    swatch: t.color.tone.warning.background.var,
+    check: t.color.tone.warning.foregroundOnBackground.var,
+  },
+  {
+    id: 'danger',
+    label: 'Danger',
+    swatch: t.color.tone.danger.background.var,
+    check: t.color.tone.danger.foregroundOnBackground.var,
+  },
+  {
+    id: 'info',
+    label: 'Info',
+    swatch: t.color.tone.info.background.var,
+    check: t.color.tone.info.foregroundOnBackground.var,
+  },
 ];
 
 const SIZE_OPTIONS = ['sm', 'md', 'lg'] as const;

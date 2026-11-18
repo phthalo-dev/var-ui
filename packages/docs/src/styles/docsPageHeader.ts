@@ -12,6 +12,8 @@ export const docsPageHeader = typestyles.recipe({
   layer: 'components',
   slots: [
     'root',
+    'content',
+    'preview',
     'eyebrow',
     'title',
     'lead',
@@ -28,9 +30,15 @@ export const docsPageHeader = typestyles.recipe({
     base: {
       root: {
         overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: t.space.sm.var,
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1fr)',
+        alignItems: 'center',
+        columnGap: t.space.xl.var,
+        // With a live preview the band splits: copy on the left, the component on the right.
+        '&[data-has-preview]': {
+          gridTemplateColumns: 'minmax(0, 1fr) minmax(14rem, 18rem)',
+          [belowMd]: { gridTemplateColumns: 'minmax(0, 1fr)' },
+        },
         marginBlockEnd: t.space.lg.var,
         padding: `${t.space.xl.var} ${t.space.xl.var} ${t.space.lg.var}`,
         minWidth: 0,
@@ -41,6 +49,27 @@ export const docsPageHeader = typestyles.recipe({
           padding: `${t.space.lg.var} ${t.space.md.var} ${t.space.md.var}`,
           borderRadius: t.radius.lg.var,
         },
+      },
+      content: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: t.space.sm.var,
+        minWidth: 0,
+      },
+      // The hero preview: the live component on a raised plate, at most 200px tall.
+      preview: {
+        display: 'grid',
+        placeItems: 'center',
+        boxSizing: 'border-box',
+        minHeight: '7.5rem',
+        maxHeight: '12.5rem',
+        padding: t.space.md.var,
+        overflow: 'hidden',
+        borderRadius: t.radius.lg.var,
+        border: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
+        backgroundColor: t.color.background.surface.var,
+        boxShadow: t.shadow.md.var,
+        [belowMd]: { display: 'none' },
       },
       eyebrow: {
         margin: 0,
@@ -95,8 +124,8 @@ export const docsPageHeader = typestyles.recipe({
       },
       importCode: {
         minWidth: 0,
-        overflowX: 'auto',
-        scrollbarWidth: 'none',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         fontFamily: t.fontFamily.mono.var,
         fontSize: '0.8125rem',
@@ -115,8 +144,8 @@ export const docsPageHeader = typestyles.recipe({
         marginBlockStart: t.space.xxs.var,
         padding: 0,
         listStyle: 'none',
-        fontSize: t.fontSize.md.var,
-        lineHeight: '1.5rem',
+        fontSize: t.fontSize.sm.var,
+        lineHeight: '1.25rem',
       },
       metaItem: {
         display: 'inline-flex',
@@ -134,15 +163,15 @@ export const docsPageHeader = typestyles.recipe({
         columnGap: t.space.sm.var,
         minWidth: 0,
         color: t.color.text.primary.var,
+        // Plain text links that underline on hover: a calm row inside the hero band.
         '& a': {
           color: 'inherit',
           fontWeight: t.fontWeight.medium.var,
-          textDecoration: 'underline',
-          textDecorationColor: `color-mix(in srgb, currentColor 25%, transparent)`,
+          textDecoration: 'none',
           textUnderlineOffset: '0.1875rem',
           '&:hover': {
             color: t.color.link.default.var,
-            textDecorationColor: 'currentColor',
+            textDecoration: 'underline',
           },
         },
       },
@@ -150,11 +179,11 @@ export const docsPageHeader = typestyles.recipe({
         display: 'inline-flex',
         flexShrink: 0,
         color: t.color.text.secondary.var,
-        '& svg': { width: '1rem', height: '1rem' },
+        '& svg': { width: '0.875rem', height: '0.875rem' },
       },
       metaCode: {
         fontFamily: t.fontFamily.mono.var,
-        fontSize: '0.8125rem',
+        fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.normal.var,
         color: t.color.text.primary.var,
         backgroundColor: 'transparent',
@@ -181,6 +210,36 @@ export const docsPageTabs = typestyles.recipe({
         minWidth: 0,
         padding: 0,
         '&[hidden]': { display: 'none' },
+      },
+    },
+  }),
+});
+
+/**
+ * Guide article under a `DocsPageHeader`: the MDX `# Title` is already the hero H1, so it is
+ * hidden, and the paragraph after it reads as ordinary body text (the hero carries the lead).
+ * `utilities` layer, alongside `proseContent`, whose heading rhythm it adjusts.
+ */
+export const docsGuideArticle = typestyles.recipe({
+  name: 'docs-guide-article',
+  layer: 'utilities',
+  slots: ['root'],
+  styles: () => ({
+    base: {
+      root: {
+        minWidth: 0,
+        '& > h1:first-child': {
+          display: 'none',
+        },
+        '& > h1:first-child + p': {
+          fontSize: 'inherit',
+          lineHeight: 'inherit',
+          color: 'inherit',
+          marginBottom: t.space.md.var,
+        },
+        '& > h1:first-child + h2': {
+          marginTop: 0,
+        },
       },
     },
   }),

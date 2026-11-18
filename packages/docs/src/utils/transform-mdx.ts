@@ -22,7 +22,8 @@ export type TransformMdxResult = {
 const FENCE_RE = /(```[\s\S]*?```)/g;
 const DEMO_RE = /<Demo\s+id=["']([^"']+)["']\s*\/>/g;
 const PROPS_TABLE_RE = /<PropsTable\s+slug=["'][^"']+["']\s*\/>/g;
-const WIDGET_RE = /<(CssVariableReference|ColorSwatches|ShadowSwatches)\s*\/>/g;
+const WIDGET_RE =
+  /<(CssVariableReference|ColorSwatches|ShadowSwatches|TokenSpecimens)(\s+[^>]*)?\s*\/>/g;
 /** `<GuideCards>` wraps a list that the Markdown view keeps; drop only the wrapper tags. */
 const GUIDE_CARDS_TAG_RE = /^<\/?GuideCards>\s*$/gm;
 const PACKAGE_INSTALL_RE = /<PackageInstall\s+packages=["']([^"']+)["'](\s+dev)?\s*\/>/g;

@@ -132,7 +132,6 @@ export const configuratorStyles = typestyles.recipe({
         color: '#fff',
         fontSize: '0.75rem',
         fontWeight: t.fontWeight.bold.var,
-        textShadow: '0 0.0625rem 0.125rem rgb(0 0 0 / 40%)',
       },
       code: {
         borderRadius: t.radius.lg.var,

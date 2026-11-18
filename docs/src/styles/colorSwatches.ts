@@ -13,6 +13,7 @@ export const colorSwatchesStyles = typestyles.recipe({
     'paletteRamp',
     'paletteSwatch',
     'paletteStep',
+    'paletteStepNumber',
     'semanticGroup',
     'semanticGroupTitle',
     'semanticGrid',
@@ -43,9 +44,10 @@ export const colorSwatchesStyles = typestyles.recipe({
       },
       sectionDescription: {
         margin: 0,
-        fontSize: t.fontSize.sm.var,
+        marginBlockEnd: t.space.sm.var,
+        fontSize: '1rem',
         color: t.color.text.secondary.var,
-        lineHeight: t.lineHeight.relaxed.var,
+        lineHeight: '1.625rem',
       },
       paletteFamily: {
         display: 'grid',
@@ -79,6 +81,13 @@ export const colorSwatchesStyles = typestyles.recipe({
         flexDirection: 'column',
         alignItems: 'stretch',
         gap: t.space.xxs.var,
+      },
+      // Step numbers over the ramps (one header row), so steps are readable at a glance.
+      paletteStepNumber: {
+        fontFamily: t.fontFamily.mono.var,
+        fontSize: t.fontSize.xs.var,
+        color: t.color.text.secondary.var,
+        textAlign: 'center',
       },
       paletteStep: {
         aspectRatio: '1',

@@ -1,6 +1,7 @@
 import { atProperty, variant, type VariantOptions } from 'typestyles';
 import { focusRing } from '../internal/focusRing';
 import { transitionOf } from '../internal/motion';
+import { inlineScrollFade } from '../internal/scrollFade';
 import { typestyles } from '../runtime';
 import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
@@ -50,6 +51,11 @@ const tabsVarDefinitions = {
   panelBorder: {
     ...atProperty.color,
     value: t.color.border.default.var,
+  },
+  /** Trailing-edge fade width for a horizontally scrolling pill row (scroll-driven; 0 at the end). */
+  scrollFadeEnd: {
+    ...atProperty.length,
+    value: '0px',
   },
 } as const;
 
@@ -163,6 +169,9 @@ export const tabs = typestyles.recipe({
               flexWrap: 'nowrap',
               overflowX: 'auto',
               scrollbarWidth: 'none',
+              scrollSnapType: 'x proximity',
+              // While more tabs sit off an edge, that edge fades out (scroll-driven).
+              ...inlineScrollFade('var-ui-tabs-scroll-fade', { end: vars.scrollFadeEnd }),
               maxWidth: '100%',
               padding: '0.25rem',
               margin: '-0.25rem',
@@ -172,6 +181,7 @@ export const tabs = typestyles.recipe({
             },
             tab: {
               flexShrink: 0,
+              scrollSnapAlign: 'start',
               whiteSpace: 'nowrap',
               height: t.size.control.md.var,
               paddingBlock: 0,

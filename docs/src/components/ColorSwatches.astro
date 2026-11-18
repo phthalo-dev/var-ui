@@ -26,6 +26,14 @@ const c = colorSwatchesStyles();
       darkest (10). Reference with <code>designTokens.color.palette['family-step']</code>.
     </p>
 
+    <div class={(c.paletteFamily).className} aria-hidden="true">
+      <span />
+      <div class={(c.paletteRamp).className}>
+        {(paletteByFamily[0]?.swatches ?? []).map((swatch) => (
+          <span class={(c.paletteStepNumber).className}>{swatch.step}</span>
+        ))}
+      </div>
+    </div>
     {
       paletteByFamily.map(({ family, swatches }) => (
         <div class={(c.paletteFamily).className}>

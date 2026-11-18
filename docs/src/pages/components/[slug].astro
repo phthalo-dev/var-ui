@@ -9,7 +9,8 @@ import ComponentStylesPanel from '../../components/ComponentStylesPanel.astro';
 import DemoHost from '../../components/DemoHost.astro';
 import HiddenPropsTable from '@var-ui/docs-components/HiddenPropsTable';
 import PropsTable from '../../components/PropsTable.astro';
-import { Toc, mergeProps, combine } from '@var-ui/astro';
+import { mergeProps, combine } from '@var-ui/astro';
+import ComponentPageRails from '../../components/ComponentPageRails.astro';
 import { proseContent } from '@var-ui/core';
 import { componentDocArticle } from '../../styles/componentPage';
 import {
@@ -54,7 +55,6 @@ const tocContentSelector = "[data-panel='documentation']";
 <BaseLayout
   title={`${frontmatter.title} · Var UI`}
   showToc
-  tocHidden={initialTab !== 'documentation'}
   tocContentSelector={tocContentSelector}
 >
   <ComponentPageHeader entry={entry} categoryLabel={categoryLabel} sourceLinks={sourceLinks} />
@@ -86,13 +86,12 @@ const tocContentSelector = "[data-panel='documentation']";
     </div>
   </ComponentDocTabs>
 
-  <Toc
+  <ComponentPageRails
     slot="toc"
-    title="On this page"
-    label="On this page"
-    auto
-    contentSelector={tocContentSelector}
-    headingSelector="h2[id]:not(#props):not([data-prose-isolate] *), h3[id]:not([data-prose-isolate] *)"
+    slug={slug}
+    initialTab={initialTab}
+    hasPlayground={hasComponentPlayground(slug)}
+    tocContentSelector={tocContentSelector}
   />
 </BaseLayout>
 

@@ -3,8 +3,8 @@ export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DocsPageHeader from '@var-ui/docs/DocsPageHeader';
-import ComponentThumb from '../../components/ComponentThumb.astro';
-import { Card, Grid, mergeProps } from '@var-ui/astro';
+import { clampWords } from '../../lib/clamp-words';
+import { Card, mergeProps } from '@var-ui/astro';
 import { categoryLabels, componentRegistry, type ComponentCategory } from '../../data/components';
 import { componentCatalog } from '../../styles/componentPage';
 import { findMdxModule } from '../../lib/loadMdx';
@@ -44,18 +44,15 @@ const catalog = componentCatalog();
             </h2>
             <span {...mergeProps(catalog.count)}>{group.entries.length}</span>
           </header>
-          <Grid columns="auto" minColumnWidth="15rem" gap="sm">
+          <div {...mergeProps(catalog.grid)}>
             {group.entries.map((entry) => (
               <Card
                 href={`/components/${entry.slug}`}
                 title={entry.name}
-                description={entry.description}
-                className={catalog.card.className}
-              >
-                <ComponentThumb slot="media" name={entry.name} />
-              </Card>
+                description={clampWords(entry.description, 72)}
+              />
             ))}
-          </Grid>
+          </div>
         </section>
       ))
     }

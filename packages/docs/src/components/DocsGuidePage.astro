@@ -6,6 +6,7 @@
 import { getEntry, render } from 'astro:content';
 import config from 'virtual:var-docs/config';
 import DocsGuideArticle from './DocsGuideArticle.astro';
+import DocsPageHeader from './DocsPageHeader.astro';
 import { matchGuideRoute, resolveGuideRouteConfig, stripAstroBase } from '../utils/routing';
 
 const {
@@ -44,6 +45,7 @@ const { Content } = await render(entry);
 const data = entry.data as {
   title: string;
   description?: string;
+  eyebrow?: string;
   template: 'guide' | 'splash';
   tableOfContents: boolean;
   wide: boolean;
@@ -51,6 +53,8 @@ const data = entry.data as {
 const title = `${data.title} · ${config.title}`;
 const wide = data.wide === true;
 const showToc = data.tableOfContents !== false;
+const sectionName = matched.collection.replace(/[-_]/g, ' ');
+const eyebrow = data.eyebrow ?? sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
 
 Astro.locals.varDocsRoute = {
   collection: matched.collection,
@@ -63,6 +67,7 @@ Astro.locals.varDocsRoute = {
 ---
 
 <Layout title={title} showToc={showToc}>
+  <DocsPageHeader title={data.title} eyebrow={eyebrow} lead={data.description} />
   <DocsGuideArticle wide={wide}>
     <Content components={{ ...mdxComponents }} />
   </DocsGuideArticle>

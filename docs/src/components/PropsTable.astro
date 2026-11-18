@@ -58,7 +58,7 @@ const astroBound = framework === 'astro' ? hasAstroBinding(slug) : false;
                 <tbody>
                   {
                     astroDoc.props.map((prop) => (
-                      <tr class={pt.row.className}>
+                      <tr class={pt.row.className} id={`prop-${prop.name}`}>
                         <td class={pt.cell.className} data-col="name">
                           <span class={pt.propName.className}>
                             {prop.name}

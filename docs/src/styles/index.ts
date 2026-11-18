@@ -19,4 +19,5 @@ import './playgroundShell';
 import './playgroundSidebar';
 import '@var-ui/docs/styles';
 import './componentPage';
+import './tokenSpecimens';
 import './root';

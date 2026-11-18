@@ -12,6 +12,8 @@ export const codeBlock = typestyles.recipe({
   slots: [
     'root',
     'card',
+    'stageWrap',
+    'toolbar',
     'preview',
     'previewInner',
     'code',
@@ -35,13 +37,42 @@ export const codeBlock = typestyles.recipe({
         backgroundColor: t.color.background.surface.var,
         overflow: 'hidden',
       },
-      // Layout only: the surface and dot field come from the core `stage` recipe.
+      stageWrap: {
+        position: 'relative',
+        // Reveal the toolbar while the pointer or focus is anywhere on the stage.
+        '&:is(:hover, :focus-within) > [role="toolbar"]': {
+          opacity: 1,
+        },
+      },
+      // Small preview toolbar (color mode, direction), top-right, shown on hover / focus.
+      toolbar: {
+        position: 'absolute',
+        top: t.space.xs.var,
+        insetInlineEnd: t.space.xs.var,
+        display: 'flex',
+        gap: '0.125rem',
+        padding: '0.125rem',
+        borderRadius: t.radius.md.var,
+        border: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
+        backgroundColor: t.color.background.surface.var,
+        boxShadow: t.shadow.xs.var,
+        opacity: 0,
+        transition: `opacity ${t.duration.fast.var} ${t.easing.standard.var}`,
+        '& [aria-pressed="true"]': {
+          color: t.color.tone.accent.foreground.var,
+          backgroundColor: t.color.tone.accent.subtleBackground.var,
+        },
+        '& svg': { width: '1rem', height: '1rem' },
+        '@media (hover: none)': { opacity: 1 },
+      },
+      // Layout only: the surface and dot field come from the core `stage` recipe. Height follows
+      // the content, with a 120px floor.
       preview: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '10rem',
-        padding: `${t.space.xxl.var} ${t.space.xl.var}`,
+        minHeight: '7.5rem',
+        padding: `${t.space.xl.var} ${t.space.lg.var}`,
         overflowX: 'auto',
         [belowMd]: {
           padding: `${t.space.xl.var} ${t.space.md.var}`,

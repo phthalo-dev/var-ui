@@ -121,6 +121,11 @@ export const docsPage = typestyles.recipe({
         gap: t.space.xxs.var,
         paddingBlockStart: t.space.md.var,
         borderBlockStart: `${t.borderWidth.default.var} solid ${t.color.border.subtle.var}`,
+        // No hairline when it would sit under nothing (the auto TOC found too few headings).
+        '[data-var-ui-toc][hidden] + &, &:first-child': {
+          borderBlockStart: 'none',
+          paddingBlockStart: 0,
+        },
       },
       tocAction: {
         display: 'inline-flex',

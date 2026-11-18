@@ -234,9 +234,9 @@ export const proseContent = typestyles.recipe({
             boxDecorationBreak: 'clone',
             WebkitBoxDecorationBreak: 'clone',
           },
-          // Dense contexts (tables, lists) carry mono text only; the first table column keeps
-          // the chip because it names the thing the row is about.
-          '& :is(td, li) > code': {
+          // Table cells carry mono text only; the first column keeps the chip because it names
+          // the thing the row is about. Everywhere else (prose, lists, leads) code is a chip.
+          '& td > code': {
             backgroundColor: 'transparent',
             paddingInline: 0,
           },

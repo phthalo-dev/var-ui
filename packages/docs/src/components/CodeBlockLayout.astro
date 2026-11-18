@@ -1,6 +1,7 @@
 ---
 import CodeDemoCodeBlock from './CodeDemoCodeBlock.astro';
-import { combine, Heading, mergeProps } from '@var-ui/astro';
+import { Button, combine, Heading, mergeProps } from '@var-ui/astro';
+import { svg as darkSvg } from '@var-ui/icons/glyphs/colorModeDark';
 import { codeBlock as codeBlockRecipe } from '../styles/codeBlock';
 import { stage } from '@var-ui/core';
 
@@ -40,9 +41,32 @@ const s = codeBlockRecipe();
   <div {...mergeProps(s.card)}>
     {
       hasPreview ? (
-        <div {...combine(stage(), s.preview)} data-prose-isolate>
-          <div {...mergeProps(s.previewInner)}>
-            <slot name="preview" />
+        <div {...mergeProps(s.stageWrap)}>
+          <div {...combine(stage(), s.preview)} data-prose-isolate data-demo-stage>
+            <div {...mergeProps(s.previewInner)} data-demo-stage-inner>
+              <slot name="preview" />
+            </div>
+          </div>
+          <div {...mergeProps(s.toolbar)} role="toolbar" aria-label="Preview options">
+            <Button
+              size="sm"
+              appearance="ghost"
+              layout="icon"
+              aria-label="Preview in the opposite color mode"
+              aria-pressed="false"
+              data-demo-toggle="color-mode"
+            >
+              <span aria-hidden="true" set:html={darkSvg} />
+            </Button>
+            <Button
+              size="sm"
+              appearance="ghost"
+              aria-label="Preview right-to-left"
+              aria-pressed="false"
+              data-demo-toggle="direction"
+            >
+              RTL
+            </Button>
           </div>
         </div>
       ) : null
@@ -72,5 +96,7 @@ const s = codeBlockRecipe();
 
 <script>
   import { initCodeBlockExpand } from '../scripts/codeBlockExpand';
+  import { initDemoStageToolbar } from '../scripts/demoStageToolbar';
   initCodeBlockExpand();
+  initDemoStageToolbar();
 </script>

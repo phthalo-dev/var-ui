@@ -48,13 +48,22 @@ function renderInline(text: string): ReactNode {
     );
 }
 
-function PropRow({ prop, fallbackDefault }: { prop: PropDoc; fallbackDefault?: string }) {
+function PropRow({
+  prop,
+  fallbackDefault,
+  anchored,
+}: {
+  prop: PropDoc;
+  fallbackDefault?: string;
+  /** Give the row an `id` (`prop-<name>`) for the rail's jump-list. */
+  anchored?: boolean;
+}) {
   const s = docsPropsTable();
   const type = cleanType(prop.type);
   const defaultValue = prop.default ?? fallbackDefault;
   const description = prop.description ?? commonPropDescriptions[prop.name];
   return (
-    <tr className={s.row.className}>
+    <tr className={s.row.className} id={anchored ? `prop-${prop.name}` : undefined}>
       <td className={s.cell.className} data-col="name">
         <span className={s.propName.className}>
           {prop.name}
@@ -103,12 +112,14 @@ function PropsTableSection({
   id,
   recipeDefaults = {},
   footer,
+  anchored = false,
 }: {
   title?: string;
   props: PropDoc[];
   id?: string;
   recipeDefaults?: Record<string, string>;
   footer?: ReactNode;
+  anchored?: boolean;
 }) {
   const s = docsPropsTable();
   if (props.length === 0) {
@@ -140,7 +151,12 @@ function PropsTableSection({
           </thead>
           <tbody>
             {props.map((prop) => (
-              <PropRow key={prop.name} prop={prop} fallbackDefault={recipeDefaults[prop.name]} />
+              <PropRow
+                key={prop.name}
+                prop={prop}
+                fallbackDefault={recipeDefaults[prop.name]}
+                anchored={anchored}
+              />
             ))}
           </tbody>
         </table>
@@ -182,6 +198,7 @@ export function PropsTable({ slug, doc, recipeDefaults }: PropsTableProps) {
   return (
     <>
       <PropsTableSection
+        anchored
         props={varUiProps}
         recipeDefaults={toTypeQuotes(recipeDefaults)}
         footer={reactAriaProps.length > 0 ? null : domDisclosure}

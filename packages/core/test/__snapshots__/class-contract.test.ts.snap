@@ -1898,6 +1898,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-tabs-railcolor",
       "--var-ui-tabs-railradius",
       "--var-ui-tabs-railwidth",
+      "--var-ui-tabs-scrollfadeend",
       "--var-ui-tabs-tabcolor",
       "--var-ui-tabs-tabindicatorcolor",
       "--var-ui-tabs-tabselectedcolor",

@@ -7,8 +7,8 @@ import { docsPageHeader } from '../styles/docsPageHeader';
 export type DocsPageHeaderMetaLink = { label: string; href: string };
 
 export type DocsPageHeaderMeta = {
-  /** Item label (e.g. "Source", "Package"). */
-  label: string;
+  /** Item label (e.g. "Source", "Package"); omit for a self-describing link. */
+  label?: string;
   /** Inline SVG markup for the item icon. */
   icon?: string;
   /** Links shown after the label. */
@@ -29,9 +29,14 @@ type Props = {
 const { title, eyebrow, lead, importCode, meta = [] } = Astro.props;
 const s = docsPageHeader();
 const cb = codeBlock({ variant: 'default' });
+const hasPreview = Astro.slots.has('preview');
 ---
 
-<header {...combine(stage({ tone: 'accent', fade: 'end' }), s.root)}>
+<header
+  {...combine(stage({ tone: 'accent', fade: 'end' }), s.root)}
+  data-has-preview={hasPreview || undefined}
+>
+  <div class={cx(s.content)}>
   {eyebrow ? <p class={cx(s.eyebrow)}>{eyebrow}</p> : null}
   <h1 class={cx(s.title)}>{title}</h1>
   {lead ? <p class={cx(s.lead)}>{lead}</p> : null}
@@ -61,7 +66,7 @@ const cb = codeBlock({ variant: 'default' });
         {meta.map((row) => (
           <li class={cx(s.metaItem)}>
             {row.icon ? <span class={cx(s.metaIcon)} aria-hidden="true" set:html={row.icon} /> : null}
-            <span class={cx(s.metaLabel)}>{row.label}</span>
+            {row.label ? <span class={cx(s.metaLabel)}>{row.label}</span> : null}
             <span class={cx(s.metaValue)}>
               {row.code ? <code class={cx(s.metaCode)}>{row.code}</code> : null}
               {row.links?.map((link) => (
@@ -76,4 +81,12 @@ const cb = codeBlock({ variant: 'default' });
     ) : null
   }
   <slot />
+  </div>
+  {
+    hasPreview ? (
+      <div class={cx(s.preview)} data-prose-isolate>
+        <slot name="preview" />
+      </div>
+    ) : null
+  }
 </header>
