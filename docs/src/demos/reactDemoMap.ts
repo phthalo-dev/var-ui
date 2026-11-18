@@ -217,6 +217,7 @@ import ColorPickerDefault from './color-picker/default/react';
 import ColorPickerSwatch from './color-picker/swatch/react';
 import TableDefault from './table/default/react';
 import TableStriped from './table/striped/react';
+import TableBordered from './table/bordered/react';
 import TreeDefault from './tree/default/react';
 import TreeExpanded from './tree/expanded/react';
 import FileTreeDefault from './file-tree/default/react';
@@ -441,6 +442,7 @@ export const reactDemoMap = {
   'color-picker.swatch': ColorPickerSwatch,
   'table.default': TableDefault,
   'table.striped': TableStriped,
+  'table.bordered': TableBordered,
   'tree.default': TreeDefault,
   'tree.expanded': TreeExpanded,
   'file-tree.default': FileTreeDefault,

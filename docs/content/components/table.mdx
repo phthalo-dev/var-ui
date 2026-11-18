@@ -21,6 +21,16 @@ Enable `striped` and `density="compact"` for denser rosters; add `caption` for a
 
 <Demo id="table.striped" />
 
+### Bordered, with a minimum width
+
+`bordered` frames the table with an outer border and rounded corners. `minWidth` sets the `<table>`'s minimum width (any CSS `min-width` value): when the container is narrower, the table scrolls horizontally inside its frame instead of squeezing the columns. `highlightOnHover` shades the row under the pointer.
+
+<Demo id="table.bordered" />
+
+## Styling the table
+
+`className` and `style` go to the root, the horizontal scroller that frames the table. Give it a `maxHeight` to scroll rows under a `stickyHeader`. `ref` and every other native attribute (`aria-label`, `id`, `data-*`) go to the `<table>`, the same split as the form fields. To size the table from CSS instead of the prop, set `--var-ui-table-minwidth` on the root or in a theme.
+
 ## Props
 
 <PropsTable slug="table" />
