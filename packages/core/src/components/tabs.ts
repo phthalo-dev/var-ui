@@ -254,6 +254,12 @@ export const tabs = typestyles.recipe({
                 }),
                 ...atForcedColors(forced.selected),
               },
+              // On the light-mode ink fill the icon follows the label (accent green on near-black
+              // reads as a stray colour); dark mode keeps the accent icon on its raised surface.
+              '&[data-selected] svg': {
+                color: 'currentColor',
+                ...atDarkMode({ color: vars.tabIndicatorColor.var }),
+              },
             },
           },
         },
