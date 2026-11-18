@@ -1,4 +1,4 @@
-import type { IconName } from '@var-ui/core';
+import type { AstroIcon } from '../lib/icon';
 import { menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
@@ -43,8 +43,11 @@ export type MenuItemDefinition = {
   href?: string;
   /** Leading color swatch (e.g. theme pickers). Any CSS color value. */
   swatch?: string;
-  /** Leading icon from the icon registry. In a `layout: 'row'` section, the item shows only it. */
-  icon?: IconName;
+  /**
+   * Leading icon: a registry name or `{ svg }` markup. In a `layout: 'row'` section, the item
+   * shows only it.
+   */
+  icon?: AstroIcon;
 };
 
 /** Data model for a group of items, mirroring the React `MenuSectionDefinition`. */

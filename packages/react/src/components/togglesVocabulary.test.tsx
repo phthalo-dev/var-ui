@@ -197,6 +197,27 @@ describe('ToggleButton', () => {
   });
 });
 
+describe('SegmentedControl icons', () => {
+  const icons = [
+    { value: 'light', label: 'Light', icon: 'colorModeLight' as const },
+    { value: 'dark', label: 'Dark', icon: <svg data-testid="dark-icon" /> },
+  ];
+
+  it('renders the icon before the label in the default layout', () => {
+    wrap(<SegmentedControl aria-label="Mode" options={icons} />);
+    expect(screen.getByRole('radio', { name: 'Light' })).toBeTruthy();
+    expect(screen.getByTestId('dark-icon')).toBeTruthy();
+    expect(screen.getByText('Dark')).toBeTruthy();
+  });
+
+  it('icon layout shows only the icon and names the segment with its label', () => {
+    wrap(<SegmentedControl aria-label="Mode" layout="icon" options={icons} />);
+    expect(screen.queryByText('Light')).toBeNull();
+    expect(screen.getByRole('radio', { name: 'Light' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'Dark' })).toBeTruthy();
+  });
+});
+
 describe('SegmentedControl', () => {
   const segs = [
     { value: 'list', label: 'List' },

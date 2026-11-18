@@ -9,7 +9,8 @@ import {
 } from 'react-aria-components';
 import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
-import type { ControlSize } from '@var-ui/core';
+import type { ControlSize, IconName } from '@var-ui/core';
+import { Icon } from '../icons';
 import { observeSegmentedControlIndicator } from '@var-ui/core/components/indicators/segmented-control';
 import { mergeProps } from 'typestyles';
 import { mergeRefs } from '../internal/mergeRefs';
@@ -19,7 +20,12 @@ import { pickRacDroppedDomProps, racRenderWithExtras } from '../internal/racDomP
 
 export type SegmentedControlOption = Omit<Option, 'label'> & {
   label: ReactNode;
-  /** Accessible name when `label` is not plain text (e.g. icon-only segments). */
+  /**
+   * Icon before the label: a registry icon name or any node. With `layout="icon"` only the icon
+   * shows and a string `label` becomes the segment's accessible name.
+   */
+  icon?: IconName | Exclude<ReactNode, string>;
+  /** Accessible name when `label` is not plain text. Defaults to a string `label` for icon-only segments. */
   'aria-label'?: string;
 };
 
@@ -57,6 +63,14 @@ export type SegmentedControlProps = Omit<
   ref?: Ref<HTMLDivElement>;
 };
 
+/** Registry names render an `Icon` sized like `IconButton`'s; nodes render as given. */
+function renderOptionIcon(
+  icon: NonNullable<SegmentedControlOption['icon']>,
+  size: ControlSize,
+): ReactNode {
+  return typeof icon === 'string' ? <Icon name={icon as IconName} size={size} /> : icon;
+}
+
 /**
  * Single-select segmented control built on `RadioGroup`.
  *
@@ -78,7 +92,8 @@ export function SegmentedControl({
   ...props
 }: SegmentedControlProps): JSX.Element {
   const contextSize = useControlSize();
-  const s = segmentedControl({ size: size ?? contextSize ?? 'md', layout, fullWidth });
+  const resolvedSize = size ?? contextSize ?? 'md';
+  const s = segmentedControl({ size: resolvedSize, layout, fullWidth });
   const t = toggleButton({ segmented: true });
   const rootRef = useRef<HTMLDivElement>(null);
   const setRoot = useMemo(() => mergeRefs(rootRef, ref), [ref]);
@@ -111,17 +126,24 @@ export function SegmentedControl({
       ref={setRoot}
       {...mergeProps(s.root, className)}
     >
-      {options.map((option) => (
-        <AriaRadio
-          key={option.value}
-          value={option.value}
-          aria-label={option['aria-label']}
-          isDisabled={option.disabled}
-          {...mergeProps(t)}
-        >
-          {option.label}
-        </AriaRadio>
-      ))}
+      {options.map((option) => {
+        const iconOnly = layout === 'icon' && option.icon != null;
+        const name =
+          option['aria-label'] ??
+          (iconOnly && typeof option.label === 'string' ? option.label : undefined);
+        return (
+          <AriaRadio
+            key={option.value}
+            value={option.value}
+            aria-label={name}
+            isDisabled={option.disabled}
+            {...mergeProps(t)}
+          >
+            {option.icon != null ? renderOptionIcon(option.icon, resolvedSize) : null}
+            {iconOnly ? null : option.label}
+          </AriaRadio>
+        );
+      })}
     </AriaRadioGroup>
   );
 }

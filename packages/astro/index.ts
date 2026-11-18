@@ -149,3 +149,4 @@ export {
   initToggleButtons,
   TOGGLE_BUTTON_CHANGE_EVENT,
 } from './src/scripts/toggleButton';
+export { iconMarkup, type AstroIcon } from './src/lib/icon';

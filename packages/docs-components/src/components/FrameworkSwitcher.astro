@@ -1,6 +1,5 @@
 ---
-import { mergeProps, SegmentedControl } from '@var-ui/astro';
-import { icon } from '@var-ui/core';
+import { SegmentedControl } from '@var-ui/astro';
 import type { ControlSize } from '@var-ui/core';
 import { DOCS_FRAMEWORKS } from '../framework';
 import { FRAMEWORK_META } from '../framework-icons';
@@ -18,12 +17,12 @@ type Props = {
 const { size = 'md', appearance = 'icons', fullWidth = false, className } = Astro.props;
 const framework = Astro.locals.framework;
 const iconOnly = appearance === 'icons';
-const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md' }));
 
+// In the `icon` layout only the icon shows and the label names the segment.
 const options = DOCS_FRAMEWORKS.map((value) => ({
   value,
   label: FRAMEWORK_META[value].label,
-  ...(iconOnly ? { 'aria-label': FRAMEWORK_META[value].label } : {}),
+  icon: { svg: FRAMEWORK_META[value].iconSvg },
 }));
 ---
 
@@ -37,21 +36,7 @@ const options = DOCS_FRAMEWORKS.map((value) => ({
   className={className}
   aria-label="Documentation framework"
   data-framework-switcher
->
-  {/* One static slot per framework: Astro cannot name slots inside a map. */}
-  <Fragment slot="react">
-    <span {...iconRecipe} aria-hidden="true" set:html={FRAMEWORK_META.react.iconSvg} />
-    {iconOnly ? null : FRAMEWORK_META.react.label}
-  </Fragment>
-  <Fragment slot="astro">
-    <span {...iconRecipe} aria-hidden="true" set:html={FRAMEWORK_META.astro.iconSvg} />
-    {iconOnly ? null : FRAMEWORK_META.astro.label}
-  </Fragment>
-  <Fragment slot="html">
-    <span {...iconRecipe} aria-hidden="true" set:html={FRAMEWORK_META.html.iconSvg} />
-    {iconOnly ? null : FRAMEWORK_META.html.label}
-  </Fragment>
-</SegmentedControl>
+/>
 
 <script>
   import { initFrameworkSwitcher } from '../scripts/frameworkSwitcher';

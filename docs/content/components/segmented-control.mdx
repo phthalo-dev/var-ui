@@ -27,4 +27,15 @@ Drive selection with `value` and `onValueChange` when the active segment must sy
 
 ## Accessibility
 
-Each segment is a radio button inside a `role="radiogroup"`; keyboard users Tab to the checked option (or the first option when none is checked) and move between options with arrow keys (React Aria). For icon-only options, set `aria-label` on the option. Give the group an accessible name with `aria-label` or `aria-labelledby`. Options are `{ value, label, disabled? }`; the control is always single-select.
+Each segment is a radio button inside a `role="radiogroup"`; keyboard users Tab to the checked option (or the first option when none is checked) and move between options with arrow keys (React Aria). Give the group an accessible name with `aria-label` or `aria-labelledby`. Options are `{ value, label, icon?, disabled?, aria-label? }`; the control is always single-select.
+
+## Icons
+
+An option's `icon` renders before its label. It takes a registry name (`'colorModeDark'`) or, in React, any node; in Astro, `{ svg }` markup (for example a glyph from `@var-ui/icons/glyphs/<name>`). With `layout="icon"` only the icon shows, and the label becomes the segment's accessible name and (in Astro) its tooltip. The same options array works in React and Astro, including when it's built with `map`, which Astro's named slots can't do.
+
+```ts
+const options = [
+  { value: 'list', label: 'List', icon: 'menu' },
+  { value: 'grid', label: 'Grid', icon: { svg: gridSvg } }, // Astro; in React pass <GridIcon />
+];
+```
