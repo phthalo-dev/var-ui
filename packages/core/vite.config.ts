@@ -20,6 +20,7 @@ export default defineConfig({
       'src/components/indicators/top-nav.ts',
       'src/components/indicators/sliding.ts',
       'src/components/toc/spy.ts',
+      'src/shared/menuNavigation.ts',
       'src/shared/textMatch.ts',
       'src/theme/constants.ts',
       'src/theme/register-default.ts',

@@ -28,7 +28,11 @@ type CommandPaletteSlot =
   | 'groupHeading'
   | 'footer'
   | 'footerHint'
-  | 'empty';
+  | 'empty'
+  | 'emptyIcon'
+  | 'emptyTitle'
+  | 'emptyHint'
+  | 'cancel';
 type CommandPaletteSlots = Record<CommandPaletteSlot, ComponentAttrsResult>;
 type CommandPaletteRecipeFn = () => CommandPaletteSlots;
 
@@ -53,8 +57,12 @@ type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   recentKey?: string;
   /** Heading of the recent items group (see `recentKey`). @default 'Recent' */
   recentLabel?: string;
-  /** Message shown when no items match the query. @default 'No results' */
+  /** Message shown when no items match the query, followed by the query. @default 'No results' */
   emptyLabel?: string;
+  /** Second line of the empty state, e.g. a suggestion ("Try 'button'"). */
+  emptyHint?: string;
+  /** Label of the Cancel button shown on touch-first devices (no Escape key). @default 'Cancel' */
+  cancelLabel?: string;
   className?: string;
 };
 
@@ -69,6 +77,8 @@ const {
   recentKey,
   recentLabel = 'Recent',
   emptyLabel = 'No results',
+  emptyHint,
+  cancelLabel = 'Cancel',
   className,
   ...rest
 } = Astro.props;
@@ -91,6 +101,7 @@ const resultBodyClass = (cp.resultBody).className;
 const resultTitleClass = (cp.resultTitle).className;
 const resultMetaClass = (cp.resultMeta).className;
 const emptyClass = (cp.empty).className;
+const cancelRecipe = mergeProps(cp.cancel);
 const resultIconClass = cp.resultIcon.className;
 const markClass = cp.mark.className;
 const groupClass = cp.group.className;
@@ -111,6 +122,10 @@ const footerHintRecipe = mergeProps(cp.footerHint);
   data-class-result-title={resultTitleClass}
   data-class-result-meta={resultMetaClass}
   data-class-empty={emptyClass}
+  data-class-empty-icon={cp.emptyIcon.className}
+  data-class-empty-title={cp.emptyTitle.className}
+  data-class-empty-hint={cp.emptyHint.className}
+  data-empty-hint={emptyHint}
   data-class-result-icon={resultIconClass}
   data-class-mark={markClass}
   data-highlight-matches={highlightMatches ? undefined : 'false'}
@@ -129,7 +144,7 @@ const footerHintRecipe = mergeProps(cp.footerHint);
   >
     <div {...frameRecipe}>
       <div {...inputRowRecipe}>
-        <span {...inputIconRecipe} aria-hidden="true">
+        <span {...inputIconRecipe} aria-hidden="true" data-var-ui-command-palette-input-icon>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -156,6 +171,9 @@ const footerHintRecipe = mergeProps(cp.footerHint);
           aria-controls={`${id}-results`}
           aria-expanded="false"
         />
+        <button {...cancelRecipe} type="button" data-var-ui-command-palette-cancel>
+          {cancelLabel}
+        </button>
       </div>
       <div
         {...resultsRecipe}

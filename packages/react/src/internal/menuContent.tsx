@@ -41,6 +41,8 @@ export type MenuSectionDefinition = {
   /**
    * `row` lays the items out side by side as compact icon buttons (give each an `icon`; the
    * `label` becomes its accessible name and tooltip), e.g. a Light / Dark / System switch.
+   * ArrowLeft / ArrowRight move (and wrap) within the row; ArrowUp / ArrowDown treat it as one
+   * stop. Choosing a row item keeps the menu open: it is a setting beside the rest of the menu.
    * @default 'list'
    */
   layout?: 'list' | 'row';
@@ -93,6 +95,7 @@ export function MenuContent({
             const next = keys === 'all' ? null : ([...keys][0] ?? null);
             onSectionValueChange?.(sectionIndex, next === null ? null : String(next));
           }}
+          shouldCloseOnSelect={row ? false : undefined}
           {...sectionProps}
           data-layout={row ? 'row' : undefined}
         >
@@ -124,6 +127,7 @@ export function MenuContent({
         <AriaMenuSection
           key={`section-${sectionIndex}`}
           aria-label={section.label}
+          shouldCloseOnSelect={false}
           {...sectionProps}
           data-layout="row"
         >

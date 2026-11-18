@@ -80,8 +80,12 @@ export type CommandPaletteProps = Omit<ComponentPropsWithRef<'dialog'>, 'childre
   closeOnAction?: boolean;
   /** Input placeholder. @default 'Search…' */
   placeholder?: string;
-  /** Message shown when no items match the query. @default 'No results' */
+  /** Message shown when no items match the query, followed by the query. @default 'No results' */
   emptyLabel?: string;
+  /** Second line of the empty state, e.g. a suggestion ("Try 'button'"). */
+  emptyHint?: string;
+  /** Label of the Cancel button shown on touch-first devices (no Escape key). @default 'Cancel' */
+  cancelLabel?: string;
   /**
    * Key combo that toggles the palette, e.g. `'mod+k'`, `'ctrl+shift+p'`, or an array of combos.
    * `mod` is ⌘ on Apple platforms and Ctrl elsewhere (either is accepted). `true` uses the default
@@ -193,6 +197,8 @@ export function CommandPalette({
   closeOnAction = true,
   placeholder = 'Search…',
   emptyLabel = 'No results',
+  emptyHint,
+  cancelLabel = 'Cancel',
   hotkey = true,
   highlightMatches = true,
   recentKey,
@@ -265,10 +271,20 @@ export function CommandPalette({
 
   const recentItems = useMemo(() => {
     if (!recentKey || query.trim() !== '') return [];
-    return recentIds
-      .map((id) => items.find((item) => item.id === id))
-      .filter((item): item is CommandPaletteItem => item !== undefined);
+    return (
+      recentIds
+        .map((id) => items.find((item) => item.id === id))
+        .filter((item): item is CommandPaletteItem => item !== undefined)
+        // Out of their own section, titles can be ambiguous ("Overview"): the subtitle names it.
+        .map((item) =>
+          item.group
+            ? { ...item, meta: [item.group, item.meta].filter(Boolean).join(' · ') }
+            : item,
+        )
+    );
   }, [recentKey, recentIds, items, query]);
+  const empty = recentItems.length === 0 && visibleItems.length === 0;
+  const trimmedQuery = query.trim();
 
   const blocks = useMemo(() => toBlocks(visibleItems), [visibleItems]);
 
@@ -340,7 +356,7 @@ export function CommandPalette({
       style={style}
     >
       {dialog.mounted ? (
-        <div {...mergeProps(cp.frame)}>
+        <div {...mergeProps(cp.frame)} data-empty={empty ? '' : undefined}>
           <Autocomplete inputValue={query} onInputChange={setQuery}>
             <div {...mergeProps(cp.inputRow)}>
               <span {...mergeProps(cp.inputIcon)}>
@@ -349,15 +365,34 @@ export function CommandPalette({
               <TextField aria-label={placeholder}>
                 <Input {...mergeProps(cp.input)} placeholder={placeholder} autoFocus />
               </TextField>
+              <button
+                type="button"
+                {...mergeProps(cp.cancel)}
+                onClick={(event) => root.close({ event: event.nativeEvent, reason: 'close-press' })}
+              >
+                {cancelLabel}
+              </button>
             </div>
             <ListBox
               {...mergeProps(cp.results)}
               aria-label={placeholder}
-              renderEmptyState={() => (
-                <div {...mergeProps(cp.empty)} role={loading ? 'status' : undefined}>
-                  {loading ? loadingLabel : emptyLabel}
-                </div>
-              )}
+              renderEmptyState={() =>
+                loading ? (
+                  <div {...mergeProps(cp.empty)} role="status">
+                    {loadingLabel}
+                  </div>
+                ) : (
+                  <div {...mergeProps(cp.empty)} role="status">
+                    <span {...mergeProps(cp.emptyIcon)} aria-hidden="true">
+                      <Icon name="search" />
+                    </span>
+                    <p {...mergeProps(cp.emptyTitle)}>
+                      {trimmedQuery ? `${emptyLabel} for “${trimmedQuery}”` : emptyLabel}
+                    </p>
+                    {emptyHint ? <p {...mergeProps(cp.emptyHint)}>{emptyHint}</p> : null}
+                  </div>
+                )
+              }
             >
               {recentItems.length > 0 ? (
                 <ListBoxSection key="recent" {...mergeProps(cp.group)}>

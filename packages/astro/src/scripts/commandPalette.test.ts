@@ -209,4 +209,43 @@ describe('command palette results (round 2)', () => {
     expect(root.querySelector('[data-group="recent"]')).toBeNull();
     localStorage.removeItem('p2-recent');
   });
+
+  it('echoes the query in the empty state, adds the hint and flags the frame', () => {
+    const root = mount('data-empty-hint="Try button"', items);
+    const frame = root.querySelector('dialog')!;
+    expect(frame.hasAttribute('data-empty')).toBe(false);
+    type(root, 'zzz');
+    const empty = root.querySelector('[data-var-ui-command-palette-empty]');
+    expect(empty?.textContent).toContain('No results for “zzz”');
+    expect(empty?.textContent).toContain('Try button');
+    expect(frame.hasAttribute('data-empty')).toBe(true);
+    type(root, 'but');
+    expect(frame.hasAttribute('data-empty')).toBe(false);
+  });
+
+  it('names the section of Recent items in their subtitle', () => {
+    localStorage.setItem('p3-recent', JSON.stringify(['/t']));
+    const root = mount(
+      'data-recent-key="p3-recent"',
+      JSON.stringify([{ id: '/t', title: 'Overview', meta: 'Start here', group: 'Theming' }]),
+    );
+    const recent = root.querySelector('[data-group="recent"]');
+    expect(recent?.textContent).toContain('Theming · Start here');
+    localStorage.removeItem('p3-recent');
+  });
+
+  it('closes from the Cancel button', () => {
+    const root = mount();
+    const cancel = document.createElement('button');
+    cancel.setAttribute('data-var-ui-command-palette-cancel', '');
+    root.querySelector('dialog')!.append(cancel);
+    // The script binds Cancel at init: mount a fresh palette with the button in place.
+    const html = root.outerHTML.replace('data-var-ui-command-palette-initialized=""', '');
+    document.body.innerHTML = html;
+    const fresh = document.getElementById('p2') as HTMLElement;
+    initCommandPalette(fresh);
+    getCommandPaletteController(fresh)?.open();
+    fresh.querySelector<HTMLElement>('[data-var-ui-command-palette-cancel]')!.click();
+    expect(fresh.querySelector('dialog')!.open).toBe(false);
+  });
 });

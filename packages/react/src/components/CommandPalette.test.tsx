@@ -201,7 +201,32 @@ describe('CommandPalette', () => {
       />,
     );
     await userEvent.type(screen.getByPlaceholderText('Search…'), 'zzz');
-    expect(screen.getByText('No results')).toBeTruthy();
+    expect(screen.getByText('No results for “zzz”')).toBeTruthy();
+  });
+
+  it('echoes the query with an optional hint and drops the hints footer while empty', async () => {
+    wrap(
+      <CommandPalette
+        open
+        hotkey={false}
+        items={[{ id: 'a', title: 'Only' }]}
+        emptyHint="Try 'only'"
+        onAction={() => {}}
+        onOpenChange={() => {}}
+      />,
+    );
+    const frame = () => document.querySelector('dialog > div')!;
+    expect(frame().hasAttribute('data-empty')).toBe(false);
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'zzz');
+    expect(screen.getByText("Try 'only'")).toBeTruthy();
+    expect(frame().hasAttribute('data-empty')).toBe(true);
+  });
+
+  it('closes from the Cancel button (shown on touch-first devices)', async () => {
+    const onOpenChange = vi.fn();
+    wrap(<CommandPalette open hotkey={false} items={[]} onOpenChange={onOpenChange} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
   });
 
   it('renders empty state without crashing when items is []', () => {
@@ -475,6 +500,35 @@ describe('CommandPalette item actions and chrome', () => {
       'Alpha',
       'Beta',
     ]);
+    unmount();
+    localStorage.removeItem('test-recent');
+  });
+
+  it('names the section of a Recent item in its subtitle', () => {
+    localStorage.setItem('test-recent-2', JSON.stringify(['t']));
+    const { unmount } = wrap(
+      <CommandPalette
+        open
+        {...base}
+        items={[{ id: 't', title: 'Overview', meta: 'Start here', group: 'Theming' }]}
+        recentKey="test-recent-2"
+      />,
+    );
+    expect(screen.getByText('Theming · Start here')).toBeTruthy();
+    unmount();
+    localStorage.removeItem('test-recent-2');
+  });
+
+  it('keeps Recent out of a query', async () => {
+    localStorage.setItem('test-recent', JSON.stringify(['b']));
+    const items = [
+      { id: 'a', title: 'Alpha' },
+      { id: 'b', title: 'Beta' },
+    ];
+    const { unmount } = wrap(
+      <CommandPalette open {...base} items={items} recentKey="test-recent" />,
+    );
+    expect(screen.getByText('Recent')).toBeTruthy();
     await userEvent.type(screen.getByRole('textbox'), 'al');
     expect(screen.queryByText('Recent')).toBeNull();
     unmount();

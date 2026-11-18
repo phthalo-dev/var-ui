@@ -1,4 +1,5 @@
 import type { IconName } from '@var-ui/core';
+import { MENU_ROW_SELECTOR, menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
 /**
  * Vanilla controller for the Astro `Menu` component — a menu-button pattern
  * (trigger + popup list) with roving focus and typeahead. The popup is a native
@@ -60,6 +61,8 @@ export type MenuSectionDefinition = {
   /**
    * `row` lays the items out side by side as compact icon buttons (give each an `icon`; the
    * `label` becomes its accessible name and tooltip), e.g. a Light / Dark / System switch.
+   * ArrowLeft / ArrowRight move (and wrap) within the row; ArrowUp / ArrowDown treat it as one
+   * stop. Choosing a row item keeps the menu open: it is a setting beside the rest of the menu.
    * @default 'list'
    */
   layout?: 'list' | 'row';
@@ -226,11 +229,6 @@ export function initMenu(root: Element): void {
     if (restore && (active === document.body || popover.contains(active))) trigger.focus();
   });
 
-  function moveFocus(currentIndex: number, delta: number): void {
-    const next = (currentIndex + delta + items.length) % items.length;
-    focusItemAt(next);
-  }
-
   function handleTypeahead(event: KeyboardEvent, currentIndex: number): void {
     typeaheadBuffer += event.key.toLocaleLowerCase();
     clearTimeout(typeaheadTimer);
@@ -295,22 +293,18 @@ export function initMenu(root: Element): void {
     if (currentIndex === -1) return;
 
     switch (event.key) {
+      // Lists step up/down; a `layout: 'row'` section is one stop whose items left/right step
+      // through (wrapping within the row).
       case 'ArrowDown':
-        event.preventDefault();
-        moveFocus(currentIndex, 1);
-        return;
       case 'ArrowUp':
-        event.preventDefault();
-        moveFocus(currentIndex, -1);
-        return;
-      // A `layout: 'row'` section lays its items out horizontally: left/right step through it.
       case 'ArrowRight':
       case 'ArrowLeft': {
-        if (!target.closest('[data-layout="row"]')) return;
+        const next = menuArrowTarget(items, target, event.key, {
+          rtl: getComputedStyle(target).direction === 'rtl',
+        });
+        if (!next) return;
         event.preventDefault();
-        const rtl = getComputedStyle(target).direction === 'rtl';
-        const forward = (event.key === 'ArrowRight') !== rtl;
-        moveFocus(currentIndex, forward ? 1 : -1);
+        next.focus();
         return;
       }
       case 'Home':
@@ -366,6 +360,9 @@ export function initMenu(root: Element): void {
           detail: { id: item.getAttribute('data-item-id') },
         }),
       );
+      // A row (Light / Dark / System) is a setting beside the rest of the menu, not a command:
+      // the menu stays open so the next choice is one step away.
+      if (item.closest(MENU_ROW_SELECTOR)) return;
       hideMenu({ restoreFocus: !isLink });
     });
   }

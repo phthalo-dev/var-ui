@@ -4,16 +4,36 @@ import type { DocsSearchItem } from '@var-ui/docs/utils';
 
 export type { DocsSearchItem };
 
+// Page descriptions from guide frontmatter, keyed by URL, so every result has the same kind of
+// subtitle (what the page is about) rather than some showing descriptions and others raw paths.
+const guideSources = import.meta.glob<string>(
+  '../../content/{docs,theming,playground}/*.{md,mdx}',
+  {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  },
+);
+
+const descriptions = new Map<string, string>(
+  Object.entries(guideSources).flatMap(([file, source]) => {
+    const match = /^---\r?\n[\s\S]*?^description:\s*(.+?)\s*$[\s\S]*?^---/m.exec(source);
+    if (!match?.[1]) return [];
+    const [, section = '', slug = ''] = /content\/([^/]+)\/([^/]+)\.mdx?$/.exec(file) ?? [];
+    const url = slug === 'index' ? `/${section}` : `/${section}/${slug}`;
+    return [[url, match[1].replace(/^(['"])(.*)\1$/, '$2')]];
+  }),
+);
+
 function sidebarItems(
   items: ReadonlyArray<{ text: string; link: string }>,
   group: string,
   icon: DocsSearchItem['icon'],
 ): DocsSearchItem[] {
-  // The group heading already says the section; the subtitle shows where the page lives.
   return items.map((item) => ({
     id: item.link,
     title: item.text,
-    meta: item.link,
+    meta: descriptions.get(item.link),
     keywords: [group],
     group,
     icon,

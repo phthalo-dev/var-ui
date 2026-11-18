@@ -100,6 +100,13 @@ export function initCommandPalette(root: HTMLElement): () => void {
   const resultTitleClass = root.dataset.classResultTitle ?? 'var-ui-command-palette__resultTitle';
   const resultMetaClass = root.dataset.classResultMeta ?? 'var-ui-command-palette__resultMeta';
   const emptyClass = root.dataset.classEmpty ?? 'var-ui-command-palette__empty';
+  const emptyIconClass = root.dataset.classEmptyIcon ?? 'var-ui-command-palette__emptyIcon';
+  const emptyTitleClass = root.dataset.classEmptyTitle ?? 'var-ui-command-palette__emptyTitle';
+  const emptyHintClass = root.dataset.classEmptyHint ?? 'var-ui-command-palette__emptyHint';
+  const emptyHint = root.dataset.emptyHint || '';
+  const frame = results.parentElement;
+  const searchIconSvg =
+    root.querySelector('[data-var-ui-command-palette-input-icon]')?.innerHTML ?? '';
   const resultIconClass = root.dataset.classResultIcon ?? 'var-ui-command-palette__resultIcon';
   const markClass = root.dataset.classMark ?? 'var-ui-command-palette__mark';
   const highlight = root.dataset.highlightMatches !== 'false';
@@ -137,7 +144,11 @@ export function initCommandPalette(root: HTMLElement): () => void {
     const recent = readRecentCommandPaletteIds(recentKey)
       .map((id) => index.find((item) => item.id === id))
       .filter((item): item is CommandPaletteClientItem => item !== undefined);
-    return recent.length > 0 ? [{ id: 'recent', label: recentLabel, items: recent }] : [];
+    // Out of their own section, titles can be ambiguous ("Overview"): the subtitle names it.
+    const withSection = recent.map((item) =>
+      item.group ? { ...item, meta: [item.group, item.meta].filter(Boolean).join(' · ') } : item,
+    );
+    return recent.length > 0 ? [{ id: 'recent', label: recentLabel, items: withSection }] : [];
   }
 
   function render(query: string): void {
@@ -146,8 +157,16 @@ export function initCommandPalette(root: HTMLElement): () => void {
     flatItems = flattenCommandPaletteGroups(groups);
     activeIndex = flatItems.length > 0 ? 0 : -1;
 
-    if (groups.length === 0 || flatItems.length === 0) {
-      results.innerHTML = `<p class="${emptyClass}" data-var-ui-command-palette-empty>${escapeHtml(emptyLabel)}</p>`;
+    const empty = groups.length === 0 || flatItems.length === 0;
+    frame?.toggleAttribute('data-empty', empty);
+    if (empty) {
+      const trimmed = query.trim();
+      const title = trimmed ? `${emptyLabel} for “${trimmed}”` : emptyLabel;
+      const icon = searchIconSvg
+        ? `<span class="${emptyIconClass}" aria-hidden="true">${searchIconSvg}</span>`
+        : '';
+      const hint = emptyHint ? `<p class="${emptyHintClass}">${escapeHtml(emptyHint)}</p>` : '';
+      results.innerHTML = `<div class="${emptyClass}" role="status" data-var-ui-command-palette-empty>${icon}<p class="${emptyTitleClass}">${escapeHtml(title)}</p>${hint}</div>`;
       syncActive();
       return;
     }
@@ -253,6 +272,10 @@ export function initCommandPalette(root: HTMLElement): () => void {
   });
 
   const unbindBackdrop = bindBackdropDismiss(dialog, () => setOpen(false));
+
+  root.querySelector('[data-var-ui-command-palette-cancel]')?.addEventListener('click', () => {
+    setOpen(false);
+  });
 
   input.addEventListener('input', () => {
     render(input.value);

@@ -35,6 +35,7 @@ const closeIcon = mergeProps(icon({ size: 'sm' }));
 const resolvedSide = side === 'auto' ? 'start' : side;
 const panelStyle = `--var-ui-mobile-nav-panelwidth: ${width}px`;
 const hasHeaderSlot = Astro.slots.has('header');
+const hasFooterSlot = Astro.slots.has('footer');
 ---
 
 <div data-var-ui-mobile-nav>
@@ -63,6 +64,13 @@ const hasHeaderSlot = Astro.slots.has('header');
     <div {...mergeProps(s.body)}>
       <slot />
     </div>
+    {
+      hasFooterSlot ? (
+        <div {...mergeProps(s.footer)}>
+          <slot name="footer" />
+        </div>
+      ) : null
+    }
   </dialog>
 </div>
 

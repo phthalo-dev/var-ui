@@ -71,11 +71,18 @@ export const segmentedControl = typestyles.recipe({
       ...atProperty.color,
       value: t.color.background.surface.var,
     },
+    // Light: a white thumb needs a real hairline (plus `shadow.xs`) to sit above a near-white track.
     indicatorBorder: {
       ...atProperty.color,
-      value: t.color.border.subtle.var,
+      value: t.color.border.default.var,
     },
-    segmentColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    /** 1px top edge light on the thumb (dark mode), like a lit key cap. */
+    indicatorHighlight: { ...atProperty.color, value: 'transparent' },
+    // Unselected segments sit a step below `text.secondary`, so the checked one reads at a glance.
+    segmentColor: {
+      ...atProperty.color,
+      value: `color-mix(in oklch, ${t.color.text.secondary.var} 72%, transparent)`,
+    },
     segmentHoverColor: { ...atProperty.color, value: t.color.text.primary.var },
     segmentSelectedColor: {
       ...atProperty.color,
@@ -101,10 +108,15 @@ export const segmentedControl = typestyles.recipe({
           boxShadow: `inset 0 0 0 0.0625rem ${vars.trackBorder.var}`,
           isolation: 'isolate',
           ...atForcedColors(forced.boundary),
-          // Dark mode: the thumb lifts (lighter than the track) instead of sinking into it.
+          // Dark mode: the thumb lifts (clearly lighter than the track, with a lit top edge)
+          // instead of sinking into it. `elevated` equals the track colour in dark.
           ...atDarkMode({
-            [vars.indicatorBackground.name]: t.color.background.elevated.var,
-            [vars.indicatorBorder.name]: t.color.border.default.var,
+            [vars.indicatorBackground.name]:
+              `color-mix(in oklch, ${t.color.text.primary.var} 13%, ${t.color.background.subtle.var})`,
+            [vars.indicatorBorder.name]:
+              `color-mix(in oklch, ${t.color.text.primary.var} 9%, transparent)`,
+            [vars.indicatorHighlight.name]:
+              `color-mix(in oklch, ${t.color.text.primary.var} 10%, transparent)`,
           }),
           '&::after': {
             content: '""',
@@ -115,7 +127,7 @@ export const segmentedControl = typestyles.recipe({
             width: vars.indicatorWidth.var,
             borderRadius: segmentRadius,
             backgroundColor: vars.indicatorBackground.var,
-            boxShadow: `0 0 0 0.0625rem ${vars.indicatorBorder.var}, ${t.shadow.xs.var}`,
+            boxShadow: `inset 0 0.0625rem 0 ${vars.indicatorHighlight.var}, 0 0 0 0.0625rem ${vars.indicatorBorder.var}, ${t.shadow.xs.var}`,
             pointerEvents: 'none',
             opacity: vars.indicatorOpacity.var,
             zIndex: t.zIndex.base.var,

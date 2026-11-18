@@ -25,8 +25,8 @@ export const varUiWordmark = typestyles.recipe({
         color: t.color.code.base.var,
         fontFeatureSettings: '"calt", "liga"',
       },
-      // Header glyph: a phthalo tile with the custom-property dashes (`--`), set before the
-      // wordmark. Sized to the cap height of the bar's labels plus a hair.
+      // Header glyph: a phthalo tile with `(-)`, the `var(--ui)` call in miniature (also the
+      // favicon), set before the wordmark. Sized to the cap height of the bar's labels plus a hair.
       mark: {
         display: 'inline-flex',
         flexShrink: 0,
@@ -63,6 +63,8 @@ export const varUiWordmark = typestyles.recipe({
         header: {
           root: {
             flexShrink: 0,
+            // Centre the 1em text boxes on the 20px tile (baseline alignment sat them ~1.5px high).
+            alignItems: 'center',
             fontSize: t.fontSize.lg.var,
             letterSpacing: '-0.05em',
           },

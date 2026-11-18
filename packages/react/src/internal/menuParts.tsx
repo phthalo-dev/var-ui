@@ -4,6 +4,7 @@ import {
   useMemo,
   type ComponentPropsWithRef,
   type JSX,
+  type KeyboardEvent,
   type ReactNode,
 } from 'react';
 import {
@@ -21,6 +22,11 @@ import type { IconName } from '@var-ui/core';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { Icon } from '../icons';
 import { menu } from '@var-ui/core/components/menu';
+import {
+  isMenuArrowKey,
+  MENU_ROW_SELECTOR,
+  menuArrowTarget,
+} from '@var-ui/core/shared/menuNavigation';
 import { NativePopover } from './NativePopover';
 import { toRacProps } from './racProps';
 import {
@@ -163,6 +169,31 @@ function MenuTrigger(props: MenuTriggerProps): JSX.Element {
   return <OverlayTrigger {...props} root={useMenuContext().root} />;
 }
 
+/**
+ * Arrow keys around `layout: 'row'` sections (shared model with the Astro Menu): Left/Right wrap
+ * within the row, Up/Down treat the row as one stop. React Aria's list navigation is vertical
+ * only, so these keys are taken before it sees them; menus without rows are left alone.
+ */
+function handleRowArrowKeys(event: KeyboardEvent<HTMLDivElement>): void {
+  if (!isMenuArrowKey(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const menuEl = target.closest('[role="menu"]');
+  if (!menuEl || !menuEl.querySelector(MENU_ROW_SELECTOR)) return;
+  const items = Array.from(menuEl.querySelectorAll<HTMLElement>('[role^="menuitem"]')).filter(
+    (item) => item.closest('[role="menu"]') === menuEl,
+  );
+  if (!items.includes(target)) return;
+  const next = menuArrowTarget(items, target, event.key, {
+    rtl: getComputedStyle(target).direction === 'rtl',
+    rowsOnly: true,
+  });
+  if (!next) return;
+  event.preventDefault();
+  event.stopPropagation();
+  next.focus();
+}
+
 function MenuPopup({
   children,
   className,
@@ -170,6 +201,7 @@ function MenuPopup({
   offset,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
+  onKeyDownCapture,
   ref,
   ...rest
 }: MenuPopupProps): JSX.Element {
@@ -198,6 +230,10 @@ function MenuPopup({
       ref={setRef}
       placement={placement}
       offset={offset}
+      onKeyDownCapture={(event) => {
+        onKeyDownCapture?.(event);
+        if (!event.defaultPrevented) handleRowArrowKeys(event);
+      }}
     >
       <AriaMenu
         {...mergeProps(m.menu)}

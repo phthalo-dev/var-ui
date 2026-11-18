@@ -107,6 +107,9 @@ const UNDOCUMENTED_HOOKS = [
   'data-hotkey',
   // Astro CommandPalette root: config the client script reads (React takes them as props).
   'data-empty-label',
+  'data-empty-hint',
+  // CommandPalette frame while the list is empty (hides the hints footer).
+  'data-empty',
   'data-highlight-matches',
   'data-recent-key',
   'data-recent-label',

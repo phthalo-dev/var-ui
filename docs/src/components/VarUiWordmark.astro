@@ -17,8 +17,15 @@ const Tag = as;
   {
     size === 'header' ? (
       <span {...mergeProps(wordmark.mark)} aria-hidden="true">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round">
-          <path d="M5.25 10h3.5M11.25 10h3.5" />
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M7 4.75Q4.5 10 7 15.25M13 4.75Q15.5 10 13 15.25M8.9 10h2.2" />
         </svg>
       </span>
     ) : null

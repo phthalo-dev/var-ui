@@ -587,7 +587,11 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "command-palette": {
     "axes": [],
     "slots": {
+      "cancel": "var-ui-command-palette__cancel",
       "empty": "var-ui-command-palette__empty",
+      "emptyHint": "var-ui-command-palette__emptyHint",
+      "emptyIcon": "var-ui-command-palette__emptyIcon",
+      "emptyTitle": "var-ui-command-palette__emptyTitle",
       "footer": "var-ui-command-palette__footer",
       "footerHint": "var-ui-command-palette__footerHint",
       "frame": "var-ui-command-palette__frame",
@@ -1218,6 +1222,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "slots": {
       "body": "var-ui-mobile-nav__body",
       "closeButton": "var-ui-mobile-nav__closeButton",
+      "footer": "var-ui-mobile-nav__footer",
       "header": "var-ui-mobile-nav__header",
       "headerContent": "var-ui-mobile-nav__headerContent",
       "headerTitle": "var-ui-mobile-nav__headerTitle",
@@ -1567,6 +1572,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-segmented-control-indicatorbackground",
       "--var-ui-segmented-control-indicatorborder",
+      "--var-ui-segmented-control-indicatorhighlight",
       "--var-ui-segmented-control-indicatoropacity",
       "--var-ui-segmented-control-indicatorwidth",
       "--var-ui-segmented-control-indicatorx",

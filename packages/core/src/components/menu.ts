@@ -119,10 +119,11 @@ export const menu = typestyles.recipe({
         menu: {
           outline: 'none',
         },
+        // Rows sit flush (36px pitch): a gap between them only made long lists taller.
         section: {
           display: 'flex',
           flexDirection: 'column',
-          gap: t.space.xxs.var,
+          gap: 0,
         },
         /**
          * A section laid out as a row of compact icon items (`layout: 'row'`), e.g. a
@@ -133,7 +134,8 @@ export const menu = typestyles.recipe({
           flexDirection: 'row',
           gap: t.space.xxs.var,
           padding: `${t.space.xxs.var} ${t.space.xxs.var}`,
-          '& > *': {
+          // The role attribute lifts these over the `item` slot's list-row metrics.
+          '& > [role^="menuitem"]': {
             flex: '1 1 0',
             justifyContent: 'center',
             minHeight: t.size.control.md.var,
@@ -175,7 +177,11 @@ export const menu = typestyles.recipe({
           alignItems: 'center',
           gap: t.space.xs.var,
           fontSize: t.fontSize.md.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          lineHeight: t.lineHeight.tight.var,
+          // One 36px rhythm for every row (a wrapped label still grows it).
+          minHeight: t.size.control.lg.var,
+          boxSizing: 'border-box',
+          padding: `${t.space.xxs.var} ${t.space.sm.var}`,
           borderRadius: t.radius.sm.var,
           cursor: 'pointer',
           color: vars.itemForeground.var,

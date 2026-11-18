@@ -542,4 +542,75 @@ describe('row sections (layout: row)', () => {
     keydown(item(root, 'other'), 'ArrowLeft');
     expect(document.activeElement).toBe(item(root, 'other'));
   });
+  let appearanceCount = 0;
+  function mountAppearance(): HTMLElement {
+    appearanceCount += 1;
+    const id = `menu-a${appearanceCount}`;
+    const radio = (itemId: string, checked: boolean) =>
+      `<button type="button" role="menuitemradio" aria-checked="${checked}" aria-label="${itemId}"
+        data-var-ui-menu-item data-item-id="${itemId}" tabindex="-1"></button>`;
+    const host = document.createElement('div');
+    host.innerHTML = `
+      <div data-var-ui-menu-root data-selection-mode="none">
+        <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
+          aria-controls="${id}" popovertarget="${id}-popover">Appearance</button>
+        <div data-var-ui-menu-popover id="${id}-popover" popover="auto">
+          <div role="menu" id="${id}" aria-label="Appearance">
+            <div role="group" aria-label="Mode" data-var-ui-menu-group data-layout="row">
+              ${radio('light', false)}${radio('dark', false)}${radio('system', true)}
+            </div>
+            <div role="separator"></div>
+            <div role="group" aria-label="Theme" data-var-ui-menu-group>
+              <button type="button" role="menuitemradio" aria-checked="true" data-var-ui-menu-item data-item-id="teal" tabindex="-1">Teal</button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-item-id="rose" tabindex="-1">Rose</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(host);
+    const root = host.querySelector('[data-var-ui-menu-root]') as HTMLElement;
+    initMenu(root);
+    return root;
+  }
+
+  it('wraps ArrowLeft/Right within the row instead of leaving it', () => {
+    const root = mountAppearance();
+    keydown(trigger(root), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    keydown(item(root, 'system'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'light'));
+    keydown(item(root, 'light'), 'ArrowLeft');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    // Left/Right inside the Theme list do nothing.
+    item(root, 'teal').focus();
+    keydown(item(root, 'teal'), 'ArrowRight');
+    expect(document.activeElement).toBe(item(root, 'teal'));
+  });
+
+  it('ArrowUp/Down treat the row as one stop, entering it on the checked item', () => {
+    const root = mountAppearance();
+    trigger(root).click();
+    item(root, 'light').focus();
+    keydown(item(root, 'light'), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'teal'));
+    keydown(item(root, 'teal'), 'ArrowUp');
+    expect(document.activeElement).toBe(item(root, 'system'));
+    keydown(item(root, 'system'), 'ArrowUp');
+    expect(document.activeElement).toBe(item(root, 'rose'));
+    keydown(item(root, 'rose'), 'ArrowDown');
+    expect(document.activeElement).toBe(item(root, 'system'));
+  });
+
+  it('stays open after a row pick; a list pick still closes', () => {
+    const root = mountAppearance();
+    const actions = collectActions(root);
+    trigger(root).click();
+    item(root, 'dark').click();
+    expect(isOpen(root)).toBe(true);
+    expect(item(root, 'dark').getAttribute('aria-checked')).toBe('true');
+    expect(item(root, 'system').getAttribute('aria-checked')).toBe('false');
+    item(root, 'rose').click();
+    expect(isOpen(root)).toBe(false);
+    expect(actions).toEqual(['dark', 'rose']);
+  });
 });

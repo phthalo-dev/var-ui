@@ -25,6 +25,7 @@ export const docsTopNav = typestyles.recipe({
     'divider',
     'mobileNavBrand',
     'mobileNavBody',
+    'mobileNavPrimary',
     'mobileNavSection',
     'mobileNavSectionTitle',
   ],
@@ -116,14 +117,23 @@ export const docsTopNav = typestyles.recipe({
         gap: t.space.md.var,
         padding: t.space.sm.var,
       },
+      // Site sections (Docs, Components, …): a hair heavier than the page tree, with a divider
+      // before it (`data-divided`) so the two lists do not run together.
+      mobileNavPrimary: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& a': { fontWeight: t.fontWeight.medium.var },
+        '&[data-divided]': {
+          paddingBlockEnd: t.space.md.var,
+          borderBlockEnd: `0.0625rem solid ${t.color.border.subtle.var}`,
+        },
+      },
+      // Preferences, pinned in the drawer footer (`MobileNav` draws the top border).
       mobileNavSection: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
         gap: t.space.xs.var,
-        paddingBlockStart: t.space.md.var,
-        paddingInline: t.space.xs.var,
-        borderBlockStart: `0.0625rem solid ${t.color.border.subtle.var}`,
       },
       mobileNavSectionTitle: {
         margin: 0,

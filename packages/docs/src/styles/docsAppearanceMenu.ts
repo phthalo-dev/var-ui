@@ -5,7 +5,7 @@ type DocsAppearanceMenuSlots = readonly ['root', 'trigger', 'modeIcon', 'swatch'
 
 /**
  * Header appearance menu: one icon button whose glyph shows the colour mode (`data-mode-preference`
- * on `root` picks it) over a short bar in the current theme's swatch colour.
+ * on `root` picks it), with a dot in the current theme's swatch colour at its corner.
  *
  * No `variants` here, so this is a plain multi-slot recipe (each slot is a className string).
  * Slot names that do not collide with CSS property names make TS pick the slot-with-variants
@@ -49,16 +49,17 @@ export const docsAppearanceMenu = typestyles.recipe({
       modeIcon: {
         display: 'inline-flex',
       },
-      // Theme swatch: a short colour bar under the glyph (a colour chip, not a status dot).
+      // Theme swatch: a small dot at the glyph's bottom-right corner, cut out of the icon by a
+      // ring in the bar colour (an underline would read as a selected tab).
       swatch: {
         position: 'absolute',
-        insetInlineStart: '50%',
-        insetBlockEnd: '-0.3125rem',
-        width: '0.625rem',
-        height: '0.125rem',
+        insetInlineEnd: '-0.1875rem',
+        insetBlockEnd: '-0.1875rem',
+        width: '0.4375rem',
+        height: '0.4375rem',
         borderRadius: t.radius.full.var,
-        transform: 'translateX(-50%)',
         backgroundColor: t.color.tone.accent.foreground.var,
+        boxShadow: `0 0 0 0.09375rem ${t.color.background.surface.var}`,
         pointerEvents: 'none',
       },
     },

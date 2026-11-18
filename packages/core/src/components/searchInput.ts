@@ -200,6 +200,10 @@ export const searchInput = typestyles.recipe({
               '&:hover': {
                 borderColor: t.color.border.default.var,
               },
+              // The focus ring is the only outline: a hairline inside it reads as a second one.
+              '&:has(:focus-visible)': {
+                borderColor: 'transparent',
+              },
             },
             trigger: {
               width: '100%',

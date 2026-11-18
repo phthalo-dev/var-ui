@@ -4,6 +4,8 @@ import { border, borderSide } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
+import { atCoarsePointer } from '../internal/pointer';
+import { focusRing } from '../internal/focusRing';
 import { nativeBackdrop, nativeDialogReset, nativeEnterExit } from '../shared/overlayMotion';
 
 /**
@@ -37,6 +39,10 @@ export const commandPalette = typestyles.recipe({
     'resultMeta',
     'mark',
     'empty',
+    'emptyIcon',
+    'emptyTitle',
+    'emptyHint',
+    'cancel',
     'footer',
     'footerHint',
   ],
@@ -89,13 +95,14 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.secondary.var,
     },
+    // One match treatment for titles and subtitles: accent ink, no chip.
     markBackground: {
       ...atProperty.color,
-      value: t.color.tone.accent.subtleBackground.var,
+      value: 'transparent',
     },
     markForeground: {
       ...atProperty.color,
-      value: t.color.text.primary.var,
+      value: t.color.tone.accent.foreground.var,
     },
     groupHeadingColor: {
       ...atProperty.color,
@@ -122,8 +129,8 @@ export const commandPalette = typestyles.recipe({
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
           [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
-          [vars.markBackground.name]: t.color.tone.accent.subtleBackground.var,
-          [vars.markForeground.name]: t.color.text.primary.var,
+          [vars.markBackground.name]: 'transparent',
+          [vars.markForeground.name]: t.color.tone.accent.foreground.var,
           [vars.groupHeadingColor.name]: t.color.text.secondary.var,
           [vars.emptyColor.name]: t.color.text.secondary.var,
           // The native `<dialog>` is the surface itself (no padding, so a click whose target is the
@@ -175,7 +182,8 @@ export const commandPalette = typestyles.recipe({
           gap: t.space.xs.var,
           padding: `${t.space.sm.var} ${t.space.md.var}`,
           ...borderSide('block-end', vars.inputRowBorder.var),
-          '& > :last-child': {
+          // The field (after the icon) takes the room; a trailing Cancel keeps its own width.
+          '& > :nth-child(2)': {
             display: 'flex',
             flex: '1 1 auto',
             minWidth: 0,
@@ -298,13 +306,9 @@ export const commandPalette = typestyles.recipe({
           // A step below the group headings and hints, so the title leads.
           color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
           lineHeight: 1.3,
-          // Matches in the subtitle: weight only, no tint (the title carries the highlight).
-          '& mark': {
-            backgroundColor: 'transparent',
-            color: vars.resultForeground.var,
-          },
         },
-        // Matched text: an underline-weight tint, no padding (the text must not shift).
+        // Matched text, in titles and subtitles alike: accent ink and weight, no padding (the
+        // text must not shift).
         mark: {
           fontFamily: 'inherit',
           fontWeight: t.fontWeight.semibold.var,
@@ -312,6 +316,7 @@ export const commandPalette = typestyles.recipe({
           color: vars.markForeground.var,
           borderRadius: '0.125rem',
           padding: 0,
+          ...atForcedColors({ color: 'Highlight', backgroundColor: 'transparent' }),
         },
         // Keyboard hints under the results (↑↓ navigate, ↵ open, esc close).
         footer: {
@@ -325,6 +330,9 @@ export const commandPalette = typestyles.recipe({
           ...borderSide('block-start', vars.inputRowBorder.var),
           fontSize: t.fontSize.xs.var,
           color: vars.resultMetaColor.var,
+          // Nothing to navigate (`data-empty` on the frame), or no keyboard: the hints go.
+          '[data-empty] &': { display: 'none' },
+          ...atCoarsePointer({ display: 'none' }),
         },
         footerHint: {
           display: 'inline-flex',
@@ -333,10 +341,57 @@ export const commandPalette = typestyles.recipe({
           whiteSpace: 'nowrap',
         },
         empty: {
-          padding: `${t.space.md.var} ${t.space.md.var}`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: t.space.xxs.var,
+          margin: 0,
+          padding: `${t.space.xl.var} ${t.space.md.var}`,
           fontSize: t.fontSize.sm.var,
           color: vars.emptyColor.var,
           lineHeight: 1.5,
+          textAlign: 'center',
+        },
+        emptyIcon: {
+          display: 'inline-flex',
+          marginBlockEnd: t.space.xxs.var,
+          color: vars.inputIconColor.var,
+          lineHeight: 0,
+          '& svg': { width: t.size.icon.lg.var, height: t.size.icon.lg.var },
+        },
+        /** `No results for "query"`: echoing the query makes a typo obvious. */
+        emptyTitle: {
+          margin: 0,
+          fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: vars.resultForeground.var,
+          overflowWrap: 'anywhere',
+        },
+        emptyHint: {
+          margin: 0,
+          fontSize: t.fontSize.sm.var,
+          color: vars.emptyColor.var,
+        },
+        /** Closes the palette. Shown only on touch-first devices, which have no Escape key. */
+        cancel: {
+          display: 'none',
+          flexShrink: 0,
+          alignItems: 'center',
+          minHeight: t.size.control.md.var,
+          margin: 0,
+          marginInlineEnd: `calc(-1 * ${t.space.xs.var})`,
+          paddingBlock: 0,
+          paddingInline: t.space.xs.var,
+          border: 'none',
+          borderRadius: t.radius.sm.var,
+          backgroundColor: 'transparent',
+          font: 'inherit',
+          fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: t.color.tone.accent.foreground.var,
+          cursor: 'pointer',
+          '&:focus-visible': focusRing,
+          ...atCoarsePointer({ display: 'inline-flex' }),
         },
       },
     };

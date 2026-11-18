@@ -76,7 +76,16 @@ const mobileNavVarDefinitions = {
 export const mobileNav = typestyles.recipe({
   name: 'mobile-nav',
   layer: 'components',
-  slots: ['popup', 'header', 'headerContent', 'headerTitle', 'body', 'closeButton', 'toggle'],
+  slots: [
+    'popup',
+    'header',
+    'headerContent',
+    'headerTitle',
+    'body',
+    'footer',
+    'closeButton',
+    'toggle',
+  ],
   vars: mobileNavVarDefinitions,
   styles: ({ vars }) => {
     return {
@@ -134,6 +143,17 @@ export const mobileNav = typestyles.recipe({
           flex: '1 1 auto',
           minHeight: 0,
           overflowY: 'auto',
+        },
+        /** Pinned under the scrolling body (settings, account): always in reach of the thumb. */
+        footer: {
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: t.space.xs.var,
+          padding: `${t.space.sm.var} ${t.space.md.var}`,
+          paddingBlockEnd: `max(${t.space.sm.var}, env(safe-area-inset-bottom))`,
+          ...borderSide('block-start', vars.panelBorder.var),
+          backgroundColor: vars.panelBackground.var,
         },
         closeButton: {
           appearance: 'none',
