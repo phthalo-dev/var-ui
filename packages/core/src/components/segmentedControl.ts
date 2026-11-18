@@ -22,6 +22,9 @@ const segmentRadius = `calc(${t.radius.md.var} - ${trackPadding})`;
 /** `default` — text (or icon + text) segments; `icon` — square, icon-only segments. */
 const segmentedControlLayout = variant.enum(['default', 'icon'], { default: 'default' });
 
+/** Fills its container's inline size, with equal-width segments (drawers, narrow forms). */
+const segmentedControlFullWidth = variant.boolean({ default: false });
+
 /** Track + segment metrics for segmented controls. */
 function segmentedControlSize(size: ControlSize) {
   const height = controlSizeMetrics[size].height;
@@ -57,7 +60,11 @@ export const segmentedControl = typestyles.recipe({
   name: 'segmented-control',
   layer: 'components',
   slots: ['root'],
-  variants: { size: controlSize, layout: segmentedControlLayout },
+  variants: {
+    size: controlSize,
+    layout: segmentedControlLayout,
+    fullWidth: segmentedControlFullWidth,
+  },
   vars: {
     trackBackground: {
       ...atProperty.color,
@@ -222,6 +229,21 @@ export const segmentedControl = typestyles.recipe({
                 flex: '0 0 auto',
                 aspectRatio: '1 / 1',
                 paddingInline: 0,
+              },
+            },
+          },
+        },
+        fullWidth: {
+          false: {},
+          true: {
+            root: {
+              display: 'flex',
+              width: '100%',
+              // Equal shares of the track, whatever each label's length (icon segments too).
+              '& > *, & > [class]': {
+                flex: '1 1 0',
+                minWidth: 0,
+                aspectRatio: 'auto',
               },
             },
           },

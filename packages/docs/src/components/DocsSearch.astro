@@ -4,7 +4,12 @@ import type { DocsSearchItem } from '../types';
 
 type Props = {
   items: readonly DocsSearchItem[];
+  /** Placeholder in the command palette's input. */
   placeholder?: string;
+  /** Placeholder on the bar's search trigger: short, so it fits the tablet-width bar. */
+  triggerPlaceholder?: string;
+  /** Accessible name of the trigger and the palette. */
+  label?: string;
   id?: string;
   /** Second line of the "No results" state. */
   emptyHint?: string;
@@ -13,6 +18,8 @@ type Props = {
 const {
   items,
   placeholder = 'Search docs…',
+  triggerPlaceholder = 'Search…',
+  label = 'Search docs',
   id: paletteId = 'docs-search',
   emptyHint = "Try a component name like “button”, or a topic like “tokens”.",
 } = Astro.props;
@@ -24,14 +31,14 @@ const {
     variant="command"
     size="md"
     commandPalette={paletteId}
-    placeholder={placeholder}
-    aria-label={placeholder}
+    placeholder={triggerPlaceholder}
+    aria-label={label}
   />
   <CommandPalette
     id={paletteId}
     items={[...items]}
     placeholder={placeholder}
-    aria-label={placeholder}
+    aria-label={label}
     recentKey={`${paletteId}-recent`}
     emptyHint={emptyHint}
   />

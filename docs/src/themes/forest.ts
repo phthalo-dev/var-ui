@@ -5,7 +5,7 @@ import {
   designTokens as p,
   groteskMono,
   layoutPanel,
-  lightSyntaxValues,
+  syntaxCodeTokens,
   menu,
   registerFontFace,
   segmentedControl,
@@ -218,7 +218,7 @@ export const forestThemeTokens = {
         dark: p.color.palette['green-2'].var,
       },
     },
-    code: lightSyntaxValues,
+    code: syntaxCodeTokens(),
   },
   borderWidth: {
     thin: '0',

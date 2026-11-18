@@ -403,6 +403,20 @@ export const sideNav = typestyles.recipe({
           '[data-collapsed] &[data-selected]::before': {
             display: 'none',
           },
+          // `selectionStyle="text"` on the section: the current item is marked by its accent
+          // label alone (no fill, no bar), so a neighbouring list's filled row stays the one fill.
+          '[data-selection-style="text"] &[data-selected]': {
+            backgroundColor: 'transparent',
+          },
+          '[data-selection-style="text"] &[data-selected]::before': {
+            display: 'none',
+          },
+          '[data-selection-style="text"] &[data-selected]:hover': {
+            backgroundColor: vars.itemHoverBackground.var,
+          },
+          '[data-selection-style="text"] &[data-selected]:active': {
+            backgroundColor: t.color.navItem.activeBackground.var,
+          },
           '&[data-selected]:hover': {
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,

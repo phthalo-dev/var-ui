@@ -33,7 +33,7 @@ const hasPageNav = Astro.slots.has('default');
     {
       topNav.length > 0 ? (
         <div {...combine(nav.mobileNavPrimary)} data-divided={hasPageNav ? '' : undefined}>
-          <SideNavSection>
+          <SideNavSection selectionStyle="text">
             {topNav.map((item) => (
               <SideNavItem
                 label={item.text}

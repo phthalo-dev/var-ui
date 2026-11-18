@@ -226,6 +226,12 @@ export type SideNavSectionProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & 
   defaultOpen?: boolean;
   /** Item count shown after the title of a collapsible section. */
   count?: number;
+  /**
+   * How the selected item shows: `fill` (tinted row with a leading accent bar) or `text` (accent
+   * label only), for a section that sits beside another list's filled current page (e.g. the site
+   * sections above a page tree in a drawer). @default 'fill'
+   */
+  selectionStyle?: 'fill' | 'text';
 };
 
 /** Groups `SideNav.Item`s under an optional title/subtitle/endContent header. */
@@ -236,11 +242,13 @@ export function SideNavSection({
   collapsible = false,
   defaultOpen = true,
   count,
+  selectionStyle = 'fill',
   children,
   className,
   ref,
   ...rest
 }: SideNavSectionProps): JSX.Element {
+  const selectionStyleAttr = selectionStyle === 'text' ? 'text' : undefined;
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
   if (collapsible && title != null) {
@@ -251,6 +259,7 @@ export function SideNavSection({
         ref={ref as Ref<HTMLDetailsElement>}
         open={defaultOpen}
         data-collapsible=""
+        data-selection-style={selectionStyleAttr}
       >
         <summary {...mergeProps(s.sectionSummary)}>
           <div {...mergeProps(s.sectionTitle)}>{title}</div>
@@ -266,7 +275,12 @@ export function SideNavSection({
   const showHeader = !isCollapsed && (title != null || subtitle != null || endContent != null);
 
   return (
-    <div {...rest} {...mergeProps(s.section, className)} ref={ref}>
+    <div
+      {...rest}
+      {...mergeProps(s.section, className)}
+      ref={ref}
+      data-selection-style={selectionStyleAttr}
+    >
       {showHeader ? (
         <div {...mergeProps(s.sectionHeader)}>
           <div {...mergeProps(s.sectionTitles)}>

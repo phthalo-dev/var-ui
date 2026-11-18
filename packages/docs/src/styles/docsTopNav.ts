@@ -34,14 +34,9 @@ export const docsTopNav = typestyles.recipe({
       root: {
         minWidth: 0,
         flexWrap: 'nowrap',
+        // One 24px gap after the brand at every width (the only gap the bar shows: `end`
+        // pushes itself right with an auto margin).
         gap: t.space.lg.var,
-        [belowLg]: {
-          gap: t.space.md.var,
-        },
-        '& [data-var-ui-top-nav-heading]': {
-          // Optical: the wordmark's bracket sits on the same centre line as the nav labels.
-          paddingInlineEnd: t.space.xs.var,
-        },
         '& [data-var-ui-top-nav-start]': {
           flexShrink: 0,
           [belowSm]: {
@@ -79,8 +74,9 @@ export const docsTopNav = typestyles.recipe({
         },
         '& .docs-search [data-var-ui-search-input]': {
           width: '15rem',
+          // Tablet widths: the full nav, switcher and appearance controls share the bar.
           [belowLg]: {
-            width: '12rem',
+            width: '10rem',
           },
           [belowMd]: {
             width: 'auto',
@@ -105,7 +101,7 @@ export const docsTopNav = typestyles.recipe({
           display: 'none',
         },
       },
-      // Drawer header: the brand, linked home (same mark as the bar).
+      // Drawer header: the brand lockup, linked home.
       mobileNavBrand: {
         display: 'inline-flex',
         alignItems: 'center',
@@ -116,11 +112,14 @@ export const docsTopNav = typestyles.recipe({
         outline: 'none',
         '&:focus-visible': focusRing,
       },
+      // Rows inset 4px (`xxs`) plus their own 12px padding: the list text lands on the drawer's
+      // 16px header/footer inset, so brand, links and preferences share one left edge.
       mobileNavBody: {
         display: 'flex',
         flexDirection: 'column',
         gap: t.space.md.var,
-        padding: t.space.sm.var,
+        paddingBlock: t.space.sm.var,
+        paddingInline: t.space.xxs.var,
       },
       // Site sections (Docs, Components, …): a hair heavier than the page tree, with a divider
       // before it (`data-divided`) so the two lists do not run together.
@@ -128,16 +127,21 @@ export const docsTopNav = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         '& a': { fontWeight: t.fontWeight.medium.var },
+        // Full-bleed like the drawer's header and footer rules: step out over the body's 4px inset
+        // and pad back in, so the links stay on the shared left edge.
         '&[data-divided]': {
+          marginInline: `calc(-1 * ${t.space.xxs.var})`,
+          paddingInline: t.space.xxs.var,
           paddingBlockEnd: t.space.md.var,
           borderBlockEnd: `0.0625rem solid ${t.color.border.subtle.var}`,
         },
       },
-      // Preferences, pinned in the drawer footer (`MobileNav` draws the top border).
+      // Preferences, pinned in the drawer footer (`MobileNav` draws the top border). Controls
+      // stretch to the footer's width.
       mobileNavSection: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start',
+        alignItems: 'stretch',
         gap: t.space.xs.var,
       },
       mobileNavSectionTitle: {

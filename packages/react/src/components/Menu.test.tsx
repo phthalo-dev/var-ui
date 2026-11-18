@@ -569,3 +569,59 @@ describe('Menu.FromSections row sections, icons and swatches', () => {
     expect(teal.querySelector('[style*="background-color"]')).not.toBeNull();
   });
 });
+
+describe('Menu.FromSections closeOnSelect', () => {
+  const sections = (closeOnSelect?: boolean) => [
+    {
+      label: 'Mode',
+      layout: 'row' as const,
+      defaultValue: 'dark',
+      items: [
+        { id: 'light', label: 'Light', icon: 'colorModeLight' as const },
+        { id: 'dark', label: 'Dark', icon: 'colorModeDark' as const },
+      ],
+    },
+    {
+      label: 'Theme',
+      closeOnSelect,
+      defaultValue: 'teal',
+      items: [
+        { id: 'teal', label: 'Teal', swatch: 'teal' },
+        { id: 'rose', label: 'Rose', swatch: 'pink' },
+      ],
+    },
+  ];
+
+  it('keeps the menu open on a row pick and on a closeOnSelect: false section pick', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>Appearance</Button>}
+        aria-label="Appearance"
+        sections={sections(false)}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Appearance' }));
+    await screen.findByRole('menu', { name: 'Appearance' });
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Light' }));
+    expect(screen.queryByRole('menu', { name: 'Appearance' })).not.toBeNull();
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Rose' }));
+    expect(screen.queryByRole('menu', { name: 'Appearance' })).not.toBeNull();
+    expect(screen.getByRole('menuitemradio', { name: 'Rose' }).getAttribute('aria-checked')).toBe(
+      'true',
+    );
+  });
+
+  it('closes on a list section pick by default', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>Appearance</Button>}
+        aria-label="Appearance"
+        sections={sections()}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Appearance' }));
+    await screen.findByRole('menu', { name: 'Appearance' });
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Rose' }));
+    await waitFor(() => expect(screen.queryByRole('menu', { name: 'Appearance' })).toBeNull());
+  });
+});

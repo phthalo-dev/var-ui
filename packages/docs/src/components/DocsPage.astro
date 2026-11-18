@@ -82,6 +82,8 @@ const hasToolsSlot = Astro.slots.has('tools');
 const hasRailSlot = Astro.slots.has('rail');
 const hasDrawerToolsSlot = Astro.slots.has('drawerTools');
 const hasBrandSlot = Astro.slots.has('brand');
+/** `drawerBrand`: the drawer header's brand (e.g. a full lockup where the bar shows a mark); falls back to `brand`. */
+const hasDrawerBrandSlot = Astro.slots.has('drawerBrand');
 const hasThemeScriptSlot = Astro.slots.has('themeScript');
 const showMobileNav = topNav.length > 0 || Boolean(sidebarSections);
 
@@ -138,7 +140,11 @@ const markdownGlyph =
       {
         showMobileNav ? (
           <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath} brand={brand}>
-            {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
+            {hasDrawerBrandSlot ? (
+              <slot name="drawerBrand" slot="brand" />
+            ) : hasBrandSlot ? (
+              <slot name="brand" slot="brand" />
+            ) : null}
             {sidebarSections ? (
               <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
             ) : null}

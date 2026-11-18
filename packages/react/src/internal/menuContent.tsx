@@ -46,6 +46,12 @@ export type MenuSectionDefinition = {
    * @default 'list'
    */
   layout?: 'list' | 'row';
+  /**
+   * Whether choosing an item in this section closes the menu. Set `false` for settings the user
+   * may try in turn (e.g. a "Theme" list beside a Mode row), so the menu stays open on a pick.
+   * @default true (`false` for `layout: 'row'`)
+   */
+  closeOnSelect?: boolean;
 };
 
 export type MenuContentProps = {
@@ -78,6 +84,7 @@ export function MenuContent({
 
   sections.forEach((section, sectionIndex) => {
     const row = section.layout === 'row';
+    const keepOpen = !(section.closeOnSelect ?? !row);
     const sectionProps = row ? combine(m.section, m.sectionRow) : mergeProps(m.section);
     if (section.defaultValue !== undefined) {
       const checked =
@@ -95,7 +102,7 @@ export function MenuContent({
             const next = keys === 'all' ? null : ([...keys][0] ?? null);
             onSectionValueChange?.(sectionIndex, next === null ? null : String(next));
           }}
-          shouldCloseOnSelect={row ? false : undefined}
+          shouldCloseOnSelect={keepOpen ? false : undefined}
           {...sectionProps}
           data-layout={row ? 'row' : undefined}
         >
@@ -127,7 +134,7 @@ export function MenuContent({
         <AriaMenuSection
           key={`section-${sectionIndex}`}
           aria-label={section.label}
-          shouldCloseOnSelect={false}
+          shouldCloseOnSelect={keepOpen ? false : undefined}
           {...sectionProps}
           data-layout="row"
         >
@@ -142,7 +149,20 @@ export function MenuContent({
           </Header>,
         );
       }
-      section.items.forEach((item) => nodes.push(renderItem(item, m)));
+      if (keepOpen) {
+        nodes.push(
+          <AriaMenuSection
+            key={`section-${sectionIndex}`}
+            aria-label={section.label}
+            shouldCloseOnSelect={false}
+            {...sectionProps}
+          >
+            {section.items.map((item) => renderItem(item, m))}
+          </AriaMenuSection>,
+        );
+      } else {
+        section.items.forEach((item) => nodes.push(renderItem(item, m)));
+      }
     }
     if (sectionIndex < sections.length - 1) {
       nodes.push(<Separator key={`sep-${sectionIndex}`} {...mergeProps(m.separator)} />);

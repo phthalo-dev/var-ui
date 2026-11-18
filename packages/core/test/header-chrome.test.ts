@@ -51,7 +51,7 @@ describe('app header chrome recipes', () => {
   it('searchInput collapses the command trigger at the chosen breakpoint only', () => {
     searchInput({ variant: 'command', size: 'md', collapseBelow: 'lg' });
     const css = getRegisteredCss();
-    expect(css).toMatch(/@media \(max-width: 64rem\)[^@]*aspect-ratio: 1 \/ 1/);
+    expect(css).toMatch(/@media \(width < 64rem\)[^@]*aspect-ratio: 1 \/ 1/);
     expect(css).toContain('[data-variant="command"]');
   });
 

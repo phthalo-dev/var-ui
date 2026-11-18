@@ -15,13 +15,24 @@ registerFontFace({
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
 });
 
-const wordmarkSize = variant.enum(['hero', 'header', 'mark', 'inline'], { default: 'hero' });
+const wordmarkSize = variant.enum(['hero', 'header', 'bar', 'lockup', 'inline'], {
+  default: 'hero',
+});
+
+/**
+ * The bar shows the full lockup where it fits: below `sm` (section links live in the drawer, so
+ * the bar has room) and from `lg` up. Between `sm` and `lg` the section links, search and
+ * right-side controls need the room, so the tile stands alone. Both boundaries are the ones the
+ * nav itself switches on, so the brand never changes at a width where nothing else does.
+ */
+const belowSm = typestyles.breakpoint('sm', 'max');
+const atLg = typestyles.breakpoint('lg', 'min');
 
 /** Shared Var UI wordmark with theme-aware CSS syntax colors. */
 export const varUiWordmark = typestyles.recipe({
   name: 'wordmark',
   layer: 'components',
-  slots: ['root', 'mark', 'keyword', 'punctuation', 'customProperty'],
+  slots: ['root', 'mark', 'text', 'keyword', 'punctuation', 'customProperty'],
   variants: {
     size: wordmarkSize,
   },
@@ -54,6 +65,11 @@ export const varUiWordmark = typestyles.recipe({
         color: t.color.background.surface.var,
         '& svg': { display: 'block', width: '100%', height: '100%' },
       },
+      // The `var(--ui)` text run, one box so `bar` can drop it on narrow screens.
+      text: {
+        display: 'inline-flex',
+        alignItems: 'baseline',
+      },
       keyword: {
         // Brand pairing: phthalo accent for `var`, amber for `--ui`.
         color: t.color.tone.accent.foreground.var,
@@ -64,6 +80,13 @@ export const varUiWordmark = typestyles.recipe({
       customProperty: {
         color: t.color.code.attr.var,
         fontWeight: t.fontWeight.medium.var,
+        // Brand moment: where the lockup is a link (bar, drawer, footer), hovering or focusing it
+        // resolves `--ui` to the accent, the way an editor lights up a hovered symbol. The duration
+        // token collapses under reduced motion, so the change is instant there.
+        transition: `color ${t.duration.medium.var} ${t.easing.standard.var}`,
+        'a:hover &, a:focus-visible &': {
+          color: t.color.tone.accent.foreground.var,
+        },
       },
     },
     variants: {
@@ -83,11 +106,40 @@ export const varUiWordmark = typestyles.recipe({
             fontSize: t.fontSize.lg.var,
             letterSpacing: '-0.05em',
           },
+          text: { alignItems: 'center' },
         },
-        // Icon only (app bar and drawer header): the tile alone, a touch larger than in the lockup.
-        mark: {
-          root: { flexShrink: 0, alignItems: 'center' },
-          mark: { width: '1.5rem', height: '1.5rem', marginInlineEnd: 0 },
+        // App bar: the tile + wordmark lockup below `sm` and from `lg` up, the tile alone between.
+        bar: {
+          root: {
+            flexShrink: 0,
+            alignItems: 'center',
+            fontSize: t.fontSize.lg.var,
+            letterSpacing: '-0.05em',
+          },
+          mark: {
+            width: '1.5rem',
+            height: '1.5rem',
+            marginInlineEnd: 0,
+            [belowSm]: { marginInlineEnd: t.space.xs.var },
+            [atLg]: { marginInlineEnd: t.space.xs.var },
+          },
+          text: {
+            display: 'none',
+            alignItems: 'center',
+            [belowSm]: { display: 'inline-flex' },
+            [atLg]: { display: 'inline-flex' },
+          },
+        },
+        // The bar's lockup at every width (drawer header): 24px tile + wordmark.
+        lockup: {
+          root: {
+            flexShrink: 0,
+            alignItems: 'center',
+            fontSize: t.fontSize.lg.var,
+            letterSpacing: '-0.05em',
+          },
+          mark: { width: '1.5rem', height: '1.5rem' },
+          text: { alignItems: 'center' },
         },
         inline: {
           root: {
@@ -95,6 +147,7 @@ export const varUiWordmark = typestyles.recipe({
             fontSize: '0.92em',
             letterSpacing: '-0.06em',
           },
+          text: { display: 'inline' },
         },
       },
     },

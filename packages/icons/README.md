@@ -54,3 +54,6 @@ import { varUiMarkSvg, varUiFaviconSvg } from '@var-ui/icons/brand'; // strings 
 
 const favicon = varUiFaviconSvg({ background: '#007255' }); // glyph on a rounded tile
 ```
+
+At 20px and below use the 16px optical size, `varUiMarkSmall` / `varUiMarkSmallSvg` (16×16
+grid, 2px strokes on whole pixels). `varUiFaviconSvg` already uses it.

@@ -94,6 +94,8 @@ type ControlChannelRefs = {
   semantic: { name: string; var: string };
   solidBg: { name: string; var: string };
   solidFg: { name: string; var: string };
+  /** Ghost hover / open fill, set per tone by {@link controlToneAssignments}. */
+  ghostHover: { name: string; var: string };
 };
 
 type TonePaintRefs = {
@@ -154,6 +156,25 @@ export function toneChannelAssignments(v: SemanticChannelRefs, key: Tone) {
   return semanticChannelAssignments(v, key);
 }
 
+/**
+ * The warm neutral hover chip the top nav uses: `navItem.hoverBackground` firmed with a touch of
+ * ink (alone it all but vanishes on white; an ink wash over `transparent` loses the palette hue).
+ */
+export const neutralHoverChip = `color-mix(in oklch, ${t.color.navItem.hoverBackground.var}, ${t.color.text.primary.var} 4%)`;
+
+/**
+ * Tone channels for controls (button): the shared channels plus the ghost hover/open fill.
+ * Neutral ghost controls take the same warm chip as nav items ({@link neutralHoverChip}), so
+ * an icon button beside the top nav hovers and opens in the nav's tint, not a grey ink mix.
+ */
+export function controlToneAssignments(v: ControlChannelRefs, key: Tone) {
+  return {
+    ...toneChannelAssignments(v, key),
+    [v.ghostHover.name]:
+      key === 'neutral' ? neutralHoverChip : subtleBackgroundColor(v.semantic.var),
+  };
+}
+
 /** One style entry per shared tone. */
 export function mapTone<Style>(paint: (key: Tone) => Style): Record<Tone, Style> {
   return Object.fromEntries(toneValues.map((key) => [key, paint(key)])) as Record<Tone, Style>;
@@ -210,7 +231,11 @@ export function controlAppearancePaint(v: ControlPaintRefs, appearance: ToneAppe
         [v.background.name]: 'transparent',
         [v.foreground.name]: v.semantic.var,
         [hoverWhenEnabled]: {
-          [v.background.name]: subtleBackgroundColor(v.semantic.var),
+          [v.background.name]: v.ghostHover.var,
+        },
+        // A ghost trigger keeps its hover fill while its popup is open.
+        '&[aria-expanded="true"]': {
+          [v.background.name]: v.ghostHover.var,
         },
       };
   }

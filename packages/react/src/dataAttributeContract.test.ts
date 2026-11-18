@@ -29,6 +29,8 @@ const DOCUMENTED_HOOKS = [
 
 /** Present today, not part of the documented contract (recipe axes, layout flags, script hooks). */
 const UNDOCUMENTED_HOOKS = [
+  // SideNav section `selectionStyle="text"`: the recipe's hook for accent-text-only selection.
+  'data-selection-style',
   'data-accordion-id',
   // react-aria's name for the trigger kind (`MenuTrigger`, `Select`, ...), mirrored on NativePopover's shell.
   'data-trigger',

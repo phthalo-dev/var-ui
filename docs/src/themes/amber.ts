@@ -11,6 +11,7 @@ import {
 import {
   neoBrutalistBorderDarkDefault,
   neoBrutalistBorderDarkStrong,
+  neoBrutalistBorderDarkSubtle,
 } from './neo-brutalist-shadows';
 
 const amberDarkHue = 65;
@@ -124,6 +125,11 @@ export const amberThemeTokens = {
     },
     tone: amberTone,
     border: {
+      // Quiet hairlines take the theme's hue too (the default's are warm neutral).
+      subtle: {
+        light: p.color.palette['sand-3'].var,
+        dark: neoBrutalistBorderDarkSubtle(amberDarkHue),
+      },
       default: {
         light: '#000',
         dark: neoBrutalistBorderDarkDefault(amberDarkHue),

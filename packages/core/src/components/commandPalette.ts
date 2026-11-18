@@ -83,9 +83,11 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.navItem.selectedBackground.var,
     },
+    // The active row keeps body ink (the tinted fill marks it), so the accent match run in its
+    // title still reads; an accent title would swallow it.
     resultSelectedForeground: {
       ...atProperty.color,
-      value: t.color.navItem.selectedForeground.var,
+      value: t.color.text.primary.var,
     },
     resultMetaColor: {
       ...atProperty.color,
@@ -122,7 +124,7 @@ export const commandPalette = typestyles.recipe({
           [vars.inputPlaceholder.name]: t.color.text.placeholder.var,
           [vars.resultForeground.name]: t.color.text.primary.var,
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
-          [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
+          [vars.resultSelectedForeground.name]: t.color.text.primary.var,
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
           [vars.markBackground.name]: 'transparent',
           [vars.markForeground.name]: t.color.tone.accent.foreground.var,
@@ -301,11 +303,12 @@ export const commandPalette = typestyles.recipe({
           color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
           lineHeight: 1.3,
         },
-        // Matched text, in titles and subtitles alike: accent ink and weight, no padding (the
-        // text must not shift).
+        // Matched text, in titles and subtitles alike: accent ink only. The weight is the
+        // line's own (a bump read as bold in the 400-weight subtitle but barely showed in the
+        // 500-weight title) and there is no padding, so the text never shifts.
         mark: {
           fontFamily: 'inherit',
-          fontWeight: t.fontWeight.semibold.var,
+          fontWeight: 'inherit',
           backgroundColor: vars.markBackground.var,
           color: vars.markForeground.var,
           borderRadius: '0.125rem',

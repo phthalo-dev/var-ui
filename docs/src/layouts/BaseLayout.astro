@@ -58,10 +58,11 @@ const searchItems = buildDocsSearchIndex();
   tocExtraPaths={['/components']}
   htmlAttributes={{ 'data-framework': framework }}
 >
-  <VarUiWordmark slot="brand" size="mark" />
+  <VarUiWordmark slot="brand" size="bar" />
+  <VarUiWordmark slot="drawerBrand" size="lockup" />
   <DocsThemeScript slot="themeScript" />
   <FrameworkSwitcher slot="tools" />
-  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" />
+  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" fullWidth />
   <slot name="head" slot="head" />
   <slot name="toc" slot="toc" />
   <slot name="rail" slot="rail" />

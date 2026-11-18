@@ -46,25 +46,19 @@ export const darkSyntaxValues = {
   deletionBackground: tokens.color.palette['red-10'].var,
 } satisfies SyntaxFaceValues;
 
-export const code = {
-  base: { light: lightSyntaxValues.base, dark: darkSyntaxValues.base },
-  keyword: { light: lightSyntaxValues.keyword, dark: darkSyntaxValues.keyword },
-  title: { light: lightSyntaxValues.title, dark: darkSyntaxValues.title },
-  attr: { light: lightSyntaxValues.attr, dark: darkSyntaxValues.attr },
-  string: { light: lightSyntaxValues.string, dark: darkSyntaxValues.string },
-  builtIn: { light: lightSyntaxValues.builtIn, dark: darkSyntaxValues.builtIn },
-  comment: { light: lightSyntaxValues.comment, dark: darkSyntaxValues.comment },
-  name: { light: lightSyntaxValues.name, dark: darkSyntaxValues.name },
-  section: { light: lightSyntaxValues.section, dark: darkSyntaxValues.section },
-  bullet: { light: lightSyntaxValues.bullet, dark: darkSyntaxValues.bullet },
-  addition: { light: lightSyntaxValues.addition, dark: darkSyntaxValues.addition },
-  additionBackground: {
-    light: lightSyntaxValues.additionBackground,
-    dark: darkSyntaxValues.additionBackground,
-  },
-  deletion: { light: lightSyntaxValues.deletion, dark: darkSyntaxValues.deletion },
-  deletionBackground: {
-    light: lightSyntaxValues.deletionBackground,
-    dark: darkSyntaxValues.deletionBackground,
-  },
-} satisfies ColorTokenPatch['code'];
+/**
+ * Mode-aware `color.code` tokens: each key gets `{ light, dark }` from the two faces. Themes pass
+ * this (optionally with their own faces) instead of a single face, which would keep light-mode
+ * syntax colors on dark surfaces.
+ */
+export function syntaxCodeTokens(
+  light: SyntaxFaceValues = lightSyntaxValues,
+  dark: SyntaxFaceValues = darkSyntaxValues,
+): { [K in keyof SyntaxFaceValues]: { light: string; dark: string } } {
+  const keys = Object.keys(light) as (keyof SyntaxFaceValues)[];
+  return Object.fromEntries(keys.map((key) => [key, { light: light[key], dark: dark[key] }])) as {
+    [K in keyof SyntaxFaceValues]: { light: string; dark: string };
+  };
+}
+
+export const code = syntaxCodeTokens() satisfies ColorTokenPatch['code'];

@@ -194,7 +194,7 @@ export default function LiveInspector() {
   // Phones: the panel sits behind a "Show CSS" disclosure to keep the page short.
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
-    const query = window.matchMedia('(max-width: 48rem)');
+    const query = window.matchMedia('(width < 48rem)');
     const update = () => setNarrow(query.matches);
     update();
     query.addEventListener('change', update);
