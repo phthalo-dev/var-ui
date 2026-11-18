@@ -10,8 +10,12 @@ export type ChatMessageBubbleProps = Omit<
 > & {
   /** Bubble content — plain text or a consumer-rendered markdown tree. */
   children: ReactNode;
-  /** Visual variant. `ghost` drops the background but keeps padding for alignment. @default filled */
-  variant?: NonNullable<ChatMessageBubbleVariantProps['variant']>;
+  /**
+   * `solid` fills the bubble with the sender colour; `subtle` tints user bubbles instead of the
+   * solid accent fill; `ghost` drops the background but keeps padding for alignment.
+   * @default solid
+   */
+  appearance?: NonNullable<ChatMessageBubbleVariantProps['appearance']>;
   /** Position within a multi-bubble group from the same sender — tightens corners. */
   group?: NonNullable<ChatMessageBubbleVariantProps['group']>;
   /** Additional CSS class names merged onto the root element. */
@@ -32,7 +36,7 @@ export type ChatMessageBubbleProps = Omit<
  */
 export function ChatMessageBubble({
   children,
-  variant = 'filled',
+  appearance = 'solid',
   group,
   className,
   ref,
@@ -40,7 +44,7 @@ export function ChatMessageBubble({
 }: ChatMessageBubbleProps): JSX.Element {
   const context = useChatMessageContext();
   const sender = context?.sender ?? 'assistant';
-  const b = chatMessageBubble({ sender, variant, group: group ?? 'none' });
+  const b = chatMessageBubble({ sender, appearance, group: group ?? 'none' });
   return (
     <div {...rest} {...mergeProps(b.root, className)} ref={ref}>
       {children}

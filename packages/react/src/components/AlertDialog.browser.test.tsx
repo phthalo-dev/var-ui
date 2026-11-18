@@ -41,7 +41,7 @@ function Confirm({
               <Button
                 data-testid="confirm"
                 tone={destructive ? 'danger' : 'accent'}
-                appearance="filled"
+                appearance="solid"
                 onClick={onConfirm}
               >
                 Delete

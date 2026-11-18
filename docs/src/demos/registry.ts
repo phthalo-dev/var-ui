@@ -22,6 +22,8 @@ import { snippets as emptyStateDefaultSnippets } from './empty-state/default/sni
 import { snippets as gridDefaultSnippets } from './grid/default/snippets';
 import { snippets as headingDefaultSnippets } from './heading/default/snippets';
 import { snippets as linkDefaultSnippets } from './link/default/snippets';
+import { snippets as linkQuietSnippets } from './link/quiet/snippets';
+import { snippets as unstyledButtonDefaultSnippets } from './unstyled-button/default/snippets';
 import { snippets as progressBarDefaultSnippets } from './progress-bar/default/snippets';
 import { snippets as progressCircleDefaultSnippets } from './progress-circle/default/snippets';
 import { snippets as progressCircleIndeterminateSnippets } from './progress-circle/indeterminate/snippets';
@@ -217,6 +219,7 @@ import { snippets as colorPickerDefaultSnippets } from './color-picker/default/s
 import { snippets as colorPickerSwatchSnippets } from './color-picker/swatch/snippets';
 import { snippets as tableDefaultSnippets } from './table/default/snippets';
 import { snippets as tableStripedSnippets } from './table/striped/snippets';
+import { snippets as tableBorderedSnippets } from './table/bordered/snippets';
 import { snippets as treeDefaultSnippets } from './tree/default/snippets';
 import { snippets as treeExpandedSnippets } from './tree/expanded/snippets';
 import { snippets as fileTreeDefaultSnippets } from './file-tree/default/snippets';
@@ -244,6 +247,8 @@ export const DEMO_IDS = [
   'text.emphasis',
   'text.clamp',
   'link.default',
+  'link.quiet',
+  'unstyled-button.default',
   'code-block.default',
   'prose.compact',
   'alert.default',
@@ -443,6 +448,7 @@ export const DEMO_IDS = [
   'color-picker.swatch',
   'table.default',
   'table.striped',
+  'table.bordered',
   'tree.default',
   'tree.expanded',
   'file-tree.default',
@@ -469,6 +475,8 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'text.emphasis': textEmphasisSnippets,
   'text.clamp': textClampSnippets,
   'link.default': linkDefaultSnippets,
+  'link.quiet': linkQuietSnippets,
+  'unstyled-button.default': unstyledButtonDefaultSnippets,
   'code-block.default': codeBlockDefaultSnippets,
   'prose.compact': proseCompactSnippets,
   'alert.default': alertDefaultSnippets,
@@ -668,6 +676,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'color-picker.swatch': colorPickerSwatchSnippets,
   'table.default': tableDefaultSnippets,
   'table.striped': tableStripedSnippets,
+  'table.bordered': tableBorderedSnippets,
   'tree.default': treeDefaultSnippets,
   'tree.expanded': treeExpandedSnippets,
   'file-tree.default': fileTreeDefaultSnippets,
@@ -694,6 +703,8 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'text.emphasis': () => import('./text/emphasis/react'),
   'text.clamp': () => import('./text/clamp/react'),
   'link.default': () => import('./link/default/react'),
+  'link.quiet': () => import('./link/quiet/react'),
+  'unstyled-button.default': () => import('./unstyled-button/default/react'),
   'code-block.default': () => import('./code-block/default/react'),
   'prose.compact': () => import('./prose/compact/react'),
   'alert.default': () => import('./alert/default/react'),
@@ -893,6 +904,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'color-picker.swatch': () => import('./color-picker/swatch/react'),
   'table.default': () => import('./table/default/react'),
   'table.striped': () => import('./table/striped/react'),
+  'table.bordered': () => import('./table/bordered/react'),
   'tree.default': () => import('./tree/default/react'),
   'tree.expanded': () => import('./tree/expanded/react'),
   'file-tree.default': () => import('./file-tree/default/react'),
@@ -994,6 +1006,16 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'link.default',
     snippets: demoSnippets['link.default'],
     react: reactDemoLoaders['link.default'],
+  },
+  'link.quiet': {
+    id: 'link.quiet',
+    snippets: demoSnippets['link.quiet'],
+    react: reactDemoLoaders['link.quiet'],
+  },
+  'unstyled-button.default': {
+    id: 'unstyled-button.default',
+    snippets: demoSnippets['unstyled-button.default'],
+    react: reactDemoLoaders['unstyled-button.default'],
   },
   'code-block.default': {
     id: 'code-block.default',
@@ -1989,6 +2011,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'table.striped',
     snippets: demoSnippets['table.striped'],
     react: reactDemoLoaders['table.striped'],
+  },
+  'table.bordered': {
+    id: 'table.bordered',
+    snippets: demoSnippets['table.bordered'],
+    react: reactDemoLoaders['table.bordered'],
   },
   'tree.default': {
     id: 'tree.default',

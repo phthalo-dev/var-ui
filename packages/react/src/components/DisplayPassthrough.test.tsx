@@ -353,15 +353,27 @@ describe('handler + aria passthrough', () => {
     expect(button.className).not.toBe('');
   });
 
-  it('Table forwards rest to <table> and className to the root wrapper', () => {
+  it('Table sends ref and native attrs to <table>; className and style to the root', () => {
+    const ref = createRef<HTMLTableElement>();
     render(
-      <Table data-testid="t" className="custom" aria-label="Users">
+      <Table
+        data-testid="t"
+        className="custom"
+        style={{ maxHeight: '20rem' }}
+        aria-label="Users"
+        ref={ref}
+      >
         <Table.Body />
       </Table>,
     );
     const table = screen.getByTestId('t');
     expect(table.tagName).toBe('TABLE');
     expect(table.getAttribute('aria-label')).toBe('Users');
+    expect(ref.current).toBe(table);
+    const root = table.parentElement as HTMLElement;
+    expect(root.className).toContain('custom');
+    expect(root.style.maxHeight).toBe('20rem');
+    expect(table.className).not.toContain('custom');
   });
 
   it('Carousel previous/next labels are overridable', () => {

@@ -302,12 +302,12 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "chat-message-bubble": {
     "axes": [
+      "appearance",
+      "data-appearance",
       "data-group",
       "data-sender",
-      "data-variant",
       "group",
       "sender",
-      "variant",
     ],
     "slots": {
       "root": "var-ui-chat-message-bubble",
@@ -1107,6 +1107,19 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-layout-panel-panelwidth",
     ],
   },
+  "link": {
+    "axes": [
+      "data-size",
+      "data-tone",
+      "size",
+      "tone",
+    ],
+    "slots": {
+      "icon": "var-ui-link__icon",
+      "root": "var-ui-link",
+    },
+    "vars": [],
+  },
   "list": {
     "axes": [
       "data-density",
@@ -1393,8 +1406,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "axes": [
       "appearance",
       "data-appearance",
+      "data-size",
       "data-tone",
       "indeterminate",
+      "size",
       "tone",
     ],
     "slots": {
@@ -1409,6 +1424,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-progress-bar-fillcolor",
       "--var-ui-progress-bar-fillwidth",
       "--var-ui-progress-bar-trackcolor",
+      "--var-ui-progress-bar-tracksize",
     ],
   },
   "progress-circle": {
@@ -1885,13 +1901,14 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "table": {
     "axes": [
+      "bordered",
       "data-density",
       "data-dividers",
       "data-layout",
       "data-text-overflow",
       "density",
       "dividers",
-      "hasHover",
+      "highlightOnHover",
       "layout",
       "stickyHeader",
       "striped",
@@ -1922,6 +1939,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-table-headerbg",
       "--var-ui-table-headercolor",
       "--var-ui-table-hoverbg",
+      "--var-ui-table-minwidth",
       "--var-ui-table-stripebg",
     ],
   },
@@ -2303,6 +2321,13 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-tree-rowpaddingy",
       "--var-ui-tree-selectedbg",
     ],
+  },
+  "unstyled-button": {
+    "axes": [],
+    "slots": {
+      "base": "var-ui-unstyled-button",
+    },
+    "vars": [],
   },
   "visually-hidden": {
     "axes": [],

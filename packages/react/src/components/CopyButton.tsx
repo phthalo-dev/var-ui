@@ -23,6 +23,13 @@ export type CopyButtonProps = Omit<ComponentPropsWithRef<'button'>, 'children' |
   copiedLabel?: string;
   /** Label for the default button after a failed copy. @default Error */
   errorLabel?: string;
+  /**
+   * Called with the copied text after a successful write. (The native `onCopy` is the
+   * clipboard event on the element, so this one has a distinct name.)
+   */
+  onCopied?: (value: string) => void;
+  /** Called when the clipboard write fails (permission denied, insecure context). */
+  onCopyError?: (error: Error, value: string) => void;
 };
 
 /**
@@ -36,12 +43,14 @@ export function CopyButton({
   copyLabel = 'Copy',
   copiedLabel = 'Copied',
   errorLabel = 'Error',
+  onCopied,
+  onCopyError,
   className,
   onClick,
   ref,
   ...rest
 }: CopyButtonProps): JSX.Element {
-  const { copied, copy, error } = useCopy({ timeout });
+  const { copied, copy, error } = useCopy({ timeout, onCopied, onCopyError });
   const cb = copyButton();
 
   const handleCopy = () => {

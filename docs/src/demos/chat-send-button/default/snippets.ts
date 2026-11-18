@@ -19,9 +19,9 @@ function SendToggle() {
 // Send ↔ stop streaming toggle is React-only.
 import { button } from '@var-ui/core';
 
-const send = button({ tone: 'accent', appearance: 'filled' });
+const send = button({ tone: 'accent', appearance: 'solid' });
 ---
 
 <button type="button" class:list={[send]} aria-label="Send message">↑</button>`,
-  html: `<button type="button" data-tone="accent" data-appearance="filled" data-size="md" data-layout="default" class="var-ui-button" aria-label="Send message"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>`,
+  html: `<button type="button" data-tone="accent" data-appearance="solid" data-size="md" data-layout="default" class="var-ui-button" aria-label="Send message"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>`,
 } satisfies DemoSnippets;

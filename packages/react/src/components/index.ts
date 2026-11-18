@@ -1,5 +1,10 @@
 export * from './chat';
-export { Button, type ButtonProps } from './Button';
+export {
+  Button,
+  type ButtonAsButtonProps,
+  type ButtonAsLinkProps,
+  type ButtonProps,
+} from './Button';
 export { IconButton, type IconButtonProps } from './IconButton';
 export { ButtonGroup, type ButtonGroupProps } from './ButtonGroup';
 export {
@@ -49,6 +54,7 @@ export {
   Select,
   type SelectDescriptionProps,
   type SelectErrorProps,
+  type SelectHeaderProps,
   type SelectItemProps,
   type SelectLabelProps,
   type SelectListBoxProps,
@@ -56,10 +62,13 @@ export {
   type SelectPopoverProps,
   type SelectProps,
   type SelectRootProps,
+  type SelectSectionData,
+  type SelectSectionProps,
+  type SelectSelectionProps,
   type SelectTriggerProps,
   type SelectValueProps,
 } from './Select';
-export { Tabs, type TabsProps } from './Tabs';
+export { Tabs, type TabDefinition, type TabsProps } from './Tabs';
 export {
   TabList,
   TabListMenu,
@@ -208,7 +217,7 @@ export {
 } from './Table';
 export { Tree, TreeItem, type TreeItemData, type TreeItemProps, type TreeProps } from './Tree';
 export { Divider, type DividerProps } from './Divider';
-export { Grid, type GridProps } from './Grid';
+export { Grid, type GridColumns, type GridProps } from './Grid';
 export { Section, type SectionProps } from './Section';
 export { ScrollArea, type ScrollAreaProps } from './ScrollArea';
 export { HStack, Stack, type StackProps } from './Stack';
@@ -252,6 +261,7 @@ export { ProgressCircle, type ProgressCircleProps } from './ProgressCircle';
 export { Meter, type MeterProps } from './Meter';
 export { Rating, type RatingProps } from './Rating';
 export { Spinner, type SpinnerProps } from './Spinner';
+export { UnstyledButton, type UnstyledButtonProps } from './UnstyledButton';
 export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden';
 export { Portal, type PortalProps } from './Portal';
 export {
@@ -300,9 +310,15 @@ export { TimeInput, type TimeInputProps } from './TimeInput';
 export { Typeahead, type TypeaheadOption, type TypeaheadProps } from './Typeahead';
 export {
   Combobox,
+  type ComboboxClearButtonProps,
+  type ComboboxDescriptionProps,
+  type ComboboxErrorProps,
+  type ComboboxInputProps,
   type ComboboxItemProps,
+  type ComboboxLabelProps,
   type ComboboxListBoxProps,
   type ComboboxOption,
+  type ComboboxPopoverProps,
   type ComboboxProps,
   type ComboboxRootProps,
 } from './Combobox';
@@ -324,6 +340,7 @@ export { ResizeHandle, type ResizeHandleProps } from './ResizeHandle';
 export {
   Pagination,
   generatePageRange,
+  type PaginationLabels,
   type PaginationProps,
   type PaginationVariant,
 } from './Pagination';

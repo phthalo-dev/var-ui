@@ -22,6 +22,8 @@ import EmptyStateDefault from './empty-state/default/astro.astro';
 import GridDefault from './grid/default/astro.astro';
 import HeadingDefault from './heading/default/astro.astro';
 import LinkDefault from './link/default/astro.astro';
+import LinkQuiet from './link/quiet/astro.astro';
+import UnstyledButtonDefault from './unstyled-button/default/astro.astro';
 import ProgressBarDefault from './progress-bar/default/astro.astro';
 import SectionDefault from './section/default/astro.astro';
 import SpinnerDefault from './spinner/default/astro.astro';
@@ -100,6 +102,8 @@ const astroDemos = {
   'text.emphasis': TextEmphasis,
   'text.clamp': TextClamp,
   'link.default': LinkDefault,
+  'link.quiet': LinkQuiet,
+  'unstyled-button.default': UnstyledButtonDefault,
   'code-block.default': CodeBlockDefault,
   'prose.compact': ProseCompact,
   'alert.default': AlertDefault,

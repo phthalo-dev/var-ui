@@ -3,6 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export type UseCopyOptions = {
   /** Milliseconds before `copied` resets to false. @default 2000 */
   timeout?: number;
+  /** Called with the copied text after a successful write (a "Copied" toast, analytics). */
+  onCopied?: (value: string) => void;
+  /** Called when the clipboard write fails (permission denied, insecure context). */
+  onCopyError?: (error: Error, value: string) => void;
 };
 
 export type UseCopyResult = {
@@ -19,10 +23,17 @@ export type UseCopyResult = {
 /**
  * Clipboard copy state machine. Pair with `CopyButton` or wire to any control.
  */
-export function useCopy({ timeout = 2000 }: UseCopyOptions = {}): UseCopyResult {
+export function useCopy({
+  timeout = 2000,
+  onCopied,
+  onCopyError,
+}: UseCopyOptions = {}): UseCopyResult {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Latest callbacks without re-creating `copy` (callers pass inline functions).
+  const callbacksRef = useRef({ onCopied, onCopyError });
+  callbacksRef.current = { onCopied, onCopyError };
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -51,9 +62,13 @@ export function useCopy({ timeout = 2000 }: UseCopyOptions = {}): UseCopyResult 
           timerRef.current = null;
         }, timeout);
       } catch (cause) {
+        const copyError = cause instanceof Error ? cause : new Error('Copy failed');
         setCopied(false);
-        setError(cause instanceof Error ? cause : new Error('Copy failed'));
+        setError(copyError);
+        callbacksRef.current.onCopyError?.(copyError, value);
+        return;
       }
+      callbacksRef.current.onCopied?.(value);
     },
     [clearTimer, timeout],
   );

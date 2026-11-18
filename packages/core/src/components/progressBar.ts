@@ -5,7 +5,7 @@ import { forced } from '../internal/forcedColors';
 import { transitionOf } from '../internal/motion';
 import { designTokens as t } from '../tokens';
 import { semanticTone, toneValues, toneWithDefault, type Tone } from '../shared/semanticTone';
-import { fillAppearance } from '../shared/variantAxes';
+import { controlSize, fillAppearance } from '../shared/variantAxes';
 
 const slide = keyframes.create('var-ui-progress-slide', {
   from: { transform: 'translateX(-100%)' },
@@ -27,6 +27,7 @@ export const progressBar = typestyles.recipe({
   layer: 'components',
   slots: ['root', 'header', 'label', 'valueText', 'track', 'fill'],
   variants: {
+    size: controlSize,
     tone: toneWithDefault('accent'),
     appearance: fillAppearance,
     indeterminate: variant.boolean({ default: false }),
@@ -44,6 +45,7 @@ export const progressBar = typestyles.recipe({
       ...atProperty.percentage,
       value: '0%',
     },
+    trackSize: { ...atProperty.length, value: '0.5rem' },
   },
   styles: ({ vars }) => {
     return {
@@ -53,7 +55,7 @@ export const progressBar = typestyles.recipe({
         label: { fontSize: t.fontSize.sm.var, fontWeight: t.fontWeight.medium.var },
         valueText: { fontSize: t.fontSize.sm.var, color: t.color.text.secondary.var },
         track: {
-          height: '0.375rem',
+          blockSize: vars.trackSize.var,
           borderRadius: t.radius.full.var,
           backgroundColor: vars.trackColor.var,
           overflow: 'hidden',
@@ -69,6 +71,12 @@ export const progressBar = typestyles.recipe({
         },
       },
       variants: {
+        // Same track sizes as `meter`, so the two read as one family.
+        size: {
+          sm: { root: { [vars.trackSize.name]: '0.25rem' } },
+          md: { root: { [vars.trackSize.name]: '0.5rem' } },
+          lg: { root: { [vars.trackSize.name]: '0.75rem' } },
+        },
         tone: Object.fromEntries(
           toneValues.map((key) => [
             key,

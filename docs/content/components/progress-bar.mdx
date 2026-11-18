@@ -20,6 +20,14 @@ Determinate progress indicator.
 
 <Demo id="progress-bar.default" />
 
+### Sizes and bare bars
+
+`size` (`sm`, `md`, `lg`) sets the track thickness, with the same steps as `Meter`. `min` and `max` default to 0 and 100. The formatted value shows beside a `label`; a bar without a label is just the track, so give it an `aria-label`:
+
+```tsx
+<ProgressBar aria-label="Upload" value={40} size="sm" />
+```
+
 ## Props
 
 <PropsTable slug="progress-bar" />

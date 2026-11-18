@@ -67,7 +67,7 @@ const semanticToneExports = new Set([
   'subtleHoverMix',
   'subtleBackgroundColor',
   'subtleBorderColor',
-  'filledHoverColor',
+  'solidHoverColor',
   'semanticChannelAssignments',
   'neutralChannelAssignments',
   'controlAppearancePaint',

@@ -4,8 +4,8 @@ import { serializeHtmlTag } from '../../serializeHtml';
 
 export function render(): string {
   const m = chatMessage({ sender: 'assistant' });
-  const first = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'first' });
-  const last = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'last' });
+  const first = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'first' });
+  const last = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'last' });
   const name = serializeHtmlTag(
     'div',
     mergeProps(m.header),

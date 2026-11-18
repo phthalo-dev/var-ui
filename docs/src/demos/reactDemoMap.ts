@@ -23,6 +23,8 @@ import EmptyStateDefault from './empty-state/default/react';
 import GridDefault from './grid/default/react';
 import HeadingDefault from './heading/default/react';
 import LinkDefault from './link/default/react';
+import LinkQuiet from './link/quiet/react';
+import UnstyledButtonDefault from './unstyled-button/default/react';
 import ProgressBarDefault from './progress-bar/default/react';
 import ProgressCircleDefault from './progress-circle/default/react';
 import ProgressCircleIndeterminate from './progress-circle/indeterminate/react';
@@ -218,6 +220,7 @@ import ColorPickerDefault from './color-picker/default/react';
 import ColorPickerSwatch from './color-picker/swatch/react';
 import TableDefault from './table/default/react';
 import TableStriped from './table/striped/react';
+import TableBordered from './table/bordered/react';
 import TreeDefault from './tree/default/react';
 import TreeExpanded from './tree/expanded/react';
 import FileTreeDefault from './file-tree/default/react';
@@ -244,6 +247,8 @@ export const reactDemoMap = {
   'text.emphasis': TextEmphasis,
   'text.clamp': TextClamp,
   'link.default': LinkDefault,
+  'link.quiet': LinkQuiet,
+  'unstyled-button.default': UnstyledButtonDefault,
   'code-block.default': CodeBlockDefault,
   'prose.compact': ProseCompact,
   'alert.default': AlertDefault,
@@ -443,6 +448,7 @@ export const reactDemoMap = {
   'color-picker.swatch': ColorPickerSwatch,
   'table.default': TableDefault,
   'table.striped': TableStriped,
+  'table.bordered': TableBordered,
   'tree.default': TreeDefault,
   'tree.expanded': TreeExpanded,
   'file-tree.default': FileTreeDefault,

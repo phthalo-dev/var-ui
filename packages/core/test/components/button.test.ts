@@ -5,12 +5,12 @@ import { button } from '../../src/components/button';
 
 describe('button', () => {
   it('registers tone and appearance variants including danger', () => {
-    button({ tone: 'accent', appearance: 'filled' });
-    button({ tone: 'danger', appearance: 'filled' });
+    button({ tone: 'accent', appearance: 'solid' });
+    button({ tone: 'danger', appearance: 'solid' });
     const css = getRegisteredCss();
     expect(css).toContain('.var-ui-button[data-tone="accent"]');
     expect(css).toContain('.var-ui-button[data-tone="danger"]');
-    expect(css).toContain('[data-appearance="filled"]');
+    expect(css).toContain('[data-appearance="solid"]');
     expect(css).toContain('var(--var-ui-color-tone-danger-background)');
   });
 

@@ -1,7 +1,7 @@
 import { Button, HStack, Stack } from '@var-ui/react';
 
 const tones = ['neutral', 'accent', 'success', 'warning', 'danger', 'info'] as const;
-const appearances = ['filled', 'outline', 'subtle', 'ghost'] as const;
+const appearances = ['solid', 'outline', 'subtle', 'ghost'] as const;
 
 function toneLabel(tone: (typeof tones)[number]) {
   return tone.charAt(0).toUpperCase() + tone.slice(1);

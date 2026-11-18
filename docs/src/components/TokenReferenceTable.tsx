@@ -170,7 +170,7 @@ export default function TokenReferenceTable({ rows }: TokenReferenceTableProps):
       <Table
         density="compact"
         dividers="rows"
-        hasHover
+        highlightOnHover
         stickyHeader
         layout="fixed"
         columnOrder={[...COLUMN_KEYS]}

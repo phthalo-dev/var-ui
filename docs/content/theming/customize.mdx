@@ -64,12 +64,12 @@ export const acme = createDesignTheme({
           accent: { textTransform: 'uppercase' },
         },
         appearance: {
-          filled: {},
+          solid: {},
         },
       },
       compoundVariants: [
         {
-          variants: { tone: 'accent', appearance: 'filled', size: 'lg' },
+          variants: { tone: 'accent', appearance: 'solid', size: 'lg' },
           style: { letterSpacing: '0.08em' },
         },
       ],
@@ -176,7 +176,7 @@ styles.override(button, { base: { borderRadius: '62.4375rem' } }, { layer: 'over
 // Theme-scoped (same mechanism as `components` on createDesignTheme)
 styles.override(
   button,
-  { variants: { tone: { danger: { fontWeight: 700 } }, appearance: { filled: {} } } },
+  { variants: { tone: { danger: { fontWeight: 700 } }, appearance: { solid: {} } } },
   { selectorPrefix: `.${acme.className}`, layer: 'overrides' },
 );
 ```
@@ -191,7 +191,7 @@ styles.override(
 | Hand-written CSS against a public class          | Target the stable base/slot class (e.g. `.var-ui-button`)           |
 
 Attribute mode means variant state is `data-*` on the element
-(`data-tone="accent"` and `data-appearance="filled"`), not a separate class. Overrides still target the
+(`data-tone="accent"` and `data-appearance="solid"`), not a separate class. Overrides still target the
 right selectors via TypeStyles `styles.override` — you never write those
 selectors yourself in the theme config.
 

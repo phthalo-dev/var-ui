@@ -4,7 +4,7 @@ import { serializeHtmlTag } from '../../serializeHtml';
 
 function message(sender: 'assistant' | 'user', text: string): string {
   const m = chatMessage({ sender });
-  const bubble = chatMessageBubble({ sender, variant: 'filled', group: 'none' });
+  const bubble = chatMessageBubble({ sender, appearance: 'solid', group: 'none' });
   const content = serializeHtmlTag(
     'div',
     mergeProps(m.content),

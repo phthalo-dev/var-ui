@@ -5,7 +5,7 @@ import { sender } from '../../shared/variantAxes';
 import { forced } from '../../internal/forcedColors';
 import { atForcedColors } from '../../theme/conditions';
 
-const bubbleVariant = variant.enum(['filled', 'subtle', 'ghost'], { default: 'filled' });
+const bubbleAppearance = variant.enum(['solid', 'subtle', 'ghost'], { default: 'solid' });
 const bubbleGroup = variant.enum(['none', 'first', 'middle', 'last'], { default: 'none' });
 
 /**
@@ -28,7 +28,7 @@ export const chatMessageBubble = typestyles.recipe({
   slots: ['root'],
   variants: {
     sender,
-    variant: bubbleVariant,
+    appearance: bubbleAppearance,
     group: bubbleGroup,
   },
   vars: {
@@ -75,8 +75,8 @@ export const chatMessageBubble = typestyles.recipe({
             },
           },
         },
-        variant: {
-          filled: { root: { ...atForcedColors(forced.boundary) } },
+        appearance: {
+          solid: { root: { ...atForcedColors(forced.boundary) } },
           subtle: {
             root: {
               // User bubbles drop the solid accent fill for a subtle one so

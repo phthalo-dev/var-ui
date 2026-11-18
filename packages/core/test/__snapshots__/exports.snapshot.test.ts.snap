@@ -6,7 +6,6 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "constant": [
       "PROSE_ISOLATE_ATTRIBUTE",
       "THEME_CLASS_PREFIX",
-      "link",
     ],
     "fonts": [
       "defineFonts",
@@ -72,6 +71,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "toggleButton",
       "toggleGroup",
       "topNav",
+      "unstyledButton",
       "visuallyHidden",
     ],
     "icons": [
@@ -121,6 +121,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "icon",
       "kbd",
       "layout",
+      "link",
       "list",
       "menu",
       "menubar",
@@ -201,9 +202,9 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
   },
   "summary": {
     "runtimeByCategory": {
-      "constant": 3,
+      "constant": 2,
       "fonts": 4,
-      "helper": 58,
+      "helper": 59,
       "icons": 1,
       "layout": 5,
       "object": 5,
@@ -214,10 +215,10 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tokens": 16,
     },
     "runtimeByKind": {
-      "function": 143,
+      "function": 144,
       "number": 4,
       "object": 20,
-      "string": 6,
+      "string": 5,
     },
     "runtimeExports": 173,
     "typeOnlyExports": 146,
@@ -300,6 +301,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "LayoutPadding",
     "LayoutPanelVariantProps",
     "LayoutVariantProps",
+    "LinkVariantProps",
     "ListVariantProps",
     "MenubarVariantProps",
     "MeterThresholds",

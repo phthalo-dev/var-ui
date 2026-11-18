@@ -4,7 +4,7 @@ import { mergeProps } from '../../../lib/mergeProps';
 
 // No @var-ui/astro ChatMessage — core recipe row approximating React layout.
 const m = chatMessage({ sender: 'assistant' });
-const bubble = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'none' });
+const bubble = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'none' });
 const a = avatar({ size: 'sm' });
 const metaRow = stack({
   direction: 'row',

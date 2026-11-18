@@ -10,7 +10,7 @@ export function render(): string {
     'button',
     {
       type: 'button',
-      ...mergeProps(button({ tone: 'accent', appearance: 'filled' })),
+      ...mergeProps(button({ tone: 'accent', appearance: 'solid' })),
       'aria-label': 'Send message',
     },
     arrowUpIcon,
