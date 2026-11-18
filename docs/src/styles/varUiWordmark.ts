@@ -25,8 +25,8 @@ export const varUiWordmark = typestyles.recipe({
         color: t.color.code.base.var,
         fontFeatureSettings: '"calt", "liga"',
       },
-      // Header glyph: a phthalo tile with `(-)`, the `var(--ui)` call in miniature (also the
-      // favicon), set before the wordmark. Sized to the cap height of the bar's labels plus a hair.
+      // Brand mark (`@var-ui/icons/brand`): an accent tile with `(-)`, the `var(--ui)` call in
+      // miniature, set before the wordmark. The favicon draws the same glyph on the same tile.
       mark: {
         display: 'inline-flex',
         flexShrink: 0,
@@ -34,7 +34,8 @@ export const varUiWordmark = typestyles.recipe({
         width: '1.25rem',
         height: '1.25rem',
         marginInlineEnd: t.space.xs.var,
-        borderRadius: t.radius.sm.var,
+        // Same corner as the favicon tile (rx 6 on 24).
+        borderRadius: '25%',
         backgroundColor: t.color.tone.accent.foreground.var,
         color: t.color.background.surface.var,
         '& svg': { display: 'block', width: '100%', height: '100%' },
@@ -54,7 +55,14 @@ export const varUiWordmark = typestyles.recipe({
     variants: {
       size: {
         hero: {
+          // Hero tile tracks the wordmark's size, a little under the cap height.
+          mark: {
+            width: '0.72em',
+            height: '0.72em',
+            marginInlineEnd: '0.16em',
+          },
           root: {
+            alignItems: 'center',
             fontSize: 'clamp(3.5rem, 14vw, 9rem)',
             letterSpacing: '-0.08em',
             textShadow: `0 0 64px color-mix(in oklch, ${t.color.tone.accent.foreground.var} 35%, transparent)`,

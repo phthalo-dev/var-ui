@@ -20,7 +20,14 @@ export default defineConfig({
     clearMocks: false,
   },
   pack: {
-    entry: ['src/index.ts', 'src/glyphs.ts', ...glyphData, ...icons],
+    entry: [
+      'src/index.ts',
+      'src/glyphs.ts',
+      'src/brand.ts',
+      'src/brand-mark.tsx',
+      ...glyphData,
+      ...icons,
+    ],
     dts: true,
     format: ['esm'],
     sourcemap: true,

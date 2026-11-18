@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 // String alias keys match by prefix, so the glyph barrel (`@var-ui/icons/glyphs`) and single
 // glyphs (`@var-ui/icons/glyphs/<name>`) need anchored patterns.
 const glyphAliases = (iconsSrc: string) => [
+  { find: /^@var-ui\/icons\/brand$/, replacement: `${iconsSrc}/brand.ts` },
   { find: /^@var-ui\/icons\/glyphs$/, replacement: `${iconsSrc}/glyphs.ts` },
   { find: /^@var-ui\/icons\/glyphs\/(.+)$/, replacement: `${iconsSrc}/glyph-data/$1` },
 ];

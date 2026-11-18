@@ -42,3 +42,15 @@ auto-imported.
 
 To use a third-party icon library instead, map its glyphs onto `IconName`
 keys — see the `@var-ui/react` README.
+
+## Brand mark
+
+The Var UI mark, `(-)` (the `var(--)` call in miniature), is on the same 24×24 grid and
+paints with `currentColor`, so you set it on your own tile:
+
+```tsx
+import { varUiMark } from '@var-ui/icons'; // React element
+import { varUiMarkSvg, varUiFaviconSvg } from '@var-ui/icons/brand'; // strings (Astro, HTML)
+
+const favicon = varUiFaviconSvg({ background: '#007255' }); // glyph on a rounded tile
+```

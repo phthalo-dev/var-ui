@@ -20,6 +20,7 @@ import {
   innerHtml as colorModeSystemInner,
   svg as colorModeSystemSvg,
 } from './glyph-data/colorModeSystem';
+import { innerHtml as componentInner, svg as componentSvg } from './glyph-data/component';
 import { innerHtml as copyInner, svg as copySvg } from './glyph-data/copy';
 import { innerHtml as errorInner, svg as errorSvg } from './glyph-data/error';
 import { innerHtml as eyeInner, svg as eyeSvg } from './glyph-data/eye';
@@ -30,10 +31,9 @@ import {
   innerHtml as moreHorizontalInner,
   svg as moreHorizontalSvg,
 } from './glyph-data/moreHorizontal';
-import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
 import { innerHtml as pageInner, svg as pageSvg } from './glyph-data/page';
-import { innerHtml as componentInner, svg as componentSvg } from './glyph-data/component';
 import { innerHtml as paletteInner, svg as paletteSvg } from './glyph-data/palette';
+import { innerHtml as searchInner, svg as searchSvg } from './glyph-data/search';
 import { innerHtml as starInner, svg as starSvg } from './glyph-data/star';
 import { innerHtml as stopInner, svg as stopSvg } from './glyph-data/stop';
 import { innerHtml as successInner, svg as successSvg } from './glyph-data/success';
@@ -54,6 +54,7 @@ export const defaultGlyphInnerHtml = {
   colorModeDark: colorModeDarkInner,
   colorModeLight: colorModeLightInner,
   colorModeSystem: colorModeSystemInner,
+  component: componentInner,
   copy: copyInner,
   error: errorInner,
   eye: eyeInner,
@@ -61,11 +62,10 @@ export const defaultGlyphInnerHtml = {
   info: infoInner,
   menu: menuInner,
   moreHorizontal: moreHorizontalInner,
+  page: pageInner,
+  palette: paletteInner,
   search: searchInner,
   star: starInner,
-  page: pageInner,
-  component: componentInner,
-  palette: paletteInner,
   stop: stopInner,
   success: successInner,
   warning: warningInner,
@@ -88,6 +88,7 @@ export const defaultIconSvgs = {
   colorModeDark: colorModeDarkSvg,
   colorModeLight: colorModeLightSvg,
   colorModeSystem: colorModeSystemSvg,
+  component: componentSvg,
   copy: copySvg,
   error: errorSvg,
   eye: eyeSvg,
@@ -95,11 +96,10 @@ export const defaultIconSvgs = {
   info: infoSvg,
   menu: menuSvg,
   moreHorizontal: moreHorizontalSvg,
+  page: pageSvg,
+  palette: paletteSvg,
   search: searchSvg,
   star: starSvg,
-  page: pageSvg,
-  component: componentSvg,
-  palette: paletteSvg,
   stop: stopSvg,
   success: successSvg,
   warning: warningSvg,

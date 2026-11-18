@@ -80,6 +80,7 @@ const reexports = names.map((name) => `export { ${name} } from './icons/${name}'
 writeFileSync(
   join(pkgRoot, 'src/index.ts'),
   `export { defaultIcons } from './default-icons';
+export { varUiMark } from './brand-mark';
 ${reexports}
 `,
 );
@@ -94,6 +95,10 @@ const exports = {
   './glyphs': {
     types: './dist/glyphs.d.mts',
     import: './dist/glyphs.mjs',
+  },
+  './brand': {
+    types: './dist/brand.d.mts',
+    import: './dist/brand.mjs',
   },
 };
 for (const name of names) {

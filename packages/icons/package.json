@@ -26,6 +26,10 @@
       "types": "./dist/glyphs.d.mts",
       "import": "./dist/glyphs.mjs"
     },
+    "./brand": {
+      "types": "./dist/brand.d.mts",
+      "import": "./dist/brand.mjs"
+    },
     "./glyphs/arrowDown": {
       "types": "./dist/glyph-data/arrowDown.d.mts",
       "import": "./dist/glyph-data/arrowDown.mjs"
@@ -122,6 +126,14 @@
       "types": "./dist/icons/colorModeSystem.d.mts",
       "import": "./dist/icons/colorModeSystem.mjs"
     },
+    "./glyphs/component": {
+      "types": "./dist/glyph-data/component.d.mts",
+      "import": "./dist/glyph-data/component.mjs"
+    },
+    "./component": {
+      "types": "./dist/icons/component.d.mts",
+      "import": "./dist/icons/component.mjs"
+    },
     "./glyphs/copy": {
       "types": "./dist/glyph-data/copy.d.mts",
       "import": "./dist/glyph-data/copy.mjs"
@@ -178,14 +190,6 @@
       "types": "./dist/icons/moreHorizontal.d.mts",
       "import": "./dist/icons/moreHorizontal.mjs"
     },
-    "./glyphs/search": {
-      "types": "./dist/glyph-data/search.d.mts",
-      "import": "./dist/glyph-data/search.mjs"
-    },
-    "./search": {
-      "types": "./dist/icons/search.d.mts",
-      "import": "./dist/icons/search.mjs"
-    },
     "./glyphs/page": {
       "types": "./dist/glyph-data/page.d.mts",
       "import": "./dist/glyph-data/page.mjs"
@@ -194,14 +198,6 @@
       "types": "./dist/icons/page.d.mts",
       "import": "./dist/icons/page.mjs"
     },
-    "./glyphs/component": {
-      "types": "./dist/glyph-data/component.d.mts",
-      "import": "./dist/glyph-data/component.mjs"
-    },
-    "./component": {
-      "types": "./dist/icons/component.d.mts",
-      "import": "./dist/icons/component.mjs"
-    },
     "./glyphs/palette": {
       "types": "./dist/glyph-data/palette.d.mts",
       "import": "./dist/glyph-data/palette.mjs"
@@ -209,6 +205,14 @@
     "./palette": {
       "types": "./dist/icons/palette.d.mts",
       "import": "./dist/icons/palette.mjs"
+    },
+    "./glyphs/search": {
+      "types": "./dist/glyph-data/search.d.mts",
+      "import": "./dist/glyph-data/search.mjs"
+    },
+    "./search": {
+      "types": "./dist/icons/search.d.mts",
+      "import": "./dist/icons/search.mjs"
     },
     "./glyphs/star": {
       "types": "./dist/glyph-data/star.d.mts",

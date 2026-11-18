@@ -6,6 +6,7 @@
 import { ClientRouter } from 'astro:transitions';
 import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript } from '@var-ui/astro';
 import { docsMarketingPage } from '../styles/docsMarketingPage';
+import DocsFavicon from './DocsFavicon.astro';
 import DocsMobileMenu from './DocsMobileMenu.astro';
 import DocsTopBar from './DocsTopBar.astro';
 import type { DocsBrand, DocsSearchItem, TopNavItem as TopNavItemType } from '../types';
@@ -54,6 +55,7 @@ const hasFooterSlot = Astro.slots.has('footer');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+    <DocsFavicon />
     <ThemeScript themeClass={themeClassName} />
     {hasThemeScriptSlot ? <slot name="themeScript" /> : null}
     <link rel="stylesheet" href={`${import.meta.env.BASE_URL}typestyles.css`} />

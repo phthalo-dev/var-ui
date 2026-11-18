@@ -122,6 +122,13 @@ export const VarDocsComponentsConfigSchema = z
 export const VarDocsUserConfigSchema = z.object({
   /** Site title — used in `<title>` and header when no logo. */
   title: z.string().min(1),
+  /**
+   * Favicon URL that `DocsPage` and `DocsMarketingPage` emit in `<head>` (and `DocsFavicon` for
+   * site layouts that render their own `<head>`). Root-relative paths get the Astro `base`.
+   * The `type` is taken from the extension (`.svg`, `.png`, `.ico`). Omit for no favicon link.
+   * @example '/favicon.svg'
+   */
+  favicon: z.string().min(1).optional(),
   /** Top navigation items (maps to TopNav). Optional in Phase 2. */
   topNav: z.array(TopNavItemSchema).optional(),
   /** Sidebar sections. Optional in Phase 2 (site still computes per-route). */
