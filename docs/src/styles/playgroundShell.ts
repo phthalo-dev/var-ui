@@ -3,7 +3,7 @@ import { typestyles } from '@var-ui/core';
 export const playgroundShellStyles = typestyles.recipe({
   name: 'playground-shell',
   layer: 'components',
-  slots: ['root', 'layout'],
+  slots: ['root', 'layout', 'article'],
   styles: () => ({
     base: {
       root: {
@@ -15,6 +15,11 @@ export const playgroundShellStyles = typestyles.recipe({
         height: '100%',
         minHeight: 0,
         minWidth: 0,
+      },
+      /** Wide reference article (color ramps); typography comes from `proseContent`. */
+      article: {
+        maxWidth: '72rem',
+        marginInline: 'auto',
       },
     },
   }),

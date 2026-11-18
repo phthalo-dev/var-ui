@@ -23,6 +23,9 @@ const FENCE_RE = /(```[\s\S]*?```)/g;
 const DEMO_RE = /<Demo\s+id=["']([^"']+)["']\s*\/>/g;
 const PROPS_TABLE_RE = /<PropsTable\s+slug=["'][^"']+["']\s*\/>/g;
 const WIDGET_RE = /<(CssVariableReference|ColorSwatches|ShadowSwatches)\s*\/>/g;
+/** `<GuideCards>` wraps a list that the Markdown view keeps; drop only the wrapper tags. */
+const GUIDE_CARDS_TAG_RE = /^<\/?GuideCards>\s*$/gm;
+const PACKAGE_INSTALL_RE = /<PackageInstall\s+packages=["']([^"']+)["'](\s+dev)?\s*\/>/g;
 const WIDGET_PLACEHOLDER = '_Interactive widget — see the HTML docs page._';
 
 export function transformMdx(input: TransformMdxInput): TransformMdxResult {
@@ -73,9 +76,16 @@ function transformProse(segment: string, input: TransformMdxInput): string {
     return renderDemoFences(snippet);
   });
 
-  const withProps = withDemos.replace(PROPS_TABLE_RE, () => renderPropsTable(input.props));
+  const withProps = withDemos
+    .replace(PROPS_TABLE_RE, () => renderPropsTable(input.props))
+    .replace(PACKAGE_INSTALL_RE, (_match, packages: string, dev?: string) =>
+      [
+        fence('bash', `pnpm add${dev ? ' -D' : ''} ${packages}`),
+        fence('bash', `npm install${dev ? ' -D' : ''} ${packages}`),
+      ].join('\n\n'),
+    );
 
-  return withProps.replace(WIDGET_RE, WIDGET_PLACEHOLDER);
+  return withProps.replace(WIDGET_RE, WIDGET_PLACEHOLDER).replace(GUIDE_CARDS_TAG_RE, '');
 }
 
 function renderDemoFences(snippet: { react: string; astro?: string; html?: string }): string {

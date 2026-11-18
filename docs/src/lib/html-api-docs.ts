@@ -129,3 +129,21 @@ export function getHtmlApiDoc(slug: string): HtmlApiDoc | null {
     note: 'Apply via `mergeProps(recipe(…))` or copy the class / data attributes onto your markup.',
   };
 }
+
+/** Variant defaults (`recipe.defaults`) for a component slug's core recipe, keyed by prop name. */
+export function getRecipeDefaults(slug: string): Record<string, string> {
+  const camel = slugToCamel(slug);
+  for (const name of slug === 'text' ? ['textBlock', camel] : [camel, slug]) {
+    const recipe = (core as Record<string, unknown>)[name];
+    if (typeof recipe !== 'function') continue;
+    const defaults = (recipe as { defaults?: Record<string, unknown> }).defaults;
+    if (!defaults) continue;
+    return Object.fromEntries(
+      Object.entries(defaults).map(([key, value]) => [
+        key,
+        typeof value === 'string' ? `'${value}'` : String(value),
+      ]),
+    );
+  }
+  return {};
+}

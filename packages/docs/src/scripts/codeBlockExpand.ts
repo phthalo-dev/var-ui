@@ -19,14 +19,14 @@ function setCollapsed(section: HTMLElement, collapsed: boolean): void {
     body.style.maxHeight = COLLAPSED_MAX_HEIGHT;
     body.style.overflow = 'hidden';
     fade?.removeAttribute('hidden');
-    button.textContent = 'Expand code';
+    button.textContent = 'Show full code';
     button.setAttribute('aria-expanded', 'false');
   } else {
     section.removeAttribute(COLLAPSED_ATTR);
     body.style.maxHeight = '';
     body.style.overflow = '';
     fade?.setAttribute('hidden', '');
-    button.textContent = 'Collapse code';
+    button.textContent = 'Collapse';
     button.setAttribute('aria-expanded', 'true');
   }
 }
@@ -46,6 +46,7 @@ export function initCodeBlockExpand(root: ParentNode = document): void {
       return;
     }
 
+    expandWrap.removeAttribute('hidden');
     setCollapsed(section, true);
 
     button.addEventListener('click', () => {

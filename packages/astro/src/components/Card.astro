@@ -12,7 +12,10 @@ type DivProps = Omit<HTMLAttributes<'div'>, 'title'> & {
   className?: string;
 };
 
-/** With `href` the whole card is a link, like React's `Card` and `Button`. */
+/**
+ * With `href` the whole card is a link, like React's `Card` and `Button`. A `media` slot renders
+ * full-bleed above the title (React: the `media` prop).
+ */
 type LinkProps = Omit<HTMLAttributes<'a'>, 'title' | 'href'> & {
   href: string;
   /** Card headline. */
@@ -41,6 +44,7 @@ const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 ---
 {href !== undefined ? (
   <a href={href} {...rest} {...combine(c.root, c.linkRoot, className)}>
+    {Astro.slots.has('media') ? <div {...mergeProps(c.media)}><slot name="media" /></div> : null}
     <span {...mergeProps(c.linkTitle)}>{title}</span>
     {description ? <p {...mergeProps(c.linkDescription)}>{description}</p> : null}
     <slot />

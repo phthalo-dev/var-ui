@@ -90,7 +90,7 @@ export function registerBaseStyles(): void {
       },
       h2: {
         fontSize: t.fontSize.xxl.var,
-        fontWeight: t.fontWeight.bold.var,
+        fontWeight: t.fontWeight.semibold.var,
         marginTop: t.space.xl.var,
         marginBottom: t.space.xs.var,
       },
@@ -128,8 +128,8 @@ export function registerBaseStyles(): void {
       code: {
         fontFamily: t.fontFamily.mono.var,
         fontSize: '0.9em',
-        fontWeight: t.fontWeight.medium.var,
-        color: t.color.link.hover.var,
+        fontWeight: t.fontWeight.normal.var,
+        color: 'inherit',
       },
       'a code': {
         color: 'inherit',

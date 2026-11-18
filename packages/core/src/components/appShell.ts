@@ -6,6 +6,22 @@ import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { transitionOf } from '../internal/motion';
 import { atForcedColors } from '../theme/conditions';
+import { breakpoint } from '../runtime';
+
+/**
+ * CSS twin of the `data-mobile` attribute the AppShell scripts set from `matchMedia`. Keyed on
+ * `data-mobile-breakpoint`, so the first paint (before hydration) already hides the side nav and
+ * aside below the breakpoint instead of flashing a desktop layout on phones.
+ */
+const mobileBreakpoints = ['sm', 'md', 'lg'] as const;
+function belowMobileBreakpoint(styles: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    mobileBreakpoints.map((name) => [
+      `[data-mobile-breakpoint="${name}"] &`,
+      { [breakpoint(name, 'max')]: styles },
+    ]),
+  );
+}
 
 const appShellHeight = variant.enum(['fill', 'auto', 'stretch'], { default: 'fill' });
 const appShellVariant = variant.enum(['wash', 'surface', 'section', 'elevated'], {
@@ -186,6 +202,11 @@ export const appShell = typestyles.recipe({
             gridTemplateColumns: '1fr',
             gridTemplateRows: 'auto 1fr',
           },
+          ...belowMobileBreakpoint({
+            gridTemplateAreas: '"top" "main"',
+            gridTemplateColumns: '1fr',
+            gridTemplateRows: 'auto 1fr',
+          }),
         },
         topNav: {
           gridArea: 'top',
@@ -228,6 +249,7 @@ export const appShell = typestyles.recipe({
           '[data-mobile] &': {
             display: 'none',
           },
+          ...belowMobileBreakpoint({ display: 'none' }),
         },
         main: {
           gridArea: 'main',
@@ -257,6 +279,7 @@ export const appShell = typestyles.recipe({
           '[data-mobile] &': {
             display: 'none',
           },
+          ...belowMobileBreakpoint({ display: 'none' }),
         },
       },
       variants: {

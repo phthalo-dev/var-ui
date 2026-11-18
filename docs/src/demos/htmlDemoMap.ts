@@ -6,6 +6,7 @@ import { render as renderBadgeDefault } from './badge/default/html';
 import { render as renderBannerDefault } from './banner/default/html';
 import { render as renderButtonDefault } from './button/default/html';
 import { render as renderButtonDisabled } from './button/disabled/html';
+import { render as renderButtonSizes } from './button/sizes/html';
 import { render as renderButtonVariants } from './button/variants/html';
 import { render as renderCardDefault } from './card/default/html';
 import { render as renderCarouselDefault } from './carousel/default/html';
@@ -81,6 +82,7 @@ import { render as renderSearchInputDefault } from './search-input/default/html'
 const htmlDemos = {
   'button.default': renderButtonDefault,
   'button.variants': renderButtonVariants,
+  'button.sizes': renderButtonSizes,
   'button.disabled': renderButtonDisabled,
   'stack.default': renderStackDefault,
   'grid.default': renderGridDefault,

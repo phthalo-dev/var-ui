@@ -80,6 +80,7 @@ export * from './splitter';
 export * from './stack';
 export * from './styleVars';
 export * from './statusDot';
+export * from './stage';
 export * from './steps';
 export * from './surface';
 export * from './switch';

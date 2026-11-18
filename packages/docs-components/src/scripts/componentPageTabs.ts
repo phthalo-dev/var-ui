@@ -37,7 +37,8 @@ function syncLocation(tabId: string): void {
 
 function syncTocVisibility(root: HTMLElement): void {
   const docPanel = root.querySelector<HTMLElement>('#panel-documentation');
-  const toc = root.querySelector<HTMLElement>('[data-component-doc-toc]');
+  // The page TOC rail lives in the DocsPage frame; it only tracks the Documentation panel.
+  const toc = document.querySelector<HTMLElement>('[data-docs-toc-slot]');
   if (!docPanel || !toc) return;
 
   if (docPanel.hasAttribute('hidden')) {

@@ -12,7 +12,8 @@ export const tone = {
       foregroundOnBackground: onLight,
     },
     dark: {
-      foreground: tokens.color.palette['phthalo-4'].var,
+      // Desaturated for text on dark surfaces: legible without glowing.
+      foreground: 'oklch(0.8 0.1 175)',
       background: tokens.color.palette['phthalo-7'].var,
       foregroundOnBackground: onLight,
     },

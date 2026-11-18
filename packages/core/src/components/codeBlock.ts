@@ -5,6 +5,39 @@ import { focusRing } from '../internal/focusRing';
 import { border, borderSide } from '../internal/border';
 import { inlineScrollFade } from '../internal/scrollFade';
 
+const LANGUAGE_LABELS: Record<string, string> = {
+  sh: 'Shell',
+  shell: 'Shell',
+  bash: 'Shell',
+  zsh: 'Shell',
+  console: 'Shell',
+  tsx: 'TSX',
+  ts: 'TS',
+  typescript: 'TS',
+  jsx: 'JSX',
+  js: 'JS',
+  javascript: 'JS',
+  css: 'CSS',
+  html: 'HTML',
+  astro: 'Astro',
+  json: 'JSON',
+  md: 'Markdown',
+  mdx: 'MDX',
+  diff: 'Diff',
+  txt: 'Text',
+  text: 'Text',
+  plaintext: 'Text',
+};
+
+/**
+ * Display label for a code block language id (`tsx` → `TSX`, `bash` → `Shell`): one
+ * convention for every code block header. Unknown ids are upper-cased.
+ */
+export function codeLanguageLabel(language: string): string {
+  const id = language.trim().toLowerCase();
+  return LANGUAGE_LABELS[id] ?? id.toUpperCase();
+}
+
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const codeBlockVarDefinitions = {
   border: {
@@ -37,7 +70,7 @@ const codeBlockVarDefinitions = {
   },
   copyButtonHoverBackground: {
     ...atProperty.color,
-    value: t.color.background.subtle.var,
+    value: `color-mix(in oklab, ${t.color.text.primary.var} 7%, transparent)`,
   },
   feedbackColor: {
     ...atProperty.color,
@@ -59,6 +92,7 @@ const codeBlockVarDefinitions = {
   /** Font size of the code and line numbers (set it to fit long declarations in a narrow column). */
   fontSize: {
     syntax: '*',
+    initial: '0.8125rem',
     value: t.fontSize.sm.var,
   },
   /** Width of the right-edge fade on horizontally scrollable code (scroll-driven; 0 at the end). */
@@ -83,6 +117,8 @@ export const codeBlock = typestyles.recipe({
     'root',
     'header',
     'title',
+    'tabs',
+    'tab',
     'filename',
     'language',
     'actions',
@@ -106,15 +142,18 @@ export const codeBlock = typestyles.recipe({
           borderRadius: t.radius.lg.var,
           backgroundColor: vars.background.var,
           overflow: 'hidden',
-          boxShadow: t.shadow.sm.var,
         },
+        // 40px header: label on the left, an always-visible icon copy button on the right.
         header: {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: t.space.xs.var,
+          minHeight: '2.5rem',
+          boxSizing: 'border-box',
           paddingBlock: t.space.xxs.var,
-          paddingInline: t.space.sm.var,
+          paddingInlineStart: t.space.md.var,
+          paddingInlineEnd: '0.375rem',
           ...borderSide('block-end', vars.border.var),
           backgroundColor: vars.backgroundHeader.var,
         },
@@ -124,22 +163,61 @@ export const codeBlock = typestyles.recipe({
           gap: t.space.xs.var,
           minWidth: 0,
         },
-        filename: {
+        // Tabbed code blocks (package managers, multiple files): tabs replace the filename.
+        tabs: {
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.125rem',
+          marginInlineStart: `calc(-1 * ${t.space.xs.var})`,
+          minWidth: 0,
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+        },
+        tab: {
+          appearance: 'none',
+          display: 'inline-flex',
+          alignItems: 'center',
+          height: '1.75rem',
+          paddingInline: t.space.xs.var,
+          border: 'none',
+          borderRadius: t.radius.md.var,
+          backgroundColor: 'transparent',
+          fontFamily: 'inherit',
           fontSize: t.fontSize.sm.var,
           fontWeight: t.fontWeight.medium.var,
-          color: vars.filenameColor.var,
+          color: vars.languageColor.var,
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
+          transition: t.transition.colorShift.var,
+          '&:hover': {
+            color: vars.filenameColor.var,
+          },
+          '&:focus-visible': {
+            ...focusRing,
+          },
+          '&[aria-selected="true"]': {
+            color: vars.filenameColor.var,
+            backgroundColor: vars.copyButtonHoverBackground.var,
+          },
+        },
+        // Filename and language label share one style: 12px/500 muted.
+        filename: {
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: vars.languageColor.var,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         },
         language: {
           fontSize: t.fontSize.xs.var,
-          fontWeight: t.fontWeight.bold.var,
-          fontFamily: t.fontFamily.mono.var,
-          textTransform: 'uppercase',
-          letterSpacing: '0.06em',
+          fontWeight: t.fontWeight.medium.var,
           color: vars.languageColor.var,
           whiteSpace: 'nowrap',
+          // Next to a filename the language is redundant (the extension says it).
+          '* + &': {
+            display: 'none',
+          },
         },
         actions: {
           display: 'inline-flex',
@@ -148,28 +226,43 @@ export const codeBlock = typestyles.recipe({
           flexShrink: 0,
         },
         /**
-         * Copy button reads as a mono uppercase text action rather than a boxed button. The header
-         * already has its own hairline + toolbar tint; a second bordered chip inside it reads as
-         * double chrome.
+         * Copy button: a 28px ghost icon button. The text label is screen-reader only (the
+         * button also carries `aria-label`); the icon swaps to a check on success.
          */
         copyButton: {
           appearance: 'none',
+          position: 'relative',
           display: 'inline-flex',
           alignItems: 'center',
-          gap: t.space.xxs.var,
+          justifyContent: 'center',
+          flexShrink: 0,
+          width: '1.75rem',
+          height: '1.75rem',
+          padding: 0,
           border: 'none',
           backgroundColor: 'transparent',
           color: vars.copyButtonColor.var,
-          borderRadius: t.radius.sm.var,
-          paddingBlock: t.space.xxs.var,
-          paddingInline: t.space.xs.var,
-          fontFamily: t.fontFamily.mono.var,
-          fontSize: t.fontSize.xs.var,
-          fontWeight: t.fontWeight.semibold.var,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
+          borderRadius: t.radius.md.var,
           cursor: 'pointer',
           transition: t.transition.colorShift.var,
+          '& [data-codeblock-copy-icon]': {
+            display: 'inline-flex',
+          },
+          '& svg': {
+            width: '1rem',
+            height: '1rem',
+          },
+          '& [data-codeblock-copy-text]': {
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            padding: 0,
+            margin: '-1px',
+            overflow: 'hidden',
+            clip: 'rect(0, 0, 0, 0)',
+            whiteSpace: 'nowrap',
+            border: 0,
+          },
           '&:hover': {
             color: vars.filenameColor.var,
             backgroundColor: vars.copyButtonHoverBackground.var,
@@ -185,6 +278,9 @@ export const codeBlock = typestyles.recipe({
           },
         },
         feedback: {
+          '&:empty': {
+            display: 'none',
+          },
           fontSize: t.fontSize.sm.var,
           color: vars.feedbackColor.var,
           minHeight: '1lh',
@@ -222,10 +318,11 @@ export const codeBlock = typestyles.recipe({
           // keeps a hard edge and browsers without scroll timelines show no fade.
           ...inlineScrollFade('var-ui-code-block-scroll-fade', { end: vars.scrollFade }),
           margin: 0,
-          padding: t.space.md.var,
+          paddingBlock: t.space.md.var,
+          paddingInline: t.space.md.var,
           fontFamily: t.fontFamily.mono.var,
           fontSize: vars.fontSize.var,
-          lineHeight: 1.6,
+          lineHeight: 1.7,
           overflow: 'auto',
           backgroundColor: 'transparent',
           border: 'none',

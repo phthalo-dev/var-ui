@@ -9,6 +9,7 @@ import { vitePluginVarDocsTypestyles } from './integrations/typestyles';
 import { vitePluginVarDocsPackageExports } from './integrations/vite-package-exports';
 import { vitePluginVarDocsVirtualModules } from './integrations/vite-virtual-modules';
 import { designTokenShikiTheme } from './utils/shiki-theme';
+import { codeBlockShikiTransformer } from './utils/shiki-code-block';
 import {
   assertSingleStaticGuidePrefix,
   guideInjectPatterns,
@@ -148,6 +149,7 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
           markdown: {
             shikiConfig: {
               theme: shikiTheme,
+              transformers: [codeBlockShikiTransformer()],
             },
           },
           vite: {

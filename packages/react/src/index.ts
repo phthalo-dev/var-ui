@@ -18,3 +18,6 @@ export {
   type OverlayOpenChangeReason,
 } from './overlays';
 export * from './hooks';
+// Class-composition helpers, re-exported like `@var-ui/astro` does, so apps compose recipe
+// slots without a direct `typestyles` import.
+export { combine, cx, mergeProps } from 'typestyles';

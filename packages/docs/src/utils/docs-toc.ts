@@ -1,5 +1,7 @@
 export const DOCS_TOC_CONTENT_SELECTOR = '.docs-article';
-export const DOCS_TOC_HEADING_SELECTOR = 'h2[id], h3[id]';
+/** Headings inside a live demo (`data-prose-isolate`, e.g. an open dialog title) are not page sections. */
+export const DOCS_TOC_HEADING_SELECTOR =
+  'h2[id]:not([data-prose-isolate] *), h3[id]:not([data-prose-isolate] *)';
 
 export function normalizeDocsPath(path: string): string {
   return path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;

@@ -4,6 +4,7 @@ import type { DocsFramework } from '@var-ui/docs-components/framework';
 export type DemoId =
   | 'button.default'
   | 'button.variants'
+  | 'button.sizes'
   | 'button.disabled'
   | 'stack.default'
   | 'grid.default'

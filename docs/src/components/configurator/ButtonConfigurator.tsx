@@ -8,7 +8,7 @@ import type { DocsFramework } from '@var-ui/docs-components/framework';
 import { configuratorStyles } from '@/styles/configurator';
 import { AppearancePicker } from './AppearancePicker';
 import { ComponentConfigurator } from './ComponentConfigurator';
-import { generateButtonCode, type ButtonConfiguratorState } from './buttonCode';
+import { generateButtonCode, TONE_OPTIONS, type ButtonConfiguratorState } from './buttonCode';
 import { SizePicker } from './SizePicker';
 import { ToneSwatchPicker } from './ToneSwatchPicker';
 
@@ -25,11 +25,23 @@ const DEFAULT_STATE: ButtonConfiguratorState = {
   label: 'Button',
 };
 
-function ControlGroup({ label, children }: { label: string; children: React.ReactNode }) {
+function ControlGroup({
+  label,
+  value,
+  children,
+}: {
+  label: string;
+  /** Current value, shown muted after the label (e.g. the selected tone's name). */
+  value?: string;
+  children: React.ReactNode;
+}) {
   const c = configuratorStyles();
   return (
     <div className={c.controlGroup.className}>
-      <span className={c.controlLabel.className}>{label}</span>
+      <span className={c.controlLabel.className}>
+        {label}
+        {value ? <span className={c.controlValue.className}>{value}</span> : null}
+      </span>
       {children}
     </div>
   );
@@ -63,7 +75,10 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
               />
             </ControlGroup>
 
-            <ControlGroup label="Tone">
+            <ControlGroup
+              label="Tone"
+              value={TONE_OPTIONS.find((option) => option.id === state.tone)?.label}
+            >
               <ToneSwatchPicker
                 value={state.tone}
                 onChange={(tone: Tone) => setState((s) => ({ ...s, tone }))}
@@ -77,19 +92,14 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
               />
             </ControlGroup>
 
-            <ControlGroup label="Disabled">
+            <ControlGroup label="State">
               <Switch
-                aria-label="Disabled"
                 checked={state.disabled}
                 onCheckedChange={(disabled) => setState((s) => ({ ...s, disabled }))}
               >
                 Disabled
               </Switch>
-            </ControlGroup>
-
-            <ControlGroup label="Elevated">
               <Switch
-                aria-label="Elevated"
                 checked={state.elevated}
                 onCheckedChange={(elevated) => setState((s) => ({ ...s, elevated }))}
               >
@@ -100,6 +110,7 @@ export default function ButtonConfigurator({ framework }: ButtonConfiguratorProp
         }
         code={codeOutput.code}
         language={codeOutput.language}
+        filename={codeOutput.filename}
       />
     </IconProvider>
   );

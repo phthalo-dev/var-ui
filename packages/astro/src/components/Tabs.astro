@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { tabs as tabsRecipe } from '@var-ui/core/components/tabs';
+import { tabs as tabsRecipe, type TabsAppearance } from '@var-ui/core/components/tabs';
 import { mergeProps } from "../utils";
 
 type TabDef = { value: string; label: string; disabled?: boolean };
@@ -8,12 +8,14 @@ type TabDef = { value: string; label: string; disabled?: boolean };
 type Props = Omit<HTMLAttributes<'div'>, 'children'> & {
   tabs: TabDef[];
   defaultValue?: string;
+  /** Underline rail or pill buttons. @default 'underline' */
+  appearance?: TabsAppearance;
   className?: string;
 };
 
-const { tabs, defaultValue, className, ...rest } = Astro.props;
+const { tabs, defaultValue, appearance = 'underline', className, ...rest } = Astro.props;
 const selected = defaultValue ?? tabs[0]?.value;
-const t = tabsRecipe();
+const t = tabsRecipe({ appearance });
 
 const panelSlots = await Promise.all(
   tabs.map(async (tab) => ({

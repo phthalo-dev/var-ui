@@ -4,3 +4,5 @@ export { docsMarketingPage } from './docsMarketingPage';
 export { docsThemePicker } from './docsThemePicker';
 export { codeBlock } from './codeBlock';
 export { docsTopNav } from './docsTopNav';
+export { docsPageHeader, docsPageTabs } from './docsPageHeader';
+export { docsPropsTable } from './docsPropsTable';

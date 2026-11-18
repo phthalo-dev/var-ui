@@ -14,8 +14,8 @@ const installation = readFileSync(
 
 describe('getting-started copy', () => {
   it('has copy-paste npm install, CSS import, and no extract plugin', () => {
-    expect(gettingStarted).toContain('pnpm add @var-ui/react');
-    expect(gettingStarted).toContain('npm install @var-ui/react');
+    // One tabbed block renders pnpm / npm / yarn / bun commands for these packages.
+    expect(gettingStarted).toContain('<PackageInstall packages="@var-ui/react');
     expect(gettingStarted).toContain("import '@var-ui/core/styles.css'");
     expect(gettingStarted).not.toContain('@typestyles/vite');
     expect(gettingStarted).not.toContain('typestyles-entry.ts');

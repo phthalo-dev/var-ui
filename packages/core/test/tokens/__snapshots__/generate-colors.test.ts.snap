@@ -8,12 +8,12 @@ exports[`generateColors > clamps chroma for a near-gray accent 1`] = `
       "light": "oklch(97.00% 0.002 0)",
     },
     "code": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "codeHeader": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "elevated": {
       "dark": "oklch(22.00% 0.005 0)",
@@ -64,60 +64,60 @@ exports[`generateColors > clamps chroma for a near-gray accent 1`] = `
   },
   "code": {
     "addition": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "var(--var-ui-color-palette-green-4)",
+      "light": "var(--var-ui-color-palette-green-7)",
     },
     "additionBackground": {
       "dark": "var(--var-ui-color-palette-emerald-10)",
       "light": "var(--var-ui-color-palette-emerald-1)",
     },
     "attr": {
-      "dark": "var(--var-ui-color-palette-amber-4)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "var(--var-ui-color-palette-stone-4)",
+      "light": "var(--var-ui-color-palette-stone-7)",
     },
     "base": {
-      "dark": "var(--var-ui-color-palette-gray-3)",
-      "light": "var(--var-ui-color-palette-gray-10)",
+      "dark": "var(--var-ui-color-palette-stone-3)",
+      "light": "var(--var-ui-color-palette-stone-9)",
     },
     "builtIn": {
-      "dark": "var(--var-ui-color-palette-orange-4)",
-      "light": "var(--var-ui-color-palette-orange-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "bullet": {
-      "dark": "var(--var-ui-color-palette-amber-5)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "comment": {
-      "dark": "var(--var-ui-color-palette-gray-4)",
-      "light": "var(--var-ui-color-palette-gray-5)",
+      "dark": "var(--var-ui-color-palette-stone-6)",
+      "light": "var(--var-ui-color-palette-stone-5)",
     },
     "deletion": {
       "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "light": "var(--var-ui-color-palette-red-7)",
     },
     "deletionBackground": {
       "dark": "var(--var-ui-color-palette-red-10)",
       "light": "var(--var-ui-color-palette-red-1)",
     },
     "keyword": {
-      "dark": "var(--var-ui-color-palette-violet-4)",
-      "light": "var(--var-ui-color-palette-purple-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "name": {
-      "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "section": {
-      "dark": "var(--var-ui-color-palette-indigo-4)",
-      "light": "var(--var-ui-color-palette-indigo-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "string": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "title": {
-      "dark": "var(--var-ui-color-palette-blue-4)",
-      "light": "var(--var-ui-color-palette-blue-6)",
+      "dark": "var(--var-ui-color-palette-stone-1)",
+      "light": "var(--var-ui-color-palette-stone-10)",
     },
   },
   "link": {
@@ -273,12 +273,12 @@ exports[`generateColors > returns mode-aware color leaves for the default accent
       "light": "oklch(97.00% 0.002 258.81008101651366)",
     },
     "code": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "codeHeader": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "elevated": {
       "dark": "oklch(22.00% 0.005 258.81008101651366)",
@@ -329,60 +329,60 @@ exports[`generateColors > returns mode-aware color leaves for the default accent
   },
   "code": {
     "addition": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "var(--var-ui-color-palette-green-4)",
+      "light": "var(--var-ui-color-palette-green-7)",
     },
     "additionBackground": {
       "dark": "var(--var-ui-color-palette-emerald-10)",
       "light": "var(--var-ui-color-palette-emerald-1)",
     },
     "attr": {
-      "dark": "var(--var-ui-color-palette-amber-4)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "var(--var-ui-color-palette-stone-4)",
+      "light": "var(--var-ui-color-palette-stone-7)",
     },
     "base": {
-      "dark": "var(--var-ui-color-palette-gray-3)",
-      "light": "var(--var-ui-color-palette-gray-10)",
+      "dark": "var(--var-ui-color-palette-stone-3)",
+      "light": "var(--var-ui-color-palette-stone-9)",
     },
     "builtIn": {
-      "dark": "var(--var-ui-color-palette-orange-4)",
-      "light": "var(--var-ui-color-palette-orange-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "bullet": {
-      "dark": "var(--var-ui-color-palette-amber-5)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "comment": {
-      "dark": "var(--var-ui-color-palette-gray-4)",
-      "light": "var(--var-ui-color-palette-gray-5)",
+      "dark": "var(--var-ui-color-palette-stone-6)",
+      "light": "var(--var-ui-color-palette-stone-5)",
     },
     "deletion": {
       "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "light": "var(--var-ui-color-palette-red-7)",
     },
     "deletionBackground": {
       "dark": "var(--var-ui-color-palette-red-10)",
       "light": "var(--var-ui-color-palette-red-1)",
     },
     "keyword": {
-      "dark": "var(--var-ui-color-palette-violet-4)",
-      "light": "var(--var-ui-color-palette-purple-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "name": {
-      "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "section": {
-      "dark": "var(--var-ui-color-palette-indigo-4)",
-      "light": "var(--var-ui-color-palette-indigo-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "string": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "title": {
-      "dark": "var(--var-ui-color-palette-blue-4)",
-      "light": "var(--var-ui-color-palette-blue-6)",
+      "dark": "var(--var-ui-color-palette-stone-1)",
+      "light": "var(--var-ui-color-palette-stone-10)",
     },
   },
   "link": {
@@ -538,12 +538,12 @@ exports[`generateColors > returns themes for a saturated pink accent 1`] = `
       "light": "oklch(97.00% 0.002 356.9447697294126)",
     },
     "code": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 9%, var(--var-ui-color-background-surface))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 4%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "codeHeader": {
-      "dark": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 14%, var(--var-ui-color-background-subtle))",
-      "light": "color-mix(in srgb, var(--var-ui-color-tone-accent-foreground) 8%, var(--var-ui-color-background-surface))",
+      "dark": "oklch(0.235 0.008 60)",
+      "light": "var(--var-ui-color-palette-stone-1)",
     },
     "elevated": {
       "dark": "oklch(22.00% 0.005 356.9447697294126)",
@@ -594,60 +594,60 @@ exports[`generateColors > returns themes for a saturated pink accent 1`] = `
   },
   "code": {
     "addition": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "var(--var-ui-color-palette-green-4)",
+      "light": "var(--var-ui-color-palette-green-7)",
     },
     "additionBackground": {
       "dark": "var(--var-ui-color-palette-emerald-10)",
       "light": "var(--var-ui-color-palette-emerald-1)",
     },
     "attr": {
-      "dark": "var(--var-ui-color-palette-amber-4)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "var(--var-ui-color-palette-stone-4)",
+      "light": "var(--var-ui-color-palette-stone-7)",
     },
     "base": {
-      "dark": "var(--var-ui-color-palette-gray-3)",
-      "light": "var(--var-ui-color-palette-gray-10)",
+      "dark": "var(--var-ui-color-palette-stone-3)",
+      "light": "var(--var-ui-color-palette-stone-9)",
     },
     "builtIn": {
-      "dark": "var(--var-ui-color-palette-orange-4)",
-      "light": "var(--var-ui-color-palette-orange-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "bullet": {
-      "dark": "var(--var-ui-color-palette-amber-5)",
-      "light": "var(--var-ui-color-palette-amber-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "comment": {
-      "dark": "var(--var-ui-color-palette-gray-4)",
-      "light": "var(--var-ui-color-palette-gray-5)",
+      "dark": "var(--var-ui-color-palette-stone-6)",
+      "light": "var(--var-ui-color-palette-stone-5)",
     },
     "deletion": {
       "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "light": "var(--var-ui-color-palette-red-7)",
     },
     "deletionBackground": {
       "dark": "var(--var-ui-color-palette-red-10)",
       "light": "var(--var-ui-color-palette-red-1)",
     },
     "keyword": {
-      "dark": "var(--var-ui-color-palette-violet-4)",
-      "light": "var(--var-ui-color-palette-purple-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "name": {
-      "dark": "var(--var-ui-color-palette-red-4)",
-      "light": "var(--var-ui-color-palette-red-6)",
+      "dark": "var(--var-ui-color-palette-phthalo-3)",
+      "light": "var(--var-ui-color-palette-phthalo-8)",
     },
     "section": {
-      "dark": "var(--var-ui-color-palette-indigo-4)",
-      "light": "var(--var-ui-color-palette-indigo-6)",
+      "dark": "oklch(0.8 0.1 175)",
+      "light": "var(--var-ui-color-palette-phthalo-7)",
     },
     "string": {
-      "dark": "var(--var-ui-color-palette-teal-4)",
-      "light": "var(--var-ui-color-palette-teal-6)",
+      "dark": "oklch(0.83 0.09 72)",
+      "light": "var(--var-ui-color-palette-amber-7)",
     },
     "title": {
-      "dark": "var(--var-ui-color-palette-blue-4)",
-      "light": "var(--var-ui-color-palette-blue-6)",
+      "dark": "var(--var-ui-color-palette-stone-1)",
+      "light": "var(--var-ui-color-palette-stone-10)",
     },
   },
   "link": {

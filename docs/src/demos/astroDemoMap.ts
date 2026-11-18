@@ -6,6 +6,7 @@ import BadgeDefault from './badge/default/astro.astro';
 import BannerDefault from './banner/default/astro.astro';
 import ButtonDefault from './button/default/astro.astro';
 import ButtonDisabled from './button/disabled/astro.astro';
+import ButtonSizes from './button/sizes/astro.astro';
 import ButtonVariants from './button/variants/astro.astro';
 import CardDefault from './card/default/astro.astro';
 import CarouselDefault from './carousel/default/astro.astro';
@@ -81,6 +82,7 @@ import SearchInputDefault from './search-input/default/astro.astro';
 const astroDemos = {
   'button.default': ButtonDefault,
   'button.variants': ButtonVariants,
+  'button.sizes': ButtonSizes,
   'button.disabled': ButtonDisabled,
   'stack.default': StackDefault,
   'grid.default': GridDefault,

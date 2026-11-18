@@ -22,7 +22,7 @@ const tocVarDefinitions = {
   },
   titleColor: {
     ...atProperty.color,
-    value: t.color.text.secondary.var,
+    value: t.color.text.primary.var,
   },
   railColor: {
     ...atProperty.color,
@@ -62,7 +62,7 @@ const tocVarDefinitions = {
   },
   linkSelectedIndicator: {
     ...atProperty.color,
-    value: t.color.text.primary.var,
+    value: t.color.tone.accent.foreground.var,
   },
 } as const;
 
@@ -94,9 +94,11 @@ export const toc = typestyles.recipe({
           },
         },
         title: {
-          margin: `0 0 ${t.space.md.var}`,
-          fontSize: t.fontSize.sm.var,
-          fontWeight: t.fontWeight.medium.var,
+          margin: `0 0 ${t.space.sm.var}`,
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.semibold.var,
+          letterSpacing: t.letterSpacing.caps.var,
+          textTransform: 'uppercase',
           color: vars.titleColor.var,
         },
         list: {
@@ -146,9 +148,9 @@ export const toc = typestyles.recipe({
         },
         link: {
           display: 'block',
-          paddingBlock: t.space.xxs.var,
+          paddingBlock: '0.3125rem',
           fontSize: t.fontSize.sm.var,
-          lineHeight: t.lineHeight.normal.var,
+          lineHeight: '1.125rem',
           fontWeight: t.fontWeight.normal.var,
           color: vars.linkColor.var,
           textDecoration: 'none',

@@ -99,12 +99,16 @@ export const button = typestyles.recipe({
         },
         '&[disabled]': {
           opacity: t.opacity.disabled.var,
+          // Disabled reads as inert in every tone: drain the hue, not just the opacity.
+          filter: 'grayscale(0.9)',
           cursor: 'not-allowed',
           ...atForcedColors(forced.disabled),
         },
         // Link-rendered buttons (`href`) have no `disabled` attribute.
         '&[aria-disabled="true"]': {
           opacity: t.opacity.disabled.var,
+          // Disabled reads as inert in every tone: drain the hue, not just the opacity.
+          filter: 'grayscale(0.9)',
           cursor: 'not-allowed',
           ...atForcedColors(forced.disabled),
         },

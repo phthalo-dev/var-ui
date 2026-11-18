@@ -222,6 +222,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "linkHint": "var-ui-card__linkHint",
       "linkRoot": "var-ui-card__linkRoot",
       "linkTitle": "var-ui-card__linkTitle",
+      "media": "var-ui-card__media",
       "root": "var-ui-card",
       "title": "var-ui-card__title",
     },
@@ -431,6 +432,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "lineNumber": "var-ui-code-block__lineNumber",
       "pre": "var-ui-code-block__pre",
       "root": "var-ui-code-block",
+      "tab": "var-ui-code-block__tab",
+      "tabs": "var-ui-code-block__tabs",
       "title": "var-ui-code-block__title",
     },
     "vars": [
@@ -442,6 +445,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-code-block-copybuttonhoverbackground",
       "--var-ui-code-block-feedbackcolor",
       "--var-ui-code-block-filenamecolor",
+      "--var-ui-code-block-fontsize",
       "--var-ui-code-block-languagecolor",
       "--var-ui-code-block-linehighlightbackground",
       "--var-ui-code-block-linenumbercolor",
@@ -1736,6 +1740,25 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-stack-gap",
     ],
   },
+  "stage": {
+    "axes": [
+      "data-fade",
+      "data-pattern",
+      "data-tone",
+      "fade",
+      "pattern",
+      "tone",
+    ],
+    "slots": {
+      "base": "var-ui-stage",
+    },
+    "vars": [
+      "--var-ui-stage-ink",
+      "--var-ui-stage-inkstrength",
+      "--var-ui-stage-spacing",
+      "--var-ui-stage-surface",
+    ],
+  },
   "status-dot": {
     "axes": [
       "appearance",
@@ -1856,7 +1879,10 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     ],
   },
   "tabs": {
-    "axes": [],
+    "axes": [
+      "appearance",
+      "data-appearance",
+    ],
     "slots": {
       "list": "var-ui-tabs__list",
       "panel": "var-ui-tabs__panel",

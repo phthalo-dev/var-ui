@@ -18,12 +18,13 @@ const APPEARANCE_OPTIONS: { id: ToneAppearance; label: string }[] = [
 ];
 
 const TONE_OPTIONS: { id: Tone; label: string; swatch: string }[] = [
-  { id: 'neutral', label: 'Neutral', swatch: t.color.text.secondary.var },
-  { id: 'accent', label: 'Accent', swatch: t.color.tone.accent.foreground.var },
-  { id: 'success', label: 'Success', swatch: t.color.tone.success.foreground.var },
-  { id: 'warning', label: 'Warning', swatch: t.color.tone.warning.foreground.var },
-  { id: 'danger', label: 'Danger', swatch: t.color.tone.danger.foreground.var },
-  { id: 'info', label: 'Info', swatch: t.color.tone.info.foreground.var },
+  // Swatches show the filled-button fill each tone produces, in both color modes.
+  { id: 'neutral', label: 'Neutral', swatch: t.color.text.primary.var },
+  { id: 'accent', label: 'Accent', swatch: t.color.tone.accent.background.var },
+  { id: 'success', label: 'Success', swatch: t.color.tone.success.background.var },
+  { id: 'warning', label: 'Warning', swatch: t.color.tone.warning.background.var },
+  { id: 'danger', label: 'Danger', swatch: t.color.tone.danger.background.var },
+  { id: 'info', label: 'Info', swatch: t.color.tone.info.background.var },
 ];
 
 const SIZE_OPTIONS = ['sm', 'md', 'lg'] as const;

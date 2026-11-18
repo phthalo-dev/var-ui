@@ -1,6 +1,11 @@
 import { designTokens as t, focusRing, typestyles } from '@var-ui/core';
 
-/** Docs kit chrome for `@var-ui/docs/CodeBlock` (preview + source). */
+const belowMd = typestyles.breakpoint('md', 'max');
+
+/**
+ * Docs kit chrome for `@var-ui/docs/CodeBlock`: a demo "stage" (dot-grid preview) joined to the
+ * shared code block, with an optional collapse toggle floating over a fade.
+ */
 export const codeBlock = typestyles.recipe({
   name: 'docs-code-block',
   layer: 'components',
@@ -18,7 +23,6 @@ export const codeBlock = typestyles.recipe({
   styles: () => ({
     base: {
       root: {
-        marginBlock: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         gap: t.space.xs.var,
@@ -31,19 +35,24 @@ export const codeBlock = typestyles.recipe({
         backgroundColor: t.color.background.surface.var,
         overflow: 'hidden',
       },
+      // Layout only: the surface and dot field come from the core `stage` recipe.
       preview: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '9rem',
-        padding: `${t.space.xxxl.var} ${t.space.xl.var}`,
-        backgroundColor: t.color.background.app.var,
+        minHeight: '10rem',
+        padding: `${t.space.xxl.var} ${t.space.xl.var}`,
+        overflowX: 'auto',
+        [belowMd]: {
+          padding: `${t.space.xl.var} ${t.space.md.var}`,
+        },
       },
       previewInner: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
+        minWidth: 0,
       },
       code: {
         position: 'relative',
@@ -51,122 +60,59 @@ export const codeBlock = typestyles.recipe({
         borderTopStyle: 'solid',
         borderTopColor: t.color.border.default.var,
       },
+      // Inside a demo card the code block drops its own frame: the card is the frame.
       codeBlock: {
         '& [data-codeblock]': {
           border: 'none',
           borderRadius: 0,
           boxShadow: 'none',
-          backgroundColor: 'transparent',
-        },
-        '& [data-codeblock-header]': {
-          borderBottomWidth: t.borderWidth.default.var,
-          borderBottomStyle: 'solid',
-          borderBottomColor: t.color.border.default.var,
-          backgroundColor: t.color.background.subtle.var,
-        },
-        '&[data-demo-framework="react"] [data-codeblock-header] [class*="code-block__title"]::before':
-          {
-            content: '"TS"',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            width: '1.25rem',
-            height: '1.25rem',
-            marginInlineEnd: t.space.xs.var,
-            borderRadius: t.radius.sm.var,
-            fontSize: '0.5625rem',
-            fontWeight: t.fontWeight.bold.var,
-            fontFamily: t.fontFamily.body.var,
-            letterSpacing: '-0.02em',
-            lineHeight: 1,
-            color: t.color.tone.accent.foregroundOnBackground.var,
-            backgroundColor: '#3178c6',
-          },
-        '&[data-demo-framework="astro"] [data-codeblock-header] [class*="code-block__title"]::before':
-          {
-            content: '"A"',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            width: '1.25rem',
-            height: '1.25rem',
-            marginInlineEnd: t.space.xs.var,
-            borderRadius: t.radius.sm.var,
-            fontSize: '0.625rem',
-            fontWeight: t.fontWeight.bold.var,
-            fontFamily: t.fontFamily.body.var,
-            lineHeight: 1,
-            color: t.color.tone.accent.foregroundOnBackground.var,
-            backgroundColor: '#ff5d01',
-          },
-        '&[data-demo-framework="html"] [data-codeblock-header] [class*="code-block__title"]::before':
-          {
-            content: '"5"',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            width: '1.25rem',
-            height: '1.25rem',
-            marginInlineEnd: t.space.xs.var,
-            borderRadius: t.radius.sm.var,
-            fontSize: '0.5625rem',
-            fontWeight: t.fontWeight.bold.var,
-            fontFamily: t.fontFamily.body.var,
-            lineHeight: 1,
-            color: t.color.tone.accent.foregroundOnBackground.var,
-            backgroundColor: '#e34c26',
-          },
-        '& [data-codeblock-header] [class*="code-block__title"]': {
-          display: 'inline-flex',
-          alignItems: 'center',
-        },
-        '& [data-codeblock-header] [class*="code-block__language"]': {
-          display: 'none',
-        },
-        '& [data-codeblock-copy-text]': {
-          position: 'absolute',
-          width: '1px',
-          height: '1px',
-          padding: 0,
-          margin: '-1px',
-          overflow: 'hidden',
-          clip: 'rect(0, 0, 0, 0)',
-          whiteSpace: 'nowrap',
-          border: 0,
         },
       },
       codeFade: {
         position: 'absolute',
         insetInline: 0,
-        bottom: '2.75rem',
-        height: '3.5rem',
+        bottom: 0,
+        height: '5rem',
         pointerEvents: 'none',
-        background: `linear-gradient(to bottom, transparent, ${t.color.background.surface.var})`,
+        background: `linear-gradient(to bottom, transparent, ${t.color.background.code.var} 70%)`,
       },
+      // Collapsed: a small ghost button floating over the fade. Expanded: a quiet footer row.
       expand: {
         display: 'flex',
         justifyContent: 'center',
-        paddingBlock: t.space.xs.var,
-        borderTopWidth: t.borderWidth.default.var,
-        borderTopStyle: 'solid',
-        borderTopColor: t.color.border.default.var,
+        paddingBlock: t.space.sm.var,
+        backgroundColor: t.color.background.code.var,
+        '&[hidden]': { display: 'none' },
+        '[data-demo-collapsed] > &': {
+          position: 'absolute',
+          insetInline: 0,
+          bottom: 0,
+          backgroundColor: 'transparent',
+          pointerEvents: 'none',
+        },
       },
       expandButton: {
         appearance: 'none',
-        border: 'none',
-        background: 'transparent',
-        padding: `${t.space.xxs.var} ${t.space.sm.var}`,
+        pointerEvents: 'auto',
+        display: 'inline-flex',
+        alignItems: 'center',
+        height: '1.75rem',
+        paddingInline: t.space.sm.var,
+        borderRadius: t.radius.full.var,
+        borderWidth: t.borderWidth.default.var,
+        borderStyle: 'solid',
+        borderColor: t.color.border.default.var,
+        backgroundColor: t.color.background.surface.var,
+        boxShadow: t.shadow.xs.var,
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.medium.var,
         fontFamily: 'inherit',
-        color: t.color.tone.accent.foreground.var,
+        color: t.color.text.secondary.var,
         cursor: 'pointer',
-        borderRadius: t.radius.sm.var,
+        transition: t.transition.colorShift.var,
         '&:hover': {
-          textDecoration: 'underline',
+          color: t.color.text.primary.var,
+          borderColor: t.color.border.strong.var,
         },
         '&:focus-visible': {
           ...focusRing,

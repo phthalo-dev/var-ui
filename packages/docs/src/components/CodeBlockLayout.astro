@@ -2,6 +2,7 @@
 import CodeDemoCodeBlock from './CodeDemoCodeBlock.astro';
 import { combine, Heading, mergeProps } from '@var-ui/astro';
 import { codeBlock as codeBlockRecipe } from '../styles/codeBlock';
+import { stage } from '@var-ui/core';
 
 export type CodeBlockFramework = 'react' | 'astro' | 'html';
 
@@ -39,7 +40,7 @@ const s = codeBlockRecipe();
   <div {...mergeProps(s.card)}>
     {
       hasPreview ? (
-        <div {...mergeProps(s.preview)}>
+        <div {...combine(stage(), s.preview)} data-prose-isolate>
           <div {...mergeProps(s.previewInner)}>
             <slot name="preview" />
           </div>
@@ -60,9 +61,9 @@ const s = codeBlockRecipe();
         showLineNumbers={showLineNumbers}
       />
       <div {...mergeProps(s.codeFade)} data-demo-fade hidden></div>
-      <div {...mergeProps(s.expand)} data-demo-expand-wrap>
+      <div {...mergeProps(s.expand)} data-demo-expand-wrap hidden>
         <button type="button" {...mergeProps(s.expandButton)} data-demo-expand>
-          Expand code
+          Show full code
         </button>
       </div>
     </section>

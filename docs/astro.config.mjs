@@ -17,6 +17,10 @@ const docsRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   output: 'server',
+  redirects: {
+    // The sidebar says "Design tokens"; keep the readable URL working.
+    '/theming/design-tokens': '/theming/tokens',
+  },
   adapter: netlify(),
   integrations: [
     varDocs({
@@ -93,6 +97,7 @@ export default defineConfig({
         '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
         '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
         '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
+        '@var-ui/docs/guide-entry': `${root}/packages/docs/src/utils/guideEntry.ts`,
         '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,
         '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
         '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
@@ -103,6 +108,8 @@ export default defineConfig({
         '@var-ui/docs/DocsSearch': `${root}/packages/docs/src/components/DocsSearch.astro`,
         '@var-ui/docs/DocsSidebar': `${root}/packages/docs/src/components/DocsSidebar.astro`,
         '@var-ui/docs/DocsToc': `${root}/packages/docs/src/components/DocsToc.astro`,
+        '@var-ui/docs/DocsPageHeader': `${root}/packages/docs/src/components/DocsPageHeader.astro`,
+        '@var-ui/docs/PackageInstall': `${root}/packages/docs/src/components/PackageInstall.astro`,
         '@var-ui/docs/DocsThemePicker': `${root}/packages/docs/src/components/DocsThemePicker.astro`,
         '@var-ui/docs/CodeBlock': `${root}/packages/docs/src/components/CodeBlock.astro`,
         '@var-ui/docs/CodeDemoCodeBlock': `${root}/packages/docs/src/components/CodeDemoCodeBlock.astro`,

@@ -6,6 +6,7 @@ import { snippets as badgeDefaultSnippets } from './badge/default/snippets';
 import { snippets as bannerDefaultSnippets } from './banner/default/snippets';
 import { snippets as buttonDefaultSnippets } from './button/default/snippets';
 import { snippets as buttonDisabledSnippets } from './button/disabled/snippets';
+import { snippets as buttonSizesSnippets } from './button/sizes/snippets';
 import { snippets as buttonVariantsSnippets } from './button/variants/snippets';
 import { snippets as cardDefaultSnippets } from './card/default/snippets';
 import { snippets as carouselDefaultSnippets } from './carousel/default/snippets';
@@ -225,6 +226,7 @@ export type { DemoEntry, DemoId, DemoSnippets };
 export const DEMO_IDS = [
   'button.default',
   'button.variants',
+  'button.sizes',
   'button.disabled',
   'stack.default',
   'grid.default',
@@ -448,6 +450,7 @@ export const DEMO_IDS = [
 export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'button.default': buttonDefaultSnippets,
   'button.variants': buttonVariantsSnippets,
+  'button.sizes': buttonSizesSnippets,
   'button.disabled': buttonDisabledSnippets,
   'stack.default': stackDefaultSnippets,
   'grid.default': gridDefaultSnippets,
@@ -671,6 +674,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
 export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'button.default': () => import('./button/default/react'),
   'button.variants': () => import('./button/variants/react'),
+  'button.sizes': () => import('./button/sizes/react'),
   'button.disabled': () => import('./button/disabled/react'),
   'stack.default': () => import('./stack/default/react'),
   'grid.default': () => import('./grid/default/react'),
@@ -901,6 +905,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'button.variants',
     snippets: demoSnippets['button.variants'],
     react: reactDemoLoaders['button.variants'],
+  },
+  'button.sizes': {
+    id: 'button.sizes',
+    snippets: demoSnippets['button.sizes'],
+    react: reactDemoLoaders['button.sizes'],
   },
   'button.disabled': {
     id: 'button.disabled',

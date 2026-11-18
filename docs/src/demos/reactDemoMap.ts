@@ -7,6 +7,7 @@ import BadgeDefault from './badge/default/react';
 import BannerDefault from './banner/default/react';
 import ButtonDefault from './button/default/react';
 import ButtonDisabled from './button/disabled/react';
+import ButtonSizes from './button/sizes/react';
 import ButtonVariants from './button/variants/react';
 import CardDefault from './card/default/react';
 import CarouselDefault from './carousel/default/react';
@@ -225,6 +226,7 @@ import FileTreeNested from './file-tree/nested/react';
 export const reactDemoMap = {
   'button.default': ButtonDefault,
   'button.variants': ButtonVariants,
+  'button.sizes': ButtonSizes,
   'button.disabled': ButtonDisabled,
   'stack.default': StackDefault,
   'grid.default': GridDefault,
