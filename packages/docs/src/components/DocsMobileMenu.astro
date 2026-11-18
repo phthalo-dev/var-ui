@@ -1,0 +1,58 @@
+---
+/**
+ * The docs mobile drawer (`MobileNav`): section links, a divider, the page's own navigation
+ * (default slot, e.g. `DocsSidebar`) and, pinned in the drawer footer under "Preferences", the
+ * `tools` slot (controls the header hides below `md`, such as a framework switcher).
+ *
+ * It slides in from the end side, where the hamburger sits, and its header repeats the brand
+ * (`brand` slot, else `brand.heading`) linked to `brand.href`.
+ */
+import { cx, MobileNav, SideNavItem, SideNavSection } from '@var-ui/astro';
+import { docsTopNav } from '../styles/docsTopNav';
+import type { DocsBrand, TopNavItem as TopNavItemType } from '../types';
+
+type Props = {
+  topNav: readonly TopNavItemType[];
+  /** Normalized current path (without base) used for the selected link. */
+  currentPath: string;
+  brand?: DocsBrand;
+};
+
+const { topNav, currentPath, brand = { heading: 'Docs', href: '/' } } = Astro.props;
+const nav = docsTopNav();
+const hasToolsSlot = Astro.slots.has('tools');
+const hasBrandSlot = Astro.slots.has('brand');
+const hasPageNav = Astro.slots.has('default');
+---
+
+<MobileNav side="end" label={`${brand.heading} navigation`}>
+  <a slot="header" href={brand.href} class={cx(nav.mobileNavBrand)} aria-label={`${brand.heading} home`}>
+    {hasBrandSlot ? <slot name="brand" /> : brand.heading}
+  </a>
+  <div class={cx(nav.mobileNavBody)}>
+    {
+      topNav.length > 0 ? (
+        <div class={cx(nav.mobileNavPrimary)} data-divided={hasPageNav ? '' : undefined}>
+          <SideNavSection>
+            {topNav.map((item) => (
+              <SideNavItem
+                label={item.text}
+                href={item.link}
+                selected={currentPath.startsWith(item.match)}
+              />
+            ))}
+          </SideNavSection>
+        </div>
+      ) : null
+    }
+    <slot />
+  </div>
+  {
+    hasToolsSlot ? (
+      <section slot="footer" class={cx(nav.mobileNavSection)} aria-label="Preferences">
+        <p class={cx(nav.mobileNavSectionTitle)}>Preferences</p>
+        <slot name="tools" />
+      </section>
+    ) : null
+  }
+</MobileNav>

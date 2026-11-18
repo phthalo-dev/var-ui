@@ -15,8 +15,15 @@ type Props = Omit<
   /** Links this trigger to a `CommandPalette` root `id` when `variant="command"`. */
   commandPalette?: string;
   placeholder?: string;
-  /** Shown in the command trigger when `variant="command"`. @default '⌘K' */
+  /**
+   * Shown in the command trigger when `variant="command"`. Defaults to the palette hotkey for the
+   * platform: `⌘K` on Apple devices, `Ctrl K` elsewhere (swapped on the client).
+   */
   shortcut?: string;
+  /**
+   * Below this width the command trigger collapses to a square icon button. @default 'md'
+   */
+  collapseBelow?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   name?: string;
   value?: string;
   /** Classes merged onto the root wrapper. */
@@ -31,7 +38,8 @@ const {
   size = 'md',
   commandPalette: commandPaletteId,
   placeholder = 'Search…',
-  shortcut = '⌘K',
+  shortcut,
+  collapseBelow = 'md',
   name,
   value,
   className,
@@ -40,7 +48,7 @@ const {
   ...rest
 } = Astro.props;
 
-const s = searchInput({ variant, size });
+const s = searchInput({ variant, size, collapseBelow });
 const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' ? 'sm' : 'md' }));
 ---
 
@@ -84,7 +92,9 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
   }
   {variant === 'command' ? (
     <span {...mergeProps(s.shortcut)}>
-      <Kbd aria-hidden="true">{shortcut}</Kbd>
+      <Kbd aria-hidden="true" data-var-ui-mod-shortcut={shortcut ? undefined : 'k'}>
+        {shortcut ?? '⌘K'}
+      </Kbd>
     </span>
   ) : null}
 </div>

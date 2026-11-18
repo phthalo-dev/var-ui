@@ -93,7 +93,7 @@ describe('CommandPalette', () => {
       />,
     );
     await userEvent.type(screen.getByPlaceholderText('Search…'), 'sett');
-    expect(screen.getByText('Open settings')).toBeTruthy();
+    expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Open settings']);
     expect(screen.queryByText('Sign out')).toBeNull();
     await userEvent.keyboard('{Enter}');
     expect(onAction).toHaveBeenCalledWith('a');
@@ -120,6 +120,19 @@ describe('CommandPalette', () => {
     await userEvent.type(screen.getByPlaceholderText('Search…'), 'a');
     await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{Enter}');
     expect(onAction).toHaveBeenCalledWith('c');
+  });
+
+  it('shows keyboard hints in a footer unless hints={false}', () => {
+    const { rerender } = wrap(
+      <CommandPalette open onOpenChange={() => {}} hotkey={false} items={[]} />,
+    );
+    const footer = document.querySelector('.var-ui-command-palette__footer');
+    expect(footer?.textContent).toContain('to navigate');
+    expect(footer?.getAttribute('aria-hidden')).toBe('true');
+    rerender(
+      <CommandPalette open onOpenChange={() => {}} hotkey={false} items={[]} hints={false} />,
+    );
+    expect(document.querySelector('.var-ui-command-palette__footer')).toBeNull();
   });
 
   it('hides the heading of a group with no matching items', async () => {
@@ -188,7 +201,32 @@ describe('CommandPalette', () => {
       />,
     );
     await userEvent.type(screen.getByPlaceholderText('Search…'), 'zzz');
-    expect(screen.getByText('No results')).toBeTruthy();
+    expect(screen.getByText('No results for “zzz”')).toBeTruthy();
+  });
+
+  it('echoes the query with an optional hint and drops the hints footer while empty', async () => {
+    wrap(
+      <CommandPalette
+        open
+        hotkey={false}
+        items={[{ id: 'a', title: 'Only' }]}
+        emptyHint="Try 'only'"
+        onAction={() => {}}
+        onOpenChange={() => {}}
+      />,
+    );
+    const frame = () => document.querySelector('dialog > div')!;
+    expect(frame().hasAttribute('data-empty')).toBe(false);
+    await userEvent.type(screen.getByPlaceholderText('Search…'), 'zzz');
+    expect(screen.getByText("Try 'only'")).toBeTruthy();
+    expect(frame().hasAttribute('data-empty')).toBe(true);
+  });
+
+  it('closes from the Cancel button (shown on touch-first devices)', async () => {
+    const onOpenChange = vi.fn();
+    wrap(<CommandPalette open hotkey={false} items={[]} onOpenChange={onOpenChange} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
   });
 
   it('renders empty state without crashing when items is []', () => {
@@ -418,28 +456,87 @@ describe('CommandPalette item actions and chrome', () => {
       />,
     );
     expect(screen.getByTestId('item-icon')).toBeTruthy();
-    const keys = Array.from(document.querySelectorAll('kbd')).map((k) => k.textContent);
+    const keys = Array.from(document.querySelectorAll('[role="option"] kbd')).map(
+      (k) => k.textContent,
+    );
     expect(keys).toEqual(['⌘', 'K', 'G P']);
   });
 
-  it('highlights matches only when highlightMatches is set', async () => {
+  it('highlights matches by default; highlightMatches={false} renders plain text', async () => {
     const items = [{ id: 'a', title: 'Open settings', meta: 'Preferences' }];
     const { rerender } = wrap(<CommandPalette open {...base} items={items} />);
     await userEvent.type(screen.getByRole('textbox'), 'sett');
-    expect(document.querySelector('mark')).toBeNull();
+    expect(document.querySelector('mark')?.textContent).toBe('sett');
 
     rerender(
       <>
-        <CommandPalette open {...base} items={items} highlightMatches />
+        <CommandPalette open {...base} items={items} highlightMatches={false} />
       </>,
     );
-    expect(document.querySelector('mark')?.textContent).toBe('sett');
+    expect(document.querySelector('mark')).toBeNull();
+  });
+
+  it('renders a registry icon name in the type tile', () => {
+    wrap(<CommandPalette open {...base} items={[{ id: 'a', title: 'Alpha', icon: 'search' }]} />);
+    const option = screen.getByRole('option');
+    expect(option.querySelector('svg')).toBeTruthy();
+  });
+
+  it('lists remembered items under Recent while the query is empty (recentKey)', async () => {
+    localStorage.removeItem('test-recent');
+    const items = [
+      { id: 'a', title: 'Alpha' },
+      { id: 'b', title: 'Beta' },
+    ];
+    const { unmount } = wrap(
+      <CommandPalette open {...base} items={items} recentKey="test-recent" closeOnAction={false} />,
+    );
+    expect(screen.queryByText('Recent')).toBeNull();
+    await userEvent.click(screen.getByText('Beta'));
+    expect(JSON.parse(localStorage.getItem('test-recent') ?? '[]')).toEqual(['b']);
+    expect(screen.getByText('Recent')).toBeTruthy();
+    expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual([
+      'Beta',
+      'Alpha',
+      'Beta',
+    ]);
+    unmount();
+    localStorage.removeItem('test-recent');
+  });
+
+  it('names the section of a Recent item in its subtitle', () => {
+    localStorage.setItem('test-recent-2', JSON.stringify(['t']));
+    const { unmount } = wrap(
+      <CommandPalette
+        open
+        {...base}
+        items={[{ id: 't', title: 'Overview', meta: 'Start here', group: 'Theming' }]}
+        recentKey="test-recent-2"
+      />,
+    );
+    expect(screen.getByText('Theming · Start here')).toBeTruthy();
+    unmount();
+    localStorage.removeItem('test-recent-2');
+  });
+
+  it('keeps Recent out of a query', async () => {
+    localStorage.setItem('test-recent', JSON.stringify(['b']));
+    const items = [
+      { id: 'a', title: 'Alpha' },
+      { id: 'b', title: 'Beta' },
+    ];
+    const { unmount } = wrap(
+      <CommandPalette open {...base} items={items} recentKey="test-recent" />,
+    );
+    expect(screen.getByText('Recent')).toBeTruthy();
+    await userEvent.type(screen.getByRole('textbox'), 'al');
+    expect(screen.queryByText('Recent')).toBeNull();
+    unmount();
+    localStorage.removeItem('test-recent');
   });
 
   it('highlights the right characters when lowercasing changes string length', async () => {
-    wrap(
-      <CommandPalette open {...base} highlightMatches items={[{ id: 'a', title: 'İstanbul' }]} />,
-    );
+    wrap(<CommandPalette open {...base} items={[{ id: 'a', title: 'İstanbul' }]} />);
     await userEvent.type(screen.getByRole('textbox'), 'stan');
     expect(document.querySelector('mark')?.textContent).toBe('stan');
   });

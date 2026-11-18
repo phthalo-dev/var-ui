@@ -5,6 +5,7 @@ import { focusRing } from '../internal/focusRing';
 import { border } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { transitionOf } from '../internal/motion';
+import { pressNudge } from '../internal/press';
 import { atForcedColors } from '../theme/conditions';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
 import type { ControlSize } from '../shared/variantAxes';
@@ -91,9 +92,7 @@ export const button = typestyles.recipe({
         justifyContent: 'center',
         gap: t.space.xs.var,
         transition: `${t.transition.borderShadow.var}, ${transitionOf('background-color')}, ${transitionOf('transform', 'fast')}`,
-        '&:active': {
-          transform: 'translateY(0.0625rem)',
-        },
+        '&:active': pressNudge,
         '&:focus-visible': {
           ...focusRing,
         },

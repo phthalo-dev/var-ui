@@ -5,6 +5,7 @@ import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { button } from '@var-ui/core/components/button';
 import { icon } from '@var-ui/core/components/icon';
 import { menu } from '@var-ui/core/components/menu';
+import { defaultIconSvgs } from '@var-ui/icons/glyphs';
 import type { ButtonVariantProps } from '@var-ui/core';
 import { combine, mergeProps } from "../utils";
 import {
@@ -81,6 +82,10 @@ const itemLabelRecipe = mergeProps(m.itemLabel);
 const itemShortcutRecipe = mergeProps(m.itemShortcut);
 
 const singleSelection = defaultValue !== undefined;
+const sectionRecipe = mergeProps(m.section);
+const sectionRowRecipe = combine(m.section, m.sectionRow);
+const itemIconRecipe = mergeProps(m.itemIcon);
+const iconSvgs: Record<string, string> = defaultIconSvgs;
 
 const hasTriggerSlot = Astro.slots.has("trigger");
 
@@ -140,7 +145,12 @@ const itemContents = await Promise.all(
               {section.label}
             </div>
           ) : null}
-          {section.items.map((item) => {
+          {(() => {
+            const sectionSelection = section.defaultValue !== undefined;
+            const row = section.layout === "row";
+            const radio = singleSelection || sectionSelection;
+            const checkedId = sectionSelection ? section.defaultValue : defaultValue;
+            const rendered = section.items.map((item) => {
             const content = itemContents.find(
               (entry) => entry.id === item.id,
             )?.content;
@@ -148,7 +158,7 @@ const itemContents = await Promise.all(
             const itemRecipe = combine(m.item, item.danger && m.itemDanger);
             const inner = (
               <>
-                {singleSelection ? (
+                {radio ? (
                   <span
                     {...itemCheckRecipe}
                     data-var-ui-menu-item-check
@@ -162,8 +172,21 @@ const itemContents = await Promise.all(
                 ) : null}
                 {content ? (
                   <Fragment set:html={content} />
+                ) : row ? (
+                  item.icon && iconSvgs[item.icon] ? (
+                    <span {...itemIconRecipe} aria-hidden="true">
+                      <span {...checkIconRecipe} set:html={iconSvgs[item.icon]} />
+                    </span>
+                  ) : (
+                    <span {...itemLabelRecipe}>{item.label}</span>
+                  )
                 ) : (
                   <>
+                    {item.icon && iconSvgs[item.icon] ? (
+                      <span {...itemIconRecipe} aria-hidden="true">
+                        <span {...checkIconRecipe} set:html={iconSvgs[item.icon]} />
+                      </span>
+                    ) : null}
                     {item.swatch ? (
                       <span
                         {...itemSwatchRecipe}
@@ -179,11 +202,13 @@ const itemContents = await Promise.all(
                 )}
               </>
             );
-            return item.href && !singleSelection ? (
+            return item.href && !radio ? (
               <a
                 role="menuitem"
                 href={disabled ? undefined : item.href}
                 aria-disabled={disabled || undefined}
+                aria-label={row ? item.label : undefined}
+                title={row ? item.label : undefined}
                 data-var-ui-menu-item
                 data-item-id={item.id}
                 tabindex="-1"
@@ -194,14 +219,12 @@ const itemContents = await Promise.all(
             ) : (
               <button
                 type="button"
-                role={singleSelection ? "menuitemradio" : "menuitem"}
+                role={radio ? "menuitemradio" : "menuitem"}
                 aria-checked={
-                  singleSelection
-                    ? item.id === defaultValue
-                      ? "true"
-                      : "false"
-                    : undefined
+                  radio ? (item.id === checkedId ? "true" : "false") : undefined
                 }
+                aria-label={row ? item.label : undefined}
+                title={row ? item.label : undefined}
                 aria-disabled={disabled || undefined}
                 data-var-ui-menu-item
                 data-item-id={item.id}
@@ -211,7 +234,21 @@ const itemContents = await Promise.all(
                 {inner}
               </button>
             );
-          })}
+          });
+            return sectionSelection || row ? (
+              <div
+                role="group"
+                aria-label={section.label}
+                data-var-ui-menu-group
+                data-layout={row ? "row" : undefined}
+                {...(row ? sectionRowRecipe : sectionRecipe)}
+              >
+                {rendered}
+              </div>
+            ) : (
+              rendered
+            );
+          })()}
           {sectionIndex < sections.length - 1 ? (
             <div role="separator" {...separatorRecipe} />
           ) : null}

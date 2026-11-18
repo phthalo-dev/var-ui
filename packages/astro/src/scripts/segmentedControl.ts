@@ -9,65 +9,66 @@ import {
  */
 export const SEGMENTED_CONTROL_CHANGE_EVENT = 'var-ui:segmented-control-change';
 
+let nameCounter = 0;
+
+/**
+ * Unique radio-group `name` for a server-rendered segmented control. The random part keeps names
+ * distinct across pages whose elements outlive a view transition (`transition:persist`).
+ */
+export function nextSegmentedControlName(): string {
+  nameCounter += 1;
+  return `var-ui-segmented-${Math.random().toString(36).slice(2, 8)}-${nameCounter}`;
+}
+
+function segmentsOf(root: Element): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(':scope > [data-segment-id]'));
+}
+
+function radioOf(segment: Element): HTMLInputElement | null {
+  return segment.querySelector<HTMLInputElement>('input[type="radio"]');
+}
+
+/**
+ * Mark `value` as the checked segment (`data-selected` + the radio's `checked`) and move the
+ * indicator. Does not dispatch the change event: use it to reflect state set elsewhere.
+ */
+export function setSegmentedControlValue(root: Element, value: string | null): void {
+  segmentsOf(root).forEach((segment) => {
+    const selected = segment.getAttribute('data-segment-id') === value;
+    segment.toggleAttribute('data-selected', selected);
+    const radio = radioOf(segment);
+    if (radio) radio.checked = selected;
+  });
+  if (root instanceof HTMLElement) {
+    syncSegmentedControlIndicator(root);
+  }
+}
+
+/** Current `data-segment-id` of the checked segment, or `null`. */
+export function getSegmentedControlValue(root: Element): string | null {
+  const checked = segmentsOf(root).find((segment) => radioOf(segment)?.checked);
+  return checked?.getAttribute('data-segment-id') ?? null;
+}
+
 export function initSegmentedControl(root: Element): void {
   if (root.hasAttribute('data-var-ui-segmented-control-initialized')) return;
   root.setAttribute('data-var-ui-segmented-control-initialized', '');
 
-  const segments = Array.from(root.querySelectorAll<HTMLElement>('[data-segment-id]'));
-
-  function select(segment: HTMLElement): void {
-    segments.forEach((candidate) => {
-      const selected = candidate === segment;
-      candidate.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      if (selected) {
-        candidate.setAttribute('data-selected', '');
-      } else {
-        candidate.removeAttribute('data-selected');
-      }
-    });
-    if (root instanceof HTMLElement) {
-      syncSegmentedControlIndicator(root);
-    }
+  // Native radios own focus and keyboard (Tab to the checked one, arrows move and check);
+  // mirror the checked radio onto `data-selected` for styling and the indicator.
+  root.addEventListener('change', (event) => {
+    const radio = event.target;
+    if (!(radio instanceof HTMLInputElement) || radio.type !== 'radio') return;
+    const segment = radio.closest('[data-segment-id]');
+    if (!segment || segment.parentElement !== root) return;
+    const id = segment.getAttribute('data-segment-id');
+    setSegmentedControlValue(root, id);
     root.dispatchEvent(
       new CustomEvent(SEGMENTED_CONTROL_CHANGE_EVENT, {
         bubbles: true,
-        detail: { id: segment.getAttribute('data-segment-id') },
+        detail: { id },
       }),
     );
-  }
-
-  segments.forEach((segment) => {
-    segment.addEventListener('click', () => select(segment));
-  });
-
-  // Arrow keys move focus only; Enter/Space activate the focused button natively.
-  root.addEventListener('keydown', (event) => {
-    if (!(event instanceof KeyboardEvent)) return;
-    if (!(event.target instanceof HTMLElement)) return;
-
-    const currentIndex = segments.indexOf(event.target);
-    if (currentIndex === -1) return;
-
-    let nextIndex: number | null = null;
-    switch (event.key) {
-      case 'ArrowLeft':
-        nextIndex = currentIndex === 0 ? segments.length - 1 : currentIndex - 1;
-        break;
-      case 'ArrowRight':
-        nextIndex = currentIndex === segments.length - 1 ? 0 : currentIndex + 1;
-        break;
-      case 'Home':
-        nextIndex = 0;
-        break;
-      case 'End':
-        nextIndex = segments.length - 1;
-        break;
-      default:
-        return;
-    }
-
-    event.preventDefault();
-    segments[nextIndex]?.focus();
   });
 
   if (root instanceof HTMLElement) {

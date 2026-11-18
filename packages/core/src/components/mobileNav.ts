@@ -3,6 +3,8 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
 import { borderSide } from '../internal/border';
+import { transitionOf } from '../internal/motion';
+import { pressedState } from '../internal/press';
 import {
   nativeBackdrop,
   nativeDialogReset,
@@ -74,7 +76,16 @@ const mobileNavVarDefinitions = {
 export const mobileNav = typestyles.recipe({
   name: 'mobile-nav',
   layer: 'components',
-  slots: ['popup', 'header', 'headerContent', 'headerTitle', 'body', 'closeButton', 'toggle'],
+  slots: [
+    'popup',
+    'header',
+    'headerContent',
+    'headerTitle',
+    'body',
+    'footer',
+    'closeButton',
+    'toggle',
+  ],
   vars: mobileNavVarDefinitions,
   styles: ({ vars }) => {
     return {
@@ -133,6 +144,17 @@ export const mobileNav = typestyles.recipe({
           minHeight: 0,
           overflowY: 'auto',
         },
+        /** Pinned under the scrolling body (settings, account): always in reach of the thumb. */
+        footer: {
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: t.space.xs.var,
+          padding: `${t.space.sm.var} ${t.space.md.var}`,
+          paddingBlockEnd: `max(${t.space.sm.var}, env(safe-area-inset-bottom))`,
+          ...borderSide('block-start', vars.panelBorder.var),
+          backgroundColor: vars.panelBackground.var,
+        },
         closeButton: {
           appearance: 'none',
           border: 'none',
@@ -142,9 +164,18 @@ export const mobileNav = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
+          flexShrink: 0,
+          // Same 32px hit box as the header controls; the icon is centred inside it.
+          minWidth: t.size.control.md.var,
+          minHeight: t.size.control.md.var,
           padding: t.space.xxs.var,
           marginInlineEnd: `calc(${t.space.xxs.var} * -1)`,
           borderRadius: t.radius.sm.var,
+          '& svg': {
+            display: 'block',
+            width: t.size.icon.md.var,
+            height: t.size.icon.md.var,
+          },
           '&:hover': {
             backgroundColor: vars.toggleHoverBackground.var,
             color: vars.headerColor.var,
@@ -162,8 +193,14 @@ export const mobileNav = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: t.space.xs.var,
-          borderRadius: t.radius.sm.var,
+          flexShrink: 0,
+          boxSizing: 'border-box',
+          // A square control-sized icon button, like the bar's other icon controls.
+          width: t.size.control.md.var,
+          height: t.size.control.md.var,
+          padding: 0,
+          borderRadius: t.radius.md.var,
+          transition: transitionOf(['background-color', 'color', 'transform'], 'fast'),
           '& svg': {
             display: 'block',
             width: t.size.icon.md.var,
@@ -173,6 +210,7 @@ export const mobileNav = typestyles.recipe({
             backgroundColor: vars.toggleHoverBackground.var,
             color: vars.headerColor.var,
           },
+          ...pressedState,
           '&:focus-visible': {
             ...focusRing,
           },

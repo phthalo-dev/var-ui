@@ -1,0 +1,150 @@
+---
+/**
+ * Header appearance menu: one quiet icon button that opens a Menu with a compact "Mode" row
+ * (Light / Dark / System) and, when the docs config has theme presets, a "Theme" list.
+ * The trigger glyph shows the current mode; a ringed dot at its corner shows the theme's swatch.
+ */
+import config from "virtual:var-docs/config";
+import { icon } from "@var-ui/core";
+import { Menu, mergeProps } from "@var-ui/astro";
+import { svg as colorModeDark } from "@var-ui/icons/glyphs/colorModeDark";
+import { svg as colorModeLight } from "@var-ui/icons/glyphs/colorModeLight";
+import { svg as colorModeSystem } from "@var-ui/icons/glyphs/colorModeSystem";
+import { docsAppearanceMenu } from "../styles/docsAppearanceMenu";
+import { resolveThemePresets } from "../utils/theme/presets";
+
+type Props = {
+  /** `localStorage` key of the colour mode (same as `ThemeScript`). @default 'theme-mode' */
+  colorModeStorageKey?: string;
+};
+
+const { colorModeStorageKey = "theme-mode" } = Astro.props;
+
+const presets = resolveThemePresets(config.theme.presets);
+const storageKey = config.theme.storageKey;
+const fallbackClassName = config.theme.defaultClassName;
+const defaultThemeId = presets[0]?.id ?? null;
+
+const s = docsAppearanceMenu();
+const iconRecipe = mergeProps(icon({ size: "md" }));
+
+const presetsJson = JSON.stringify(
+  presets.map((theme) => ({
+    id: theme.id,
+    label: theme.label,
+    className: theme.className,
+    swatch: theme.swatch,
+    lazyCss: theme.lazyCss,
+  })),
+);
+
+const modes = [
+  { id: "light", label: "Light", svg: colorModeLight, icon: "colorModeLight" },
+  { id: "dark", label: "Dark", svg: colorModeDark, icon: "colorModeDark" },
+  { id: "system", label: "System", svg: colorModeSystem, icon: "colorModeSystem" },
+] as const;
+
+const sections = [
+  {
+    label: "Mode",
+    layout: "row" as const,
+    defaultValue: "mode-system",
+    items: modes.map((mode) => ({ id: `mode-${mode.id}`, label: mode.label, icon: mode.icon })),
+  },
+  ...(presets.length > 1
+    ? [
+        {
+          label: "Theme",
+          defaultValue: defaultThemeId ? `theme-${defaultThemeId}` : null,
+          items: presets.map((theme) => ({
+            id: `theme-${theme.id}`,
+            label: theme.label,
+            swatch: theme.swatch ?? "currentColor",
+          })),
+        },
+      ]
+    : []),
+];
+
+const defaultSwatch = presets[0]?.swatch;
+---
+
+<div
+  class={s.root}
+  data-docs-appearance-menu
+  data-presets={presetsJson}
+  data-storage-key={storageKey}
+  data-fallback-class={fallbackClassName}
+  data-color-mode-storage-key={colorModeStorageKey}
+>
+  <Menu
+    sections={sections}
+    aria-label="Appearance"
+    menuLabel="Appearance"
+    appearance="ghost"
+    tone="neutral"
+    layout="icon"
+    size="md"
+    placement="bottom end"
+  >
+    <span slot="trigger" class={s.trigger} aria-hidden="true">
+      {
+        modes.map((mode) => (
+          <span class={s.modeIcon} data-mode-icon={mode.id}>
+            <span {...iconRecipe} set:html={mode.svg} />
+          </span>
+        ))
+      }
+      {
+        presets.length > 1 ? (
+          <span
+            class={s.swatch}
+            data-docs-appearance-swatch
+            style={defaultSwatch ? { backgroundColor: defaultSwatch } : undefined}
+          />
+        ) : null
+      }
+    </span>
+  </Menu>
+  {/* Reflect the stored mode / theme before first paint (the module script syncs after). */}
+  <script
+    is:inline
+    define:vars={{ storageKey, colorModeStorageKey, presetsJson, defaultThemeId }}
+  >
+    (function () {
+      try {
+        var root = document.currentScript && document.currentScript.parentElement;
+        if (!root) return;
+        var mode = localStorage.getItem(colorModeStorageKey);
+        if (mode !== "light" && mode !== "dark") mode = "system";
+        root.setAttribute("data-mode-preference", mode);
+        var presets = JSON.parse(presetsJson);
+        var themeId = localStorage.getItem(storageKey);
+        var theme =
+          presets.find(function (p) {
+            return p.id === themeId;
+          }) ||
+          presets.find(function (p) {
+            return p.id === defaultThemeId;
+          });
+        var swatch = root.querySelector("[data-docs-appearance-swatch]");
+        if (swatch && theme && theme.swatch) swatch.style.backgroundColor = theme.swatch;
+        root.querySelectorAll("[data-item-id]").forEach(function (item) {
+          var id = item.getAttribute("data-item-id") || "";
+          if (id.indexOf("mode-") === 0) item.setAttribute("aria-checked", String(id === "mode-" + mode));
+          else if (theme && id.indexOf("theme-") === 0)
+            item.setAttribute("aria-checked", String(id === "theme-" + theme.id));
+        });
+      } catch (_) {}
+    })();
+  </script>
+</div>
+
+<script>
+  import { setColorMode } from "@var-ui/astro";
+  import { initDocsAppearanceMenus } from "../scripts/docsAppearanceMenu";
+
+  const init = () => initDocsAppearanceMenus({ setColorMode });
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>

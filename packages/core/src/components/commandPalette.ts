@@ -4,6 +4,8 @@ import { border, borderSide } from '../internal/border';
 import { forced } from '../internal/forcedColors';
 import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { designTokens as t } from '../tokens';
+import { atCoarsePointer } from '../internal/pointer';
+import { focusRing } from '../internal/focusRing';
 import { nativeBackdrop, nativeDialogReset, nativeEnterExit } from '../shared/overlayMotion';
 
 /**
@@ -37,6 +39,12 @@ export const commandPalette = typestyles.recipe({
     'resultMeta',
     'mark',
     'empty',
+    'emptyIcon',
+    'emptyTitle',
+    'emptyHint',
+    'cancel',
+    'footer',
+    'footerHint',
   ],
   vars: {
     backdropBackground: {
@@ -69,7 +77,7 @@ export const commandPalette = typestyles.recipe({
     },
     resultForeground: {
       ...atProperty.color,
-      value: t.color.navItem.foreground.var,
+      value: t.color.text.primary.var,
     },
     resultHoverBackground: {
       ...atProperty.color,
@@ -87,13 +95,14 @@ export const commandPalette = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.secondary.var,
     },
+    // One match treatment for titles and subtitles: accent ink, no chip.
     markBackground: {
       ...atProperty.color,
-      value: t.color.tone.accent.subtleBackground.var,
+      value: 'transparent',
     },
     markForeground: {
       ...atProperty.color,
-      value: t.color.text.primary.var,
+      value: t.color.tone.accent.foreground.var,
     },
     groupHeadingColor: {
       ...atProperty.color,
@@ -115,13 +124,13 @@ export const commandPalette = typestyles.recipe({
           [vars.inputIconColor.name]: t.color.text.placeholder.var,
           [vars.inputForeground.name]: t.color.text.primary.var,
           [vars.inputPlaceholder.name]: t.color.text.placeholder.var,
-          [vars.resultForeground.name]: t.color.navItem.foreground.var,
+          [vars.resultForeground.name]: t.color.text.primary.var,
           [vars.resultHoverBackground.name]: t.color.navItem.hoverBackground.var,
           [vars.resultSelectedBackground.name]: t.color.navItem.selectedBackground.var,
           [vars.resultSelectedForeground.name]: t.color.navItem.selectedForeground.var,
           [vars.resultMetaColor.name]: t.color.text.secondary.var,
-          [vars.markBackground.name]: t.color.tone.accent.subtleBackground.var,
-          [vars.markForeground.name]: t.color.text.primary.var,
+          [vars.markBackground.name]: 'transparent',
+          [vars.markForeground.name]: t.color.tone.accent.foreground.var,
           [vars.groupHeadingColor.name]: t.color.text.secondary.var,
           [vars.emptyColor.name]: t.color.text.secondary.var,
           // The native `<dialog>` is the surface itself (no padding, so a click whose target is the
@@ -173,7 +182,8 @@ export const commandPalette = typestyles.recipe({
           gap: t.space.xs.var,
           padding: `${t.space.sm.var} ${t.space.md.var}`,
           ...borderSide('block-end', vars.inputRowBorder.var),
-          '& > :last-child': {
+          // The field (after the icon) takes the room; a trailing Cancel keeps its own width.
+          '& > :nth-child(2)': {
             display: 'flex',
             flex: '1 1 auto',
             minWidth: 0,
@@ -198,6 +208,8 @@ export const commandPalette = typestyles.recipe({
           color: vars.inputForeground.var,
           outline: 'none',
           '&::placeholder': { color: vars.inputPlaceholder.var },
+          // Esc clears and closes; the UA clear button only adds noise.
+          '&::-webkit-search-cancel-button': { display: 'none' },
         },
         results: {
           flex: 1,
@@ -212,6 +224,7 @@ export const commandPalette = typestyles.recipe({
           padding: 0,
         },
         groupHeading: {
+          margin: 0,
           padding: `${t.space.xs.var} ${t.space.md.var} ${t.space.xxs.var}`,
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.semibold.var,
@@ -222,11 +235,15 @@ export const commandPalette = typestyles.recipe({
         result: {
           margin: 0,
         },
+        // ~44px rows: icon tile, title over a muted one-line subtitle, optional shortcut.
         resultLink: {
           display: 'flex',
           alignItems: 'center',
           gap: t.space.sm.var,
-          padding: `${t.space.xs.var} ${t.space.md.var}`,
+          boxSizing: 'border-box',
+          minHeight: '2.75rem',
+          paddingBlock: t.space.xxs.var,
+          paddingInline: t.space.sm.var,
           textDecoration: 'none',
           color: vars.resultForeground.var,
           transition: t.transition.surfaceFast.var,
@@ -240,12 +257,23 @@ export const commandPalette = typestyles.recipe({
           color: vars.resultSelectedForeground.var,
           ...atForcedColors(forced.selected),
         },
+        // Result type tile (page, component, theme…): a quiet square that tints with the row.
         resultIcon: {
           flexShrink: 0,
           display: 'inline-flex',
           alignItems: 'center',
+          justifyContent: 'center',
+          width: '1.75rem',
+          height: '1.75rem',
+          borderRadius: t.radius.sm.var,
+          ...border(vars.inputRowBorder.var),
+          boxSizing: 'border-box',
           color: vars.resultMetaColor.var,
           lineHeight: 0,
+          '& svg': {
+            width: t.size.icon.sm.var,
+            height: t.size.icon.sm.var,
+          },
         },
         resultBody: {
           flex: '1 1 auto',
@@ -260,29 +288,110 @@ export const commandPalette = typestyles.recipe({
         },
         resultTitle: {
           display: 'block',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
           fontSize: t.fontSize.md.var,
-          fontWeight: t.fontWeight.semibold.var,
-          lineHeight: 1.35,
-          marginBottom: t.space.xxs.var,
+          fontWeight: t.fontWeight.medium.var,
+          lineHeight: 1.3,
         },
+        // Subtitle: one muted 12px line under the title.
         resultMeta: {
           display: 'block',
-          fontSize: t.fontSize.sm.var,
-          color: vars.resultMetaColor.var,
-          lineHeight: 1.35,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          fontSize: t.fontSize.xs.var,
+          fontWeight: t.fontWeight.normal.var,
+          // A step below the group headings and hints, so the title leads.
+          color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
+          lineHeight: 1.3,
         },
+        // Matched text, in titles and subtitles alike: accent ink and weight, no padding (the
+        // text must not shift).
         mark: {
           fontFamily: 'inherit',
+          fontWeight: t.fontWeight.semibold.var,
           backgroundColor: vars.markBackground.var,
           color: vars.markForeground.var,
-          borderRadius: t.radius.sm.var,
-          padding: `0 ${t.space.xxs.var}`,
+          borderRadius: '0.125rem',
+          padding: 0,
+          ...atForcedColors({ color: 'Highlight', backgroundColor: 'transparent' }),
+        },
+        // Keyboard hints under the results (↑↓ navigate, ↵ open, esc close).
+        footer: {
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: `${t.space.xxs.var} ${t.space.md.var}`,
+          paddingBlock: t.space.xs.var,
+          paddingInline: t.space.md.var,
+          ...borderSide('block-start', vars.inputRowBorder.var),
+          fontSize: t.fontSize.xs.var,
+          color: vars.resultMetaColor.var,
+          // Nothing to navigate (`data-empty` on the frame), or no keyboard: the hints go.
+          '[data-empty] &': { display: 'none' },
+          ...atCoarsePointer({ display: 'none' }),
+        },
+        footerHint: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: t.space.xxs.var,
+          whiteSpace: 'nowrap',
         },
         empty: {
-          padding: `${t.space.md.var} ${t.space.md.var}`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: t.space.xxs.var,
+          margin: 0,
+          padding: `${t.space.xl.var} ${t.space.md.var}`,
           fontSize: t.fontSize.sm.var,
           color: vars.emptyColor.var,
           lineHeight: 1.5,
+          textAlign: 'center',
+        },
+        emptyIcon: {
+          display: 'inline-flex',
+          marginBlockEnd: t.space.xxs.var,
+          color: vars.inputIconColor.var,
+          lineHeight: 0,
+          '& svg': { width: t.size.icon.lg.var, height: t.size.icon.lg.var },
+        },
+        /** `No results for "query"`: echoing the query makes a typo obvious. */
+        emptyTitle: {
+          margin: 0,
+          fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: vars.resultForeground.var,
+          overflowWrap: 'anywhere',
+        },
+        emptyHint: {
+          margin: 0,
+          fontSize: t.fontSize.sm.var,
+          color: vars.emptyColor.var,
+        },
+        /** Closes the palette. Shown only on touch-first devices, which have no Escape key. */
+        cancel: {
+          display: 'none',
+          flexShrink: 0,
+          alignItems: 'center',
+          minHeight: t.size.control.md.var,
+          margin: 0,
+          marginInlineEnd: `calc(-1 * ${t.space.xs.var})`,
+          paddingBlock: 0,
+          paddingInline: t.space.xs.var,
+          border: 'none',
+          borderRadius: t.radius.sm.var,
+          backgroundColor: 'transparent',
+          font: 'inherit',
+          fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
+          color: t.color.tone.accent.foreground.var,
+          cursor: 'pointer',
+          '&:focus-visible': focusRing,
+          ...atCoarsePointer({ display: 'inline-flex' }),
         },
       },
     };

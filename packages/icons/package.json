@@ -186,6 +186,30 @@
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
     },
+    "./glyphs/page": {
+      "types": "./dist/glyph-data/page.d.mts",
+      "import": "./dist/glyph-data/page.mjs"
+    },
+    "./page": {
+      "types": "./dist/icons/page.d.mts",
+      "import": "./dist/icons/page.mjs"
+    },
+    "./glyphs/component": {
+      "types": "./dist/glyph-data/component.d.mts",
+      "import": "./dist/glyph-data/component.mjs"
+    },
+    "./component": {
+      "types": "./dist/icons/component.d.mts",
+      "import": "./dist/icons/component.mjs"
+    },
+    "./glyphs/palette": {
+      "types": "./dist/glyph-data/palette.d.mts",
+      "import": "./dist/glyph-data/palette.mjs"
+    },
+    "./palette": {
+      "types": "./dist/icons/palette.d.mts",
+      "import": "./dist/icons/palette.mjs"
+    },
     "./glyphs/star": {
       "types": "./dist/glyph-data/star.d.mts",
       "import": "./dist/glyph-data/star.mjs"

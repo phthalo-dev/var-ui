@@ -9,4 +9,14 @@ describe('buildDocsSearchIndex', () => {
     expect(items.some((i) => i.id.startsWith('/components/'))).toBe(true);
     expect(items.some((i) => i.id.startsWith('/theming/'))).toBe(true);
   });
+
+  it('subtitles guide pages with their frontmatter description, not a raw path', () => {
+    const items = buildDocsSearchIndex();
+    const guides = items.filter((i) => !i.id.startsWith('/components/'));
+    expect(guides.length).toBeGreaterThan(0);
+    for (const item of guides) {
+      expect(item.meta, item.id).toBeTruthy();
+      expect(item.meta?.startsWith('/'), item.id).toBe(false);
+    }
+  });
 });

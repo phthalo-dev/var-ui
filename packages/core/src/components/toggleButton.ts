@@ -76,26 +76,29 @@ export const toggleButton = typestyles.recipe({
       variants: {
         size: controlSizeVariants((size) => controlSurfaceSize(size)),
         segmented: {
+          // Segment chrome inside a `segmentedControl` track: the track's indicator is the
+          // selected surface, so the segment itself stays transparent. Radius matches the
+          // indicator (track radius minus its inset) so the focus ring hugs the same shape.
           true: {
             height: '100%',
             minHeight: 0,
             paddingBlock: 0,
             border: 'none',
-            borderRadius: t.radius.full.var,
+            borderRadius: `calc(${t.radius.md.var} - ${t.space.xxs.var} / 2)`,
             backgroundColor: 'transparent',
             [vars.foreground.name]: t.color.text.secondary.var,
-            fontWeight: t.fontWeight.normal.var,
+            fontWeight: t.fontWeight.medium.var,
             boxShadow: 'none',
             transition: transitionOf('color', 'fast'),
             '&:hover': {
               backgroundColor: 'transparent',
               borderColor: 'transparent',
+              [vars.foreground.name]: t.color.text.primary.var,
             },
             '&[data-selected], &[aria-pressed="true"]': {
               [vars.background.name]: 'transparent',
               [vars.border.name]: 'transparent',
               [vars.foreground.name]: t.color.text.primary.var,
-              fontWeight: t.fontWeight.semibold.var,
               boxShadow: 'none',
               '&:hover': {
                 [vars.background.name]: 'transparent',

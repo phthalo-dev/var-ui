@@ -6,12 +6,15 @@ type Props = {
   items: readonly DocsSearchItem[];
   placeholder?: string;
   id?: string;
+  /** Second line of the "No results" state. */
+  emptyHint?: string;
 };
 
 const {
   items,
   placeholder = 'Search docs…',
   id: paletteId = 'docs-search',
+  emptyHint = "Try a component name like “button”, or a topic like “tokens”.",
 } = Astro.props;
 ---
 
@@ -29,5 +32,7 @@ const {
     items={[...items]}
     placeholder={placeholder}
     aria-label={placeholder}
+    recentKey={`${paletteId}-recent`}
+    emptyHint={emptyHint}
   />
 </div>

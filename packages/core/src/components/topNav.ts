@@ -2,18 +2,21 @@ import { atProperty } from 'typestyles';
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { borderSide, border } from '../internal/border';
-import { atForcedColors } from '../theme/conditions';
+import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
+import { transitionOf } from '../internal/motion';
+import { pressedState } from '../internal/press';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
   background: {
     ...atProperty.color,
     value: t.color.background.surface.var,
   },
+  // `border.default`: `subtle` all but vanishes against a white bar.
   border: {
     ...atProperty.color,
-    value: t.color.border.strong.var,
+    value: t.color.border.default.var,
   },
   headingColor: {
     ...atProperty.color,
@@ -23,9 +26,15 @@ const topNavVarDefinitions = {
     ...atProperty.color,
     value: t.color.navItem.foreground.var,
   },
+  itemHoverColor: {
+    ...atProperty.color,
+    value: t.color.text.primary.var,
+  },
+  // Quieter than the selected pill: hover previews, selection states. A 5% ink wash reads on
+  // any bar colour; a neutral surface step (`background.subtle`) all but vanishes on white.
   itemHoverBackground: {
     ...atProperty.color,
-    value: t.color.navItem.hoverBackground.var,
+    value: `color-mix(in oklch, ${t.color.text.primary.var} 5%, transparent)`,
   },
   itemSelectedBackground: {
     ...atProperty.color,
@@ -35,6 +44,10 @@ const topNavVarDefinitions = {
     ...atProperty.color,
     value: t.color.navItem.selectedForeground.var,
   },
+  // Selected pill position (`observeTopNavIndicator` sets these on the `start` zone).
+  indicatorX: { ...atProperty.length, value: '0rem' },
+  indicatorWidth: { ...atProperty.length, value: '0rem' },
+  indicatorOpacity: { ...atProperty.number, value: '0' },
   menuTriggerColor: {
     ...atProperty.color,
     value: t.color.navItem.foreground.var,
@@ -100,6 +113,7 @@ export const topNav = typestyles.recipe({
     'center',
     'end',
     'item',
+    'itemLabel',
     'menuTrigger',
     'menuList',
     'richBody',
@@ -124,7 +138,14 @@ export const topNav = typestyles.recipe({
           paddingInline: t.space.md.var,
           backgroundColor: vars.background.var,
           ...borderSide('block-end', vars.border.var),
-          boxShadow: t.shadow.sm.var,
+          // Dark: hover stays a quiet preview; the selected pill gets a firmer accent tint.
+          ...atDarkMode({
+            [vars.border.name]: t.color.border.subtle.var,
+            [vars.itemHoverBackground.name]:
+              `color-mix(in oklch, ${t.color.navItem.hoverBackground.var} 30%, transparent)`,
+            [vars.itemSelectedBackground.name]:
+              `color-mix(in oklch, ${t.color.tone.accent.foreground.var} 16%, transparent)`,
+          }),
           '&[data-layout="grid"]': {
             display: 'grid',
             gridTemplateColumns: '1fr auto 1fr',
@@ -149,10 +170,32 @@ export const topNav = typestyles.recipe({
           textDecoration: 'none',
         },
         start: {
+          position: 'relative',
+          isolation: 'isolate',
           display: 'flex',
           alignItems: 'center',
           gap: t.space.xxs.var,
           minWidth: 0,
+          // The selected pill: one shape that slides between items (`observeTopNavIndicator`).
+          // Without the script, the selected item paints its own fill instead.
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            insetBlockStart: '50%',
+            insetInlineStart: 0,
+            height: t.size.control.md.var,
+            width: vars.indicatorWidth.var,
+            borderRadius: t.radius.navItem.var,
+            backgroundColor: vars.itemSelectedBackground.var,
+            opacity: vars.indicatorOpacity.var,
+            transform: `translate(${vars.indicatorX.var}, -50%)`,
+            pointerEvents: 'none',
+            zIndex: 0,
+            ...atForcedColors({ display: 'none' }),
+          },
+          '&[data-indicator-ready]::before': {
+            transition: `${transitionOf(['transform', 'width'], 'medium', 'emphasized')}, ${transitionOf('opacity', 'fast')}`,
+          },
           '[data-layout="grid"] &': {
             justifySelf: 'start',
           },
@@ -178,29 +221,44 @@ export const topNav = typestyles.recipe({
           },
         },
         item: {
+          position: 'relative',
+          zIndex: 1,
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xs.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          boxSizing: 'border-box',
+          // Same height as the bar's controls (search, buttons) so every pill lines up.
+          minHeight: t.size.control.md.var,
+          paddingBlock: 0,
+          paddingInline: t.space.sm.var,
           borderRadius: t.radius.navItem.var,
           border: 'none',
           backgroundColor: 'transparent',
           color: vars.itemColor.var,
           fontSize: t.fontSize.md.var,
+          fontWeight: t.fontWeight.medium.var,
           textDecoration: 'none',
           cursor: 'pointer',
           outline: 'none',
           whiteSpace: 'nowrap',
-          '&:hover': {
+          transition: transitionOf(['background-color', 'color', 'transform'], 'fast'),
+          '&:hover:not([data-selected])': {
             backgroundColor: vars.itemHoverBackground.var,
+            color: vars.itemHoverColor.var,
           },
+          ...pressedState,
           '&:focus-visible': {
             ...focusRing,
           },
           '&[data-selected]': {
             backgroundColor: vars.itemSelectedBackground.var,
             color: vars.itemSelectedColor.var,
-            fontWeight: t.fontWeight.medium.var,
+            fontWeight: t.fontWeight.semibold.var,
+            ...atForcedColors(forced.selected),
+          },
+          // The sliding pill paints the fill.
+          '[data-indicator] &[data-selected]': {
+            backgroundColor: 'transparent',
             ...atForcedColors(forced.selected),
           },
           '&[data-disabled]': {
@@ -210,11 +268,32 @@ export const topNav = typestyles.recipe({
             pointerEvents: 'none',
           },
         },
+        // Reserves the semibold width (hidden `::after` copy of `data-label`) so selecting an
+        // item never shifts its neighbours.
+        itemLabel: {
+          display: 'inline-flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          '&::after': {
+            // Empty alt text keeps the duplicate out of the accessibility tree.
+            content: 'attr(data-label) / ""',
+            height: 0,
+            overflow: 'hidden',
+            visibility: 'hidden',
+            userSelect: 'none',
+            pointerEvents: 'none',
+            fontWeight: t.fontWeight.semibold.var,
+          },
+        },
         menuTrigger: {
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xxs.var,
-          padding: `${t.space.xs.var} ${t.space.sm.var}`,
+          boxSizing: 'border-box',
+          minHeight: t.size.control.md.var,
+          paddingBlock: 0,
+          paddingInline: t.space.sm.var,
+          fontWeight: t.fontWeight.medium.var,
           borderRadius: t.radius.navItem.var,
           border: 'none',
           backgroundColor: 'transparent',
@@ -223,9 +302,12 @@ export const topNav = typestyles.recipe({
           cursor: 'pointer',
           outline: 'none',
           whiteSpace: 'nowrap',
+          transition: transitionOf(['background-color', 'color', 'transform'], 'fast'),
           '&:hover': {
             backgroundColor: vars.itemHoverBackground.var,
+            color: vars.itemHoverColor.var,
           },
+          ...pressedState,
           '&:focus-visible': {
             ...focusRing,
           },

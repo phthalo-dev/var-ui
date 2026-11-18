@@ -2,25 +2,17 @@
 import { ClientRouter } from 'astro:transitions';
 import {
   AppShell,
-  ColorModeToggle,
   cx,
   Layout,
   LayoutContent,
   LayoutPanel,
-  MobileNav,
-  MobileNavToggle,
   mergeProps,
   SideNav,
-  SideNavItem,
-  SideNavSection,
   ThemeScript,
-  TopNav,
-  TopNavHeading,
-  TopNavItem,
 } from '@var-ui/astro';
-import { docsTopNav } from '../styles/docsTopNav';
 import { docsPage, docsPageContent } from '../styles/docsPage';
-import DocsSearch from './DocsSearch.astro';
+import DocsMobileMenu from './DocsMobileMenu.astro';
+import DocsTopBar from './DocsTopBar.astro';
 import DocsSidebar from './DocsSidebar.astro';
 import DocsToc from './DocsToc.astro';
 import type { DocsBrand, DocsSearchItem, SidebarSection, TopNavItem as TopNavItemType } from '../types';
@@ -82,7 +74,8 @@ const showAutoToc =
         });
 const showTocPanel = hasTocSlot || showAutoToc;
 const hasToolsSlot = Astro.slots.has('tools');
-const hasThemePickerSlot = Astro.slots.has('themePicker');
+const hasDrawerToolsSlot = Astro.slots.has('drawerTools');
+const hasBrandSlot = Astro.slots.has('brand');
 const hasThemeScriptSlot = Astro.slots.has('themeScript');
 const showMobileNav = topNav.length > 0 || Boolean(sidebarSections);
 
@@ -90,7 +83,6 @@ function isSidebarLinkActive(link: string): boolean {
   return currentPath === normalizeDocsPath(link);
 }
 
-const nav = docsTopNav();
 const page = docsPage();
 const sidebarContent = docsPageContent({
   width: contentWidth === 'full' ? 'full' : 'default',
@@ -117,69 +109,42 @@ const defaultContent = docsPageContent();
   </head>
   <body class={cx('docs-body', bodyClassName)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
-      <TopNav slot="topNav" className={cx(nav.root)}>
-        <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} />
-        {
-          topNav.map((item) => (
-            <TopNavItem
-              label={item.text}
-              href={item.link}
-              selected={currentPath.startsWith(item.match)}
-            />
-          ))
-        }
-        <div slot="end" class={cx(nav.tools)}>
-          <div
-            class={cx(nav.toolsPersist)}
-            transition:persist="docs-top-nav-tools"
-            transition:animate="none"
-          >
-            <DocsSearch items={searchItems} />
-            <div class={cx(nav.toolbar)}>
-              {hasToolsSlot ? (
-                <div class={cx(nav.toolbarExtra)}>
-                  <slot name="tools" />
-                </div>
-              ) : null}
-              {hasThemePickerSlot ? <slot name="themePicker" /> : null}
-              <ColorModeToggle includeSystem size="md" />
-            </div>
-          </div>
-          {
-            showMobileNav ? <MobileNavToggle /> : null
-          }
-        </div>
-      </TopNav>
+      <DocsTopBar
+        slot="topNav"
+        topNav={topNav}
+        searchItems={searchItems}
+        brand={brand}
+        currentPath={currentPath}
+        mobileNav={showMobileNav}
+      >
+        {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
+        {hasToolsSlot ? <slot name="tools" slot="tools" /> : null}
+      </DocsTopBar>
 
       {
         showMobileNav ? (
-          <MobileNav slot="mobileNav" header="Menu">
-            <div class={cx(nav.mobileNavBody)}>
-              {
-                topNav.length > 0 ? (
-                  <SideNavSection>
-                    {topNav.map((item) => (
-                      <SideNavItem
-                        label={item.text}
-                        href={item.link}
-                        selected={currentPath.startsWith(item.match)}
-                      />
-                    ))}
-                  </SideNavSection>
-                ) : null
-              }
-              {sidebarSections ? (
-                <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
-              ) : null}
-            </div>
-          </MobileNav>
+          <DocsMobileMenu slot="mobileNav" topNav={topNav} currentPath={currentPath} brand={brand}>
+            {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
+            {sidebarSections ? (
+              <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
+            ) : null}
+            {hasDrawerToolsSlot ? <slot name="drawerTools" slot="tools" /> : null}
+          </DocsMobileMenu>
         ) : null
       }
 
       {
         sidebarSections ? (
           <Layout height="fill" padding="none" className={cx(page.siteLayout)}>
-            <LayoutPanel slot="start" side="start" width={280} hasDivider padding="none" scrollable={false}>
+            <LayoutPanel
+              slot="start"
+              side="start"
+              width={280}
+              hasDivider
+              padding="none"
+              scrollable={false}
+              className={page.sidebar.className}
+            >
               <SideNav label="Section navigation" collapsible>
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
               </SideNav>

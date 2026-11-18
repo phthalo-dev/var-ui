@@ -30,3 +30,9 @@ const hasStart = Astro.slots.has('default');
     <div data-var-ui-top-nav-end {...mergeProps(s.end)}><slot name="end" /></div>
   )}
 </nav>
+
+<script>
+  import { initTopNavs } from '../scripts/topNav';
+  initTopNavs();
+  document.addEventListener('astro:page-load', () => initTopNavs());
+</script>

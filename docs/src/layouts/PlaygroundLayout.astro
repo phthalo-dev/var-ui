@@ -1,43 +1,31 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import {
-  AppShell,
-  ColorModeToggle,
-  cx,
-  Layout,
-  LayoutContent,
-  MobileNav,
-  MobileNavToggle,
-  SideNavItem,
-  SideNavSection,
-  ThemeScript,
-  TopNav,
-  TopNavHeading,
-  TopNavItem,
-} from '@var-ui/astro';
+import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
+import { playgroundLayout } from '@/styles/playgroundLayout';
 import { defaultThemeClassName } from '@var-ui/core';
-import DocsSearch from '../components/DocsSearch.astro';
-import DocsThemePicker from '../components/DocsThemePicker.astro';
+import { normalizeDocsPath } from '@var-ui/docs/utils';
+/*
+ * Kit chrome via relative paths so Netlify SSR (Node ESM) does not load workspace `.astro`
+ * through package exports (same as BaseLayout).
+ */
+import DocsMobileMenu from '../../../packages/docs/src/components/DocsMobileMenu.astro';
+import DocsTopBar from '../../../packages/docs/src/components/DocsTopBar.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
+import VarUiWordmark from '../components/VarUiWordmark.astro';
 import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
 import { topNav as topNavItems } from '../data/navigation';
-import { docsTopNav } from '@var-ui/docs/styles';
+import { buildDocsSearchIndex } from '../lib/search-index';
 
 const { title = 'Var UI', bleed = false } = Astro.props as {
   title?: string;
   bleed?: boolean;
 };
 const framework = Astro.locals.framework;
-const pathname = Astro.url.pathname;
-
-function normalizePath(path: string): string {
-  return path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
-}
-
-const currentPath = normalizePath(pathname);
+const currentPath = normalizeDocsPath(Astro.url.pathname);
+const searchItems = buildDocsSearchIndex();
 const hljsScopeClass = cx(codeHljsScope().root);
-const nav = docsTopNav();
+const frame = playgroundLayout({ bleed });
 ---
 
 <html lang="en" class={defaultThemeClassName} data-framework={framework}>
@@ -47,60 +35,36 @@ const nav = docsTopNav();
     <title>{title}</title>
     <ThemeScript themeClass={defaultThemeClassName} />
     <DocsThemeScript />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/typestyles.css" />
     <ClientRouter />
   </head>
   <body class={cx('docs-body', 'docs-body--playground', hljsScopeClass)}>
     <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
-      <TopNav slot="topNav" className={(nav.root).className}>
-        <TopNavHeading slot="heading" heading="Var UI" headingHref="/" />
-        {
-          topNavItems.map((item) => (
-            <TopNavItem
-              label={item.text}
-              href={item.link}
-              selected={currentPath.startsWith(item.match)}
-            />
-          ))
-        }
-        <div slot="end" class={(nav.tools).className}>
-          <div
-            class={(nav.toolsPersist).className}
-            transition:persist="docs-top-nav-tools"
-            transition:animate="none"
-          >
-            <DocsSearch />
-            <div class={(nav.toolbar).className}>
-              <div class={(nav.toolbarExtra).className}>
-                <FrameworkSwitcher />
-              </div>
-              <DocsThemePicker />
-              <ColorModeToggle includeSystem size="md" />
-            </div>
-          </div>
-          <MobileNavToggle />
-        </div>
-      </TopNav>
+      <DocsTopBar
+        slot="topNav"
+        topNav={topNavItems}
+        searchItems={searchItems}
+        brand={{ heading: 'Var UI', href: '/' }}
+        currentPath={currentPath}
+      >
+        <VarUiWordmark slot="brand" size="header" />
+        <FrameworkSwitcher slot="tools" />
+      </DocsTopBar>
 
-      <MobileNav slot="mobileNav" header="Menu">
-        <div class={(nav.mobileNavBody).className}>
-          <SideNavSection>
-            {
-              topNavItems.map((item) => (
-                <SideNavItem
-                  label={item.text}
-                  href={item.link}
-                  selected={currentPath.startsWith(item.match)}
-                />
-              ))
-            }
-          </SideNavSection>
-        </div>
-      </MobileNav>
+      <DocsMobileMenu
+        slot="mobileNav"
+        topNav={topNavItems}
+        currentPath={currentPath}
+        brand={{ heading: 'Var UI', href: '/' }}
+      >
+        <VarUiWordmark slot="brand" size="header" />
+        <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" />
+      </DocsMobileMenu>
 
-      <Layout height="fill" padding="none" className="docs-playground-layout">
+      <Layout height="fill" padding="none" className={frame.layout.className}>
         <LayoutContent label="Playground">
-          <div class:list={['docs-playground-content', bleed && 'docs-playground-content--bleed']}>
+          <div {...mergeProps(frame.content)}>
             <slot />
           </div>
         </LayoutContent>
@@ -112,41 +76,3 @@ const nav = docsTopNav();
     </script>
   </body>
 </html>
-
-<style is:global>
-  html,
-  body.docs-body {
-    height: 100%;
-    margin: 0;
-  }
-
-  body.docs-body {
-    overflow: hidden;
-  }
-
-  body.docs-body #var-ui-app-shell-main {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 0;
-  }
-</style>
-
-<style>
-  .docs-playground-layout {
-    flex: 1 1 auto;
-    min-height: 0;
-    min-width: 0;
-  }
-
-  .docs-playground-content {
-    height: 100%;
-    min-height: 0;
-    padding: var(--var-ui-space-xl);
-    box-sizing: border-box;
-  }
-
-  .docs-playground-content--bleed {
-    padding: 0;
-  }
-</style>

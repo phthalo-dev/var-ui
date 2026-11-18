@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import {
+  getSegmentedControlValue,
   initSegmentedControl,
   initSegmentedControls,
+  nextSegmentedControlName,
   SEGMENTED_CONTROL_CHANGE_EVENT,
+  setSegmentedControlValue,
 } from './segmentedControl';
 
 class ResizeObserverMock {
@@ -10,21 +13,26 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-function mountSegments(): HTMLElement {
+/** Mirrors `SegmentedControl.astro`: a radiogroup of labels wrapping native radios. */
+function mountSegments(name = nextSegmentedControlName()): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
-    <div data-var-ui-segmented-control>
-      <button type="button" data-segment-id="list" aria-pressed="true" data-selected>List</button>
-      <button type="button" data-segment-id="grid" aria-pressed="false">Grid</button>
-      <button type="button" data-segment-id="table" aria-pressed="false">Table</button>
+    <div role="radiogroup" aria-label="View" data-var-ui-segmented-control>
+      <label data-segment-id="list" data-selected><input type="radio" name="${name}" value="list" checked>List</label>
+      <label data-segment-id="grid"><input type="radio" name="${name}" value="grid">Grid</label>
+      <label data-segment-id="table"><input type="radio" name="${name}" value="table">Table</label>
     </div>
   `;
   document.body.appendChild(host);
   return host.querySelector('[data-var-ui-segmented-control]') as HTMLElement;
 }
 
-function segment(root: HTMLElement, id: string): HTMLButtonElement {
-  return root.querySelector(`[data-segment-id="${id}"]`) as HTMLButtonElement;
+function segment(root: HTMLElement, id: string): HTMLLabelElement {
+  return root.querySelector(`[data-segment-id="${id}"]`) as HTMLLabelElement;
+}
+
+function radio(root: HTMLElement, id: string): HTMLInputElement {
+  return segment(root, id).querySelector('input') as HTMLInputElement;
 }
 
 describe('initSegmentedControl', () => {
@@ -37,16 +45,17 @@ describe('initSegmentedControl', () => {
     });
   });
 
-  it('selects the clicked segment and deselects the rest', () => {
+  it('checks the clicked segment and moves data-selected to it', () => {
     const root = mountSegments();
     initSegmentedControl(root);
 
     segment(root, 'grid').click();
 
-    expect(segment(root, 'grid').getAttribute('aria-pressed')).toBe('true');
+    expect(radio(root, 'grid').checked).toBe(true);
     expect(segment(root, 'grid').hasAttribute('data-selected')).toBe(true);
-    expect(segment(root, 'list').getAttribute('aria-pressed')).toBe('false');
+    expect(radio(root, 'list').checked).toBe(false);
     expect(segment(root, 'list').hasAttribute('data-selected')).toBe(false);
+    expect(getSegmentedControlValue(root)).toBe('grid');
   });
 
   it('dispatches a change event with the selected id', () => {
@@ -61,45 +70,28 @@ describe('initSegmentedControl', () => {
     expect((onChange.mock.calls[0][0] as CustomEvent).detail).toEqual({ id: 'table' });
   });
 
-  it('moves focus with arrow keys without changing selection', () => {
+  it('is one radio group: only the checked radio is in the tab order', () => {
     const root = mountSegments();
     initSegmentedControl(root);
-    const list = segment(root, 'list');
 
-    list.focus();
-    list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
-
-    expect(document.activeElement).toBe(segment(root, 'grid'));
-    expect(list.getAttribute('aria-pressed')).toBe('true');
+    expect(root.getAttribute('role')).toBe('radiogroup');
+    const radios = Array.from(root.querySelectorAll('input'));
+    expect(new Set(radios.map((input) => input.name)).size).toBe(1);
+    expect(radios.filter((input) => input.checked)).toHaveLength(1);
   });
 
-  it('wraps focus around both ends', () => {
+  it('setSegmentedControlValue reflects external state without dispatching', () => {
     const root = mountSegments();
     initSegmentedControl(root);
-    const list = segment(root, 'list');
-    const table = segment(root, 'table');
+    const onChange = vi.fn();
+    root.addEventListener(SEGMENTED_CONTROL_CHANGE_EVENT, onChange);
 
-    list.focus();
-    list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
-    expect(document.activeElement).toBe(table);
+    setSegmentedControlValue(root, 'table');
 
-    table.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
-    expect(document.activeElement).toBe(list);
-  });
-
-  it('focuses first and last segments with Home and End', () => {
-    const root = mountSegments();
-    initSegmentedControl(root);
-    const list = segment(root, 'list');
-
-    list.focus();
-    list.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
-    expect(document.activeElement).toBe(segment(root, 'table'));
-
-    segment(root, 'table').dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Home', bubbles: true }),
-    );
-    expect(document.activeElement).toBe(list);
+    expect(radio(root, 'table').checked).toBe(true);
+    expect(segment(root, 'table').hasAttribute('data-selected')).toBe(true);
+    expect(segment(root, 'list').hasAttribute('data-selected')).toBe(false);
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('does not double-bind handlers', () => {
@@ -112,6 +104,10 @@ describe('initSegmentedControl', () => {
     segment(root, 'grid').click();
 
     expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('generates distinct group names', () => {
+    expect(nextSegmentedControlName()).not.toBe(nextSegmentedControlName());
   });
 
   it('initSegmentedControls initializes every root on the page', () => {

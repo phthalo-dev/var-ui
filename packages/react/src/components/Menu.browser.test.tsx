@@ -472,6 +472,83 @@ describe('Menu presets on a native popover', () => {
   });
 });
 
+describe('Menu row sections (layout: row)', () => {
+  const radio = (label: string) =>
+    [...document.querySelectorAll<HTMLElement>('[role="menuitemradio"]')].find(
+      (o) => o.getAttribute('aria-label') === label || o.textContent?.trim() === label,
+    )!;
+  function Appearance({ onAction = () => {} }: { onAction?: (id: string) => void }) {
+    const on = (id: string) => () => onAction(id);
+    return (
+      <Wrap>
+        <Menu.FromSections
+          trigger={<button type="button">Appearance</button>}
+          sections={[
+            {
+              label: 'Mode',
+              layout: 'row',
+              defaultValue: 'system',
+              items: ['light', 'dark', 'system'].map((id) => ({
+                id,
+                label: id[0]!.toUpperCase() + id.slice(1),
+                onAction: on(id),
+              })),
+            },
+            {
+              label: 'Theme',
+              defaultValue: 'teal',
+              items: [
+                { id: 'teal', label: 'Teal', onAction: on('teal') },
+                { id: 'rose', label: 'Rose', onAction: on('rose') },
+              ],
+            },
+          ]}
+        />
+      </Wrap>
+    );
+  }
+
+  test('ArrowLeft/Right wrap within the row; ArrowUp/Down move between the row and the list', async () => {
+    render(<Appearance />);
+    trigger().focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await raf();
+    radio('System').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(radio('Light'));
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(document.activeElement).toBe(radio('System'));
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(document.activeElement).toBe(radio('Dark'));
+    // Down leaves the row for the Theme list, Up comes back on the checked mode.
+    await userEvent.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(radio('Teal'));
+    await userEvent.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(radio('Rose'));
+    await userEvent.keyboard('{ArrowUp}{ArrowUp}');
+    expect(document.activeElement).toBe(radio('System'));
+    // Left/Right inside the list stay put.
+    await userEvent.keyboard('{ArrowDown}{ArrowRight}');
+    expect(document.activeElement).toBe(radio('Teal'));
+  });
+
+  test('picking a row item keeps the menu open; a list item closes it', async () => {
+    const onAction = vi.fn();
+    render(<Appearance onAction={onAction} />);
+    await userEvent.click(trigger());
+    await raf();
+    await userEvent.click(radio('Dark'));
+    await raf();
+    expect(isOpen()).toBe(true);
+    expect(radio('Dark').getAttribute('aria-checked')).toBe('true');
+    expect(radio('System').getAttribute('aria-checked')).toBe('false');
+    await userEvent.click(radio('Rose'));
+    await closed();
+    expect(isOpen()).toBe(false);
+    expect(onAction.mock.calls.map(([id]) => id)).toEqual(['dark', 'rose']);
+  });
+});
+
 describe('Menu.ContextMenu anchoring', () => {
   function Ctx({
     onOpenChange,
