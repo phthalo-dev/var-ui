@@ -13,6 +13,18 @@ describe('parseVarDocsConfig', () => {
     expect(config.theme.defaultClassName).toBe('theme-var-ui-default');
     expect(config.typestyles.entry).toBe('typestyles-entry.ts');
     expect(config.disableMiddleware).toBe(false);
+    expect(config.favicon).toBeUndefined();
+  });
+
+  it('accepts a favicon path', () => {
+    const config = parseVarDocsConfig({
+      title: 'Var UI',
+      favicon: '/favicon.svg',
+      theme: { defaultClassName: 'theme-var-ui-default' },
+      typestyles: { entry: 'typestyles-entry.ts' },
+    });
+
+    expect(config.favicon).toBe('/favicon.svg');
   });
 
   it('defaults colorMode when omitted', () => {

@@ -14,9 +14,11 @@ import { docsThemePresets } from './src/themes/presets.ts';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-// String alias keys match by prefix, so the glyph barrel (`@var-ui/icons/glyphs`) and single
-// glyphs (`@var-ui/icons/glyphs/<name>`) need anchored patterns.
+// String alias keys match by prefix, so the glyph barrel (`@var-ui/icons/glyphs`), single
+// glyphs (`@var-ui/icons/glyphs/<name>`) and the brand mark (`@var-ui/icons/brand`) need
+// anchored patterns.
 const glyphAliases = (iconsSrc) => [
+  { find: /^@var-ui\/icons\/brand$/, replacement: `${iconsSrc}/brand.ts` },
   { find: /^@var-ui\/icons\/glyphs$/, replacement: `${iconsSrc}/glyphs.ts` },
   { find: /^@var-ui\/icons\/glyphs\/(.+)$/, replacement: `${iconsSrc}/glyph-data/$1` },
 ];
@@ -34,6 +36,7 @@ export default defineConfig({
   integrations: [
     varDocs({
       title: 'Var UI',
+      favicon: '/favicon.svg',
       theme: {
         defaultClassName: defaultThemeClassName,
         // Theme-driven syntax: Shiki uses color.code.* from createDesignTheme().
@@ -123,6 +126,7 @@ export default defineConfig({
           '@var-ui/docs/CodeBlock': `${root}/packages/docs/src/components/CodeBlock.astro`,
           '@var-ui/docs/CodeDemoCodeBlock': `${root}/packages/docs/src/components/CodeDemoCodeBlock.astro`,
           '@var-ui/docs/DocsThemeScript': `${root}/packages/docs/src/components/DocsThemeScript.astro`,
+          '@var-ui/docs/DocsFavicon': `${root}/packages/docs/src/components/DocsFavicon.astro`,
           '@var-ui/docs/theme-css': `${root}/packages/docs/src/integrations/theme-css-extract.ts`,
           '@var-ui/docs': `${root}/packages/docs/index.ts`,
           '@var-ui/docs-components/framework': `${root}/packages/docs-components/src/framework.ts`,

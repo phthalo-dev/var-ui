@@ -12,6 +12,7 @@ import { close } from './icons/close';
 import { colorModeDark } from './icons/colorModeDark';
 import { colorModeLight } from './icons/colorModeLight';
 import { colorModeSystem } from './icons/colorModeSystem';
+import { component } from './icons/component';
 import { copy } from './icons/copy';
 import { error } from './icons/error';
 import { eye } from './icons/eye';
@@ -19,11 +20,10 @@ import { eyeOff } from './icons/eyeOff';
 import { info } from './icons/info';
 import { menu } from './icons/menu';
 import { moreHorizontal } from './icons/moreHorizontal';
+import { page } from './icons/page';
+import { palette } from './icons/palette';
 import { search } from './icons/search';
 import { star } from './icons/star';
-import { page } from './icons/page';
-import { component } from './icons/component';
-import { palette } from './icons/palette';
 import { stop } from './icons/stop';
 import { success } from './icons/success';
 import { warning } from './icons/warning';
@@ -43,6 +43,7 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   colorModeDark,
   colorModeLight,
   colorModeSystem,
+  component,
   copy,
   error,
   eye,
@@ -50,11 +51,10 @@ export const defaultIcons: Record<IconName, ReactNode> = {
   info,
   menu,
   moreHorizontal,
+  page,
+  palette,
   search,
   star,
-  page,
-  component,
-  palette,
   stop,
   success,
   warning,

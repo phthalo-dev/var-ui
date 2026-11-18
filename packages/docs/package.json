@@ -49,6 +49,7 @@
     "./CodeBlock": "./src/components/CodeBlock.astro",
     "./CodeDemoCodeBlock": "./src/components/CodeDemoCodeBlock.astro",
     "./DocsThemeScript": "./src/components/DocsThemeScript.astro",
+    "./DocsFavicon": "./src/components/DocsFavicon.astro",
     "./theme-css": "./src/integrations/theme-css-extract.ts"
   },
   "publishConfig": {

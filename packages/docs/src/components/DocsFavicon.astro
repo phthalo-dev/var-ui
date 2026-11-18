@@ -1,0 +1,12 @@
+---
+/**
+ * `<link rel="icon">` for `varDocs({ favicon })`. `DocsPage` and `DocsMarketingPage` render it;
+ * site layouts that write their own `<head>` can drop it in too. Renders nothing when unset.
+ */
+import config from 'virtual:var-docs/config';
+import { faviconLink } from '../utils/favicon';
+
+const link = faviconLink(config.favicon, import.meta.env.BASE_URL);
+---
+
+{link ? <link rel="icon" href={link.href} type={link.type} /> : null}

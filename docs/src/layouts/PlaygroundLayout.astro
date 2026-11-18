@@ -9,6 +9,7 @@ import { normalizeDocsPath } from '@var-ui/docs/utils';
  * Kit chrome via relative paths so Netlify SSR (Node ESM) does not load workspace `.astro`
  * through package exports (same as BaseLayout).
  */
+import DocsFavicon from '../../../packages/docs/src/components/DocsFavicon.astro';
 import DocsMobileMenu from '../../../packages/docs/src/components/DocsMobileMenu.astro';
 import DocsTopBar from '../../../packages/docs/src/components/DocsTopBar.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
@@ -35,7 +36,7 @@ const frame = playgroundLayout({ bleed });
     <title>{title}</title>
     <ThemeScript themeClass={defaultThemeClassName} />
     <DocsThemeScript />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <DocsFavicon />
     <link rel="stylesheet" href="/typestyles.css" />
     <ClientRouter />
   </head>
@@ -48,7 +49,7 @@ const frame = playgroundLayout({ bleed });
         brand={{ heading: 'Var UI', href: '/' }}
         currentPath={currentPath}
       >
-        <VarUiWordmark slot="brand" size="header" />
+        <VarUiWordmark slot="brand" size="mark" />
         <FrameworkSwitcher slot="tools" />
       </DocsTopBar>
 
@@ -58,7 +59,7 @@ const frame = playgroundLayout({ bleed });
         currentPath={currentPath}
         brand={{ heading: 'Var UI', href: '/' }}
       >
-        <VarUiWordmark slot="brand" size="header" />
+        <VarUiWordmark slot="brand" size="mark" />
         <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" />
       </DocsMobileMenu>
 
