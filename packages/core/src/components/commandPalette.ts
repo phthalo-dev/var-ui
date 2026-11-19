@@ -300,7 +300,7 @@ export const commandPalette = typestyles.recipe({
           fontSize: t.fontSize.xs.var,
           fontWeight: t.fontWeight.normal.var,
           // A step below the group headings and hints, so the title leads.
-          color: `color-mix(in oklch, ${vars.resultMetaColor.var} 78%, transparent)`,
+          color: t.color.text.tertiary.var,
           lineHeight: 1.3,
         },
         // Matched text, in titles and subtitles alike: accent ink only. The weight is the
