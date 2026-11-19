@@ -64,6 +64,35 @@ function run(argv: string[], cwd?: string) {
   return cap;
 }
 
+describe('runCli tokens', () => {
+  const withTokens: Catalog = {
+    ...catalog,
+    tokens: [{ path: 'space.md', cssVar: '--var-ui-space-md', value: '1rem' }],
+  };
+  const runTokens = (argv: string[]) => {
+    const cap = capture();
+    runCli(argv, cap.io, { catalog: withTokens });
+    return cap;
+  };
+
+  it('lists matching tokens and exits 0', () => {
+    const cap = runTokens(['tokens', 'space']);
+    expect(cap.exitCode).toBe(0);
+    expect(cap.stdout).toBe('space.md  --var-ui-space-md  1rem\n');
+  });
+
+  it('says so on stderr and exits 1 when nothing matches', () => {
+    const cap = runTokens(['tokens', 'nope']);
+    expect(cap.exitCode).toBe(1);
+    expect(cap.stdout).toBe('');
+    expect(cap.stderr).toContain('No design tokens match "nope"');
+  });
+
+  it('is listed in help', () => {
+    expect(run([]).stdout).toContain('tokens [query]');
+  });
+});
+
 describe('runCli', () => {
   it('prints help and exits 0', () => {
     const cap = run([]);

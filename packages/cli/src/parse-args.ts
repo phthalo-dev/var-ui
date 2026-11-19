@@ -5,6 +5,7 @@ export type ParsedCli =
   | { command: 'component'; list: boolean; query?: string; json: boolean; allProps: boolean }
   | { command: 'docs'; list: boolean; query?: string; json: boolean }
   | { command: 'search'; query: string; json: boolean }
+  | { command: 'tokens'; query?: string; json: boolean }
   | { command: 'init' }
   | { command: 'unknown'; argv: string[] };
 
@@ -46,6 +47,14 @@ export function parseCliArgs(argv: string[]): ParsedCli {
 
   if (command === 'search') {
     return { command: 'search', query: rest.join(' '), json };
+  }
+
+  if (command === 'tokens') {
+    // Read the query from the raw args: a pasted variable name (`--var-ui-space-md`) looks like
+    // an option to `parseArgs`.
+    const raw = argv.slice(argv.indexOf('tokens') + 1).filter((arg) => arg !== '--json');
+    const query = raw.join(' ').trim();
+    return query ? { command: 'tokens', query, json } : { command: 'tokens', json };
   }
 
   if (command === 'init') {

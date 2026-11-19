@@ -88,7 +88,7 @@ describe('renderAgentsBlock', () => {
     );
     expect(block).not.toContain('Vite plugin `@typestyles/vite`');
     expect(block).toContain(
-      'CLI: `npx @var-ui/cli component <Name>`, `npx @var-ui/cli search <query>`, `npx @var-ui/cli docs getting-started`. Bare `npx var-ui` is unreliable.',
+      'CLI: `npx @var-ui/cli component <Name>`, `npx @var-ui/cli search <query>`, `npx @var-ui/cli tokens <query>` (CSS variable names), `npx @var-ui/cli docs getting-started`. Bare `npx var-ui` is unreliable.',
     );
     expect(block).toContain('Button (`button`)');
     expect(block).toContain('- Button (`button`) — Triggers an action or event.');

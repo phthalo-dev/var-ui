@@ -9,6 +9,7 @@ import type {
   ComponentRecord,
   GuideRecord,
   PropRow,
+  TokenRecord,
 } from '../types';
 // @ts-expect-error TS5097: the Node generate entry resolves sibling imports with a .ts extension
 import { domPropsNote } from '../props-note.ts';
@@ -114,7 +115,27 @@ export async function buildCatalog(paths: RepoPaths, version: string): Promise<C
     meta: buildCatalogMeta(paths.repoRoot),
     components,
     guides: await loadGuides(paths, transformMdx),
+    tokens: await loadTokens(paths.repoRoot),
   };
+}
+
+/**
+ * Every design token, from `listDesignTokens()` in the built `@var-ui/core`. The generator runs
+ * from TS source under `node --experimental-strip-types`, which can't load core's extensionless
+ * source imports, so it reads `dist`. Core builds first: this package depends on `@var-ui/docs`,
+ * which depends on `@var-ui/core`.
+ */
+export async function loadTokens(repoRoot: string): Promise<TokenRecord[]> {
+  const entry = join(repoRoot, 'packages/core/dist/index.mjs');
+  if (!existsSync(entry)) {
+    throw new Error(
+      `[var-ui cli] ${entry} is missing. Build @var-ui/core first (vp run -F @var-ui/core build).`,
+    );
+  }
+  const { listDesignTokens } = (await import(pathToFileURL(entry).href)) as {
+    listDesignTokens: () => Array<TokenRecord & { ref: string }>;
+  };
+  return listDesignTokens().map(({ path, cssVar, value }) => ({ path, cssVar, value }));
 }
 
 /**

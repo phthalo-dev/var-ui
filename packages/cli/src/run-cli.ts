@@ -2,6 +2,7 @@ import { formatComponent, listComponents, unknownComponentMessage } from './comm
 import { formatGuide, listGuides, unknownGuideMessage } from './commands/docs';
 import { initAgentsDocs } from './commands/init';
 import { formatSearchHits } from './commands/search';
+import { catalogTokens, filterTokens, formatTokens, noTokensMessage } from './commands/tokens';
 import { findInstalledReactVersion, staleCatalogWarning } from './catalog-freshness';
 import { loadCatalog } from './load-catalog';
 import { findComponent, findGuide } from './lookup';
@@ -27,6 +28,7 @@ Commands:
   component [name]     Look up a component or list all
   search <query>       Ranked search across components and guides
   docs [id]            Look up a guide or list all
+  tokens [query]       List design tokens and their CSS variables
 
 Options:
   --json               Print JSON
@@ -96,6 +98,18 @@ export function runCli(argv: string[], io: CliIo, options?: RunCliOptions): void
         return;
       }
       io.stdout.write(formatGuide(record, parsed.json));
+      io.exit(0);
+      return;
+    }
+
+    if (parsed.command === 'tokens') {
+      const tokens = filterTokens(catalogTokens(catalog), parsed.query);
+      if (tokens.length === 0) {
+        io.stderr.write(noTokensMessage(parsed.query ?? ''));
+        io.exit(1);
+        return;
+      }
+      io.stdout.write(formatTokens(tokens, parsed.json));
       io.exit(0);
       return;
     }
