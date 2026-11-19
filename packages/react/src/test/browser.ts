@@ -7,10 +7,20 @@ import { userEvent } from 'vite-plus/test/browser';
 export const raf = (): Promise<void> =>
   new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 
-/** Resolves once every running CSS animation/transition on `el` (and descendants) has finished. */
+/**
+ * Resolves once every running time-based CSS animation/transition on `el` (and descendants) has
+ * finished. Scroll-driven animations (edge fades on a scroller) and infinite loops never finish,
+ * so they are skipped, as `useMountedWhileAnimating` does.
+ */
 export async function settled(el: Element): Promise<void> {
   await raf();
-  await Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})));
+  const timeBased = el
+    .getAnimations({ subtree: true })
+    .filter(
+      (a) =>
+        a.timeline === document.timeline && a.effect?.getComputedTiming().iterations !== Infinity,
+    );
+  await Promise.all(timeBased.map((a) => a.finished.catch(() => {})));
 }
 
 /** True when `el` is in the top layer (modal dialog, open popover, fullscreen). */
