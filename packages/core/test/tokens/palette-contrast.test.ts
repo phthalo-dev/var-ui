@@ -74,3 +74,43 @@ describe('palette ramp contrast', () => {
     }
   });
 });
+
+describe('text.tertiary (#189)', () => {
+  // `tertiary` is `color-mix(in oklch, secondary 85%, surface)`; OKLCH mixes interpolate L, C and
+  // h linearly, so compute the same mix of the default values here and check it against the
+  // surfaces quiet text sits on.
+  const mix = (a: string, b: string, p: number) => {
+    const parse = (c: string) => {
+      const [l, ch, h] = c
+        .replace(/^oklch\(|\)$/g, '')
+        .split(/\s+/)
+        .map((v) => (v.endsWith('%') ? Number.parseFloat(v) / 100 : Number(v)));
+      return [l!, ch!, h!];
+    };
+    const [l1, c1, h1] = parse(a);
+    const [l2, c2, h2] = parse(b);
+    return `oklch(${l1 * p + l2 * (1 - p)} ${c1 * p + c2 * (1 - p)} ${h1 * p + h2 * (1 - p)})`;
+  };
+  const stone = baseColorPalettes.stone;
+  const white = 'oklch(1 0 0)';
+  const cases = {
+    light: { secondary: stone['7'], surface: white, subtle: stone['1'] },
+    dark: {
+      secondary: 'oklch(0.74 0.012 65)',
+      surface: 'oklch(0.2 0.007 60)',
+      subtle: 'oklch(0.235 0.008 60)',
+    },
+  };
+
+  for (const [mode, c] of Object.entries(cases)) {
+    it(`meets WCAG AA on surface and subtle in ${mode} mode`, () => {
+      const tertiary = mix(c.secondary, c.surface, 0.85);
+      expect(contrastRatio(tertiary, c.surface)).toBeGreaterThanOrEqual(WCAG_AA);
+      expect(contrastRatio(tertiary, c.subtle)).toBeGreaterThanOrEqual(WCAG_AA);
+      // …and is a real step below secondary.
+      expect(contrastRatio(tertiary, c.surface)).toBeLessThan(
+        contrastRatio(c.secondary, c.surface),
+      );
+    });
+  }
+});

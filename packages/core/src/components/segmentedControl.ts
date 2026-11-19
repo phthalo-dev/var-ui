@@ -86,10 +86,7 @@ export const segmentedControl = typestyles.recipe({
     /** 1px top edge light on the thumb (dark mode), like a lit key cap. */
     indicatorHighlight: { ...atProperty.color, value: 'transparent' },
     // Unselected segments sit a step below `text.secondary`, so the checked one reads at a glance.
-    segmentColor: {
-      ...atProperty.color,
-      value: `color-mix(in oklch, ${t.color.text.secondary.var} 72%, transparent)`,
-    },
+    segmentColor: { ...atProperty.color, value: t.color.text.tertiary.var },
     segmentHoverColor: { ...atProperty.color, value: t.color.text.primary.var },
     segmentSelectedColor: {
       ...atProperty.color,
