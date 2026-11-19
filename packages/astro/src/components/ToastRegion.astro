@@ -1,22 +1,43 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import type { VariantOptions } from 'typestyles';
-import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 type ToastPlacement = VariantOptions<typeof toastPlacement>;
+type Length = number | string;
 
 type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
-  /** Screen corner the region anchors to. @default bottom-end */
+  /** Screen corner or edge center the region anchors to. @default bottom-end */
   placement?: ToastPlacement;
+  /**
+   * Distance from the anchored edges (a number is px): `block` is the top/bottom edge, `inline`
+   * the start/end edge. A single value applies to both. Same shape as React `ToastRegion`.
+   */
+  offset?: Length | { block?: Length; inline?: Length };
   /** Maximum number of toasts visible at once. @default 3 */
   maxVisible?: number;
   className?: string;
 };
 
-const { placement = 'bottom-end', maxVisible = 3, className, ...rest } = Astro.props;
+const { placement = 'bottom-end', offset, maxVisible = 3, className, style, ...rest } = Astro.props;
 const region = toastRecipe({ placement });
+const toLength = (value: Length | undefined) =>
+  typeof value === 'number' ? `${value}px` : value;
+const { block, inline } =
+  offset === undefined
+    ? { block: undefined, inline: undefined }
+    : typeof offset === 'object'
+      ? offset
+      : { block: offset, inline: offset };
+const toastVars = recipeVars(toastRecipe);
+const offsetVars = styleVars([
+  [toastVars.offsetBlock, toLength(block)],
+  [toastVars.offsetInline, toLength(inline)],
+]);
 ---
 
 <div
@@ -25,6 +46,7 @@ const region = toastRecipe({ placement });
   data-var-ui-toast-region
   data-max-visible={maxVisible}
   {...mergeProps(region.region, className)}
+  style={mergeInlineStyle(offsetVars, style)}
   aria-live="polite"
   aria-relevant="additions"
 >

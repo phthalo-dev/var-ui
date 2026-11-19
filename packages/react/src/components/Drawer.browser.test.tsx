@@ -337,15 +337,19 @@ describe('placement', () => {
 describe('API surface', () => {
   test('native props and ref reach the <dialog>; Trigger merges onto a Button component', async () => {
     const ref = { current: null as HTMLDialogElement | null };
+    // Tokens live on the theme surface (`theme-var-ui-default`), not `:root`: without it the
+    // Button has no size and Playwright will not click it.
     render(
-      <Drawer.Root>
-        <Drawer.Trigger>
-          <Button>Open</Button>
-        </Drawer.Trigger>
-        <Drawer.Popup ref={ref} id="d" className="mine" data-x="1" aria-label="Panel">
-          <Drawer.Body>x</Drawer.Body>
-        </Drawer.Popup>
-      </Drawer.Root>,
+      <DesignSystemProvider>
+        <Drawer.Root>
+          <Drawer.Trigger>
+            <Button>Open</Button>
+          </Drawer.Trigger>
+          <Drawer.Popup ref={ref} id="d" className="mine" data-x="1" aria-label="Panel">
+            <Drawer.Body>x</Drawer.Body>
+          </Drawer.Popup>
+        </Drawer.Root>
+      </DesignSystemProvider>,
     );
     expect(ref.current).toBe(dlg());
     expect(dlg().id).toBe('d');

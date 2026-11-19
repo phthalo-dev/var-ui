@@ -123,3 +123,10 @@ describe('CodeBlock', () => {
     });
   });
 });
+
+describe('CodeBlock plain text', () => {
+  it('shows markup characters as typed, not double-escaped', () => {
+    const { container } = render(<CodeBlock code={'<div class="a">&</div>'} copyable={false} />);
+    expect(container.querySelector('code')!.textContent).toBe('<div class="a">&</div>');
+  });
+});

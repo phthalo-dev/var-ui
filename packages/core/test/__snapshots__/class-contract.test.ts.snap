@@ -219,8 +219,11 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "card": {
     "axes": [],
     "slots": {
+      "action": "var-ui-card__action",
       "body": "var-ui-card__body",
+      "description": "var-ui-card__description",
       "grid": "var-ui-card__grid",
+      "header": "var-ui-card__header",
       "linkDescription": "var-ui-card__linkDescription",
       "linkHint": "var-ui-card__linkHint",
       "linkRoot": "var-ui-card__linkRoot",
@@ -228,6 +231,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "media": "var-ui-card__media",
       "root": "var-ui-card",
       "title": "var-ui-card__title",
+      "titleEnd": "var-ui-card__titleEnd",
     },
     "vars": [
       "--var-ui-card-background",

@@ -39,8 +39,6 @@
     "dev": "vp pack --watch"
   },
   "dependencies": {
-    "@react-aria/i18n": "^3.13.1",
-    "react-aria": "3.50.0",
     "typestyles": "catalog:"
   },
   "devDependencies": {
