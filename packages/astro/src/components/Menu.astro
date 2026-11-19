@@ -5,7 +5,7 @@ import { svg as chevronDownSvg } from '@var-ui/icons/glyphs/chevronDown';
 import { button } from '@var-ui/core/components/button';
 import { icon } from '@var-ui/core/components/icon';
 import { menu } from '@var-ui/core/components/menu';
-import { defaultIconSvgs } from '@var-ui/icons/glyphs';
+import { iconMarkup } from '../lib/icon';
 import type { ButtonVariantProps } from '@var-ui/core';
 import { combine, mergeProps } from "../utils";
 import {
@@ -85,7 +85,6 @@ const singleSelection = defaultValue !== undefined;
 const sectionRecipe = mergeProps(m.section);
 const sectionRowRecipe = combine(m.section, m.sectionRow);
 const itemIconRecipe = mergeProps(m.itemIcon);
-const iconSvgs: Record<string, string> = defaultIconSvgs;
 
 const hasTriggerSlot = Astro.slots.has("trigger");
 
@@ -174,18 +173,18 @@ const itemContents = await Promise.all(
                 {content ? (
                   <Fragment set:html={content} />
                 ) : row ? (
-                  item.icon && iconSvgs[item.icon] ? (
+                  item.icon ? (
                     <span {...itemIconRecipe} aria-hidden="true">
-                      <span {...checkIconRecipe} set:html={iconSvgs[item.icon]} />
+                      <span {...checkIconRecipe} set:html={iconMarkup(item.icon)} />
                     </span>
                   ) : (
                     <span {...itemLabelRecipe}>{item.label}</span>
                   )
                 ) : (
                   <>
-                    {item.icon && iconSvgs[item.icon] ? (
+                    {item.icon ? (
                       <span {...itemIconRecipe} aria-hidden="true">
-                        <span {...checkIconRecipe} set:html={iconSvgs[item.icon]} />
+                        <span {...checkIconRecipe} set:html={iconMarkup(item.icon)} />
                       </span>
                     ) : null}
                     {item.swatch ? (

@@ -5,13 +5,20 @@ import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from "../utils";
 import { nextSegmentedControlName } from "../scripts/segmentedControl";
+import { icon as iconStyles } from '@var-ui/core/components/icon';
+import { iconMarkup, type AstroIcon } from "../lib/icon";
 
 type SegmentOption = {
   /** Unique value; also the name of the optional slot that renders rich content. */
   value: string;
   label: string;
   disabled?: boolean;
-  /** Accessible name when the slotted content is not plain text (e.g. icon-only segments). */
+  /**
+   * Icon before the label: a registry name or `{ svg }` markup. With `layout="icon"` only the
+   * icon shows and `label` becomes the segment's accessible name and tooltip.
+   */
+  icon?: AstroIcon;
+  /** Accessible name when the slotted content is not plain text. Defaults to `label` for icon-only segments. */
   "aria-label"?: string;
 };
 
@@ -48,6 +55,9 @@ const {
 } = Astro.props;
 
 const s = segmentedControl({ size, layout, fullWidth });
+// Same control-size → icon-size map as IconButton.
+const iconRecipe = mergeProps(iconStyles({ size }));
+const iconOnly = layout === "icon";
 const segmentRecipe = mergeProps(toggleButton({ segmented: true }));
 
 const optionContent = await Promise.all(
@@ -83,7 +93,7 @@ const optionContent = await Promise.all(
         data-segment-id={option.value}
         data-selected={selected ? "" : undefined}
         data-disabled={optionDisabled ? "" : undefined}
-        title={layout === "icon" ? (option["aria-label"] ?? option.label) : undefined}
+        title={iconOnly ? (option["aria-label"] ?? option.label) : undefined}
         {...segmentRecipe}
       >
         <input
@@ -92,9 +102,18 @@ const optionContent = await Promise.all(
           value={option.value}
           checked={selected}
           disabled={optionDisabled}
-          aria-label={option["aria-label"]}
+          aria-label={option["aria-label"] ?? (iconOnly && option.icon ? option.label : undefined)}
         />
-        {content ? <Fragment set:html={content} /> : option.label}
+        {content ? (
+          <Fragment set:html={content} />
+        ) : (
+          <>
+            {option.icon ? (
+              <span {...iconRecipe} aria-hidden="true" set:html={iconMarkup(option.icon)} />
+            ) : null}
+            {iconOnly && option.icon ? null : option.label}
+          </>
+        )}
       </label>
     );
   })}
