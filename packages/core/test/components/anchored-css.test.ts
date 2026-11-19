@@ -24,13 +24,13 @@ const rules = (css: string, ...needles: string[]) =>
 
 describe('anchored placement vocabulary', () => {
   it('maps side + align to logical position-area values', () => {
-    expect(popupPositionArea('bottom', 'start')).toBe('block-end span-inline-end');
-    expect(popupPositionArea('bottom', 'end')).toBe('block-end span-inline-start');
-    expect(popupPositionArea('bottom', 'center')).toBe('block-end');
-    expect(popupPositionArea('top', 'start')).toBe('block-start span-inline-end');
-    expect(popupPositionArea('start', 'start')).toBe('inline-start span-block-end');
-    expect(popupPositionArea('end', 'center')).toBe('inline-end');
-    expect(popupPositionArea('end', 'end')).toBe('inline-end span-block-start');
+    expect(popupPositionArea('bottom', 'start')).toBe('self-block-end span-self-inline-end');
+    expect(popupPositionArea('bottom', 'end')).toBe('self-block-end span-self-inline-start');
+    expect(popupPositionArea('bottom', 'center')).toBe('self-block-end');
+    expect(popupPositionArea('top', 'start')).toBe('self-block-start span-self-inline-end');
+    expect(popupPositionArea('start', 'start')).toBe('self-inline-start span-self-block-end');
+    expect(popupPositionArea('end', 'center')).toBe('self-inline-end');
+    expect(popupPositionArea('end', 'end')).toBe('self-inline-end span-self-block-start');
   });
 
   it('flips along the placement axis first', () => {
@@ -83,11 +83,13 @@ describe('anchored recipes', () => {
     popover();
     const css = getRegisteredCss();
     const sel = (p: string) => `.var-ui-popover[data-placement="${p}"] {`;
-    expect(rules(css, sel('bottom'), 'position-area: block-end span-inline-end')).toHaveLength(1);
     expect(
-      rules(css, sel('bottom end'), 'position-area: block-end span-inline-start'),
+      rules(css, sel('bottom'), 'position-area: self-block-end span-self-inline-end'),
     ).toHaveLength(1);
-    expect(rules(css, sel('end center'), 'position-area: inline-end')).toHaveLength(1);
+    expect(
+      rules(css, sel('bottom end'), 'position-area: self-block-end span-self-inline-start'),
+    ).toHaveLength(1);
+    expect(rules(css, sel('end center'), 'position-area: self-inline-end')).toHaveLength(1);
     const [top] = rules(css, sel('top start'));
     expect(top).toContain('margin: 0');
     expect(top).toContain('margin-block-end: var(--var-ui-popup-offset, var(--var-ui-space-xs))');
@@ -101,9 +103,9 @@ describe('anchored recipes', () => {
   it('tooltip and hover card default to a centered top placement', () => {
     tooltip();
     const css = getRegisteredCss();
-    expect(rules(css, '.var-ui-tooltip {', 'position-area: block-start;')).toHaveLength(1);
+    expect(rules(css, '.var-ui-tooltip {', 'position-area: self-block-start;')).toHaveLength(1);
     expect(
-      rules(css, '.var-ui-tooltip[data-placement="bottom"] {', 'position-area: block-end;'),
+      rules(css, '.var-ui-tooltip[data-placement="bottom"] {', 'position-area: self-block-end;'),
     ).toHaveLength(1);
   });
 
