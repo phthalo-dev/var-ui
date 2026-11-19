@@ -1,6 +1,7 @@
 import { variant, type VariantOptions } from 'typestyles';
 import { designTokens as t } from '../tokens';
 import { TONE_KEYS } from '../tokens/schema/color/tone';
+import { PALETTE_FAMILIES, type PaletteFamily } from '../tokens/schema/color/palette';
 
 /**
  * Every component tone. `neutral` sits outside the color tokens; the rest are
@@ -360,5 +361,36 @@ export function appearanceSurface(
           borderBlockStyle: 'solid',
           borderBlockColor: subtleBorder,
         }),
+  };
+}
+
+/**
+ * Identity color axis: every base palette name (`blue`, `red`, `sage`, …). For roles, kinds and
+ * labels, not status. `none` (the default) leaves `tone` in charge.
+ */
+export const hueColor = variant.enum(['none', ...PALETTE_FAMILIES], { default: 'none' });
+
+export type HueColor = PaletteFamily;
+
+/** One style entry per hue (`none` paints nothing). */
+export function mapHue<Style>(
+  paint: (key: HueColor) => Style,
+): Record<HueColor | 'none', Style | Record<string, never>> {
+  return {
+    none: {},
+    ...(Object.fromEntries(PALETTE_FAMILIES.map((key) => [key, paint(key)])) as Record<
+      HueColor,
+      Style
+    >),
+  };
+}
+
+/** Channels for a named hue: ink and fill are the hue, solid text is the surface. */
+export function hueChannelAssignments(v: SemanticChannelRefs, key: HueColor) {
+  const hue = t.color.hue[key].var;
+  return {
+    [v.semantic.name]: hue,
+    [v.solidBg.name]: hue,
+    [v.solidFg.name]: t.color.background.surface.var,
   };
 }

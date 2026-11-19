@@ -1,6 +1,7 @@
 import type { ColorTokenPatch, SemanticColorTokens } from '../../types';
 import { background } from './background';
 import { border } from './border';
+import { categorical, chart, hue } from './categorical';
 import { code } from './code';
 import { link } from './link';
 import { navItem } from './navItem';
@@ -30,5 +31,8 @@ export const color = {
   skeleton,
   track,
   code,
+  hue,
+  categorical,
+  chart,
   tone,
 } as Omit<SemanticColorTokens, 'tone'> & Pick<ColorTokenPatch, 'tone'>;

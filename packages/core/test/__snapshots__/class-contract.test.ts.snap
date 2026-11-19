@@ -106,7 +106,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "badge": {
     "axes": [
       "appearance",
+      "color",
       "data-appearance",
+      "data-color",
       "data-tone",
       "tone",
     ],
@@ -1810,7 +1812,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   "status-dot": {
     "axes": [
       "appearance",
+      "color",
       "data-appearance",
+      "data-color",
       "data-tone",
       "pulse",
       "tone",
