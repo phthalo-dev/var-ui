@@ -21,6 +21,18 @@ Group related destinations with multiple `SideNav.Section`s — each can take `t
 
 <Demo id="side-nav.sections" />
 
+### Collapsible sections
+
+`collapsible` renders a section as a native `<details>` disclosure. `defaultOpen` sets where it starts. In React, `open` and `onOpenChange` control it. To remember what the reader opened and closed across page loads, give the `SideNav` a `persistKey`:
+
+```tsx
+<SideNav persistKey="docs-sidebar">
+  <SideNav.Section title="Guides" collapsible>…</SideNav.Section>
+</SideNav>
+```
+
+State goes to `localStorage` under that key. Sections are told apart by their `id`, or else their title. The section holding the current page (`aria-current="page"`) always starts open. Astro's `SideNav` takes the same `persistKey`. The helper behind both is `persistDisclosures(root, key)` from `@var-ui/core/shared/disclosureState`, for plain HTML.
+
 ## Props
 
 <PropsTable slug="side-nav" />
