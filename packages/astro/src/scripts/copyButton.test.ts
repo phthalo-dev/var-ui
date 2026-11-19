@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import {
-  COPY_BUTTON_COPIED_EVENT,
-  COPY_BUTTON_ERROR_EVENT,
-  initCopyButton,
-  initCopyButtons,
-} from './copyButton';
+import { COPIED_EVENT, COPY_ERROR_EVENT } from './copy';
+import { initCopyButton, initCopyButtons } from './copyButton';
 
 describe('initCopyButton', () => {
   beforeEach(() => {
@@ -86,7 +82,7 @@ describe('initCopyButton', () => {
     stubClipboard(() => Promise.resolve());
     const btn = mountCopyButton({ value: 'abc' });
     const onCopied = vi.fn();
-    document.body.addEventListener(COPY_BUTTON_COPIED_EVENT, (event) =>
+    document.body.addEventListener(COPIED_EVENT, (event) =>
       onCopied((event as CustomEvent<{ value: string }>).detail),
     );
     initCopyButton(btn);
@@ -99,7 +95,7 @@ describe('initCopyButton', () => {
     stubClipboard(() => Promise.reject(new Error('denied')));
     const btn = mountCopyButton({ value: 'abc' });
     const onError = vi.fn();
-    document.body.addEventListener(COPY_BUTTON_ERROR_EVENT, (event) =>
+    document.body.addEventListener(COPY_ERROR_EVENT, (event) =>
       onError((event as CustomEvent<{ value: string }>).detail),
     );
     initCopyButton(btn);

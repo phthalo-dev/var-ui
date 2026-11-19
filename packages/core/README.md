@@ -389,40 +389,37 @@ Adding class names is free; removing or renaming requires a major bump and a del
 
 ## CodeBlock copy helper pattern
 
-Use the `codeBlock` recipe with `data-*` hooks so any framework (or vanilla JS) can attach clipboard behavior:
+The `codeBlock` recipe's `copyButton` and `feedback` slots carry the copy chrome; `data-*` hooks hold the state, so any framework (or vanilla JS) can attach clipboard behaviour. `@var-ui/astro` ships this as `initCodeBlockCopy()`.
 
 ```html
-<div class="...codeBlock('root')" data-codeblock>
-  <div class="...codeBlock('header')" data-codeblock-header>
-    <div class="...codeBlock('actions')">
+<div class="var-ui-code-block" data-codeblock>
+  <div class="var-ui-code-block__header" data-codeblock-header>
+    <div class="var-ui-code-block__actions">
       <button
         type="button"
-        class="...codeBlock('copyButton') ...codeBlock('copyButtonIdle')"
-        data-codeblock-copy
+        class="var-ui-code-block__copyButton"
+        data-var-ui-code-copy
+        data-code="npm i @var-ui/react"
         data-copy-label="Copy code"
         data-copied-label="Copied"
+        data-error-label="Copy failed"
         aria-label="Copy code"
       >
-        Copy
+        <span data-codeblock-copy-icon><!-- copy icon --></span>
       </button>
-      <span
-        class="...codeBlock('feedback') ...codeBlock('feedbackInline')"
-        data-codeblock-feedback
-        role="status"
-        aria-live="polite"
-      ></span>
+      <span class="var-ui-code-block__feedback" data-codeblock-feedback role="status"></span>
     </div>
   </div>
   <pre><code>...</code></pre>
 </div>
 ```
 
-Minimal behavior:
+Behaviour:
 
-1. On `[data-codeblock-copy]` click, read text from the closest code element and write to `navigator.clipboard`.
-2. Toggle `data-copied` or `data-error` on the button for visual state styles.
-3. Set button `aria-label` to `Copied` on success, and restore to `Copy code` after a timeout.
-4. Announce status text through `[data-codeblock-feedback]` (`role="status"` + `aria-live="polite"`).
+1. On click, write `data-code` to `navigator.clipboard`.
+2. Set `data-copied` or `data-error` on the button (the recipe colours it), swap the icon (check / error), and set `aria-label` to `data-copied-label` or `data-error-label`.
+3. Put the same label in `[data-codeblock-feedback]` with `data-tone="success"` or `"error"`. The recipe shows it only for errors; a success is announced but not shown.
+4. After 2 seconds (`data-timeout`), clear all of it and restore `data-copy-label`.
 
 ## Syntax highlighting
 

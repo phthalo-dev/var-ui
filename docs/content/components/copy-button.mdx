@@ -35,7 +35,7 @@ Override `copyLabel` and `copiedLabel` (and optionally `errorLabel`) for context
 />
 ```
 
-In Astro, listen for the bubbling `var-ui:copy-button-copied` and `var-ui:copy-button-error` events (`COPY_BUTTON_COPIED_EVENT`, `COPY_BUTTON_ERROR_EVENT` from `@var-ui/astro`); `event.detail.value` is the text.
+In Astro, listen for the bubbling `var-ui:copied` and `var-ui:copy-error` events (`COPIED_EVENT`, `COPY_ERROR_EVENT` from `@var-ui/astro`); `event.detail.value` is the text.
 
 ## Props
 

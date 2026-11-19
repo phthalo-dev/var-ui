@@ -23,9 +23,12 @@ interface Props extends Omit<HTMLAttributes<'div'>, 'children'>, CodeBlockVarian
   highlightedLines?: number[];
   /** Scroll cap for the code body — any CSS length. */
   maxHeight?: string;
+  /** Copy button's accessible name before a copy. Same prop as `CopyButton`. @default Copy code */
   copyLabel?: string;
+  /** Name after a successful copy, also announced to screen readers. @default Copied */
   copiedLabel?: string;
-  copyErrorLabel?: string;
+  /** Name after a failed copy, also shown and announced beside the button. @default Copy failed */
+  errorLabel?: string;
 }
 
 function classifyDiffLine(line: string): DiffLineTone | undefined {
@@ -51,7 +54,7 @@ const {
   maxHeight,
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
-  copyErrorLabel = 'Copy failed',
+  errorLabel = 'Copy failed',
   ...rest
 } = Astro.props as Props;
 
@@ -87,11 +90,10 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
               data-code={code}
               data-copy-label={copyLabel}
               data-copied-label={copiedLabel}
-              data-copy-error-label={copyErrorLabel}
+              data-error-label={errorLabel}
               aria-label={copyLabel}
             >
               <span data-codeblock-copy-icon set:html={copySvg} />
-              <span data-codeblock-copy-text>Copy</span>
             </button>
             <span
               {...mergeProps(cb.feedback)}

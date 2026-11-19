@@ -14,7 +14,7 @@ type Props = {
   highlightedLines?: number[];
   copyLabel?: string;
   copiedLabel?: string;
-  copyErrorLabel?: string;
+  errorLabel?: string;
 };
 
 const { code, language, showLineNumbers, ...rest } = Astro.props as Props;

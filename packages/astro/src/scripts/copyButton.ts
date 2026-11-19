@@ -1,18 +1,10 @@
 import { svg as checkSvg } from '@var-ui/icons/glyphs/check';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
 import { svg as errorSvg } from '@var-ui/icons/glyphs/error';
-import { copyText } from './codeBlockCopy';
+import { copyText, copyTimeout, dispatchCopyResult } from './copy';
 
 const SELECTOR = '[data-var-ui-copy-button]';
 const INITIALIZED_ATTR = 'data-var-ui-copy-button-initialized';
-const DEFAULT_TIMEOUT_MS = 2000;
-
-/** Fired on a `CopyButton` after a successful copy; bubbles. `detail: { value }`. */
-export const COPY_BUTTON_COPIED_EVENT = 'var-ui:copy-button-copied';
-/** Fired on a `CopyButton` when the clipboard write fails; bubbles. `detail: { value }`. */
-export const COPY_BUTTON_ERROR_EVENT = 'var-ui:copy-button-error';
-
-export type CopyButtonEventDetail = { value: string };
 
 const COPY_ICON = copySvg;
 const CHECK_ICON = checkSvg;
@@ -68,8 +60,7 @@ export function initCopyButton(btn: HTMLButtonElement): void {
     const value = btn.getAttribute('data-value') ?? '';
     const copyLabel = btn.getAttribute('data-copy-label') ?? 'Copy';
     const copiedLabel = btn.getAttribute('data-copied-label') ?? 'Copied';
-    const errorLabel = btn.getAttribute('data-error-label') ?? 'Error';
-    const timeout = Number(btn.getAttribute('data-timeout')) || DEFAULT_TIMEOUT_MS;
+    const errorLabel = btn.getAttribute('data-error-label') ?? 'Copy failed';
 
     const ok = await copyText(value);
     if (ok) {
@@ -77,14 +68,9 @@ export function initCopyButton(btn: HTMLButtonElement): void {
     } else {
       setState(btn, 'error', errorLabel, ERROR_ICON);
     }
-    btn.dispatchEvent(
-      new CustomEvent<CopyButtonEventDetail>(
-        ok ? COPY_BUTTON_COPIED_EVENT : COPY_BUTTON_ERROR_EVENT,
-        { bubbles: true, detail: { value } },
-      ),
-    );
+    dispatchCopyResult(btn, ok, value);
 
-    window.setTimeout(() => setState(btn, 'idle', copyLabel, COPY_ICON), timeout);
+    window.setTimeout(() => setState(btn, 'idle', copyLabel, COPY_ICON), copyTimeout(btn));
   });
 }
 

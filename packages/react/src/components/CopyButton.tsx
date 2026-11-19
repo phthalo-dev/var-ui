@@ -17,11 +17,11 @@ export type CopyButtonProps = Omit<ComponentPropsWithRef<'button'>, 'children' |
   timeout?: number;
   /** Custom render function; defaults to a styled icon button. */
   children?: (state: CopyButtonRenderProps) => ReactNode;
-  /** Label for the default button when not copied. @default Copy */
+  /** Button text and accessible name before a copy. @default Copy */
   copyLabel?: string;
-  /** Label for the default button after a successful copy. @default Copied */
+  /** Text and name after a successful copy. @default Copied */
   copiedLabel?: string;
-  /** Label for the default button after a failed copy. @default Error */
+  /** Text and name after a failed copy. @default Copy failed */
   errorLabel?: string;
   /**
    * Called with the copied text after a successful write. (The native `onCopy` is the
@@ -42,7 +42,7 @@ export function CopyButton({
   children,
   copyLabel = 'Copy',
   copiedLabel = 'Copied',
-  errorLabel = 'Error',
+  errorLabel = 'Copy failed',
   onCopied,
   onCopyError,
   className,

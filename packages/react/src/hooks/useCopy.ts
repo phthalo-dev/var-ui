@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type UseCopyOptions = {
-  /** Milliseconds before `copied` resets to false. @default 2000 */
+  /** Milliseconds before `copied` / `error` reset. @default 2000 */
   timeout?: number;
   /** Called with the copied text after a successful write (a "Copied" toast, analytics). */
   onCopied?: (value: string) => void;
@@ -12,7 +12,7 @@ export type UseCopyOptions = {
 export type UseCopyResult = {
   /** Whether the last copy attempt succeeded within the timeout window. */
   copied: boolean;
-  /** Error from the last failed copy attempt, if any. */
+  /** Error from the last failed copy attempt, until the timeout resets it. */
   error: Error | null;
   /** Write `value` to the clipboard. */
   copy: (value: string) => Promise<void>;
@@ -65,6 +65,10 @@ export function useCopy({
         const copyError = cause instanceof Error ? cause : new Error('Copy failed');
         setCopied(false);
         setError(copyError);
+        timerRef.current = setTimeout(() => {
+          setError(null);
+          timerRef.current = null;
+        }, timeout);
         callbacksRef.current.onCopyError?.(copyError, value);
         return;
       }
