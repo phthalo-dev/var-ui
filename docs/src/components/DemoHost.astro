@@ -3,7 +3,7 @@ import DemoChrome from './DemoChrome.astro';
 import DemoReactIsland from './DemoReactIsland';
 import { astroDemoMap } from '../demos/astroDemoMap';
 import { htmlDemoMap } from '../demos/htmlDemoMap';
-import { demoSnippets, type DemoId } from '../demos/registry';
+import { getDemoSnippets, type DemoId } from '../demos/registry';
 
 type Props = {
   id: DemoId;
@@ -12,7 +12,7 @@ type Props = {
 
 const { id, title } = Astro.props;
 const framework = Astro.locals.framework;
-const code = demoSnippets[id][framework];
+const code = getDemoSnippets(id)[framework];
 const language = framework === 'react' ? 'tsx' : framework === 'astro' ? 'astro' : 'html';
 const filename =
   framework === 'react' ? 'Demo.tsx' : framework === 'astro' ? 'Demo.astro' : 'Demo.html';
