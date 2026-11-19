@@ -50,7 +50,22 @@ Override one entry by spreading: `components={{ ...proseComponents, a: MyLink }}
 
 ## How it composes
 
-`Prose`'s element rules live in the `base` [cascade layer](/theming/plain-css#cascade-layers-and-specificity), below `components`. A Var UI component inside `Prose` (mapped by `proseComponents` or placed by hand) always keeps its own styles. There's no `not-prose` escape hatch to remember, and no specificity contest with your own classes.
+`Prose`'s element rules live in the `base` [cascade layer](/theming/plain-css#cascade-layers-and-specificity), below `components`. A Var UI component inside `Prose` (mapped by `proseComponents` or placed by hand) always keeps its own styles, with no `data-not-prose` and no specificity contest with your own classes. You only need `data-not-prose` for markup that isn't a Var UI component.
+
+## Opting out
+
+Mark anything that shouldn't take prose styles with `data-not-prose`: a live demo, an embedded widget, a hand-built table. Prose skips the element and everything inside it. The element itself still gets the space between blocks, so it sits in the flow like any other block. Var UI components don't need it, because their own styles already win.
+
+```tsx
+<Prose>
+  <Markdown>{intro}</Markdown>
+  <div data-not-prose>
+    <MyChart />
+  </div>
+</Prose>
+```
+
+To add your own element rules on top of prose, wrap them in `proseRules()` from `@var-ui/core` so they honour `data-not-prose` too.
 
 ## Astro
 

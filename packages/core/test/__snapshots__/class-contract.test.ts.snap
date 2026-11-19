@@ -787,26 +787,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-divider-color",
     ],
   },
-  "docs-prose": {
-    "axes": [],
-    "slots": {
-      "headingAnchor": "var-ui-docs-prose__headingAnchor",
-      "root": "var-ui-docs-prose",
-      "tableWrap": "var-ui-docs-prose__tableWrap",
-    },
-    "vars": [
-      "--var-ui-docs-prose-blockquotebackground",
-      "--var-ui-docs-prose-blockquoteborder",
-      "--var-ui-docs-prose-foreground",
-      "--var-ui-docs-prose-inlinecodebackground",
-      "--var-ui-docs-prose-prebackground",
-      "--var-ui-docs-prose-preborder",
-      "--var-ui-docs-prose-secondarycolor",
-      "--var-ui-docs-prose-tableborder",
-      "--var-ui-docs-prose-tablecellborder",
-      "--var-ui-docs-prose-tableheaderbackground",
-    ],
-  },
   "drawer": {
     "axes": [
       "data-size",

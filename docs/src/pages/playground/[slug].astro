@@ -4,8 +4,8 @@ export const prerender = false;
 import PlaygroundLayout from '../../layouts/PlaygroundLayout.astro';
 import ColorSwatches from '../../components/ColorSwatches.astro';
 import { findMdxModule } from '../../lib/loadMdx';
-import { proseContent } from '@var-ui/core';
-import { mergeProps } from '@var-ui/astro';
+import { docsArticleProse } from '@var-ui/docs/styles';
+import { combine } from '@var-ui/astro';
 import { playgroundShellStyles } from '../../styles/playgroundShell';
 
 const slug = Astro.params.slug;
@@ -20,12 +20,12 @@ if (!loader) {
 }
 
 const { Content, frontmatter } = await loader();
-const prose = proseContent();
+const prose = docsArticleProse();
 const shell = playgroundShellStyles();
 ---
 
 <PlaygroundLayout title={`${frontmatter.title} · Var UI`}>
-  <article {...mergeProps(prose.root, shell.article.className, 'docs-article')}>
+  <article {...combine(...prose, shell.article, { className: 'docs-article' })}>
     <Content components={{ ColorSwatches }} />
   </article>
 </PlaygroundLayout>

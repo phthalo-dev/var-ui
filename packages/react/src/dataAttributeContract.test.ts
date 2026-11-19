@@ -128,6 +128,7 @@ const UNDOCUMENTED_HOOKS = [
   'data-mobile',
   'data-mobile-breakpoint',
   'data-nested',
+  'data-not-prose',
   'data-overlay',
   'data-pending',
   'data-placeholder',

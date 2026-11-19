@@ -6,6 +6,7 @@ import { DesignSystemProvider } from '../DesignSystemProvider';
 import { Code } from './Code';
 import { CodeBlock } from './CodeBlock';
 import { Prose } from './Prose';
+import { Table } from './Table';
 
 describe('Prose (real browser)', () => {
   test('scales headings and inline code from the inherited font size', () => {
@@ -78,5 +79,69 @@ describe('Prose (real browser)', () => {
     const gapAbove = block.top - before.bottom;
     expect(gapAbove).toBeGreaterThan(0);
     expect(after.top - block.bottom).toBeCloseTo(gapAbove, 0);
+  });
+
+  test('data-not-prose opts a subtree out, but the block keeps its place in the flow', () => {
+    const { getByText, getByTestId } = render(
+      <DesignSystemProvider applyToDocument>
+        <div style={{ fontSize: '20px' }}>
+          <Prose density="balanced">
+            <p>Before</p>
+            <div data-testid="demo" data-not-prose>
+              <h2>Demo heading</h2>
+              <a href="#x">Demo link</a>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>cell</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ul>
+              <li>Item</li>
+            </ul>
+            <h2>Prose heading</h2>
+          </Prose>
+        </div>
+      </DesignSystemProvider>,
+    );
+    // Inside the marked block: no prose heading scale, link underline offset or table display.
+    expect(getComputedStyle(getByText('Demo heading')).fontSize).not.toBe(
+      getComputedStyle(getByText('Prose heading')).fontSize,
+    );
+    expect(getComputedStyle(getByText('Demo link')).textUnderlineOffset).not.toBe('3px');
+    expect(getComputedStyle(getByText('cell').closest('table')!).display).toBe('table');
+    // The marked block itself still gets the space after it.
+    expect(parseFloat(getComputedStyle(getByTestId('demo')).marginBlockEnd)).toBeGreaterThan(0);
+    // `::marker` rules survive the scoping (the exclusion goes before the pseudo-element).
+    const markerColor = getComputedStyle(getByText('Item'), '::marker').color;
+    expect(markerColor).not.toBe(getComputedStyle(getByText('Item')).color);
+  });
+
+  test('a Var UI Table inside keeps display: table (prose makes bare tables scroll blocks)', () => {
+    const { getByTestId } = render(
+      <DesignSystemProvider applyToDocument>
+        <Prose>
+          <table data-testid="bare">
+            <tbody>
+              <tr>
+                <td>a</td>
+              </tr>
+            </tbody>
+          </table>
+          <Table
+            data-testid="component"
+            aria-label="t"
+            columns={[{ key: 'a', header: 'A' }]}
+            data={[{ id: '1', a: 'x' }]}
+          />
+        </Prose>
+      </DesignSystemProvider>,
+    );
+    expect(getComputedStyle(getByTestId('bare')).display).toBe('block');
+    // Native attributes land on the <table> itself (#145).
+    expect(getByTestId('component').tagName).toBe('TABLE');
+    expect(getComputedStyle(getByTestId('component')).display).toBe('table');
   });
 });

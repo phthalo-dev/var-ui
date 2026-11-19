@@ -159,7 +159,7 @@ const hasPreview = Astro.slots.has('preview');
   </div>
   {
     hasPreview ? (
-      <div {...combine(stage({ fade: 'radial', surface: 'none' }), s.preview)} data-prose-isolate>
+      <div {...combine(stage({ fade: 'radial', surface: 'none' }), s.preview)} data-not-prose>
         <slot name="preview" />
       </div>
     ) : null

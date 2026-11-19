@@ -27,7 +27,7 @@ export const playgroundShellStyles = typestyles.recipe({
         marginInlineEnd: 'auto',
         '&&': { display: 'none', [belowLg]: { display: 'inline-flex' } },
       },
-      /** Wide reference article (color ramps); typography comes from `proseContent`. */
+      /** Wide reference article (color ramps); typography comes from `docsProse`. */
       article: {
         maxWidth: '72rem',
         marginInline: 'auto',
