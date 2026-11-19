@@ -32,7 +32,7 @@ First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design t
 
 ## Browser tests
 
-Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. Filter with `vp test run --project browser|jsdom`.
+Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. To run one of them from the repo root, use the full project name, `vp test run --project '@var-ui/react (browser)'` (or `(jsdom)`), or a glob, `--project '*(browser)'`. The short names `browser` / `jsdom` only match when run from `packages/react`.
 
 One-time setup per machine: `pnpm exec playwright install chromium` (the test run fails with that hint if the browser is missing). CI installs and caches it in the Verify job.
 

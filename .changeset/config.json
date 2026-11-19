@@ -2,7 +2,6 @@
   "$schema": "https://unpkg.com/@changesets/config@4.0.0/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "phthalo-dev/var-ui" }],
   "commit": false,
-  "fixed": [],
   "fixed": [
     [
       "@var-ui/astro",
