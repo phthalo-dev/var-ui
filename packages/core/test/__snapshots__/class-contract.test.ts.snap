@@ -1448,6 +1448,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-prose-h2size",
       "--var-ui-prose-h3size",
       "--var-ui-prose-headinggap",
+      "--var-ui-prose-lineheight",
       "--var-ui-prose-secondarycolor",
     ],
   },
