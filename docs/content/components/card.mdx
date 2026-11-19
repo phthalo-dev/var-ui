@@ -29,7 +29,12 @@ card. The card gets button semantics, focus and Enter/Space, with the title as i
 block content ends up inside a button. Links and buttons inside the card keep working.
 
 ```tsx
-<Card title="Memory" titleEnd={<Badge tone="success">Saved</Badge>} description="Tuesday" onClick={open} />
+<Card
+  title="Memory"
+  titleEnd={<Badge tone="success">Saved</Badge>}
+  description="Tuesday"
+  onClick={open}
+/>
 ```
 
 ## Props
