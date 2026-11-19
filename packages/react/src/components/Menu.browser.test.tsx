@@ -667,6 +667,32 @@ describe('Menu.ContextMenu anchoring', () => {
     expect(item('Copy').contains(hit)).toBe(true);
   });
 
+  test('the first right-click never paints the popup at the window corner', async () => {
+    render(<Ctx />);
+    // Sample every frame from the gesture on: an open, painted popup must already be anchored at
+    // the pointer, not at 0,0 for a frame while it mounts and anchors (#257 review).
+    const frames: Array<{ left: number; top: number }> = [];
+    let sampling = true;
+    const sample = () => {
+      const el = document.querySelector<HTMLElement>('[popover]');
+      if (el?.matches(':popover-open')) {
+        const r = el.getBoundingClientRect();
+        if (r.width > 0) frames.push({ left: r.left, top: r.top });
+      }
+      if (sampling) requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+    await userEvent.click(surface(), { button: 'right', position: { x: 50, y: 60 } });
+    await settled(popup());
+    await raf();
+    sampling = false;
+    expect(frames.length).toBeGreaterThan(0);
+    for (const frame of frames) {
+      expect(Math.round(frame.left)).toBe(150);
+      expect(frame.top).toBeGreaterThanOrEqual(160 - 1);
+    }
+  });
+
   test('a second right-click moves the anchor and the menu', async () => {
     render(<Ctx />);
     await userEvent.click(surface(), { button: 'right', position: { x: 20, y: 20 } });
