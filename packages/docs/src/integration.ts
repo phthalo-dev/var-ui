@@ -9,7 +9,9 @@ import { vitePluginVarDocsTypestyles } from './integrations/typestyles';
 import { vitePluginVarDocsPackageExports } from './integrations/vite-package-exports';
 import { vitePluginVarDocsVirtualModules } from './integrations/vite-virtual-modules';
 import { designTokenShikiTheme } from './utils/shiki-theme';
+import { codeBlockMarkup } from '@var-ui/core';
 import { codeBlockShikiTransformer } from './utils/shiki-code-block';
+import { followCodeBlockMarkup } from './integrations/code-block-markup-dev';
 import {
   assertSingleStaticGuidePrefix,
   guideInjectPatterns,
@@ -56,6 +58,9 @@ function emitMarkdownViews(
  * `@var-ui/docs-components`.
  */
 export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
+  // The Shiki transformer runs in the config context, where `@var-ui/core` is its built `dist`.
+  // In dev it switches to a copy loaded through Vite that follows source edits (#195).
+  const markupImpl = { current: codeBlockMarkup };
   if (typeof userOpts !== 'object' || userOpts === null || Array.isArray(userOpts)) {
     throw new AstroError(
       'Invalid config passed to varDocs integration',
@@ -149,7 +154,7 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
           markdown: {
             shikiConfig: {
               theme: shikiTheme,
-              transformers: [codeBlockShikiTransformer()],
+              transformers: [codeBlockShikiTransformer({ markup: () => markupImpl.current })],
             },
           },
           vite: {
@@ -159,6 +164,9 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
             },
           },
         } as Parameters<typeof updateConfig>[0]);
+      },
+      'astro:server:setup': async ({ server, logger }) => {
+        await followCodeBlockMarkup(server as never, markupImpl, logger);
       },
       'astro:build:start': async ({ logger }) => {
         // Prefer project cwd (Astro runs build from the site root).

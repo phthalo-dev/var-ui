@@ -73,7 +73,15 @@ function hastProps(
  * Shiki transformer that wraps markdown fenced code in the Var UI `codeBlock` chrome (40px header
  * with a language label and copy button), so guide pages share one code block with demos.
  */
-export function codeBlockShikiTransformer() {
+export function codeBlockShikiTransformer({
+  markup = () => codeBlockMarkup,
+}: {
+  /**
+   * Where the transformer gets `codeBlockMarkup`. The integration passes the copy it loads
+   * through Vite in dev, so core source edits apply without a restart (#195).
+   */
+  markup?: () => typeof codeBlockMarkup;
+} = {}) {
   return {
     name: 'var-ui:code-block',
     root(this: ShikiTransformerContext, root: HastNode) {
@@ -81,7 +89,7 @@ export function codeBlockShikiTransformer() {
       if (!pre) return;
       const lang = (this.options.lang ?? '').toLowerCase();
       // The same structure as the React and Astro `CodeBlock` (#194).
-      const m = codeBlockMarkup({ code: this.source, language: lang || 'text' });
+      const m = markup()({ code: this.source, language: lang || 'text' });
 
       const { class: shikiClass, ...preProperties } = pre.properties ?? {};
       pre.properties = {
