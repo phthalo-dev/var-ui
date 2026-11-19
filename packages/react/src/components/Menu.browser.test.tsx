@@ -602,6 +602,20 @@ describe('Menu.ContextMenu anchoring', () => {
     expect(isOpen()).toBe(false);
   });
 
+  test('the popup paints and hit-tests at its own rect (#235)', async () => {
+    render(<Ctx />);
+    await userEvent.click(surface(), { button: 'right', position: { x: 50, y: 60 } });
+    await settled(popup());
+    // Chrome's initial `position-visibility` is `anchors-visible`: a `visibility: hidden`
+    // virtual anchor would hide the whole popup, so it would be open but neither painted nor
+    // hit-testable.
+    const anchor = document.querySelector<HTMLElement>('[data-context-menu-anchor]')!;
+    expect(getComputedStyle(anchor).visibility).toBe('visible');
+    const r = item('Copy').getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    expect(item('Copy').contains(hit)).toBe(true);
+  });
+
   test('a second right-click moves the anchor and the menu', async () => {
     render(<Ctx />);
     await userEvent.click(surface(), { button: 'right', position: { x: 20, y: 20 } });
