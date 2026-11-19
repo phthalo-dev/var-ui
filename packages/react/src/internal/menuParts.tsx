@@ -142,7 +142,7 @@ type MenuContextValue = {
 };
 
 /** Whether items of the nearest menu list render the radio check (false inside submenus). */
-const MenuCheckContext = createContext(false);
+export const MenuCheckContext = createContext(false);
 
 const { Context: MenuContext, use: useMenuContext } =
   createOverlayContext<MenuContextValue>('Menu');
