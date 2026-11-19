@@ -24,44 +24,54 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
+      "@var-ui/source": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
     "./color-mode-script": {
+      "@var-ui/source": "./src/theme/colorModeScript.ts",
       "types": "./dist/theme/colorModeScript.d.mts",
       "import": "./dist/theme/colorModeScript.mjs"
     },
     "./vite": {
+      "@var-ui/source": "./src/vite.ts",
       "types": "./dist/vite.d.mts",
       "import": "./dist/vite.mjs"
     },
     "./theme-constants": {
+      "@var-ui/source": "./src/theme/constants.ts",
       "types": "./dist/theme/constants.d.mts",
       "import": "./dist/theme/constants.mjs"
     },
     "./register-default-theme": {
+      "@var-ui/source": "./src/theme/register-default.ts",
       "types": "./dist/theme/register-default.d.mts",
       "import": "./dist/theme/register-default.mjs"
     },
     "./styles": {
+      "@var-ui/source": "./src/styles.ts",
       "types": "./dist/styles.d.mts",
       "import": "./dist/styles.mjs"
     },
     "./styles.css": "./dist/styles.css",
     "./components/*": {
+      "@var-ui/source": "./src/components/*.ts",
       "types": "./dist/components/*.d.mts",
       "import": "./dist/components/*.mjs"
     },
     "./components/index": null,
     "./shared/*": {
+      "@var-ui/source": "./src/shared/*.ts",
       "types": "./dist/shared/*.d.mts",
       "import": "./dist/shared/*.mjs"
     },
     "./tokens/declare": {
+      "@var-ui/source": "./src/tokens/declare.ts",
       "types": "./dist/tokens/declare.d.mts",
       "import": "./dist/tokens/declare.mjs"
     },
     "./icons/iconNames": {
+      "@var-ui/source": "./src/icons/iconNames.ts",
       "types": "./dist/icons/iconNames.d.mts",
       "import": "./dist/icons/iconNames.mjs"
     }

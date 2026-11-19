@@ -729,12 +729,6 @@ importers:
 
   packages/react:
     dependencies:
-      '@react-aria/i18n':
-        specifier: ^3.13.1
-        version: 3.13.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      react-aria:
-        specifier: 3.50.0
-        version: 3.50.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typestyles:
         specifier: 'catalog:'
         version: 0.35.2

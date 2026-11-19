@@ -263,13 +263,17 @@ export function initCommandPalette(root: HTMLElement): () => void {
 
   controllers.set(root, controller);
 
-  // Remember chosen results (Enter clicks the link too) for the "Recent" group.
+  // Remember chosen results (Enter clicks the link too) for the "Recent" group, and close the
+  // palette: with view transitions it can sit in a persisted element (`transition:persist`), so
+  // navigating does not unload it. A modifier click opens a new tab or window: stay open.
   results.addEventListener('click', (event) => {
     const link = (event.target as HTMLElement | null)?.closest<HTMLElement>(
       '[data-var-ui-command-palette-item]',
     );
-    const id = link?.dataset.itemId;
+    if (!link) return;
+    const id = link.dataset.itemId;
     if (recentKey && id) rememberCommandPaletteId(recentKey, id);
+    if (!(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) setOpen(false);
   });
 
   dialog.addEventListener('close', () => {

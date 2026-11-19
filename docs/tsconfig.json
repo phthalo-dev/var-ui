@@ -3,27 +3,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"],
-      "@var-ui/core/theme-constants": ["../packages/core/src/theme/constants.ts"],
-      "@var-ui/core/color-mode-script": ["../packages/core/src/theme/colorModeScript.ts"],
-      "@var-ui/core/styles": ["../packages/core/src/styles.ts"],
-      "@var-ui/core/components/*": ["../packages/core/src/components/*"],
-      "@var-ui/core": ["../packages/core/src/index.ts"],
-      "@var-ui/react": ["../packages/react/src/index.ts"],
-      "@var-ui/icons/glyphs": ["../packages/icons/src/glyphs.ts"],
-      "@var-ui/icons/brand": ["../packages/icons/src/brand.ts"],
-      "@var-ui/icons/glyphs/*": ["../packages/icons/src/glyph-data/*"],
-      "@var-ui/icons": ["../packages/icons/src/index.ts"],
-      "@var-ui/astro": ["../packages/astro/index.ts"],
-      "@var-ui/docs": ["../packages/docs/index.ts"],
-      "@var-ui/docs/schema": ["../packages/docs/schema.ts"],
-      "@var-ui/docs/utils": ["../packages/docs/src/utils/index.ts"],
-      "@var-ui/docs/theme-client": ["../packages/docs/src/utils/theme/client.ts"],
-      "@var-ui/docs/highlight": ["../packages/docs/src/utils/highlightCodeBlock.ts"],
-      "@var-ui/docs/styles": ["../packages/docs/src/styles/index.ts"],
-      "@var-ui/docs/shiki": ["../packages/docs/src/utils/shiki-theme.ts"],
-      "@var-ui/docs/*": ["../packages/docs/src/components/*"]
-    }
+      "@/*": ["./src/*"]
+    },
+    "customConditions": ["@var-ui/source"]
   },
   "include": [
     "src",

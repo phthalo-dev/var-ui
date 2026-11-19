@@ -8,10 +8,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "types": ["vite/client"],
-    "paths": {
-      "@var-ui/icons/glyphs": ["../icons/src/glyphs.ts"],
-      "@var-ui/icons/glyphs/*": ["../icons/src/glyph-data/*"]
-    }
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["index.ts", "src/**/*.ts", "src/**/*.astro", "src/env.d.ts"]
 }

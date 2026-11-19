@@ -13,6 +13,7 @@ export const sizeTokenSchema = {
     sm: atProperty.length,
     md: atProperty.length,
     lg: atProperty.length,
+    xl: atProperty.length,
   },
   /** Minimum widths for text-entry fields. */
   field: {

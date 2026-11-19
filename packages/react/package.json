@@ -19,10 +19,12 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
+      "@var-ui/source": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
     "./components/*": {
+      "@var-ui/source": "./src/components/*.tsx",
       "types": "./dist/components/*.d.mts",
       "import": "./dist/components/*.mjs"
     },
@@ -37,8 +39,6 @@
     "dev": "vp pack --watch"
   },
   "dependencies": {
-    "@react-aria/i18n": "^3.13.1",
-    "react-aria": "3.50.0",
     "typestyles": "catalog:"
   },
   "devDependencies": {
