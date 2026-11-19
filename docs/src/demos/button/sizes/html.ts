@@ -3,6 +3,7 @@ import { mergeProps } from '../../../lib/mergeProps';
 import { serializeHtmlTag } from '../../serializeHtml';
 
 const sizes = [
+  ['xs', 'Extra small'],
   ['sm', 'Small'],
   ['md', 'Medium'],
   ['lg', 'Large'],
