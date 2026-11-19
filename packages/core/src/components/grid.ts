@@ -1,4 +1,4 @@
-import { atProperty, variant, type CSSProperties, type RecipeVariants } from 'typestyles';
+import { atProperty, variant, type RecipeVariants } from 'typestyles';
 import { breakpoint, typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { gap } from '../shared/variantAxes';
@@ -11,34 +11,50 @@ const gridColumns = variant.enum(
 /** Per-breakpoint column counts backing the responsive `columns` map. */
 export type GridResponsiveColumns = Partial<Record<'base' | 'sm' | 'md' | 'lg' | 'xl', number>>;
 
-const RESPONSIVE_BREAKPOINTS = ['sm', 'md', 'lg', 'xl'] as const;
+type GridColumnStop = keyof GridResponsiveColumns;
+
+const COLUMN_STOPS = ['base', 'sm', 'md', 'lg', 'xl'] as const satisfies readonly GridColumnStop[];
+
+/**
+ * Custom properties holding the track list for each stop of a responsive `columns` map. They have
+ * no default on purpose: an unset stop falls back to the previous one (and before the first set
+ * stop, to the `auto` template), so they are plain names rather than registered recipe vars.
+ */
+export const gridColumnTracksVar = {
+  base: '--var-ui-grid-columns-base',
+  sm: '--var-ui-grid-columns-sm',
+  md: '--var-ui-grid-columns-md',
+  lg: '--var-ui-grid-columns-lg',
+  xl: '--var-ui-grid-columns-xl',
+} as const satisfies Record<GridColumnStop, `--${string}`>;
 
 const fixedTracks = (count: number) => `repeat(${count}, minmax(0, 1fr))`;
 
 /**
- * Media-query class backing the responsive `columns` map (`{ base: 2, lg: 7 }`)
- * on the React and Astro `Grid`. Values must be positive integers. Combine it
- * with the recipe called with `columns: 'fixed'` when `base` is set (the class
- * then owns the template at every width), or `columns: 'auto'` otherwise (the
- * auto-fill template holds until the first breakpoint). Returns undefined when
- * the map sets nothing.
+ * Inline custom properties for a responsive `columns` map (`{ base: 2, lg: 7 }`) on the React and
+ * Astro `Grid`. Pair it with the recipe called with `columns: 'fixed'`, whose static CSS reads
+ * them (so it works with extracted CSS and SSR, unlike a runtime-hashed class). Counts must be
+ * positive integers. Returns undefined when the map sets nothing.
  */
-export function gridColumnsStyle(counts: GridResponsiveColumns): string | undefined {
-  const styles: CSSProperties = {};
-  if (counts.base != null) {
-    styles.gridTemplateColumns = fixedTracks(counts.base);
-  }
-  for (const bp of RESPONSIVE_BREAKPOINTS) {
-    const count = counts[bp];
-    if (count != null) {
-      styles[breakpoint(bp, 'min')] = { gridTemplateColumns: fixedTracks(count) };
+export function gridColumnsVars(counts: GridResponsiveColumns): Record<string, string> | undefined {
+  const vars: Record<string, string> = {};
+  for (const stop of COLUMN_STOPS) {
+    const count = counts[stop];
+    if (count == null) continue;
+    if (!Number.isInteger(count) || count < 1) {
+      throw new Error(`[var-ui] Grid columns.${stop} must be a positive integer (got ${count}).`);
     }
+    vars[gridColumnTracksVar[stop]] = fixedTracks(count);
   }
-  if (Object.keys(styles).length === 0) {
-    return undefined;
-  }
-  return typestyles.hash(styles, { layer: 'components', label: 'grid-columns' });
+  return Object.keys(vars).length > 0 ? vars : undefined;
 }
+
+/** `var(--md, var(--sm, var(--base, <fallback>)))`: the nearest set stop at or below `stop`. */
+const tracksAt = (stop: GridColumnStop, fallback: string) =>
+  COLUMN_STOPS.slice(0, COLUMN_STOPS.indexOf(stop) + 1).reduce(
+    (inner, s) => `var(${gridColumnTracksVar[s]}, ${inner})`,
+    fallback,
+  );
 
 /**
  * Responsive grid. `columns: 'auto'` packs `minmax(minColumnWidth, 1fr)`
@@ -61,11 +77,12 @@ export const grid = typestyles.recipe({
     minColumnWidth: { ...atProperty.length, value: t.size.field.minWidth.var },
   },
   styles: ({ vars }) => {
+    const autoTracks = `repeat(auto-fill, minmax(${vars.minColumnWidth.var}, 1fr))`;
     return {
       base: {
         display: 'grid',
         gap: vars.gap.var,
-        gridTemplateColumns: `repeat(auto-fill, minmax(${vars.minColumnWidth.var}, 1fr))`,
+        gridTemplateColumns: autoTracks,
       },
       variants: {
         columns: {
@@ -78,8 +95,14 @@ export const grid = typestyles.recipe({
           six: { gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' },
           seven: { gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' },
           eight: { gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' },
-          // Template owned by the `gridColumnsStyle` class (responsive maps).
-          fixed: {},
+          // Responsive maps and counts past `eight`: tracks from `gridColumnsVars`, mobile-first.
+          fixed: {
+            gridTemplateColumns: tracksAt('base', autoTracks),
+            [breakpoint('sm', 'min')]: { gridTemplateColumns: tracksAt('sm', autoTracks) },
+            [breakpoint('md', 'min')]: { gridTemplateColumns: tracksAt('md', autoTracks) },
+            [breakpoint('lg', 'min')]: { gridTemplateColumns: tracksAt('lg', autoTracks) },
+            [breakpoint('xl', 'min')]: { gridTemplateColumns: tracksAt('xl', autoTracks) },
+          },
         },
         // Step names map 1:1 to the space tokens (#133).
         gap: {

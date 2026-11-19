@@ -1,6 +1,6 @@
 import { getRegisteredCss } from 'typestyles';
 import { describe, expect, it } from 'vite-plus/test';
-import { grid, gridColumnsStyle } from '../../src/components/grid';
+import { grid, gridColumnTracksVar, gridColumnsVars } from '../../src/components/grid';
 
 describe('grid columns', () => {
   it('seven gives fixed 7-up tracks', () => {
@@ -9,28 +9,24 @@ describe('grid columns', () => {
     expect(css).toContain('repeat(7, minmax(0, 1fr))');
   });
 
-  it('gridColumnsStyle emits a base rule and media rules per breakpoint', () => {
-    const className = gridColumnsStyle({ base: 2, sm: 3, md: 4, lg: 7 });
-    expect(className).toBeTruthy();
+  it('gridColumnsVars sets one track variable per stop in the map', () => {
+    expect(gridColumnsVars({ base: 2, md: 4, lg: 7 })).toEqual({
+      '--var-ui-grid-columns-base': 'repeat(2, minmax(0, 1fr))',
+      '--var-ui-grid-columns-md': 'repeat(4, minmax(0, 1fr))',
+      '--var-ui-grid-columns-lg': 'repeat(7, minmax(0, 1fr))',
+    });
+    expect(gridColumnsVars({})).toBeUndefined();
+    expect(() => gridColumnsVars({ md: 0 })).toThrow(/positive integer/);
+  });
 
+  it('the fixed variant is static CSS: each breakpoint falls back to the nearest smaller stop (#196)', () => {
+    grid({ columns: 'fixed' });
     const css = getRegisteredCss();
-    const rules = css.split('}').filter((rule) => rule.includes(className!));
-    expect(rules.length).toBeGreaterThan(0);
-
-    const all = rules.join('}');
-    expect(all).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
-    expect(all).toContain('repeat(3, minmax(0, 1fr))');
-    expect(all).toContain('repeat(4, minmax(0, 1fr))');
-    expect(all).toContain('repeat(7, minmax(0, 1fr))');
-    // Breakpoint media queries come from the theme breakpoints.
-    expect(all).toContain('@media');
-  });
-
-  it('gridColumnsStyle is deterministic for the same map', () => {
-    expect(gridColumnsStyle({ base: 2, lg: 7 })).toBe(gridColumnsStyle({ base: 2, lg: 7 }));
-  });
-
-  it('gridColumnsStyle returns undefined for an empty map', () => {
-    expect(gridColumnsStyle({})).toBeUndefined();
+    const { base, sm, md } = gridColumnTracksVar;
+    // Mobile-first: below sm only base applies, else the auto-fill template.
+    expect(css).toMatch(new RegExp(`grid-template-columns: var\\(${base}, repeat\\(auto-fill`));
+    // At md: md, then sm, then base, then auto.
+    expect(css).toContain(`var(${md}, var(${sm}, var(${base}, repeat(auto-fill`);
+    expect(css).toContain('@media (min-width: 48rem)');
   });
 });

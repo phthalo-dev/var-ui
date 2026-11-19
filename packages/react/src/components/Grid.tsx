@@ -1,5 +1,5 @@
 import type { HTMLAttributes, JSX, Ref } from 'react';
-import { grid, gridColumnsStyle, type GridResponsiveColumns } from '@var-ui/core/components/grid';
+import { grid, gridColumnsVars, type GridResponsiveColumns } from '@var-ui/core/components/grid';
 import type { Gap, GridVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from 'typestyles';
@@ -32,7 +32,7 @@ export type GridProps = HTMLAttributes<HTMLDivElement> & {
 
 function resolveColumns(columns: GridColumns): {
   variant: NonNullable<GridVariantProps['columns']>;
-  columnsClassName?: string;
+  columnsStyle?: Record<string, string>;
 } {
   if (typeof columns === 'number') {
     const word = columnVariant[columns as keyof typeof columnVariant];
@@ -44,14 +44,12 @@ function resolveColumns(columns: GridColumns): {
         '[var-ui] Grid columns must be a positive integer, "auto", or a per-breakpoint count map.',
       );
     }
-    // Counts beyond the named variants go through the responsive style path.
-    return { variant: 'fixed', columnsClassName: gridColumnsStyle({ base: columns }) };
+    // Counts beyond the named variants go through the responsive track variables.
+    return { variant: 'fixed', columnsStyle: gridColumnsVars({ base: columns }) };
   }
   if (typeof columns === 'object' && columns !== null) {
-    return {
-      variant: columns.base != null ? 'fixed' : 'auto',
-      columnsClassName: gridColumnsStyle(columns),
-    };
+    // `fixed` reads the per-breakpoint tracks and falls back to `auto` before the first set one.
+    return { variant: 'fixed', columnsStyle: gridColumnsVars(columns) };
   }
   return { variant: 'auto' };
 }
@@ -73,15 +71,17 @@ export function Grid({
   ref,
   ...props
 }: GridProps): JSX.Element {
-  const { variant, columnsClassName } = resolveColumns(columns);
+  const { variant, columnsStyle } = resolveColumns(columns);
   const minColumnWidthStyle = minColumnWidth
     ? styleVars([[gridVars.minColumnWidth, minColumnWidth]])
     : undefined;
+  const ownStyle =
+    columnsStyle || minColumnWidthStyle ? { ...columnsStyle, ...minColumnWidthStyle } : undefined;
   return (
     <div
       {...props}
-      {...mergeProps(grid({ columns: variant, gap }), columnsClassName, className)}
-      style={minColumnWidthStyle ? { ...style, ...minColumnWidthStyle } : style}
+      {...mergeProps(grid({ columns: variant, gap }), className)}
+      style={ownStyle ? { ...ownStyle, ...style } : style}
       ref={ref}
     />
   );

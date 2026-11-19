@@ -39,7 +39,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "fileInput",
       "getColorModeInitScript",
       "getMeterTone",
-      "gridColumnsStyle",
+      "gridColumnsVars",
       "hiddenClassName",
       "hiddenStyle",
       "hoverCard",
@@ -90,6 +90,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "object": [
       "figtreeGrotesk",
       "focusRing",
+      "gridColumnTracksVar",
       "placement",
       "scrollAreaFade",
       "scrollAreaOrientation",
@@ -209,7 +210,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "helper": 62,
       "icons": 1,
       "layout": 5,
-      "object": 5,
+      "object": 6,
       "recipe": 61,
       "recipe-adjacent": 6,
       "runtime": 1,
@@ -219,10 +220,10 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByKind": {
       "function": 147,
       "number": 4,
-      "object": 20,
+      "object": 21,
       "string": 5,
     },
-    "runtimeExports": 176,
+    "runtimeExports": 177,
     "typeOnlyExports": 151,
   },
   "typeOnlyExports": [
