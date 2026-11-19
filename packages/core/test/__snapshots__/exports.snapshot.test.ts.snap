@@ -90,9 +90,9 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "object": [
       "figtreeGrotesk",
       "focusRing",
-      "placement",
       "scrollAreaFade",
       "scrollAreaOrientation",
+      "toastPlacement",
     ],
     "recipe": [
       "alert",
