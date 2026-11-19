@@ -121,6 +121,25 @@ describe('Menu on a native popover', () => {
     expect(item('Add to Library')).toBe(document.activeElement);
   });
 
+  test('the popup anchors to the trigger, never to one of its own items (#234)', async () => {
+    render(<Basic />);
+    await userEvent.click(trigger());
+    await settled(popup());
+    const name = getComputedStyle(trigger()).getPropertyValue('anchor-name');
+    expect(name).toMatch(/^--/);
+    expect(getComputedStyle(popup()).getPropertyValue('position-anchor')).toBe(name);
+    for (const el of popup().querySelectorAll('*')) {
+      expect(getComputedStyle(el).getPropertyValue('anchor-name')).toBe('none');
+    }
+    // Moving focus through the items (each runs `usePress`) must not move the anchor.
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await raf();
+    expect(getComputedStyle(trigger()).getPropertyValue('anchor-name')).toBe(name);
+    expect(popup().getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      trigger().getBoundingClientRect().bottom - 1,
+    );
+  });
+
   test('ArrowUp on the trigger opens with the last item focused', async () => {
     render(<Basic />);
     trigger().focus();
