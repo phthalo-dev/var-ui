@@ -18,6 +18,7 @@ export * from './checkbox';
 export * from './chip';
 export * from './chipGroup';
 export * from './codeBlock';
+export * from './codeBlockMarkup';
 export * from './collapsible';
 export * from './colorField';
 export * from './colorPicker';

@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, JSX, Ref } from 'react';
 import { useMemo } from 'react';
-import { codeBlock, codeLanguageLabel } from '@var-ui/core/components/codeBlock';
+import { codeBlock } from '@var-ui/core/components/codeBlock';
+import { codeBlockMarkup, type CodeBlockAttributes } from '@var-ui/core/components/codeBlockMarkup';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { useCopy } from '../hooks/useCopy';
@@ -23,12 +24,9 @@ function classifyDiffLine(line: string): DiffLineTone | undefined {
   return undefined;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+/** `codeBlockMarkup` attributes as React props (`class` is `className`). */
+function reactProps({ class: className, ...rest }: CodeBlockAttributes): Record<string, unknown> {
+  return { className, ...rest };
 }
 
 export type CodeBlockProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
@@ -117,25 +115,30 @@ export function CodeBlock({
     );
   }
 
+  // Same structure as Astro and the docs Shiki transformer (#194). React drives the copy button
+  // itself, so it takes only its class from the markup, not the script hooks.
+  const m = codeBlockMarkup({ code, language, filename, variant, copyable });
   return (
     <div
       {...rest}
-      {...mergeProps(cb.root, className)}
+      {...reactProps(m.root)}
+      className={mergeProps(m.root.class, className).className}
       ref={ref as Ref<HTMLDivElement>}
-      data-codeblock
     >
-      <div {...mergeProps(cb.header)} data-codeblock-header>
-        <div {...mergeProps(cb.title)}>
-          {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? (
-            <span {...mergeProps(cb.language)}>{codeLanguageLabel(language)}</span>
+      <div {...reactProps(m.header)}>
+        <div {...reactProps(m.title)}>
+          {m.filename ? (
+            <span {...reactProps(m.filename.attributes)}>{m.filename.text}</span>
+          ) : null}
+          {m.language ? (
+            <span {...reactProps(m.language.attributes)}>{m.language.text}</span>
           ) : null}
         </div>
-        {copyable ? (
-          <div {...mergeProps(cb.actions)}>
+        {m.actions && m.copyButton && m.feedback ? (
+          <div {...reactProps(m.actions)}>
             <button
               type="button"
-              {...mergeProps(cb.copyButton)}
+              className={m.copyButton.class}
               data-copied={copied || undefined}
               data-error={error ? true : undefined}
               onClick={() => void copy(code)}
@@ -147,10 +150,8 @@ export function CodeBlock({
             </button>
             {/* Announces the result; the recipe shows it only for errors (success has the check). */}
             <span
-              {...mergeProps(cb.feedback)}
+              {...reactProps(m.feedback)}
               data-tone={{ idle: undefined, copied: 'success', error: 'error' }[copyState]}
-              role="status"
-              aria-live="polite"
             >
               {copyState === 'idle' ? '' : label}
             </span>
@@ -158,12 +159,8 @@ export function CodeBlock({
         ) : null}
       </div>
 
-      <div
-        {...mergeProps(cb.body)}
-        data-codeblock-body
-        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
-      >
-        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
+      <div {...reactProps(m.body)} style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}>
+        <pre {...reactProps(m.pre)} data-wrap={wrapLongLines || undefined}>
           {showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {
@@ -203,7 +200,8 @@ export function CodeBlock({
               dangerouslySetInnerHTML={{ __html: codeHtml! }}
             />
           ) : (
-            <code {...mergeProps(cb.code)}>{escapeHtml(code)}</code>
+            // React escapes text itself; escaping here too showed `&lt;` instead of `<`.
+            <code {...mergeProps(cb.code)}>{code}</code>
           )}
         </pre>
       </div>
