@@ -534,6 +534,14 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { Section } from '@var-ui/react';",
   },
   {
+    slug: 'bleed',
+    name: 'Bleed',
+    category: 'layout',
+    description:
+      'Spans a padded, centred frame edge to edge while its content stays on the column.',
+    importLine: "import { Bleed } from '@var-ui/react';",
+  },
+  {
     slug: 'center',
     name: 'Center',
     category: 'layout',

@@ -1,0 +1,13 @@
+---
+import { Bleed, Stack, Text } from '@var-ui/astro';
+---
+
+<div style="container-type: inline-size; padding-inline: 1.5rem; border: 0.0625rem dashed var(--var-ui-color-border-default)">
+  <Stack gap="sm" style="max-width: 20rem; margin-inline: auto">
+    <Text>The column</Text>
+    <Bleed gutter="1.5rem" style="background: var(--var-ui-color-background-subtle); padding-block: 0.75rem">
+      <Text>A full-bleed band, content on the column</Text>
+    </Bleed>
+    <Text>The column again</Text>
+  </Stack>
+</div>
