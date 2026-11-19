@@ -3,6 +3,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import { componentRegistry } from '../data/components.ts';
 import { canonicalizePropType } from './prop-type-format.ts';
+import { getRecipeDefaults } from './recipe-defaults.ts';
 
 export type PropDoc = {
   name: string;
@@ -178,7 +179,11 @@ function findTypeAlias(program: ts.Program, typeName: string): ts.TypeAliasDecla
   return undefined;
 }
 
-function extractPropsForType(program: ts.Program, typeName: string): ComponentPropsDoc | undefined {
+function extractPropsForType(
+  program: ts.Program,
+  typeName: string,
+  recipeDefaults: Record<string, string> = {},
+): ComponentPropsDoc | undefined {
   const checker = program.getTypeChecker();
   const alias = findTypeAlias(program, typeName);
 
@@ -216,7 +221,10 @@ function extractPropsForType(program: ts.Program, typeName: string): ComponentPr
         checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation),
       ),
       required: isPropertyRequired(prop, propType, checker),
-      default: getJsDocTag(prop, 'default'),
+      // JSDoc `@default` wins; recipe variant props (`size`, `tone`, …) fall back to the recipe's.
+      default:
+        getJsDocTag(prop, 'default') ??
+        (source === 'var-ui' ? recipeDefaults[prop.name] : undefined),
       description: getJsDocDescription(prop, checker),
       source,
     });
@@ -271,7 +279,7 @@ export function extractAllComponentProps(): Record<string, ComponentPropsDoc> {
 
   for (const entry of componentRegistry) {
     const typeName = `${entry.name}Props`;
-    const doc = extractPropsForType(program, typeName);
+    const doc = extractPropsForType(program, typeName, getRecipeDefaults(entry.slug));
 
     if (!doc) {
       console.warn(`[extract-props] Missing props type: ${typeName} (${entry.slug})`);
