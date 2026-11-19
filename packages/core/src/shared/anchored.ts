@@ -49,16 +49,21 @@ const usableViewportWidth = `anchor-size(${viewportAnchor} width, 100vw)`;
 
 const isBlockSide = (side: PopupSide) => side === 'top' || side === 'bottom';
 
-/** `position-area` for a placement. Logical values, so start/end mirror in RTL with no JS. */
+/**
+ * `position-area` for a placement. `self-` logical keywords, so start/end follow the popup's own
+ * direction and mirror in RTL with no JS. Plain `inline-start` / `span-inline-end` resolve
+ * against the containing block, which for a top-layer popover is the root: under a subtree
+ * `dir="rtl"` (a `DirectionProvider`) they stayed left-to-right.
+ */
 export function popupPositionArea(side: PopupSide, align: PopupAlign): string {
   if (isBlockSide(side)) {
-    const block = side === 'bottom' ? 'block-end' : 'block-start';
+    const block = side === 'bottom' ? 'self-block-end' : 'self-block-start';
     if (align === 'center') return block;
-    return `${block} ${align === 'start' ? 'span-inline-end' : 'span-inline-start'}`;
+    return `${block} ${align === 'start' ? 'span-self-inline-end' : 'span-self-inline-start'}`;
   }
-  const inline = side === 'start' ? 'inline-start' : 'inline-end';
+  const inline = side === 'start' ? 'self-inline-start' : 'self-inline-end';
   if (align === 'center') return inline;
-  return `${inline} ${align === 'start' ? 'span-block-end' : 'span-block-start'}`;
+  return `${inline} ${align === 'start' ? 'span-self-block-end' : 'span-self-block-start'}`;
 }
 
 /** Flip along the placement axis first, then the other, then both. */

@@ -258,8 +258,7 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
         cursor: 'not-allowed',
       },
     },
-    // The day grid is a <table>: opt out of the element base styles (outer border, cell
-    // borders, `th` fill, bottom margin) that are meant for prose tables.
+    // The day grid is a <table>: collapse the UA cell spacing.
     calendarGrid: {
       borderCollapse: 'collapse',
       width: '100%',
@@ -267,8 +266,6 @@ export function calendarGridChrome(colors: CalendarGridChromeColors) {
       border: 'none',
     },
     calendarHeaderCell: {
-      border: 'none',
-      backgroundColor: 'transparent',
       textAlign: 'center',
       fontSize: t.fontSize.sm.var,
       fontWeight: t.fontWeight.medium.var,
