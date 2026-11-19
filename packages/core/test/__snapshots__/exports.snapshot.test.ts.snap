@@ -39,7 +39,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "fileInput",
       "getColorModeInitScript",
       "getMeterTone",
-      "gridColumnsStyle",
+      "gridColumnsVars",
       "hiddenClassName",
       "hiddenStyle",
       "hoverCard",

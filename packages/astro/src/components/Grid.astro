@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { grid, gridColumnsStyle, type GridResponsiveColumns } from '@var-ui/core/components/grid';
+import { grid, gridColumnsVars, type GridResponsiveColumns } from '@var-ui/core/components/grid';
 import type { Gap, GridVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
@@ -33,7 +33,7 @@ type Props = HTMLAttributes<'div'> & {
 const { columns = 'auto', minColumnWidth, gap = 'md', className, style, ...rest } = Astro.props;
 
 let variant: NonNullable<GridVariantProps['columns']> = 'auto';
-let columnsClassName: string | undefined;
+let columnsStyle: Record<string, string> | undefined;
 if (typeof columns === 'number') {
   const word = columnVariant[columns as keyof typeof columnVariant];
   if (word) {
@@ -45,17 +45,31 @@ if (typeof columns === 'number') {
       );
     }
     variant = 'fixed';
-    columnsClassName = gridColumnsStyle({ base: columns });
+    columnsStyle = gridColumnsVars({ base: columns });
   }
 } else if (typeof columns === 'object' && columns !== null) {
-  variant = columns.base != null ? 'fixed' : 'auto';
-  columnsClassName = gridColumnsStyle(columns);
+  // `fixed` reads the per-breakpoint tracks and falls back to `auto` before the first set one.
+  variant = 'fixed';
+  columnsStyle = gridColumnsVars(columns);
 }
 
-const minColumnWidthStyle = minColumnWidth
-  ? styleVars([[gridVars.minColumnWidth, minColumnWidth]])
-  : undefined;
-const mergedStyle = mergeInlineStyle(minColumnWidthStyle, style);
-const rp = mergeProps(grid({ columns: variant, gap }), columnsClassName, className);
+const ownVars = {
+  ...columnsStyle,
+  ...(minColumnWidth ? styleVars([[gridVars.minColumnWidth, minColumnWidth]]) : undefined),
+};
+const minColumnWidthStyle = Object.keys(ownVars).length > 0 ? ownVars : undefined;
+// `style` may be a string or an object depending on the caller.
+const mergedStyle =
+  minColumnWidthStyle == null
+    ? style
+    : typeof style === 'string'
+      ? [
+          ...Object.entries(minColumnWidthStyle).map(([name, value]) => `${name}: ${value}`),
+          style,
+        ]
+          .filter(Boolean)
+          .join('; ')
+      : { ...style, ...minColumnWidthStyle };
+const rp = mergeProps(grid({ columns: variant, gap }), className);
 ---
 <div {...rest} {...rp} style={mergedStyle}><slot /></div>
