@@ -37,8 +37,6 @@
     "dev": "vp pack --watch"
   },
   "dependencies": {
-    "@react-aria/i18n": "^3.13.1",
-    "react-aria": "3.50.0",
     "typestyles": "catalog:"
   },
   "devDependencies": {
@@ -54,6 +52,7 @@
     "jsdom": "^26.0.0",
     "playwright": "catalog:",
     "react": "catalog:",
+    "react-aria": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
@@ -66,6 +65,7 @@
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",
     "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "react": "catalog:",
+    "react-aria": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:"
   },
