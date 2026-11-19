@@ -19,10 +19,12 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
+      "@var-ui/source": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
     "./components/*": {
+      "@var-ui/source": "./src/components/*.tsx",
       "types": "./dist/components/*.d.mts",
       "import": "./dist/components/*.mjs"
     },

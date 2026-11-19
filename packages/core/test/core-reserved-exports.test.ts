@@ -12,6 +12,7 @@ describe('@var-ui/core package.json', () => {
   it('exports and marks styles.css as a side effect', () => {
     expect(pkg.exports['./styles.css']).toBe('./dist/styles.css');
     expect(pkg.exports['./styles']).toEqual({
+      '@var-ui/source': './src/styles.ts',
       types: './dist/styles.d.mts',
       import: './dist/styles.mjs',
     });

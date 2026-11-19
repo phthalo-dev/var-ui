@@ -87,29 +87,21 @@ ${reexports}
 
 const pkgPath = join(pkgRoot, 'package.json');
 const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+// `@var-ui/source` points in-repo consumers (docs, examples, tests) at the TypeScript source; it
+// is a custom condition no published consumer sets. See SOURCE_CONDITION in source-conditions.ts.
+const entry = (src, dist) => ({
+  '@var-ui/source': `./src/${src}`,
+  types: `./dist/${dist}.d.mts`,
+  import: `./dist/${dist}.mjs`,
+});
 const exports = {
-  '.': {
-    types: './dist/index.d.mts',
-    import: './dist/index.mjs',
-  },
-  './glyphs': {
-    types: './dist/glyphs.d.mts',
-    import: './dist/glyphs.mjs',
-  },
-  './brand': {
-    types: './dist/brand.d.mts',
-    import: './dist/brand.mjs',
-  },
+  '.': entry('index.ts', 'index'),
+  './glyphs': entry('glyphs.ts', 'glyphs'),
+  './brand': entry('brand.ts', 'brand'),
 };
 for (const name of names) {
-  exports[`./glyphs/${name}`] = {
-    types: `./dist/glyph-data/${name}.d.mts`,
-    import: `./dist/glyph-data/${name}.mjs`,
-  };
-  exports[`./${name}`] = {
-    types: `./dist/icons/${name}.d.mts`,
-    import: `./dist/icons/${name}.mjs`,
-  };
+  exports[`./glyphs/${name}`] = entry(`glyph-data/${name}.ts`, `glyph-data/${name}`);
+  exports[`./${name}`] = entry(`icons/${name}.tsx`, `icons/${name}`);
 }
 pkg.exports = exports;
 writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
