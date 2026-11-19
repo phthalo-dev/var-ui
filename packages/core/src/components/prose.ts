@@ -100,7 +100,8 @@ export const prose = typestyles.recipe({
     h1Size: { syntax: '*', value: '1.5em' },
     h2Size: { syntax: '*', value: '1.25em' },
     h3Size: { syntax: '*', value: '1.125em' },
-    lineHeight: { syntax: '*', value: t.lineHeight.normal.var },
+    /** `initial` is a literal: `@property` needs a computationally independent placeholder. */
+    lineHeight: { syntax: '*', initial: 'normal', value: t.lineHeight.normal.var },
     secondaryColor: { ...atProperty.color, value: t.color.text.secondary.var },
     borderColor: { ...atProperty.color, value: t.color.border.default.var },
     codeBackground: { ...atProperty.color, value: t.color.background.subtle.var },

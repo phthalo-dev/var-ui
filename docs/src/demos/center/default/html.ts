@@ -7,7 +7,10 @@ export function render(): string {
   const text = serializeHtmlTag('p', mergeProps(textBlock({})), 'Centered');
   return serializeHtmlTag(
     'div',
-    { ...centerRp, style: 'height: 7.5rem; border: 0.0625rem dashed var(--color-border)' },
+    {
+      ...centerRp,
+      style: 'height: 7.5rem; border: 0.0625rem dashed var(--var-ui-color-border-default)',
+    },
     text,
   );
 }

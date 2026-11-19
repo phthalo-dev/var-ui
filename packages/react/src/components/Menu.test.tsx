@@ -138,6 +138,35 @@ describe('Menu', () => {
     expect(await screen.findByRole('menuitem', { name: 'Edit' })).toBeTruthy();
   });
 
+  it('preset items reserve a check column only in single-choice sections', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>View</Button>}
+        sections={[
+          { items: [{ id: 'edit', label: 'Edit' }] },
+          {
+            defaultValue: 'grid',
+            items: [
+              { id: 'grid', label: 'Grid' },
+              { id: 'list', label: 'List' },
+            ],
+          },
+        ]}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'View' }));
+    await screen.findByText('Edit');
+    const check = (name: string) =>
+      screen
+        .getByText(name)
+        .closest('[role^="menuitem"]')!
+        .querySelector('.var-ui-menu__itemCheck');
+    // A plain action item: no empty column pushing its label in.
+    expect(check('Edit')).toBeNull();
+    expect(check('Grid')).not.toBeNull();
+    expect(check('List')).not.toBeNull();
+  });
+
   it('opens Menu.ContextMenu on contextmenu only', async () => {
     wrap(
       <Menu.ContextMenu sections={[{ items: [{ id: 'copy', label: 'Copy' }] }]}>

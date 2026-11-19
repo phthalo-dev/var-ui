@@ -4,6 +4,7 @@ import { textBlock } from '@var-ui/core/components/typography';
 import type { TextBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 const textVars = recipeVars(textBlock);
 
@@ -51,14 +52,7 @@ if (lineClamp !== undefined) {
   }
 }
 
-const mergedStyle =
-  clampStyle == null
-    ? style
-    : typeof style === 'string'
-      ? [...Object.entries(clampStyle).map(([name, value]) => `${name}: ${value}`), style]
-          .filter(Boolean)
-          .join('; ')
-      : { ...style, ...clampStyle };
+const mergedStyle = mergeInlineStyle(clampStyle, style);
 
 const rp = mergeProps(
   textBlock({ size, tone, weight, eyebrow, mono, whiteSpace, lineClamp: clampVariant }),

@@ -85,7 +85,7 @@ export default defineConfig({
     ],
   },
   staged: {
-    '*.{js,jsx,ts,tsx,json,css,md}': 'vp check --fix',
+    '*.{js,jsx,ts,tsx,json,css,md,mdx}': 'vp check --fix',
   },
   run: {
     cache: true,

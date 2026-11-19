@@ -10,17 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "types": ["node"],
-    "paths": {
-      "@var-ui/core/theme-constants": ["./../../packages/core/src/theme/constants.ts"],
-      "@var-ui/core/color-mode-script": ["./../../packages/core/src/theme/colorModeScript.ts"],
-      "@var-ui/core/styles": ["./../../packages/core/src/styles.ts"],
-      "@var-ui/core/components/*": ["./../../packages/core/src/components/*"],
-      "@var-ui/core": ["./../../packages/core/src/index.ts"],
-      "@var-ui/react": ["./../../packages/react/src/index.ts"],
-      "@var-ui/icons/glyphs": ["./../../packages/icons/src/glyphs.ts"],
-      "@var-ui/icons/glyphs/*": ["./../../packages/icons/src/glyph-data/*"],
-      "@var-ui/icons": ["./../../packages/icons/src/index.ts"]
-    }
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["src", "vite.config.ts", "typestyles-entry.ts"]
 }
