@@ -42,7 +42,7 @@ const s = codeBlockRecipe();
     {
       hasPreview ? (
         <div {...mergeProps(s.stageWrap)}>
-          <div {...combine(stage(), s.preview)} data-prose-isolate data-demo-stage>
+          <div {...combine(stage(), s.preview)} data-not-prose data-demo-stage>
             <div {...mergeProps(s.previewInner)} data-demo-stage-inner>
               <slot name="preview" />
             </div>

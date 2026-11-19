@@ -8,7 +8,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["packages/*/src", "vite.config.ts"],
   "exclude": ["packages/*/node_modules", "examples"]

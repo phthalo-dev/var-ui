@@ -121,6 +121,25 @@ describe('Menu on a native popover', () => {
     expect(item('Add to Library')).toBe(document.activeElement);
   });
 
+  test('the popup anchors to the trigger, never to one of its own items (#234)', async () => {
+    render(<Basic />);
+    await userEvent.click(trigger());
+    await settled(popup());
+    const name = getComputedStyle(trigger()).getPropertyValue('anchor-name');
+    expect(name).toMatch(/^--/);
+    expect(getComputedStyle(popup()).getPropertyValue('position-anchor')).toBe(name);
+    for (const el of popup().querySelectorAll('*')) {
+      expect(getComputedStyle(el).getPropertyValue('anchor-name')).toBe('none');
+    }
+    // Moving focus through the items (each runs `usePress`) must not move the anchor.
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await raf();
+    expect(getComputedStyle(trigger()).getPropertyValue('anchor-name')).toBe(name);
+    expect(popup().getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      trigger().getBoundingClientRect().bottom - 1,
+    );
+  });
+
   test('ArrowUp on the trigger opens with the last item focused', async () => {
     render(<Basic />);
     trigger().focus();
@@ -430,6 +449,10 @@ describe('Menu on a native popover', () => {
         </Menu.Root>
       </Wrap>,
     );
+    // The popover mounts on first open (#237).
+    expect(ref.current).toBeNull();
+    await userEvent.click(trigger());
+    await settled(popup());
     expect(ref.current).toBe(popup());
     expect(popup().getAttribute('data-testid')).toBe('popup');
     expect(popup().classList.contains('mine')).toBe(true);
@@ -437,6 +460,34 @@ describe('Menu on a native popover', () => {
 });
 
 describe('Menu presets on a native popover', () => {
+  test('a list of preset menus mounts no popover until one opens (#237)', async () => {
+    const sections = [{ items: [{ id: 'play', label: 'Play' }] }];
+    render(
+      <Wrap>
+        {Array.from({ length: 20 }, (_, i) => (
+          <Menu.FromSections
+            key={i}
+            sections={sections}
+            trigger={<button type="button">Row {i}</button>}
+          />
+        ))}
+        <Menu.Overflow sections={sections} />
+        <Menu.ContextMenu sections={sections}>
+          <div>Surface</div>
+        </Menu.ContextMenu>
+      </Wrap>,
+    );
+    expect(document.querySelectorAll('[popover]')).toHaveLength(0);
+    const row = [...document.querySelectorAll('button')].find((b) => b.textContent === 'Row 3')!;
+    await userEvent.click(row);
+    await settled(popup());
+    expect(document.querySelectorAll('[popover]')).toHaveLength(1);
+    await userEvent.keyboard('{Escape}');
+    await closed();
+    // The trigger never unmounted, so focus is back on it.
+    expect(document.activeElement).toBe(row);
+  });
+
   test('FromSections opens, runs onAction (with danger/shortcut content) and closes', async () => {
     const onAction = vi.fn();
     render(
@@ -602,6 +653,20 @@ describe('Menu.ContextMenu anchoring', () => {
     expect(isOpen()).toBe(false);
   });
 
+  test('the popup paints and hit-tests at its own rect (#235)', async () => {
+    render(<Ctx />);
+    await userEvent.click(surface(), { button: 'right', position: { x: 50, y: 60 } });
+    await settled(popup());
+    // Chrome's initial `position-visibility` is `anchors-visible`: a `visibility: hidden`
+    // virtual anchor would hide the whole popup, so it would be open but neither painted nor
+    // hit-testable.
+    const anchor = document.querySelector<HTMLElement>('[data-context-menu-anchor]')!;
+    expect(getComputedStyle(anchor).visibility).toBe('visible');
+    const r = item('Copy').getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    expect(item('Copy').contains(hit)).toBe(true);
+  });
+
   test('a second right-click moves the anchor and the menu', async () => {
     render(<Ctx />);
     await userEvent.click(surface(), { button: 'right', position: { x: 20, y: 20 } });
@@ -622,6 +687,7 @@ describe('Menu.ContextMenu anchoring', () => {
     surface().dispatchEvent(
       new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 0, clientY: 0 }),
     );
+    await raf();
     await settled(popup());
     const s = surface().getBoundingClientRect();
     const p = popup().getBoundingClientRect();

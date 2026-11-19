@@ -1,5 +1,5 @@
 ---
-import { proseContent } from '@var-ui/core';
+import { docsProseTableWrap } from '@var-ui/docs/styles';
 import { PropsTable as ReactPropsTable } from './PropsTable';
 import { getAstroComponentDoc, hasAstroBinding } from '../lib/astro-component-docs';
 import { getHtmlApiDoc, getRecipeDefaults } from '../lib/html-api-docs';
@@ -14,7 +14,7 @@ type Props = {
 
 const { slug } = Astro.props;
 const framework = Astro.locals.framework;
-const tableWrap = mergeProps(proseContent().tableWrap);
+const tableWrap = mergeProps(docsProseTableWrap());
 const pt = docsPropsTable();
 const cleanType = (type: string) => type.replace(/\s*\|\s*undefined\b/g, '').trim();
 

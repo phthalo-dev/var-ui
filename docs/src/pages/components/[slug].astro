@@ -11,7 +11,7 @@ import HiddenPropsTable from '@var-ui/docs-components/HiddenPropsTable';
 import PropsTable from '../../components/PropsTable.astro';
 import { mergeProps, combine } from '@var-ui/astro';
 import ComponentPageRails from '../../components/ComponentPageRails.astro';
-import { proseContent } from '@var-ui/core';
+import { docsArticleProse } from '@var-ui/docs/styles';
 import { componentDocArticle } from '../../styles/componentPage';
 import {
   getComponentCategoryLabel,
@@ -47,7 +47,7 @@ const initialTab = parseComponentDocTab(
   Astro.url.searchParams.get('tab') ?? Astro.url.hash.replace(/^#/, ''),
   slug,
 );
-const prose = proseContent();
+const prose = docsArticleProse();
 const article = componentDocArticle();
 const tocContentSelector = "[data-panel='documentation']";
 ---
@@ -67,7 +67,7 @@ const tocContentSelector = "[data-panel='documentation']";
 
   <ComponentDocTabs tabs={docTabs} defaultSelectedId={initialTab}>
     <div slot="documentation">
-      <article {...combine(prose.root, article.root)} data-panel="documentation">
+      <article {...combine(...prose, article.root)} data-panel="documentation">
         <Content components={{ Demo: DemoHost, PropsTable: HiddenPropsTable }} />
       </article>
     </div>
@@ -86,7 +86,7 @@ const tocContentSelector = "[data-panel='documentation']";
       </section>
     </div>
     <div slot="styles">
-      <section {...combine(prose.root, article.panel)} data-panel="styles" aria-label="Styles">
+      <section {...combine(...prose, article.panel)} data-panel="styles" aria-label="Styles">
         <ComponentStylesPanel slug={slug} />
       </section>
     </div>

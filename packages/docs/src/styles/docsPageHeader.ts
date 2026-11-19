@@ -259,7 +259,7 @@ export const docsPageTabs = typestyles.recipe({
 /**
  * Guide article under a `DocsPageHeader`: the MDX `# Title` is already the hero H1, so it is
  * hidden, and the paragraph after it reads as ordinary body text (the hero carries the lead).
- * `utilities` layer, alongside `proseContent`, whose heading rhythm it adjusts.
+ * `utilities` layer, so it overrides the heading rhythm of `docsProse` (in `base`).
  */
 export const docsGuideArticle = typestyles.recipe({
   name: 'docs-guide-article',

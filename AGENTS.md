@@ -30,9 +30,13 @@ release. Add a tool name to select part of the graph. For example, run
 
 First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design tokens — not new `*.css` files or ad-hoc `@media` queries. Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/react` and `@var-ui/astro`). Register site recipes in the TypeStyles extract entry. See `.cursor/rules/typestyles-first.mdc`.
 
+## Loading packages from source
+
+In-repo consumers (the docs site, examples, package tests) load `@var-ui/core`, `@var-ui/react` and `@var-ui/icons` from TypeScript source, not `dist`. Every entry in those packages' `exports` has an `@var-ui/source` condition pointing at its source file. Vite configs spread `sourceConditions` from `source-conditions.ts` (repo root), and every tsconfig sets `customConditions: ["@var-ui/source"]`. To add an entry point, add it to the package's `exports` with the source condition first; no alias anywhere (`packages/core/test/source-condition.test.ts` checks the targets exist). Published consumers never set the condition, so they get `dist`. Exception: TypeStyles CSS extraction still bundles from `dist` (phthalo-dev/typestyles#349), so rebuild core after changing a recipe if extracted CSS looks stale.
+
 ## Browser tests
 
-Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. Filter with `vp test run --project browser|jsdom`.
+Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. To run one of them from the repo root, use the full project name, `vp test run --project '@var-ui/react (browser)'` (or `(jsdom)`), or a glob, `--project '*(browser)'`. The short names `browser` / `jsdom` only match when run from `packages/react`.
 
 One-time setup per machine: `pnpm exec playwright install chromium` (the test run fails with that hint if the browser is missing). CI installs and caches it in the Verify job.
 

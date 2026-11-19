@@ -103,6 +103,8 @@ export const table = typestyles.recipe({
           overflowX: 'auto',
         },
         table: {
+          // Own the display: inside `Prose`, bare tables become scrollable blocks.
+          display: 'table',
           width: '100%',
           minWidth: vars.minWidth.var,
           borderCollapse: 'collapse',
@@ -147,11 +149,10 @@ export const table = typestyles.recipe({
         cell: {
           padding: `${vars.cellPaddingY.var} ${vars.cellPaddingX.var}`,
           color: vars.bodyColor.var,
-          // Override the element base styles (`th` header fill, top alignment): a row-header
-          // `th` in the body is still a body cell, and mixed-height rows center their content.
+          // A row-header `th` in the body is still a body cell: undo the UA's centred `th`.
+          // Mixed-height rows center their content.
           textAlign: 'start',
           verticalAlign: 'middle',
-          backgroundColor: 'transparent',
           '&[data-align="center"]': { textAlign: 'center' },
           '&[data-align="end"]': { textAlign: 'end' },
         },

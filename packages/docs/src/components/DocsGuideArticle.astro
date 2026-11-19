@@ -1,15 +1,15 @@
 ---
-import { proseContent } from '@var-ui/core';
-import { mergeProps } from '@var-ui/astro';
+import { docsArticleProse } from '../styles/docsProse';
+import { combine } from '@var-ui/astro';
 import { docsGuideArticle } from '../styles/docsPageHeader';
 
 const { wide = false } = Astro.props as { wide?: boolean };
-const prose = proseContent();
+const prose = docsArticleProse();
 const article = docsGuideArticle();
 ---
 
 <article
-  {...mergeProps(prose.root, article.root.className, 'docs-article')}
+  {...combine(...prose, article.root, { className: 'docs-article' })}
   data-docs-article
   data-wide={wide || undefined}
 >

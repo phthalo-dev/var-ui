@@ -4,6 +4,16 @@ export type Catalog = {
   meta?: CatalogMeta;
   components: ComponentRecord[];
   guides: GuideRecord[];
+  // Absent in catalogs generated before `var-ui tokens` (#218).
+  tokens?: TokenRecord[];
+};
+
+/** One design token, from `listDesignTokens()` in `@var-ui/core`. */
+export type TokenRecord = {
+  path: string; // 'space.md', 'color.text.primary'
+  cssVar: string; // '--var-ui-space-md'
+  // Built-in default; colours carry `{ light, dark }`.
+  value: string | number | { light?: string | number; dark?: string | number };
 };
 
 export type CatalogMeta = {

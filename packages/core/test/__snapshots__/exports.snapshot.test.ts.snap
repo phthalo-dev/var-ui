@@ -4,7 +4,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
 {
   "runtimeExports": {
     "constant": [
-      "PROSE_ISOLATE_ATTRIBUTE",
+      "NOT_PROSE_ATTRIBUTE",
       "THEME_CLASS_PREFIX",
     ],
     "fonts": [
@@ -54,6 +54,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "pinInput",
       "progressBar",
       "progressCircle",
+      "proseRules",
       "recipeVars",
       "resizeHandle",
       "resolveScrollAreaFade",
@@ -162,7 +163,6 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "layoutFooter",
       "layoutHeader",
       "layoutPanel",
-      "proseContent",
       "switchStyles",
     ],
     "runtime": [
@@ -206,12 +206,12 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByCategory": {
       "constant": 2,
       "fonts": 4,
-      "helper": 61,
+      "helper": 62,
       "icons": 1,
       "layout": 5,
       "object": 5,
       "recipe": 61,
-      "recipe-adjacent": 7,
+      "recipe-adjacent": 6,
       "runtime": 1,
       "theme": 13,
       "tokens": 16,
