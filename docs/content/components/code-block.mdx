@@ -87,6 +87,16 @@ headers the `section` color. Lines are classified from their leading character (
 <CodeBlock code={toolOutput} maxHeight="20rem" />
 ```
 
+### Copy
+
+The copy button takes the same props as [`CopyButton`](/components/copy-button). `copyLabel`, `copiedLabel` and `errorLabel` name the button in each state (it's icon-only, so they're its accessible name). The result is announced in a status region, which is also shown when the copy fails. `onCopied` / `onCopyError` fire after the clipboard write:
+
+```tsx
+<CodeBlock code={command} onCopied={() => toast.success('Command copied')} />
+```
+
+In Astro, `CodeBlock` fires the same bubbling `var-ui:copied` / `var-ui:copy-error` events as `CopyButton` (`COPIED_EVENT`, `COPY_ERROR_EVENT` from `@var-ui/astro`).
+
 ## Props
 
 <PropsTable slug="code-block" />

@@ -2,6 +2,7 @@ import { atProperty, type RecipeVariants, variant, type VariantOptions } from 't
 import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { focusRing } from '../internal/focusRing';
+import { srOnly } from '../internal/srOnly';
 import { border, borderSide } from '../internal/border';
 import { inlineScrollFade } from '../internal/scrollFade';
 
@@ -252,17 +253,6 @@ export const codeBlock = typestyles.recipe({
             width: '1rem',
             height: '1rem',
           },
-          '& [data-codeblock-copy-text]': {
-            position: 'absolute',
-            width: '1px',
-            height: '1px',
-            padding: 0,
-            margin: '-1px',
-            overflow: 'hidden',
-            clip: 'rect(0, 0, 0, 0)',
-            whiteSpace: 'nowrap',
-            border: 0,
-          },
           '&:hover': {
             color: vars.filenameColor.var,
             backgroundColor: vars.copyButtonHoverBackground.var,
@@ -287,7 +277,9 @@ export const codeBlock = typestyles.recipe({
           display: 'inline-flex',
           alignItems: 'center',
           marginInlineStart: t.space.xxs.var,
+          // Success is announced, not shown: the copy icon already turned into a check.
           '&[data-tone="success"]': {
+            ...srOnly,
             color: t.color.tone.success.foreground.var,
           },
           '&[data-tone="error"]': {

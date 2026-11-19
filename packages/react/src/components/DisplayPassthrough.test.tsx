@@ -428,9 +428,9 @@ describe('handler + aria passthrough', () => {
     expect(screen.getByRole('button', { name: 'Mehr' })).toBeTruthy();
   });
 
-  it('CodeBlock copy text is overridable', () => {
-    render(<CodeBlock code="x" copyText="Kopieren" />);
-    expect(screen.getByRole('button').textContent).toBe('Kopieren');
+  it('CodeBlock copy label is overridable', () => {
+    render(<CodeBlock code="x" copyLabel="Code kopieren" />);
+    expect(screen.getByRole('button', { name: 'Code kopieren' })).toBeTruthy();
   });
 
   it('Tree composes a user onKeyDown and onClick', () => {

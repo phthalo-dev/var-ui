@@ -69,7 +69,7 @@ describe('CopyButton', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
     expect(onCopyError).toHaveBeenCalledWith(denied, 'secret');
     expect(onCopied).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Error' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Copy failed' })).toBeTruthy();
     vi.unstubAllGlobals();
   });
 });

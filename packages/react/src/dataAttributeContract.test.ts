@@ -54,7 +54,6 @@ const UNDOCUMENTED_HOOKS = [
   'data-codeblock',
   'data-codeblock-body',
   'data-codeblock-copy-icon',
-  'data-codeblock-copy-text',
   'data-codeblock-feedback',
   'data-codeblock-header',
   'data-codeblock-pre',
@@ -73,7 +72,6 @@ const UNDOCUMENTED_HOOKS = [
   'data-context-menu-anchor',
   'data-copied',
   'data-copied-label',
-  'data-copy-error-label',
   'data-copy-label',
   // CopyButton (Astro): icon/label spans the script swaps, plus the value and
   // reset-timeout inputs the script reads back from the markup.

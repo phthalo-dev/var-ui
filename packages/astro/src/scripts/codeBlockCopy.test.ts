@@ -1,11 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { copyText, initCodeBlockCopy } from './codeBlockCopy';
+import { initCodeBlockCopy } from './codeBlockCopy';
+import { COPIED_EVENT, COPY_ERROR_EVENT, copyText } from './copy';
+
+const stubClipboard = (writeText: (text: string) => Promise<void>) => {
+  // @ts-expect-error test stub
+  globalThis.navigator = { clipboard: { writeText } };
+};
+
+const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe('copyText', () => {
   it('writes to clipboard', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
-    // @ts-expect-error test stub
-    globalThis.navigator = { clipboard: { writeText } };
+    stubClipboard(writeText);
     await expect(copyText('hello')).resolves.toBe(true);
     expect(writeText).toHaveBeenCalledWith('hello');
   });
@@ -16,112 +23,94 @@ describe('initCodeBlockCopy', () => {
     document.body.innerHTML = '';
   });
 
-  function mountCopyButton(options?: { copiedLabel?: string; copyErrorLabel?: string }) {
-    const copiedLabel = options?.copiedLabel ?? 'Copied';
-    const copyErrorLabel = options?.copyErrorLabel ?? 'Copy failed';
-
+  function mount(attrs = '') {
     document.body.innerHTML = `
       <div data-codeblock-actions>
-        <button
-          type="button"
-          data-var-ui-code-copy
-          data-code="hello"
-          data-copy-label="Copy code"
-          data-copied-label="${copiedLabel}"
-          data-copy-error-label="${copyErrorLabel}"
-          aria-label="Copy code"
-        >
-          <span data-codeblock-copy-icon>
-            <svg data-icon="copy"><rect x="9" y="9"></rect></svg>
-          </span>
-          <span data-codeblock-copy-text>Copy</span>
+        <button type="button" data-var-ui-code-copy data-code="hello" ${attrs}>
+          <span data-codeblock-copy-icon><svg data-icon="copy"></svg></span>
         </button>
         <span data-codeblock-feedback role="status"></span>
       </div>
     `;
+    initCodeBlockCopy();
+    return {
+      btn: document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!,
+      feedback: document.querySelector('[data-codeblock-feedback]')!,
+    };
   }
 
-  it('updates button text, icon, and feedback on success with custom label', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    // @ts-expect-error test stub
-    globalThis.navigator = { clipboard: { writeText } };
+  it('names the button with the default labels', () => {
+    const { btn } = mount();
+    expect(btn.getAttribute('aria-label')).toBe('Copy code');
+  });
 
-    mountCopyButton({ copiedLabel: 'Saved to clipboard' });
-    initCodeBlockCopy();
+  it('on success: check icon, copiedLabel as name, announced (tone success), copied event', async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined));
+    const { btn, feedback } = mount('data-copied-label="Saved"');
+    const onCopied = vi.fn();
+    document.body.addEventListener(COPIED_EVENT, (event) =>
+      onCopied((event as CustomEvent).detail),
+    );
 
-    const btn = document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!;
     btn.click();
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await tick();
 
-    expect(btn.getAttribute('aria-label')).toBe('Saved to clipboard');
-    expect(btn.getAttribute('data-copied')).toBe('');
-    expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Copied');
+    expect(btn.hasAttribute('data-copied')).toBe(true);
+    expect(btn.getAttribute('aria-label')).toBe('Saved');
     expect(btn.querySelector('[data-codeblock-copy-icon] svg path')?.getAttribute('d')).toBe(
       'M4.5 12.5l5 5L19.5 7',
     );
-
-    const feedback = document.querySelector('[data-codeblock-feedback]')!;
-    expect(feedback.textContent).toBe('Saved to clipboard');
+    expect(feedback.textContent).toBe('Saved');
     expect(feedback.getAttribute('data-tone')).toBe('success');
+    expect(onCopied).toHaveBeenCalledWith({ value: 'hello' });
   });
 
-  it('does not duplicate default copied label in inline feedback', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    // @ts-expect-error test stub
-    globalThis.navigator = { clipboard: { writeText } };
+  it('on failure: error icon, errorLabel as name and feedback, error event', async () => {
+    stubClipboard(vi.fn().mockRejectedValue(new Error('denied')));
+    const { btn, feedback } = mount('data-error-label="Could not copy"');
+    const onError = vi.fn();
+    document.body.addEventListener(COPY_ERROR_EVENT, (event) =>
+      onError((event as CustomEvent).detail),
+    );
 
-    mountCopyButton();
-    initCodeBlockCopy();
-
-    const btn = document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!;
     btn.click();
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await tick();
 
-    expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Copied');
-    expect(document.querySelector('[data-codeblock-feedback]')?.textContent).toBe('');
-  });
-
-  it('updates button text and feedback on error', async () => {
-    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
-    // @ts-expect-error test stub
-    globalThis.navigator = { clipboard: { writeText } };
-
-    mountCopyButton({ copyErrorLabel: 'Could not copy' });
-    initCodeBlockCopy();
-
-    const btn = document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!;
-    btn.click();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
+    expect(btn.hasAttribute('data-error')).toBe(true);
+    expect(btn.hasAttribute('data-copied')).toBe(false);
     expect(btn.getAttribute('aria-label')).toBe('Could not copy');
-    expect(btn.getAttribute('data-error')).toBe('');
-    expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Error');
-
-    const feedback = document.querySelector('[data-codeblock-feedback]')!;
+    expect(btn.querySelector('[data-codeblock-copy-icon] svg')?.innerHTML).not.toBe('');
     expect(feedback.textContent).toBe('Could not copy');
     expect(feedback.getAttribute('data-tone')).toBe('error');
+    expect(onError).toHaveBeenCalledWith({ value: 'hello' });
   });
 
-  it('resets copy state after timeout', async () => {
+  it('returns to idle after data-timeout (default 2000ms)', async () => {
     vi.useFakeTimers();
     try {
-      const writeText = vi.fn().mockResolvedValue(undefined);
-      // @ts-expect-error test stub
-      globalThis.navigator = { clipboard: { writeText } };
-
-      mountCopyButton();
-      initCodeBlockCopy();
-
-      const btn = document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!;
+      stubClipboard(vi.fn().mockResolvedValue(undefined));
+      const { btn, feedback } = mount();
       btn.click();
-      vi.runAllTicks();
-
-      vi.advanceTimersByTime(1200);
-
-      expect(btn.getAttribute('data-copied')).toBeNull();
+      await vi.advanceTimersByTimeAsync(1999);
+      expect(btn.hasAttribute('data-copied')).toBe(true);
+      await vi.advanceTimersByTimeAsync(1);
+      expect(btn.hasAttribute('data-copied')).toBe(false);
       expect(btn.getAttribute('aria-label')).toBe('Copy code');
-      expect(btn.querySelector('[data-codeblock-copy-text]')?.textContent).toBe('Copy');
-      expect(document.querySelector('[data-codeblock-feedback]')?.textContent).toBe('');
+      expect(feedback.textContent).toBe('');
+      expect(feedback.hasAttribute('data-tone')).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('honours data-timeout', async () => {
+    vi.useFakeTimers();
+    try {
+      stubClipboard(vi.fn().mockResolvedValue(undefined));
+      const { btn } = mount('data-timeout="500"');
+      btn.click();
+      await vi.advanceTimersByTimeAsync(500);
+      expect(btn.hasAttribute('data-copied')).toBe(false);
     } finally {
       vi.useRealTimers();
     }
