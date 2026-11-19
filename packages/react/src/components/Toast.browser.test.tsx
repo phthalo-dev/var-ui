@@ -7,7 +7,7 @@ import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
 import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
-import { toast } from '../toast/imperativeToast';
+import { createToaster, toast } from '../toast/imperativeToast';
 import { Dialog } from './Dialog';
 import { ToastProvider, ToastQueue, ToastRegion } from './Toast';
 
@@ -126,6 +126,83 @@ describe('Toast region (native popover)', () => {
     });
     await raf();
     expect(region()!.getBoundingClientRect().left).toBeLessThan(window.innerWidth / 2);
+  });
+});
+
+describe('Toast placement and offset (#242)', () => {
+  test('bottom-center centers the region horizontally', async () => {
+    render(<Shell placement="bottom-center">{null}</Shell>);
+    act(() => {
+      toast.show({ title: 'Centered', durationMs: 0 });
+    });
+    await raf();
+    const r = region()!.getBoundingClientRect();
+    expect(Math.abs(r.left + r.width / 2 - window.innerWidth / 2)).toBeLessThanOrEqual(1);
+    expect(Math.round(window.innerHeight - r.bottom)).toBe(0);
+  });
+
+  test('offset moves the region off its edges; className and style reach it', async () => {
+    render(
+      <Shell placement="bottom-end" offset={{ block: 64, inline: '1rem' }} className="mine">
+        {null}
+      </Shell>,
+    );
+    act(() => {
+      toast.show({ title: 'Above the bar', durationMs: 0 });
+    });
+    await raf();
+    const r = region()!.getBoundingClientRect();
+    expect(Math.round(window.innerHeight - r.bottom)).toBe(64);
+    expect(Math.round(window.innerWidth - r.right)).toBe(16);
+    expect(region()!.classList.contains('mine')).toBe(true);
+  });
+
+  test('the offset custom property works from plain CSS too', async () => {
+    const queue = new ToastQueue();
+    render(
+      <DesignSystemProvider applyToDocument>
+        <IconProvider icons={{}}>
+          <ToastRegion queue={queue} style={{ ['--var-ui-toast-offsetblock' as string]: '40px' }} />
+        </IconProvider>
+      </DesignSystemProvider>,
+    );
+    act(() => {
+      queue.add({ title: 'CSS' });
+    });
+    await raf();
+    expect(Math.round(window.innerHeight - region()!.getBoundingClientRect().bottom)).toBe(40);
+  });
+
+  test('createToaster targets an app-owned queue and region', async () => {
+    const queue = new ToastQueue();
+    const notify = createToaster(queue);
+    render(
+      <DesignSystemProvider applyToDocument>
+        <IconProvider icons={{}}>
+          <ToastRegion queue={queue} />
+        </IconProvider>
+      </DesignSystemProvider>,
+    );
+    let id = '';
+    act(() => {
+      id = notify({ title: 'Added to favorites', durationMs: 0 });
+    });
+    await raf();
+    expect(text('Added to favorites')).toBeTruthy();
+    act(() => notify.dismiss(id));
+    await expect.poll(region).toBeNull();
+  });
+
+  test('ToastProvider takes an existing queue, and toast() reaches it', async () => {
+    const queue = new ToastQueue();
+    render(<Shell queue={queue}>{null}</Shell>);
+    act(() => {
+      toast.show({ title: 'Shared', durationMs: 0 });
+    });
+    await raf();
+    expect(queue.visibleToasts.map((t) => t.content.title)).toEqual(['Shared']);
+    act(() => queue.clear());
+    await expect.poll(region).toBeNull();
   });
 });
 

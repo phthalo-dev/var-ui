@@ -22,6 +22,9 @@ import { nativeEnterExit } from '../shared/overlayMotion';
  * <div className={t.region}><div className={t.item}>…</div></div>
  * ```
  */
+/** Horizontally centered in the viewport: both inline edges at 0 with auto margins. */
+const centered = { insetInline: 0, marginInline: 'auto', width: 'fit-content' } as const;
+
 export const toast = typestyles.recipe({
   name: 'toast',
   layer: 'components',
@@ -41,6 +44,13 @@ export const toast = typestyles.recipe({
       value: t.color.text.secondary.var,
     },
     closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    /**
+     * Distance from the anchored top/bottom edge, e.g. the height of a bottom player bar:
+     * `--var-ui-toast-offsetblock: var(--app-bottom-bar)`.
+     */
+    offsetBlock: { ...atProperty.length, value: '0px' },
+    /** Distance from the anchored start/end edge (ignored by the `*-center` placements). */
+    offsetInline: { ...atProperty.length, value: '0px' },
   },
   styles: ({ vars }) => {
     return {
@@ -62,7 +72,7 @@ export const toast = typestyles.recipe({
           gap: t.space.xs.var,
           padding: t.space.md.var,
           pointerEvents: 'none',
-          maxWidth: 'min(${t.size.panel.lg.var}, calc(100vw - 2rem))',
+          maxWidth: `min(${t.size.panel.lg.var}, calc(100vw - 2rem))`,
         },
         item: {
           pointerEvents: 'auto',
@@ -134,10 +144,20 @@ export const toast = typestyles.recipe({
           outline: { item: appearanceSurface(vars, 'outline') },
         },
         placement: {
-          'top-end': { region: { top: 0, insetInlineEnd: 0 } },
-          'top-start': { region: { top: 0, insetInlineStart: 0 } },
-          'bottom-end': { region: { bottom: 0, insetInlineEnd: 0 } },
-          'bottom-start': { region: { bottom: 0, insetInlineStart: 0 } },
+          'top-start': {
+            region: { top: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
+          },
+          'top-center': { region: { top: vars.offsetBlock.var, ...centered } },
+          'top-end': {
+            region: { top: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
+          },
+          'bottom-start': {
+            region: { bottom: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
+          },
+          'bottom-center': { region: { bottom: vars.offsetBlock.var, ...centered } },
+          'bottom-end': {
+            region: { bottom: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
+          },
         },
       },
     };

@@ -15,6 +15,37 @@ For live notification queues without React, mount a `ToastRegion` and call the i
 
 <Demo id="toast.default" />
 
+## Placement and offset
+
+`placement` is a corner (`top-start`, `top-end`, `bottom-start`, `bottom-end`) or an edge's
+center (`top-center`, `bottom-center`), and follows the reading direction. `offset` moves the
+region off those edges, for example above a persistent bottom bar. A number is px. `block` is the
+top or bottom edge, and `inline` the start or end edge:
+
+```tsx
+<ToastProvider placement="bottom-end" offset={{ block: 'var(--player-height, 0px)' }}>
+```
+
+The offsets are the recipe variables `--var-ui-toast-offsetblock` and
+`--var-ui-toast-offsetinline`, so plain CSS or a media query can set them too. `className` and
+`style` on `ToastProvider` reach the region.
+
+## Your own queue
+
+To reach toasts from outside React (a store, a fetch wrapper), create the queue yourself. Either
+pass it to `ToastProvider queue={…}`, which keeps `toast()` and `useToast()` working, or render
+your own `ToastRegion`. `createToaster(queue)` gives you the same imperative API bound to that
+queue:
+
+```ts
+import { createToaster, ToastQueue } from '@var-ui/react';
+
+export const appToasts = new ToastQueue({ maxVisibleToasts: 3 });
+export const notify = createToaster(appToasts);
+
+notify({ title: 'Added to favorites', tone: 'success' });
+```
+
 ## Props
 
 <PropsTable slug="toast" />
@@ -32,5 +63,4 @@ Prefer short, non-interactive toasts while a modal is open.
 ## Accessibility
 
 Toasts render in a live region with appropriate status semantics. Dismiss controls
-expose an accessible name and keyboard support via React Aria Components. `placement` accepts
-`top-start`, `top-end`, `bottom-start` and `bottom-end` and follows the reading direction.
+expose an accessible name and keyboard support via React Aria Components.
