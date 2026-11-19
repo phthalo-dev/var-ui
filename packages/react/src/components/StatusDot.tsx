@@ -8,6 +8,7 @@ export type StatusDotProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
 
 export function StatusDot({
   tone = 'neutral',
+  category,
   appearance = 'solid',
   pulse = false,
   'aria-label': ariaLabel,
@@ -18,7 +19,7 @@ export function StatusDot({
   return (
     <span
       {...rest}
-      {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
+      {...mergeProps(statusDot({ tone, category, appearance, pulse }), className)}
       ref={ref}
       aria-label={ariaLabel}
       role={ariaLabel ? 'img' : undefined}

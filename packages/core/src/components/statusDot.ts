@@ -9,6 +9,8 @@ import {
   semanticTone,
   surfaceAppearanceWithDefault,
   tone,
+  category,
+  mapCategory,
   type SemanticToneKey,
 } from '../shared/semanticTone';
 
@@ -30,6 +32,8 @@ export const statusDot = typestyles.recipe({
   layer: 'components',
   variants: {
     tone,
+    /** Identity hue (`1`–`8`) for roles and kinds; set it instead of `tone`. */
+    category,
     appearance: surfaceAppearanceWithDefault('solid'),
     pulse: variant.boolean({ default: false }),
   },
@@ -52,6 +56,7 @@ export const statusDot = typestyles.recipe({
       },
       variants: {
         tone: mapTone((key) => (key === 'neutral' ? {} : toneColor(key))),
+        category: mapCategory((key) => ({ color: t.color.categorical[key].var })),
         appearance: {
           solid: {},
           outline: {

@@ -3,6 +3,9 @@ import { typestyles } from '../runtime';
 import { designTokens as t } from '../tokens';
 import { border } from '../internal/border';
 import {
+  category,
+  categoryChannelAssignments,
+  mapCategory,
   mapTone,
   subtleBackgroundColor,
   subtleBorderColor,
@@ -19,6 +22,8 @@ export const badge = typestyles.recipe({
   layer: 'components',
   variants: {
     tone,
+    /** Identity hue (`1`–`8`) for roles and kinds; set it instead of `tone`. */
+    category,
     appearance: surfaceAppearance,
   },
   vars: {
@@ -63,6 +68,7 @@ export const badge = typestyles.recipe({
       },
       variants: {
         tone: mapTone((key) => toneChannelAssignments(vars, key)),
+        category: mapCategory((key) => categoryChannelAssignments(vars, key)),
         appearance: {
           subtle: {
             [vars.borderColor.name]: subtleBorderColor(vars.semantic.var),

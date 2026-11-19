@@ -16,14 +16,18 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
  *
  * ```tsx
  * <Badge tone="success">Active</Badge>
+ * <Badge category="3">Reviewer</Badge>   // identity hue, not status
  * ```
  */
 export function Badge({
   tone = 'neutral',
+  category,
   appearance = 'subtle',
   className,
   ref,
   ...props
 }: BadgeProps): JSX.Element {
-  return <span {...props} {...mergeProps(badge({ tone, appearance }), className)} ref={ref} />;
+  return (
+    <span {...props} {...mergeProps(badge({ tone, category, appearance }), className)} ref={ref} />
+  );
 }

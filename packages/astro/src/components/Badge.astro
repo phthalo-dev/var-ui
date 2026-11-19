@@ -8,7 +8,7 @@ interface Props extends HTMLAttributes<'span'>, BadgeVariantProps {
   className?: string;
 }
 
-const { tone = 'neutral', appearance = 'subtle', className, ...rest } = Astro.props;
-const rp = mergeProps(badge({ tone, appearance }), className);
+const { tone = 'neutral', category, appearance = 'subtle', className, ...rest } = Astro.props;
+const rp = mergeProps(badge({ tone, category, appearance }), className);
 ---
 <span {...rest} {...rp}><slot /></span>

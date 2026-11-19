@@ -362,3 +362,35 @@ export function appearanceSurface(
         }),
   };
 }
+
+/**
+ * Categorical identity axis (`1`–`8`): Badge and StatusDot hues for roles and kinds, not status.
+ * `none` (the default) leaves `tone` in charge.
+ */
+export const category = variant.enum(['none', '1', '2', '3', '4', '5', '6', '7', '8'], {
+  default: 'none',
+});
+
+export type Category = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
+
+/** One style entry per category (`none` paints nothing). */
+export function mapCategory<Style>(
+  paint: (key: Category) => Style,
+): Record<Category | 'none', Style | Record<string, never>> {
+  return {
+    none: {},
+    ...(Object.fromEntries(
+      (['1', '2', '3', '4', '5', '6', '7', '8'] as const).map((key) => [key, paint(key)]),
+    ) as Record<Category, Style>),
+  };
+}
+
+/** Channels for a categorical color: ink and fill are the hue, solid text is the surface. */
+export function categoryChannelAssignments(v: SemanticChannelRefs, key: Category) {
+  const hue = t.color.categorical[key].var;
+  return {
+    [v.semantic.name]: hue,
+    [v.solidBg.name]: hue,
+    [v.solidFg.name]: t.color.background.surface.var,
+  };
+}

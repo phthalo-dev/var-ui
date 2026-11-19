@@ -74,3 +74,16 @@ describe('palette ramp contrast', () => {
     }
   });
 });
+
+describe('color.categorical (#144)', () => {
+  const darkSurface = 'oklch(0.2 0.007 60)';
+  const hues = ['blue', 'orange', 'teal', 'pink', 'grass', 'violet', 'amber', 'red'] as const;
+
+  it('every category reads as a mark (≥ 3:1) on the surface in both modes', () => {
+    for (const hue of hues) {
+      const ramp = baseColorPalettes[hue];
+      expect(contrastRatio(ramp['6'], '#ffffff'), `${hue} light`).toBeGreaterThanOrEqual(3);
+      expect(contrastRatio(ramp['5'], darkSurface), `${hue} dark`).toBeGreaterThanOrEqual(3);
+    }
+  });
+});

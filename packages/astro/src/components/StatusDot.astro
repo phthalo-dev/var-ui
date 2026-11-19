@@ -10,6 +10,7 @@ interface Props extends Omit<HTMLAttributes<'span'>, 'children'>, StatusDotVaria
 
 const {
   tone = 'neutral',
+  category,
   appearance = 'solid',
   pulse = false,
   'aria-label': ariaLabel,
@@ -19,7 +20,7 @@ const {
 ---
 <span
   {...rest}
-  {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
+  {...mergeProps(statusDot({ tone, category, appearance, pulse }), className)}
   aria-label={ariaLabel}
   role={ariaLabel ? 'img' : undefined}
   aria-hidden={ariaLabel ? undefined : true}
