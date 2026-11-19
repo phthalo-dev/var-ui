@@ -73,6 +73,10 @@ Icon-only overflow menu using the `moreHorizontal` glyph — same `sections` sha
 
 <Demo id="more-menu.overflow" />
 
+### Menus in long lists
+
+Give every row its own `Menu.FromSections`, `Menu.Overflow` or `Menu.ContextMenu`. A menu's popup (the `[popover]` element) mounts the first time the menu opens, and its items only while it is open. So a 60-row list costs 60 triggers, not 60 hidden popovers. The trigger stays mounted, so focus returns to it on close.
+
 ## Props
 
 <PropsTable slug="menu" />

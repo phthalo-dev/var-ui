@@ -430,6 +430,10 @@ describe('Menu on a native popover', () => {
         </Menu.Root>
       </Wrap>,
     );
+    // The popover mounts on first open (#237).
+    expect(ref.current).toBeNull();
+    await userEvent.click(trigger());
+    await settled(popup());
     expect(ref.current).toBe(popup());
     expect(popup().getAttribute('data-testid')).toBe('popup');
     expect(popup().classList.contains('mine')).toBe(true);
@@ -437,6 +441,34 @@ describe('Menu on a native popover', () => {
 });
 
 describe('Menu presets on a native popover', () => {
+  test('a list of preset menus mounts no popover until one opens (#237)', async () => {
+    const sections = [{ items: [{ id: 'play', label: 'Play' }] }];
+    render(
+      <Wrap>
+        {Array.from({ length: 20 }, (_, i) => (
+          <Menu.FromSections
+            key={i}
+            sections={sections}
+            trigger={<button type="button">Row {i}</button>}
+          />
+        ))}
+        <Menu.Overflow sections={sections} />
+        <Menu.ContextMenu sections={sections}>
+          <div>Surface</div>
+        </Menu.ContextMenu>
+      </Wrap>,
+    );
+    expect(document.querySelectorAll('[popover]')).toHaveLength(0);
+    const row = [...document.querySelectorAll('button')].find((b) => b.textContent === 'Row 3')!;
+    await userEvent.click(row);
+    await settled(popup());
+    expect(document.querySelectorAll('[popover]')).toHaveLength(1);
+    await userEvent.keyboard('{Escape}');
+    await closed();
+    // The trigger never unmounted, so focus is back on it.
+    expect(document.activeElement).toBe(row);
+  });
+
   test('FromSections opens, runs onAction (with danger/shortcut content) and closes', async () => {
     const onAction = vi.fn();
     render(
@@ -622,6 +654,7 @@ describe('Menu.ContextMenu anchoring', () => {
     surface().dispatchEvent(
       new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 0, clientY: 0 }),
     );
+    await raf();
     await settled(popup());
     const s = surface().getBoundingClientRect();
     const p = popup().getBoundingClientRect();
