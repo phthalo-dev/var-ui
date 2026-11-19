@@ -1,5 +1,28 @@
 # @var-ui/react
 
+## 0.13.0
+
+### Minor Changes
+
+- [#223](https://github.com/phthalo-dev/var-ui/pull/223) [`b6a3775`](https://github.com/phthalo-dev/var-ui/commit/b6a37759ed1ac65691daa21f7bf52da6e52431b0) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Data-driven icons for SegmentedControl options and Astro menu items ([#182](https://github.com/phthalo-dev/var-ui/issues/182)).
+  
+  - **astro** `SegmentedControl` options take `icon` (a registry name or `{ svg }` markup). Menu items' `icon` also accepts `{ svg }`. New `AstroIcon` type and `iconMarkup()`; an unknown icon name now throws at render instead of rendering nothing. Astro named slots can't be generated inside a `map`, so per-option content now travels with the data. `ColorModeToggle` is built on it.
+  - **react** `SegmentedControl` options take `icon` (registry name or node), the same shape as Astro.
+  - In both, with `layout="icon"` only the icon shows and a string `label` becomes the segment's accessible name, so icon-only options no longer need a separate `aria-label`.
+  - **docs-components** `FrameworkSwitcher` uses option icons instead of one slot per framework.
+
+- [#214](https://github.com/phthalo-dev/var-ui/pull/214) [`18beb11`](https://github.com/phthalo-dev/var-ui/commit/18beb11b23819ecc2db804365bfed954f0ccb0d7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `Prose` for rendered markdown in app UI ([#147](https://github.com/phthalo-dev/var-ui/issues/147)).
+  
+  - **core** `prose` recipe: styles the bare elements a markdown renderer emits (headings, paragraphs, lists, links, inline and fenced code, blockquotes, tables, rules), relative to the inherited font size. `density` (`compact | balanced | spacious`) sets the rhythm and heading scale. Element rules sit in the `base` cascade layer, so Var UI components inside keep their own styles. `inlineCode` is now `0.875em` instead of a fixed `xs`, so `Code` scales with its text.
+  - **react** `Prose` and `proseComponents`, an element map for react-markdown / MDX: fenced code → `CodeBlock` (language from `language-*`), inline code → `Code`, links → `Link`, GFM tables → `Table` parts with column alignment.
+  - **astro** `Prose`.
+
+- [#219](https://github.com/phthalo-dev/var-ui/pull/219) [`df329e0`](https://github.com/phthalo-dev/var-ui/commit/df329e092e4b0313efb9aa4748daacf2d6bd7a05) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - SPA colour-mode setup and a runtime token list ([#148](https://github.com/phthalo-dev/var-ui/issues/148)).
+  
+  - **core** One colour-mode init script for every setup: `getColorModeInitScript` (`@var-ui/core/color-mode-script`, also from the root). New Vite plugin `varUiColorMode` (`@var-ui/core/vite`) injects it first in `index.html`, so SPAs get no flash on reload without server rendering. New `listDesignTokens()` returns every built-in token's path, CSS variable, `var()` ref and default value (`designTokens` is a proxy with no enumerable keys).
+  - **react** `getColorModeInitScript` is the core implementation (same signature).
+  - **astro** `ThemeScript` renders the core script and takes `defaultColorMode`; across view transitions it copies the resolved theme class and mode onto the incoming page. Removed `applyThemeBoot`, `bootTheme` and `watchThemeOnNavigation`: an unused copy of the boot logic that ran too late (a module script) to prevent a flash. Use `ThemeScript`.
+
 ## 0.12.0
 
 ### Minor Changes
