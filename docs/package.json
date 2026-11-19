@@ -27,7 +27,6 @@
     "astro": "catalog:",
     "highlight.js": "^11.11.1",
     "react": "catalog:",
-    "react-aria": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",
     "rehype-slug": "^6.0.0",

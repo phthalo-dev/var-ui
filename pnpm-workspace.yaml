@@ -14,8 +14,6 @@ catalog:
   react: ^19.0.0
   react-dom: ^19.0.0
   react-aria-components: ^1.19.0
-  # One copy, shared with react-aria-components (which pins it exactly): #234.
-  react-aria: ^3.50.0
   '@internationalized/date': ^3.12.2
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0

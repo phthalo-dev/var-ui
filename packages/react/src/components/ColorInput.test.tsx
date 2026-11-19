@@ -60,8 +60,7 @@ describe('ColorInput', () => {
     expect(screen.queryByRole('textbox')).toBeNull();
   });
 
-  it('opens the picker from the swatch button', async () => {
-    const user = userEvent.setup();
+  it('wires the swatch button to the picker popover', () => {
     render(
       <ColorInput
         appearance="swatch"
@@ -70,9 +69,11 @@ describe('ColorInput', () => {
         onChange={() => {}}
       />,
     );
-    await user.click(screen.getByRole('button', { name: 'Color for Alex' }));
-    expect(await screen.findByRole('dialog')).toBeTruthy();
-    expect(screen.getByRole('slider', { name: 'Hue' })).toBeTruthy();
+    // jsdom has no native popover invoker: check the wiring here; opening is a browser test.
+    const button = screen.getByRole('button', { name: 'Color for Alex' });
+    const popup = screen.getByRole('dialog', { hidden: true, name: 'Color for Alex' });
+    expect(button.getAttribute('popovertarget')).toBe(popup.id);
+    expect(popup.getAttribute('popover')).toBe('auto');
   });
 });
 
