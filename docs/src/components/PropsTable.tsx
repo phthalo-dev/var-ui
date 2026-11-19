@@ -11,8 +11,6 @@ type PropsTableProps = {
   slug: string;
   /** Props data loaded for the current page. */
   doc?: ComponentPropsDoc | null;
-  /** Variant defaults from the component's core recipe, keyed by prop name. */
-  recipeDefaults?: Record<string, string>;
 };
 
 /** Types past this length collapse behind a "Show type" disclosure. */
@@ -51,17 +49,15 @@ function renderInline(text: string): ReactNode {
 
 function PropRow({
   prop,
-  fallbackDefault,
   anchored,
 }: {
   prop: PropDoc;
-  fallbackDefault?: string;
   /** Give the row an `id` (`prop-<name>`) for the rail's jump-list. */
   anchored?: boolean;
 }) {
   const s = docsPropsTable();
   const type = cleanType(prop.type);
-  const defaultValue = prop.default ?? fallbackDefault;
+  const defaultValue = prop.default;
   const description = prop.description ?? commonPropDescriptions[prop.name];
   return (
     <tr {...mergeProps(s.row)} id={anchored ? `prop-${prop.name}` : undefined}>
@@ -107,14 +103,12 @@ function PropsTableSection({
   title,
   props,
   id,
-  recipeDefaults = {},
   footer,
   anchored = false,
 }: {
   title?: string;
   props: PropDoc[];
   id?: string;
-  recipeDefaults?: Record<string, string>;
   footer?: ReactNode;
   anchored?: boolean;
 }) {
@@ -148,12 +142,7 @@ function PropsTableSection({
           </thead>
           <tbody>
             {props.map((prop) => (
-              <PropRow
-                key={prop.name}
-                prop={prop}
-                fallbackDefault={recipeDefaults[prop.name]}
-                anchored={anchored}
-              />
+              <PropRow key={prop.name} prop={prop} anchored={anchored} />
             ))}
           </tbody>
         </table>
@@ -163,14 +152,7 @@ function PropsTableSection({
   );
 }
 
-/** Recipe defaults arrive as `'md'`; show them in the Type column's quote style. */
-function toTypeQuotes(defaults: Record<string, string> = {}): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(defaults).map(([key, value]) => [key, value.replace(/^'(.*)'$/, '"$1"')]),
-  );
-}
-
-export function PropsTable({ slug, doc, recipeDefaults }: PropsTableProps) {
+export function PropsTable({ slug, doc }: PropsTableProps) {
   const s = docsPropsTable();
   if (!doc) {
     return (
@@ -197,7 +179,6 @@ export function PropsTable({ slug, doc, recipeDefaults }: PropsTableProps) {
       <PropsTableSection
         anchored
         props={varUiProps}
-        recipeDefaults={toTypeQuotes(recipeDefaults)}
         footer={reactAriaProps.length > 0 ? null : domDisclosure}
       />
       {reactAriaProps.length > 0 ? (
