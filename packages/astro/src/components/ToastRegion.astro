@@ -2,7 +2,8 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { VariantOptions } from 'typestyles';
 import { toastPlacement } from '@var-ui/core/shared/variantAxes';
-import { toast as toastRecipe, toastOffsetVar } from '@var-ui/core/components/toast';
+import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { mergeProps } from '../utils';
 import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
@@ -32,11 +33,11 @@ const { block, inline } =
     : typeof offset === 'object'
       ? offset
       : { block: offset, inline: offset };
-const offsetEntries = [
-  [toastOffsetVar.block, toLength(block)],
-  [toastOffsetVar.inline, toLength(inline)],
-].filter((entry): entry is [string, string] => entry[1] !== undefined);
-const offsetVars = offsetEntries.length > 0 ? Object.fromEntries(offsetEntries) : undefined;
+const toastVars = recipeVars(toastRecipe);
+const offsetVars = styleVars([
+  [toastVars.offsetBlock, toLength(block)],
+  [toastVars.offsetInline, toLength(inline)],
+]);
 ---
 
 <div

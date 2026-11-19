@@ -22,19 +22,6 @@ import { nativeEnterExit } from '../shared/overlayMotion';
  * <div className={t.region}><div className={t.item}>…</div></div>
  * ```
  */
-/**
- * Distance of the region from the screen edges it is anchored to, e.g. above a bottom player bar:
- * `:root { --var-ui-toast-offset-block: var(--player-height) }`. Plain custom properties, not
- * recipe vars: nothing declares them on the region, so a value set on any ancestor reaches it.
- * The `*-center` placements ignore `inline`.
- */
-export const toastOffsetVar = {
-  block: '--var-ui-toast-offset-block',
-  inline: '--var-ui-toast-offset-inline',
-} as const;
-const offsetBlock = `var(${toastOffsetVar.block}, 0px)`;
-const offsetInline = `var(${toastOffsetVar.inline}, 0px)`;
-
 /** Horizontally centered in the viewport: both inline edges at 0 with auto margins. */
 const centered = { insetInline: 0, marginInline: 'auto', width: 'fit-content' } as const;
 
@@ -57,6 +44,14 @@ export const toast = typestyles.recipe({
       value: t.color.text.secondary.var,
     },
     closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
+    /**
+     * Distance of the region from the screen edges it is anchored to, e.g. above a bottom player
+     * bar. `inheritOverride` with no `syntax`: the `0px` default is a `var()` fallback at the read
+     * site, not a declaration on the region, so a value set on any ancestor (even `:root`) reaches
+     * it. `inline` is ignored by the `*-center` placements.
+     */
+    offsetBlock: { value: '0px', inheritOverride: true },
+    offsetInline: { value: '0px', inheritOverride: true },
   },
   styles: ({ vars }) => {
     return {
@@ -151,18 +146,18 @@ export const toast = typestyles.recipe({
         },
         placement: {
           'top-start': {
-            region: { top: offsetBlock, insetInlineStart: offsetInline },
+            region: { top: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
           },
-          'top-center': { region: { top: offsetBlock, ...centered } },
+          'top-center': { region: { top: vars.offsetBlock.var, ...centered } },
           'top-end': {
-            region: { top: offsetBlock, insetInlineEnd: offsetInline },
+            region: { top: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
           },
           'bottom-start': {
-            region: { bottom: offsetBlock, insetInlineStart: offsetInline },
+            region: { bottom: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
           },
-          'bottom-center': { region: { bottom: offsetBlock, ...centered } },
+          'bottom-center': { region: { bottom: vars.offsetBlock.var, ...centered } },
           'bottom-end': {
-            region: { bottom: offsetBlock, insetInlineEnd: offsetInline },
+            region: { bottom: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
           },
         },
       },

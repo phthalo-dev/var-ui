@@ -18,6 +18,8 @@ import {
 import { createToaster, toast } from '../toast/imperativeToast';
 import { Dialog } from './Dialog';
 import { ToastProvider, ToastQueue, ToastRegion } from './Toast';
+import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import { recipeVars } from '@var-ui/core/components/styleVars';
 
 beforeAll(() => {
   const fast = document.createElement('style');
@@ -170,7 +172,7 @@ describe('Toast placement and offset (#242)', () => {
 
   test('the offset custom property works from plain CSS on :root (it inherits)', async () => {
     const rootStyle = document.documentElement.style;
-    rootStyle.setProperty('--var-ui-toast-offset-block', '40px');
+    rootStyle.setProperty(recipeVars(toastRecipe).offsetBlock.name, '40px');
     try {
       const queue = new ToastQueue();
       render(
@@ -186,7 +188,7 @@ describe('Toast placement and offset (#242)', () => {
       await raf();
       expect(Math.round(viewport().bottom - region()!.getBoundingClientRect().bottom)).toBe(40);
     } finally {
-      rootStyle.removeProperty('--var-ui-toast-offset-block');
+      rootStyle.removeProperty(recipeVars(toastRecipe).offsetBlock.name);
     }
   });
 

@@ -26,9 +26,10 @@ top or bottom edge, and `inline` the start or end edge:
 <ToastProvider placement="bottom-end" offset={{ block: 'var(--player-height, 0px)' }}>
 ```
 
-The offsets are the custom properties `--var-ui-toast-offset-block` and
-`--var-ui-toast-offset-inline`, which inherit, so plain CSS can set them anywhere above the
-region, in a media query too: `:root { --var-ui-toast-offset-block: var(--player-height) }`. `className` and
+The offsets are the recipe variables `--var-ui-toast-offsetblock` and
+`--var-ui-toast-offsetinline`. Their `0px` default is a fallback where they're read, not a
+declaration on the region, so plain CSS can set them anywhere above it, in a media query too:
+`:root { --var-ui-toast-offsetblock: var(--player-height) }`. `className` and
 `style` on `ToastProvider` reach the region.
 
 ## Your own queue
