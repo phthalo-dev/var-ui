@@ -1,7 +1,7 @@
 import type { CreateTokenValues } from 'typestyles';
 import { registerFontFace } from '../fonts/register-font-face';
 import { typestyles } from '../runtime';
-import { designTokens } from '../tokens';
+import { themeTokenRefs, withTokenRefs } from './token-refs';
 import type { ThemeTokenTree, ThemeTokensOf } from './token-tree';
 import { REDUCED_MOTION_MODE_ID, reducedMotionMode } from './reduced-motion';
 import type { DesignTheme, DesignThemeComponentPatch, DesignThemeCreateConfig } from './types';
@@ -28,6 +28,7 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
     registerFontFace(face);
   }
 
+  const refs = themeTokenRefs(tokenOverrides);
   const surface = typestyles.tokens.createTheme({
     name,
     replace: replace ?? true,
@@ -37,12 +38,13 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
     modes: modes?.some((mode) => mode.id === REDUCED_MOTION_MODE_ID)
       ? modes
       : [reducedMotionMode, ...(modes ?? [])],
-    components,
+    components: withTokenRefs(components, refs),
   } as Parameters<typeof typestyles.tokens.createTheme>[0]);
 
   return {
     ...surface,
-    tokens: (surface.tokens ?? designTokens) as DesignTheme<ThemeTokensOf<T>>['tokens'],
+    // `{ name, var }` refs for every namespace (TypeStyles' own `tokens` are `var()` strings).
+    tokens: refs as DesignTheme<ThemeTokensOf<T>>['tokens'],
   } as DesignTheme<ThemeTokensOf<T>>;
 }
 

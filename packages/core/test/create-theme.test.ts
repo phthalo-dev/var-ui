@@ -243,8 +243,13 @@ describe('createDesignTheme', () => {
       },
     });
 
-    expect(acme.tokens.brand.accent).toBe('var(--var-ui-brand-accent)');
-    expect(acme.tokens.brand.halo).toBe('var(--var-ui-brand-halo)');
+    expect(acme.tokens.brand.accent).toEqual({
+      name: '--var-ui-brand-accent',
+      var: 'var(--var-ui-brand-accent)',
+    });
+    expect(acme.tokens.brand.halo.var).toBe('var(--var-ui-brand-halo)');
+    // Built-in namespaces have the same shape (#230).
+    expect(acme.tokens.space.md.var).toBe('var(--var-ui-space-md)');
     expect(acme.tokens.color).toBeDefined();
 
     const css = getRegisteredCss();
@@ -338,6 +343,31 @@ describe('createDesignTheme', () => {
     expect(css).toContain('--var-ui-layout-panel-border: transparent');
   });
 
+  it('factory tokens are { name, var } refs for built-in and custom namespaces (#230)', () => {
+    button({ tone: 'accent', appearance: 'solid', size: 'md' });
+    createDesignTheme({
+      name: 'acme-refs',
+      tokens: { app: { heroCover: '18rem', play: { size: '3.5rem' } } },
+      components: {
+        button: {
+          styles: ({ tokens: t }) => ({
+            // Built-in leaves used to arrive as strings here, so `.var` was undefined.
+            base: {
+              margin: t.space.xs.var,
+              width: t.app.heroCover.var,
+              height: t.app.play.size.var,
+            },
+          }),
+        },
+      },
+    });
+    const css = getRegisteredCss();
+    expect(css).toContain('margin: var(--var-ui-space-xs)');
+    expect(css).toContain('width: var(--var-ui-app-heroCover)');
+    expect(css).toContain('height: var(--var-ui-app-play-size)');
+    expect(css).not.toContain('undefined');
+  });
+
   it('components accepts plain objects and per-key factories', () => {
     button({ tone: 'accent', appearance: 'solid', size: 'md' });
     badge({});
@@ -353,7 +383,7 @@ describe('createDesignTheme', () => {
       components: {
         button: {
           styles: ({ tokens: t }) => ({
-            base: { color: t.brand.accent },
+            base: { color: t.brand.accent.var },
           }),
         },
         badge: {
