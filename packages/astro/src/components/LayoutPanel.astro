@@ -1,7 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { layoutPanel } from '@var-ui/core/components/layout';
+import { layoutPanel, LAYOUT_PANEL_POPUP_ATTRIBUTE } from '@var-ui/core/components/layout';
 import type { LayoutPadding, LayoutPanelVariantProps } from '@var-ui/core';
+import type { LayoutBreakpoint } from '@var-ui/core/components/breakpoints';
 import { mergeProps } from '../utils';
 import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
@@ -13,6 +14,15 @@ type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
   padding?: LayoutPadding;
   side?: 'start' | 'end';
   label?: string;
+  /**
+   * Collapses the panel below a breakpoint, same shape as React. `overlay` moves it into a native
+   * modal `<dialog>` drawer when opened; `hidden` shows it in place when opened. CSS hides it on
+   * the first paint. Open it with a button carrying `data-var-ui-layout-panel-toggle` and
+   * `aria-controls` set to the panel `id`, or with `setLayoutPanelOpen(panel, true)`.
+   */
+  responsive?: { below: LayoutBreakpoint; mode: 'overlay' | 'hidden' };
+  /** Starts open below the breakpoint (`responsive` only). @default false */
+  defaultOpen?: boolean;
   className?: string;
 };
 
@@ -36,6 +46,8 @@ const {
   side,
   role,
   label,
+  responsive,
+  defaultOpen = false,
   className,
   style: styleProp,
   ...rest
@@ -44,6 +56,7 @@ const s = layoutPanel({ scrollable, hasDivider, padding: toZonePaddingVariant(pa
 const resolvedRole = role ?? (label != null ? 'region' : undefined);
 const widthValue = toCssSize(width);
 const style = mergeInlineStyle(widthValue != null ? { width: widthValue } : undefined, styleProp);
+const popupAttrs = { [LAYOUT_PANEL_POPUP_ATTRIBUTE]: '' };
 ---
 
 <div
@@ -51,8 +64,31 @@ const style = mergeInlineStyle(widthValue != null ? { width: widthValue } : unde
   {...rest}
   {...mergeProps(s.panel, className)}
   data-side={side}
+  data-var-ui-layout-panel={responsive ? '' : undefined}
+  data-responsive={responsive?.mode}
+  data-responsive-below={responsive?.below}
+  data-open={responsive && defaultOpen ? '' : undefined}
   style={style}
   role={resolvedRole}
 >
   <slot />
 </div>
+{
+  responsive?.mode === 'overlay' && (
+    <dialog
+      {...popupAttrs}
+      {...mergeProps(s.popup)}
+      data-side={side}
+      aria-label={label ?? 'Panel'}
+    >
+      <div {...mergeProps(s.body)} />
+    </dialog>
+  )
+}
+
+<script>
+  // Bundled once per page; does nothing unless a panel has `responsive`.
+  import { initLayoutPanels } from '../scripts/layoutPanel';
+  initLayoutPanels();
+  document.addEventListener('astro:page-load', initLayoutPanels);
+</script>

@@ -8,6 +8,19 @@ description: Fixed-width side panel for Layout start/end slots.
 Side panel for `Layout` start/end slots. Supports fixed width, `useResizable`
 integration, and responsive `overlay` / `hidden` modes below a breakpoint. `overlay` renders the panel in a native modal `<dialog>` that slides in from `data-side` (the same primitive as `Drawer` and `MobileNav`): native focus trap, Escape, backdrop dismissal and scroll lock, with `open` / `defaultOpen` / `onOpenChange(open, details)`.
 
+### Responsive in Astro
+
+Astro's `LayoutPanel` takes the same `responsive={{ below, mode }}`. CSS hides the panel below the
+breakpoint on the first paint, with no JavaScript. Open it with any button carrying
+`data-var-ui-layout-panel-toggle` and `aria-controls` set to the panel's `id`, or call
+`setLayoutPanelOpen(panel, true)`. `overlay` moves the panel into its `<dialog>` drawer, and
+`hidden` shows it in place.
+
+```astro
+<button type="button" data-var-ui-layout-panel-toggle aria-controls="docs-nav">Menu</button>
+<LayoutPanel id="docs-nav" side="start" responsive={{ below: 'md', mode: 'overlay' }}>…</LayoutPanel>
+```
+
 ## Examples
 
 ### Default

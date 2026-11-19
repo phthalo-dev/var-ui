@@ -6,6 +6,7 @@ import {
   layoutFooter,
   layoutHeader,
   layoutPanel,
+  LAYOUT_PANEL_POPUP_ATTRIBUTE,
 } from '@var-ui/core/components/layout';
 import { layoutBreakpointQueries } from '@var-ui/core/components/breakpoints';
 import {
@@ -461,6 +462,11 @@ export function LayoutPanel({
       {...mergeProps(s.panel, className)}
       ref={ref}
       data-side={dataSide}
+      // CSS twin of `responsive` (shared with Astro): hides the panel below the breakpoint on the
+      // first paint, before `useMediaQuery` has run.
+      data-responsive={responsive?.mode}
+      data-responsive-below={responsive?.below}
+      data-open={responsive && open ? '' : undefined}
       style={style}
       role={isOverlayMode ? undefined : resolvedRole}
     >
@@ -472,6 +478,7 @@ export function LayoutPanel({
     return (
       <NativeSheetPopup
         {...mergeProps(s.popup)}
+        {...{ [LAYOUT_PANEL_POPUP_ATTRIBUTE]: '' }}
         root={root}
         data-side={dataSide}
         aria-label={ariaLabelledBy ? undefined : (accessibleName ?? 'Panel')}
