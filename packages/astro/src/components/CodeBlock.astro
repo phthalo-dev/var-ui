@@ -1,6 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { codeBlock, codeLanguageLabel } from '@var-ui/core/components/codeBlock';
+import { codeBlock } from '@var-ui/core/components/codeBlock';
+import { codeBlockMarkup } from '@var-ui/core/components/codeBlockMarkup';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
@@ -60,6 +61,17 @@ const {
 
 const cb = codeBlock({ variant });
 const codeBlockVars = recipeVars(codeBlock);
+// Same structure as React and the docs Shiki transformer (#194).
+const m = codeBlockMarkup({
+  code,
+  language,
+  filename,
+  variant: variant === 'inline' ? 'default' : variant,
+  copyable,
+  copyLabel,
+  copiedLabel,
+  errorLabel,
+});
 
 const highlightedSet = new Set(highlightedLines);
 const lines = code.replace(/\n$/, '').split('\n');
@@ -75,42 +87,24 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
       {code}
     </code>
   ) : (
-    <div {...rest} {...mergeProps(cb.root, className)} data-codeblock>
-      <div {...mergeProps(cb.header)} data-codeblock-header>
-        <div {...mergeProps(cb.title)}>
-          {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? <span {...mergeProps(cb.language)}>{codeLanguageLabel(language)}</span> : null}
+    <div {...rest} {...m.root} class={[m.root.class, className].filter(Boolean).join(' ')}>
+      <div {...m.header}>
+        <div {...m.title}>
+          {m.filename ? <span {...m.filename.attributes}>{m.filename.text}</span> : null}
+          {m.language ? <span {...m.language.attributes}>{m.language.text}</span> : null}
         </div>
-        {copyable ? (
-          <div {...mergeProps(cb.actions)}>
-            <button
-              type="button"
-              {...mergeProps(cb.copyButton)}
-              data-var-ui-code-copy
-              data-code={code}
-              data-copy-label={copyLabel}
-              data-copied-label={copiedLabel}
-              data-error-label={errorLabel}
-              aria-label={copyLabel}
-            >
-              <span data-codeblock-copy-icon set:html={copySvg} />
+        {m.actions && m.copyButton && m.feedback ? (
+          <div {...m.actions}>
+            <button {...m.copyButton}>
+              <span {...m.copyIcon} set:html={copySvg} />
             </button>
-            <span
-              {...mergeProps(cb.feedback)}
-              data-codeblock-feedback
-              role="status"
-              aria-live="polite"
-            />
+            <span {...m.feedback} />
           </div>
         ) : null}
       </div>
 
-      <div
-        {...mergeProps(cb.body)}
-        data-codeblock-body
-        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
-      >
-        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre
+      <div {...m.body} style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}>
+        <pre {...m.pre} data-wrap={wrapLongLines || undefined}
         >{showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {

@@ -1,0 +1,100 @@
+import { codeBlock, codeLanguageLabel, type CodeBlockVariantProps } from './codeBlock';
+
+/** DOM attributes for one code-block part: `class` plus `data-*` / `aria-*` / native attributes. */
+export type CodeBlockAttributes = { class: string } & Record<string, string | undefined>;
+
+export type CodeBlockMarkupOptions = {
+  /** The source, for the copy button's `data-code`. */
+  code: string;
+  /** Language id (`ts`, `bash`); shown as its label (`TypeScript`, `Shell`). */
+  language?: string;
+  filename?: string;
+  variant?: Exclude<CodeBlockVariantProps['variant'], 'inline'>;
+  /** Render the copy button and its status region. @default true */
+  copyable?: boolean;
+  copyLabel?: string;
+  copiedLabel?: string;
+  errorLabel?: string;
+};
+
+/** Every part of a block code block, in render order. Text parts carry their `text`. */
+export type CodeBlockMarkup = {
+  root: CodeBlockAttributes;
+  header: CodeBlockAttributes;
+  title: CodeBlockAttributes;
+  filename: { attributes: CodeBlockAttributes; text: string } | null;
+  language: { attributes: CodeBlockAttributes; text: string } | null;
+  /** `null` when not copyable. */
+  actions: CodeBlockAttributes | null;
+  /** Wired by `initCodeBlockCopy` (`@var-ui/astro`) through `data-var-ui-code-copy`. */
+  copyButton: (CodeBlockAttributes & { type: 'button' }) | null;
+  /** Wrapper for the copy glyph (`@var-ui/icons/glyphs/copy`). */
+  copyIcon: Record<string, string>;
+  feedback: CodeBlockAttributes | null;
+  body: CodeBlockAttributes;
+  pre: CodeBlockAttributes;
+  code: CodeBlockAttributes;
+};
+
+type Slot = { className: string; attrs?: Record<string, string> };
+
+const attributes = (slot: Slot, extra: Record<string, string | undefined> = {}) =>
+  ({ class: slot.className, ...slot.attrs, ...extra }) as CodeBlockAttributes;
+
+/**
+ * The structure of a code block (header with filename / language label and copy button, then the
+ * `<pre><code>`) as plain attribute maps: one source of truth for the React and Astro
+ * `CodeBlock`, the docs Shiki transformer and hand-written HTML. Fill `pre > code` yourself
+ * (plain text or highlighted HTML).
+ *
+ * ```ts
+ * const m = codeBlockMarkup({ code, language: 'ts' });
+ * // <div {...m.root}><div {...m.header}>…</div><div {...m.body}><pre {...m.pre}><code {...m.code}>
+ * ```
+ */
+export function codeBlockMarkup({
+  code,
+  language,
+  filename,
+  variant = 'default',
+  copyable = true,
+  copyLabel = 'Copy code',
+  copiedLabel = 'Copied',
+  errorLabel = 'Copy failed',
+}: CodeBlockMarkupOptions): CodeBlockMarkup {
+  const cb = codeBlock({ variant });
+  return {
+    root: attributes(cb.root, { 'data-codeblock': '', 'data-language': language || undefined }),
+    header: attributes(cb.header, { 'data-codeblock-header': '' }),
+    title: attributes(cb.title),
+    filename: filename ? { attributes: attributes(cb.filename), text: filename } : null,
+    language: language
+      ? { attributes: attributes(cb.language), text: codeLanguageLabel(language) }
+      : null,
+    actions: copyable ? attributes(cb.actions) : null,
+    copyButton: copyable
+      ? {
+          ...attributes(cb.copyButton, {
+            'data-var-ui-code-copy': '',
+            'data-code': code.replace(/\n$/, ''),
+            'data-copy-label': copyLabel,
+            'data-copied-label': copiedLabel,
+            'data-error-label': errorLabel,
+            'aria-label': copyLabel,
+          }),
+          type: 'button',
+        }
+      : null,
+    copyIcon: { 'data-codeblock-copy-icon': '' },
+    feedback: copyable
+      ? attributes(cb.feedback, {
+          'data-codeblock-feedback': '',
+          role: 'status',
+          'aria-live': 'polite',
+        })
+      : null,
+    body: attributes(cb.body, { 'data-codeblock-body': '' }),
+    pre: attributes(cb.pre, { 'data-codeblock-pre': '' }),
+    code: attributes(cb.code),
+  };
+}
