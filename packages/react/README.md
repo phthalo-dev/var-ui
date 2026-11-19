@@ -7,7 +7,7 @@ Framework-specific wrappers around accessible primitives ([React Aria Components
 ## Install
 
 ```bash
-pnpm add @var-ui/react @var-ui/core react react-dom react-aria-components react-aria
+pnpm add @var-ui/react @var-ui/core react react-dom react-aria-components
 ```
 
 Within this monorepo:
@@ -20,7 +20,7 @@ Within this monorepo:
 }
 ```
 
-Peer dependencies: `react`, `react-dom`, `react-aria-components`, `react-aria`, and `@var-ui/core`. Install the `react-aria` version your `react-aria-components` depends on, so there is one copy (`npm ls react-aria`).
+Peer dependencies: `react`, `react-dom`, `react-aria-components`, and `@var-ui/core`.
 
 ## Usage
 
