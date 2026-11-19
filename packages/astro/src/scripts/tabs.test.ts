@@ -87,3 +87,37 @@ describe('createTabsController', () => {
     expect(tabB.getAttribute('aria-selected')).toBe('true');
   });
 });
+
+describe('createTabsController: panels elsewhere (#197)', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('finds panels by aria-controls anywhere in the document', () => {
+    document.body.innerHTML = `
+      <header><div data-var-ui-tabs id="page">
+        <div role="tablist">
+          <button role="tab" id="page-tab-a" aria-controls="page-panel-a" aria-selected="true">A</button>
+          <button role="tab" id="page-tab-b" aria-controls="page-panel-b" aria-selected="false">B</button>
+        </div>
+      </div></header>
+      <main>
+        <div role="tabpanel" id="page-panel-a" aria-labelledby="page-tab-a"></div>
+        <div role="tabpanel" id="page-panel-b" aria-labelledby="page-tab-b" hidden></div>
+      </main>`;
+    createTabsController(document.getElementById('page')!);
+    (document.getElementById('page-tab-b') as HTMLButtonElement).click();
+    expect(document.getElementById('page-panel-b')!.hidden).toBe(false);
+    expect(document.getElementById('page-panel-a')!.hidden).toBe(true);
+  });
+
+  it('in RTL, ArrowLeft moves to the next tab', () => {
+    const el = mountTabs();
+    el.setAttribute('dir', 'rtl');
+    createTabsController(el);
+    const tabA = el.querySelector('#tab-a') as HTMLButtonElement;
+    tabA.focus();
+    tabA.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    expect(el.querySelector('#tab-b')!.getAttribute('aria-selected')).toBe('true');
+  });
+});
