@@ -1,10 +1,8 @@
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { defineConfig } from 'vite-plus';
+import { sourceConditions } from '../../source-conditions';
 import { playwright } from 'vite-plus/test/browser-playwright';
-
-const coreSrc = fileURLToPath(new URL('../core/src', import.meta.url));
 
 // Browser tests (`*.browser.test.ts(x)`) run in headless Chromium via Playwright. Fail early with
 // an actionable message instead of Playwright's launch error when the browser is not installed.
@@ -19,16 +17,8 @@ if (process.argv.some((arg) => /[\\/]vitest\.mjs$/.test(arg)) && !existsSync(chr
 }
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
-      '@var-ui/core/color-mode-script': `${coreSrc}/theme/colorModeScript.ts`,
-      '@var-ui/core/components': `${coreSrc}/components`,
-      '@var-ui/core/shared': `${coreSrc}/shared`,
-      '@var-ui/core/tokens': `${coreSrc}/tokens`,
-      '@var-ui/core/icons': `${coreSrc}/icons`,
-    },
-  },
+  // Workspace packages (`@var-ui/core`) load from source, via their exports' `@var-ui/source`.
+  ...sourceConditions,
   pack: {
     entry: ['src/index.ts'],
     dts: true,

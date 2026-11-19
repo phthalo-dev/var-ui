@@ -9,10 +9,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "paths": {
-      "@var-ui/core": ["../core/src/index.ts"],
-      "@var-ui/core/*": ["../core/src/*"]
-    }
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["src"]
 }

@@ -28,10 +28,12 @@ describe('package subpath exports', () => {
   it('core uses wildcards for components/shared and reserves theme/styles entries', () => {
     const { exports } = readPkg('core');
     expect(exports['./components/*']).toEqual({
+      '@var-ui/source': './src/components/*.ts',
       types: './dist/components/*.d.mts',
       import: './dist/components/*.mjs',
     });
     expect(exports['./shared/*']).toEqual({
+      '@var-ui/source': './src/shared/*.ts',
       types: './dist/shared/*.d.mts',
       import: './dist/shared/*.mjs',
     });
@@ -56,6 +58,7 @@ describe('package subpath exports', () => {
   it('react uses a components wildcard and does not publish helpers', () => {
     const { exports } = readPkg('react');
     expect(exports['./components/*']).toEqual({
+      '@var-ui/source': './src/components/*.tsx',
       types: './dist/components/*.d.mts',
       import: './dist/components/*.mjs',
     });

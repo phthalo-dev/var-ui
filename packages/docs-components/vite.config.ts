@@ -1,7 +1,5 @@
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite-plus';
-
-const coreSrc = fileURLToPath(new URL('../core/src', import.meta.url));
+import { sourceConditions } from '../../source-conditions';
 
 export default defineConfig({
   plugins: [
@@ -20,14 +18,7 @@ export default defineConfig({
       },
     },
   ],
-  resolve: {
-    alias: {
-      '@var-ui/core/components': `${coreSrc}/components`,
-      '@var-ui/core/shared': `${coreSrc}/shared`,
-      '@var-ui/core/tokens': `${coreSrc}/tokens`,
-      '@var-ui/core/icons': `${coreSrc}/icons`,
-    },
-  },
+  ...sourceConditions,
   test: {
     // Vitest v4 compatibility: preserve mock call history.
     // Remove after tests no longer rely on calls from setup or earlier tests.
