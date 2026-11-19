@@ -54,7 +54,6 @@
     "jsdom": "^26.0.0",
     "playwright": "catalog:",
     "react": "catalog:",
-    "react-aria": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
@@ -67,7 +66,6 @@
     "@var-ui/core": "workspace:>=0.1.0 <1.0.0",
     "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "react": "catalog:",
-    "react-aria": "catalog:",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:"
   },

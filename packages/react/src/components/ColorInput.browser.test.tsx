@@ -69,7 +69,8 @@ describe('ColorInput on a native popover', () => {
     await userEvent.click(trigger());
     await raf();
     expect(isOpen()).toBe(true);
-    expect(popup().getAttribute('popover')).toBe('manual');
+    // Our Popover: a native light-dismiss popover.
+    expect(popup().getAttribute('popover')).toBe('auto');
     expect(container.contains(popup())).toBe(true);
     expect(hue()).toBeTruthy();
     expect(popup().contains(document.activeElement)).toBe(true);
