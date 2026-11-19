@@ -9,6 +9,7 @@ export const sizeTokenSchema = {
     xl: atProperty.length,
   },
   icon: {
+    xs: atProperty.length,
     sm: atProperty.length,
     md: atProperty.length,
     lg: atProperty.length,

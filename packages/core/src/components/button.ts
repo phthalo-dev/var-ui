@@ -8,7 +8,7 @@ import { transitionOf } from '../internal/motion';
 import { pressNudge } from '../internal/press';
 import { atForcedColors } from '../theme/conditions';
 import { controlSizeVariants, controlSurfaceSize } from '../internal/controlSize';
-import type { ControlSize } from '../shared/variantAxes';
+import { size as sizeAxis, type ControlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,
   controlToneAssignments,
@@ -21,8 +21,38 @@ const buttonAppearance = variant.enum(['solid', 'outline', 'subtle', 'ghost'], {
   default: 'subtle',
 });
 const buttonLayout = variant.enum(['default', 'icon'], { default: 'default' });
-/** Control sizes plus `xl`, a call-to-action size for heroes and marketing bands. */
-const buttonSize = variant.enum(['sm', 'md', 'lg', 'xl'], { default: 'md' });
+/**
+ * Control sizes plus `xs`, for dense rows, tags and code-block headers, and `xl`, a
+ * call-to-action size for heroes and marketing bands. Only the button family goes this small
+ * or large: text-entry controls stop at the `sm`–`lg` control scale.
+ */
+const buttonSize = sizeAxis;
+
+/** WCAG 2.2 target size (2.5.8): the minimum pointer target, in CSS px. */
+const MIN_TARGET_SIZE = '24px';
+
+/**
+ * `xs` metrics: one step below `sm` on every axis. The visible box is 20px, so an invisible
+ * `::after` grows the pointer target to 24px without changing layout. Keep a few px between
+ * neighbouring `xs` buttons, or their targets overlap.
+ */
+const buttonXsSize = {
+  boxSizing: 'border-box' as const,
+  height: t.size.control.xs.var,
+  minHeight: t.size.control.xs.var,
+  fontSize: t.fontSize.xs.var,
+  paddingInline: t.space.xs.var,
+  paddingBlock: 0,
+  gap: t.space.xxs.var,
+  borderRadius: t.radius.sm.var,
+  position: 'relative' as const,
+  '&::after': {
+    content: '""',
+    position: 'absolute' as const,
+    insetBlock: `min(0px, calc((100% - ${MIN_TARGET_SIZE}) / 2))`,
+    insetInline: `min(0px, calc((100% - ${MIN_TARGET_SIZE}) / 2))`,
+  },
+};
 
 /** `xl` call-to-action metrics: one step above `lg` on every axis. */
 const buttonXlSize = {
@@ -126,6 +156,7 @@ export const button = typestyles.recipe({
           ghost: controlAppearancePaint(vars, 'ghost'),
         },
         size: {
+          xs: buttonXsSize,
           ...controlSizeVariants((size: ControlSize) => controlSurfaceSize(size)),
           xl: buttonXlSize,
         },

@@ -5,6 +5,7 @@ export const snippets = {
 
 <Stack gap="lg">
   <HStack gap="sm">
+    <IconButton icon="search" aria-label="Search extra small" size="xs" />
     <IconButton icon="search" aria-label="Search small" size="sm" />
     <IconButton icon="search" aria-label="Search medium" size="md" />
     <IconButton icon="search" aria-label="Search large" size="lg" />

@@ -28,9 +28,11 @@ Each row below is one appearance; each button in the row is a different tone.
 
 ### Sizes
 
-`size` (`sm`, `md`, `lg`, `xl`) falls back to the surrounding control size, then `md`, so a button inside an `InputGroup`, a `Toolbar` or a `Select.Root` matches its neighbours without its own `size`.
+`size` (`xs`, `sm`, `md`, `lg`, `xl`) falls back to the surrounding control size, then `md`, so a button inside an `InputGroup`, a `Toolbar` or a `Select.Root` matches its neighbours without its own `size`.
 
 <Demo id="button.sizes" />
+
+`xs` is for dense rows, tags and code-block headers. Its box is 20px, under the 24px minimum target in WCAG 2.2 (2.5.8), so an invisible layer grows the pointer target to 24px without changing layout. Leave at least 4px between neighbouring `xs` buttons so their targets don't overlap. `xs` and `xl` are button-only: text inputs and selects stop at `sm`–`lg`.
 
 ### Disabled
 
