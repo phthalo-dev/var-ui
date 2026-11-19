@@ -17,6 +17,7 @@ import HiddenShowMd from './hidden/show-md/react';
 import DirectionRtl from './direction/rtl/react';
 import CardLink from './card/link/react';
 import CodeBlockDefault from './code-block/default/react';
+import ProseCompact from './prose/compact/react';
 import DividerDefault from './divider/default/react';
 import EmptyStateDefault from './empty-state/default/react';
 import GridDefault from './grid/default/react';
@@ -249,6 +250,7 @@ export const reactDemoMap = {
   'link.quiet': LinkQuiet,
   'unstyled-button.default': UnstyledButtonDefault,
   'code-block.default': CodeBlockDefault,
+  'prose.compact': ProseCompact,
   'alert.default': AlertDefault,
   'banner.default': BannerDefault,
   'badge.default': BadgeDefault,

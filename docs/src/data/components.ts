@@ -675,6 +675,14 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { Text } from '@var-ui/react';",
   },
   {
+    slug: 'prose',
+    name: 'Prose',
+    category: 'content',
+    description:
+      'Rendered markdown or rich text, sized to fit chat bubbles, panels and reading views.',
+    importLine: "import { Prose, proseComponents } from '@var-ui/react';",
+  },
+  {
     slug: 'code-block',
     name: 'CodeBlock',
     category: 'content',

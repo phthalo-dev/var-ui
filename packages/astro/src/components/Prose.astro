@@ -1,0 +1,20 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { prose } from '@var-ui/core/components/prose';
+import type { Density } from '@var-ui/core';
+import { mergeProps } from '../utils';
+
+/**
+ * Rendered markdown or rich text in app UI: the same `<div>` and class as the React `Prose`.
+ * Styles the bare elements a markdown renderer emits, relative to the surrounding font size.
+ */
+interface Props extends HTMLAttributes<'div'> {
+  /** `compact` for chat bubbles and cards, `balanced` for panels, `spacious` for reading views. @default balanced */
+  density?: Density;
+  className?: string;
+}
+
+const { density = 'balanced', className, ...rest } = Astro.props;
+---
+
+<div {...rest} {...mergeProps(prose({ density }), className)}><slot /></div>

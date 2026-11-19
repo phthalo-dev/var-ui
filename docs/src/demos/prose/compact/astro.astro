@@ -1,0 +1,14 @@
+---
+import { Prose } from '@var-ui/astro';
+---
+
+<Prose density="compact">
+  <h3>Build fixed</h3>
+  <p>The failure came from a stale <code>dist</code> folder. I rebuilt core and the tests pass again:</p>
+  <pre><code class="language-sh">vp run build
+vp test run</code></pre>
+  <ul>
+    <li>2,642 tests passed</li>
+    <li>See the <a href="#">CI run</a> for details</li>
+  </ul>
+</Prose>

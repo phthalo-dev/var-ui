@@ -141,6 +141,7 @@ export {
   type HoverCardTriggerProps,
 } from './HoverCard';
 export { Code, type CodeProps } from './Code';
+export { Prose, proseComponents, type ProseProps } from './Prose';
 export { CodeBlock, type CodeBlockProps, type CodeBlockVariant } from './CodeBlock';
 export { Alert, type AlertAppearance, type AlertProps } from './Alert';
 export {

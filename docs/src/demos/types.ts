@@ -24,6 +24,7 @@ export type DemoId =
   | 'link.quiet'
   | 'unstyled-button.default'
   | 'code-block.default'
+  | 'prose.compact'
   | 'alert.default'
   | 'banner.default'
   | 'badge.default'

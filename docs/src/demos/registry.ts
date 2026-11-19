@@ -16,6 +16,7 @@ import { snippets as hiddenShowMdSnippets } from './hidden/show-md/snippets';
 import { snippets as directionRtlSnippets } from './direction/rtl/snippets';
 import { snippets as cardLinkSnippets } from './card/link/snippets';
 import { snippets as codeBlockDefaultSnippets } from './code-block/default/snippets';
+import { snippets as proseCompactSnippets } from './prose/compact/snippets';
 import { snippets as dividerDefaultSnippets } from './divider/default/snippets';
 import { snippets as emptyStateDefaultSnippets } from './empty-state/default/snippets';
 import { snippets as gridDefaultSnippets } from './grid/default/snippets';
@@ -249,6 +250,7 @@ export const DEMO_IDS = [
   'link.quiet',
   'unstyled-button.default',
   'code-block.default',
+  'prose.compact',
   'alert.default',
   'banner.default',
   'badge.default',
@@ -476,6 +478,7 @@ export const demoSnippets: Record<DemoId, DemoSnippets> = {
   'link.quiet': linkQuietSnippets,
   'unstyled-button.default': unstyledButtonDefaultSnippets,
   'code-block.default': codeBlockDefaultSnippets,
+  'prose.compact': proseCompactSnippets,
   'alert.default': alertDefaultSnippets,
   'banner.default': bannerDefaultSnippets,
   'badge.default': badgeDefaultSnippets,
@@ -703,6 +706,7 @@ export const reactDemoLoaders: Record<DemoId, DemoEntry['react']> = {
   'link.quiet': () => import('./link/quiet/react'),
   'unstyled-button.default': () => import('./unstyled-button/default/react'),
   'code-block.default': () => import('./code-block/default/react'),
+  'prose.compact': () => import('./prose/compact/react'),
   'alert.default': () => import('./alert/default/react'),
   'banner.default': () => import('./banner/default/react'),
   'badge.default': () => import('./badge/default/react'),
@@ -1017,6 +1021,11 @@ export const demoRegistry: Record<DemoId, DemoEntry> = {
     id: 'code-block.default',
     snippets: demoSnippets['code-block.default'],
     react: reactDemoLoaders['code-block.default'],
+  },
+  'prose.compact': {
+    id: 'prose.compact',
+    snippets: demoSnippets['prose.compact'],
+    react: reactDemoLoaders['prose.compact'],
   },
   'alert.default': {
     id: 'alert.default',
