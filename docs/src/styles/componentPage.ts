@@ -8,7 +8,7 @@ const breakpointMdMax = typestyles.breakpoint('md', 'max');
  */
 export const componentDocArticle = typestyles.recipe({
   name: 'docs-component-article',
-  // Same layer as `proseContent` (utilities) so these overrides of its heading rhythm apply.
+  // Above `docsProse` (base layer), so these overrides of its heading rhythm apply.
   layer: 'utilities',
   slots: ['root', 'panel'],
   styles: () => ({

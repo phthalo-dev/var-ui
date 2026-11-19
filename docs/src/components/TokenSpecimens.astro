@@ -23,7 +23,7 @@ const entries = Object.entries(values)
 
 {
   group === 'radius' ? (
-    <div {...mergeProps(s.tiles)} data-prose-isolate>
+    <div {...mergeProps(s.tiles)} data-not-prose>
       {entries.map((entry) => (
         <div {...mergeProps(s.tile)}>
           <div {...mergeProps(s.tileShape)} style={{ borderRadius: entry.ref }} />
@@ -33,7 +33,7 @@ const entries = Object.entries(values)
       ))}
     </div>
   ) : (
-    <div {...mergeProps(s.list)} data-prose-isolate>
+    <div {...mergeProps(s.list)} data-not-prose>
       {entries.map((entry) => (
         <div {...mergeProps(s.row)}>
           <span {...mergeProps(s.tokenName)}>{entry.key}</span>

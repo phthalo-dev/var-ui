@@ -1,7 +1,7 @@
 export const DOCS_TOC_CONTENT_SELECTOR = '.docs-article';
-/** Headings inside a live demo (`data-prose-isolate`, e.g. an open dialog title) are not page sections. */
+/** Headings inside a live demo (`data-not-prose`, e.g. an open dialog title) are not page sections. */
 export const DOCS_TOC_HEADING_SELECTOR =
-  'h2[id]:not([data-prose-isolate] *), h3[id]:not([data-prose-isolate] *)';
+  'h2[id]:not([data-not-prose] *), h3[id]:not([data-not-prose] *)';
 
 export function normalizeDocsPath(path: string): string {
   return path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;

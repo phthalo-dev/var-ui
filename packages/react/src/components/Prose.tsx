@@ -35,7 +35,8 @@ export type ProseProps = ComponentPropsWithRef<'div'> & {
  * Rendered markdown or rich text in app UI. Styles the bare elements a markdown renderer emits,
  * relative to the surrounding font size, so it fits a chat bubble or a reading pane. Var UI
  * components inside keep their own styles. Pair with `proseComponents` to render code blocks,
- * links and tables as `CodeBlock`, `Link` and `Table`.
+ * links and tables as `CodeBlock`, `Link` and `Table`. Mark anything else that should keep its own
+ * styles (a demo, an embedded widget) with `data-not-prose`.
  *
  * ```tsx
  * <Prose density="compact">

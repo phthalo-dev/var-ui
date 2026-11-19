@@ -29,7 +29,7 @@ const cards = await Promise.all(
 const catalog = componentCatalog();
 ---
 
-<div {...mergeProps(catalog.grid)} data-prose-isolate>
+<div {...mergeProps(catalog.grid)} data-not-prose>
   {
     cards.map((card) => (
       <Card

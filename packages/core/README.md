@@ -74,7 +74,7 @@ emits stable public class names.
 | **Data input** | `textField`, `textAreaField`, `checkbox`, `radio`, `switchStyles`, `select`, `field` (+ `fieldChrome` helper) |
 | **Feedback**   | `alert`, `banner`, `badge`, `spinner`, `skeleton`, `progressBar`, `statusDot`                                 |
 | **Layout**     | `stack`, `grid`, `section`, `center`, `aspectRatio`, `divider`, `layout` (shell)                              |
-| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `proseContent`, `steps`, `fileTree`                 |
+| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `prose`, `steps`, `fileTree`                        |
 | **Containers** | `card`, `carousel`, `thumbnail`, `avatar`, `avatarGroup`                                                      |
 | **Overlay**    | `dialog`, `overlay`, `commandPalette`, `tabs`                                                                 |
 | **Icons**      | `icon` recipe + `IconName` union / `iconNameList` (glyphs live in `@var-ui/icons`)                            |
@@ -460,23 +460,13 @@ mapping in `docs/src/styles/codeHighlight.ts`.
 - [Design system guide](https://typestyles.dev/docs/design-system) — patterns for building your own
 - [Documentation site](../../docs/README.md) — primary consumer of this package
 
-## Prose / docs content primitives (`proseContent`)
+## Rendered markdown (`prose`)
 
-Long-form markdown helpers live in `proseContent` from `@var-ui/core`. Put `proseContent('root')` on the element that wraps rendered HTML.
+Put `prose({ density })` on the element that wraps rendered markdown or rich text (`Prose` in `@var-ui/react` / `@var-ui/astro`). It styles the bare elements a renderer emits (headings, paragraphs, lists, links, inline and fenced code, blockquotes, tables, rules) relative to the surrounding font size. `density` is `compact` (chat bubbles, cards), `balanced` (panels) or `spacious` (reading views).
 
-Covered primitives:
+Element rules live in the `base` cascade layer, so a Var UI component rendered inside keeps its own styles. For anything else that should opt out (a live demo, an embedded widget, a hand-built table), mark it `data-not-prose` (`NOT_PROSE_ATTRIBUTE`): prose skips the element and everything inside it, while the element itself still takes part in the vertical flow.
 
-| Primitive         | Markdown / HTML                    | Notes                                                                      |
-| ----------------- | ---------------------------------- | -------------------------------------------------------------------------- |
-| **Blockquote**    | `> …`                              | Tinted panel + accent border                                               |
-| **`kbd`**         | `<kbd>Ctrl</kbd>`                  | Keyboard cap styling                                                       |
-| **Badge**         | `<span data-docs-badge>New</span>` | Optional `data-docs-badge-tone`: `success`, `warning`, `danger`, `info`    |
-| **Table**         | GFM tables                         | For wide tables wrap with `<div class="…proseContent('tableWrap')">`       |
-| **Divider**       | `---` → `<hr>`                     | Themed horizontal rule                                                     |
-| **Heading links** | `h1`–`h6`                          | Apps can inject `<a data-prose-heading-anchor>` permalinks (see docs site) |
-
-**Docs site** composes `proseContent('root')` with site overrides and passes a custom
-`createDesignTheme` surface so semantic `--var-ui-color-*` tracks the shell.
+To extend prose with your own element rules, tune its vars (`flow`, `headingGap`, `h1Size`–`h3Size`, `lineHeight`, `borderColor`, `codeBackground`, `secondaryColor`) and wrap descendant rules in `proseRules({ '& kbd': { … } })` so they honour `data-not-prose` too. The docs site's `docsProse` (in `@var-ui/docs/styles`) is built this way.
 
 ### Admonition-style callouts (markdown-only)
 
