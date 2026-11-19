@@ -1,6 +1,7 @@
 import { variant, type VariantOptions } from 'typestyles';
 import { designTokens as t } from '../tokens';
 import { TONE_KEYS } from '../tokens/schema/color/tone';
+import { PALETTE_FAMILIES, type PaletteFamily } from '../tokens/schema/color/palette';
 
 /**
  * Every component tone. `neutral` sits outside the color tokens; the rest are
@@ -364,30 +365,29 @@ export function appearanceSurface(
 }
 
 /**
- * Categorical identity axis (`1`–`8`): Badge and StatusDot hues for roles and kinds, not status.
- * `none` (the default) leaves `tone` in charge.
+ * Identity color axis: every base palette name (`blue`, `red`, `sage`, …). For roles, kinds and
+ * labels, not status. `none` (the default) leaves `tone` in charge.
  */
-export const category = variant.enum(['none', '1', '2', '3', '4', '5', '6', '7', '8'], {
-  default: 'none',
-});
+export const hueColor = variant.enum(['none', ...PALETTE_FAMILIES], { default: 'none' });
 
-export type Category = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
+export type HueColor = PaletteFamily;
 
-/** One style entry per category (`none` paints nothing). */
-export function mapCategory<Style>(
-  paint: (key: Category) => Style,
-): Record<Category | 'none', Style | Record<string, never>> {
+/** One style entry per hue (`none` paints nothing). */
+export function mapHue<Style>(
+  paint: (key: HueColor) => Style,
+): Record<HueColor | 'none', Style | Record<string, never>> {
   return {
     none: {},
-    ...(Object.fromEntries(
-      (['1', '2', '3', '4', '5', '6', '7', '8'] as const).map((key) => [key, paint(key)]),
-    ) as Record<Category, Style>),
+    ...(Object.fromEntries(PALETTE_FAMILIES.map((key) => [key, paint(key)])) as Record<
+      HueColor,
+      Style
+    >),
   };
 }
 
-/** Channels for a categorical color: ink and fill are the hue, solid text is the surface. */
-export function categoryChannelAssignments(v: SemanticChannelRefs, key: Category) {
-  const hue = t.color.categorical[key].var;
+/** Channels for a named hue: ink and fill are the hue, solid text is the surface. */
+export function hueChannelAssignments(v: SemanticChannelRefs, key: HueColor) {
+  const hue = t.color.hue[key].var;
   return {
     [v.semantic.name]: hue,
     [v.solidBg.name]: hue,

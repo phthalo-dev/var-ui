@@ -1,8 +1,18 @@
 import { atProperty, type TokenSchema } from 'typestyles';
+import { PALETTE_FAMILIES, type PaletteFamily } from './palette';
 
 /**
- * Identity colors (agent roles, event kinds, chart series), not status. Eight hues spread around
- * the wheel, mode-aware, each at least 4:1 against `background.surface`.
+ * Identity colors by name (`blue`, `red`, `sage`, …): one mode-aware color per base palette
+ * family, readable as text on `background.surface` and `background.subtle` in both modes. For
+ * roles, kinds and labels, not status (use `tone` for that).
+ */
+export const hueTokenSchema = Object.fromEntries(
+  PALETTE_FAMILIES.map((family) => [family, atProperty.color]),
+) as { readonly [F in PaletteFamily]: typeof atProperty.color };
+
+/**
+ * Chart series in order (`1` first). Each is a named hue, ordered so neighbours differ most;
+ * themes can reorder or swap them.
  */
 export const categoricalTokenSchema = {
   1: atProperty.color,

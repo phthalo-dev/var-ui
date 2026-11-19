@@ -3,12 +3,12 @@ import { statusDot } from '@var-ui/core/components/statusDot';
 import type { StatusDotVariantProps } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
 
-export type StatusDotProps = Omit<ComponentPropsWithRef<'span'>, 'children'> &
+export type StatusDotProps = Omit<ComponentPropsWithRef<'span'>, 'children' | 'color'> &
   StatusDotVariantProps;
 
 export function StatusDot({
   tone = 'neutral',
-  category,
+  color,
   appearance = 'solid',
   pulse = false,
   'aria-label': ariaLabel,
@@ -19,7 +19,7 @@ export function StatusDot({
   return (
     <span
       {...rest}
-      {...mergeProps(statusDot({ tone, category, appearance, pulse }), className)}
+      {...mergeProps(statusDot({ tone, color, appearance, pulse }), className)}
       ref={ref}
       aria-label={ariaLabel}
       role={ariaLabel ? 'img' : undefined}

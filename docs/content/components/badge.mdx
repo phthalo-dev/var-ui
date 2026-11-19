@@ -13,17 +13,17 @@ Compact label for counts or status.
 
 <Demo id="badge.default" />
 
-### Categories
+### Colors
 
-`tone` means status (success, warning, danger). For identity, such as an agent role or an event
-kind, use `category` (`"1"`–`"8"`). The eight hues are spread around the wheel, adapt to color
-mode, and are the same `color.categorical.*` tokens charts use for series, so a role's badge and
-its chart line match. `StatusDot` takes `category` too.
+`tone` means status (success, warning, danger). For identity, such as an agent role, an event
+kind or a label, use `color` with any name from the base palette: `blue`, `red`, `sage` and the
+rest. Each color adapts to color mode and is readable as text on the surface (WCAG AA), in every
+`appearance`. `StatusDot` takes `color` too.
 
-```tsx
-<Badge category="1">Planner</Badge>
-<Badge category="3" appearance="solid">Reviewer</Badge>
-```
+<Demo id="badge.colors" />
+
+For chart series, `color.categorical.1`–`8` lists eight of these hues in an order where
+neighbours differ most.
 
 ## Props
 

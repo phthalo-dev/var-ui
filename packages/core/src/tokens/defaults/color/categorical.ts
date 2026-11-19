@@ -1,21 +1,32 @@
 import { tokens } from '../../declare';
+import { PALETTE_FAMILIES, type PaletteFamily } from '../../schema/color/palette';
 import type { ColorTokenPatch } from '../../types';
 
 const p = tokens.color.palette;
 
 /**
- * Light: step 6 (≥ 4.1:1 on white). Dark: step 5 (≥ 4.8:1 on the dark surface). Ordered so
- * neighbours differ most: blue, orange, teal, pink, grass, violet, amber, red.
+ * Every palette family as a named hue: step 7 in light mode (≥ 5.5:1 on surface and subtle),
+ * step 4 in dark mode (≥ 8:1), so the hue works as badge text, an outline and a solid fill.
  */
+export const hue = Object.fromEntries(
+  PALETTE_FAMILIES.map((family) => [
+    family,
+    { light: p[`${family}-7`].var, dark: p[`${family}-4`].var },
+  ]),
+) as Record<PaletteFamily, { light: string; dark: string }> satisfies ColorTokenPatch['hue'];
+
+const h = tokens.color.hue;
+
+/** Chart series order: blue, orange, teal, pink, grass, violet, amber, red. */
 export const categorical = {
-  1: { light: p['blue-6'].var, dark: p['blue-5'].var },
-  2: { light: p['orange-6'].var, dark: p['orange-5'].var },
-  3: { light: p['teal-6'].var, dark: p['teal-5'].var },
-  4: { light: p['pink-6'].var, dark: p['pink-5'].var },
-  5: { light: p['grass-6'].var, dark: p['grass-5'].var },
-  6: { light: p['violet-6'].var, dark: p['violet-5'].var },
-  7: { light: p['amber-6'].var, dark: p['amber-5'].var },
-  8: { light: p['red-6'].var, dark: p['red-5'].var },
+  1: h.blue.var,
+  2: h.orange.var,
+  3: h.teal.var,
+  4: h.pink.var,
+  5: h.grass.var,
+  6: h.violet.var,
+  7: h.amber.var,
+  8: h.red.var,
 } satisfies ColorTokenPatch['categorical'];
 
 export const chart = {

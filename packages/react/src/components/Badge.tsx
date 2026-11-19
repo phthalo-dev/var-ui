@@ -5,7 +5,7 @@ import { mergeProps } from 'typestyles';
 
 export type { SurfaceAppearance as BadgeAppearance } from '@var-ui/core';
 
-export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
+export type BadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, 'color'> &
   BadgeVariantProps & {
     /** Ref to the underlying `<span>` element. */
     ref?: Ref<HTMLSpanElement>;
@@ -16,18 +16,18 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
  *
  * ```tsx
  * <Badge tone="success">Active</Badge>
- * <Badge category="3">Reviewer</Badge>   // identity hue, not status
+ * <Badge color="violet">Reviewer</Badge>   // identity color, not status
  * ```
  */
 export function Badge({
   tone = 'neutral',
-  category,
+  color,
   appearance = 'subtle',
   className,
   ref,
   ...props
 }: BadgeProps): JSX.Element {
   return (
-    <span {...props} {...mergeProps(badge({ tone, category, appearance }), className)} ref={ref} />
+    <span {...props} {...mergeProps(badge({ tone, color, appearance }), className)} ref={ref} />
   );
 }

@@ -4,7 +4,8 @@
 '@var-ui/astro': minor
 ---
 
-Categorical colors for identity, not status:
+Named colors for identity, not status:
 
-- **Tokens:** `color.categorical.1`–`8` (blue, orange, teal, pink, grass, violet, amber, red). Mode-aware palette steps, each at least 4:1 on the surface in both modes, ordered so neighbours differ most. Use them for chart series, roles and kinds. Plus chart chrome: `color.chart.axis`, `gridline` and `plot`.
-- **Badge and StatusDot `category`** (`"1"`–`"8"`): sets the hue instead of `tone`, in every appearance. `none` (the default) leaves `tone` in charge.
+- **Badge and StatusDot `color`** takes any name from the base palette: `blue`, `red`, `violet`, `teal`, `sage`, `stone` and the rest of the 40 families. It sets the hue instead of `tone`, in every appearance. `none` (the default) leaves `tone` in charge. `<Badge color="violet">Reviewer</Badge>`.
+- **Tokens:** `color.hue.<name>` for every palette family, mode-aware: step 7 in light mode (≥ 5.5:1 on surface and subtle) and step 4 in dark mode (≥ 8:1), so each works as badge text, an outline and a fill.
+- `color.categorical.1`–`8` lists eight of them in chart series order (blue, orange, teal, pink, grass, violet, amber, red). Chart chrome: `color.chart.axis`, `gridline` and `plot`.
