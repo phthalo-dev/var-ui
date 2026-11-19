@@ -29,6 +29,8 @@ const DOCUMENTED_HOOKS = [
 
 /** Present today, not part of the documented contract (recipe axes, layout flags, script hooks). */
 const UNDOCUMENTED_HOOKS = [
+  // TextAreaField `autosize` without `maxRows`: no height cap (#142).
+  'data-max-rows',
   // SideNav section `selectionStyle="text"`: the recipe's hook for accent-text-only selection.
   'data-selection-style',
   'data-accordion-id',

@@ -24,13 +24,22 @@ import { cx, mergeProps } from 'typestyles';
 import { FormErrorsContext } from './Form';
 
 export type FieldMeta = {
-  /** Visible label rendered above the control. */
-  label?: string;
+  /** Visible label rendered above the control (text or nodes, e.g. a trailing hint). */
+  label?: ReactNode;
   /** Helper text shown below the control when there is no error. */
-  description?: string;
+  description?: ReactNode;
   /** Validation message; when set, the field is shown in an error state. */
-  errorMessage?: string;
+  errorMessage?: ReactNode;
 };
+
+/**
+ * The plain text of a `label` (`FieldMeta` labels may be nodes), for attributes that need a
+ * string such as `aria-label`. `undefined` for a node label: name the control with
+ * `aria-labelledby` (the rendered label) instead.
+ */
+export function labelText(label: ReactNode): string | undefined {
+  return typeof label === 'string' || typeof label === 'number' ? String(label) : undefined;
+}
 
 export type FieldRootProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /**

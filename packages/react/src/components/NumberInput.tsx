@@ -63,7 +63,12 @@ export type NumberInputProps = Omit<
     value?: number;
     /** Initial value when uncontrolled. */
     defaultValue?: number;
-    /** Called with the parsed number (`NaN` when cleared). The native `onChange` event still reaches the `<input>`. */
+    /**
+     * Called with the parsed number (`NaN` when cleared) when the value is **committed**: on blur,
+     * Enter, the stepper buttons or arrow keys. Not on every keystroke, because a partly typed
+     * number (`-`, `1.`) isn't a value yet. For live "unsaved changes" tracking use the native
+     * `onChange`, which still reaches the `<input>` on each keystroke.
+     */
     onValueChange?: (value: number) => void;
     /** Smallest allowed value. */
     min?: number;

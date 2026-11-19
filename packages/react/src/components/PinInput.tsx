@@ -11,7 +11,7 @@ import { useCallback, useRef, useState } from 'react';
 import { pinInput } from '@var-ui/core/components/pinInput';
 import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from 'typestyles';
-import type { FieldMeta } from './Field';
+import { labelText, type FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
 import { useControlSize } from '../internal/controlSizeContext';
 
@@ -232,7 +232,7 @@ export function PinInput({
     applyPastedValue(index, event.clipboardData.getData('text'));
   };
 
-  const groupLabel = ariaLabel ?? label;
+  const groupLabel = ariaLabel ?? labelText(label);
 
   return (
     <FieldFrame
