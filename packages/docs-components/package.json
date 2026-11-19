@@ -20,7 +20,8 @@
     "index.ts",
     "schema.ts",
     "src",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "exports": {

@@ -25,6 +25,7 @@ describe('navigation', () => {
       '/docs',
       '/docs/getting-started',
       '/docs/installation',
+      '/docs/upgrading',
       '/docs/overlay-lifecycle',
       '/docs/hooks',
       '/docs/forms',
