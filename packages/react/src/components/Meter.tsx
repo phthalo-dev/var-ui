@@ -20,7 +20,10 @@ export type MeterProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'role' 
     optimum?: number;
     /** Visible label above the track; also the accessible name. */
     label?: string;
-    /** Show the formatted value next to the label. @default true */
+    /**
+     * Show the formatted value next to the label. A bare meter shows no value text.
+     * @default true when `label` is set
+     */
     showValueText?: boolean;
     /** Spoken and displayed value, replacing the formatted one. */
     valueLabel?: string;
@@ -49,7 +52,7 @@ export function Meter({
   high,
   optimum,
   label,
-  showValueText = true,
+  showValueText = Boolean(label),
   valueLabel,
   formatOptions,
   size = 'md',

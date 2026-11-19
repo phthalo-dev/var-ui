@@ -11,7 +11,7 @@ export type ButtonConfiguratorState = {
 };
 
 const APPEARANCE_OPTIONS: { id: ToneAppearance; label: string }[] = [
-  { id: 'filled', label: 'Filled' },
+  { id: 'solid', label: 'Solid' },
   { id: 'outline', label: 'Outline' },
   { id: 'subtle', label: 'Subtle' },
   { id: 'ghost', label: 'Ghost' },

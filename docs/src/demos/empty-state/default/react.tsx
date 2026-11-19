@@ -7,7 +7,7 @@ export default function Preview() {
       title="No results"
       description="Try a different filter, or clear the search."
       action={
-        <Button tone="accent" appearance="filled">
+        <Button tone="accent" appearance="solid">
           Clear filters
         </Button>
       }

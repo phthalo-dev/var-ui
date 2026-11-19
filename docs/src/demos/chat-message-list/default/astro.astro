@@ -8,10 +8,10 @@ const assistant = chatMessage({ sender: 'assistant' });
 const user = chatMessage({ sender: 'user' });
 const assistantBubble = chatMessageBubble({
   sender: 'assistant',
-  variant: 'filled',
+  appearance: 'solid',
   group: 'none',
 });
-const userBubble = chatMessageBubble({ sender: 'user', variant: 'filled', group: 'none' });
+const userBubble = chatMessageBubble({ sender: 'user', appearance: 'solid', group: 'none' });
 ---
 
 <div {...mergeProps(l.root)} role="log" aria-live="polite">

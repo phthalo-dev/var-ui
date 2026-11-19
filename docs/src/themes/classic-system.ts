@@ -288,7 +288,7 @@ export const classicSystemTheme = defaultTheme.override({
           },
           variants: {
             appearance: {
-              filled: {
+              solid: {
                 borderColor: v.color.border.default.var,
               },
             },

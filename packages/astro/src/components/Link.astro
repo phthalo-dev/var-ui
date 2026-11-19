@@ -1,14 +1,30 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { link } from '@var-ui/core/components/link';
+import { link, type LinkVariantProps } from '@var-ui/core/components/link';
 import { mergeProps } from '../utils';
 
 type Props = HTMLAttributes<'a'> & {
   href: string;
+  /** `accent` is the link colour; `primary` / `secondary` are text colours for quiet links. @default accent */
+  tone?: NonNullable<LinkVariantProps['tone']>;
+  /** Font size. `inherit` matches the surrounding text. @default inherit */
+  size?: NonNullable<LinkVariantProps['size']>;
   className?: string;
 };
 
-const { href, className, ...rest } = Astro.props;
+const { href, tone, size, className, ...rest } = Astro.props;
+const l = link({ tone, size });
+const iconProps = mergeProps(l.icon);
+const hasStart = Astro.slots.has('start-icon');
+const hasEnd = Astro.slots.has('end-icon');
 ---
 
-<a href={href} {...rest} {...mergeProps(link, className)}><slot /></a>
+<a href={href} {...rest} {...mergeProps(l.root, className)}
+  >{hasStart && <span {...iconProps} aria-hidden="true"><slot name="start-icon" /></span>}<slot />{
+    hasEnd && (
+      <span {...iconProps} aria-hidden="true">
+        <slot name="end-icon" />
+      </span>
+    )
+  }</a
+>

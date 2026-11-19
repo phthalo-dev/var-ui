@@ -17,7 +17,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'children' | 'role'> &
     high?: number;
     optimum?: number;
     label?: string;
-    /** Show the formatted value beside the label. @default true */
+    /** Show the formatted value beside the label. @default true when `label` is set */
     showValueText?: boolean;
     valueLabel?: string;
     className?: string;
@@ -31,7 +31,7 @@ const {
   high,
   optimum,
   label,
-  showValueText = true,
+  showValueText = Boolean(label),
   valueLabel,
   size = 'md',
   tone,

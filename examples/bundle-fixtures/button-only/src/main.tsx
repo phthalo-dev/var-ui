@@ -3,7 +3,7 @@ import { Button, DesignSystemProvider } from '@var-ui/react';
 
 createRoot(document.getElementById('root')!).render(
   <DesignSystemProvider>
-    <Button tone="accent" appearance="filled">
+    <Button tone="accent" appearance="solid">
       Save
     </Button>
   </DesignSystemProvider>,

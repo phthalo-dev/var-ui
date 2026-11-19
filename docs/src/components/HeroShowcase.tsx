@@ -61,7 +61,7 @@ const showcases: Record<string, () => JSX.Element> = {
         <Button appearance="ghost" size="sm">
           Cancel
         </Button>
-        <Button tone="accent" appearance="filled" size="sm">
+        <Button tone="accent" appearance="solid" size="sm">
           Ship it
         </Button>
       </HStack>
@@ -116,7 +116,7 @@ const showcases: Record<string, () => JSX.Element> = {
         <Button appearance="ghost" size="sm">
           Reset
         </Button>
-        <Button tone="accent" appearance="filled" size="sm">
+        <Button tone="accent" appearance="solid" size="sm">
           Save theme
         </Button>
       </HStack>
@@ -125,7 +125,7 @@ const showcases: Record<string, () => JSX.Element> = {
   button: () => (
     <Stack gap="md" align="center">
       <HStack gap="sm" align="center">
-        <Button tone="accent" appearance="filled">
+        <Button tone="accent" appearance="solid">
           Deploy
         </Button>
         <Button appearance="outline">Preview</Button>
@@ -146,7 +146,7 @@ const showcases: Record<string, () => JSX.Element> = {
   ),
   'icon-button': () => (
     <HStack gap="sm" align="center">
-      <IconButton icon="search" aria-label="Search" tone="accent" appearance="filled" />
+      <IconButton icon="search" aria-label="Search" tone="accent" appearance="solid" />
       <IconButton icon="menu" aria-label="Menu" appearance="outline" />
       <IconButton icon="star" aria-label="Star" tone="warning" appearance="subtle" />
       <IconButton icon="close" aria-label="Close" appearance="ghost" />
@@ -336,7 +336,7 @@ const showcases: Record<string, () => JSX.Element> = {
           <Button appearance="ghost" size="sm">
             Cancel
           </Button>
-          <Button tone="danger" appearance="filled" size="sm">
+          <Button tone="danger" appearance="solid" size="sm">
             Delete
           </Button>
         </HStack>

@@ -14,10 +14,10 @@ import { mergeProps } from '../../../lib/mergeProps';
 const l = chatLayout();
 const list = chatMessageList({ density: 'balanced' });
 const m = chatMessage({ sender: 'assistant' });
-const bubble = chatMessageBubble({ sender: 'assistant', variant: 'filled', group: 'none' });
+const bubble = chatMessageBubble({ sender: 'assistant', appearance: 'solid', group: 'none' });
 const a = avatar({ size: 'sm' });
 const c = chatComposer();
-const send = button({ tone: 'accent', appearance: 'filled' });
+const send = button({ tone: 'accent', appearance: 'solid' });
 ---
 
 <div style="height: 17.5rem">

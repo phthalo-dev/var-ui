@@ -43,8 +43,8 @@ function emittedRule(selector: string, keep: string): string | undefined {
 const ruleCss = [
   emittedRule('.var-ui-button[data-tone="accent"]', '--var-ui-button-solidbg') ??
     `.var-ui-button[data-tone="accent"] {\n  --var-ui-button-solidbg: var(${TOKEN});\n}`,
-  emittedRule('.var-ui-button[data-appearance="filled"]', '--var-ui-button-background') ??
-    '.var-ui-button[data-appearance="filled"] {\n  --var-ui-button-background: var(--var-ui-button-solidbg);\n}',
+  emittedRule('.var-ui-button[data-appearance="solid"]', '--var-ui-button-background') ??
+    '.var-ui-button[data-appearance="solid"] {\n  --var-ui-button-background: var(--var-ui-button-solidbg);\n}',
 ].join('\n\n');
 ---
 
@@ -92,9 +92,9 @@ const ruleCss = [
 
   <span {...combine(c.label, c.step3)}>3 · components</span>
   <div {...combine(c.cell, c.step3, c.components)} data-cascade-components>
-    <Button tone="accent" appearance="filled" pill>Publish release</Button>
+    <Button tone="accent" appearance="solid" pill>Publish release</Button>
     <Badge tone="accent">Synced</Badge>
-    <ProgressBar label="Rollout" value={64} showValueText />
+    <ProgressBar label="Rollout" value={64} />
     <Avatar name="Maya Okafor" size="sm" />
   </div>
 </div>

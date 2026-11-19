@@ -4,6 +4,26 @@ import userEvent from '@testing-library/user-event';
 import { Table } from './Table';
 
 describe('Table', () => {
+  it('sets the minWidth recipe variable on the root so the table scrolls instead of squeezing', () => {
+    render(<Table aria-label="Runs" minWidth="48rem" style={{ maxHeight: '10rem' }} />);
+    const root = screen.getByRole('table').parentElement as HTMLElement;
+    expect(root.style.getPropertyValue('--var-ui-table-minwidth')).toBe('48rem');
+    expect(root.style.maxHeight).toBe('10rem');
+  });
+
+  it('leaves the root style untouched without minWidth', () => {
+    render(<Table aria-label="Runs" />);
+    const root = screen.getByRole('table').parentElement as HTMLElement;
+    expect(root.getAttribute('style')).toBeNull();
+  });
+
+  it('marks bordered and highlightOnHover on the root', () => {
+    render(<Table aria-label="Runs" bordered highlightOnHover />);
+    const root = screen.getByRole('table').parentElement as HTMLElement;
+    expect(root.hasAttribute('data-bordered')).toBe(true);
+    expect(root.hasAttribute('data-highlight-on-hover')).toBe(true);
+  });
+
   it('renders compound table semantics', () => {
     render(
       <Table caption="Team">

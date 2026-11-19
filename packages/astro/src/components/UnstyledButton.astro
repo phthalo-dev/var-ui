@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { unstyledButton } from '@var-ui/core/components/unstyledButton';
+import { mergeProps } from '../utils';
+
+/**
+ * A native `<button>` without chrome, keeping the cursor, focus ring and disabled state. Same
+ * DOM and classes as the React `UnstyledButton`. `type` defaults to `button`.
+ */
+interface Props extends HTMLAttributes<'button'> {
+  className?: string;
+}
+
+const { type = 'button', className, ...rest } = Astro.props;
+---
+
+<button type={type} {...rest} {...mergeProps(unstyledButton(), className)}><slot /></button>

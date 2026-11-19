@@ -19,7 +19,7 @@ export default function InstallCommand({ command }: InstallCommandProps) {
         <CopyButton value={command}>
           {({ copied, copy }) => (
             <Button
-              appearance="filled"
+              appearance="solid"
               aria-label={copied ? 'Copied' : `Copy “${command}”`}
               onClick={copy}
               pill

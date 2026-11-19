@@ -11,7 +11,7 @@ export default function Preview() {
         <Popover.Content>
           <p>Anyone with the link can view this draft.</p>
           <HStack gap="sm" style={{ marginTop: '0.75rem' }}>
-            <Button tone="accent" appearance="filled" size="sm">
+            <Button tone="accent" appearance="solid" size="sm">
               Copy link
             </Button>
             <Button tone="accent" appearance="ghost" size="sm">

@@ -1,0 +1,30 @@
+---
+title: UnstyledButton
+description: A native button without chrome, for inline toggles and custom pressable regions.
+---
+
+# UnstyledButton
+
+A native `<button>` with the browser's chrome removed: no background, border, padding or font of its own, so it takes the look of whatever it wraps. It keeps what makes it a button: the pointer cursor, the shared focus ring, keyboard activation and a disabled state.
+
+Use it for small inline toggles ("Show details"), a clickable row or card region, or an icon smaller than the smallest `IconButton`. When the control should look like a button, use [Button](/components/button) or [IconButton](/components/icon-button).
+
+## Examples
+
+### Disclosure toggle
+
+<Demo id="unstyled-button.default" />
+
+## Accessibility
+
+It is a real `<button>`, so Enter and Space activate it and it is in the tab order. `type` defaults to `button`, so it never submits a form by accident; pass `type="submit"` when it should. An icon-only `UnstyledButton` needs an accessible name: an `aria-label`, or [VisuallyHidden](/components/visually-hidden) text inside it.
+
+## Astro
+
+`UnstyledButton` from `@var-ui/astro` renders the same `<button>` and class. In plain HTML, put the `var-ui-unstyled-button` class on a `<button>`.
+
+## Props
+
+<PropsTable slug="unstyled-button" />
+
+All native `<button>` attributes and handlers are passed through, and `ref` is the button.

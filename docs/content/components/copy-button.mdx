@@ -23,6 +23,20 @@ Override `copyLabel` and `copiedLabel` (and optionally `errorLabel`) for context
 
 <Demo id="copy-button.labels" />
 
+## Reacting to a copy
+
+`onCopied(value)` runs after a successful write and `onCopyError(error, value)` when the write fails (permission denied, an insecure context), so you can show your own toast or log the failure. They have their own names because the native `onCopy` is the element's clipboard event. `useCopy` takes the same two options.
+
+```tsx
+<CopyButton
+  value={url}
+  onCopied={() => toast.success('Link copied')}
+  onCopyError={() => toast.error('Copy failed')}
+/>
+```
+
+In Astro, listen for the bubbling `var-ui:copy-button-copied` and `var-ui:copy-button-error` events (`COPY_BUTTON_COPIED_EVENT`, `COPY_BUTTON_ERROR_EVENT` from `@var-ui/astro`); `event.detail.value` is the text.
+
 ## Props
 
 <PropsTable slug="copy-button" />

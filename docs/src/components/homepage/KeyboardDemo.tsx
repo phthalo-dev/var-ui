@@ -168,7 +168,7 @@ export default function KeyboardDemo() {
             label="Post title"
           />
           <div {...mergeProps(k.row)}>
-            <Button appearance="filled" tone="accent">
+            <Button appearance="solid" tone="accent">
               Publish
             </Button>
             <Menu>

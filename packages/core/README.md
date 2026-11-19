@@ -11,7 +11,7 @@ import '@var-ui/core/styles.css';
 import { button, layout, designTokens, defaultThemeClassName } from '@var-ui/core';
 
 document.body.className = defaultThemeClassName; // `theme-var-ui-default`
-element.className = button({ tone: 'accent', appearance: 'filled' });
+element.className = button({ tone: 'accent', appearance: 'solid' });
 // `layout` — multi-pane page shell; `stack` and `textBlock` — section and body text
 ```
 

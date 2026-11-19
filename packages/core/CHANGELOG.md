@@ -1,5 +1,207 @@
 # @var-ui/core
 
+## 0.12.0
+
+### Minor Changes
+
+- [#183](https://github.com/phthalo-dev/var-ui/pull/183) [`9577997`](https://github.com/phthalo-dev/var-ui/commit/9577997f4292789a2342b9f7b13c8be341ce2c22) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - App header chrome: one calm, consistent header across docs pages.
+  
+  - **core** `sideNav`: sections and items rendered outside a `SideNav` root (e.g. in a `MobileNav` drawer) get the default colours instead of the transparent `@property` initial values.
+  - **core** `topNav`: items are the 32px control height with a quieter hover than the selected pill, selected items are semibold, and a new `itemLabel` slot reserves the bold width so selecting never shifts neighbours. The bar drops its shadow for a `border.subtle` hairline.
+  - **core** `segmentedControl`: new `layout: 'icon'` (square segments), nested indicator radius (the focus ring matches it), hover colour on unselected segments, a hairline track and a lifted indicator in dark mode. `toggleButton({ segmented: true })` no longer uses a pill radius.
+  - **core** `searchInput`: new `collapseBelow` variant (`none | sm | md | lg | xl`, default `md`, was a fixed `xl`) for the command trigger, a hover fill, a single focus ring on the field, and an even inset around the shortcut key cap. The collapsed trigger is a quiet icon button.
+  - **core** `kbd`: a centred fixed-height key cap. `commandPalette`: new `footer` / `footerHint` slots; the search input hides the UA clear button.
+  - **react** `SegmentedControl` / `ColorModeToggle`: `layout` prop (`ColorModeToggle` uses `icon` for icon-only segments). `CommandPalette`: keyboard hints footer (`hints`, default on). `Menu.FromSections`: a section `defaultValue` makes it an independent single-choice group. `TopNavItem` renders the `itemLabel` slot.
+  - **astro** `SegmentedControl` is a radio group of native radios (one tab stop, arrow keys move and check, like React); new `layout`, `name`, `disabled` props and `setSegmentedControlValue` / `getSegmentedControlValue`. `ColorModeToggle` is built on it. `Menu` sections take `defaultValue` for per-section radio groups. `SearchInput` takes `collapseBelow` and shows `Ctrl K` off Apple platforms. `CommandPalette` renders its group headings with the recipe's `groupHeading` slot (was an unstyled `<h2>`) and a hints footer (`hints`). New `COLOR_MODE_CHANGE_EVENT`, `readColorModePreference` (unset = `system`).
+  - **docs** One shared header, `DocsTopBar` (with `DocsMobileMenu`), used by `DocsPage` and `DocsMarketingPage`: the same brand and links on every page, persisted across view transitions (no jump or cross-fade; the selected link moves on navigation). `DocsThemePicker` is replaced by `DocsAppearanceMenu` (colour mode + theme presets in one icon menu); the `themePicker` slot is gone and a `drawerTools` slot puts tools in the mobile drawer. The docs sidebar moves into the drawer below `md`.
+  - **docs-components** `FrameworkSwitcher` is the Astro `SegmentedControl` (radio group, icon layout) with `size` and `appearance` props.
+
+- [#183](https://github.com/phthalo-dev/var-ui/pull/183) [`9577997`](https://github.com/phthalo-dev/var-ui/commit/9577997f4292789a2342b9f7b13c8be341ce2c22) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - App header, round 2.
+  
+  - `TopNav`: the selected item's fill is one pill that slides between items (`observeTopNavIndicator` in `@var-ui/core/components/indicators/top-nav`; React and Astro start it for you). Whatever moves `data-selected` moves the pill; it only animates after first placement and follows the duration tokens, so reduced motion turns it off. Dark hover is quieter than the selected pill, the dark selected tint is stronger, and items and menu triggers share the button's pressed nudge. The bar hairline uses `border.default` in light mode.
+  - `SegmentedControl`: the thumb uses the same sliding-indicator engine (`indicators/sliding`) and no longer animates in from the left edge on first paint.
+  - `SearchInput` (`variant="command"`): filled tray with a hairline, the same chrome as a `SegmentedControl` track; the ⌘K key cap sits one step above the field so it stays visible on hover in dark mode. Collapsed, the icon brightens on hover like the bar's other icon buttons.
+  - `MobileNav`: the toggle is a square 32px icon button with the shared pressed state.
+  - `CommandPalette` (React and Astro): ~44px rows with a muted 12px subtitle, a leading type-icon tile (`icon` takes an icon name; React still accepts a node), matched text highlighted by default (`highlightMatches={false}` to opt out), and `recentKey` to list recently chosen items under "Recent" on an empty query. Astro clears `aria-activedescendant` when nothing matches. Both share `findTextMatch` (`@var-ui/core/shared/textMatch`).
+  - `Menu` (React and Astro): items take `icon` (and `swatch` in React, matching Astro); a section with `layout: 'row'` renders compact icon items side by side (arrow left/right move along it in Astro). Section labels are quiet 12px text and long menus scroll inside a capped height.
+  - `@var-ui/icons`: new `page`, `component` and `palette` glyphs (and icon names in core).
+  - `@var-ui/docs`: the mobile drawer opens from the end side (where the hamburger is) with the brand in its header; the header selection moves when navigation starts, not after the swap; the Appearance trigger shows the theme as a colour bar under the mode glyph instead of a badge dot, with Mode as a 3-icon row; search results get type icons, subtitles and recents; the mobile bar uses one 8px rhythm.
+
+- [#205](https://github.com/phthalo-dev/var-ui/pull/205) [`59d4ff2`](https://github.com/phthalo-dev/var-ui/commit/59d4ff2d15808da8f48a28bf69c9057a1d4f36fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - - `ColorInput` gains `format="css"`: it accepts any CSS color (`var(--brand)`, `oklch(…)`, named colors) as typed, allows an empty value, paints the swatch with it (falling back to `defaultValue`), and starts the picker from the resolved color. The `colorField` recipe has a matching `format` variant (`hex` keeps the upper-case input).
+  - Text inputs in `textField` and `colorField` end long values in an ellipsis at rest.
+  - `Tabs` gains `size: 'sm' | 'md'` (React and Astro; core `tabs` recipe variant) for compact rows in side panels.
+
+- [#205](https://github.com/phthalo-dev/var-ui/pull/205) [`59d4ff2`](https://github.com/phthalo-dev/var-ui/commit/59d4ff2d15808da8f48a28bf69c9057a1d4f36fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CommandPalette`: only one row is ever highlighted. Rows no longer paint a separate hover background (the `resultHoverBackground` var is gone); moving the pointer over a row makes it the active row in React (as the Astro palette already did), so keyboard and pointer share one highlight.
+
+- [#184](https://github.com/phthalo-dev/var-ui/pull/184) [`5e09594`](https://github.com/phthalo-dev/var-ui/commit/5e09594ebe82a1154ae9e213ec5e04ec54044a4c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs visual design pass, built into the system:
+  
+  - `tabs` gains `appearance: 'underline' | 'pill'` (React and Astro `Tabs` take `appearance`); tabs lay out an icon + label.
+  - `codeBlock`: 40px header, icon-only 28px copy button (label kept for screen readers), neutral code surface, and `tabs` / `tab` slots for tabbed blocks.
+  - `proseContent`: 16/26 reading type, 44/28/20 heading ramp, lead paragraph, neutral inline-code chip, quiet link underline, hairline tables.
+  - `sideNav`: 32px rows, semibold active item with a 2px accent bar. `toc`: uppercase label, accent indicator.
+  - `appShell`: CSS twin of `data-mobile`, so the side nav and aside hide below the mobile breakpoint on first paint.
+  - Tokens: warm three-step dark surfaces (canvas / chrome / raised), warm borders and muted text, neutral code surfaces, a restrained three-hue syntax palette, a desaturated dark accent. Disabled buttons drain their hue.
+  - `@var-ui/docs`: `DocsPageHeader` (eyebrow, title, lead, metadata list), `PackageInstall` (tabbed pnpm / npm / yarn / bun block), markdown fences rendered as the shared code block, demo frames as dot-grid stages, a centered content + TOC grid, a sidebar that becomes the mobile drawer, and a props-table recipe.
+  - `@var-ui/docs-components`: `ComponentDocTabs` uses pill tabs with icons; the TOC lives in the `DocsPage` rail.
+
+- [#184](https://github.com/phthalo-dev/var-ui/pull/184) [`5e09594`](https://github.com/phthalo-dev/var-ui/commit/5e09594ebe82a1154ae9e213ec5e04ec54044a4c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs visual design, round 2:
+  
+  - New core `stage` recipe (`pattern: dots | grid | none`, `tone: neutral | accent`, `fade: none | start | end`): the shared showcase surface for demos, playgrounds and page heroes.
+  - `proseContent` stops at `[data-prose-isolate]` subtrees (export `PROSE_ISOLATE_ATTRIBUTE`), so live demos keep their own typography. Inline code is quieter (0.875em, 1px 4px, 4px radius) and mono-only in tables and lists.
+  - `codeBlock`: `codeLanguageLabel()` gives one label convention (TSX, CSS, Shell); filename and language share a 12px/500 muted style. React and Astro `CodeBlock` use it.
+  - `Card` gains a full-bleed `media` slot (React `media` prop, Astro `media` slot) and an accent-edged hover lift.
+  - Pill `Tabs` stay on one scrollable row with unclipped focus rings; the selected pill is a raised surface in dark mode.
+  - Neutral filled controls are a softer ink / off-white; the dark-mode selected nav item has a real accent tint.
+  - `@var-ui/react` re-exports `combine`, `cx` and `mergeProps`, like `@var-ui/astro`.
+  - `@var-ui/docs`: `DocsPageHeader` is an accent stage band with a copyable import and one metadata row; the TOC rail keeps its column on every tab; `guideEntryExists()` (`@var-ui/docs/guide-entry`) lets routes 404 before rendering; the props-table recipe stacks into cards below 640px.
+
+- [#184](https://github.com/phthalo-dev/var-ui/pull/184) [`5e09594`](https://github.com/phthalo-dev/var-ui/commit/5e09594ebe82a1154ae9e213ec5e04ec54044a4c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs component pages, round 4:
+  
+  - `tabs` underline appearance is now true page tabs: a full-width hairline rail, a 2px accent indicator that slides (respecting reduced motion), 44px tall tabs with a neutral hover underline and an accented icon on the selected tab. The row scrolls sideways with a trailing fade.
+  - `@var-ui/docs`:
+    - The hero (`DocsPageHeader`) spans the full content frame (main column + rail), with a large showcase plate set into the band.
+    - The rail (TOC or per-tab list) starts below the hero and tabs, and sticks under the new collapsed page bar.
+    - The collapsed page bar (`docsPageBar`): once the hero scrolls away, a compact sticky bar shows the page name, the page tabs, source and Markdown links and the import copy button. It reveals with a CSS scroll-driven animation on the hero's view timeline, falling back to an IntersectionObserver; a fade-only variant applies under reduced motion. It is exposed to AT and keyboard only while visible.
+  - `@var-ui/docs-components`: `ComponentDocTabs` uses the underline tabs and joins the page grid (`data-docs-page-tabs`).
+
+- [#184](https://github.com/phthalo-dev/var-ui/pull/184) [`5e09594`](https://github.com/phthalo-dev/var-ui/commit/5e09594ebe82a1154ae9e213ec5e04ec54044a4c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs component pages, round 5:
+  
+  - `SideNav.Section` (React and Astro) gains `collapsible`, `defaultOpen` and `count`: a native `<details>` disclosure whose title row sticks to the top of the scroll area, with a trailing chevron and an item count. New `sideNav` slots: `sectionSummary`, `sectionCount`, `sectionChevron`, `sectionItems`.
+  - Underline `tabs`: the rail ends flush with the container edge.
+  - `@var-ui/docs`:
+    - The collapsed page bar is a full-bleed sub-header (edge to edge across the content area, content on the page frame, hairline bottom border) with core underline tabs whose indicator sits on the hairline.
+    - It reveals as a discrete 140ms fade once the page's real tab row has passed under it, so labels and tab rows never double up.
+    - Bar-tab jumps land the panel 24px under a shown bar.
+    - The bar never truncates the name; it drops source links and the Markdown label below `xl`, and the eyebrow below `lg`.
+    - The hero band is borderless and its showcase sits directly on the band (no plate).
+    - `DocsSidebar` groups collapse (the current group open, the open state remembered).
+  - `@var-ui/docs-components`: page tabs below the hero use the pill appearance again.
+
+- [#205](https://github.com/phthalo-dev/var-ui/pull/205) [`59d4ff2`](https://github.com/phthalo-dev/var-ui/commit/59d4ff2d15808da8f48a28bf69c9057a1d4f36fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs visual design, round 7 (layout and hero):
+  
+  - `@var-ui/docs`: below `lg` the section sidebar moves into the mobile drawer (the shell switches to `mobileBreakpoint="lg"` on pages with a sidebar, and the header hamburger shows from there). The `DocsPageHeader` hero hangs its text from the top and, with a showcase, is a fixed-height slot, so the H1 and page tabs land at the same y on every page; below `xl` the showcase is dropped so the lead, import line and metadata keep the full frame. The showcase halo stays inside the page frame.
+  - `stage`: the neutral dot field is stronger in light mode (19% ink; 13% in dark).
+  - `select` and `combobox`: the selected option shows a trailing check mark, so selection does not rely on colour alone (`dropdownSelectedCheck` in the shared field chrome).
+
+- [#205](https://github.com/phthalo-dev/var-ui/pull/205) [`59d4ff2`](https://github.com/phthalo-dev/var-ui/commit/59d4ff2d15808da8f48a28bf69c9057a1d4f36fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs visual design, round 8:
+  
+  - `toc`: the rail no longer hides itself below `xl`; the layout that holds it decides (an `AppShell` aside, a docs frame).
+  - `collapsible` / `Accordion`: a closed panel (`hidden="until-found"`) drops its padding, so a closed row is its trigger only.
+  - `segmentedControl`: segments never shrink below label + padding; a row too wide for its container scrolls sideways.
+  - `chatLayout`: the composer dock is no longer `position: sticky` (it floated over messages inside clipped or scrolling ancestors); bound the root's height and the messages scroll above it.
+  - `ColorInput` `format="css"` shows a short label at rest (`phthalo-7` for `var(--var-ui-color-palette-phthalo-7)`, also for the placeholder) with the full value in the tooltip and on focus; the form value travels in a hidden input. New `colorValueLabel()` in `@var-ui/core/shared/colorLabel`.
+  - `@var-ui/docs`: the main content area is a size container (`docsMainContainer`); the rail and hero showcase respond to its width (shown down to a 1200px viewport with the sidebar), the showcase shrinks before it hides, and the single-column frame keeps its left edge. On pages with tabs the hero showcase overhangs the tab row, so the tabs follow the metadata by 40px; elsewhere it is sized to its scene. The showcase ends on the frame edge. `DocsPage` and `DocsGuidePage` take a `rail` slot (content above the TOC).
+
+- [#176](https://github.com/phthalo-dev/var-ui/pull/176) [`c4e28d0`](https://github.com/phthalo-dev/var-ui/commit/c4e28d09a6f9124b9af3fbae100e3c0e9afe1c13) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Marketing-grade primitives and fixes:
+  
+  - Tokens: fluid `fontSize.display.{sm,md,lg}`, `letterSpacing.display`, `fontWeight.light`; `size.control.xl` is now `3rem`.
+  - `Heading`: `size` replaces `display` with `display-sm` / `display-md` / `display-lg`, adds a `weight` axis, and balances wrapping.
+  - `Text`: new `mono` boolean.
+  - `Button`: new `xl` size and `pill` boolean.
+  - `Table`: cells center vertically and body row headers no longer pick up the base `th` fill.
+  - `Slider`: never wider than its container.
+  - `CodeBlock`: lighter shadow; Astro plain/terminal code is no longer double-escaped (`&quot;`).
+  - `DocsMarketingPage`: `bleed` prop for edge-to-edge pages and a `footer` slot.
+  - Radius scale is now `sm` 4px / `md` 6px / `lg` 12px / `xl` 16px; `Card` uses `lg` radius and `lg` padding; `SegmentedControl` uses the control radius (`md`).
+  - New `color.overlay.shadow` ink token; shadows no longer tint with the (light) text color in dark mode.
+  - New `xxl` (90rem) breakpoint.
+  - `MobileNav` toggle declares its color vars on the `toggle` slot, so the hamburger is visible when rendered outside the popup (docs header ≤768px).
+  - New `color.background.code` / `codeHeader` tokens (surface nudged toward the accent); `CodeBlock` uses them, and generated themes include them.
+  - `Tabs`: the grid track shrinks (`minmax(0, 1fr)`), so wide panel content scrolls instead of overflowing.
+  - `SideNav`: button items (no `href`) reset native button chrome.
+  - Tone faces: filled-surface text never uses a fallback that fails 4.5:1 (falls back to near-black ink).
+  - `CodeBlock`: scroll-driven right-edge fade while code overflows horizontally (new `scrollFade` var; no fade when nothing overflows or without scroll timelines).
+  - Code surface tokens mix in sRGB (no hue drift toward pink on warm neutrals); light mode tints the surface rather than `subtle`.
+  - New `figtreeGrotesk` font preset (Figtree body, Space Grotesk display, JetBrains Mono).
+  - Type scale: `fontSize.xs` / `sm` pinned to 12px / 13px (legibility floor for captions, badges, mono labels).
+  - `Calendar`: the day grid and nav buttons opt out of element base styles (table borders, `th` fill, native button chrome).
+  - `Calendar`: new `marked` prop (ISO strings or date values) draws a marker dot on those days; today gets a ring; selection/hover now style the day cell itself (they targeted a child that doesn't exist); the standalone grid shrinks with narrow containers.
+  - New `scrollFade` recipe: scroll-driven edge fades for any horizontal scroller (shared with `CodeBlock`'s fade via an internal helper).
+  - `ChatMessage`: the 80% width cap moved from the bubble to the message content column, so short bubbles no longer wrap into a narrow column.
+  - `Switch` / `Checkbox` / `Radio`: the control root is `position: relative`, so the visually-hidden native input sits on the control. It used to resolve against a distant positioned ancestor, and focusing or clicking a control inside a scroll container scrolled that ancestor (blanking an app shell).
+  - `Layout` content / panel scrollers and `AppShell` main are containing blocks (`position: relative`), so absolutely positioned descendants scroll with them.
+  - `CodeBlock`: new `fontSize` var (defaults to `fontSize.sm`) for the code and line numbers.
+  - `atDarkMode()`: emits its two pinned-dark selectors as separate keys, so styles nested under it (`& child`) apply on both branches. Before, a nested rule also matched the host itself, which turned the whole docs page italic and bold after switching to dark mode.
+  - `Checkbox` / `CheckboxGroup`: the ✓ / − indicator is `aria-hidden`, so a checked box's accessible name no longer gains a leading "✓".
+  - `Code`: new `nowrap` boolean (`inlineCode` recipe `nowrap` variant) keeps a snippet such as `@var-ui/react` on one line. New Astro `Code` component with the same props.
+  - `ChatMessageBubble`: the bubble is `inline-block` instead of a flex column, so inline markup (`<code>`, links, emphasis) flows with the message text instead of breaking onto its own row.
+  - `@var-ui/cli`: republish the generated docs catalog for the component changes above.
+
+- [#212](https://github.com/phthalo-dev/var-ui/pull/212) [`fd1bb25`](https://github.com/phthalo-dev/var-ui/commit/fd1bb2598248ec88120ae5767133c7106ccc5e36) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Small API gaps and naming alignment ([#146](https://github.com/phthalo-dev/var-ui/issues/146)).
+  
+  - **One appearance vocabulary.** `button`'s `filled` appearance is now `solid`, matching badge, alert, chip, toast, banner, progress and meter. `chatMessageBubble`'s `variant` axis is now `appearance` (`solid | subtle | ghost`; React `ChatMessageBubble` prop `variant` → `appearance`). Theme overrides keyed on `appearance.filled` move to `appearance.solid`; plain CSS selectors move to `[data-appearance="solid"]`.
+  - **New `UnstyledButton`** (core `unstyledButton`, React, Astro): a native `<button>` without chrome that keeps the cursor, focus ring and disabled state, for inline toggles and custom pressable regions.
+  - **Link** (core, React, Astro): `link` is now a recipe with `root` and `icon` slots. New `tone` (`accent | primary | secondary`) and `size` (`inherit | xs | sm | md | lg`). A link now inherits the surrounding font size by default (was a fixed `md`). React adds `startIcon` / `endIcon`; Astro adds `start-icon` / `end-icon` slots. Disabled links get the disabled style.
+  - **ProgressBar** (core, React, Astro): new `size` (`sm | md | lg`, the same track steps as `Meter`; `md` is 0.5rem, was 0.375rem). `minValue` / `maxValue` are now `min` / `max`, like `Meter` and `ProgressCircle`. Astro gains `valueLabel`.
+  - **ProgressBar and Meter** show value text by default only when there is a `label`, so a bare bar needs just an `aria-label`.
+  - **CopyButton**: `onCopied(value)` and `onCopyError(error, value)` (React; also on `useCopy`). Astro dispatches bubbling `var-ui:copy-button-copied` / `var-ui:copy-button-error` events (`COPY_BUTTON_COPIED_EVENT`, `COPY_BUTTON_ERROR_EVENT`) and exports `initCopyButton(s)`.
+  - **Types**: `TabDefinition`, `GridColumns`, `PaginationLabels`, `ButtonAsButtonProps`, `ButtonAsLinkProps`, the `Combobox` part props and the `Select` section/header props are exported from `@var-ui/react`. A test now fails when a component module exports a type the package root doesn't.
+
+- [#206](https://github.com/phthalo-dev/var-ui/pull/206) [`44a7b5a`](https://github.com/phthalo-dev/var-ui/commit/44a7b5afa97454a16a155a5ee0d008eb93c51c75) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Table: `bordered`, `minWidth`, and `ref` on the `<table>` ([#145](https://github.com/phthalo-dev/var-ui/issues/145)).
+  
+  - **core** `table`: new `bordered` variant (outer border and surface radius on the root scroller; the last body row drops its divider) and a `minWidth` variable (`--var-ui-table-minwidth`) for the `<table>`'s minimum width. `hasHover` is renamed `highlightOnHover`.
+  - **react** `Table`: new `bordered` and `minWidth` props; `hasHover` is renamed `highlightOnHover`. `ref` now points at the `<table>` (it was the root `<div>`), matching the form fields: `className` and `style` style the root, `ref` and every other native attribute reach the `<table>`.
+
+### Patch Changes
+
+- [#183](https://github.com/phthalo-dev/var-ui/pull/183) [`9577997`](https://github.com/phthalo-dev/var-ui/commit/9577997f4292789a2342b9f7b13c8be341ce2c22) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - App header round 3: menu keyboard model, palette states, drawer footer, stronger selection.
+  
+  - **core** `topNav`: hover is a 5% ink wash, visible on a white bar (the neutral surface step all but vanished in light mode).
+  - **core** new `@var-ui/core/shared/menuNavigation` (`menuArrowTarget`): the arrow-key model for menus with `layout: 'row'` sections, shared by React and Astro.
+  - **core** `menu`: list rows share one 36px rhythm; row-section items keep their 32px segments.
+  - **core** `segmentedControl`: unselected segments a step quieter than `text.secondary`; the light thumb gets a `border.default` hairline, the dark thumb is clearly lighter than the track with a lit top edge (new `indicatorHighlight` var).
+  - **core** `searchInput` (`command`): the hairline goes transparent while focused, so the focus ring is the only outline.
+  - **core** `commandPalette`: new `emptyIcon`, `emptyTitle`, `emptyHint` and `cancel` slots; the footer hides while the list is empty (`data-empty` on `frame`) and on touch-first devices, where `cancel` shows instead. Matches use one treatment in titles and subtitles (accent ink, no chip).
+  - **core** `mobileNav`: new `footer` slot, pinned under the scrolling body.
+  - **react / astro** `Menu`: in a `layout: 'row'` section ArrowLeft/Right wrap within the row and ArrowUp/Down treat the row as one stop (entering on the checked item); picking a row item keeps the menu open. `CommandPalette`: the empty state echoes the query (`No results for “…”`) with an optional `emptyHint`, a `cancelLabel` button for touch, and Recent items name their group in the subtitle. `MobileNav`: `footer` prop (React) / `footer` slot (Astro).
+  - **docs** `DocsMobileMenu`: a divider between the site sections and the page tree; Preferences are pinned in the drawer footer. `DocsSearch`: an `emptyHint` suggestion. `DocsAppearanceMenu`: the theme cue is a ringed swatch dot at the glyph's corner instead of an underline bar.
+
+- [#204](https://github.com/phthalo-dev/var-ui/pull/204) [`6c3482d`](https://github.com/phthalo-dev/var-ui/commit/6c3482db9fd93768a355a9fc8c834359d37c2473) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - App header polish, round 5:
+  
+  - `Menu` sections take `closeOnSelect` (React and Astro). Set it to `false` to keep the menu open on a pick, as `layout: 'row'` sections already do. The docs Appearance menu now stays open on a Theme pick too.
+  - `SegmentedControl` takes `fullWidth` (React and Astro): it fills its container and gives every segment an equal share. `FrameworkSwitcher` passes it through.
+  - `SideNav.Section` / `SideNavSection` takes `selectionStyle: 'fill' | 'text'`. With `'text'`, the current item shows accent text only, with no fill and no bar. The docs drawer uses it for the site sections, so the current page row is the only filled row.
+  - Icons: the brand mark has a 16px optical size, `varUiMarkSmall` / `varUiMarkSmallSvg` (16 grid, 2px strokes on whole pixels). `varUiFaviconSvg` now uses it.
+  - Command palette: one match highlight style (accent ink at the line's own weight) for titles and descriptions. Ranking now puts word starts above camelCase humps and description starts above mid-description hits, and adds one-typo title matching for queries of 4+ characters when nothing matches as typed.
+  - Top nav: the light hover chip comes from the neutral hover step plus a touch of ink, so it keeps the palette's hue.
+  - Docs kit: one 24px gap after the brand at every width, and the drawer's brand, links and preferences share one 16px inset.
+  - Docs kit: the bar shows the `var(--ui)` lockup from `lg` up (the tile alone below), and the search trigger reads "Search…" (accessible name "Search docs") so the tablet-width bar fits without overflowing. `DocsSearch` gains `triggerPlaceholder` and `label`.
+
+- [#204](https://github.com/phthalo-dev/var-ui/pull/204) [`6c3482d`](https://github.com/phthalo-dev/var-ui/commit/6c3482db9fd93768a355a9fc8c834359d37c2473) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - App header polish, round 6:
+  
+  - Breakpoints: `typestyles.breakpoint(name, 'max')` and `media(name, 'max', …)` now emit an exclusive range query (`(width < 48rem)`), so "below md" and "md and up" no longer both match at exactly 768px. `AppShell` / `Layout` mobile queries follow. Calling `breakpoint(name)` without a feature now means `'min'` (it used to emit an invalid `@media (48rem)`). This works around phthalo-dev/typestyles#345.
+  - Button: neutral `ghost` buttons hover in the same warm chip as the top nav (`neutralHoverChip`), and every `ghost` button keeps its hover fill while its popup is open (`aria-expanded="true"`). New recipe var: `--var-ui-button-ghosthover`.
+  - Command palette: the active row keeps body ink (`resultSelectedForeground` defaults to `text.primary`), so the accent match highlight stays visible in it.
+  - Command palette ranking: a mid-word title or keyword hit (`sel` in Carousel) ranks below description word starts; keywords match at word starts. One-typo ties prefer the longer correctly typed prefix (`inpt` → Input* above Installation).
+  - Command palette items take `headings` (React and Astro): section headings searched below the title and description prefix. When a heading is the match, it is shown as the subtitle.
+  - Docs kit: `DocsPage` / `DocsMarketingPage` take a `drawerBrand` slot (falls back to `brand`) for the drawer header. Guide frontmatter takes `keywords`. The drawer's divider under the site sections is full-bleed.
+  - core: `syntaxCodeTokens(light?, dark?)` builds mode-aware `color.code` tokens from two syntax faces. The Forest and Classic System docs themes use it, so their wordmark and code colours no longer stay light-mode on dark surfaces.
+
+- [#202](https://github.com/phthalo-dev/var-ui/pull/202) [`f923338`](https://github.com/phthalo-dev/var-ui/commit/f9233389382488f3cc54088b0e3d711e30bcb6ce) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - CommandPalette ranks results by relevance in React and Astro: exact title, then title prefix, title word-start, title substring, keyword and description matches. Groups are ordered by their best hit and the top hit is active. A description-only match shows the highlighted snippet around it in the subtitle. On touch-first devices no row is pre-highlighted while the query is empty. The shared helpers live in `@var-ui/core/shared/commandSearch` and `@var-ui/core/shared/pointer`.
+
+- [#184](https://github.com/phthalo-dev/var-ui/pull/184) [`5e09594`](https://github.com/phthalo-dev/var-ui/commit/5e09594ebe82a1154ae9e213ec5e04ec54044a4c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Docs visual design, round 3:
+  
+  - Prose inline code is one chip everywhere except table cells (mono only, first column keeps the chip).
+  - Pill `Tabs` scroll with snap and a scroll-driven trailing-edge fade.
+  - `@var-ui/docs`:
+    - `DocsPageHeader` takes a `preview` slot: a live component plate in the right half of the hero band.
+    - Guide pages render the same hero (eyebrow from frontmatter `eyebrow` or the section name, lead from `description`); the MDX title is hidden by `docsGuideArticle`.
+    - The import pill truncates with an ellipsis and keeps its copy button; metadata links underline on hover only.
+    - Demo stages size to their content (120px floor) and get a hover toolbar: preview in the opposite color mode, and right-to-left.
+    - The TOC hairline only shows under a rendered TOC.
+  - `@var-ui/docs-components`: the component tabs script shows a per-tab rail block (`data-rail`), so non-Documentation tabs keep useful right-rail content.
+
+- [#178](https://github.com/phthalo-dev/var-ui/pull/178) [`7430159`](https://github.com/phthalo-dev/var-ui/commit/74301599bfc88094b6c63f98dda86bb4645b5e81) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix nested theme surfaces so they inherit an ancestor's pinned `data-color-mode` instead of following the OS. Theme classes like `.theme-var-ui-rose` now use `color-scheme: inherit` when nested without their own pin, while root or pinned theme surfaces keep an explicit `color-scheme`. Also documents the SSR hydration pitfall when initializing `DesignSystemProvider`'s controlled `colorMode` from `localStorage`.
+
+- [#205](https://github.com/phthalo-dev/var-ui/pull/205) [`59d4ff2`](https://github.com/phthalo-dev/var-ui/commit/59d4ff2d15808da8f48a28bf69c9057a1d4f36fa) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Pill `Tabs`: in light mode the selected tab's icon follows the label colour on the ink fill instead of staying accent green; dark mode keeps the accent icon.
+
+- [#180](https://github.com/phthalo-dev/var-ui/pull/180) [`1d2ff75`](https://github.com/phthalo-dev/var-ui/commit/1d2ff754670a23e69a5538950a466b829aeb3e37) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix SegmentedControl keyboard focus to follow the APG radio group pattern
+  
+  `SegmentedControl` now builds on React Aria `RadioGroup` instead of `ToggleButtonGroup`. Tab enters the group on the checked segment (or the first segment when none is checked), and arrow keys move selection as expected for a `role="radiogroup"`. The sliding indicator and segment styling are unchanged.
+
+- [#183](https://github.com/phthalo-dev/var-ui/pull/183) [`9577997`](https://github.com/phthalo-dev/var-ui/commit/9577997f4292789a2342b9f7b13c8be341ce2c22) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - - `@var-ui/docs`: lazy theme stylesheets (`/themes/<id>.css`) keep the cascade layer their rules were emitted in. The extract sliced from the theme class mid-`@layer tokens { … }` block, dropping the opener, so the theme's `color-scheme: light dark` became unlayered and overrode the `data-color-mode` pin: Light/Dark did nothing on every non-default theme. The plain theme rule also matches `:root.theme-<id>` so its tokens beat the base `:root` tokens in that layer whatever order the stylesheets load in, and its redundant `color-scheme` is dropped (base styles set it for every theme class).
+  - `MobileNav`: the close button has a 32px control-sized box and sizes its icon (core), and the Astro `MobileNav` now renders the close icon (it rendered an empty 8px button).
+
 ## 0.11.0
 
 ### Minor Changes

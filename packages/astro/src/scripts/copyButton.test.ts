@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { initCopyButton, initCopyButtons } from './copyButton';
+import {
+  COPY_BUTTON_COPIED_EVENT,
+  COPY_BUTTON_ERROR_EVENT,
+  initCopyButton,
+  initCopyButtons,
+} from './copyButton';
 
 describe('initCopyButton', () => {
   beforeEach(() => {
@@ -75,6 +80,32 @@ describe('initCopyButton', () => {
     expect(btn.querySelector('[data-copy-button-icon] svg path')?.getAttribute('d')).toBe(
       'M12 7.5v5.5M12 16.5h.01',
     );
+  });
+
+  it('dispatches a bubbling copied event with the value', async () => {
+    stubClipboard(() => Promise.resolve());
+    const btn = mountCopyButton({ value: 'abc' });
+    const onCopied = vi.fn();
+    document.body.addEventListener(COPY_BUTTON_COPIED_EVENT, (event) =>
+      onCopied((event as CustomEvent<{ value: string }>).detail),
+    );
+    initCopyButton(btn);
+    btn.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(onCopied).toHaveBeenCalledWith({ value: 'abc' });
+  });
+
+  it('dispatches a bubbling error event when the write fails', async () => {
+    stubClipboard(() => Promise.reject(new Error('denied')));
+    const btn = mountCopyButton({ value: 'abc' });
+    const onError = vi.fn();
+    document.body.addEventListener(COPY_BUTTON_ERROR_EVENT, (event) =>
+      onError((event as CustomEvent<{ value: string }>).detail),
+    );
+    initCopyButton(btn);
+    btn.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(onError).toHaveBeenCalledWith({ value: 'abc' });
   });
 
   it('resets to idle after the timeout', async () => {

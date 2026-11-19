@@ -61,7 +61,7 @@ export const acmeTheme = createDesignTheme({
           },
           compoundVariants: [
             {
-              variants: { tone: 'accent', appearance: 'filled', size: 'lg' },
+              variants: { tone: 'accent', appearance: 'solid', size: 'lg' },
               style: { letterSpacing: '0.08em' },
             },
           ],

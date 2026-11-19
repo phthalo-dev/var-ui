@@ -62,6 +62,7 @@ export * from './pinInput';
 export * from './popover';
 export * from './progressBar';
 export * from './progressCircle';
+export * from './prose';
 export * from './proseContent';
 export * from './radio';
 export * from './rating';
@@ -102,6 +103,7 @@ export * from './tooltip';
 export * from './topNav';
 export * from './tree';
 export * from './typography';
+export * from './unstyledButton';
 export * from './visuallyHidden';
 
 /** Public types. The modules also export recipe-authoring helpers that stay off this barrel. */

@@ -42,6 +42,13 @@ export const componentRegistry: ComponentEntry[] = [
     importLine: "import { IconButton } from '@var-ui/react';",
   },
   {
+    slug: 'unstyled-button',
+    name: 'UnstyledButton',
+    category: 'action',
+    description: 'A native button without chrome, for inline toggles and custom pressable regions.',
+    importLine: "import { UnstyledButton } from '@var-ui/react';",
+  },
+  {
     slug: 'button-group',
     name: 'ButtonGroup',
     category: 'action',
@@ -666,6 +673,14 @@ export const componentRegistry: ComponentEntry[] = [
     category: 'content',
     description: 'Body text with size and tone variants.',
     importLine: "import { Text } from '@var-ui/react';",
+  },
+  {
+    slug: 'prose',
+    name: 'Prose',
+    category: 'content',
+    description:
+      'Rendered markdown or rich text, sized to fit chat bubbles, panels and reading views.',
+    importLine: "import { Prose, proseComponents } from '@var-ui/react';",
   },
   {
     slug: 'code-block',

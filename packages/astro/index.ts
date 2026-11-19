@@ -18,6 +18,8 @@ export { default as Heading } from './src/components/Heading.astro';
 export { default as Text } from './src/components/Text.astro';
 export { default as Avatar } from './src/components/Avatar.astro';
 export { default as Spinner } from './src/components/Spinner.astro';
+export { default as Prose } from './src/components/Prose.astro';
+export { default as UnstyledButton } from './src/components/UnstyledButton.astro';
 export { default as VisuallyHidden } from './src/components/VisuallyHidden.astro';
 export { default as Skeleton } from './src/components/Skeleton.astro';
 export { default as ProgressBar } from './src/components/ProgressBar.astro';
@@ -141,6 +143,13 @@ export {
   SEGMENTED_CONTROL_CHANGE_EVENT,
   setSegmentedControlValue,
 } from './src/scripts/segmentedControl';
+export {
+  COPY_BUTTON_COPIED_EVENT,
+  COPY_BUTTON_ERROR_EVENT,
+  initCopyButton,
+  initCopyButtons,
+  type CopyButtonEventDetail,
+} from './src/scripts/copyButton';
 export {
   initToggleButton,
   initToggleButtons,

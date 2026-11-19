@@ -51,7 +51,7 @@ function AlertDialogPopup(props: AlertDialogPopupProps): JSX.Element {
  *     <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
  *     <AlertDialog.Actions>
  *       <AlertDialog.Close><Button autoFocus>Cancel</Button></AlertDialog.Close>
- *       <AlertDialog.Close><Button tone="danger" appearance="filled" onClick={remove}>Delete</Button></AlertDialog.Close>
+ *       <AlertDialog.Close><Button tone="danger" appearance="solid" onClick={remove}>Delete</Button></AlertDialog.Close>
  *     </AlertDialog.Actions>
  *   </AlertDialog.Popup>
  * </AlertDialog>

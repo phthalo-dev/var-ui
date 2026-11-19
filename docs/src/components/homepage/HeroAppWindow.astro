@@ -80,11 +80,11 @@ const w = homeAppWindow();
             <span {...combine(w.planName)}>Pro <Badge tone="accent" appearance="solid">Popular</Badge></span>
             <p {...combine(w.price)}>$19<span {...combine(w.priceUnit)}> / seat</span></p>
             <Text size="sm" tone="secondary">Unlimited projects, custom themes</Text>
-            <Button size="sm" tone="accent" appearance="filled" pill>Upgrade to Pro</Button>
+            <Button size="sm" tone="accent" appearance="solid" pill>Upgrade to Pro</Button>
           </div>
         </div>
         <div {...combine(w.usage)}>
-          <ProgressBar label="Seats" value={8} maxValue={12} showValueText />
+          <ProgressBar label="Seats" value={8} max={12} />
           <Meter label="Storage" value={64} valueLabel="64 GB" tone="accent" />
         </div>
       </div>

@@ -17,7 +17,7 @@ import {
   tone,
 } from '../shared/semanticTone';
 
-const buttonAppearance = variant.enum(['filled', 'outline', 'subtle', 'ghost'], {
+const buttonAppearance = variant.enum(['solid', 'outline', 'subtle', 'ghost'], {
   default: 'subtle',
 });
 const buttonLayout = variant.enum(['default', 'icon'], { default: 'default' });
@@ -120,7 +120,7 @@ export const button = typestyles.recipe({
       variants: {
         tone: mapTone((key) => controlToneAssignments(vars, key)),
         appearance: {
-          filled: controlAppearancePaint(vars, 'filled'),
+          solid: controlAppearancePaint(vars, 'solid'),
           outline: controlAppearancePaint(vars, 'outline'),
           subtle: controlAppearancePaint(vars, 'subtle'),
           ghost: controlAppearancePaint(vars, 'ghost'),

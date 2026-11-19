@@ -15,7 +15,7 @@ describe('theme conditions and colorModes', () => {
   });
 
   it('emits light-dark() for color mode values on override properties', () => {
-    button({ tone: 'accent', appearance: 'filled', size: 'md' });
+    button({ tone: 'accent', appearance: 'solid', size: 'md' });
     createDesignTheme({
       name: 'mode-values',
       components: {
@@ -35,7 +35,7 @@ describe('theme conditions and colorModes', () => {
   });
 
   it('emits conditional override rules for when.dark', () => {
-    button({ tone: 'accent', appearance: 'filled', size: 'md' });
+    button({ tone: 'accent', appearance: 'solid', size: 'md' });
     createDesignTheme({
       name: 'conditions',
       components: {

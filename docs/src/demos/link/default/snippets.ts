@@ -9,5 +9,5 @@ import { Link } from '@var-ui/astro';
 ---
 
 <Link href="#">Documentation</Link>`,
-  html: `<a href="#" class="var-ui-link">Documentation</a>`,
+  html: `<a href="#" data-tone="accent" data-size="inherit" class="var-ui-link">Documentation</a>`,
 } satisfies DemoSnippets;

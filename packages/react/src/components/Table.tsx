@@ -1,6 +1,7 @@
-import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode, Ref } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { table as tableStyles } from '@var-ui/core/components/table';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import type { Density, TableVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
@@ -17,19 +18,34 @@ export type TableColumnDef<T extends Record<string, unknown> = Record<string, un
   allowsSorting?: boolean;
 };
 
+const tableVars = recipeVars(tableStyles);
+
 /**
- * `className`, `style` and `ref` target the root wrapper `<div>`; all other attributes are
- * forwarded to the `<table>` element.
+ * `className` and `style` style the root (the horizontal scroller that frames the table);
+ * `ref` and every other native attribute reach the `<table>`. This is the same split as the
+ * form fields. Size the table itself with `minWidth`.
  */
 export type TableProps<T extends Record<string, unknown> = Record<string, unknown>> = Omit<
   ComponentPropsWithRef<'table'>,
-  'children' | 'ref'
+  'children'
 > & {
+  /** Cell padding. @default balanced */
   density?: Density;
+  /** Which cell borders to draw inside the table. @default rows */
   dividers?: NonNullable<TableVariantProps['dividers']>;
-  striped?: NonNullable<TableVariantProps['striped']>;
-  hasHover?: NonNullable<TableVariantProps['hasHover']>;
-  stickyHeader?: NonNullable<TableVariantProps['stickyHeader']>;
+  /** Shade every other body row. @default false */
+  striped?: boolean;
+  /** Shade the row under the pointer. @default false */
+  highlightOnHover?: boolean;
+  /** Draw an outer border with rounded corners around the table. @default false */
+  bordered?: boolean;
+  /**
+   * Minimum width of the `<table>`, as any CSS `min-width` value (`48rem`, `max-content`).
+   * When the root is narrower, it scrolls horizontally instead of squeezing the columns.
+   */
+  minWidth?: string;
+  /** Pin the header row while the rows scroll. @default false */
+  stickyHeader?: boolean;
   textOverflow?: NonNullable<TableVariantProps['textOverflow']>;
   /** @default 'auto' */
   layout?: NonNullable<TableVariantProps['layout']>;
@@ -46,8 +62,6 @@ export type TableProps<T extends Record<string, unknown> = Record<string, unknow
   onSortChange?: (next: SortDescriptor) => void;
   children?: ReactNode;
   caption?: ReactNode;
-  /** Ref to the underlying root `<div>` element. */
-  ref?: Ref<HTMLDivElement>;
 };
 
 export type TableColumnProps = Omit<
@@ -256,7 +270,9 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   density = 'balanced',
   dividers = 'rows',
   striped = false,
-  hasHover = false,
+  highlightOnHover = false,
+  bordered = false,
+  minWidth,
   stickyHeader = false,
   textOverflow = 'wrap',
   layout = 'auto',
@@ -279,9 +295,10 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   const s = tableStyles({
     density,
     dividers,
-    striped: striped ? true : false,
-    hasHover: hasHover ? true : false,
-    stickyHeader: stickyHeader ? true : false,
+    striped,
+    highlightOnHover,
+    bordered,
+    stickyHeader,
     textOverflow,
     layout,
   });
@@ -356,8 +373,13 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
 
   return (
     <TableContext.Provider value={{ styles: s }}>
-      <div {...mergeProps(s.root, className)} style={style} ref={ref}>
-        <table {...rest} {...mergeProps(s.table)}>
+      <div
+        {...mergeProps(s.root, className)}
+        style={
+          minWidth != null ? { ...styleVars([[tableVars.minWidth, minWidth]]), ...style } : style
+        }
+      >
+        <table {...rest} ref={ref} {...mergeProps(s.table)}>
           {caption != null ? <TableCaption>{caption}</TableCaption> : null}
           {colgroup}
           {content}
