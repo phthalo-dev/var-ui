@@ -14,6 +14,13 @@ describe('catalog completeness', () => {
     };
     const catalog = await buildCatalog(defaultRepoPaths(repoRoot), version);
     expect(catalog.components.length).toBeGreaterThan(50);
+    // Design tokens for `var-ui tokens`, read from the built @var-ui/core.
+    expect(catalog.tokens!.length).toBeGreaterThan(500);
+    expect(catalog.tokens).toContainEqual({
+      path: 'space.md',
+      cssVar: '--var-ui-space-md',
+      value: '1rem',
+    });
     expect(catalog.guides.some((guide) => guide.id === 'getting-started')).toBe(true);
 
     const guideIds = catalog.guides.map((guide) => guide.id);
