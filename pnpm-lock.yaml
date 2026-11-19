@@ -594,6 +594,9 @@ importers:
 
   packages/cli:
     devDependencies:
+      '@var-ui/core':
+        specifier: workspace:*
+        version: link:../core
       '@var-ui/docs':
         specifier: workspace:*
         version: link:../docs
