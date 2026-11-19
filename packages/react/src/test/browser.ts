@@ -24,14 +24,14 @@ export const inTopLayer = (el: Element): boolean =>
  * scrollbars reserve a gutter on Linux/Windows, macOS overlay scrollbars reserve none, and
  * `scrollbar-gutter: stable` keeps it while a modal locks scroll).
  */
-export function viewport(): { left: number; right: number } {
+export function viewport(): { left: number; right: number; top: number; bottom: number } {
   const probe = document.createElement('div');
   probe.style.cssText =
     'position:fixed;inset:0;visibility:hidden;pointer-events:none;margin:0;padding:0;border:0;';
   document.body.append(probe);
-  const { left, right } = probe.getBoundingClientRect();
+  const { left, right, top, bottom } = probe.getBoundingClientRect();
   probe.remove();
-  return { left, right };
+  return { left, right, top, bottom };
 }
 
 /** Diagnostic payload for docking assertions (shown in the failure message, handy on CI). */

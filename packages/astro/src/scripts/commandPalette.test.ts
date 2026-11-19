@@ -288,6 +288,32 @@ describe('command palette results (round 2)', () => {
     }
   });
 
+  it('closes when a result is clicked', () => {
+    // With view transitions the palette can live in a persisted element: navigating does not
+    // unload it, so a click has to close it the way Enter does.
+    const root = mount('', items);
+    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    let navigated = false;
+    button.addEventListener('click', (event) => {
+      navigated = !event.defaultPrevented;
+      event.preventDefault();
+    });
+    button.click();
+    expect(navigated).toBe(true);
+    expect(root.querySelector('dialog')!.open).toBe(false);
+    expect(root.querySelector('input')!.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('stays open when a result is opened in a new tab (modifier click)', () => {
+    const root = mount('', items);
+    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    button.addEventListener('click', (event) => event.preventDefault());
+    button.dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true }),
+    );
+    expect(root.querySelector('dialog')!.open).toBe(true);
+  });
+
   it('closes from the Cancel button', () => {
     const root = mount();
     const cancel = document.createElement('button');
