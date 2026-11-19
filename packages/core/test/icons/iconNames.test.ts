@@ -1,39 +1,10 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { iconNameList } from '../../src/icons/iconNames';
 
-describe('icon system (core)', () => {
-  it('ships every semantic icon name', () => {
-    expect([...iconNameList].sort()).toEqual(
-      [
-        'check',
-        'chevronDown',
-        'chevronLeft',
-        'chevronRight',
-        'close',
-        'copy',
-        'error',
-        'info',
-        'search',
-        'success',
-        'warning',
-        'arrowDown',
-        'arrowUp',
-        'arrowsUpDown',
-        'stop',
-        'wrench',
-        'clock',
-        'menu',
-        'moreHorizontal',
-        'colorModeLight',
-        'colorModeDark',
-        'colorModeSystem',
-        'eye',
-        'eyeOff',
-        'star',
-        'page',
-        'component',
-        'palette',
-      ].sort(),
-    );
+// The list is checked against the glyphs themselves in `@var-ui/icons` (`generated.test.ts`).
+describe('iconNameList', () => {
+  it('has unique camelCase names', () => {
+    expect(new Set(iconNameList).size).toBe(iconNameList.length);
+    for (const name of iconNameList) expect(name).toMatch(/^[a-z][a-zA-Z0-9]*$/);
   });
 });
