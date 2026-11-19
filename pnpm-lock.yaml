@@ -197,6 +197,9 @@ catalogs:
     react:
       specifier: ^19.0.0
       version: 19.2.7
+    react-aria:
+      specifier: ^3.50.0
+      version: 3.50.0
     react-aria-components:
       specifier: ^1.19.0
       version: 1.19.0
@@ -298,6 +301,9 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.2.7
+      react-aria:
+        specifier: 'catalog:'
+        version: 3.50.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-aria-components:
         specifier: 'catalog:'
         version: 1.19.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -729,12 +735,6 @@ importers:
 
   packages/react:
     dependencies:
-      '@react-aria/i18n':
-        specifier: ^3.13.1
-        version: 3.13.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      react-aria:
-        specifier: 3.50.0
-        version: 3.50.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typestyles:
         specifier: 'catalog:'
         version: 0.35.2
@@ -775,6 +775,9 @@ importers:
       react:
         specifier: 'catalog:'
         version: 19.2.7
+      react-aria:
+        specifier: 'catalog:'
+        version: 3.50.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-aria-components:
         specifier: 'catalog:'
         version: 1.19.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
