@@ -1,5 +1,25 @@
 # @var-ui/docs
 
+## 0.13.0
+
+### Minor Changes
+
+- [#220](https://github.com/phthalo-dev/var-ui/pull/220) [`2d043fa`](https://github.com/phthalo-dev/var-ui/commit/2d043fa2f7d1e2187a020e17056a60a8f36a4904) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New browser-safe entry `@var-ui/docs/theme-client` with `ensureDocsThemeStyles`, `createDocsThemeController` and the theme preset helpers ([#169](https://github.com/phthalo-dev/var-ui/issues/169)). `@var-ui/docs/utils` also re-exports Node-only modules, so importing it from a client island pulled `node:` imports into the browser bundle.
+
+### Patch Changes
+
+- [#214](https://github.com/phthalo-dev/var-ui/pull/214) [`18beb11`](https://github.com/phthalo-dev/var-ui/commit/18beb11b23819ecc2db804365bfed954f0ccb0d7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `Prose` for rendered markdown in app UI ([#147](https://github.com/phthalo-dev/var-ui/issues/147)).
+  
+  - **core** `prose` recipe: styles the bare elements a markdown renderer emits (headings, paragraphs, lists, links, inline and fenced code, blockquotes, tables, rules), relative to the inherited font size. `density` (`compact | balanced | spacious`) sets the rhythm and heading scale. Element rules sit in the `base` cascade layer, so Var UI components inside keep their own styles. `inlineCode` is now `0.875em` instead of a fixed `xs`, so `Code` scales with its text.
+  - **react** `Prose` and `proseComponents`, an element map for react-markdown / MDX: fenced code → `CodeBlock` (language from `language-*`), inline code → `Code`, links → `Link`, GFM tables → `Table` parts with column alignment.
+  - **astro** `Prose`.
+
+- [#219](https://github.com/phthalo-dev/var-ui/pull/219) [`df329e0`](https://github.com/phthalo-dev/var-ui/commit/df329e092e4b0313efb9aa4748daacf2d6bd7a05) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - SPA colour-mode setup and a runtime token list ([#148](https://github.com/phthalo-dev/var-ui/issues/148)).
+  
+  - **core** One colour-mode init script for every setup: `getColorModeInitScript` (`@var-ui/core/color-mode-script`, also from the root). New Vite plugin `varUiColorMode` (`@var-ui/core/vite`) injects it first in `index.html`, so SPAs get no flash on reload without server rendering. New `listDesignTokens()` returns every built-in token's path, CSS variable, `var()` ref and default value (`designTokens` is a proxy with no enumerable keys).
+  - **react** `getColorModeInitScript` is the core implementation (same signature).
+  - **astro** `ThemeScript` renders the core script and takes `defaultColorMode`; across view transitions it copies the resolved theme class and mode onto the incoming page. Removed `applyThemeBoot`, `bootTheme` and `watchThemeOnNavigation`: an unused copy of the boot logic that ran too late (a module script) to prevent a flash. Use `ThemeScript`.
+
 ## 0.12.0
 
 ### Minor Changes
