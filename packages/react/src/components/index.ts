@@ -163,6 +163,7 @@ export {
 } from './Fieldset';
 export { Form, type FormProps } from './Form';
 export { AspectRatio, type AspectRatioProps } from './AspectRatio';
+export { Bleed, type BleedProps } from './Bleed';
 export { Center, type CenterProps } from './Center';
 export { Hidden, type HiddenProps } from './Hidden';
 export { Breadcrumbs, type BreadcrumbItemData, type BreadcrumbsProps } from './Breadcrumbs';

@@ -143,6 +143,18 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-banner-solidfg",
     ],
   },
+  "bleed": {
+    "axes": [
+      "align",
+      "data-align",
+    ],
+    "slots": {
+      "base": "var-ui-bleed",
+    },
+    "vars": [
+      "--var-ui-bleed-gutter",
+    ],
+  },
   "breadcrumbs": {
     "axes": [],
     "slots": {

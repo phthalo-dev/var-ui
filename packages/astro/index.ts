@@ -4,6 +4,7 @@ export { default as ColorModeToggle } from './src/theme/ColorModeToggle.astro';
 export { default as Stack } from './src/components/Stack.astro';
 export { default as HStack } from './src/components/HStack.astro';
 export { default as Grid } from './src/components/Grid.astro';
+export { default as Bleed } from './src/components/Bleed.astro';
 export { default as Center } from './src/components/Center.astro';
 export { default as Hidden } from './src/components/Hidden.astro';
 export { default as Section } from './src/components/Section.astro';

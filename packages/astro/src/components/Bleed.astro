@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { bleed } from '@var-ui/core/components/bleed';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import { mergeProps } from '../utils';
+
+type Props = HTMLAttributes<'div'> & {
+  /** `content` keeps the children on the page column; `edge` lets them bleed too. @default content */
+  align?: 'content' | 'edge';
+  /** The frame container's own inline padding, which the bleed also covers. @default 0px */
+  gutter?: string;
+  className?: string;
+};
+
+const { align = 'content', gutter, className, style, ...rest } = Astro.props;
+const vars = styleVars([[recipeVars(bleed).gutter, gutter]]);
+const rp = mergeProps(bleed({ align }), className);
+const mergedStyle =
+  vars == null
+    ? style
+    : typeof style === 'string'
+      ? [...Object.entries(vars).map(([name, value]) => `${name}: ${value}`), style]
+          .filter(Boolean)
+          .join('; ')
+      : { ...vars, ...style };
+---
+<div {...rest} {...rp} style={mergedStyle}><slot /></div>
