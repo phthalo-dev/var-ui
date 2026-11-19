@@ -19,6 +19,19 @@ Give a `Card` an `href` and the whole card becomes one link (an `<a>`), the same
 
 <Demo id="card.link" />
 
+### Description, title badge and pressable cards
+
+Every card takes `description`, and `titleEnd` for content at the end of the title row, such as a
+status `Badge`. In Astro that's the `title-end` slot. Link cards accept a node `title`.
+
+`onClick` makes a div card pressable: the title becomes a `<button>` whose hit area covers the
+card. The card gets button semantics, focus and Enter/Space, with the title as its name, and no
+block content ends up inside a button. Links and buttons inside the card keep working.
+
+```tsx
+<Card title="Memory" titleEnd={<Badge tone="success">Saved</Badge>} description="Tuesday" onClick={open} />
+```
+
 ## Props
 
 <PropsTable slug="card" />
