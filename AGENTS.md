@@ -74,6 +74,10 @@ All published packages share one version (`fixed` group in `.changeset/config.js
 
 - Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit). There is no pre-push hook — `vp run ci` runs in GitHub Actions on the PR. The pre-commit hook exits early when `CI` is set; the release job commits version bumps and pushes tags, and must not re-run it.
 - Generated `CHANGELOG.md` files are excluded from formatting; changesets does not format them.
+- Packages that read another package's `dist` at build time must declare it as a dependency, or `vp run -F … build` runs them in parallel (the CLI catalog generator read core's `dist` before it existed, #269).
+- Bindings and tests that import a package by name (Astro `check`, the CLI generator, Astro config files) read its `dist`: after changing core, `vp run -F @var-ui/core build` before `astro check`, or the types look stale.
+- A new or renamed file under a folder an `import.meta.glob` covers (docs demos) can be invisible to Vitest's on-disk module cache. If a registry test can't see your new folder, delete `node_modules/.vitest-cache` (#267).
+- Lockfile: pnpm 12.18 re-resolves the whole lockfile on any install. For a one-dependency change, a hand-written importer entry that `pnpm install --frozen-lockfile` accepts keeps the diff reviewable.
 - Do not set `registry-url` on `setup-vp`: it writes a placeholder auth token that blocks OIDC. The release job also installs `npm@^11.5.1` (trusted publishing needs it; npm 12 rejects flags pnpm forwards).
 - Secrets: `APP_CLIENT_ID` and `APP_PRIVATE_KEY` (GitHub App) are org secrets, with `NETLIFY_AUTH_TOKEN`; `NETLIFY_SITE_ID` is a repo secret.
 - Node comes from `.nvmrc`; pnpm from `packageManager`. Do not repeat versions in workflow YAML.
