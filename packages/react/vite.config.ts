@@ -22,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@var-ui/core/theme-constants': `${coreSrc}/theme/constants.ts`,
+      '@var-ui/core/color-mode-script': `${coreSrc}/theme/colorModeScript.ts`,
       '@var-ui/core/components': `${coreSrc}/components`,
       '@var-ui/core/shared': `${coreSrc}/shared`,
       '@var-ui/core/tokens': `${coreSrc}/tokens`,

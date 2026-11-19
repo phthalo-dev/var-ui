@@ -1,4 +1,7 @@
-import { COLOR_MODE_ATTRIBUTE } from '@var-ui/core/theme-constants';
+import {
+  getColorModeInitScript as getCoreColorModeInitScript,
+  type ColorModeInitScriptOptions,
+} from '@var-ui/core/color-mode-script';
 import { createContext, useContext, useState } from 'react';
 import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect';
 
@@ -55,57 +58,17 @@ export function readStoredColorMode(storageKey: string | undefined): ColorMode |
   return VALID_COLOR_MODES.includes(stored as ColorMode) ? (stored as ColorMode) : undefined;
 }
 
-export type GetColorModeInitScriptOptions = {
-  storageKey: string;
-  defaultColorMode: ColorMode;
-  /** When set, adds this class to `document.documentElement` before paint (use with `applyToDocument`). */
-  themeClassName?: string;
-};
+/** Options for {@link getColorModeInitScript}: the provider's `storageKey`, `defaultColorMode` and theme class. */
+export type GetColorModeInitScriptOptions = ColorModeInitScriptOptions;
 
 /**
- * Returns an inline `<script>` body that reproduces DesignSystemProvider's color-mode
- * resolution synchronously, before first paint. Render it as the first child of `<head>` in an
- * SSR app (before any other head content) to eliminate flash-of-wrong-mode on load.
- *
- * Built as a plain string template rather than via `Function.prototype.toString()` — a real
- * function's stringified source isn't guaranteed byte-identical between an app's SSR and client
- * bundles (different transform passes), which caused a hydration mismatch on this script's
- * `dangerouslySetInnerHTML` content. `light` and `dark` set `data-color-mode`; `system` removes
- * it so `color-scheme: light dark` on `:root` follows the OS. Keep that in sync with
- * DesignSystemProvider's `applyToDocument` effect.
+ * Inline `<script>` body that applies DesignSystemProvider's stored colour mode (and theme
+ * class) before first paint. Render it first in `<head>` in an SSR app. For a Vite SPA, use the
+ * `varUiColorMode` plugin from `@var-ui/core/vite`, which injects the same script into
+ * `index.html`. Keep it in sync with the provider's `applyToDocument` effect.
  */
-export function getColorModeInitScript({
-  storageKey,
-  defaultColorMode,
-  themeClassName,
-}: GetColorModeInitScriptOptions): string {
-  var storageKeyJson = JSON.stringify(storageKey);
-  var defaultColorModeJson = JSON.stringify(defaultColorMode);
-  var themeClassStmt = themeClassName
-    ? 'document.documentElement.classList.add(' + JSON.stringify(themeClassName) + ');'
-    : '';
-  const attributeJson = JSON.stringify(COLOR_MODE_ATTRIBUTE);
-  return (
-    '(function(){' +
-    'var VALID=["light","dark","system"];' +
-    'var stored=null;' +
-    'try{stored=window.localStorage.getItem(' +
-    storageKeyJson +
-    ')}catch(e){}' +
-    'var colorMode=VALID.indexOf(stored)!==-1?stored:' +
-    defaultColorModeJson +
-    ';' +
-    themeClassStmt +
-    'var root=document.documentElement;' +
-    'root.style.colorScheme="";' +
-    'if(colorMode==="light"||colorMode==="dark"){root.setAttribute(' +
-    attributeJson +
-    ',colorMode)}else{root.removeAttribute(' +
-    attributeJson +
-    ')}' +
-    '})();'
-  );
-}
+export const getColorModeInitScript: (options: GetColorModeInitScriptOptions) => string =
+  getCoreColorModeInitScript;
 
 export function useColorMode(): ColorModeContextValue {
   const context = useContext(ColorModeContext);

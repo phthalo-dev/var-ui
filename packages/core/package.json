@@ -27,6 +27,14 @@
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
+    "./color-mode-script": {
+      "types": "./dist/theme/colorModeScript.d.mts",
+      "import": "./dist/theme/colorModeScript.mjs"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.mts",
+      "import": "./dist/vite.mjs"
+    },
     "./theme-constants": {
       "types": "./dist/theme/constants.d.mts",
       "import": "./dist/theme/constants.mjs"

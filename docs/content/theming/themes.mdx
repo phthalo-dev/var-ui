@@ -88,7 +88,48 @@ export function App() {
 
 For SPA / full-page apps, pass `applyToDocument` so the theme class and `data-color-mode`
 live on `<html>` and `body` picks up tokenized background/text from core document globals.
-For SSR without a flash of wrong mode, also use `getColorModeInitScript`.
+
+## No flash on reload
+
+React applies a stored colour mode only after it loads, so a reload paints the default mode
+first. A small inline script in `<head>` applies the stored mode (and the theme class) before
+first paint. There is one implementation (`@var-ui/core/color-mode-script`), and each setup
+renders it:
+
+- **Vite SPA (no server rendering).** Add the `varUiColorMode` plugin. It injects the script
+  into `index.html`. Share the settings with the provider so the storage key and default can't
+  drift:
+
+  ```ts
+  // src/colorMode.ts
+  export const COLOR_MODE = { storageKey: 'color-mode', defaultColorMode: 'system' } as const;
+  ```
+
+  ```ts
+  // vite.config.ts
+  import { varUiColorMode } from '@var-ui/core/vite';
+  import { defaultThemeClassName } from '@var-ui/core/theme-constants';
+  import { COLOR_MODE } from './src/colorMode';
+
+  export default defineConfig({
+    plugins: [react(), varUiColorMode({ ...COLOR_MODE, themeClassName: defaultThemeClassName })],
+  });
+  ```
+
+  ```tsx
+  <DesignSystemProvider applyToDocument {...COLOR_MODE}>
+    …
+  </DesignSystemProvider>
+  ```
+
+  With a custom theme, pass its class name (`forestTheme.className`) as `themeClassName`.
+
+- **SSR (Next.js, Remix, …).** Render `getColorModeInitScript({ storageKey, defaultColorMode, themeClassName })` from `@var-ui/react` as the first child of `<head>`:
+  `<script dangerouslySetInnerHTML={{ __html: getColorModeInitScript(COLOR_MODE) }} />`.
+- **Astro.** `<ThemeScript themeClass={…} storageKey={…} />` from `@var-ui/astro` renders the
+  same script and carries the mode across view transitions.
+- **Plain HTML / another framework.** Call `getColorModeInitScript` from
+  `@var-ui/core/color-mode-script` at build or render time and inline the result.
 
 ## Next
 
