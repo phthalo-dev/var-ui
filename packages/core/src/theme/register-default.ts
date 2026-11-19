@@ -2,6 +2,7 @@ import type { Theme, ThemeOverrideInput } from 'typestyles';
 import { defaultTokens } from '../tokens/preset';
 import type { DesignThemeTokenValues } from '../tokens/types';
 import { createDesignTheme } from './create-theme';
+import { themeTokenRefs, withTokenRefs } from './token-refs';
 import type { ThemeTokensOf } from './token-tree';
 import type { DesignTheme, DesignThemeComponentPatch } from './types';
 import { DEFAULT_THEME_NAME } from './constants';
@@ -35,10 +36,11 @@ export type DefaultThemeSurface = Omit<DesignTheme<DefaultThemeTokenTree>, 'over
 function bindDefaultOverride(surface: Theme<DefaultThemeTokenTree>): DefaultThemeSurface {
   return {
     ...surface,
-    tokens: (surface.tokens ?? undefined) as DefaultThemeSurface['tokens'],
+    tokens: themeTokenRefs(undefined) as DefaultThemeSurface['tokens'],
     override(input: DefaultThemeOverrideInput): DefaultThemeSurface {
+      const components = withTokenRefs(input.components, themeTokenRefs(undefined));
       return bindDefaultOverride(
-        surface.override(input as ThemeOverrideInput<DefaultThemeTokenTree>),
+        surface.override({ ...input, components } as ThemeOverrideInput<DefaultThemeTokenTree>),
       );
     },
   } as DefaultThemeSurface;

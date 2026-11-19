@@ -3,7 +3,6 @@ import type {
   InferThemeTokensFromConfig,
   Theme,
   ThemeComponentsFor,
-  TokenRefTree,
 } from 'typestyles';
 import type { FontFaceDefinition } from '../fonts/types';
 import type { DesignThemeTokenValues, ThemeModeDefinition } from '../tokens/types';
@@ -35,15 +34,28 @@ export type InferCustomThemeTokens<C extends DesignThemeCreateConfig> = C extend
   ? CustomNamespacesFromTokenMap<Tok>
   : Record<string, never>;
 
+/** A token reference, the same shape as every `designTokens` leaf. */
+export type TokenRef = { readonly name: string; readonly var: string };
+
+/** `{ name, var }` refs for a custom token tree; `{ light, dark }` leaves are one token. */
+export type TokenRefsOf<T> = T extends string | number
+  ? TokenRef
+  : T extends { light?: string | number; dark?: string | number }
+    ? keyof T extends 'light' | 'dark'
+      ? TokenRef
+      : { readonly [K in keyof T]: TokenRefsOf<T[K]> }
+    : T extends Record<string, unknown>
+      ? { readonly [K in keyof T]: TokenRefsOf<T[K]> }
+      : TokenRef;
+
 /**
- * Declared design token refs plus custom namespaces from `createDesignTheme({ tokens })`.
+ * Declared design token refs plus custom namespaces from `createDesignTheme({ tokens })`, all with
+ * `{ name, var }` leaves (`t.space.md.var`, `t.app.heroCover.var`).
  * Hoist custom token maps into a leaf module for override factories (avoids `typeof theme.tokens` cycles).
  */
 export type DesignThemeTokens<E extends Record<string, unknown> = Record<string, never>> =
   DesignTokenRefs & {
-    readonly [K in keyof E & string]: E[K] extends CreateTokenValues
-      ? TokenRefTree<E[K]>
-      : TokenRefTree<CreateTokenValues>;
+    readonly [K in keyof E & string]: TokenRefsOf<E[K]>;
   };
 
 /** Context passed to theme `components` factories — full design token refs + custom namespaces. */

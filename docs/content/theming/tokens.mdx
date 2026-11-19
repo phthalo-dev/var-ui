@@ -68,7 +68,9 @@ Theme overrides use two layers:
   overrides; patch the `color` namespace for semantic tokens, compiled to `light-dark()`)
 
 Custom namespaces from `createDesignTheme({ tokens })` appear on the theme's
-`.tokens` object alongside built-in refs.
+`.tokens` object alongside built-in refs, with the same `{ name, var }` leaves:
+`theme.tokens.space.md.var` and `theme.tokens.app.heroCover.var`. The `tokens` passed to
+`components` factories have the same shape.
 
 Syntax-highlighting colors live under `color.code` (`designTokens.color.code`).
 `lightSyntaxValues` / `darkSyntaxValues` are exported aliases for theme presets.

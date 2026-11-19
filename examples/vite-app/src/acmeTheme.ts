@@ -42,7 +42,7 @@ export const acmeTheme = createDesignTheme({
         const config = {
           base: {
             borderRadius: '999px',
-            boxShadow: t.brand.glow,
+            boxShadow: t.brand.glow.var,
             borderColor: {
               light: t.color.border.default.var,
               dark: t.color.border.strong.var,
@@ -84,7 +84,7 @@ export const acmeTheme = createDesignTheme({
         base: {
           root: {
             borderRadius: '16px',
-            backgroundImage: t.brand.halo,
+            backgroundImage: t.brand.halo.var,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'top right',
             backgroundSize: '40% 40%',
