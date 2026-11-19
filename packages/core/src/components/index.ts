@@ -113,7 +113,7 @@ export type {
   SurfaceAppearance,
 } from '../shared/semanticTone';
 export {
-  placement,
+  toastPlacement,
   type ControlSize,
   type Density,
   type FillAppearance,
