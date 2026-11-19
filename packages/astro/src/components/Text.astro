@@ -3,7 +3,8 @@ import type { HTMLAttributes } from 'astro/types';
 import { textBlock } from '@var-ui/core/components/typography';
 import type { TextBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
-import { mergeProps, withStyle } from '../utils';
+import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 const textVars = recipeVars(textBlock);
 
@@ -51,7 +52,7 @@ if (lineClamp !== undefined) {
   }
 }
 
-const mergedStyle = withStyle(clampStyle, style);
+const mergedStyle = mergeInlineStyle(clampStyle, style);
 
 const rp = mergeProps(
   textBlock({ size, tone, weight, eyebrow, mono, whiteSpace, lineClamp: clampVariant }),

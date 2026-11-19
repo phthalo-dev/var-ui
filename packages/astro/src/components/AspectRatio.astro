@@ -1,7 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { aspectRatio } from '@var-ui/core/components/aspectRatio';
-import { mergeProps, withStyle } from '../utils';
+import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 type Props = HTMLAttributes<'div'> & {
   ratio?: number;
@@ -9,7 +10,7 @@ type Props = HTMLAttributes<'div'> & {
 };
 
 const { ratio, className, style, ...rest } = Astro.props;
-const ratioStyle = withStyle(ratio != null ? { 'aspect-ratio': String(ratio) } : undefined, style);
+const ratioStyle = mergeInlineStyle(ratio != null ? { 'aspect-ratio': String(ratio) } : undefined, style);
 const rp = mergeProps(aspectRatio(), className);
 ---
 <div {...rest} {...rp} style={ratioStyle}><slot /></div>

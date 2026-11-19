@@ -4,7 +4,8 @@ import type { VariantOptions } from 'typestyles';
 import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
-import { mergeProps, withStyle } from '../utils';
+import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 type ToastPlacement = VariantOptions<typeof toastPlacement>;
 type Length = number | string;
@@ -45,7 +46,7 @@ const offsetVars = styleVars([
   data-var-ui-toast-region
   data-max-visible={maxVisible}
   {...mergeProps(region.region, className)}
-  style={withStyle(offsetVars, style)}
+  style={mergeInlineStyle(offsetVars, style)}
   aria-live="polite"
   aria-relevant="additions"
 >

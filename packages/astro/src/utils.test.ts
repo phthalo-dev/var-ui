@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { mergeProps, withStyle } from './utils';
+import { mergeProps } from './utils';
 
 describe('mergeProps', () => {
   it('merges a string recipe with className', () => {
@@ -13,21 +13,5 @@ describe('mergeProps', () => {
     );
     expect(result.className).toMatch(/root/);
     expect(result['data-intent']).toBe('primary');
-  });
-});
-
-describe('withStyle', () => {
-  it('returns the caller style when there is nothing to add', () => {
-    expect(withStyle(undefined, 'color: red')).toBe('color: red');
-    expect(withStyle({}, { color: 'red' })).toEqual({ color: 'red' });
-  });
-
-  it('puts own declarations first, so the caller wins, for strings and objects', () => {
-    expect(withStyle({ '--x': '1px' }, 'color: red')).toBe('--x: 1px; color: red');
-    expect(withStyle({ '--x': '1px' }, undefined)).toEqual({ '--x': '1px' });
-    expect(withStyle({ '--x': '1px' }, { '--x': '2px', color: 'red' })).toEqual({
-      '--x': '2px',
-      color: 'red',
-    });
   });
 });

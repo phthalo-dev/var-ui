@@ -3,7 +3,8 @@ import type { HTMLAttributes } from 'astro/types';
 import { grid, gridColumnsStyle, type GridResponsiveColumns } from '@var-ui/core/components/grid';
 import type { Gap, GridVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
-import { mergeProps, withStyle } from '../utils';
+import { mergeProps } from '../utils';
+import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
 const gridVars = recipeVars(grid);
 
@@ -54,7 +55,7 @@ if (typeof columns === 'number') {
 const minColumnWidthStyle = minColumnWidth
   ? styleVars([[gridVars.minColumnWidth, minColumnWidth]])
   : undefined;
-const mergedStyle = withStyle(minColumnWidthStyle, style);
+const mergedStyle = mergeInlineStyle(minColumnWidthStyle, style);
 const rp = mergeProps(grid({ columns: variant, gap }), columnsClassName, className);
 ---
 <div {...rest} {...rp} style={mergedStyle}><slot /></div>

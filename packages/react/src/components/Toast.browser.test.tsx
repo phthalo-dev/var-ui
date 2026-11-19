@@ -6,7 +6,15 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
+import {
+  animating,
+  finishAll,
+  freezeAt,
+  holdMotion,
+  raf,
+  settled,
+  viewport,
+} from '../test/browser';
 import { createToaster, toast } from '../toast/imperativeToast';
 import { Dialog } from './Dialog';
 import { ToastProvider, ToastQueue, ToastRegion } from './Toast';
@@ -136,9 +144,11 @@ describe('Toast placement and offset (#242)', () => {
       toast.show({ title: 'Centered', durationMs: 0 });
     });
     await raf();
+    // Measured against the usable viewport: Linux CI reserves a classic scrollbar gutter.
     const r = region()!.getBoundingClientRect();
-    expect(Math.abs(r.left + r.width / 2 - window.innerWidth / 2)).toBeLessThanOrEqual(1);
-    expect(Math.round(window.innerHeight - r.bottom)).toBe(0);
+    const v = viewport();
+    expect(Math.abs(r.left + r.width / 2 - (v.left + v.right) / 2)).toBeLessThanOrEqual(1);
+    expect(Math.round(v.bottom - r.bottom)).toBe(0);
   });
 
   test('offset moves the region off its edges; className and style reach it', async () => {
@@ -152,8 +162,9 @@ describe('Toast placement and offset (#242)', () => {
     });
     await raf();
     const r = region()!.getBoundingClientRect();
-    expect(Math.round(window.innerHeight - r.bottom)).toBe(64);
-    expect(Math.round(window.innerWidth - r.right)).toBe(16);
+    const v = viewport();
+    expect(Math.round(v.bottom - r.bottom)).toBe(64);
+    expect(Math.round(v.right - r.right)).toBe(16);
     expect(region()!.classList.contains('mine')).toBe(true);
   });
 
@@ -170,7 +181,7 @@ describe('Toast placement and offset (#242)', () => {
       queue.add({ title: 'CSS' });
     });
     await raf();
-    expect(Math.round(window.innerHeight - region()!.getBoundingClientRect().bottom)).toBe(40);
+    expect(Math.round(viewport().bottom - region()!.getBoundingClientRect().bottom)).toBe(40);
   });
 
   test('createToaster targets an app-owned queue and region', async () => {
