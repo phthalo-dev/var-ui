@@ -55,6 +55,7 @@ export default defineConfig({
           '@var-ui/astro': `${root}/packages/astro/index.ts`,
           '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
           '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
+          '@var-ui/docs/theme-client': `${root}/packages/docs/src/utils/theme/client.ts`,
           '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
           '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
           '@var-ui/docs/DocsGuidePage': `${root}/packages/docs/src/components/DocsGuidePage.astro`,

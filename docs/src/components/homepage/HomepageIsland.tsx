@@ -1,7 +1,7 @@
 import { defaultIcons } from '@var-ui/icons';
 import { DesignSystemProvider, IconProvider, type ColorMode } from '@var-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
+import { ensureDocsThemeStyles } from '@var-ui/docs/theme-client';
 import { readStoredColorMode } from '@/lib/storedColorMode';
 import { docsThemePresetMeta as docsThemePresets } from '@/themes/presetMeta';
 import { BentoShowcase } from './BentoShowcase';
@@ -30,7 +30,7 @@ export default function HomepageIsland() {
   // the readout show real theme colors before anything is clicked.
   useEffect(() => {
     for (const theme of docsThemePresets) {
-      ensureShowcaseThemeStyles(theme, () => setStylesVersion((n) => n + 1));
+      ensureDocsThemeStyles(theme.id, docsThemePresets, () => setStylesVersion((n) => n + 1));
     }
   }, []);
 

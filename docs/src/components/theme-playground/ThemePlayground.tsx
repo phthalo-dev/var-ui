@@ -11,7 +11,7 @@ import {
   mergeProps,
 } from '@var-ui/react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { ensureShowcaseThemeStyles } from '@/lib/showcaseThemeStyles';
+import { ensureDocsThemeStyles } from '@var-ui/docs/theme-client';
 import { readStoredColorMode } from '@/lib/storedColorMode';
 import { docsThemePresetMeta } from '@/themes/presetMeta';
 import { HighlightedCodeBlock } from '../HighlightedCodeBlock';
@@ -48,8 +48,7 @@ export default function ThemePlayground({
 
   // Showcase theme CSS is extracted to /themes/<id>.css; load the selected one.
   useEffect(() => {
-    const theme = docsThemePresetMeta.find((entry) => entry.id === state.presetId);
-    if (theme) ensureShowcaseThemeStyles(theme);
+    ensureDocsThemeStyles(state.presetId, docsThemePresetMeta);
   }, [state.presetId]);
 
   useEffect(() => {

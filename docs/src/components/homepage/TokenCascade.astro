@@ -100,7 +100,8 @@ const ruleCss = [
 </div>
 
 <script>
-  import { ensureShowcaseThemeStyles } from '../../lib/showcaseThemeStyles';
+  import { ensureDocsThemeStyles } from '@var-ui/docs/theme-client';
+  import { docsThemePresetMeta } from '../../themes/presetMeta';
   import { formatOklch } from '../../lib/formatOklch';
 
   const TOKEN = '--var-ui-color-tone-accent-background';
@@ -121,7 +122,9 @@ const ruleCss = [
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-cascade-theme]')];
     const valueEl = root.querySelector<HTMLElement>('[data-cascade-value]');
     const components = root.querySelector<HTMLElement>('[data-cascade-components]');
-    for (const button of buttons) ensureShowcaseThemeStyles({ id: button.dataset.cascadeTheme! });
+    for (const button of buttons) {
+      ensureDocsThemeStyles(button.dataset.cascadeTheme!, docsThemePresetMeta);
+    }
 
     /** Print the value the components actually resolve. */
     const readValue = () => {
