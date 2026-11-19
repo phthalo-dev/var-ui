@@ -168,20 +168,37 @@ describe('Toast placement and offset (#242)', () => {
     expect(region()!.classList.contains('mine')).toBe(true);
   });
 
-  test('the offset custom property works from plain CSS too', async () => {
-    const queue = new ToastQueue();
-    render(
-      <DesignSystemProvider applyToDocument>
-        <IconProvider icons={{}}>
-          <ToastRegion queue={queue} style={{ ['--var-ui-toast-offsetblock' as string]: '40px' }} />
-        </IconProvider>
-      </DesignSystemProvider>,
-    );
+  test('the offset custom property works from plain CSS on :root (it inherits)', async () => {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--var-ui-toast-offset-block', '40px');
+    try {
+      const queue = new ToastQueue();
+      render(
+        <DesignSystemProvider applyToDocument>
+          <IconProvider icons={{}}>
+            <ToastRegion queue={queue} />
+          </IconProvider>
+        </DesignSystemProvider>,
+      );
+      act(() => {
+        queue.add({ title: 'CSS' });
+      });
+      await raf();
+      expect(Math.round(viewport().bottom - region()!.getBoundingClientRect().bottom)).toBe(40);
+    } finally {
+      rootStyle.removeProperty('--var-ui-toast-offset-block');
+    }
+  });
+
+  test('ToastProvider keeps the limit of an app-owned queue unless maxVisibleToasts is passed', async () => {
+    const queue = new ToastQueue({ maxVisibleToasts: 5 });
+    render(<Shell queue={queue}>{null}</Shell>);
     act(() => {
-      queue.add({ title: 'CSS' });
+      for (let i = 0; i < 6; i++) queue.add({ title: `T${i}` });
     });
     await raf();
-    expect(Math.round(viewport().bottom - region()!.getBoundingClientRect().bottom)).toBe(40);
+    expect(queue.visibleToasts).toHaveLength(5);
+    act(() => queue.clear());
   });
 
   test('createToaster targets an app-owned queue and region', async () => {

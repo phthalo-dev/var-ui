@@ -1,9 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import type { VariantOptions } from 'typestyles';
-import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
-import { toast as toastRecipe } from '@var-ui/core/components/toast';
-import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import { toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toast as toastRecipe, toastOffsetVar } from '@var-ui/core/components/toast';
 import { mergeProps } from '../utils';
 import { mergeInlineStyle } from '../lib/mergeInlineStyle';
 
@@ -25,7 +24,6 @@ type Props = Omit<HTMLAttributes<'div'>, 'class:list'> & {
 
 const { placement = 'bottom-end', offset, maxVisible = 3, className, style, ...rest } = Astro.props;
 const region = toastRecipe({ placement });
-const toastVars = recipeVars(toastRecipe);
 const toLength = (value: Length | undefined) =>
   typeof value === 'number' ? `${value}px` : value;
 const { block, inline } =
@@ -34,10 +32,11 @@ const { block, inline } =
     : typeof offset === 'object'
       ? offset
       : { block: offset, inline: offset };
-const offsetVars = styleVars([
-  [toastVars.offsetBlock, toLength(block)],
-  [toastVars.offsetInline, toLength(inline)],
-]);
+const offsetEntries = [
+  [toastOffsetVar.block, toLength(block)],
+  [toastOffsetVar.inline, toLength(inline)],
+].filter((entry): entry is [string, string] => entry[1] !== undefined);
+const offsetVars = offsetEntries.length > 0 ? Object.fromEntries(offsetEntries) : undefined;
 ---
 
 <div

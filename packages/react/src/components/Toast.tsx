@@ -18,9 +18,8 @@ import {
   UNSTABLE_ToastRegion as AriaToastRegion,
 } from 'react-aria-components';
 import { type VariantOptions } from 'typestyles';
-import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
-import { toast as toastRecipe } from '@var-ui/core/components/toast';
-import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import { toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toast as toastRecipe, toastOffsetVar } from '@var-ui/core/components/toast';
 import type { ToastVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useMergedRef } from '../overlays/useMergedRef';
@@ -62,16 +61,16 @@ export type ToastOffset = Length | { block?: Length; inline?: Length };
 const toLength = (value: Length | undefined) =>
   value === undefined ? undefined : typeof value === 'number' ? `${value}px` : value;
 
-const toastVars = recipeVars(toastRecipe);
-
-/** `offset` as the recipe's `offsetBlock` / `offsetInline` custom properties. */
+/** `offset` as the `--var-ui-toast-offset-*` custom properties (also settable from any CSS). */
 function offsetStyle(offset: ToastOffset | undefined): CSSProperties | undefined {
   if (offset === undefined) return undefined;
   const { block, inline } = typeof offset === 'object' ? offset : { block: offset, inline: offset };
-  return styleVars([
-    [toastVars.offsetBlock, toLength(block)],
-    [toastVars.offsetInline, toLength(inline)],
-  ]);
+  const style: Record<string, string> = {};
+  const b = toLength(block);
+  const i = toLength(inline);
+  if (b !== undefined) style[toastOffsetVar.block] = b;
+  if (i !== undefined) style[toastOffsetVar.inline] = i;
+  return Object.keys(style).length > 0 ? (style as CSSProperties) : undefined;
 }
 
 type ToastContextValue = {
@@ -242,7 +241,10 @@ export type ToastProviderProps = Pick<
   'placement' | 'offset' | 'dismissLabel' | 'className' | 'style'
 > & {
   children: ReactNode;
-  /** Maximum number of toasts visible at once; older toasts queue behind this limit. @default 3 */
+  /**
+   * Maximum number of toasts visible at once; older toasts queue behind this limit. With your own
+   * `queue`, the queue's limit applies unless you pass this. @default 3
+   */
   maxVisibleToasts?: number;
   /**
    * Use a queue you created (`new ToastQueue()`) instead of an internal one, so code outside React
@@ -264,17 +266,21 @@ export type ToastProviderProps = Pick<
 export function ToastProvider({
   children,
   placement = 'bottom-end',
-  maxVisibleToasts = DEFAULT_MAX,
+  maxVisibleToasts,
   queue: ownQueue,
   ...regionProps
 }: ToastProviderProps): JSX.Element {
   // Created once so changing `maxVisibleToasts` keeps the toasts on screen; the limit is applied to
   // the live queue instead.
-  const [internalQueue] = useState(() => ownQueue ?? new ToastQueue({ maxVisibleToasts }));
+  const [internalQueue] = useState(
+    () => new ToastQueue({ maxVisibleToasts: maxVisibleToasts ?? DEFAULT_MAX }),
+  );
   const queue = ownQueue ?? internalQueue;
+  // An app's own queue keeps its own limit unless the prop says otherwise.
+  const limit = maxVisibleToasts ?? (ownQueue ? undefined : DEFAULT_MAX);
   useEffect(() => {
-    queue.setMaxVisible(maxVisibleToasts);
-  }, [queue, maxVisibleToasts]);
+    if (limit !== undefined) queue.setMaxVisible(limit);
+  }, [queue, limit]);
   const value = useMemo(() => ({ queue, placement }), [queue, placement]);
 
   useEffect(() => {

@@ -11,7 +11,7 @@ import {
 } from '../shared/semanticTone';
 import { atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
-import { placement } from '../shared/variantAxes';
+import { toastPlacement } from '../shared/variantAxes';
 import { nativeEnterExit } from '../shared/overlayMotion';
 
 /**
@@ -22,6 +22,19 @@ import { nativeEnterExit } from '../shared/overlayMotion';
  * <div className={t.region}><div className={t.item}>…</div></div>
  * ```
  */
+/**
+ * Distance of the region from the screen edges it is anchored to, e.g. above a bottom player bar:
+ * `:root { --var-ui-toast-offset-block: var(--player-height) }`. Plain custom properties, not
+ * recipe vars: nothing declares them on the region, so a value set on any ancestor reaches it.
+ * The `*-center` placements ignore `inline`.
+ */
+export const toastOffsetVar = {
+  block: '--var-ui-toast-offset-block',
+  inline: '--var-ui-toast-offset-inline',
+} as const;
+const offsetBlock = `var(${toastOffsetVar.block}, 0px)`;
+const offsetInline = `var(${toastOffsetVar.inline}, 0px)`;
+
 /** Horizontally centered in the viewport: both inline edges at 0 with auto margins. */
 const centered = { insetInline: 0, marginInline: 'auto', width: 'fit-content' } as const;
 
@@ -32,7 +45,7 @@ export const toast = typestyles.recipe({
   variants: {
     tone: toneWithDefault('info'),
     appearance: surfaceAppearance,
-    placement,
+    placement: toastPlacement,
   },
   vars: {
     semantic: { ...atProperty.color, value: t.color.tone.accent.foreground.var },
@@ -44,13 +57,6 @@ export const toast = typestyles.recipe({
       value: t.color.text.secondary.var,
     },
     closeColor: { ...atProperty.color, value: t.color.text.secondary.var },
-    /**
-     * Distance from the anchored top/bottom edge, e.g. the height of a bottom player bar:
-     * `--var-ui-toast-offsetblock: var(--app-bottom-bar)`.
-     */
-    offsetBlock: { ...atProperty.length, value: '0px' },
-    /** Distance from the anchored start/end edge (ignored by the `*-center` placements). */
-    offsetInline: { ...atProperty.length, value: '0px' },
   },
   styles: ({ vars }) => {
     return {
@@ -145,18 +151,18 @@ export const toast = typestyles.recipe({
         },
         placement: {
           'top-start': {
-            region: { top: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
+            region: { top: offsetBlock, insetInlineStart: offsetInline },
           },
-          'top-center': { region: { top: vars.offsetBlock.var, ...centered } },
+          'top-center': { region: { top: offsetBlock, ...centered } },
           'top-end': {
-            region: { top: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
+            region: { top: offsetBlock, insetInlineEnd: offsetInline },
           },
           'bottom-start': {
-            region: { bottom: vars.offsetBlock.var, insetInlineStart: vars.offsetInline.var },
+            region: { bottom: offsetBlock, insetInlineStart: offsetInline },
           },
-          'bottom-center': { region: { bottom: vars.offsetBlock.var, ...centered } },
+          'bottom-center': { region: { bottom: offsetBlock, ...centered } },
           'bottom-end': {
-            region: { bottom: vars.offsetBlock.var, insetInlineEnd: vars.offsetInline.var },
+            region: { bottom: offsetBlock, insetInlineEnd: offsetInline },
           },
         },
       },

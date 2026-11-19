@@ -81,7 +81,7 @@ export const sender = variant.enum(['user', 'assistant'], { default: 'assistant'
 export type Sender = VariantOptions<typeof sender>;
 
 /** Screen edge placement for viewport-anchored regions (toasts): a corner or an edge's center. */
-export const placement = variant.enum(
+export const toastPlacement = variant.enum(
   ['top-start', 'top-center', 'top-end', 'bottom-start', 'bottom-center', 'bottom-end'],
   { default: 'bottom-end' },
 );

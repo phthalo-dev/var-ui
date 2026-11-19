@@ -2106,8 +2106,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
     "vars": [
       "--var-ui-toast-closecolor",
       "--var-ui-toast-descriptioncolor",
-      "--var-ui-toast-offsetblock",
-      "--var-ui-toast-offsetinline",
       "--var-ui-toast-semantic",
       "--var-ui-toast-solidbg",
       "--var-ui-toast-solidfg",
