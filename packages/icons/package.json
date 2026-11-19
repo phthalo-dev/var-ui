@@ -54,6 +54,14 @@
       "types": "./dist/icons/arrowsUpDown.d.mts",
       "import": "./dist/icons/arrowsUpDown.mjs"
     },
+    "./glyphs/box": {
+      "types": "./dist/glyph-data/box.d.mts",
+      "import": "./dist/glyph-data/box.mjs"
+    },
+    "./box": {
+      "types": "./dist/icons/box.d.mts",
+      "import": "./dist/icons/box.mjs"
+    },
     "./glyphs/check": {
       "types": "./dist/glyph-data/check.d.mts",
       "import": "./dist/glyph-data/check.mjs"
@@ -101,6 +109,14 @@
     "./close": {
       "types": "./dist/icons/close.d.mts",
       "import": "./dist/icons/close.mjs"
+    },
+    "./glyphs/code": {
+      "types": "./dist/glyph-data/code.d.mts",
+      "import": "./dist/glyph-data/code.mjs"
+    },
+    "./code": {
+      "types": "./dist/icons/code.d.mts",
+      "import": "./dist/icons/code.mjs"
     },
     "./glyphs/colorModeDark": {
       "types": "./dist/glyph-data/colorModeDark.d.mts",
@@ -150,6 +166,14 @@
       "types": "./dist/icons/error.d.mts",
       "import": "./dist/icons/error.mjs"
     },
+    "./glyphs/externalLink": {
+      "types": "./dist/glyph-data/externalLink.d.mts",
+      "import": "./dist/glyph-data/externalLink.mjs"
+    },
+    "./externalLink": {
+      "types": "./dist/icons/externalLink.d.mts",
+      "import": "./dist/icons/externalLink.mjs"
+    },
     "./glyphs/eye": {
       "types": "./dist/glyph-data/eye.d.mts",
       "import": "./dist/glyph-data/eye.mjs"
@@ -166,6 +190,22 @@
       "types": "./dist/icons/eyeOff.d.mts",
       "import": "./dist/icons/eyeOff.mjs"
     },
+    "./glyphs/file": {
+      "types": "./dist/glyph-data/file.d.mts",
+      "import": "./dist/glyph-data/file.mjs"
+    },
+    "./file": {
+      "types": "./dist/icons/file.d.mts",
+      "import": "./dist/icons/file.mjs"
+    },
+    "./glyphs/github": {
+      "types": "./dist/glyph-data/github.d.mts",
+      "import": "./dist/glyph-data/github.mjs"
+    },
+    "./github": {
+      "types": "./dist/icons/github.d.mts",
+      "import": "./dist/icons/github.mjs"
+    },
     "./glyphs/info": {
       "types": "./dist/glyph-data/info.d.mts",
       "import": "./dist/glyph-data/info.mjs"
@@ -173,6 +213,14 @@
     "./info": {
       "types": "./dist/icons/info.d.mts",
       "import": "./dist/icons/info.mjs"
+    },
+    "./glyphs/markdown": {
+      "types": "./dist/glyph-data/markdown.d.mts",
+      "import": "./dist/glyph-data/markdown.mjs"
+    },
+    "./markdown": {
+      "types": "./dist/icons/markdown.d.mts",
+      "import": "./dist/icons/markdown.mjs"
     },
     "./glyphs/menu": {
       "types": "./dist/glyph-data/menu.d.mts",
@@ -214,6 +262,14 @@
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
     },
+    "./glyphs/sliders": {
+      "types": "./dist/glyph-data/sliders.d.mts",
+      "import": "./dist/glyph-data/sliders.mjs"
+    },
+    "./sliders": {
+      "types": "./dist/icons/sliders.d.mts",
+      "import": "./dist/icons/sliders.mjs"
+    },
     "./glyphs/star": {
       "types": "./dist/glyph-data/star.d.mts",
       "import": "./dist/glyph-data/star.mjs"
@@ -237,6 +293,14 @@
     "./success": {
       "types": "./dist/icons/success.d.mts",
       "import": "./dist/icons/success.mjs"
+    },
+    "./glyphs/terminal": {
+      "types": "./dist/glyph-data/terminal.d.mts",
+      "import": "./dist/glyph-data/terminal.mjs"
+    },
+    "./terminal": {
+      "types": "./dist/icons/terminal.d.mts",
+      "import": "./dist/icons/terminal.mjs"
     },
     "./glyphs/warning": {
       "types": "./dist/glyph-data/warning.d.mts",
