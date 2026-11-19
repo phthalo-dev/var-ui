@@ -1,6 +1,5 @@
 import type { JSX, ReactNode } from 'react';
 import type { IconName } from '@var-ui/core';
-import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { Icon } from '../icons';
 import { Button, type ButtonAsButtonProps } from './Button';
 import { useResolvedControlSize } from '../internal/controlSizeContext';
@@ -17,18 +16,16 @@ export type IconButtonProps = Omit<ButtonAsButtonProps, 'children' | 'layout' | 
 };
 
 /**
- * Before 0.7 `name` picked the glyph. It is now the native `<button name>`, so `name="close"` with
- * no `icon` renders an empty button and still type-checks in JS: warn once in development.
+ * An icon-only button with no icon is always a bug: an empty, unlabelled-looking control. It is
+ * reachable from JS or a cast (`icon` is required in TypeScript), so warn once in development.
  */
-let warnedLegacyName = false;
-function warnLegacyName(name: unknown, icon: unknown) {
-  if (warnedLegacyName || process.env.NODE_ENV === 'production') return;
-  if (icon != null || typeof name !== 'string') return;
-  if (!(iconNameList as readonly string[]).includes(name)) return;
-  warnedLegacyName = true;
+let warnedEmpty = false;
+function warnEmpty(label: string | undefined) {
+  if (warnedEmpty || process.env.NODE_ENV === 'production') return;
+  warnedEmpty = true;
   console.warn(
-    `[var-ui] <IconButton name="${name}"> has no icon. \`name\` is the native button attribute; ` +
-      `use icon="${name}" to render the glyph.`,
+    `[var-ui] <IconButton aria-label="${label ?? ''}"> has no \`icon\`, so it renders empty. ` +
+      'Pass `icon` (a registry name or a node).',
   );
 }
 
@@ -39,7 +36,7 @@ export function IconButton({
   ...props
 }: IconButtonProps): JSX.Element {
   const resolvedSize = useResolvedControlSize(size);
-  warnLegacyName(props.name, icon);
+  if (icon == null) warnEmpty(props['aria-label']);
   return (
     <Button {...props} size={resolvedSize} layout="icon">
       {typeof icon === 'string' ? (

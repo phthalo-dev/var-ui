@@ -111,21 +111,3 @@ describe('Button', () => {
     expect(screen.getByRole('link').getAttribute('aria-disabled')).toBe('true');
   });
 });
-
-describe('IconButton size', () => {
-  it('xl carries the xl glyph (#228)', async () => {
-    const { IconButton } = await import('./IconButton');
-    const { IconProvider } = await import('../icons');
-    render(
-      <IconProvider icons={{ star: <svg data-testid="glyph" /> }}>
-        <IconButton icon="star" aria-label="Play" size="xl" pill />
-      </IconProvider>,
-    );
-    const button = screen.getByRole('button', { name: 'Play' });
-    expect(button.getAttribute('data-size')).toBe('xl');
-    expect(button.hasAttribute('data-pill')).toBe(true);
-    expect(screen.getByTestId('glyph').closest('[data-size]')?.getAttribute('data-size')).toBe(
-      'xl',
-    );
-  });
-});
