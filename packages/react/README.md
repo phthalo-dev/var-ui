@@ -7,7 +7,7 @@ Components with native DOM props (`disabled`, `open`, `onClick`, `onValueChange`
 ## Install
 
 ```bash
-pnpm add @var-ui/react @var-ui/core react react-dom react-aria-components
+pnpm add @var-ui/react @var-ui/core react react-dom react-aria-components react-aria
 ```
 
 Within this monorepo:
@@ -20,7 +20,7 @@ Within this monorepo:
 }
 ```
 
-Peer dependencies: `react`, `react-dom`, `react-aria-components`, and `@var-ui/core`.
+Peer dependencies: `react`, `react-dom`, `react-aria-components`, `react-aria`, and `@var-ui/core`. Install the `react-aria` version your `react-aria-components` depends on, so there is one copy (`npm ls react-aria`).
 
 ## Usage
 

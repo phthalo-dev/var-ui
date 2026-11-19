@@ -35,6 +35,7 @@
     "dev": "vp pack --watch"
   },
   "devDependencies": {
+    "@var-ui/core": "workspace:*",
     "@var-ui/docs": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:"

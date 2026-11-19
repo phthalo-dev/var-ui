@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useMemo,
+  useState,
   type ComponentPropsWithRef,
   type JSX,
   type KeyboardEvent,
@@ -204,10 +205,16 @@ function MenuPopup({
   onKeyDownCapture,
   ref,
   ...rest
-}: MenuPopupProps): JSX.Element {
+}: MenuPopupProps): JSX.Element | null {
   const { root, selection } = useMenuContext();
   const m = menu();
   const setRef = useMergedRef<HTMLDivElement>(root.setPopupEl, ref);
+  // Mount the popover shell on first open, not with the trigger: a list of 60 rows with a menu
+  // each would otherwise mount 60 hidden `[popover]` elements (#237). The trigger is not part of
+  // the popup, so it stays mounted and focus returns to it on close. Once opened the shell stays
+  // (the menu content inside still unmounts on close).
+  const [opened, setOpened] = useState(root.open);
+  if (root.open && !opened) setOpened(true);
   const selectionProps = selection
     ? {
         selectionMode: 'single' as const,
@@ -220,6 +227,8 @@ function MenuPopup({
         },
       }
     : { selectionMode: 'none' as const };
+
+  if (!opened) return null;
 
   // The shell is the native `[popover]` element (top layer, anchored by CSS), mounted in place;
   // RAC's MenuTrigger owns open state, keyboard, typeahead and `aria-haspopup`/`aria-expanded`.
