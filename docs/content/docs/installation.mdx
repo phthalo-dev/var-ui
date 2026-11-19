@@ -22,11 +22,14 @@ Install published `@var-ui/*` packages from npm. For the copy-paste Vite + React
 
 ## Peer dependencies
 
-| Peer                      | Notes                               |
-| ------------------------- | ----------------------------------- |
-| `react` / `react-dom`     | 19                                  |
-| `react-aria-components`   | Required by `@var-ui/react`         |
-| `@internationalized/date` | Required when using date components |
+| Peer                      | Notes                                  |
+| ------------------------- | -------------------------------------- |
+| `react` / `react-dom`     | 19                                     |
+| `react-aria-components`   | Required by `@var-ui/react`            |
+| `react-aria`              | Required by `@var-ui/react`; see below |
+| `@internationalized/date` | Required when using date components    |
+
+Install **one** copy of `react-aria`: the version your `react-aria-components` depends on (`npm ls react-aria` should list a single version). `react-aria-components` pins `react-aria` exactly, and `@var-ui/react` shares its overlay and press contexts. With two copies, menu items take over their trigger and popups lose their anchor; `@var-ui/react` warns in development when it sees this.
 
 `typestyles` is a transitive dependency of `@var-ui/core`. Do not add it unless you extract CSS (below) or import TypeStyles directly.
 

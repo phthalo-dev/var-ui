@@ -106,7 +106,9 @@ const VIRTUAL_ANCHOR_STYLE: CSSProperties = {
   padding: 0,
   border: 0,
   pointerEvents: 'none',
-  visibility: 'hidden',
+  // `opacity`, not `visibility: hidden`: Chrome's initial `position-visibility` is
+  // `anchors-visible`, so a hidden anchor hides every popup anchored to it (#235).
+  opacity: 0,
 };
 
 export type VirtualAnchor = {

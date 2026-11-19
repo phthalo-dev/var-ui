@@ -127,6 +127,17 @@ type RacPopoverContextProps = Pick<
   scrollRef?: unknown;
 };
 
+let warnedDuplicate = false;
+function warnDuplicateReactAria() {
+  if (warnedDuplicate || process.env.NODE_ENV === 'production') return;
+  warnedDuplicate = true;
+  console.warn(
+    "[var-ui] A popup item took over its trigger's ref. This happens when two copies of " +
+      '`react-aria` are installed (one for `@var-ui/react`, one for `react-aria-components`). ' +
+      'Dedupe them: `npm ls react-aria` should list one version.',
+  );
+}
+
 const SIDES = new Set(['top', 'bottom', 'start', 'end']);
 const ALIGNS = new Set(['start', 'center', 'end']);
 
@@ -192,10 +203,18 @@ function NativePopoverShell({
     open: state.isOpen,
     onOpenChange: (next) => state.setOpen(next),
   });
-  const { setTriggerEl } = root;
+  const { setTriggerEl, popupEl } = root;
   // RAC's `triggerRef` is a ref object (a getter for ComboBox/DatePicker): sample it each commit.
   useLayoutEffect(() => {
-    setTriggerEl((triggerRef?.current as HTMLElement | null | undefined) ?? null);
+    const next = (triggerRef?.current as HTMLElement | null | undefined) ?? null;
+    // A trigger inside the popup is never right: it means `Overlay`'s `ClearPressResponder` did not
+    // clear the trigger's `PressResponder` (two copies of react-aria, #234), so an item's `usePress`
+    // took over `triggerRef`. Keep the last real trigger so the popup stays anchored to it.
+    if (next && popupEl?.contains(next)) {
+      warnDuplicateReactAria();
+      return;
+    }
+    setTriggerEl(next);
   });
 
   const latestOpen = useRef(state.isOpen);

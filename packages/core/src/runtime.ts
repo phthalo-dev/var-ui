@@ -1,5 +1,5 @@
 import { colorModes, createTypeStyles } from 'typestyles';
-import { designBreakpoints } from './tokens/defaults/breakpoint';
+import { designBreakpointConditions, designBreakpoints } from './tokens/defaults/breakpoint';
 
 const scopeId = 'var-ui';
 const layerOrder = ['reset', 'base', 'tokens', 'components', 'overrides', 'utilities'] as const;
@@ -14,7 +14,7 @@ export const baseTypestyles = createTypeStyles({
   scopeId,
   mode: 'attribute',
   colorModes,
-  breakpoints: designBreakpoints,
+  breakpoints: designBreakpointConditions,
   layers: {
     order: layerOrder,
     token: 'tokens',
@@ -52,9 +52,8 @@ export const toExclusiveMaxQuery = <K extends string>(key: K): K =>
   ) as K;
 
 /**
- * `breakpoint(name, feature?)` with exclusive `max` queries. Omitting the feature
- * means `'min'` (mobile-first): the registered values are bare widths, so the
- * TypeStyles default would otherwise emit an invalid `@media (48rem)`.
+ * `breakpoint(name, feature?)` with exclusive `max` queries. Omitting the feature means `'min'`
+ * (mobile-first), the registered `(min-width: …)` condition.
  */
 const breakpoint: BreakpointFn = (name, feature = 'min') =>
   toExclusiveMaxQuery(baseTypestyles.breakpoint(name, feature));

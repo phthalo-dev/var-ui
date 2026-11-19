@@ -1,4 +1,4 @@
-import { isRTL } from '@react-aria/i18n';
+import { isRTL } from 'react-aria-components';
 
 export type Direction = 'ltr' | 'rtl';
 
