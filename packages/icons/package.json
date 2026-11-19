@@ -19,238 +19,297 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
+      "@var-ui/source": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
     "./glyphs": {
+      "@var-ui/source": "./src/glyphs.ts",
       "types": "./dist/glyphs.d.mts",
       "import": "./dist/glyphs.mjs"
     },
     "./brand": {
+      "@var-ui/source": "./src/brand.ts",
       "types": "./dist/brand.d.mts",
       "import": "./dist/brand.mjs"
     },
     "./glyphs/arrowDown": {
+      "@var-ui/source": "./src/glyph-data/arrowDown.ts",
       "types": "./dist/glyph-data/arrowDown.d.mts",
       "import": "./dist/glyph-data/arrowDown.mjs"
     },
     "./arrowDown": {
+      "@var-ui/source": "./src/icons/arrowDown.tsx",
       "types": "./dist/icons/arrowDown.d.mts",
       "import": "./dist/icons/arrowDown.mjs"
     },
     "./glyphs/arrowUp": {
+      "@var-ui/source": "./src/glyph-data/arrowUp.ts",
       "types": "./dist/glyph-data/arrowUp.d.mts",
       "import": "./dist/glyph-data/arrowUp.mjs"
     },
     "./arrowUp": {
+      "@var-ui/source": "./src/icons/arrowUp.tsx",
       "types": "./dist/icons/arrowUp.d.mts",
       "import": "./dist/icons/arrowUp.mjs"
     },
     "./glyphs/arrowsUpDown": {
+      "@var-ui/source": "./src/glyph-data/arrowsUpDown.ts",
       "types": "./dist/glyph-data/arrowsUpDown.d.mts",
       "import": "./dist/glyph-data/arrowsUpDown.mjs"
     },
     "./arrowsUpDown": {
+      "@var-ui/source": "./src/icons/arrowsUpDown.tsx",
       "types": "./dist/icons/arrowsUpDown.d.mts",
       "import": "./dist/icons/arrowsUpDown.mjs"
     },
     "./glyphs/check": {
+      "@var-ui/source": "./src/glyph-data/check.ts",
       "types": "./dist/glyph-data/check.d.mts",
       "import": "./dist/glyph-data/check.mjs"
     },
     "./check": {
+      "@var-ui/source": "./src/icons/check.tsx",
       "types": "./dist/icons/check.d.mts",
       "import": "./dist/icons/check.mjs"
     },
     "./glyphs/chevronDown": {
+      "@var-ui/source": "./src/glyph-data/chevronDown.ts",
       "types": "./dist/glyph-data/chevronDown.d.mts",
       "import": "./dist/glyph-data/chevronDown.mjs"
     },
     "./chevronDown": {
+      "@var-ui/source": "./src/icons/chevronDown.tsx",
       "types": "./dist/icons/chevronDown.d.mts",
       "import": "./dist/icons/chevronDown.mjs"
     },
     "./glyphs/chevronLeft": {
+      "@var-ui/source": "./src/glyph-data/chevronLeft.ts",
       "types": "./dist/glyph-data/chevronLeft.d.mts",
       "import": "./dist/glyph-data/chevronLeft.mjs"
     },
     "./chevronLeft": {
+      "@var-ui/source": "./src/icons/chevronLeft.tsx",
       "types": "./dist/icons/chevronLeft.d.mts",
       "import": "./dist/icons/chevronLeft.mjs"
     },
     "./glyphs/chevronRight": {
+      "@var-ui/source": "./src/glyph-data/chevronRight.ts",
       "types": "./dist/glyph-data/chevronRight.d.mts",
       "import": "./dist/glyph-data/chevronRight.mjs"
     },
     "./chevronRight": {
+      "@var-ui/source": "./src/icons/chevronRight.tsx",
       "types": "./dist/icons/chevronRight.d.mts",
       "import": "./dist/icons/chevronRight.mjs"
     },
     "./glyphs/clock": {
+      "@var-ui/source": "./src/glyph-data/clock.ts",
       "types": "./dist/glyph-data/clock.d.mts",
       "import": "./dist/glyph-data/clock.mjs"
     },
     "./clock": {
+      "@var-ui/source": "./src/icons/clock.tsx",
       "types": "./dist/icons/clock.d.mts",
       "import": "./dist/icons/clock.mjs"
     },
     "./glyphs/close": {
+      "@var-ui/source": "./src/glyph-data/close.ts",
       "types": "./dist/glyph-data/close.d.mts",
       "import": "./dist/glyph-data/close.mjs"
     },
     "./close": {
+      "@var-ui/source": "./src/icons/close.tsx",
       "types": "./dist/icons/close.d.mts",
       "import": "./dist/icons/close.mjs"
     },
     "./glyphs/colorModeDark": {
+      "@var-ui/source": "./src/glyph-data/colorModeDark.ts",
       "types": "./dist/glyph-data/colorModeDark.d.mts",
       "import": "./dist/glyph-data/colorModeDark.mjs"
     },
     "./colorModeDark": {
+      "@var-ui/source": "./src/icons/colorModeDark.tsx",
       "types": "./dist/icons/colorModeDark.d.mts",
       "import": "./dist/icons/colorModeDark.mjs"
     },
     "./glyphs/colorModeLight": {
+      "@var-ui/source": "./src/glyph-data/colorModeLight.ts",
       "types": "./dist/glyph-data/colorModeLight.d.mts",
       "import": "./dist/glyph-data/colorModeLight.mjs"
     },
     "./colorModeLight": {
+      "@var-ui/source": "./src/icons/colorModeLight.tsx",
       "types": "./dist/icons/colorModeLight.d.mts",
       "import": "./dist/icons/colorModeLight.mjs"
     },
     "./glyphs/colorModeSystem": {
+      "@var-ui/source": "./src/glyph-data/colorModeSystem.ts",
       "types": "./dist/glyph-data/colorModeSystem.d.mts",
       "import": "./dist/glyph-data/colorModeSystem.mjs"
     },
     "./colorModeSystem": {
+      "@var-ui/source": "./src/icons/colorModeSystem.tsx",
       "types": "./dist/icons/colorModeSystem.d.mts",
       "import": "./dist/icons/colorModeSystem.mjs"
     },
     "./glyphs/component": {
+      "@var-ui/source": "./src/glyph-data/component.ts",
       "types": "./dist/glyph-data/component.d.mts",
       "import": "./dist/glyph-data/component.mjs"
     },
     "./component": {
+      "@var-ui/source": "./src/icons/component.tsx",
       "types": "./dist/icons/component.d.mts",
       "import": "./dist/icons/component.mjs"
     },
     "./glyphs/copy": {
+      "@var-ui/source": "./src/glyph-data/copy.ts",
       "types": "./dist/glyph-data/copy.d.mts",
       "import": "./dist/glyph-data/copy.mjs"
     },
     "./copy": {
+      "@var-ui/source": "./src/icons/copy.tsx",
       "types": "./dist/icons/copy.d.mts",
       "import": "./dist/icons/copy.mjs"
     },
     "./glyphs/error": {
+      "@var-ui/source": "./src/glyph-data/error.ts",
       "types": "./dist/glyph-data/error.d.mts",
       "import": "./dist/glyph-data/error.mjs"
     },
     "./error": {
+      "@var-ui/source": "./src/icons/error.tsx",
       "types": "./dist/icons/error.d.mts",
       "import": "./dist/icons/error.mjs"
     },
     "./glyphs/eye": {
+      "@var-ui/source": "./src/glyph-data/eye.ts",
       "types": "./dist/glyph-data/eye.d.mts",
       "import": "./dist/glyph-data/eye.mjs"
     },
     "./eye": {
+      "@var-ui/source": "./src/icons/eye.tsx",
       "types": "./dist/icons/eye.d.mts",
       "import": "./dist/icons/eye.mjs"
     },
     "./glyphs/eyeOff": {
+      "@var-ui/source": "./src/glyph-data/eyeOff.ts",
       "types": "./dist/glyph-data/eyeOff.d.mts",
       "import": "./dist/glyph-data/eyeOff.mjs"
     },
     "./eyeOff": {
+      "@var-ui/source": "./src/icons/eyeOff.tsx",
       "types": "./dist/icons/eyeOff.d.mts",
       "import": "./dist/icons/eyeOff.mjs"
     },
     "./glyphs/info": {
+      "@var-ui/source": "./src/glyph-data/info.ts",
       "types": "./dist/glyph-data/info.d.mts",
       "import": "./dist/glyph-data/info.mjs"
     },
     "./info": {
+      "@var-ui/source": "./src/icons/info.tsx",
       "types": "./dist/icons/info.d.mts",
       "import": "./dist/icons/info.mjs"
     },
     "./glyphs/menu": {
+      "@var-ui/source": "./src/glyph-data/menu.ts",
       "types": "./dist/glyph-data/menu.d.mts",
       "import": "./dist/glyph-data/menu.mjs"
     },
     "./menu": {
+      "@var-ui/source": "./src/icons/menu.tsx",
       "types": "./dist/icons/menu.d.mts",
       "import": "./dist/icons/menu.mjs"
     },
     "./glyphs/moreHorizontal": {
+      "@var-ui/source": "./src/glyph-data/moreHorizontal.ts",
       "types": "./dist/glyph-data/moreHorizontal.d.mts",
       "import": "./dist/glyph-data/moreHorizontal.mjs"
     },
     "./moreHorizontal": {
+      "@var-ui/source": "./src/icons/moreHorizontal.tsx",
       "types": "./dist/icons/moreHorizontal.d.mts",
       "import": "./dist/icons/moreHorizontal.mjs"
     },
     "./glyphs/page": {
+      "@var-ui/source": "./src/glyph-data/page.ts",
       "types": "./dist/glyph-data/page.d.mts",
       "import": "./dist/glyph-data/page.mjs"
     },
     "./page": {
+      "@var-ui/source": "./src/icons/page.tsx",
       "types": "./dist/icons/page.d.mts",
       "import": "./dist/icons/page.mjs"
     },
     "./glyphs/palette": {
+      "@var-ui/source": "./src/glyph-data/palette.ts",
       "types": "./dist/glyph-data/palette.d.mts",
       "import": "./dist/glyph-data/palette.mjs"
     },
     "./palette": {
+      "@var-ui/source": "./src/icons/palette.tsx",
       "types": "./dist/icons/palette.d.mts",
       "import": "./dist/icons/palette.mjs"
     },
     "./glyphs/search": {
+      "@var-ui/source": "./src/glyph-data/search.ts",
       "types": "./dist/glyph-data/search.d.mts",
       "import": "./dist/glyph-data/search.mjs"
     },
     "./search": {
+      "@var-ui/source": "./src/icons/search.tsx",
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
     },
     "./glyphs/star": {
+      "@var-ui/source": "./src/glyph-data/star.ts",
       "types": "./dist/glyph-data/star.d.mts",
       "import": "./dist/glyph-data/star.mjs"
     },
     "./star": {
+      "@var-ui/source": "./src/icons/star.tsx",
       "types": "./dist/icons/star.d.mts",
       "import": "./dist/icons/star.mjs"
     },
     "./glyphs/stop": {
+      "@var-ui/source": "./src/glyph-data/stop.ts",
       "types": "./dist/glyph-data/stop.d.mts",
       "import": "./dist/glyph-data/stop.mjs"
     },
     "./stop": {
+      "@var-ui/source": "./src/icons/stop.tsx",
       "types": "./dist/icons/stop.d.mts",
       "import": "./dist/icons/stop.mjs"
     },
     "./glyphs/success": {
+      "@var-ui/source": "./src/glyph-data/success.ts",
       "types": "./dist/glyph-data/success.d.mts",
       "import": "./dist/glyph-data/success.mjs"
     },
     "./success": {
+      "@var-ui/source": "./src/icons/success.tsx",
       "types": "./dist/icons/success.d.mts",
       "import": "./dist/icons/success.mjs"
     },
     "./glyphs/warning": {
+      "@var-ui/source": "./src/glyph-data/warning.ts",
       "types": "./dist/glyph-data/warning.d.mts",
       "import": "./dist/glyph-data/warning.mjs"
     },
     "./warning": {
+      "@var-ui/source": "./src/icons/warning.tsx",
       "types": "./dist/icons/warning.d.mts",
       "import": "./dist/icons/warning.mjs"
     },
     "./glyphs/wrench": {
+      "@var-ui/source": "./src/glyph-data/wrench.ts",
       "types": "./dist/glyph-data/wrench.d.mts",
       "import": "./dist/glyph-data/wrench.mjs"
     },
     "./wrench": {
+      "@var-ui/source": "./src/icons/wrench.tsx",
       "types": "./dist/icons/wrench.d.mts",
       "import": "./dist/icons/wrench.mjs"
     }

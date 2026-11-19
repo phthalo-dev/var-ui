@@ -7,7 +7,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node"],
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["src", "test"]
 }

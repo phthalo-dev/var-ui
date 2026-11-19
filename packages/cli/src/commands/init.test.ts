@@ -84,7 +84,7 @@ describe('renderAgentsBlock', () => {
       'Prefer `@var-ui/react` components and `@var-ui/core` tokens. Do not invent raw `<div>` chrome or magic hex colors.',
     );
     expect(block).toContain(
-      'Install `@var-ui/react`, `@var-ui/core`, and optionally `@var-ui/icons`. Peers: `react`, `react-dom`, `react-aria-components`. Import `@var-ui/core/styles.css` once in the app. Do not add `typestyles` or `@typestyles/vite` unless extracting custom CSS.',
+      'Install `@var-ui/react`, `@var-ui/core`, and optionally `@var-ui/icons`. Peers: `react`, `react-dom`, `react-aria-components`, `react-aria` (one copy, the version `react-aria-components` uses). Import `@var-ui/core/styles.css` once in the app. Do not add `typestyles` or `@typestyles/vite` unless extracting custom CSS.',
     );
     expect(block).not.toContain('Vite plugin `@typestyles/vite`');
     expect(block).toContain(
