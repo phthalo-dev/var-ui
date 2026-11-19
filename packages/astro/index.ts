@@ -85,6 +85,13 @@ export {
   initMobileNavToggle,
   initMobileNavToggles,
 } from './src/scripts/mobileNav';
+export {
+  initLayoutPanel,
+  initLayoutPanels,
+  LAYOUT_PANEL_OPEN_CHANGE_EVENT,
+  setLayoutPanelOpen,
+  toggleLayoutPanel,
+} from './src/scripts/layoutPanel';
 export { initSideNav, initSideNavs } from './src/scripts/sideNav';
 export { initToc, initTocs } from './src/scripts/toc';
 export { createAccordionController, initAccordions } from './src/scripts/accordion';
