@@ -243,8 +243,8 @@ describe('createDesignTheme', () => {
       },
     });
 
-    expect(acme.tokens.brand.accent).toBe('var(--var-ui-brand-accent)');
-    expect(acme.tokens.brand.halo).toBe('var(--var-ui-brand-halo)');
+    expect(acme.tokens.brand.accent.var).toBe('var(--var-ui-brand-accent)');
+    expect(acme.tokens.brand.halo.var).toBe('var(--var-ui-brand-halo)');
     expect(acme.tokens.color).toBeDefined();
 
     const css = getRegisteredCss();
