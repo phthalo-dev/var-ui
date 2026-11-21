@@ -13,6 +13,7 @@ import {
   useContext,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -20,6 +21,7 @@ import {
 import { Link as AriaLink } from 'react-aria-components';
 import { iconNameList } from '@var-ui/core/icons/iconNames';
 import { sideNav, SIDE_NAV_COLLAPSED_WIDTH } from '@var-ui/core/components/sideNav';
+import { DISCLOSURE_ID_ATTRIBUTE, persistDisclosures } from '@var-ui/core/shared/disclosureState';
 import type { IconName } from '@var-ui/core';
 import { useDirection } from '../DirectionProvider';
 import { Icon } from '../icons';
@@ -31,6 +33,8 @@ import { Tooltip } from './Tooltip';
 import { ScrollArea } from './ScrollArea';
 import { mergeProps } from 'typestyles';
 import { RacLinkOrButton } from '../internal/racDomProps';
+import { useControllableState } from '../hooks/useControllableState';
+import { useMergedRef } from '../overlays/useMergedRef';
 
 export type SideNavCollapsibleConfig = {
   /** Initial collapsed state for uncontrolled usage. @default false */
@@ -69,6 +73,12 @@ export type SideNavProps = Omit<ComponentPropsWithRef<'nav'>, 'ref'> & {
   label?: string;
   /** Accessible name of the drag handle rendered by `resizable`. @default 'Resize side navigation' */
   resizeHandleLabel?: string;
+  /**
+   * Remember which collapsible sections the reader opened or closed, in `localStorage` under this
+   * key. Sections are told apart by their `id`, or else their title. The section holding the
+   * current page (`aria-current="page"`) always starts open.
+   */
+  persistKey?: string;
   /** Ref to the underlying `<nav>` element. */
   ref?: Ref<HTMLElement>;
 };
@@ -222,8 +232,12 @@ export type SideNavSectionProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & 
    * to the top of the scroll area. Needs a `title`. @default false
    */
   collapsible?: boolean;
-  /** Initial open state of a collapsible section. @default true */
+  /** Initial open state of an uncontrolled collapsible section. @default true */
   defaultOpen?: boolean;
+  /** Open state of a collapsible section (controlled). Pair with `onOpenChange`. */
+  open?: boolean;
+  /** Called when the reader opens or closes a collapsible section. */
+  onOpenChange?: (open: boolean) => void;
   /** Item count shown after the title of a collapsible section. */
   count?: number;
   /**
@@ -241,6 +255,8 @@ export function SideNavSection({
   endContent,
   collapsible = false,
   defaultOpen = true,
+  open,
+  onOpenChange,
   count,
   selectionStyle = 'fill',
   children,
@@ -251,13 +267,39 @@ export function SideNavSection({
   const selectionStyleAttr = selectionStyle === 'text' ? 'text' : undefined;
   const s = sideNav();
   const { isCollapsed } = useSideNavContext();
+  const [isOpen, setOpen] = useControllableState({
+    value: open,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
+  const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  const mergedDetailsRef = useMergedRef<HTMLDetailsElement>(
+    ref as Ref<HTMLDetailsElement>,
+    detailsRef,
+  );
+  // `<details>` toggles itself on click; keep the DOM equal to the state after every render, so a
+  // controlled parent that ignores `onOpenChange` keeps the section as it is.
+  useLayoutEffect(() => {
+    const el = detailsRef.current;
+    if (el && el.open !== isOpen) el.open = isOpen;
+  });
   if (collapsible && title != null) {
+    const sectionId = rest.id ?? (typeof title === 'string' ? title : undefined);
     return (
       <details
         {...(rest as ComponentPropsWithRef<'details'>)}
         {...mergeProps(s.section, className)}
-        ref={ref as Ref<HTMLDetailsElement>}
-        open={defaultOpen}
+        ref={mergedDetailsRef}
+        open={isOpen}
+        onToggle={(event) => {
+          rest.onToggle?.(event as never);
+          const el = event.currentTarget;
+          if (el.open === isOpen) return;
+          setOpen(el.open);
+          // Controlled: show the prop until the parent re-renders with the new value.
+          if (open !== undefined) el.open = open;
+        }}
+        {...{ [DISCLOSURE_ID_ATTRIBUTE]: sectionId }}
         data-collapsible=""
         data-selection-style={selectionStyleAttr}
       >
@@ -459,10 +501,17 @@ export function SideNav({
   style,
   label = 'Side navigation',
   resizeHandleLabel = 'Resize side navigation',
+  persistKey,
   ref,
   ...rest
 }: SideNavProps): JSX.Element {
   const s = sideNav();
+  const navRef = useRef<HTMLElement | null>(null);
+  const mergedRef = useMergedRef<HTMLElement>(ref, navRef);
+  useEffect(() => {
+    if (!persistKey || !navRef.current) return undefined;
+    return persistDisclosures(navRef.current, persistKey);
+  }, [persistKey]);
 
   const collapsibleEnabled = Boolean(collapsible);
   const collapsibleConfig = normalizeCollapsible(collapsible);
@@ -525,7 +574,7 @@ export function SideNav({
       <nav
         aria-label={label}
         {...rest}
-        ref={ref}
+        ref={mergedRef}
         data-collapsed={isCollapsed ? '' : undefined}
         data-collapsible={collapsibleEnabled ? '' : undefined}
         data-resizable={resizableEnabled ? '' : undefined}
