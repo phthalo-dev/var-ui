@@ -29,6 +29,8 @@ const DOCUMENTED_HOOKS = [
 
 /** Present today, not part of the documented contract (recipe axes, layout flags, script hooks). */
 const UNDOCUMENTED_HOOKS = [
+  // TextAreaField `autosize` without `maxRows`: no height cap (#142).
+  'data-max-rows',
   // Pressable Card (`onClick`): the root flag and the stretched title button (#143).
   'data-pressable',
   'data-card-action',
