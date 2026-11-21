@@ -29,6 +29,9 @@ const DOCUMENTED_HOOKS = [
 
 /** Present today, not part of the documented contract (recipe axes, layout flags, script hooks). */
 const UNDOCUMENTED_HOOKS = [
+  // LayoutPanel `responsive`: the CSS twin that hides the panel below its breakpoint (#190).
+  'data-responsive',
+  'data-responsive-below',
   // Pressable Card (`onClick`): the root flag and the stretched title button (#143).
   'data-pressable',
   'data-card-action',

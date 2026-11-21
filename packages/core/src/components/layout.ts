@@ -1,5 +1,5 @@
 import { atProperty, variant, type RecipeVariants } from 'typestyles';
-import { typestyles } from '../runtime';
+import { breakpoint, typestyles } from '../runtime';
 import { borderSide } from '../internal/border';
 import { designTokens as t } from '../tokens';
 import {
@@ -253,6 +253,33 @@ export const layoutContent = typestyles.recipe({
  * slot (native `<dialog>`) for responsive drawer mode. Divider borders target the content-facing
  * edge via `data-side`; negative margins collapse inner padding when seamless.
  */
+/** Breakpoints `LayoutPanel.responsive.below` accepts. */
+const responsiveBreakpoints = ['sm', 'md', 'lg'] as const;
+
+/**
+ * Attribute that marks the overlay `<dialog>` a responsive panel moves into below its breakpoint.
+ * Inside it the panel shows; inline it hides.
+ */
+export const LAYOUT_PANEL_POPUP_ATTRIBUTE = 'data-layout-panel-popup';
+
+/**
+ * CSS twin of `LayoutPanel responsive` (React and Astro), so the first paint is right without
+ * JavaScript. Below `data-responsive-below`, an inline panel hides: `hidden` mode until it has
+ * `data-open`, `overlay` mode always (it is shown in its `<dialog>` instead).
+ */
+const responsivePanelStyles = Object.fromEntries(
+  responsiveBreakpoints.map((name) => [
+    `&[data-responsive-below="${name}"]:not(:where([${LAYOUT_PANEL_POPUP_ATTRIBUTE}] *))`,
+    {
+      [breakpoint(name, 'max')]: {
+        '&[data-responsive="overlay"], &[data-responsive="hidden"]:not([data-open])': {
+          display: 'none',
+        },
+      },
+    },
+  ]),
+);
+
 export const layoutPanel = typestyles.recipe({
   name: 'layout-panel',
   layer: 'components',
@@ -304,6 +331,7 @@ export const layoutPanel = typestyles.recipe({
               paddingInlineEnd: shell.padding.inner.x.var,
             },
           },
+          ...responsivePanelStyles,
         },
         // Responsive overlay mode: the native `<dialog>` that holds the panel body, sliding in
         // from `data-side`.
