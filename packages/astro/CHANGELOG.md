@@ -1,5 +1,57 @@
 # @var-ui/astro
 
+## 0.14.0
+
+### Minor Changes
+
+- [#275](https://github.com/phthalo-dev/var-ui/pull/275) [`d166a77`](https://github.com/phthalo-dev/var-ui/commit/d166a77b6f9b6eda8b3844fdc24d04eea784c2dc) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Card` gaps from real apps:
+  
+  - **react** `onClick` makes a div card pressable. The title renders as a `<button>` whose `::after` covers the card: button semantics, focus and Enter/Space, the title as its accessible name, and no block content inside a button. Inner links and buttons stay clickable.
+  - **react, astro** Every card takes `description`, and `titleEnd` (Astro: the `title-end` slot) for a badge at the end of the title row. React link cards accept a node `title`.
+  - **core** `card` recipe: new `header`, `titleEnd`, `description` and `action` slots and the `data-pressable` root state. A div card with no children no longer renders an empty body, which added a stray gap.
+
+- [#279](https://github.com/phthalo-dev/var-ui/pull/279) [`2473fcb`](https://github.com/phthalo-dev/var-ui/commit/2473fcb9fb2dbe94cae5d2263a7a9eaa0dd0b8c6) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Named colors for identity, not status:
+  
+  - **Badge and StatusDot `color`** takes any name from the base palette: `blue`, `red`, `violet`, `teal`, `sage`, `stone` and the rest of the 40 families. It sets the hue instead of `tone`, in every appearance. `none` (the default) leaves `tone` in charge. `<Badge color="violet">Reviewer</Badge>`.
+  - **Tokens:** `color.hue.<name>` for every palette family, mode-aware: step 7 in light mode (≥ 5.5:1 on surface and subtle) and step 4 in dark mode (≥ 8:1), so each works as badge text, an outline and a fill.
+  - `color.categorical.1`–`8` lists eight of them in chart series order (blue, orange, teal, pink, grass, violet, amber, red). Chart chrome: `color.chart.axis`, `gridline` and `plot`.
+
+- [#238](https://github.com/phthalo-dev/var-ui/pull/238) [`e97729d`](https://github.com/phthalo-dev/var-ui/commit/e97729de25f8d93d88a373708ef5efabd11bc2db) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `prose` gains an opt-out, and the docs-only prose recipe moves out of core.
+  
+  - **`data-not-prose`** (`NOT_PROSE_ATTRIBUTE`): prose element styles skip the marked element and everything inside it (a live demo, an embedded widget), while the element still takes part in the vertical flow. **`proseRules()`** scopes your own element rules the same way when you extend prose.
+  - **`proseContent` is removed from `@var-ui/core`** (class `docs-prose`). It was the docs site's reading style, and it sat in the `utilities` layer, so it overrode component styles and needed `data-prose-isolate` to keep out of demos. `@var-ui/docs` now has `docsProse` (in `@var-ui/docs/styles`), which sets `prose`'s vars to the docs ramp and adds the docs extras. It lives in the `base` layer, so components inside win. `data-prose-isolate` is replaced by `data-not-prose`.
+  - `prose` no longer gives inline children of list items and blockquotes (`code`, badges) a bottom margin; only block children are spaced.
+  - `Table` sets `display: table` on its `<table>`, so it keeps its layout inside `Prose` (which makes bare tables scrollable blocks).
+
+- [#233](https://github.com/phthalo-dev/var-ui/pull/233) [`8af0092`](https://github.com/phthalo-dev/var-ui/commit/8af0092b83f602a5de6843ece7f91eea7f2c6844) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CodeBlock` and `CopyButton` share one set of copy props and events.
+  
+  - **`CodeBlock`** (React and Astro): `copyErrorLabel` is now `errorLabel`, matching `CopyButton`. `copyText` and `errorText` are removed: the copy button is icon-only, so `copyLabel` / `copiedLabel` / `errorLabel` (its accessible name in each state) are the only labels. A copy failure shows the error icon, as `CopyButton` does.
+  - **React `CodeBlock`** gains `onCopied(value)` and `onCopyError(error, value)` and is built on `useCopy`. It resets after 2 seconds like `CopyButton` (it was 1.2s). The status region now announces success as well as failure; success is screen-reader-only.
+  - **Astro**: `CodeBlock` fires the same events as `CopyButton`, renamed to `var-ui:copied` / `var-ui:copy-error` (`COPIED_EVENT` / `COPY_ERROR_EVENT`; previously `COPY_BUTTON_COPIED_EVENT` / `COPY_BUTTON_ERROR_EVENT`), and honours `data-timeout`. The hand-written markup contract uses `data-error-label` (was `data-copy-error-label`) and drops the `[data-codeblock-copy-text]` span.
+  - **`CopyButton`**'s default `errorLabel` is now `Copy failed` (was `Error`), and `useCopy` clears `error` after the timeout, as it already did for `copied`.
+
+- [#278](https://github.com/phthalo-dev/var-ui/pull/278) [`a8ce869`](https://github.com/phthalo-dev/var-ui/commit/a8ce8697018d50b36fc720432e656ea122177fa7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Astro `Tabs`: the list and panels can live in different layout regions. The controller finds a tab's panel by `aria-controls` anywhere in the document, `Tabs` takes `id` and `panels={false}` (list only), and the new `TabPanel` (`tabs`, `value`, `selected`) renders a panel anywhere. Tab and panel ids are scoped by the `Tabs` id (`<id>-tab-<value>`), fixing collisions between two tab sets with the same values on one page. Arrow keys follow the reading direction (RTL), and navs swapped in by the client router initialize.
+
+- [#258](https://github.com/phthalo-dev/var-ui/pull/258) [`c0da8e5`](https://github.com/phthalo-dev/var-ui/commit/c0da8e5bece67e75e333ac97e964f7c0f6ddc984) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Toasts fit around app chrome.
+  
+  - **core** `toast` recipe (its screen-edge axis export is now `toastPlacement`, was `placement`): `top-center` and `bottom-center` placements, and `offsetBlock` / `offsetInline` vars (`--var-ui-toast-offsetblock` / `--var-ui-toast-offsetinline`) that move the region off its edges. They use TypeStyles' `inheritOverride`, so a value set on `:root` reaches the region, for example above a bottom player bar. Also fixes the region's `max-width`, which was a single-quoted string with an uninterpolated `${…}` and so was never applied.
+  - **react** `ToastProvider` and `ToastRegion` take `offset` (a length, or `{ block, inline }`). `ToastProvider` also takes `className`, `style` and an existing `queue`, which keeps its own limit unless `maxVisibleToasts` is passed. New `createToaster(queue)` returns the imperative `toast` API bound to a queue you own, for apps that render their own `ToastRegion`.
+  - **astro** `ToastRegion` takes `offset` with the same shape. `Grid`, `Text` and `AspectRatio` use the shared `mergeInlineStyle` helper instead of their own copies, so a `style` object no longer loses to the component's own vars.
+
+- [#232](https://github.com/phthalo-dev/var-ui/pull/232) [`01f82e4`](https://github.com/phthalo-dev/var-ui/commit/01f82e41063527985fd1eedb327de667c64a909b) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Button` and `IconButton` take `size="xs"`, a 20px button for dense rows, tags and code-block headers. An invisible layer grows its pointer target to 24px (WCAG 2.2 target size) without changing layout. New `size.icon.xs` token (12px) and `Icon size="xs"`. `xs` is button-only: text inputs and selects keep the `sm`–`lg` control scale.
+
+### Patch Changes
+
+- [#273](https://github.com/phthalo-dev/var-ui/pull/273) [`70443fb`](https://github.com/phthalo-dev/var-ui/commit/70443fbaa5f1bebdee7c73f9062444f70d1092e7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `codeBlockMarkup({ code, language, filename, copyable, … })` in core: the structure of a code block (header, language label, copy button, body, `pre`, `code`) as plain attribute maps. The React and Astro `CodeBlock`s and the docs Shiki transformer all render from it, so they can't drift. They had: markdown fences put the language in the filename slot, showed a visible "Copy" label, and used `data-copy-error-label`, which the copy script never read. The root also carries `data-language`.
+  
+  **Fix (react):** a `CodeBlock` without highlighted HTML double-escaped its code, so `<div>` showed as `&lt;div&gt;`.
+
+- [#277](https://github.com/phthalo-dev/var-ui/pull/277) [`5aded0c`](https://github.com/phthalo-dev/var-ui/commit/5aded0cbdc139372b4cc6e0760c41f3e4b4c3ca6) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - CommandPalette closes when a result is clicked, not only on Enter. With view transitions the palette can live in a persisted element (as on the docs site), so navigating left it open. Modifier clicks (open in a new tab) keep it open.
+
+- [#260](https://github.com/phthalo-dev/var-ui/pull/260) [`0a7c3b0`](https://github.com/phthalo-dev/var-ui/commit/0a7c3b07a997a2d8298c6cb03149c045c01dec60) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Grid`'s responsive `columns` map (`{ base: 2, md: 3 }`) works with extracted CSS and SSR. In Astro it silently stayed one column, because the old `gridColumnsStyle()` built a runtime-hashed class that never reached the build-time stylesheet. The `grid` recipe's `fixed` variant is now static CSS that reads per-breakpoint track vars (`columns.base` … `columns.xl` recipe vars with TypeStyles' `inheritOverride`, so an unset breakpoint stays unset). Each breakpoint falls back to the nearest smaller one that is set, and before the first set one to the `auto` template. The components set those variables inline.
+  
+  **Breaking (core):** `gridColumnsStyle` is replaced by `gridColumnsVars(counts)`, which returns the inline vars to pair with `grid({ columns: 'fixed' })`.
+
 ## 0.13.0
 
 ### Minor Changes

@@ -1,5 +1,78 @@
 # @var-ui/core
 
+## 0.14.0
+
+### Minor Changes
+
+- [#275](https://github.com/phthalo-dev/var-ui/pull/275) [`d166a77`](https://github.com/phthalo-dev/var-ui/commit/d166a77b6f9b6eda8b3844fdc24d04eea784c2dc) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Card` gaps from real apps:
+  
+  - **react** `onClick` makes a div card pressable. The title renders as a `<button>` whose `::after` covers the card: button semantics, focus and Enter/Space, the title as its accessible name, and no block content inside a button. Inner links and buttons stay clickable.
+  - **react, astro** Every card takes `description`, and `titleEnd` (Astro: the `title-end` slot) for a badge at the end of the title row. React link cards accept a node `title`.
+  - **core** `card` recipe: new `header`, `titleEnd`, `description` and `action` slots and the `data-pressable` root state. A div card with no children no longer renders an empty body, which added a stray gap.
+
+- [#279](https://github.com/phthalo-dev/var-ui/pull/279) [`2473fcb`](https://github.com/phthalo-dev/var-ui/commit/2473fcb9fb2dbe94cae5d2263a7a9eaa0dd0b8c6) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Named colors for identity, not status:
+  
+  - **Badge and StatusDot `color`** takes any name from the base palette: `blue`, `red`, `violet`, `teal`, `sage`, `stone` and the rest of the 40 families. It sets the hue instead of `tone`, in every appearance. `none` (the default) leaves `tone` in charge. `<Badge color="violet">Reviewer</Badge>`.
+  - **Tokens:** `color.hue.<name>` for every palette family, mode-aware: step 7 in light mode (≥ 5.5:1 on surface and subtle) and step 4 in dark mode (≥ 8:1), so each works as badge text, an outline and a fill.
+  - `color.categorical.1`–`8` lists eight of them in chart series order (blue, orange, teal, pink, grass, violet, amber, red). Chart chrome: `color.chart.axis`, `gridline` and `plot`.
+
+- [#273](https://github.com/phthalo-dev/var-ui/pull/273) [`70443fb`](https://github.com/phthalo-dev/var-ui/commit/70443fbaa5f1bebdee7c73f9062444f70d1092e7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `codeBlockMarkup({ code, language, filename, copyable, … })` in core: the structure of a code block (header, language label, copy button, body, `pre`, `code`) as plain attribute maps. The React and Astro `CodeBlock`s and the docs Shiki transformer all render from it, so they can't drift. They had: markdown fences put the language in the filename slot, showed a visible "Copy" label, and used `data-copy-error-label`, which the copy script never read. The root also carries `data-language`.
+  
+  **Fix (react):** a `CodeBlock` without highlighted HTML double-escaped its code, so `<div>` showed as `&lt;div&gt;`.
+
+- [#238](https://github.com/phthalo-dev/var-ui/pull/238) [`e97729d`](https://github.com/phthalo-dev/var-ui/commit/e97729de25f8d93d88a373708ef5efabd11bc2db) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `prose` gains an opt-out, and the docs-only prose recipe moves out of core.
+  
+  - **`data-not-prose`** (`NOT_PROSE_ATTRIBUTE`): prose element styles skip the marked element and everything inside it (a live demo, an embedded widget), while the element still takes part in the vertical flow. **`proseRules()`** scopes your own element rules the same way when you extend prose.
+  - **`proseContent` is removed from `@var-ui/core`** (class `docs-prose`). It was the docs site's reading style, and it sat in the `utilities` layer, so it overrode component styles and needed `data-prose-isolate` to keep out of demos. `@var-ui/docs` now has `docsProse` (in `@var-ui/docs/styles`), which sets `prose`'s vars to the docs ramp and adds the docs extras. It lives in the `base` layer, so components inside win. `data-prose-isolate` is replaced by `data-not-prose`.
+  - `prose` no longer gives inline children of list items and blockquotes (`code`, badges) a bottom margin; only block children are spaced.
+  - `Table` sets `display: table` on its `<table>`, so it keeps its layout inside `Prose` (which makes bare tables scrollable blocks).
+
+- [#260](https://github.com/phthalo-dev/var-ui/pull/260) [`0a7c3b0`](https://github.com/phthalo-dev/var-ui/commit/0a7c3b07a997a2d8298c6cb03149c045c01dec60) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Grid`'s responsive `columns` map (`{ base: 2, md: 3 }`) works with extracted CSS and SSR. In Astro it silently stayed one column, because the old `gridColumnsStyle()` built a runtime-hashed class that never reached the build-time stylesheet. The `grid` recipe's `fixed` variant is now static CSS that reads per-breakpoint track vars (`columns.base` … `columns.xl` recipe vars with TypeStyles' `inheritOverride`, so an unset breakpoint stays unset). Each breakpoint falls back to the nearest smaller one that is set, and before the first set one to the `auto` template. The components set those variables inline.
+  
+  **Breaking (core):** `gridColumnsStyle` is replaced by `gridColumnsVars(counts)`, which returns the inline vars to pair with `grid({ columns: 'fixed' })`.
+
+- [#255](https://github.com/phthalo-dev/var-ui/pull/255) [`704d04c`](https://github.com/phthalo-dev/var-ui/commit/704d04c7459a1d7b03a99ca1481fb70261e71e82) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `IconButton size="xl"` carries a matching 24px glyph. New `size.icon.xl` token (1.5rem) and `Icon size="xl"`; `IconButton` no longer maps `xl` to the `lg` glyph. With `pill` it is a circle, for primary play-style actions: `<IconButton size="xl" pill tone="accent" appearance="solid" icon={…} aria-label="Play" />`.
+
+- [#233](https://github.com/phthalo-dev/var-ui/pull/233) [`8af0092`](https://github.com/phthalo-dev/var-ui/commit/8af0092b83f602a5de6843ece7f91eea7f2c6844) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CodeBlock` and `CopyButton` share one set of copy props and events.
+  
+  - **`CodeBlock`** (React and Astro): `copyErrorLabel` is now `errorLabel`, matching `CopyButton`. `copyText` and `errorText` are removed: the copy button is icon-only, so `copyLabel` / `copiedLabel` / `errorLabel` (its accessible name in each state) are the only labels. A copy failure shows the error icon, as `CopyButton` does.
+  - **React `CodeBlock`** gains `onCopied(value)` and `onCopyError(error, value)` and is built on `useCopy`. It resets after 2 seconds like `CopyButton` (it was 1.2s). The status region now announces success as well as failure; success is screen-reader-only.
+  - **Astro**: `CodeBlock` fires the same events as `CopyButton`, renamed to `var-ui:copied` / `var-ui:copy-error` (`COPIED_EVENT` / `COPY_ERROR_EVENT`; previously `COPY_BUTTON_COPIED_EVENT` / `COPY_BUTTON_ERROR_EVENT`), and honours `data-timeout`. The hand-written markup contract uses `data-error-label` (was `data-copy-error-label`) and drops the `[data-codeblock-copy-text]` span.
+  - **`CopyButton`**'s default `errorLabel` is now `Copy failed` (was `Error`), and `useCopy` clears `error` after the timeout, as it already did for `copied`.
+
+- [#272](https://github.com/phthalo-dev/var-ui/pull/272) [`0ef2a05`](https://github.com/phthalo-dev/var-ui/commit/0ef2a059a916e900445b7ce353b6a821dee44c5c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New reading type tokens: `fontSize.prose.{body, lead, h1, h2, h3}` (16 / 19 / 44 / 28 / 20px) and the paired fixed line heights `lineHeight.prose.*` (26 / 28 / 48 / 34 / 28px), so themes can tune long-form type apart from the 14px control scale. The docs kit (`docsProse`, the page header lead) uses them instead of hard-coded rems. `Prose` itself stays relative to its inherited font size.
+
+- [#238](https://github.com/phthalo-dev/var-ui/pull/238) [`e97729d`](https://github.com/phthalo-dev/var-ui/commit/e97729de25f8d93d88a373708ef5efabd11bc2db) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Element base styles no longer format content ([#170](https://github.com/phthalo-dev/var-ui/issues/170)).
+  
+  - **core** The `base` layer keeps document defaults only: body text and background, font roles (display headings, mono code), semibold `strong`, link colour and the focus ring. Heading sizes and margins, paragraph and list spacing, `pre` chrome, blockquote, `hr`, and table borders, `th` fills and cell padding were applied to every bare element on the page. They now come from `prose` / `<Prose>`, scoped to its container. Components that render a `<table>`, a heading or a list (Table, Calendar, SideNav, the docs header) no longer inherit formatting they had to undo. **Wrap rendered markdown or rich text in `Prose`** (or add the `var-ui-prose` class) to keep it formatted. `prose` gains `caption` styles.
+  - **core** Anchored popups use `self-` logical `position-area` keywords, so `start` / `end` alignment follows the popup's own direction. Under a subtree `dir="rtl"` (a `DirectionProvider`), popups narrower than their trigger aligned to the physical left edge. The leaked table cell padding had hidden this by making the date picker as wide as its field.
+
+- [#259](https://github.com/phthalo-dev/var-ui/pull/259) [`40345ee`](https://github.com/phthalo-dev/var-ui/commit/40345ee4c0a4408e4e8a384755a14701ace76950) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `color.text.tertiary` token: quiet but enabled text, a step below `text.secondary` and not `disabled`. It is `secondary` mixed 85% toward `background.surface`, so it stays opaque and follows a theme's `secondary`. The defaults meet WCAG AA (4.5:1) on `background.surface` and `background.subtle` in both modes. `segmentedControl` (unselected segments) and `commandPalette` (result subtitles) use it instead of hand-rolled `color-mix(… transparent)` values.
+
+- [#258](https://github.com/phthalo-dev/var-ui/pull/258) [`c0da8e5`](https://github.com/phthalo-dev/var-ui/commit/c0da8e5bece67e75e333ac97e964f7c0f6ddc984) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Toasts fit around app chrome.
+  
+  - **core** `toast` recipe (its screen-edge axis export is now `toastPlacement`, was `placement`): `top-center` and `bottom-center` placements, and `offsetBlock` / `offsetInline` vars (`--var-ui-toast-offsetblock` / `--var-ui-toast-offsetinline`) that move the region off its edges. They use TypeStyles' `inheritOverride`, so a value set on `:root` reaches the region, for example above a bottom player bar. Also fixes the region's `max-width`, which was a single-quoted string with an uninterpolated `${…}` and so was never applied.
+  - **react** `ToastProvider` and `ToastRegion` take `offset` (a length, or `{ block, inline }`). `ToastProvider` also takes `className`, `style` and an existing `queue`, which keeps its own limit unless `maxVisibleToasts` is passed. New `createToaster(queue)` returns the imperative `toast` API bound to a queue you own, for apps that render their own `ToastRegion`.
+  - **astro** `ToastRegion` takes `offset` with the same shape. `Grid`, `Text` and `AspectRatio` use the shared `mergeInlineStyle` helper instead of their own copies, so a `style` object no longer loses to the component's own vars.
+
+- [#232](https://github.com/phthalo-dev/var-ui/pull/232) [`01f82e4`](https://github.com/phthalo-dev/var-ui/commit/01f82e41063527985fd1eedb327de667c64a909b) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `Button` and `IconButton` take `size="xs"`, a 20px button for dense rows, tags and code-block headers. An invisible layer grows its pointer target to 24px (WCAG 2.2 target size) without changing layout. New `size.icon.xs` token (12px) and `Icon size="xs"`. `xs` is button-only: text inputs and selects keep the `sm`–`lg` control scale.
+
+### Patch Changes
+
+- [#251](https://github.com/phthalo-dev/var-ui/pull/251) [`6485ed4`](https://github.com/phthalo-dev/var-ui/commit/6485ed4d59da3f00cc6ddcacac7dd4a89a87b76d) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - The TypeStyles instance registers its breakpoints as explicit `(min-width: …)` conditions built from the `breakpoint` tokens, so TypeStyles no longer warns about bare breakpoint values on startup. The `breakpoint` tokens keep their bare widths, and the emitted CSS is unchanged.
+
+- [#280](https://github.com/phthalo-dev/var-ui/pull/280) [`9ff3bb9`](https://github.com/phthalo-dev/var-ui/commit/9ff3bb93f488013caf046a634ed4edb3b0c4e7b0) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Scroll-driven edge fades (`scrollFade`, code blocks, the TopNav start zone) fade the correct edges in right-to-left layouts. The mask gradient was physical (`to right`), so in RTL the "more content" fade showed on the wrong side.
+
+- [#252](https://github.com/phthalo-dev/var-ui/pull/252) [`0162ef4`](https://github.com/phthalo-dev/var-ui/commit/0162ef40c50f2623d32768fac8f0735ae0bfad07) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Importing `@var-ui/core` is silent again. The `prose` recipe's `lineHeight` var has a literal `initial`, so TypeStyles registers its `@property` and no longer prints "Skipping @property for --var-ui-prose-lineheight".
+
+- [#285](https://github.com/phthalo-dev/var-ui/pull/285) [`8def41e`](https://github.com/phthalo-dev/var-ui/commit/8def41ed2a43501b63023e976a69b4d7ae2d7ade) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - A scoped theme surface (`DesignSystemProvider` without `applyToDocument`) sets its own text defaults (font family, size, line height, colour) from its tokens. Since TypeStyles stopped emitting theme tokens on `:root`, `body` resolved them to their `@property` initial values, so scoped content inherited 0px text, 0 line height and transparent colour.
+
+- [#284](https://github.com/phthalo-dev/var-ui/pull/284) [`d6877b5`](https://github.com/phthalo-dev/var-ui/commit/d6877b5d48c87afb2112a032b302944637360cd2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - ToggleButton: a selected button keeps its accent fill on hover. The base hover set `background-color` directly, which beat the selected hover var and paired a light fill with the light selected label.
+
+- [#246](https://github.com/phthalo-dev/var-ui/pull/246) [`0b8a2f7`](https://github.com/phthalo-dev/var-ui/commit/0b8a2f7c54c4564aaa67d979824b339528fe15e2) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Depend on TypeStyles 0.36. Theme presets no longer register their tokens on `:root`, so the dev server and extraction stop logging a "Skipped a rule: dedupe key" warning for each token group in every preset ([#208](https://github.com/phthalo-dev/var-ui/issues/208)). Design tokens now only come from the theme surface: the `theme-var-ui-default` class, which `DesignSystemProvider` applies. The README always said this was required, but 0.35 also put the default theme's values on `:root`, so pages without the class happened to work.
+
+- [#286](https://github.com/phthalo-dev/var-ui/pull/286) [`1c0f480`](https://github.com/phthalo-dev/var-ui/commit/1c0f48081edbebff5f50441d7fb1466586e37fdd) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Upgrade to typestyles 0.37. Drop the local workarounds typestyles now covers natively: the exclusive `breakpoint`/`media` wrapper, the token-ref stringify types, and the `surface.tokens` fallback in `createTheme`.
+
 ## 0.13.0
 
 ### Minor Changes
