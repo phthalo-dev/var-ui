@@ -42,13 +42,13 @@ export const docsProse = typestyles.recipe({
     base: {
       // Long-form reading size: 16/26, independent of the 14px control scale.
       fontFamily: t.fontFamily.body.var,
-      fontSize: '1rem',
+      fontSize: t.fontSize.prose.body.var,
       color: t.color.text.primary.var,
-      [pv.lineHeight.name]: '1.625rem',
+      [pv.lineHeight.name]: t.lineHeight.prose.body.var,
       [pv.flow.name]: t.space.md.var,
-      [pv.h1Size.name]: '2.75rem',
-      [pv.h2Size.name]: '1.75rem',
-      [pv.h3Size.name]: '1.25rem',
+      [pv.h1Size.name]: t.fontSize.prose.h1.var,
+      [pv.h2Size.name]: t.fontSize.prose.h2.var,
+      [pv.h3Size.name]: t.fontSize.prose.h3.var,
       [pv.borderColor.name]: t.color.border.default.var,
       [pv.codeBackground.name]: `color-mix(in srgb, ${t.color.text.primary.var} 6%, transparent)`,
       [belowMd]: {
@@ -69,8 +69,8 @@ export const docsProse = typestyles.recipe({
         },
         // The paragraph right after the page title is the lead: larger and muted.
         '& > h1 + p': {
-          fontSize: '1.1875rem',
-          lineHeight: '1.75rem',
+          fontSize: t.fontSize.prose.lead.var,
+          lineHeight: t.lineHeight.prose.lead.var,
           color: t.color.text.secondary.var,
           marginBottom: t.space.lg.var,
           [belowMd]: {
@@ -82,7 +82,7 @@ export const docsProse = typestyles.recipe({
         '& h2': {
           fontWeight: 650,
           letterSpacing: '-0.015em',
-          lineHeight: '2.125rem',
+          lineHeight: t.lineHeight.prose.h2.var,
           marginTop: '3.5rem',
           marginBottom: t.space.md.var,
           [belowMd]: {
@@ -92,7 +92,7 @@ export const docsProse = typestyles.recipe({
         },
         '& h3': {
           letterSpacing: '-0.01em',
-          lineHeight: '1.75rem',
+          lineHeight: t.lineHeight.prose.h3.var,
           marginTop: t.space.xl.var,
           marginBottom: t.space.xs.var,
         },

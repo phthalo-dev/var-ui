@@ -6,10 +6,20 @@ import '../../../core/src/theme/base-styles';
 import '../../../core/src/theme/register-default';
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { IconProvider } from '../icons';
-import { animating, finishAll, freezeAt, holdMotion, raf, settled } from '../test/browser';
-import { toast } from '../toast/imperativeToast';
+import {
+  animating,
+  finishAll,
+  freezeAt,
+  holdMotion,
+  raf,
+  settled,
+  viewport,
+} from '../test/browser';
+import { createToaster, toast } from '../toast/imperativeToast';
 import { Dialog } from './Dialog';
 import { ToastProvider, ToastQueue, ToastRegion } from './Toast';
+import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import { recipeVars } from '@var-ui/core/components/styleVars';
 
 beforeAll(() => {
   const fast = document.createElement('style');
@@ -126,6 +136,103 @@ describe('Toast region (native popover)', () => {
     });
     await raf();
     expect(region()!.getBoundingClientRect().left).toBeLessThan(window.innerWidth / 2);
+  });
+});
+
+describe('Toast placement and offset (#242)', () => {
+  test('bottom-center centers the region horizontally', async () => {
+    render(<Shell placement="bottom-center">{null}</Shell>);
+    act(() => {
+      toast.show({ title: 'Centered', durationMs: 0 });
+    });
+    await raf();
+    // Measured against the usable viewport: Linux CI reserves a classic scrollbar gutter.
+    const r = region()!.getBoundingClientRect();
+    const v = viewport();
+    expect(Math.abs(r.left + r.width / 2 - (v.left + v.right) / 2)).toBeLessThanOrEqual(1);
+    expect(Math.round(v.bottom - r.bottom)).toBe(0);
+  });
+
+  test('offset moves the region off its edges; className and style reach it', async () => {
+    render(
+      <Shell placement="bottom-end" offset={{ block: 64, inline: '1rem' }} className="mine">
+        {null}
+      </Shell>,
+    );
+    act(() => {
+      toast.show({ title: 'Above the bar', durationMs: 0 });
+    });
+    await raf();
+    const r = region()!.getBoundingClientRect();
+    const v = viewport();
+    expect(Math.round(v.bottom - r.bottom)).toBe(64);
+    expect(Math.round(v.right - r.right)).toBe(16);
+    expect(region()!.classList.contains('mine')).toBe(true);
+  });
+
+  test('the offset custom property works from plain CSS on :root (it inherits)', async () => {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty(recipeVars(toastRecipe).offsetBlock.name, '40px');
+    try {
+      const queue = new ToastQueue();
+      render(
+        <DesignSystemProvider applyToDocument>
+          <IconProvider icons={{}}>
+            <ToastRegion queue={queue} />
+          </IconProvider>
+        </DesignSystemProvider>,
+      );
+      act(() => {
+        queue.add({ title: 'CSS' });
+      });
+      await raf();
+      expect(Math.round(viewport().bottom - region()!.getBoundingClientRect().bottom)).toBe(40);
+    } finally {
+      rootStyle.removeProperty(recipeVars(toastRecipe).offsetBlock.name);
+    }
+  });
+
+  test('ToastProvider keeps the limit of an app-owned queue unless maxVisibleToasts is passed', async () => {
+    const queue = new ToastQueue({ maxVisibleToasts: 5 });
+    render(<Shell queue={queue}>{null}</Shell>);
+    act(() => {
+      for (let i = 0; i < 6; i++) queue.add({ title: `T${i}` });
+    });
+    await raf();
+    expect(queue.visibleToasts).toHaveLength(5);
+    act(() => queue.clear());
+  });
+
+  test('createToaster targets an app-owned queue and region', async () => {
+    const queue = new ToastQueue();
+    const notify = createToaster(queue);
+    render(
+      <DesignSystemProvider applyToDocument>
+        <IconProvider icons={{}}>
+          <ToastRegion queue={queue} />
+        </IconProvider>
+      </DesignSystemProvider>,
+    );
+    let id = '';
+    act(() => {
+      id = notify({ title: 'Added to favorites', durationMs: 0 });
+    });
+    await raf();
+    expect(text('Added to favorites')).toBeTruthy();
+    act(() => notify.dismiss(id));
+    await expect.poll(region).toBeNull();
+  });
+
+  test('ToastProvider takes an existing queue, and toast() reaches it', async () => {
+    const queue = new ToastQueue();
+    render(<Shell queue={queue}>{null}</Shell>);
+    act(() => {
+      toast.show({ title: 'Shared', durationMs: 0 });
+    });
+    await raf();
+    expect(queue.visibleToasts.map((t) => t.content.title)).toEqual(['Shared']);
+    act(() => queue.clear());
+    await expect.poll(region).toBeNull();
   });
 });
 

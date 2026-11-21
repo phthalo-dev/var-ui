@@ -27,7 +27,7 @@ export default function Preview() {
           minWidth: '13.75rem',
           border: '0.0625rem solid var(--var-ui-color-border-subtle)',
           borderRadius: '0.5rem',
-          background: 'var(--var-ui-color-surface-raised)',
+          background: 'var(--var-ui-color-background-elevated)',
         }}
       >
         Project card — right-click for actions

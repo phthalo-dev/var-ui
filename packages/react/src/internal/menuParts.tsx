@@ -1,7 +1,11 @@
 import {
   createContext,
+  useCallback,
   useContext,
+  useEffect,
+  useId,
   useMemo,
+  useRef,
   useState,
   type ComponentPropsWithRef,
   type JSX,
@@ -13,8 +17,12 @@ import {
   Menu as AriaMenu,
   MenuItem as AriaMenuItem,
   type MenuItemProps as AriaMenuItemProps,
+  MenuContext as AriaMenuContext,
   MenuSection as AriaMenuSection,
-  MenuTrigger as AriaMenuTrigger,
+  OverlayTriggerStateContext,
+  PopoverContext,
+  Provider,
+  RootMenuTriggerStateContext,
   Separator,
   SubmenuTrigger as AriaSubmenuTrigger,
   type Key,
@@ -124,12 +132,17 @@ type MenuSelection = {
 
 type MenuContextValue = {
   root: OverlayRoot;
+  /** Opens the menu with focus on its first or last item (keyboard), or on the menu itself. */
+  openWith: (strategy: FocusStrategy | null) => void;
+  close: () => void;
+  /** Labels the menu (`aria-labelledby`). */
+  triggerId: string;
   /** Set when the root has `value` / `defaultValue`: the menu is a single-choice menu. */
   selection: MenuSelection | null;
 };
 
 /** Whether items of the nearest menu list render the radio check (false inside submenus). */
-const MenuCheckContext = createContext(false);
+export const MenuCheckContext = createContext(false);
 
 const { Context: MenuContext, use: useMenuContext } =
   createOverlayContext<MenuContextValue>('Menu');
@@ -155,19 +168,127 @@ function MenuRoot({
     () => (selectable ? { value: checked, setValue: setChecked } : null),
     [selectable, checked, setChecked],
   );
-  const context = useMemo<MenuContextValue>(() => ({ root, selection }), [root, selection]);
+  const state = useRootMenuState(root);
+  const triggerId = useId();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { open: openWithStrategy, close } = state;
+  const context = useMemo<MenuContextValue>(
+    () => ({ root, selection, openWith: openWithStrategy, close, triggerId }),
+    [root, selection, openWithStrategy, close, triggerId],
+  );
 
+  // What react-aria's `MenuTrigger` provides, without its `PressResponder`: our popup is not a RAC
+  // `Popover` (which would clear that responder), so nothing above the items may register presses.
+  // The trigger's press and keyboard handling is our own (`MenuTrigger` below).
   return (
     <MenuContext.Provider value={context}>
-      <AriaMenuTrigger isOpen={root.open} onOpenChange={root.onStateChange}>
+      <Provider
+        values={[
+          [
+            AriaMenuContext,
+            {
+              'aria-labelledby': triggerId,
+              autoFocus: state.focusStrategy ?? true,
+              onClose: state.close,
+              ref: scrollRef,
+            },
+          ],
+          [OverlayTriggerStateContext, state],
+          [RootMenuTriggerStateContext, state],
+          [
+            PopoverContext,
+            {
+              trigger: 'MenuTrigger',
+              triggerRef: root.triggerRef,
+              scrollRef,
+              placement: 'bottom start',
+              'aria-labelledby': triggerId,
+            },
+          ],
+        ]}
+      >
         {children}
-      </AriaMenuTrigger>
+      </Provider>
     </MenuContext.Provider>
   );
 }
 
-function MenuTrigger(props: MenuTriggerProps): JSX.Element {
-  return <OverlayTrigger {...props} root={useMenuContext().root} />;
+type FocusStrategy = 'first' | 'last';
+type RootMenuState = NonNullable<React.ContextType<typeof RootMenuTriggerStateContext>>;
+
+/**
+ * react-stately's root menu trigger state over our overlay root: open state, the focus strategy
+ * the menu opens with, and the stack of open submenus (`SubmenuTrigger` reads it).
+ */
+function useRootMenuState(root: OverlayRoot): RootMenuState {
+  const [focusStrategy, setFocusStrategy] = useState<FocusStrategy | null>(null);
+  const [expandedKeysStack, setExpandedKeysStack] = useState<Key[]>([]);
+  const { open: isOpen, onStateChange } = root;
+  useEffect(() => {
+    if (!isOpen) setExpandedKeysStack([]);
+  }, [isOpen]);
+  const open = useCallback(
+    (strategy: FocusStrategy | null = null) => {
+      setFocusStrategy(strategy);
+      onStateChange(true);
+    },
+    [onStateChange],
+  );
+  const close = useCallback(() => {
+    setExpandedKeysStack([]);
+    onStateChange(false);
+  }, [onStateChange]);
+  return useMemo<RootMenuState>(
+    () => ({
+      isOpen,
+      focusStrategy,
+      setOpen: (next: boolean) => (next ? open() : close()),
+      open,
+      close,
+      toggle: (strategy: FocusStrategy | null = null) => (isOpen ? close() : open(strategy)),
+      expandedKeysStack,
+      openSubmenu: (triggerKey: Key, level: number) =>
+        setExpandedKeysStack((stack) =>
+          level > stack.length ? stack : [...stack.slice(0, level), triggerKey],
+        ),
+      closeSubmenu: (triggerKey: Key, level: number) =>
+        setExpandedKeysStack((stack) =>
+          stack[level] === triggerKey ? stack.slice(0, level) : stack,
+        ),
+    }),
+    [isOpen, focusStrategy, open, close, expandedKeysStack],
+  );
+}
+
+/** Keys that open a closed menu from its trigger, and where focus lands. */
+const OPEN_KEYS: Record<string, FocusStrategy> = {
+  ArrowDown: 'first',
+  Enter: 'first',
+  ' ': 'first',
+  ArrowUp: 'last',
+};
+
+function MenuTrigger({ onKeyDown, ...props }: MenuTriggerProps): JSX.Element {
+  const { root, openWith, close, triggerId } = useMenuContext();
+  return (
+    <OverlayTrigger
+      id={triggerId}
+      aria-haspopup="menu"
+      aria-expanded={root.open}
+      {...props}
+      root={root}
+      mode="none"
+      // A pointer opens the menu with focus on the menu itself; keys open it on a first/last item.
+      onClick={() => (root.open ? close() : openWith(null))}
+      onKeyDown={(event: KeyboardEvent<HTMLElement>) => {
+        onKeyDown?.(event as never);
+        const strategy = OPEN_KEYS[event.key];
+        if (!strategy || event.defaultPrevented || root.open) return;
+        event.preventDefault();
+        openWith(strategy);
+      }}
+    />
+  );
 }
 
 /**

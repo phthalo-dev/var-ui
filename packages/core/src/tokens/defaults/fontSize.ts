@@ -33,4 +33,12 @@ export const fontSize = {
     md: 'clamp(2.25rem, 1.5rem + 2.6vw, 3.5rem)',
     lg: 'clamp(2.75rem, 1.6rem + 4.4vw, 4.75rem)',
   },
+  /** Reading type: a 16px body, a 19px lead and a 44 / 28 / 20 heading ramp. */
+  prose: {
+    body: '1rem',
+    lead: '1.1875rem',
+    h1: '2.75rem',
+    h2: '1.75rem',
+    h3: '1.25rem',
+  },
 } satisfies DesignTokens['fontSize'];

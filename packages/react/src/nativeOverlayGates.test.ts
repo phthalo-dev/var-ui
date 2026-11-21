@@ -135,11 +135,11 @@ describe('native overlay gates (packages/react/src)', () => {
     expect(hits, 'use Dialog/Popover/Tooltip/... from var-ui, or NativePopover').toEqual([]);
   });
 
-  it('the adapter imports only DialogTrigger from the banned overlay components', () => {
+  it('the adapter imports none of the banned overlay components', () => {
     const adapter = reactFiles.find((f) => f.rel === ADAPTER);
     expect(adapter, ADAPTER).toBeDefined();
     const banned = racNames(adapter!.text).filter((name) => BANNED_RAC_IMPORTS.includes(name));
-    expect(banned).toEqual(['DialogTrigger']);
+    expect(banned).toEqual([]);
     expect(racOpaqueImports(adapter!.text)).toEqual([]);
   });
 
