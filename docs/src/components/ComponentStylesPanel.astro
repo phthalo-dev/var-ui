@@ -1,5 +1,5 @@
 ---
-import { proseContent } from '@var-ui/core';
+import { docsProseTableWrap } from '@var-ui/docs/styles';
 import { mergeProps } from '../lib/mergeProps';
 import StylingHooks from './StylingHooks.astro';
 import { getHtmlApiDoc } from '../lib/html-api-docs';
@@ -11,7 +11,7 @@ type Props = {
 
 const { slug } = Astro.props;
 const htmlDoc = getHtmlApiDoc(slug);
-const tableWrap = mergeProps(proseContent().tableWrap);
+const tableWrap = mergeProps(docsProseTableWrap());
 ---
 
 <div class="component-styles-panel">

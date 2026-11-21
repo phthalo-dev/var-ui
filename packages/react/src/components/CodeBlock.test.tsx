@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Card } from './Card';
 import { CodeBlock } from './CodeBlock';
 import { CopyButton } from './CopyButton';
@@ -76,5 +77,56 @@ describe('CodeBlock', () => {
     const { container } = render(<CodeBlock code="const x = 1" variant="inline" />);
     const code = container.querySelector('code[data-codeblock]')!;
     expect(code.className).toContain('var-ui-code-block');
+  });
+
+  describe('copy (same props as CopyButton)', () => {
+    const stub = (writeText: () => Promise<void>) =>
+      vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(writeText) } });
+
+    it('names the button copyLabel, then copiedLabel, announced in the status region', async () => {
+      stub(() => Promise.resolve());
+      const onCopied = vi.fn();
+      render(<CodeBlock code="npm i" copiedLabel="Copied!" onCopied={onCopied} />);
+      await userEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+      expect(onCopied).toHaveBeenCalledWith('npm i');
+      expect(screen.getByRole('button', { name: 'Copied!' })).toBeTruthy();
+      expect(screen.getByRole('status').textContent).toBe('Copied!');
+      expect(screen.getByRole('status').getAttribute('data-tone')).toBe('success');
+      vi.unstubAllGlobals();
+    });
+
+    it('uses errorLabel and calls onCopyError when the write fails', async () => {
+      const denied = new Error('denied');
+      stub(() => Promise.reject(denied));
+      const onCopyError = vi.fn();
+      render(<CodeBlock code="npm i" errorLabel="Nope" onCopyError={onCopyError} />);
+      await userEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+      expect(onCopyError).toHaveBeenCalledWith(denied, 'npm i');
+      const button = screen.getByRole('button', { name: 'Nope' });
+      expect(button.hasAttribute('data-error')).toBe(true);
+      expect(screen.getByRole('status').textContent).toBe('Nope');
+      expect(screen.getByRole('status').getAttribute('data-tone')).toBe('error');
+      vi.unstubAllGlobals();
+    });
+
+    it('returns to idle after the timeout', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      stub(() => Promise.resolve());
+      render(<CodeBlock code="npm i" />);
+      await userEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+      expect(screen.getByRole('button', { name: 'Copied' })).toBeTruthy();
+      await act(() => vi.advanceTimersByTimeAsync(2000));
+      expect(screen.getByRole('button', { name: 'Copy code' })).toBeTruthy();
+      expect(screen.getByRole('status').textContent).toBe('');
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    });
+  });
+});
+
+describe('CodeBlock plain text', () => {
+  it('shows markup characters as typed, not double-escaped', () => {
+    const { container } = render(<CodeBlock code={'<div class="a">&</div>'} copyable={false} />);
+    expect(container.querySelector('code')!.textContent).toBe('<div class="a">&</div>');
   });
 });

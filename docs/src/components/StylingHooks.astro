@@ -1,5 +1,5 @@
 ---
-import { proseContent } from '@var-ui/core';
+import { docsProseTableWrap } from '@var-ui/docs/styles';
 import HighlightedCodeBlock from './HighlightedCodeBlock.astro';
 import { loadStylingHooks } from '../lib/load-styling-hooks';
 import { mergeProps } from '../lib/mergeProps';
@@ -11,7 +11,7 @@ type Props = {
 
 const { slug } = Astro.props;
 const doc = loadStylingHooks(slug);
-const tableWrap = mergeProps(proseContent().tableWrap);
+const tableWrap = mergeProps(docsProseTableWrap());
 const multiRecipe = doc ? doc.recipes.length > 1 : false;
 const slotCount = (recipe: string) => doc?.slots.filter((s) => s.recipe === recipe).length ?? 0;
 const slotLabel = (recipe: string, slots: string[]) =>

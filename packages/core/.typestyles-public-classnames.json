@@ -223,9 +223,6 @@
     "dialog__heading",
     "dialog__popup",
     "divider",
-    "docs-prose",
-    "docs-prose__headingAnchor",
-    "docs-prose__tableWrap",
     "drawer__body",
     "drawer__closeButton",
     "drawer__header",
@@ -2337,30 +2334,6 @@
       "suffix": "base",
       "file": "src/components/divider.ts",
       "line": 14
-    },
-    {
-      "className": "docs-prose",
-      "kind": "component",
-      "namespace": "docs-prose",
-      "suffix": "base",
-      "file": "src/components/proseContent.ts",
-      "line": 19
-    },
-    {
-      "className": "docs-prose__headingAnchor",
-      "kind": "component",
-      "namespace": "docs-prose",
-      "suffix": "headingAnchor",
-      "file": "src/components/proseContent.ts",
-      "line": 19
-    },
-    {
-      "className": "docs-prose__tableWrap",
-      "kind": "component",
-      "namespace": "docs-prose",
-      "suffix": "tableWrap",
-      "file": "src/components/proseContent.ts",
-      "line": 19
     },
     {
       "className": "drawer__body",

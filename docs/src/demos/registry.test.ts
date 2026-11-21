@@ -1,42 +1,51 @@
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vite-plus/test';
-import { astroDemoIds, astroDemoMap } from './astroDemoMap';
-import { htmlDemoIds, htmlDemoMap } from './htmlDemoMap';
-import { reactDemoIds, reactDemoMap } from './reactDemoMap';
-import { REACT_ONLY_DEMO_IDS } from './reactOnlyDemoIds';
-import {
-  DEMO_IDS,
-  assertDemoComplete,
-  demoRegistry,
-  demoSnippets,
-  reactDemoLoaders,
-} from './registry';
+import { astroDemoIds } from './astroDemoMap';
+import { demoIdFromPath } from './demoPath';
+import { htmlDemoIds } from './htmlDemoMap';
+import { reactDemoIds } from './reactDemoMap';
+import { DEMO_IDS, demoSnippets, getDemoSnippets } from './registry';
 import { render as renderButtonDefault } from './button/default/html';
 import { render as renderHiddenHideMd } from './hidden/hide-md/html';
 import { render as renderHiddenShowMd } from './hidden/show-md/html';
 
-describe('demo registry completeness', () => {
-  it('has snippets and loaders for every id across frameworks', () => {
-    for (const id of DEMO_IDS) {
-      expect(demoSnippets[id].react.length).toBeGreaterThan(0);
-      expect(demoSnippets[id].astro.length).toBeGreaterThan(0);
-      expect(demoSnippets[id].html.length).toBeGreaterThan(0);
-      expect(reactDemoLoaders[id]).toBeTypeOf('function');
-      if (!REACT_ONLY_DEMO_IDS.has(id)) {
-        expect(astroDemoIds).toContain(id);
-        expect(htmlDemoIds).toContain(id);
-      }
-      assertDemoComplete(demoRegistry[id]);
-    }
+// jsdom gives `import.meta.url` a non-file scheme; Vitest still sets `dirname`.
+const demosDir = import.meta.dirname;
+
+describe('demo registry', () => {
+  it('has a demo for every folder under src/demos/<component>/<name>/', () => {
+    const folders = readdirSync(demosDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .flatMap((component) =>
+        readdirSync(path.join(demosDir, component.name), { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((demo) => `${component.name}.${demo.name}`),
+      )
+      .sort();
+    expect(DEMO_IDS).toEqual(folders);
   });
 
-  it('keeps astro/html/react map keys in sync with DEMO_IDS', () => {
-    const crossFrameworkIds = DEMO_IDS.filter((id) => !REACT_ONLY_DEMO_IDS.has(id));
-    expect([...astroDemoIds].sort()).toEqual([...crossFrameworkIds].sort());
-    expect([...htmlDemoIds].sort()).toEqual([...crossFrameworkIds].sort());
-    expect([...reactDemoIds].sort()).toEqual([...DEMO_IDS].sort());
-    expect(Object.keys(astroDemoMap).sort()).toEqual([...crossFrameworkIds].sort());
-    expect(Object.keys(htmlDemoMap).sort()).toEqual([...crossFrameworkIds].sort());
-    expect(Object.keys(reactDemoMap).sort()).toEqual([...DEMO_IDS].sort());
+  it('gives every demo react/astro/html snippets and a React preview', () => {
+    for (const id of DEMO_IDS) {
+      expect(demoSnippets[id].react.length, id).toBeGreaterThan(0);
+      expect(demoSnippets[id].astro.length, id).toBeGreaterThan(0);
+      expect(demoSnippets[id].html.length, id).toBeGreaterThan(0);
+    }
+    expect([...reactDemoIds].sort()).toEqual(DEMO_IDS);
+  });
+
+  it('pairs astro.astro and html.ts: a demo has both static previews or neither', () => {
+    expect([...astroDemoIds].sort()).toEqual([...htmlDemoIds].sort());
+  });
+
+  it('names the folder to add for an unknown id', () => {
+    expect(() => getDemoSnippets('table.nope')).toThrow('src/demos/table/nope/');
+  });
+
+  it('rejects files outside the <component>/<name>/ layout', () => {
+    expect(demoIdFromPath('./table/bordered/react.tsx')).toBe('table.bordered');
+    expect(() => demoIdFromPath('./table/react.tsx')).toThrow('src/demos/<component>/<name>/');
   });
 
   it('keeps Hidden HTML snippets aligned with live hide classes', () => {

@@ -32,12 +32,12 @@ Docs pins **Vite 6** (Astro 5’s supported bundler). `@astrojs/netlify`’s dev
 
 ## Testing / completeness
 
-- Unit tests include the **MDX demo completeness gate** (`src/demos/completeness.test.ts`): every `<Demo id>` in active MDX must be registered in `DEMO_IDS`, snippets (react/astro/html), react loaders, and astro/html maps.
+- Unit tests include the **MDX demo completeness gate** (`src/demos/completeness.test.ts`): every `<Demo id>` in active MDX must have a folder under `src/demos/`.
 - Acceptance evidence for the demo migration cutover: `.superpowers/sdd/migration-acceptance.md` (gitignored local SDD artifact).
 
 ## Adding a component page
 
 1. Add MDX under `content/components/<slug>.mdx` with `<Demo id="…" />` only (no inline framework snippets).
-2. Register demos under `src/demos/<slug>/` and wire `registry.ts`, `astroDemoMap.ts`, `htmlDemoMap.ts`.
+2. Add each demo as a folder, `src/demos/<slug>/<name>/`, which makes its id `<slug>.<name>`. It needs `snippets.ts` (react/astro/html code samples) and `react.tsx`; add `astro.astro` and `html.ts` together when the demo has a static preview. The maps in `src/demos/` glob these folders, so there is nothing to register.
 3. Add a sidebar entry in `src/data/navigation.ts`.
 4. Run `vp run @var-ui/docs-site#test` — completeness gate must stay green.

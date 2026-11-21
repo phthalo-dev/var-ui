@@ -1,4 +1,4 @@
-import { codeBlock, codeLanguageLabel } from '@var-ui/core';
+import { codeBlockMarkup, type CodeBlockAttributes } from '@var-ui/core';
 
 type HastNode = {
   type: string;
@@ -56,11 +56,17 @@ function text(value: string): HastNode {
   return { type: 'text', value };
 }
 
-function props(slot: {
-  className: string;
-  attrs?: Record<string, string>;
-}): Record<string, unknown> {
-  return { className: [slot.className], ...slot.attrs };
+/** DOM attribute names to hast property names (`data-codeblock-pre` -> `dataCodeblockPre`). */
+function hastProps(
+  attributes: CodeBlockAttributes | Record<string, string>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [name, value] of Object.entries(attributes)) {
+    if (value === undefined) continue;
+    if (name === 'class') out.className = classList(value);
+    else out[name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())] = value;
+  }
+  return out;
 }
 
 /**
@@ -73,61 +79,44 @@ export function codeBlockShikiTransformer() {
     root(this: ShikiTransformerContext, root: HastNode) {
       const pre = root.children?.find((node) => node.tagName === 'pre');
       if (!pre) return;
-      const cb = codeBlock({ variant: 'default' });
       const lang = (this.options.lang ?? '').toLowerCase();
-      const label = codeLanguageLabel(lang || 'text');
-      const source = this.source.replace(/\n$/, '');
+      // The same structure as the React and Astro `CodeBlock` (#194).
+      const m = codeBlockMarkup({ code: this.source, language: lang || 'text' });
 
       const { class: shikiClass, ...preProperties } = pre.properties ?? {};
       pre.properties = {
         ...preProperties,
-        ...props(cb.pre),
-        className: [cb.pre.className, ...classList(shikiClass)],
-        dataCodeblockPre: '',
+        ...hastProps(m.pre),
+        className: [...classList(m.pre.class), ...classList(shikiClass)],
       };
       const code = pre.children?.find((node) => node.tagName === 'code');
       if (code) {
         const { class: codeClass, ...codeProperties } = code.properties ?? {};
         code.properties = {
           ...codeProperties,
-          ...props(cb.code),
-          className: [cb.code.className, ...classList(codeClass)],
+          ...hastProps(m.code),
+          className: [...classList(m.code.class), ...classList(codeClass)],
         };
       }
 
-      const header = el('div', { ...props(cb.header), dataCodeblockHeader: '' }, [
-        el('div', props(cb.title), [el('span', props(cb.filename), [text(label)])]),
-        el('div', props(cb.actions), [
-          el(
-            'button',
-            {
-              ...props(cb.copyButton),
-              type: 'button',
-              dataVarUiCodeCopy: '',
-              dataCode: source,
-              dataCopyLabel: 'Copy code',
-              dataCopiedLabel: 'Copied',
-              dataCopyErrorLabel: 'Copy failed',
-              ariaLabel: 'Copy code',
-            },
-            [
-              el('span', { dataCodeblockCopyIcon: '' }, [copyIcon()]),
-              el('span', { dataCodeblockCopyText: '' }, [text('Copy')]),
-            ],
-          ),
-          el('span', {
-            ...props(cb.feedback),
-            dataCodeblockFeedback: '',
-            role: 'status',
-            ariaLive: 'polite',
-          }),
-        ]),
-      ]);
-
+      const title = [m.filename, m.language].flatMap((part) =>
+        part ? [el('span', hastProps(part.attributes), [text(part.text)])] : [],
+      );
+      const actions =
+        m.actions && m.copyButton && m.feedback
+          ? [
+              el('div', hastProps(m.actions), [
+                el('button', hastProps(m.copyButton), [
+                  el('span', hastProps(m.copyIcon), [copyIcon()]),
+                ]),
+                el('span', hastProps(m.feedback)),
+              ]),
+            ]
+          : [];
       root.children = [
-        el('div', { ...props(cb.root), dataCodeblock: '', dataLanguage: lang || undefined }, [
-          header,
-          el('div', { ...props(cb.body), dataCodeblockBody: '' }, [pre]),
+        el('div', hastProps(m.root), [
+          el('div', hastProps(m.header), [el('div', hastProps(m.title), title), ...actions]),
+          el('div', hastProps(m.body), [pre]),
         ]),
       ];
     },

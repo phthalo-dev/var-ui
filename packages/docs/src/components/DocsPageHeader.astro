@@ -96,11 +96,10 @@ const hasPreview = Astro.slots.has('preview');
             data-code={importCode}
             data-copy-label="Copy import"
             data-copied-label="Copied"
-            data-copy-error-label="Copy failed"
+            data-error-label="Copy failed"
             aria-label="Copy import"
           >
             <span data-codeblock-copy-icon set:html={copySvg} />
-            <span data-codeblock-copy-text>Copy</span>
           </button>
         </span>
       ) : null
@@ -128,11 +127,10 @@ const hasPreview = Astro.slots.has('preview');
           data-code={importCode}
           data-copy-label="Copy import"
           data-copied-label="Copied"
-          data-copy-error-label="Copy failed"
+          data-error-label="Copy failed"
           aria-label="Copy import"
         >
           <span data-codeblock-copy-icon set:html={copySvg} />
-          <span data-codeblock-copy-text>Copy</span>
         </button>
       </div>
     ) : null
@@ -161,7 +159,7 @@ const hasPreview = Astro.slots.has('preview');
   </div>
   {
     hasPreview ? (
-      <div {...combine(stage({ fade: 'radial', surface: 'none' }), s.preview)} data-prose-isolate>
+      <div {...combine(stage({ fade: 'radial', surface: 'none' }), s.preview)} data-not-prose>
         <slot name="preview" />
       </div>
     ) : null

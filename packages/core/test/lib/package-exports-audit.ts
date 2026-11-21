@@ -58,7 +58,6 @@ const recipeAdjacent = new Set([
   'layoutFooter',
   'layoutContent',
   'layoutPanel',
-  'proseContent',
 ]);
 
 const semanticToneExports = new Set([

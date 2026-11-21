@@ -24,7 +24,7 @@ export function ComponentConfigurator({
   return (
     <div className={c.root.className} data-component-configurator>
       <div className={c.workspace.className}>
-        <div {...combine(stage(), c.preview)} data-prose-isolate>
+        <div {...combine(stage(), c.preview)} data-not-prose>
           <div className={c.previewInner.className}>{preview}</div>
         </div>
         <aside className={c.controls.className} aria-label="Component options">

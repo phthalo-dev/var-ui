@@ -1,15 +1,7 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "paths": {
-      "@var-ui/core": ["../../packages/core/src/index.ts"],
-      "@var-ui/astro": ["../../packages/astro/index.ts"],
-      "@var-ui/icons/glyphs": ["../../packages/icons/src/glyphs.ts"],
-      "@var-ui/icons/glyphs/*": ["../../packages/icons/src/glyph-data/*"],
-      "@var-ui/docs": ["../../packages/docs/index.ts"],
-      "@var-ui/docs/styles": ["../../packages/docs/src/styles/index.ts"],
-      "@var-ui/docs/*": ["../../packages/docs/*"]
-    }
+    "customConditions": ["@var-ui/source"]
   },
   "include": ["src/**/*", "astro.config.mjs", "typestyles-entry.ts", "content/**/*"],
   "exclude": ["dist", "node_modules", ".astro"]

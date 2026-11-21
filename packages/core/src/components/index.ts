@@ -18,6 +18,7 @@ export * from './checkbox';
 export * from './chip';
 export * from './chipGroup';
 export * from './codeBlock';
+export * from './codeBlockMarkup';
 export * from './collapsible';
 export * from './colorField';
 export * from './colorPicker';
@@ -63,7 +64,6 @@ export * from './popover';
 export * from './progressBar';
 export * from './progressCircle';
 export * from './prose';
-export * from './proseContent';
 export * from './radio';
 export * from './rating';
 export * from './resizeHandle';
@@ -114,7 +114,7 @@ export type {
   SurfaceAppearance,
 } from '../shared/semanticTone';
 export {
-  placement,
+  toastPlacement,
   type ControlSize,
   type Density,
   type FillAppearance,

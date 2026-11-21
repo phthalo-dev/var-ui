@@ -1,6 +1,6 @@
 {
   "name": "@var-ui/cli",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "CLI for discovering Var UI components, guides, and agent docs",
   "homepage": "https://github.com/phthalo-dev/var-ui/tree/main/packages/cli#readme",
   "bugs": "https://github.com/phthalo-dev/var-ui/issues",
@@ -34,6 +34,7 @@
     "dev": "vp pack --watch"
   },
   "devDependencies": {
+    "@var-ui/core": "workspace:*",
     "@var-ui/docs": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:"

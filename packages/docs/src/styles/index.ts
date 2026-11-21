@@ -6,3 +6,4 @@ export { codeBlock } from './codeBlock';
 export { docsTopNav } from './docsTopNav';
 export { docsGuideArticle, docsPageBar, docsPageHeader, docsPageTabs } from './docsPageHeader';
 export { docsPropsTable } from './docsPropsTable';
+export { docsArticleProse, docsProse, docsProseTableWrap } from './docsProse';

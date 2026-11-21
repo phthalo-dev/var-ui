@@ -1,8 +1,10 @@
 import type { ComponentPropsWithoutRef, JSX, Ref } from 'react';
-import { useMemo, useState } from 'react';
-import { codeBlock, codeLanguageLabel } from '@var-ui/core/components/codeBlock';
+import { useMemo } from 'react';
+import { codeBlock } from '@var-ui/core/components/codeBlock';
+import { codeBlockMarkup, type CodeBlockAttributes } from '@var-ui/core/components/codeBlockMarkup';
 import type { CodeBlockVariantProps } from '@var-ui/core';
 import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
+import { useCopy } from '../hooks/useCopy';
 import { Icon } from '../icons';
 import { mergeProps } from 'typestyles';
 
@@ -10,7 +12,7 @@ export type { CodeBlockVariant } from '@var-ui/core';
 
 const codeBlockVars = recipeVars(codeBlock);
 
-type FeedbackTone = 'success' | 'error' | null;
+const COPY_ICONS = { idle: 'copy', copied: 'check', error: 'error' } as const;
 
 type DiffLineTone = 'added' | 'deleted' | 'hunk';
 
@@ -22,12 +24,9 @@ function classifyDiffLine(line: string): DiffLineTone | undefined {
   return undefined;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+/** `codeBlockMarkup` attributes as React props (`class` is `className`). */
+function reactProps({ class: className, ...rest }: CodeBlockAttributes): Record<string, unknown> {
+  return { className, ...rest };
 }
 
 export type CodeBlockProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
@@ -54,16 +53,16 @@ export type CodeBlockProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
     highlightedLines?: number[];
     /** Scroll cap for the code body — any CSS length (`maxLines`-style scrolling). */
     maxHeight?: string;
-    /** Accessible label for the copy button. @default Copy code */
+    /** Copy button's accessible name before a copy. Same prop as `CopyButton`. @default Copy code */
     copyLabel?: string;
-    /** Feedback text after a successful copy. @default Copied */
+    /** Name after a successful copy, also announced to screen readers. @default Copied */
     copiedLabel?: string;
-    /** Feedback text when clipboard write fails. @default Copy failed */
-    copyErrorLabel?: string;
-    /** Visible text of the copy button. @default Copy */
-    copyText?: string;
-    /** Visible text of the copy button after a failed copy. @default Error */
-    errorText?: string;
+    /** Name after a failed copy, also shown and announced beside the button. @default Copy failed */
+    errorLabel?: string;
+    /** Called with the code after a successful copy. Same as `CopyButton`'s. */
+    onCopied?: (value: string) => void;
+    /** Called when the clipboard write fails (permission denied, insecure context). */
+    onCopyError?: (error: Error, value: string) => void;
     /** Ref to the root element: a `<div>`, or a `<code>` for the `inline` variant. */
     ref?: Ref<HTMLElement>;
   };
@@ -84,18 +83,17 @@ export function CodeBlock({
   maxHeight,
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
-  copyErrorLabel = 'Copy failed',
-  copyText = 'Copy',
-  errorText = 'Error',
+  errorLabel = 'Copy failed',
+  onCopied,
+  onCopyError,
   ref,
   ...rest
 }: CodeBlockProps): JSX.Element {
   const cb = codeBlock({ variant });
 
-  const [isCopied, setIsCopied] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
-  const [feedbackTone, setFeedbackTone] = useState<FeedbackTone>(null);
+  const { copied, error, copy } = useCopy({ onCopied, onCopyError });
+  const copyState = error ? 'error' : copied ? 'copied' : 'idle';
+  const label = { idle: copyLabel, copied: copiedLabel, error: errorLabel }[copyState];
 
   const highlightedSet = useMemo(() => new Set(highlightedLines), [highlightedLines]);
   const lines = useMemo(() => code.replace(/\n$/, '').split('\n'), [code]);
@@ -103,31 +101,6 @@ export function CodeBlock({
   const inline = variant === 'inline';
   const diff = variant === 'diff';
   const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
-
-  const resetCopyState = () => {
-    setIsCopied(false);
-    setHasError(false);
-    setFeedbackText('');
-    setFeedbackTone(null);
-  };
-
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setIsCopied(true);
-      setHasError(false);
-      // Button label already reads "Copied"; skip inline feedback when labels match.
-      setFeedbackText(copiedLabel === 'Copied' ? '' : copiedLabel);
-      setFeedbackTone(copiedLabel === 'Copied' ? null : 'success');
-    } catch {
-      setIsCopied(false);
-      setHasError(true);
-      setFeedbackText(copyErrorLabel);
-      setFeedbackTone('error');
-    }
-
-    setTimeout(resetCopyState, 1200);
-  };
 
   if (inline) {
     return (
@@ -142,56 +115,52 @@ export function CodeBlock({
     );
   }
 
+  // Same structure as Astro and the docs Shiki transformer (#194). React drives the copy button
+  // itself, so it takes only its class from the markup, not the script hooks.
+  const m = codeBlockMarkup({ code, language, filename, variant, copyable });
   return (
     <div
       {...rest}
-      {...mergeProps(cb.root, className)}
+      {...reactProps(m.root)}
+      className={mergeProps(m.root.class, className).className}
       ref={ref as Ref<HTMLDivElement>}
-      data-codeblock
     >
-      <div {...mergeProps(cb.header)} data-codeblock-header>
-        <div {...mergeProps(cb.title)}>
-          {filename ? <span {...mergeProps(cb.filename)}>{filename}</span> : null}
-          {language ? (
-            <span {...mergeProps(cb.language)}>{codeLanguageLabel(language)}</span>
+      <div {...reactProps(m.header)}>
+        <div {...reactProps(m.title)}>
+          {m.filename ? (
+            <span {...reactProps(m.filename.attributes)}>{m.filename.text}</span>
+          ) : null}
+          {m.language ? (
+            <span {...reactProps(m.language.attributes)}>{m.language.text}</span>
           ) : null}
         </div>
-        {copyable ? (
-          <div {...mergeProps(cb.actions)}>
+        {m.actions && m.copyButton && m.feedback ? (
+          <div {...reactProps(m.actions)}>
             <button
               type="button"
-              {...mergeProps(cb.copyButton)}
-              data-copied={isCopied || undefined}
-              data-error={hasError || undefined}
-              onClick={onCopy}
-              aria-label={isCopied ? copiedLabel : copyLabel}
+              className={m.copyButton.class}
+              data-copied={copied || undefined}
+              data-error={error ? true : undefined}
+              onClick={() => void copy(code)}
+              aria-label={label}
             >
               <span data-codeblock-copy-icon>
-                <Icon name={isCopied ? 'check' : 'copy'} size="sm" />
-              </span>
-              {/* Icon-only button: the recipe keeps this label for screen readers only. */}
-              <span data-codeblock-copy-text>
-                {isCopied ? copiedLabel : hasError ? errorText : copyText}
+                <Icon name={COPY_ICONS[copyState]} size="sm" />
               </span>
             </button>
+            {/* Announces the result; the recipe shows it only for errors (success has the check). */}
             <span
-              {...mergeProps(cb.feedback)}
-              data-tone={feedbackTone ?? undefined}
-              role="status"
-              aria-live="polite"
+              {...reactProps(m.feedback)}
+              data-tone={{ idle: undefined, copied: 'success', error: 'error' }[copyState]}
             >
-              {feedbackText}
+              {copyState === 'idle' ? '' : label}
             </span>
           </div>
         ) : null}
       </div>
 
-      <div
-        {...mergeProps(cb.body)}
-        data-codeblock-body
-        style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}
-      >
-        <pre {...mergeProps(cb.pre)} data-wrap={wrapLongLines || undefined} data-codeblock-pre>
+      <div {...reactProps(m.body)} style={styleVars([[codeBlockVars.maxHeight, maxHeight]])}>
+        <pre {...reactProps(m.pre)} data-wrap={wrapLongLines || undefined}>
           {showLineNumbers ? (
             <code {...mergeProps(cb.code)} data-line-numbers={showLineNumbers || undefined}>
               {lines.map((line, index) => {
@@ -231,7 +200,8 @@ export function CodeBlock({
               dangerouslySetInnerHTML={{ __html: codeHtml! }}
             />
           ) : (
-            <code {...mergeProps(cb.code)}>{escapeHtml(code)}</code>
+            // React escapes text itself; escaping here too showed `&lt;` instead of `<`.
+            <code {...mergeProps(cb.code)}>{code}</code>
           )}
         </pre>
       </div>

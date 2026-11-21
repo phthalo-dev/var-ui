@@ -103,6 +103,8 @@ export const table = typestyles.recipe({
           overflowX: 'auto',
         },
         table: {
+          // Own the display: inside `Prose`, bare tables become scrollable blocks.
+          display: 'table',
           width: '100%',
           minWidth: vars.minWidth.var,
           borderCollapse: 'collapse',

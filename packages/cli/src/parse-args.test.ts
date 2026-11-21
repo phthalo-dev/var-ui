@@ -92,4 +92,18 @@ describe('parseCliArgs', () => {
       argv: ['generate', '--write'],
     });
   });
+
+  it('parses tokens with an optional query, including a pasted --var-ui- name', () => {
+    expect(parseCliArgs(['tokens'])).toEqual({ command: 'tokens', json: false });
+    expect(parseCliArgs(['tokens', 'space', '--json'])).toEqual({
+      command: 'tokens',
+      query: 'space',
+      json: true,
+    });
+    expect(parseCliArgs(['tokens', '--var-ui-space-md'])).toEqual({
+      command: 'tokens',
+      query: '--var-ui-space-md',
+      json: false,
+    });
+  });
 });

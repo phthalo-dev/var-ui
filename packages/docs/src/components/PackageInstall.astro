@@ -51,11 +51,10 @@ const uid = `pkg-${Math.random().toString(36).slice(2, 8)}`;
         data-code={managers[0].command}
         data-copy-label="Copy command"
         data-copied-label="Copied"
-        data-copy-error-label="Copy failed"
+        data-error-label="Copy failed"
         aria-label="Copy command"
       >
         <span data-codeblock-copy-icon set:html={copySvg} />
-        <span data-codeblock-copy-text>Copy</span>
       </button>
       <span {...mergeProps(cb.feedback)} data-codeblock-feedback role="status" aria-live="polite" />
     </div>

@@ -1,8 +1,12 @@
-import { DEMO_IDS } from '../demos/registry';
-import type { DemoId } from '../demos/types';
+import { DEMO_IDS, type DemoId } from '../demos/registry';
 
-/** Hero picks that differ from the first `<slug>.default` demo. */
-const HERO_OVERRIDES: Partial<Record<string, DemoId | null>> = {};
+/**
+ * Hero picks for components without a `<slug>.default` demo, where the alphabetically first
+ * demo isn't the best one.
+ */
+const HERO_OVERRIDES: Partial<Record<string, DemoId | null>> = {
+  'toggle-group': 'toggle-group.single',
+};
 
 /** Page-scale components (shells, layouts) or invisible ones have no hero preview. */
 const NO_HERO = new Set([

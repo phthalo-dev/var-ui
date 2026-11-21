@@ -74,7 +74,7 @@ emits stable public class names.
 | **Data input** | `textField`, `textAreaField`, `checkbox`, `radio`, `switchStyles`, `select`, `field` (+ `fieldChrome` helper) |
 | **Feedback**   | `alert`, `banner`, `badge`, `spinner`, `skeleton`, `progressBar`, `statusDot`                                 |
 | **Layout**     | `stack`, `grid`, `section`, `center`, `aspectRatio`, `divider`, `layout` (shell)                              |
-| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `proseContent`, `steps`, `fileTree`                 |
+| **Content**    | `heading`, `textBlock`, `kbd`, `emptyState`, `codeBlock`, `prose`, `steps`, `fileTree`                        |
 | **Containers** | `card`, `carousel`, `thumbnail`, `avatar`, `avatarGroup`                                                      |
 | **Overlay**    | `dialog`, `overlay`, `commandPalette`, `tabs`                                                                 |
 | **Icons**      | `icon` recipe + `IconName` union / `iconNameList` (glyphs live in `@var-ui/icons`)                            |
@@ -389,40 +389,37 @@ Adding class names is free; removing or renaming requires a major bump and a del
 
 ## CodeBlock copy helper pattern
 
-Use the `codeBlock` recipe with `data-*` hooks so any framework (or vanilla JS) can attach clipboard behavior:
+The `codeBlock` recipe's `copyButton` and `feedback` slots carry the copy chrome; `data-*` hooks hold the state, so any framework (or vanilla JS) can attach clipboard behaviour. `@var-ui/astro` ships this as `initCodeBlockCopy()`.
 
 ```html
-<div class="...codeBlock('root')" data-codeblock>
-  <div class="...codeBlock('header')" data-codeblock-header>
-    <div class="...codeBlock('actions')">
+<div class="var-ui-code-block" data-codeblock>
+  <div class="var-ui-code-block__header" data-codeblock-header>
+    <div class="var-ui-code-block__actions">
       <button
         type="button"
-        class="...codeBlock('copyButton') ...codeBlock('copyButtonIdle')"
-        data-codeblock-copy
+        class="var-ui-code-block__copyButton"
+        data-var-ui-code-copy
+        data-code="npm i @var-ui/react"
         data-copy-label="Copy code"
         data-copied-label="Copied"
+        data-error-label="Copy failed"
         aria-label="Copy code"
       >
-        Copy
+        <span data-codeblock-copy-icon><!-- copy icon --></span>
       </button>
-      <span
-        class="...codeBlock('feedback') ...codeBlock('feedbackInline')"
-        data-codeblock-feedback
-        role="status"
-        aria-live="polite"
-      ></span>
+      <span class="var-ui-code-block__feedback" data-codeblock-feedback role="status"></span>
     </div>
   </div>
   <pre><code>...</code></pre>
 </div>
 ```
 
-Minimal behavior:
+Behaviour:
 
-1. On `[data-codeblock-copy]` click, read text from the closest code element and write to `navigator.clipboard`.
-2. Toggle `data-copied` or `data-error` on the button for visual state styles.
-3. Set button `aria-label` to `Copied` on success, and restore to `Copy code` after a timeout.
-4. Announce status text through `[data-codeblock-feedback]` (`role="status"` + `aria-live="polite"`).
+1. On click, write `data-code` to `navigator.clipboard`.
+2. Set `data-copied` or `data-error` on the button (the recipe colours it), swap the icon (check / error), and set `aria-label` to `data-copied-label` or `data-error-label`.
+3. Put the same label in `[data-codeblock-feedback]` with `data-tone="success"` or `"error"`. The recipe shows it only for errors; a success is announced but not shown.
+4. After 2 seconds (`data-timeout`), clear all of it and restore `data-copy-label`.
 
 ## Syntax highlighting
 
@@ -460,23 +457,13 @@ mapping in `docs/src/styles/codeHighlight.ts`.
 - [Design system guide](https://typestyles.dev/docs/design-system) — patterns for building your own
 - [Documentation site](../../docs/README.md) — primary consumer of this package
 
-## Prose / docs content primitives (`proseContent`)
+## Rendered markdown (`prose`)
 
-Long-form markdown helpers live in `proseContent` from `@var-ui/core`. Put `proseContent('root')` on the element that wraps rendered HTML.
+Put `prose({ density })` on the element that wraps rendered markdown or rich text (`Prose` in `@var-ui/react` / `@var-ui/astro`). It styles the bare elements a renderer emits (headings, paragraphs, lists, links, inline and fenced code, blockquotes, tables, rules) relative to the surrounding font size. `density` is `compact` (chat bubbles, cards), `balanced` (panels) or `spacious` (reading views).
 
-Covered primitives:
+Element rules live in the `base` cascade layer, so a Var UI component rendered inside keeps its own styles. For anything else that should opt out (a live demo, an embedded widget, a hand-built table), mark it `data-not-prose` (`NOT_PROSE_ATTRIBUTE`): prose skips the element and everything inside it, while the element itself still takes part in the vertical flow.
 
-| Primitive         | Markdown / HTML                    | Notes                                                                      |
-| ----------------- | ---------------------------------- | -------------------------------------------------------------------------- |
-| **Blockquote**    | `> …`                              | Tinted panel + accent border                                               |
-| **`kbd`**         | `<kbd>Ctrl</kbd>`                  | Keyboard cap styling                                                       |
-| **Badge**         | `<span data-docs-badge>New</span>` | Optional `data-docs-badge-tone`: `success`, `warning`, `danger`, `info`    |
-| **Table**         | GFM tables                         | For wide tables wrap with `<div class="…proseContent('tableWrap')">`       |
-| **Divider**       | `---` → `<hr>`                     | Themed horizontal rule                                                     |
-| **Heading links** | `h1`–`h6`                          | Apps can inject `<a data-prose-heading-anchor>` permalinks (see docs site) |
-
-**Docs site** composes `proseContent('root')` with site overrides and passes a custom
-`createDesignTheme` surface so semantic `--var-ui-color-*` tracks the shell.
+To extend prose with your own element rules, tune its vars (`flow`, `headingGap`, `h1Size`–`h3Size`, `lineHeight`, `borderColor`, `codeBackground`, `secondaryColor`) and wrap descendant rules in `proseRules({ '& kbd': { … } })` so they honour `data-not-prose` too. The docs site's `docsProse` (in `@var-ui/docs/styles`) is built this way.
 
 ### Admonition-style callouts (markdown-only)
 
