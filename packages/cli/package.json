@@ -15,7 +15,8 @@
   },
   "files": [
     "dist",
-    "data"
+    "data",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "exports": {

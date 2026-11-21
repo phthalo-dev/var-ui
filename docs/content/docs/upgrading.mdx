@@ -1,0 +1,71 @@
+---
+title: Upgrading
+eyebrow: Guides
+description: What changed between Var UI minor versions, and how to move an app forward. Covers the 0.6 to 0.13 renames, removed APIs and token changes.
+---
+
+# Upgrading
+
+Var UI is pre-1.0, so a **minor** version can break things. Every published package ships a `CHANGELOG.md` (also on the [GitHub releases](https://github.com/phthalo-dev/var-ui/releases) page). All packages share one version number, so read one changelog per release.
+
+TypeScript catches most of the changes below. The ones that **compile but behave differently** are marked _silent_. Check those by hand.
+
+## 0.6 → 0.13
+
+### Props: platform names (0.7)
+
+Components use the native DOM vocabulary instead of React Aria's `isX` / `onPress` names.
+
+| Before (0.6)                                                             | Now                                                                                                    |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `isDisabled`, `isOpen`, `isReadOnly`, `isSelected`, `isIndeterminate`, … | `disabled`, `open`, `readOnly`, `selected`, `indeterminate`, … (every boolean drops `is`)              |
+| `onPress`                                                                | `onClick`                                                                                              |
+| `onChange(value)` on inputs                                              | `onValueChange(value)`; `onChange` is the native DOM event                                             |
+| Checkbox / Switch `isSelected` + `onChange`                              | `checked` / `defaultChecked` + `onCheckedChange`                                                       |
+| `selectedKey(s)` / `onSelectionChange` / `Set` values                    | `value` / `defaultValue` / `onValueChange` (`string \| null`, or `string[]` with `multiple`)           |
+| `minValue` / `maxValue` (NumberInput, Slider, date fields)               | `min` / `max`                                                                                          |
+| `IconButton name="close"`                                                | `icon="close"`. _Silent:_ `name` is now the native button attribute, so the old code renders no glyph. |
+| Alert `variant`                                                          | `tone`                                                                                                 |
+| Button `pending`, CommandPalette `isLoading`                             | `loading`                                                                                              |
+| PinInput `type`                                                          | `characters`                                                                                           |
+| CollapsibleGroup `allowsMultipleExpanded`                                | `multiple`                                                                                             |
+| Table `hasHover` (0.12)                                                  | `highlightOnHover`                                                                                     |
+| ChatMessageBubble `variant` (0.12)                                       | `appearance`                                                                                           |
+
+### Appearance: `filled` is `solid` (0.10, 0.12)
+
+`Button`, `IconButton` and `StatusDot` use the shared appearance axis `subtle | solid | outline | ghost`, like Badge, Alert, Chip and Toast. Replace `appearance="filled"` with `appearance="solid"`. Theme overrides keyed on `appearance.filled` move to `appearance.solid`. Plain CSS moves to `[data-appearance="solid"]`.
+
+### Overlays: native `<dialog>` and `popover` (0.7)
+
+- `Dialog.Backdrop` / `Drawer.Backdrop` are gone. Style the popup's `::backdrop`.
+- `portalContainer` is gone. Overlays render in place, in the top layer.
+- `LayerProvider`, `useLayer`, `useScrollLock` and `useOverlayPresence` are gone. Remove the provider from your app root.
+- `placement` is logical: `top | bottom | start | end`, optionally aligned (`bottom start`). `left` / `right` are gone.
+- `SimpleDialog`, `SimplePopover`, `SimpleTooltip` and the assembled `AlertDialog` / `HoverCard` / `Drawer` presets are gone. Use the compound parts. `Drawer.Panel` is `Drawer.Popup`.
+- Tooltip `delay` is `openDelay` (there is also `closeDelay`).
+
+See [Overlay lifecycle](/docs/overlay-lifecycle) for the native model.
+
+### Tokens
+
+- **Space** (0.8) uses t-shirt names: `none`, `xxs`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`, `xxxxl`. Old keys map `0→none`, `1→xxs`, `2→xs`, `3→sm`, `4→md`, `5→lg`, `6→xl`, `8→xxxl`, `10→xxl`, `12→xxxxl`. `7`, `9`, `11`, `16` and `20` are removed. _Silent:_ an old key such as `designTokens.space[4].var` doesn't throw. It reads a nested proxy, and TypeStyles reports `Invalid object value` for the property.
+- `shadow.elevation` is removed (one `xs`–`xl` scale). The `zIndex` tokens `dropdown`, `toast` and `modal` are removed (0.7).
+- `size.indicator` is per size: `size.indicator.box.md`, `dot.md`, `trackWidth.md`, `trackHeight.md` (0.10).
+
+### Components and exports
+
+- `Card href` replaces `ClickableCard`. `Chip onRemove` replaces `Pill` (0.8).
+- `Outline` is merged into `Toc` (0.9).
+- `DropdownMenu`, `ContextMenu`, `MoreMenu` are `Menu.FromSections`, `Menu.ContextMenu`, `Menu.Overflow`.
+- `@var-ui/core` exports one TypeStyles instance, `typestyles`. Write `typestyles.recipe(…)`, `typestyles.style(…)` and `typestyles.breakpoint(…)`. There are no root `recipe` / `style` exports.
+- Astro: `applyThemeBoot`, `bootTheme` and `watchThemeOnNavigation` are gone (0.13). Use `ThemeScript`.
+
+### Dependencies
+
+- `@var-ui/react` peers: `react`, `react-dom`, `react-aria-components` and `@var-ui/core`. The [Installation](/docs/installation) page lists them.
+
+## Finding the rest
+
+- `CHANGELOG.md` in `node_modules/@var-ui/<package>/` lists every change per release, breaking ones included.
+- `npx @var-ui/cli component <name>` prints a component's current props.
