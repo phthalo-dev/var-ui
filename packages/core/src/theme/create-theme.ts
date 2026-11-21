@@ -31,7 +31,6 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
   const surface = typestyles.tokens.createTheme({
     name,
     replace: replace ?? true,
-    // Defaults use `designTokens.*.var` (SyntaxRef); TypeStyles theme tokens are CreateTokenValues.
     tokens: tokenOverrides,
     // Every theme zeroes durations under prefers-reduced-motion unless it supplies its own mode.
     modes: modes?.some((mode) => mode.id === REDUCED_MOTION_MODE_ID)
@@ -40,10 +39,7 @@ export function createDesignTheme<const T extends Record<string, unknown> = Reco
     components,
   } as Parameters<typeof typestyles.tokens.createTheme>[0]);
 
-  return {
-    ...surface,
-    tokens: (surface.tokens ?? designTokens) as DesignTheme<ThemeTokensOf<T>>['tokens'],
-  } as DesignTheme<ThemeTokensOf<T>>;
+  return surface as unknown as DesignTheme<ThemeTokensOf<T>>;
 }
 
 /**

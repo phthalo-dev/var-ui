@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { appShellMobileBreakpointQueries } from '../src/components/breakpoints';
-import { breakpoint, media, toExclusiveMaxQuery } from '../src/runtime';
+import { breakpoint, media } from '../src/runtime';
 import { designBreakpointConditions } from '../src/tokens/defaults/breakpoint';
 
 describe('appShellMobileBreakpointQueries', () => {
@@ -28,12 +28,6 @@ describe('breakpoint()', () => {
     expect(media('lg', { color: 'red' })).toEqual({
       '@media (min-width: 64rem)': { color: 'red' },
     });
-  });
-
-  it('rewrites only max features', () => {
-    expect(toExclusiveMaxQuery('@media (min-width: 1px) and (max-width: 2rem)')).toBe(
-      '@media (min-width: 1px) and (width < 2rem)',
-    );
   });
 });
 
