@@ -14,4 +14,15 @@ export const fontSizeTokenSchema = {
     md: atProperty.lengthPercentage,
     lg: atProperty.lengthPercentage,
   },
+  /**
+   * Long-form reading type (docs, articles), independent of the 14px control scale. Pair each
+   * with `lineHeight.prose.*`.
+   */
+  prose: {
+    body: atProperty.lengthPercentage,
+    lead: atProperty.lengthPercentage,
+    h1: atProperty.lengthPercentage,
+    h2: atProperty.lengthPercentage,
+    h3: atProperty.lengthPercentage,
+  },
 } as const satisfies TokenSchema;
