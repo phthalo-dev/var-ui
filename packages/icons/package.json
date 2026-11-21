@@ -319,6 +319,7 @@
   },
   "scripts": {
     "build": "vp pack",
+    "generate": "node scripts/generate-icon-entries.mjs && vp fmt src package.json",
     "pack": "vp pack",
     "dev": "vp pack --watch"
   },

@@ -57,3 +57,13 @@ const favicon = varUiFaviconSvg({ background: '#007255' }); // glyph on a rounde
 
 At 20px and below use the 16px optical size, `varUiMarkSmall` / `varUiMarkSmallSvg` (16×16
 grid, 2px strokes on whole pixels). `varUiFaviconSvg` already uses it.
+
+## Adding a glyph
+
+Two edits, then one command:
+
+1. `src/glyph-data/<name>.ts`: export `innerHtml` (the children of a 24×24 `currentColor` `<svg>`) and `svg = iconSvg(innerHtml)`. Copy a neighbour.
+2. Add `<name>` to `iconNameList` in `packages/core/src/icons/iconNames.ts`. Names describe the function (`close`), not the drawing (`x-mark`).
+3. `vp run @var-ui/icons#generate` writes everything else: the React entry in `src/icons/`, the `glyphs.ts` and `default-icons.tsx` maps, the `index.ts` exports and the two `package.json` subpaths.
+
+`src/generated.test.ts` fails, and names that command, if step 3 is skipped.

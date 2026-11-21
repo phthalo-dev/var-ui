@@ -1,9 +1,10 @@
 /**
  * Refresh per-icon React entries, the glyphs barrel, and package.json subpaths
- * from `src/glyph-data/*.ts`.
+ * from `src/glyph-data/*.ts`. Run it as `vp run @var-ui/icons#generate` (which
+ * also formats the output); `src/generated.test.ts` fails when it is stale.
  *
- * Add an icon by creating `src/glyph-data/<name>.ts` (export `innerHtml`) and
- * adding the name to `iconNameList` in `@var-ui/core`, then run this script.
+ * Add an icon by creating `src/glyph-data/<name>.ts` (export `innerHtml` and
+ * `svg`) and adding the name to `iconNameList` in `@var-ui/core`, then run it.
  */
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
