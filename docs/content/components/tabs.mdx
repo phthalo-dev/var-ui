@@ -13,6 +13,25 @@ Tabbed content panels.
 
 <Demo id="tabs.default" />
 
+### List and panels in different regions
+
+Tabs find their panels by id (`aria-controls`), not by DOM nesting, so the tab row can span a
+full-width header while the panels live in the main column.
+
+In Astro, give `Tabs` an `id` and `panels={false}`, then render each `TabPanel` wherever it
+belongs. Mark the initially selected one with `selected`:
+
+```astro
+<Tabs id="page" panels={false} tabs={[{ value: 'docs', label: 'Docs' }, { value: 'api', label: 'API' }]} />
+<main>
+  <TabPanel tabs="page" value="docs" selected>…</TabPanel>
+  <TabPanel tabs="page" value="api">…</TabPanel>
+</main>
+```
+
+In React, control `value` / `onValueChange` and render the content for the selected value where
+it belongs.
+
 ## Props
 
 <PropsTable slug="tabs" />

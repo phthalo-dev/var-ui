@@ -2,6 +2,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite-plus';
+import { sourceConditions } from '../../source-conditions';
 
 const src = fileURLToPath(new URL('./src', import.meta.url));
 const glyphData = readdirSync(join(src, 'glyph-data'))
@@ -12,6 +13,8 @@ const icons = readdirSync(join(src, 'icons'))
   .map((file) => `src/icons/${file}`);
 
 export default defineConfig({
+  // `@var-ui/core` loads from source, via its exports' `@var-ui/source` condition.
+  ...sourceConditions,
   test: {
     // Vitest v4 compatibility: preserve mock call history.
     // Remove after tests no longer rely on calls from setup or earlier tests.

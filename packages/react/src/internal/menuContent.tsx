@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import { useContext, type JSX } from 'react';
 import {
   Header,
   MenuItem as AriaMenuItem,
@@ -8,7 +8,7 @@ import {
 import { menu } from '@var-ui/core/components/menu';
 import type { IconName } from '@var-ui/core';
 import { Icon } from '../icons';
-import { MenuSubmenu } from './menuParts';
+import { MenuCheckContext, MenuSubmenu } from './menuParts';
 import { combine, mergeProps } from 'typestyles';
 
 export type MenuItemDefinition = {
@@ -81,6 +81,9 @@ export function MenuContent({
 }: MenuContentProps): JSX.Element {
   const m = menu();
   const nodes: JSX.Element[] = [];
+  // The check column is for choices only: a single-choice menu (`Menu.Root value`) or a section
+  // with `defaultValue`. Plain action menus get no empty column (same as `Menu.Item` and Astro).
+  const menuCheckable = useContext(MenuCheckContext);
 
   sections.forEach((section, sectionIndex) => {
     const row = section.layout === 'row';
@@ -109,7 +112,7 @@ export function MenuContent({
           {section.label && !row ? (
             <Header {...mergeProps(m.sectionHeader)}>{section.label}</Header>
           ) : null}
-          {section.items.map((item) => renderItem(item, m, row))}
+          {section.items.map((item) => renderItem(item, m, row, true))}
         </AriaMenuSection>,
       );
       if (row && section.label) {
@@ -138,7 +141,7 @@ export function MenuContent({
           {...sectionProps}
           data-layout="row"
         >
-          {section.items.map((item) => renderItem(item, m, row))}
+          {section.items.map((item) => renderItem(item, m, row, menuCheckable))}
         </AriaMenuSection>,
       );
     } else {
@@ -157,11 +160,11 @@ export function MenuContent({
             shouldCloseOnSelect={false}
             {...sectionProps}
           >
-            {section.items.map((item) => renderItem(item, m))}
+            {section.items.map((item) => renderItem(item, m, false, menuCheckable))}
           </AriaMenuSection>,
         );
       } else {
-        section.items.forEach((item) => nodes.push(renderItem(item, m)));
+        section.items.forEach((item) => nodes.push(renderItem(item, m, false, menuCheckable)));
       }
     }
     if (sectionIndex < sections.length - 1) {
@@ -176,6 +179,7 @@ function renderItem(
   item: MenuItemDefinition,
   m: ReturnType<typeof menu>,
   row = false,
+  checkable = false,
 ): JSX.Element {
   if (item.items?.length) {
     return (
@@ -205,9 +209,11 @@ function renderItem(
           </span>
         ) : (
           <>
-            <span {...mergeProps(m.itemCheck)}>
-              {isSelected ? <Icon name="check" size="sm" /> : null}
-            </span>
+            {checkable ? (
+              <span {...mergeProps(m.itemCheck)} aria-hidden="true">
+                {isSelected ? <Icon name="check" size="sm" /> : null}
+              </span>
+            ) : null}
             {item.icon ? (
               <span {...mergeProps(m.itemIcon)} aria-hidden="true">
                 <Icon name={item.icon} size="sm" />

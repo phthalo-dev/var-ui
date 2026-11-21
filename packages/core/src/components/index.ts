@@ -19,6 +19,7 @@ export * from './checkbox';
 export * from './chip';
 export * from './chipGroup';
 export * from './codeBlock';
+export * from './codeBlockMarkup';
 export * from './collapsible';
 export * from './colorField';
 export * from './colorPicker';
@@ -114,7 +115,7 @@ export type {
   SurfaceAppearance,
 } from '../shared/semanticTone';
 export {
-  placement,
+  toastPlacement,
   type ControlSize,
   type Density,
   type FillAppearance,
