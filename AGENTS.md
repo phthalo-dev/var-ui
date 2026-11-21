@@ -30,6 +30,10 @@ release. Add a tool name to select part of the graph. For example, run
 
 First-party UI chrome uses TypeStyles recipes (`typestyles.recipe`) and design tokens — not new `*.css` files or ad-hoc `@media` queries. Apply classes with `mergeProps` / `combine` from `typestyles` (re-exported by `@var-ui/react` and `@var-ui/astro`). Register site recipes in the TypeStyles extract entry. See `.cursor/rules/typestyles-first.mdc`.
 
+## Loading packages from source
+
+In-repo consumers (the docs site, examples, package tests) load `@var-ui/core`, `@var-ui/react` and `@var-ui/icons` from TypeScript source, not `dist`. Every entry in those packages' `exports` has an `@var-ui/source` condition pointing at its source file. Vite configs spread `sourceConditions` from `source-conditions.ts` (repo root), and every tsconfig sets `customConditions: ["@var-ui/source"]`. To add an entry point, add it to the package's `exports` with the source condition first; no alias anywhere (`packages/core/test/source-condition.test.ts` checks the targets exist). Published consumers never set the condition, so they get `dist`. Exception: TypeStyles CSS extraction still bundles from `dist` (phthalo-dev/typestyles#349), so rebuild core after changing a recipe if extracted CSS looks stale.
+
 ## Browser tests
 
 Files named `*.browser.test.ts(x)` in `packages/react` run in headless Chromium (Playwright, vitest browser mode) as the `browser` project; everything else is the `jsdom` project. Both run in one `vp test run` (and in `vp run ci`). Use them for platform behaviour jsdom cannot do (top layer, `:modal`, `popover`, focus, animations). Helpers: `src/test/browser.ts`; setup: `src/test/setup.browser.ts`. To run one of them from the repo root, use the full project name, `vp test run --project '@var-ui/react (browser)'` (or `(jsdom)`), or a glob, `--project '*(browser)'`. The short names `browser` / `jsdom` only match when run from `packages/react`.
@@ -70,6 +74,10 @@ All published packages share one version (`fixed` group in `.changeset/config.js
 
 - Git hooks live in `.vite-hooks/` (a main-branch guard and `vp staged` on commit). There is no pre-push hook — `vp run ci` runs in GitHub Actions on the PR. The pre-commit hook exits early when `CI` is set; the release job commits version bumps and pushes tags, and must not re-run it.
 - Generated `CHANGELOG.md` files are excluded from formatting; changesets does not format them.
+- Packages that read another package's `dist` at build time must declare it as a dependency, or `vp run -F … build` runs them in parallel (the CLI catalog generator read core's `dist` before it existed, #269).
+- Bindings and tests that import a package by name (Astro `check`, the CLI generator, Astro config files) read its `dist`: after changing core, `vp run -F @var-ui/core build` before `astro check`, or the types look stale.
+- A new or renamed file under a folder an `import.meta.glob` covers (docs demos) can be invisible to Vitest's on-disk module cache. If a registry test can't see your new folder, delete `node_modules/.vitest-cache` (#267).
+- Lockfile: pnpm 12.18 re-resolves the whole lockfile on any install. For a one-dependency change, a hand-written importer entry that `pnpm install --frozen-lockfile` accepts keeps the diff reviewable.
 - Do not set `registry-url` on `setup-vp`: it writes a placeholder auth token that blocks OIDC. The release job also installs `npm@^11.5.1` (trusted publishing needs it; npm 12 rejects flags pnpm forwards).
 - Secrets: `APP_CLIENT_ID` and `APP_PRIVATE_KEY` (GitHub App) are org secrets, with `NETLIFY_AUTH_TOKEN`; `NETLIFY_SITE_ID` is a repo secret.
 - Node comes from `.nvmrc`; pnpm from `packageManager`. Do not repeat versions in workflow YAML.

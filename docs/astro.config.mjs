@@ -6,24 +6,13 @@ import { defaultThemeClassName } from '@var-ui/core';
 import varDocs from '@var-ui/docs';
 import componentDocsPlugin from '@var-ui/docs-components';
 import { defineConfig } from 'astro/config';
+import { sourceConditions } from '../source-conditions.ts';
 import { writeComponentProps } from './src/lib/extract-component-props.ts';
 import { writeStylingHooks } from './src/lib/extract-styling-hooks.ts';
 import { homepagePreloadPlugin } from './src/lib/homepage-preload-plugin.ts';
 import { rolldownJsxOptionsCompat } from './src/lib/rolldown-jsx-options.ts';
 import { docsThemePresets } from './src/themes/presets.ts';
 
-const root = fileURLToPath(new URL('..', import.meta.url));
-
-// String alias keys match by prefix, so the glyph barrel (`@var-ui/icons/glyphs`), single
-// glyphs (`@var-ui/icons/glyphs/<name>`) and the brand mark (`@var-ui/icons/brand`) need
-// anchored patterns.
-const glyphAliases = (iconsSrc) => [
-  { find: /^@var-ui\/icons\/brand$/, replacement: `${iconsSrc}/brand.ts` },
-  { find: /^@var-ui\/icons\/glyphs$/, replacement: `${iconsSrc}/glyphs.ts` },
-  { find: /^@var-ui\/icons\/glyphs\/(.+)$/, replacement: `${iconsSrc}/glyph-data/$1` },
-];
-const aliasList = (aliases) =>
-  Object.entries(aliases).map(([find, replacement]) => ({ find, replacement }));
 const docsRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
@@ -81,6 +70,7 @@ export default defineConfig({
   ],
   vite: {
     ssr: {
+      ...sourceConditions.ssr,
       // Workspace packages ship raw `.astro` / `.ts` source — must be processed by Vite SSR.
       noExternal: [
         '@var-ui/docs',
@@ -92,55 +82,10 @@ export default defineConfig({
       ],
     },
     plugins: [rolldownJsxOptionsCompat(), homepagePreloadPlugin()],
+    // Workspace packages load from source, via their exports' `@var-ui/source` condition.
     resolve: {
-      alias: [
-        ...glyphAliases(`${root}/packages/icons/src`),
-        ...aliasList({
-          '@var-ui/core/theme-constants': `${root}/packages/core/src/theme/constants.ts`,
-          '@var-ui/core/color-mode-script': `${root}/packages/core/src/theme/colorModeScript.ts`,
-          '@var-ui/core/styles': `${root}/packages/core/src/styles.ts`,
-          '@var-ui/core/components': `${root}/packages/core/src/components`,
-          '@var-ui/core/shared': `${root}/packages/core/src/shared`,
-          '@var-ui/core/tokens': `${root}/packages/core/src/tokens`,
-          '@var-ui/core/icons': `${root}/packages/core/src/icons`,
-          '@var-ui/core': `${root}/packages/core/src/index.ts`,
-          '@var-ui/react': `${root}/packages/react/src/index.ts`,
-          '@var-ui/icons': `${root}/packages/icons/src/index.ts`,
-          '@var-ui/astro': `${root}/packages/astro/index.ts`,
-          '@var-ui/docs/schema': `${root}/packages/docs/schema.ts`,
-          '@var-ui/docs/utils': `${root}/packages/docs/src/utils/index.ts`,
-          '@var-ui/docs/theme-client': `${root}/packages/docs/src/utils/theme/client.ts`,
-          '@var-ui/docs/highlight': `${root}/packages/docs/src/utils/highlightCodeBlock.ts`,
-          '@var-ui/docs/guide-entry': `${root}/packages/docs/src/utils/guideEntry.ts`,
-          '@var-ui/docs/styles': `${root}/packages/docs/src/styles/index.ts`,
-          '@var-ui/docs/shiki': `${root}/packages/docs/src/utils/shiki-theme.ts`,
-          '@var-ui/docs/middleware': `${root}/packages/docs/src/middleware.ts`,
-          '@var-ui/docs/DocsGuidePage': `${root}/packages/docs/src/components/DocsGuidePage.astro`,
-          '@var-ui/docs/DocsGuideArticle': `${root}/packages/docs/src/components/DocsGuideArticle.astro`,
-          '@var-ui/docs/DocsPage': `${root}/packages/docs/src/components/DocsPage.astro`,
-          '@var-ui/docs/DocsMarketingPage': `${root}/packages/docs/src/components/DocsMarketingPage.astro`,
-          '@var-ui/docs/DocsSearch': `${root}/packages/docs/src/components/DocsSearch.astro`,
-          '@var-ui/docs/DocsSidebar': `${root}/packages/docs/src/components/DocsSidebar.astro`,
-          '@var-ui/docs/DocsToc': `${root}/packages/docs/src/components/DocsToc.astro`,
-          '@var-ui/docs/DocsPageHeader': `${root}/packages/docs/src/components/DocsPageHeader.astro`,
-          '@var-ui/docs/PackageInstall': `${root}/packages/docs/src/components/PackageInstall.astro`,
-          '@var-ui/docs/DocsThemePicker': `${root}/packages/docs/src/components/DocsThemePicker.astro`,
-          '@var-ui/docs/CodeBlock': `${root}/packages/docs/src/components/CodeBlock.astro`,
-          '@var-ui/docs/CodeDemoCodeBlock': `${root}/packages/docs/src/components/CodeDemoCodeBlock.astro`,
-          '@var-ui/docs/DocsThemeScript': `${root}/packages/docs/src/components/DocsThemeScript.astro`,
-          '@var-ui/docs/DocsFavicon': `${root}/packages/docs/src/components/DocsFavicon.astro`,
-          '@var-ui/docs/theme-css': `${root}/packages/docs/src/integrations/theme-css-extract.ts`,
-          '@var-ui/docs': `${root}/packages/docs/index.ts`,
-          '@var-ui/docs-components/framework': `${root}/packages/docs-components/src/framework.ts`,
-          '@var-ui/docs-components/FrameworkSwitcher': `${root}/packages/docs-components/src/components/FrameworkSwitcher.astro`,
-          '@var-ui/docs-components/ComponentDocTabs': `${root}/packages/docs-components/src/components/ComponentDocTabs.astro`,
-          '@var-ui/docs-components/HiddenPropsTable': `${root}/packages/docs-components/src/components/HiddenPropsTable.astro`,
-          '@var-ui/docs-components/scripts/componentPageTabs': `${root}/packages/docs-components/src/scripts/componentPageTabs.ts`,
-          '@var-ui/docs-components/scripts/frameworkSwitcher': `${root}/packages/docs-components/src/scripts/frameworkSwitcher.ts`,
-          '@var-ui/docs-components': `${root}/packages/docs-components/index.ts`,
-          '@': `${docsRoot}/src`,
-        }),
-      ],
+      ...sourceConditions.resolve,
+      alias: [{ find: '@', replacement: `${docsRoot}/src` }],
     },
   },
 });

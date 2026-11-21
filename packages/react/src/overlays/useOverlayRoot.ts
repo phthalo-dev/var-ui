@@ -51,9 +51,9 @@ export type OverlayRoot = {
    */
   setOpen: (next: boolean, options?: OverlayRequestOptions) => boolean;
   /**
-   * Change handler for react-aria triggers that own the open state (`MenuTrigger`'s
-   * `onOpenChange`): the reason is derived from the observed DOM event, not forced to
-   * `'imperative'`.
+   * Change handler for react-aria state that drives the root (the Menu's react-aria menu state,
+   * RAC `Select` / `ComboBox` popups): the reason is derived from the observed DOM event, not
+   * forced to `'imperative'`.
    */
   onStateChange: (next: boolean) => void;
   /** `setOpen(false, options)`; this is what `OverlayCloseContext` carries. */

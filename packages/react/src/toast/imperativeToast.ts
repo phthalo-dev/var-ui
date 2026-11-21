@@ -34,13 +34,9 @@ function warnNoProvider() {
   console.warn('toast() was called but no <ToastProvider> is mounted; the toast was dropped.');
 }
 
-function showToast(content: ToastShowInput): string {
-  if (!activeQueue) {
-    warnNoProvider();
-    return '';
-  }
+function showOn(queue: ToastQueue, content: ToastShowInput): string {
   const { durationMs = DEFAULT_TOAST_DURATION, ...data } = content;
-  return activeQueue.add(data, {
+  return queue.add(data, {
     timeout: durationMs === 0 ? undefined : durationMs,
   });
 }
@@ -58,20 +54,40 @@ export type ImperativeToast = {
   update: (id: string, patch: Partial<ToastContentData>) => boolean;
 };
 
-export const toast: ImperativeToast & ((content: ToastShowInput) => string) = Object.assign(
-  showToast,
-  {
-    show: showToast,
-    dismiss: (id: string) => {
-      activeQueue?.close(id);
-    },
-    hide: (id: string) => {
-      activeQueue?.close(id);
-    },
-    dismissAll: () => {
-      activeQueue?.clear();
-    },
+export type Toaster = ImperativeToast & ((content: ToastShowInput) => string);
+
+function toaster(getQueue: () => ToastQueue | null): Toaster {
+  const show = (content: ToastShowInput) => {
+    const queue = getQueue();
+    if (!queue) {
+      warnNoProvider();
+      return '';
+    }
+    return showOn(queue, content);
+  };
+  return Object.assign(show, {
+    show,
+    dismiss: (id: string) => getQueue()?.close(id),
+    hide: (id: string) => getQueue()?.close(id),
+    dismissAll: () => getQueue()?.clear(),
     update: (id: string, patch: Partial<ToastContentData>) =>
-      activeQueue?.update(id, patch) ?? false,
-  },
-);
+      getQueue()?.update(id, patch) ?? false,
+  });
+}
+
+/** Imperative toasts on the mounted `ToastProvider`'s queue. */
+export const toast: Toaster = toaster(() => activeQueue);
+
+/**
+ * The same imperative API bound to a queue you own, for apps that render their own
+ * `<ToastRegion queue={…}>` (or several regions):
+ *
+ * ```ts
+ * export const appToasts = new ToastQueue({ maxVisibleToasts: 3 });
+ * export const notify = createToaster(appToasts);
+ * notify({ title: 'Added to favorites', tone: 'success' });
+ * ```
+ */
+export function createToaster(queue: ToastQueue): Toaster {
+  return toaster(() => queue);
+}

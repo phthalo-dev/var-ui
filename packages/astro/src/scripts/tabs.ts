@@ -9,12 +9,16 @@ export function createTabsController(root: HTMLElement): void {
   const tablist = tablistEl;
 
   const tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
-  const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
 
+  /**
+   * The panel a tab controls, by `aria-controls` anywhere in the document: panels may live in a
+   * different layout region from the tab list (`<Tabs panels={false}>` + `<TabPanel>`, #197).
+   */
   function getPanelForTab(tab: HTMLElement): HTMLElement | null {
     const panelId = tab.getAttribute('aria-controls');
     if (!panelId) return null;
-    return panels.find((panel) => panel.id === panelId) ?? null;
+    const panel = root.ownerDocument.getElementById(panelId);
+    return panel?.getAttribute('role') === 'tabpanel' ? panel : null;
   }
 
   function positionIndicator(): void {
@@ -62,7 +66,17 @@ export function createTabsController(root: HTMLElement): void {
 
     let nextIndex: number | null = null;
 
-    switch (event.key) {
+    // Arrow keys follow the reading direction: in RTL, ArrowLeft moves to the next tab.
+    const direction =
+      getComputedStyle(tablist).direction || tablist.closest('[dir]')?.getAttribute('dir');
+    const rtl = direction === 'rtl';
+    const key =
+      rtl && event.key === 'ArrowLeft'
+        ? 'ArrowRight'
+        : rtl && event.key === 'ArrowRight'
+          ? 'ArrowLeft'
+          : event.key;
+    switch (key) {
       case 'ArrowLeft':
         nextIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
         break;

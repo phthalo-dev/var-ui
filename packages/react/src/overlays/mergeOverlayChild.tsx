@@ -54,9 +54,9 @@ export function mergeOverlayChild(child: ReactElement, props: OverlayChildProps)
 }
 
 /**
- * How a wired child registers with react-aria's trigger context: `press` (Pressable, for Dialog,
- * Drawer and Menu triggers) or `none` (plain merge, for Close buttons and the native popover
- * relations). react-aria injects trigger props through context rather than `cloneElement`, so host
+ * How a wired child registers with react-aria's trigger context: `press` (Pressable, for Dialog
+ * and Drawer triggers) or `none` (plain merge, for Menu triggers, Close buttons and the native
+ * popover relations). react-aria injects trigger props through context rather than `cloneElement`, so host
  * elements such as `<button>` must be wrapped to register; react-aria components (`Button`)
  * already register themselves.
  */

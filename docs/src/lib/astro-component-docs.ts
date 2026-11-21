@@ -17,6 +17,7 @@ export type AstroComponentDoc = {
 };
 
 import { getComponentMeta, type RecipeSchemaAxis } from 'typestyles';
+import { getRecipeDefaults } from './recipe-defaults';
 import {
   accordionGroup,
   avatar,
@@ -270,9 +271,10 @@ export function getAstroComponentDoc(slug: string): AstroComponentDoc | null {
   const bound = destructuredPropNames(source);
   const extended = recipe ? schemaPropDocs(recipe).filter((prop) => bound.has(prop.name)) : [];
   const local = extracted?.block ? parseProps(extracted.block) : [];
+  const recipeDefaults = getRecipeDefaults(slug);
   const props = [...extended, ...local].map((prop) => ({
     ...prop,
-    default: defaults[prop.name],
+    default: defaults[prop.name] ?? recipeDefaults[prop.name],
   }));
 
   return {

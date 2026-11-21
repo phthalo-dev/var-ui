@@ -80,6 +80,17 @@ export function registerBaseStyles(): void {
         backgroundColor: t.color.background.app.var,
         color: t.color.text.primary.var,
       },
+      // A scoped theme surface (`DesignSystemProvider` without `applyToDocument`) defines the
+      // tokens `body` reads, so `body` sees only their `@property` initial values (0px font,
+      // 0 line height, transparent text) and its children would inherit those. The surface
+      // restates the document text defaults from its own tokens. No background: a scoped
+      // surface does not paint the app background.
+      [`body [class*="${THEME_CLASS_PREFIX}"]`]: {
+        fontFamily: t.fontFamily.body.var,
+        fontSize: t.fontSize.md.var,
+        lineHeight: t.lineHeight.normal.var,
+        color: t.color.text.primary.var,
+      },
       // Theme font roles only. Sizes, margins and block chrome (lists, quotes, rules, tables,
       // fenced code) are content formatting: they live in `prose`, so a component that renders
       // a heading, a <table> or a <ul> never inherits document formatting it has to undo.
