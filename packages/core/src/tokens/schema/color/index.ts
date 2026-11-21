@@ -1,5 +1,6 @@
 import type { TokenSchema } from 'typestyles';
 import { backgroundTokenSchema } from './background';
+import { categoricalTokenSchema, chartTokenSchema, hueTokenSchema } from './categorical';
 import { borderTokenSchema } from './border';
 import { codeTokenSchema } from './code';
 import { linkTokenSchema } from './link';
@@ -25,4 +26,7 @@ export const colorTokenSchema = {
   skeleton: skeletonTokenSchema,
   track: trackTokenSchema,
   code: codeTokenSchema,
+  hue: hueTokenSchema,
+  categorical: categoricalTokenSchema,
+  chart: chartTokenSchema,
 } as const satisfies TokenSchema;

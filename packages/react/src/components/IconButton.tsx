@@ -25,11 +25,7 @@ export function IconButton({
   return (
     <Button {...props} size={resolvedSize} layout="icon">
       {typeof icon === 'string' ? (
-        <Icon
-          name={icon as IconName}
-          size={resolvedSize === 'xl' ? 'lg' : resolvedSize}
-          data-mirror={dataMirror}
-        />
+        <Icon name={icon as IconName} size={resolvedSize} data-mirror={dataMirror} />
       ) : (
         icon
       )}

@@ -7,10 +7,8 @@ import type {
   Ref,
 } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable } from 'react-aria-components';
-import { NativePopover, NativePopoverTrigger } from '../internal/NativePopover';
+import { Popover } from './Popover';
 import { colorField } from '@var-ui/core/components/colorField';
-import { popover } from '@var-ui/core/components/popover';
 import type { ColorFieldVariantProps, ControlSize } from '@var-ui/core';
 import { isValidHex, normalizeHex, rgbToHex } from '../color/convert';
 import { colorValueLabel } from '@var-ui/core/shared/colorLabel';
@@ -146,7 +144,6 @@ export function ColorInput({
   const cf = colorField({ size: resolvedSize, appearance, format });
   const isField = appearance === 'field';
   const isCss = format === 'css';
-  const p = popover();
   const frame = useFieldFrame({
     description,
     errorMessage,
@@ -183,6 +180,7 @@ export function ColorInput({
       ? normalizeHex(color)
       : normalizeHex(defaultValue);
 
+  const pickerRef = useRef<HTMLDivElement>(null);
   // The picker works in hex: a `css` value is resolved through the painted swatch.
   const swatchRef = useRef<HTMLSpanElement>(null);
   const [resolvedHex, setResolvedHex] = useState<string | undefined>(undefined);
@@ -242,8 +240,15 @@ export function ColorInput({
       style={style}
     >
       <div {...mergeProps(cf.inputWrapper)} data-disabled={disabled || undefined}>
-        <NativePopoverTrigger>
-          <Pressable>
+        <Popover.Root
+          onOpenChange={(next) => {
+            // The picker is a dialog: take focus into it, as the trigger's keyboard user expects.
+            // Escape / light dismiss hand it back to the swatch (native popover focus return).
+            if (next)
+              requestAnimationFrame(() => pickerRef.current?.focus({ preventScroll: true }));
+          }}
+        >
+          <Popover.Trigger>
             <button
               type="button"
               {...mergeProps(cf.swatchButton)}
@@ -257,9 +262,14 @@ export function ColorInput({
                 aria-hidden
               />
             </button>
-          </Pressable>
-          <NativePopover {...mergeProps(p.root)}>
-            <div {...mergeProps(p.content)}>
+          </Popover.Trigger>
+          <Popover.Popup
+            placement="bottom start"
+            aria-label={swatchLabel}
+            tabIndex={-1}
+            ref={pickerRef}
+          >
+            <Popover.Content>
               <ColorPicker
                 size={resolvedSize}
                 value={pickerValue}
@@ -268,9 +278,9 @@ export function ColorInput({
                 swatchesPerRow={swatchesPerRow}
                 withAlpha={withAlpha}
               />
-            </div>
-          </NativePopover>
-        </NativePopoverTrigger>
+            </Popover.Content>
+          </Popover.Popup>
+        </Popover.Root>
         {isField && isCss && name ? <input type="hidden" name={name} value={color} /> : null}
         {isField ? (
           <input

@@ -9,12 +9,15 @@ type DivProps = Omit<HTMLAttributes<'div'>, 'title'> & {
   title?: string;
   /** Semantic level of the title heading. @default 3 */
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Supporting copy below the title. */
+  description?: string;
   className?: string;
 };
 
 /**
  * With `href` the whole card is a link, like React's `Card` and `Button`. A `media` slot renders
- * full-bleed above the title (React: the `media` prop).
+ * full-bleed above the title (React: the `media` prop), and a `title-end` slot sits at the end of
+ * the title row, e.g. a status badge (React: `titleEnd`).
  */
 type LinkProps = Omit<HTMLAttributes<'a'>, 'title' | 'href'> & {
   href: string;
@@ -41,18 +44,35 @@ const {
 } = Astro.props as Omit<DivProps, 'href'> & Partial<Omit<LinkProps, 'href'>> & { href?: string };
 const c = card();
 const Heading = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+const hasTitleEnd = Astro.slots.has('title-end');
+const hasBody = Astro.slots.has('default');
 ---
 {href !== undefined ? (
   <a href={href} {...rest} {...combine(c.root, c.linkRoot, className)}>
     {Astro.slots.has('media') ? <div {...mergeProps(c.media)}><slot name="media" /></div> : null}
-    <span {...mergeProps(c.linkTitle)}>{title}</span>
+    {hasTitleEnd ? (
+      <span {...mergeProps(c.header)}>
+        <span {...mergeProps(c.linkTitle)}>{title}</span>
+        <span {...mergeProps(c.titleEnd)}><slot name="title-end" /></span>
+      </span>
+    ) : (
+      <span {...mergeProps(c.linkTitle)}>{title}</span>
+    )}
     {description ? <p {...mergeProps(c.linkDescription)}>{description}</p> : null}
     <slot />
     {hint ? <span {...mergeProps(c.linkHint)}>{hint}</span> : null}
   </a>
 ) : (
   <div {...rest} {...mergeProps(c.root, className)}>
-    {title ? <Heading {...mergeProps(c.title)}>{title}</Heading> : null}
-    <div {...mergeProps(c.body)}><slot /></div>
+    {hasTitleEnd ? (
+      <div {...mergeProps(c.header)}>
+        {title ? <Heading {...mergeProps(c.title)}>{title}</Heading> : null}
+        <div {...mergeProps(c.titleEnd)}><slot name="title-end" /></div>
+      </div>
+    ) : title ? (
+      <Heading {...mergeProps(c.title)}>{title}</Heading>
+    ) : null}
+    {description ? <p {...mergeProps(c.description)}>{description}</p> : null}
+    {hasBody ? <div {...mergeProps(c.body)}><slot /></div> : null}
   </div>
 )}

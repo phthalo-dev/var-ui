@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, JSX, ReactNode } from 'react';
+import type { ComponentPropsWithRef, CSSProperties, JSX, ReactNode } from 'react';
 import {
   createContext,
   useCallback,
@@ -18,8 +18,9 @@ import {
   UNSTABLE_ToastRegion as AriaToastRegion,
 } from 'react-aria-components';
 import { type VariantOptions } from 'typestyles';
-import { placement as toastPlacement } from '@var-ui/core/shared/variantAxes';
+import { toastPlacement } from '@var-ui/core/shared/variantAxes';
 import { toast as toastRecipe } from '@var-ui/core/components/toast';
+import { recipeVars, styleVars } from '@var-ui/core/components/styleVars';
 import type { ToastVariantProps } from '@var-ui/core';
 import { Icon } from '../icons';
 import { useMergedRef } from '../overlays/useMergedRef';
@@ -38,10 +39,40 @@ import { mergeProps } from 'typestyles';
 
 export type ToastPlacement = VariantOptions<typeof toastPlacement>;
 export type { ToastContentData } from '../toast/types';
-export { toast, type ImperativeToast, type ToastShowInput } from '../toast/imperativeToast';
+export {
+  createToaster,
+  toast,
+  type ImperativeToast,
+  type Toaster,
+  type ToastShowInput,
+} from '../toast/imperativeToast';
 export { ToastQueue } from '../toast/toastQueue';
 
 const DEFAULT_MAX = 3;
+
+type Length = number | string;
+
+/**
+ * Distance of the region from the screen edges it is anchored to. A number is px. `block` is the
+ * top or bottom edge, `inline` the start or end edge (unused by the `*-center` placements). A
+ * single value applies to both.
+ */
+export type ToastOffset = Length | { block?: Length; inline?: Length };
+
+const toLength = (value: Length | undefined) =>
+  value === undefined ? undefined : typeof value === 'number' ? `${value}px` : value;
+
+const toastVars = recipeVars(toastRecipe);
+
+/** `offset` as the recipe's `offsetBlock` / `offsetInline` vars. */
+function offsetStyle(offset: ToastOffset | undefined): CSSProperties | undefined {
+  if (offset === undefined) return undefined;
+  const { block, inline } = typeof offset === 'object' ? offset : { block: offset, inline: offset };
+  return styleVars([
+    [toastVars.offsetBlock, toLength(block)],
+    [toastVars.offsetInline, toLength(inline)],
+  ]);
+}
 
 type ToastContextValue = {
   queue: ToastQueue;
@@ -102,8 +133,10 @@ export function Toast({
 export type ToastRegionProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   /** The toast queue to display. Construct one with `new ToastQueue()` for a declarative, provider-free setup. */
   queue: ToastQueue;
-  /** Screen corner the region anchors to. @default bottom-end */
+  /** Screen corner or edge center the region anchors to. @default bottom-end */
   placement?: ToastPlacement;
+  /** Distance from the anchored edges, e.g. `{ block: 'var(--player-height)' }` above a bottom bar. */
+  offset?: ToastOffset;
   /** Accessible label for each toast's dismiss button. @default Dismiss */
   dismissLabel?: string;
 };
@@ -115,8 +148,10 @@ export type ToastRegionProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & 
 export function ToastRegion({
   queue,
   placement = 'bottom-end',
+  offset,
   dismissLabel = 'Dismiss',
   className,
+  style,
   ref,
   ...rest
 }: ToastRegionProps): JSX.Element {
@@ -166,6 +201,7 @@ export function ToastRegion({
       {...rest}
       queue={leaving ?? queue}
       {...mergeProps(region.region, className)}
+      style={{ ...offsetStyle(offset), ...style }}
       inert={open ? undefined : true}
       ref={mergedRef}
     >
@@ -201,14 +237,21 @@ export function ToastRegion({
   );
 }
 
-export type ToastProviderProps = {
+export type ToastProviderProps = Pick<
+  ToastRegionProps,
+  'placement' | 'offset' | 'dismissLabel' | 'className' | 'style'
+> & {
   children: ReactNode;
-  /** Screen corner the toast region anchors to. @default bottom-end */
-  placement?: ToastPlacement;
-  /** Maximum number of toasts visible at once; older toasts queue behind this limit. @default 3 */
+  /**
+   * Maximum number of toasts visible at once; older toasts queue behind this limit. With your own
+   * `queue`, the queue's limit applies unless you pass this. @default 3
+   */
   maxVisibleToasts?: number;
-  /** Accessible label for each toast's dismiss button. @default Dismiss */
-  dismissLabel?: string;
+  /**
+   * Use a queue you created (`new ToastQueue()`) instead of an internal one, so code outside React
+   * can also reach it with `createToaster(queue)`. `toast()` targets it while the provider is mounted.
+   */
+  queue?: ToastQueue;
 };
 
 /**
@@ -224,15 +267,21 @@ export type ToastProviderProps = {
 export function ToastProvider({
   children,
   placement = 'bottom-end',
-  maxVisibleToasts = DEFAULT_MAX,
-  dismissLabel,
+  maxVisibleToasts,
+  queue: ownQueue,
+  ...regionProps
 }: ToastProviderProps): JSX.Element {
   // Created once so changing `maxVisibleToasts` keeps the toasts on screen; the limit is applied to
   // the live queue instead.
-  const [queue] = useState(() => new ToastQueue({ maxVisibleToasts }));
+  const [internalQueue] = useState(
+    () => new ToastQueue({ maxVisibleToasts: maxVisibleToasts ?? DEFAULT_MAX }),
+  );
+  const queue = ownQueue ?? internalQueue;
+  // An app's own queue keeps its own limit unless the prop says otherwise.
+  const limit = maxVisibleToasts ?? (ownQueue ? undefined : DEFAULT_MAX);
   useEffect(() => {
-    queue.setMaxVisible(maxVisibleToasts);
-  }, [queue, maxVisibleToasts]);
+    if (limit !== undefined) queue.setMaxVisible(limit);
+  }, [queue, limit]);
   const value = useMemo(() => ({ queue, placement }), [queue, placement]);
 
   useEffect(() => {
@@ -243,7 +292,7 @@ export function ToastProvider({
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <ToastRegion queue={queue} placement={placement} dismissLabel={dismissLabel} />
+      <ToastRegion {...regionProps} queue={queue} placement={placement} />
     </ToastContext.Provider>
   );
 }

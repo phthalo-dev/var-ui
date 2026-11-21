@@ -4,12 +4,13 @@ import { statusDot } from '@var-ui/core/components/statusDot';
 import type { StatusDotVariantProps } from '@var-ui/core';
 import { mergeProps } from '../utils';
 
-interface Props extends Omit<HTMLAttributes<'span'>, 'children'>, StatusDotVariantProps {
+interface Props extends Omit<HTMLAttributes<'span'>, 'children' | 'color'>, StatusDotVariantProps {
   className?: string;
 }
 
 const {
   tone = 'neutral',
+  color,
   appearance = 'solid',
   pulse = false,
   'aria-label': ariaLabel,
@@ -19,7 +20,7 @@ const {
 ---
 <span
   {...rest}
-  {...mergeProps(statusDot({ tone, appearance, pulse }), className)}
+  {...mergeProps(statusDot({ tone, color, appearance, pulse }), className)}
   aria-label={ariaLabel}
   role={ariaLabel ? 'img' : undefined}
   aria-hidden={ariaLabel ? undefined : true}

@@ -45,12 +45,13 @@
  *    For ComboBox the focus stays in the input, which closes itself on Escape; nothing runs here.
  * 5. RAC triggers open on pointerdown and use `state.close()` themselves (selection, Escape in
  *    Menu, ...). We follow `state.isOpen` as the single source of truth and never keep open state.
- * 6. RAC `Popover` renders through react-aria's `Overlay`, whose `ClearPressResponder` stops the
- *    trigger's `PressResponder` (MenuTrigger, DialogTrigger) from merging its handlers and ref
- *    into every pressable inside the popup (without it, the first Menu item REPLACES `triggerRef`
- *    and every item behaves as a trigger). We use the same public `Overlay` from `react-aria`
- *    (an explicit dependency pinned to the version RAC pins), portaled into our own shell, with
- *    focus management off. A second copy of `react-aria` would silently break this.
+ * 6. RAC `Popover` renders through react-aria's `Overlay`, whose `ClearPressResponder` stops a
+ *    trigger's `PressResponder` (RAC `MenuTrigger`, `DialogTrigger`) from merging its handlers and
+ *    ref into every pressable inside the popup. We never render this shell under a RAC trigger
+ *    that has a `PressResponder`: `Menu` provides RAC's menu contexts itself, and the other users
+ *    (`Select`, `ComboBox`, the date pickers) have none. So content renders in place, with no
+ *    `Overlay` and no direct `react-aria` dependency. Do not wrap it in RAC `MenuTrigger` /
+ *    `DialogTrigger`.
  * 7. Children must mount only while open (and while the exit animation runs): RAC Menu/ListBox
  *    apply `autoFocus` when they mount, which on an always-mounted hidden shell would focus
  *    nothing useful.
@@ -82,18 +83,10 @@ import {
   useContextProps,
   type PopoverProps as RacPopoverProps,
 } from 'react-aria-components';
-import { Overlay } from 'react-aria/Overlay';
 import { useAnchor, type AnchorPlacement } from '../overlays/useAnchor';
 import { useMergedRef } from '../overlays/useMergedRef';
 import { useOverlayRoot } from '../overlays/useOverlayRoot';
 import { usePopoverElement } from '../overlays/usePopoverElement';
-
-/**
- * RAC's `DialogTrigger`, re-exported so this adapter stays the only file that imports a RAC overlay
- * component (see `nativeOverlayGates.test.ts`). It owns the open state and provides the contexts
- * `NativePopover` reads, for popups whose trigger is not a RAC `Select`/`ComboBox`/`MenuTrigger`.
- */
-export { DialogTrigger as NativePopoverTrigger } from 'react-aria-components';
 
 export type NativePopoverProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   children?: ReactNode;
@@ -126,6 +119,18 @@ type RacPopoverContextProps = Pick<
   'aria-labelledby'?: string;
   scrollRef?: unknown;
 };
+
+let warnedDuplicate = false;
+function warnTriggerInsidePopup() {
+  if (warnedDuplicate || process.env.NODE_ENV === 'production') return;
+  warnedDuplicate = true;
+  console.warn(
+    "[var-ui] A popup item took over its trigger's ref. This happens when a var-ui popup " +
+      '(Menu.Popup, Select, …) is rendered inside a react-aria-components `MenuTrigger` or ' +
+      "`DialogTrigger`, whose press responder reaches the popup's items. Use the var-ui " +
+      'trigger parts (`Menu.Trigger`, `Popover.Trigger`) instead.',
+  );
+}
 
 const SIDES = new Set(['top', 'bottom', 'start', 'end']);
 const ALIGNS = new Set(['start', 'center', 'end']);
@@ -192,10 +197,19 @@ function NativePopoverShell({
     open: state.isOpen,
     onOpenChange: (next) => state.setOpen(next),
   });
-  const { setTriggerEl } = root;
+  const { setTriggerEl, popupEl } = root;
   // RAC's `triggerRef` is a ref object (a getter for ComboBox/DatePicker): sample it each commit.
   useLayoutEffect(() => {
-    setTriggerEl((triggerRef?.current as HTMLElement | null | undefined) ?? null);
+    const next = (triggerRef?.current as HTMLElement | null | undefined) ?? null;
+    // A trigger inside the popup is never right: it means a RAC trigger's `PressResponder` reached
+    // the items (this shell rendered under RAC `MenuTrigger` / `DialogTrigger`, #234), so an
+    // item's `usePress` took over `triggerRef`. Keep the last real trigger so the popup stays
+    // anchored to it.
+    if (next && popupEl?.contains(next)) {
+      warnTriggerInsidePopup();
+      return;
+    }
+    setTriggerEl(next);
   });
 
   const latestOpen = useRef(state.isOpen);
@@ -364,11 +378,7 @@ function NativePopoverShell({
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
     >
-      {pop.mounted && pop.element ? (
-        <Overlay portalContainer={pop.element} disableFocusManagement>
-          {content}
-        </Overlay>
-      ) : null}
+      {pop.mounted && pop.element ? content : null}
     </div>
   );
   return parentShell ? createPortal(shell, parentShell) : shell;
