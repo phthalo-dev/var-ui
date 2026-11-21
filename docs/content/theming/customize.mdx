@@ -56,7 +56,7 @@ export const acme = createDesignTheme({
     button: ({ tokens: t }) => ({
       base: {
         borderRadius: '62.4375rem',
-        boxShadow: t.brand.glow,
+        boxShadow: t.brand.glow.var,
         '&:hover': { boxShadow: 'none' },
       },
       variants: {
@@ -85,7 +85,7 @@ export const acme = createDesignTheme({
 ```
 
 - `acme.className` — theme surface class (`theme-var-ui-acme`)
-- `acme.tokens.brand.glow` — typed `var(--var-ui-brand-glow)` ref
+- `acme.tokens.brand.glow` — a `{ name, var }` ref, like every `designTokens` leaf: `acme.tokens.brand.glow.var` is `var(--var-ui-brand-glow)`
 
 Try the **Acme (V7 + V8 demo)** palette in the vite example app to see this live.
 
@@ -144,7 +144,7 @@ import type { AcmeTokens } from './acme.tokens';
 
 export const buttonOverride = (t: AcmeTokens) =>
   ({
-    base: { boxShadow: t.brand.glow },
+    base: { boxShadow: t.brand.glow.var },
   }) satisfies OverrideConfigFor<typeof button>;
 
 // theme.ts
