@@ -180,7 +180,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-button-background",
       "--var-ui-button-border",
       "--var-ui-button-foreground",
-      "--var-ui-button-ghosthover",
       "--var-ui-button-semantic",
       "--var-ui-button-solidbg",
       "--var-ui-button-solidfg",

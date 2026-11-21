@@ -12,8 +12,8 @@ import { size as sizeAxis, type ControlSize } from '../shared/variantAxes';
 import {
   controlAppearancePaint,
   controlToneAssignments,
+  neutralGhostHoverPaint,
   mapTone,
-  subtleBackgroundColor,
   tone,
 } from '../shared/semanticTone';
 
@@ -102,10 +102,6 @@ export const button = typestyles.recipe({
       ...atProperty.color,
       value: t.color.text.primary.var,
     },
-    ghostHover: {
-      ...atProperty.color,
-      value: subtleBackgroundColor(t.color.text.primary.var),
-    },
   },
   styles: ({ vars }) => {
     return {
@@ -181,6 +177,12 @@ export const button = typestyles.recipe({
           false: {},
         },
       },
+      compoundVariants: [
+        {
+          variants: { tone: 'neutral', appearance: 'ghost' },
+          style: neutralGhostHoverPaint(vars),
+        },
+      ],
     };
   },
 });
