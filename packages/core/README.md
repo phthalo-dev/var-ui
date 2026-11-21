@@ -59,7 +59,7 @@ See [`examples/vite-app`](../../examples/vite-app/README.md) and [`examples/astr
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Themes**        | `createDesignTheme`, `defaultTheme`, `disposeDesignTheme`, `DEFAULT_THEME_NAME`, `defaultThemeClassName`, `COLOR_MODE_ATTRIBUTE`, `mergeThemeOverrides` |
 | **Tokens**        | `designTokens`, `tokens`, `tokenValues`, `generateColors`, `lightSyntaxValues`, `darkSyntaxValues`                                                      |
-| **Customization** | `when`, `defineFonts`, `groteskMono`                                                                                                                    |
+| **Customization** | `when`, `defineFonts`, `groteskMono()`, `figtreeGrotesk()` (self-host the woff2 files; see Customize → Font presets)                                    |
 | **TypeStyles**    | `typestyles`, `style`, `recipe`, `tokens`, `global`, `breakpoint`, `media`, `override`                                                                  |
 | **Types**         | `DesignTheme`, `DesignThemeConfig`, `DesignThemeTokenValues`, `OverrideConfigFor`, …                                                                    |
 

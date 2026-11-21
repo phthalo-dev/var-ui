@@ -83,7 +83,7 @@ const aiGlowTone = {
 
 const aiGlowPrimitiveValues = {
   fontFamily: {
-    ...groteskMono.tokens.fontFamily,
+    ...groteskMono().tokens.fontFamily,
     display: '"Fraunces", Georgia, serif',
   },
   fontSize: {
@@ -217,7 +217,7 @@ export const aiGlowThemeTokens = {
   },
 } satisfies DesignThemeTokenValues;
 
-const aiGlowFonts = [...groteskMono.fonts, frauncesFace];
+const aiGlowFonts = [...groteskMono().fonts, frauncesFace];
 
 for (const face of aiGlowFonts) {
   registerFontFace(face);

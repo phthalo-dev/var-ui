@@ -13,11 +13,11 @@ import type { CreateTokenValues } from 'typestyles';
 const docsDefaultTokens = {
   ...tokenValues,
   // Figtree body, Space Grotesk display, JetBrains Mono code.
-  fontFamily: { ...tokenValues.fontFamily, ...figtreeGrotesk.tokens.fontFamily },
+  fontFamily: { ...tokenValues.fontFamily, ...figtreeGrotesk().tokens.fontFamily },
 } satisfies DesignThemeTokenValues;
 
 export const defaultTheme = createDesignTheme({
   name: 'default',
   tokens: docsDefaultTokens as DesignThemeTokenValues as Record<string, CreateTokenValues>,
-  fonts: figtreeGrotesk.fonts,
+  fonts: figtreeGrotesk().fonts,
 });

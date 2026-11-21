@@ -72,14 +72,14 @@ const forestFonts = [
   newsreaderItalicFace,
   figtreeNormalFace,
   figtreeItalicFace,
-  ...groteskMono.fonts.filter((face) => face.family === 'JetBrains Mono'),
+  ...groteskMono().fonts.filter((face) => face.family === 'JetBrains Mono'),
 ];
 
 export const forestThemeTokens = {
   fontFamily: {
     display: '"Newsreader", Georgia, "Times New Roman", serif',
     body: '"Figtree", ui-sans-serif, system-ui, sans-serif',
-    mono: groteskMono.tokens.fontFamily.mono!,
+    mono: groteskMono().tokens.fontFamily.mono!,
   },
   color: {
     background: {

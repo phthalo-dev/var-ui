@@ -187,7 +187,7 @@ export const newWaveThemeTokens = {
   },
 } satisfies DesignThemeTokenValues;
 
-for (const face of groteskMono.fonts) {
+for (const face of groteskMono().fonts) {
   registerFontFace(face);
 }
 
