@@ -142,6 +142,7 @@ export const slider = typestyles.recipe({
         },
         output: {
           fontSize: t.fontSize.sm.var,
+          fontVariantNumeric: 'tabular-nums',
           color: vars.outputColor.var,
         },
       },

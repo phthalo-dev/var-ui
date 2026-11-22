@@ -71,6 +71,7 @@ export const docsProse = typestyles.recipe({
         '& > h1 + p': {
           fontSize: t.fontSize.prose.lead.var,
           lineHeight: t.lineHeight.prose.lead.var,
+          letterSpacing: '-0.005em',
           color: t.color.text.secondary.var,
           marginBottom: t.space.lg.var,
           [belowMd]: {
@@ -90,8 +91,12 @@ export const docsProse = typestyles.recipe({
             marginTop: t.space.xxl.var,
           },
         },
+        // Display face for page and section titles (H1/H2); sub-headings switch to the body
+        // face so the display voice stays a signal, not texture.
         '& h3': {
-          letterSpacing: '-0.01em',
+          fontFamily: t.fontFamily.body.var,
+          fontWeight: 650,
+          letterSpacing: '-0.005em',
           lineHeight: t.lineHeight.prose.h3.var,
           marginTop: t.space.xl.var,
           marginBottom: t.space.xs.var,
@@ -101,6 +106,7 @@ export const docsProse = typestyles.recipe({
           marginTop: t.space.lg.var,
         },
         '& h4, & h5, & h6': {
+          fontFamily: t.fontFamily.body.var,
           lineHeight: '1.5rem',
           marginTop: t.space.lg.var,
           marginBottom: t.space.xxs.var,

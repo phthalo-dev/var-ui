@@ -89,6 +89,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "layoutShellPaddingAssignments",
     ],
     "object": [
+      "alloGrotesk",
       "figtreeGrotesk",
       "focusRing",
       "scrollAreaFade",
@@ -210,7 +211,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "helper": 63,
       "icons": 1,
       "layout": 5,
-      "object": 5,
+      "object": 6,
       "recipe": 61,
       "recipe-adjacent": 6,
       "runtime": 1,
@@ -220,10 +221,10 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByKind": {
       "function": 148,
       "number": 4,
-      "object": 20,
+      "object": 21,
       "string": 5,
     },
-    "runtimeExports": 177,
+    "runtimeExports": 178,
     "typeOnlyExports": 154,
   },
   "typeOnlyExports": [
