@@ -95,30 +95,31 @@ export function initCommandPalette(root: HTMLElement): () => void {
   let activeIndex = -1;
   let flatItems: CommandPaletteClientItem[] = [];
 
-  const resultLinkClass = root.dataset.classResultLink ?? 'var-ui-command-palette__resultLink';
+  const resultLinkClass = root.dataset.varUiClassResultLink ?? 'var-ui-command-palette__resultLink';
   const resultLinkActiveClass =
-    root.dataset.classResultLinkActive ?? 'var-ui-command-palette__resultLinkActive';
-  const resultBodyClass = root.dataset.classResultBody ?? 'var-ui-command-palette__resultBody';
-  const resultTitleClass = root.dataset.classResultTitle ?? 'var-ui-command-palette__resultTitle';
-  const resultMetaClass = root.dataset.classResultMeta ?? 'var-ui-command-palette__resultMeta';
-  const emptyClass = root.dataset.classEmpty ?? 'var-ui-command-palette__empty';
-  const emptyIconClass = root.dataset.classEmptyIcon ?? 'var-ui-command-palette__emptyIcon';
-  const emptyTitleClass = root.dataset.classEmptyTitle ?? 'var-ui-command-palette__emptyTitle';
-  const emptyHintClass = root.dataset.classEmptyHint ?? 'var-ui-command-palette__emptyHint';
-  const emptyHint = root.dataset.emptyHint || '';
+    root.dataset.varUiClassResultLinkActive ?? 'var-ui-command-palette__resultLinkActive';
+  const resultBodyClass = root.dataset.varUiClassResultBody ?? 'var-ui-command-palette__resultBody';
+  const resultTitleClass =
+    root.dataset.varUiClassResultTitle ?? 'var-ui-command-palette__resultTitle';
+  const resultMetaClass = root.dataset.varUiClassResultMeta ?? 'var-ui-command-palette__resultMeta';
+  const emptyClass = root.dataset.varUiClassEmpty ?? 'var-ui-command-palette__empty';
+  const emptyIconClass = root.dataset.varUiClassEmptyIcon ?? 'var-ui-command-palette__emptyIcon';
+  const emptyTitleClass = root.dataset.varUiClassEmptyTitle ?? 'var-ui-command-palette__emptyTitle';
+  const emptyHintClass = root.dataset.varUiClassEmptyHint ?? 'var-ui-command-palette__emptyHint';
+  const emptyHint = root.dataset.varUiEmptyHint || '';
   const frame = results.parentElement;
   const searchIconSvg =
     root.querySelector('[data-var-ui-command-palette-input-icon]')?.innerHTML ?? '';
-  const resultIconClass = root.dataset.classResultIcon ?? 'var-ui-command-palette__resultIcon';
-  const markClass = root.dataset.classMark ?? 'var-ui-command-palette__mark';
-  const highlight = root.dataset.highlightMatches !== 'false';
-  const recentKey = root.dataset.recentKey || '';
-  const recentLabel = root.dataset.recentLabel || 'Recent';
-  const emptyLabel = root.dataset.emptyLabel || 'No results';
-  const groupClass = root.dataset.classGroup ?? 'var-ui-command-palette__group';
+  const resultIconClass = root.dataset.varUiClassResultIcon ?? 'var-ui-command-palette__resultIcon';
+  const markClass = root.dataset.varUiClassMark ?? 'var-ui-command-palette__mark';
+  const highlight = root.dataset.varUiHighlightMatches !== 'false';
+  const recentKey = root.dataset.varUiRecentKey || '';
+  const recentLabel = root.dataset.varUiRecentLabel || 'Recent';
+  const emptyLabel = root.dataset.varUiEmptyLabel || 'No results';
+  const groupClass = root.dataset.varUiClassGroup ?? 'var-ui-command-palette__group';
   const groupHeadingClass =
-    root.dataset.classGroupHeading ?? 'var-ui-command-palette__groupHeading';
-  const paletteId = root.id || root.dataset.commandPaletteId || '';
+    root.dataset.varUiClassGroupHeading ?? 'var-ui-command-palette__groupHeading';
+  const paletteId = root.id || root.dataset.varUiCommandPaletteId || '';
 
   function setOpen(open: boolean): void {
     if (open) {
@@ -137,7 +138,9 @@ export function initCommandPalette(root: HTMLElement): () => void {
     input.setAttribute('aria-expanded', String(open));
     if (!paletteId) return;
     document
-      .querySelectorAll(`[data-command-palette="${paletteId}"] [data-var-ui-search-input-trigger]`)
+      .querySelectorAll(
+        `[data-var-ui-command-palette="${paletteId}"] [data-var-ui-search-input-trigger]`,
+      )
       .forEach((trigger) => trigger.setAttribute('aria-expanded', String(open)));
   }
 
@@ -199,8 +202,8 @@ export function initCommandPalette(root: HTMLElement): () => void {
                 href="${escapeAttr(item.id)}"
                 role="option"
                 data-var-ui-command-palette-item
-                data-item-id="${escapeAttr(item.id)}"
-                data-index="${optionIndex}"
+                data-var-ui-item-id="${escapeAttr(item.id)}"
+                data-var-ui-index="${optionIndex}"
                 id="var-ui-command-palette-option-${paletteId || 'default'}-${optionIndex}"
               >${icon}<span class="${resultBodyClass}"><span class="${resultTitleClass}">${text(item.title)}</span>${meta}</span></a>`;
           })
@@ -223,7 +226,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
 
   function syncActive(): void {
     results.querySelectorAll<HTMLElement>('[data-var-ui-command-palette-item]').forEach((el) => {
-      const idx = Number(el.dataset.index);
+      const idx = Number(el.dataset.varUiIndex);
       const isActive = idx === activeIndex;
       el.classList.toggle(resultLinkActiveClass, isActive);
       el.setAttribute('aria-selected', isActive ? 'true' : 'false');
@@ -237,7 +240,9 @@ export function initCommandPalette(root: HTMLElement): () => void {
     } else {
       input.removeAttribute('aria-activedescendant');
     }
-    results.querySelector(`[data-index="${activeIndex}"]`)?.scrollIntoView?.({ block: 'nearest' });
+    results
+      .querySelector(`[data-var-ui-index="${activeIndex}"]`)
+      ?.scrollIntoView?.({ block: 'nearest' });
   }
 
   function activate(direction: 'up' | 'down'): void {
@@ -246,7 +251,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
   }
 
   function selectActive(): void {
-    const link = results.querySelector<HTMLAnchorElement>(`[data-index="${activeIndex}"]`);
+    const link = results.querySelector<HTMLAnchorElement>(`[data-var-ui-index="${activeIndex}"]`);
     if (!link) return;
     setOpen(false);
     link.click();
@@ -271,7 +276,7 @@ export function initCommandPalette(root: HTMLElement): () => void {
       '[data-var-ui-command-palette-item]',
     );
     if (!link) return;
-    const id = link.dataset.itemId;
+    const id = link.dataset.varUiItemId;
     if (recentKey && id) rememberCommandPaletteId(recentKey, id);
     if (!(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) setOpen(false);
   });
@@ -313,13 +318,13 @@ export function initCommandPalette(root: HTMLElement): () => void {
       '[data-var-ui-command-palette-item]',
     );
     if (!target || !results.contains(target)) return;
-    const idx = Number(target.dataset.index);
+    const idx = Number(target.dataset.varUiIndex);
     if (!Number.isFinite(idx) || idx === activeIndex) return;
     activeIndex = idx;
     syncActive();
   });
 
-  const hotkey = root.dataset.hotkey !== 'false';
+  const hotkey = root.dataset.varUiHotkey !== 'false';
   if (hotkey) {
     const handleHotkey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {

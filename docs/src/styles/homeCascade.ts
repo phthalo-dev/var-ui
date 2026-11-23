@@ -84,13 +84,13 @@ export const homeCascade = typestyles.recipe({
         display: 'flex',
         flexDirection: 'column',
         // Small code so each declaration fits on one line; the card fills the row.
-        '& [data-codeblock]': {
+        '& .var-ui-code-block': {
           [codeBlock.vars.fontSize.name]: t.fontSize.xs.var,
           flex: '1 1 auto',
           display: 'flex',
           flexDirection: 'column',
         },
-        '& [data-codeblock-body]': { flex: '1 1 auto' },
+        '& .var-ui-code-block__body': { flex: '1 1 auto' },
       },
       step3: step(5),
       // Name on one line, swatch + value on the next.

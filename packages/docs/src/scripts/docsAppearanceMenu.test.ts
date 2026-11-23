@@ -23,7 +23,7 @@ const PRESETS = [
 ];
 
 function radio(id: string): string {
-  return `<button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-item-id="${id}">${id}</button>`;
+  return `<button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-var-ui-item-id="${id}">${id}</button>`;
 }
 
 /** Mirrors `DocsAppearanceMenu.astro`: a Menu with a Mode group and a Theme group. */
@@ -31,7 +31,7 @@ function mountMenu(): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
     <div data-docs-appearance-menu data-presets='${JSON.stringify(PRESETS)}'
-      data-storage-key="docs-theme-id" data-fallback-class="${defaultThemeClassName}"
+      data-var-ui-storage-key="docs-theme-id" data-fallback-class="${defaultThemeClassName}"
       data-color-mode-storage-key="theme-mode">
       <div data-var-ui-menu-root>
         <button type="button" data-var-ui-menu-trigger>
@@ -49,7 +49,7 @@ function mountMenu(): HTMLElement {
 
 function checked(root: HTMLElement): string[] {
   return Array.from(root.querySelectorAll('[aria-checked="true"]')).map(
-    (el) => el.getAttribute('data-item-id') ?? '',
+    (el) => el.getAttribute('data-var-ui-item-id') ?? '',
   );
 }
 

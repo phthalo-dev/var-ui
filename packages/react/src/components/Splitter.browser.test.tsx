@@ -23,7 +23,9 @@ function Wrap({ children, dir }: { children: React.ReactNode; dir?: 'rtl' }) {
 }
 
 const seps = (c: HTMLElement) => [...c.querySelectorAll<HTMLElement>('[role=separator]')];
-const panels = (c: HTMLElement) => [...c.querySelectorAll<HTMLElement>('[data-splitter-panel]')];
+const panels = (c: HTMLElement) => [
+  ...c.querySelectorAll<HTMLElement>('[data-var-ui-splitter-panel]'),
+];
 const widths = (c: HTMLElement) =>
   panels(c).map((p) => Math.round(p.getBoundingClientRect().width));
 const heights = (c: HTMLElement) =>

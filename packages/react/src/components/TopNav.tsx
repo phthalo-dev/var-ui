@@ -205,7 +205,7 @@ export function TopNavItem({
     <>
       {iconNode}
       {!iconOnly ? (
-        <span data-label={label} {...mergeProps(s.itemLabel)}>
+        <span data-var-ui-label={label} {...mergeProps(s.itemLabel)}>
           {label}
         </span>
       ) : null}

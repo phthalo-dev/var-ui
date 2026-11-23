@@ -18,6 +18,6 @@ describe('EmptyState', () => {
 
   it('omits the icon well when no icon is given', () => {
     const { container } = render(<EmptyState title="Empty" />);
-    expect(container.querySelector('[data-empty-state-icon]')).toBeNull();
+    expect(container.querySelector('.var-ui-empty-state__icon')).toBeNull();
   });
 });

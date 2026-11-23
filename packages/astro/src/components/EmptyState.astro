@@ -20,7 +20,7 @@ const hasAction = Astro.slots.has('action');
 <div {...rest} {...mergeProps(e.root, className)}>
   {
     hasIcon ? (
-      <div {...mergeProps(e.icon)} data-empty-state-icon aria-hidden="true">
+      <div {...mergeProps(e.icon)} aria-hidden="true">
         <slot name="icon" />
       </div>
     ) : null

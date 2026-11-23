@@ -21,7 +21,7 @@ describe('Icon', () => {
         <Icon name="search" />
       </IconProvider>,
     );
-    const shell = container.querySelector('[data-icon-fallback]');
+    const shell = container.querySelector('[data-var-ui-icon-fallback]');
     expect(shell).toBeTruthy();
   });
 

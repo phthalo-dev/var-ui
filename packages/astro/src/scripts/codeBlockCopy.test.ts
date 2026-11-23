@@ -26,16 +26,16 @@ describe('initCodeBlockCopy', () => {
   function mount(attrs = '') {
     document.body.innerHTML = `
       <div data-codeblock-actions>
-        <button type="button" data-var-ui-code-copy data-code="hello" ${attrs}>
+        <button type="button" data-var-ui-code-copy data-var-ui-code="hello" ${attrs}>
           <span data-codeblock-copy-icon><svg data-icon="copy"></svg></span>
         </button>
-        <span data-codeblock-feedback role="status"></span>
+        <span data-var-ui-codeblock-feedback role="status"></span>
       </div>
     `;
     initCodeBlockCopy();
     return {
       btn: document.querySelector<HTMLButtonElement>('[data-var-ui-code-copy]')!,
-      feedback: document.querySelector('[data-codeblock-feedback]')!,
+      feedback: document.querySelector('[data-var-ui-codeblock-feedback]')!,
     };
   }
 
@@ -46,7 +46,7 @@ describe('initCodeBlockCopy', () => {
 
   it('on success: check icon, copiedLabel as name, announced (tone success), copied event', async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined));
-    const { btn, feedback } = mount('data-copied-label="Saved"');
+    const { btn, feedback } = mount('data-var-ui-copied-label="Saved"');
     const onCopied = vi.fn();
     document.body.addEventListener(COPIED_EVENT, (event) =>
       onCopied((event as CustomEvent).detail),
@@ -67,7 +67,7 @@ describe('initCodeBlockCopy', () => {
 
   it('on failure: error icon, errorLabel as name and feedback, error event', async () => {
     stubClipboard(vi.fn().mockRejectedValue(new Error('denied')));
-    const { btn, feedback } = mount('data-error-label="Could not copy"');
+    const { btn, feedback } = mount('data-var-ui-error-label="Could not copy"');
     const onError = vi.fn();
     document.body.addEventListener(COPY_ERROR_EVENT, (event) =>
       onError((event as CustomEvent).detail),
@@ -85,7 +85,7 @@ describe('initCodeBlockCopy', () => {
     expect(onError).toHaveBeenCalledWith({ value: 'hello' });
   });
 
-  it('returns to idle after data-timeout (default 2000ms)', async () => {
+  it('returns to idle after data-var-ui-timeout (default 2000ms)', async () => {
     vi.useFakeTimers();
     try {
       stubClipboard(vi.fn().mockResolvedValue(undefined));
@@ -103,11 +103,11 @@ describe('initCodeBlockCopy', () => {
     }
   });
 
-  it('honours data-timeout', async () => {
+  it('honours data-var-ui-timeout', async () => {
     vi.useFakeTimers();
     try {
       stubClipboard(vi.fn().mockResolvedValue(undefined));
-      const { btn } = mount('data-timeout="500"');
+      const { btn } = mount('data-var-ui-timeout="500"');
       btn.click();
       await vi.advanceTimersByTimeAsync(500);
       expect(btn.hasAttribute('data-copied')).toBe(false);

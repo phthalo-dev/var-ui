@@ -11,11 +11,11 @@ const CHECK_ICON = checkSvg;
 const ERROR_ICON = errorSvg;
 
 function getIconEl(btn: HTMLButtonElement): HTMLElement | null {
-  return btn.querySelector('[data-copy-button-icon]');
+  return btn.querySelector('[data-var-ui-copy-button-icon]');
 }
 
 function getTextEl(btn: HTMLButtonElement): HTMLElement | null {
-  return btn.querySelector('[data-copy-button-text]');
+  return btn.querySelector('[data-var-ui-copy-button-text]');
 }
 
 function setState(
@@ -35,10 +35,10 @@ function setState(
 
   const className =
     state === 'copied'
-      ? (btn.getAttribute('data-class-copied') ?? '')
+      ? (btn.getAttribute('data-var-ui-class-copied') ?? '')
       : state === 'error'
-        ? (btn.getAttribute('data-class-error') ?? '')
-        : (btn.getAttribute('data-class-idle') ?? '');
+        ? (btn.getAttribute('data-var-ui-class-error') ?? '')
+        : (btn.getAttribute('data-var-ui-class-idle') ?? '');
   if (className) btn.className = className;
 
   const iconEl = getIconEl(btn);
@@ -53,14 +53,14 @@ export function initCopyButton(btn: HTMLButtonElement): void {
   btn.setAttribute(INITIALIZED_ATTR, '');
 
   if (!btn.getAttribute('aria-label')) {
-    btn.setAttribute('aria-label', btn.getAttribute('data-copy-label') ?? 'Copy');
+    btn.setAttribute('aria-label', btn.getAttribute('data-var-ui-copy-label') ?? 'Copy');
   }
 
   btn.addEventListener('click', async () => {
-    const value = btn.getAttribute('data-value') ?? '';
-    const copyLabel = btn.getAttribute('data-copy-label') ?? 'Copy';
-    const copiedLabel = btn.getAttribute('data-copied-label') ?? 'Copied';
-    const errorLabel = btn.getAttribute('data-error-label') ?? 'Copy failed';
+    const value = btn.getAttribute('data-var-ui-value') ?? '';
+    const copyLabel = btn.getAttribute('data-var-ui-copy-label') ?? 'Copy';
+    const copiedLabel = btn.getAttribute('data-var-ui-copied-label') ?? 'Copied';
+    const errorLabel = btn.getAttribute('data-var-ui-error-label') ?? 'Copy failed';
 
     const ok = await copyText(value);
     if (ok) {

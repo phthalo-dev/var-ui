@@ -8,7 +8,7 @@ describe('bannerDismiss', () => {
 
   it('removes the banner root when dismiss is clicked', () => {
     document.body.innerHTML = `
-      <div data-banner>
+      <div data-var-ui-banner>
         <span>Maintenance Sunday</span>
         <button type="button" data-var-ui-banner-dismiss aria-label="Dismiss"></button>
       </div>
@@ -17,12 +17,12 @@ describe('bannerDismiss', () => {
     initDismissibleBanner();
     document.querySelector<HTMLButtonElement>('[data-var-ui-banner-dismiss]')?.click();
 
-    expect(document.querySelector('[data-banner]')).toBeNull();
+    expect(document.querySelector('[data-var-ui-banner]')).toBeNull();
   });
 
   it('does not double-bind dismiss handlers', () => {
     document.body.innerHTML = `
-      <div data-banner>
+      <div data-var-ui-banner>
         <button type="button" data-var-ui-banner-dismiss aria-label="Dismiss"></button>
       </div>
     `;
@@ -31,6 +31,6 @@ describe('bannerDismiss', () => {
     initDismissibleBanner();
     document.querySelector<HTMLButtonElement>('[data-var-ui-banner-dismiss]')?.click();
 
-    expect(document.querySelector('[data-banner]')).toBeNull();
+    expect(document.querySelector('[data-var-ui-banner]')).toBeNull();
   });
 });

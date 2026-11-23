@@ -23,7 +23,7 @@ describe('typestyles extraction', () => {
     );
     expect(css).toContain('.var-ui-docs-top-nav');
     expect(css).toContain('[data-var-ui-mobile-nav-toggle]');
-    expect(css).toContain('.var-ui-docs-hljs [data-codeblock] .hljs');
+    expect(css).toContain('.var-ui-docs-hljs .var-ui-code-block .hljs');
   });
 
   it('omits base @font-face rules from lazy theme CSS', async () => {

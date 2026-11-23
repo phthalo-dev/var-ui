@@ -12,6 +12,6 @@ const { size = 'md', tone = 'accent', className, ...rest } = Astro.props;
 const styles = timeline({ size, tone });
 ---
 
-<ol {...rest} {...mergeProps(styles.root, className)} data-timeline>
+<ol {...rest} {...mergeProps(styles.root, className)}>
   <slot />
 </ol>

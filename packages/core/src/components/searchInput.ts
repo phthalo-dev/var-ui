@@ -65,7 +65,7 @@ function collapseAt(bp: 'sm' | 'md' | 'lg' | 'xl', iconColorVar: string) {
  *
  * - `default` — a real `<input type="search">` for inline filtering.
  * - `command` — read-only trigger chrome with a shortcut hint; pair with
- *   `CommandPalette` via `data-command-palette` on the Astro component.
+ *   `CommandPalette` via `data-var-ui-command-palette` on the Astro component.
  */
 export const searchInput = typestyles.recipe({
   name: 'search-input',

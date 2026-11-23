@@ -76,7 +76,7 @@ describe('ToastRegion', () => {
     });
     const region = document.querySelector('[popover]') as HTMLElement;
     expect(region.getAttribute('popover')).toBe('manual');
-    expect(region.hasAttribute('data-popover-open')).toBe(true);
+    expect(region.hasAttribute('data-var-ui-popover-open')).toBe(true);
     act(() => queue.close(id));
     expect(document.querySelector('[popover]')).toBeNull();
   });

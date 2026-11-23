@@ -20,7 +20,7 @@ function switcher(selected: string, name = 'fw'): string {
       ${['react', 'astro', 'html']
         .map(
           (id) =>
-            `<label data-segment-id="${id}"${id === selected ? ' data-selected' : ''}><input type="radio" name="${name}" value="${id}"${id === selected ? ' checked' : ''}>${id}</label>`,
+            `<label data-var-ui-segment-id="${id}"${id === selected ? ' data-selected' : ''}><input type="radio" name="${name}" value="${id}"${id === selected ? ' checked' : ''}>${id}</label>`,
         )
         .join('')}
     </div>
@@ -60,13 +60,13 @@ describe('selectFramework', () => {
     expect(document.cookie).toContain(`${FRAMEWORK_COOKIE}=html`);
     expect(document.documentElement.dataset.framework).toBe('html');
     for (const root of document.querySelectorAll('[data-framework-switcher]')) {
-      expect(root.querySelector('[data-segment-id="html"]')?.hasAttribute('data-selected')).toBe(
-        true,
-      );
+      expect(
+        root.querySelector('[data-var-ui-segment-id="html"]')?.hasAttribute('data-selected'),
+      ).toBe(true);
       expect(root.querySelector<HTMLInputElement>('input[value="html"]')?.checked).toBe(true);
-      expect(root.querySelector('[data-segment-id="react"]')?.hasAttribute('data-selected')).toBe(
-        false,
-      );
+      expect(
+        root.querySelector('[data-var-ui-segment-id="react"]')?.hasAttribute('data-selected'),
+      ).toBe(false);
     }
   });
 

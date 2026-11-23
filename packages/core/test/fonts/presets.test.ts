@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { figtreeGrotesk, groteskMono } from '../../src/fonts';
+import { alloGrotesk, figtreeGrotesk, groteskMono } from '../../src/fonts';
 
 const srcs = (preset: ReturnType<typeof groteskMono>) => preset.fonts.map((face) => face.src);
 const url = (path: string) => `url(${JSON.stringify(path)}) format('woff2')`;
@@ -23,6 +23,21 @@ describe('font presets (#247)', () => {
     expect(srcs(groteskMono({ baseUrl: 'https://cdn.example.com/f/' }))[0]).toBe(
       'url("https://cdn.example.com/f/space-grotesk-latin.woff2") format(\'woff2\')',
     );
+  });
+
+  it('alloGrotesk puts every hosted file under baseUrl and keeps its local metric fallbacks', () => {
+    const preset = alloGrotesk({ baseUrl: '/assets/fonts' });
+    const hosted = preset.fonts.flatMap((face) => face.src).filter((src) => src.startsWith('url('));
+    expect(hosted).toEqual(
+      expect.arrayContaining([
+        url('/assets/fonts/allo-latin.woff2'),
+        url('/assets/fonts/allo-latin-italic.woff2'),
+        url('/assets/fonts/space-grotesk-latin.woff2'),
+        url('/assets/fonts/jetbrains-mono-latin.woff2'),
+      ]),
+    );
+    expect(hosted.every((src) => src.includes('/assets/fonts/'))).toBe(true);
+    expect(preset.fonts.some((face) => face.family === 'Allo Fallback')).toBe(true);
   });
 
   it('quotes the URL so a baseUrl with quotes cannot break out of the rule', () => {

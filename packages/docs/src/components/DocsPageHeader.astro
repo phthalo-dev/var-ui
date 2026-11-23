@@ -93,10 +93,10 @@ const hasPreview = Astro.slots.has('preview');
             tabindex="-1"
             {...mergeProps(cb.copyButton)}
             data-var-ui-code-copy
-            data-code={importCode}
-            data-copy-label="Copy import"
-            data-copied-label="Copied"
-            data-error-label="Copy failed"
+            data-var-ui-code={importCode}
+            data-var-ui-copy-label="Copy import"
+            data-var-ui-copied-label="Copied"
+            data-var-ui-error-label="Copy failed"
             aria-label="Copy import"
           >
             <span data-codeblock-copy-icon set:html={copySvg} />
@@ -124,10 +124,10 @@ const hasPreview = Astro.slots.has('preview');
           type="button"
           {...mergeProps(cb.copyButton)}
           data-var-ui-code-copy
-          data-code={importCode}
-          data-copy-label="Copy import"
-          data-copied-label="Copied"
-          data-error-label="Copy failed"
+          data-var-ui-code={importCode}
+          data-var-ui-copy-label="Copy import"
+          data-var-ui-copied-label="Copied"
+          data-var-ui-error-label="Copy failed"
           aria-label="Copy import"
         >
           <span data-codeblock-copy-icon set:html={copySvg} />

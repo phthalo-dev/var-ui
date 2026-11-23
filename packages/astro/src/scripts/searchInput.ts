@@ -9,7 +9,7 @@ export function initSearchInput(root: HTMLElement): () => void {
   }
   root.setAttribute(INITIALIZED_ATTR, '');
 
-  const paletteId = root.dataset.commandPalette;
+  const paletteId = root.dataset.varUiCommandPalette;
   if (!paletteId) return () => {};
 
   const palette = document.getElementById(paletteId);

@@ -2,7 +2,7 @@ export function createAccordionController(root: HTMLElement): void {
   if (root.hasAttribute('data-var-ui-accordion-initialized')) return;
   root.setAttribute('data-var-ui-accordion-initialized', '');
 
-  const type = root.dataset.accordionType ?? 'single';
+  const type = root.dataset.varUiAccordionType ?? 'single';
   const collapsible = root.dataset.collapsible !== 'false';
 
   const items = Array.from(

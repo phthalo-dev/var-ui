@@ -11,12 +11,12 @@ type CopyState = 'idle' | 'copied' | 'error';
 
 const ICONS: Record<CopyState, string> = { idle: copySvg, copied: checkSvg, error: errorSvg };
 
-/** The button's name in each state, from `data-copy-label` / `data-copied-label` / `data-error-label`. */
+/** The button's name in each state, from `data-var-ui-copy-label` / `data-var-ui-copied-label` / `data-var-ui-error-label`. */
 function labels(btn: HTMLButtonElement): Record<CopyState, string> {
   return {
-    idle: btn.getAttribute('data-copy-label') ?? 'Copy code',
-    copied: btn.getAttribute('data-copied-label') ?? 'Copied',
-    error: btn.getAttribute('data-error-label') ?? 'Copy failed',
+    idle: btn.getAttribute('data-var-ui-copy-label') ?? 'Copy code',
+    copied: btn.getAttribute('data-var-ui-copied-label') ?? 'Copied',
+    error: btn.getAttribute('data-var-ui-error-label') ?? 'Copy failed',
   };
 }
 
@@ -30,7 +30,7 @@ function setState(btn: HTMLButtonElement, state: CopyState): void {
   if (iconEl) iconEl.innerHTML = ICONS[state];
 
   // Announces the result; the recipe shows it only for errors (success has the check).
-  const feedback = btn.parentElement?.querySelector('[data-codeblock-feedback]');
+  const feedback = btn.parentElement?.querySelector('[data-var-ui-codeblock-feedback]');
   if (feedback) {
     feedback.textContent = state === 'idle' ? '' : label;
     if (state === 'idle') feedback.removeAttribute('data-tone');
@@ -40,8 +40,8 @@ function setState(btn: HTMLButtonElement, state: CopyState): void {
 
 /**
  * Wires every `[data-var-ui-code-copy]` button (Astro `CodeBlock`, or the same markup by hand):
- * copies `data-code`, swaps the icon and name for `data-timeout` ms (default 2000), announces
- * the result in the sibling `[data-codeblock-feedback]`, and fires `var-ui:copied` /
+ * copies `data-var-ui-code`, swaps the icon and name for `data-var-ui-timeout` ms (default 2000), announces
+ * the result in the sibling `[data-var-ui-codeblock-feedback]`, and fires `var-ui:copied` /
  * `var-ui:copy-error` like `CopyButton`.
  */
 export function initCodeBlockCopy(root: ParentNode = document): void {
@@ -51,7 +51,7 @@ export function initCodeBlockCopy(root: ParentNode = document): void {
     if (!btn.getAttribute('aria-label')) btn.setAttribute('aria-label', labels(btn).idle);
 
     btn.addEventListener('click', async () => {
-      const code = btn.getAttribute('data-code') ?? '';
+      const code = btn.getAttribute('data-var-ui-code') ?? '';
       const ok = await copyText(code);
       setState(btn, ok ? 'copied' : 'error');
       dispatchCopyResult(btn, ok, code);

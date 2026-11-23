@@ -28,7 +28,7 @@ const hasActions = Astro.slots.has('actions');
 const role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status';
 ---
 
-<div role={role} {...rest} {...mergeProps(b.root, className)} data-banner>
+<div role={role} {...rest} {...mergeProps(b.root, className)} data-var-ui-banner>
   {
     hasIcon ? (
       <span {...mergeProps(b.icon)}>

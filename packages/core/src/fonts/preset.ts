@@ -1,4 +1,4 @@
-/** Options for the built-in font presets (`groteskMono`, `figtreeGrotesk`). */
+/** Options for the built-in font presets (`groteskMono`, `figtreeGrotesk`, `alloGrotesk`). */
 export type FontPresetOptions = {
   /**
    * Where the app serves the preset's `.woff2` files. Var UI does not ship them.

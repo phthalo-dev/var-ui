@@ -21,8 +21,8 @@ export function refreshDocsPage(): void {
 
 /** Check `framework` in one switcher (radio + `data-selected`) and move its indicator. */
 function reflectFramework(root: HTMLElement, framework: DocsFramework): void {
-  root.querySelectorAll<HTMLElement>(':scope > [data-segment-id]').forEach((segment) => {
-    const selected = segment.dataset.segmentId === framework;
+  root.querySelectorAll<HTMLElement>(':scope > [data-var-ui-segment-id]').forEach((segment) => {
+    const selected = segment.dataset.varUiSegmentId === framework;
     segment.toggleAttribute('data-selected', selected);
     const radio = segment.querySelector<HTMLInputElement>('input[type="radio"]');
     if (radio) radio.checked = selected;

@@ -13,7 +13,11 @@ function renderSlide(title: string, body: string): string {
   const bodyEl = serializeHtmlTag('div', mergeProps(c.body), body);
   const cardEl = serializeHtmlTag('div', mergeProps(c.root), `${titleEl}${bodyEl}`);
   const s = carousel();
-  return serializeHtmlTag('div', { ...mergeProps(s.item), 'data-carousel-item': true }, cardEl);
+  return serializeHtmlTag(
+    'div',
+    { ...mergeProps(s.item), 'data-var-ui-carousel-item': true },
+    cardEl,
+  );
 }
 
 export function render(): string {
@@ -27,7 +31,7 @@ export function render(): string {
     'div',
     {
       ...mergeProps(s.viewport),
-      'data-carousel-viewport': true,
+      'data-var-ui-carousel-viewport': true,
       tabindex: '0',
       style: 'grid-auto-columns: 13.75rem',
     },

@@ -6,7 +6,7 @@ function mountRegion(options?: { maxVisible?: number }): HTMLElement {
   root.setAttribute('data-var-ui-toast-region', '');
   root.className = 'var-ui-toast__region';
   if (options?.maxVisible !== undefined) {
-    root.dataset.maxVisible = String(options.maxVisible);
+    root.dataset.varUiMaxVisible = String(options.maxVisible);
   }
   document.body.append(root);
   initToastRegion(root);

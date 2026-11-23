@@ -122,16 +122,17 @@ Host font files under your app's `public/fonts/` directory. Root-relative
 
 ### Font presets
 
-`groteskMono()` and `figtreeGrotesk()` are ready-made pairings. They return the
+`groteskMono()`, `figtreeGrotesk()` and `alloGrotesk()` are ready-made pairings. They return the
 same `{ fonts, tokens }` shape as `defineFonts`. Var UI does **not** ship the
 font files: the presets point at files you host, under `/fonts/` unless you
 pass `baseUrl`. If a file is missing, the `@font-face` request 404s and text
 silently falls back to the next font in the stack.
 
-| Preset             | Files to host                                                                    |
-| ------------------ | -------------------------------------------------------------------------------- |
-| `groteskMono()`    | `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2`                        |
-| `figtreeGrotesk()` | `figtree-latin.woff2`, `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2` |
+| Preset             | Files to host                                                                                            |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| `groteskMono()`    | `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2`                                                |
+| `figtreeGrotesk()` | `figtree-latin.woff2`, `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2`                         |
+| `alloGrotesk()`    | `allo-latin.woff2`, `allo-latin-italic.woff2`, `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2` |
 
 Each file is the latin subset of the family's variable font, from Google Fonts
 or Fontsource (for example `@fontsource-variable/jetbrains-mono`).

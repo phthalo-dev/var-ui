@@ -25,7 +25,7 @@ describe('codeBlockShikiTransformer (#194)', () => {
     const root = transform('bash');
     const m = codeBlockMarkup({ code: 'echo hi', language: 'bash' });
     const block = root.children![0]!;
-    expect(block.properties).toMatchObject({ dataCodeblock: '', dataLanguage: 'bash' });
+    expect(block.properties).toMatchObject({ dataLanguage: 'bash' });
     expect(block.properties!.className).toEqual(m.root.class.split(' '));
     const pre = find(root, (n) => n.tagName === 'pre')!;
     expect(pre.properties!.className).toEqual([...m.pre.class.split(' '), 'shiki']);
@@ -39,8 +39,8 @@ describe('codeBlockShikiTransformer (#194)', () => {
     expect(button.properties).toMatchObject({
       type: 'button',
       dataVarUiCodeCopy: '',
-      dataCode: 'echo hi',
-      dataErrorLabel: 'Copy failed',
+      dataVarUiCode: 'echo hi',
+      dataVarUiErrorLabel: 'Copy failed',
       ariaLabel: 'Copy code',
     });
   });

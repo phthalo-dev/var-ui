@@ -18,9 +18,9 @@ function mountSegments(name = nextSegmentedControlName()): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
     <div role="radiogroup" aria-label="View" data-var-ui-segmented-control>
-      <label data-segment-id="list" data-selected><input type="radio" name="${name}" value="list" checked>List</label>
-      <label data-segment-id="grid"><input type="radio" name="${name}" value="grid">Grid</label>
-      <label data-segment-id="table"><input type="radio" name="${name}" value="table">Table</label>
+      <label data-var-ui-segment-id="list" data-selected><input type="radio" name="${name}" value="list" checked>List</label>
+      <label data-var-ui-segment-id="grid"><input type="radio" name="${name}" value="grid">Grid</label>
+      <label data-var-ui-segment-id="table"><input type="radio" name="${name}" value="table">Table</label>
     </div>
   `;
   document.body.appendChild(host);
@@ -28,7 +28,7 @@ function mountSegments(name = nextSegmentedControlName()): HTMLElement {
 }
 
 function segment(root: HTMLElement, id: string): HTMLLabelElement {
-  return root.querySelector(`[data-segment-id="${id}"]`) as HTMLLabelElement;
+  return root.querySelector(`[data-var-ui-segment-id="${id}"]`) as HTMLLabelElement;
 }
 
 function radio(root: HTMLElement, id: string): HTMLInputElement {

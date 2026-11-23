@@ -25,6 +25,11 @@ export type StylingAxis = {
 export type StylingState = {
   recipe: string;
   attribute: string;
+  /**
+   * Where the attribute sits relative to the slots: on the slot element itself, on an ancestor of
+   * it (a root flag such as AppShell's `data-aside`), or on an unclassed element inside it.
+   */
+  context: 'self' | 'ancestor' | 'descendant';
   /** Values the library's CSS selects on; empty when it only tests presence. */
   values: string[];
   /** Slots whose rules reference the attribute. */
@@ -134,24 +139,64 @@ function escapeRegExp(value: string): string {
 
 const ATTR_RE = /\[(data-[\w-]+)(?:\s*=\s*["']?([^"'\]]*)["']?)?\]/g;
 
-/** `data-*` attribute selectors written directly on a slot class in the registered CSS. */
+/** Attributes the guide documents globally; selecting on them does not make them a component hook. */
+const GLOBAL_ATTRS = new Set(['data-color-mode']);
+
+/** Split on a separator outside brackets and parentheses. */
+function splitTopLevel(text: string, isSeparator: (char: string) => boolean): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const char of text) {
+    if (char === '(' || char === '[') depth++;
+    else if (char === ')' || char === ']') depth--;
+    if (depth === 0 && isSeparator(char)) {
+      if (current.trim()) parts.push(current.trim());
+      current = '';
+    } else current += char;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+type AttrContext = StylingState['context'];
+
+/**
+ * `data-*` attribute selectors in rules that target a slot class: on the slot itself, on an
+ * ancestor compound (`[data-aside] .slot`), or on a descendant compound (`.slot [data-mark]`).
+ */
 function stateAttrsFor(cssLines: string[], className: string) {
-  const found = new Map<string, Set<string>>();
-  const classRe = new RegExp(
-    `\\.${escapeRegExp(className)}(?![\\w-])((?:\\[[^\\]]*\\]|:[\\w-]+(?:\\([^)]*\\))?)*)`,
-    'g',
-  );
+  const found = new Map<string, { context: AttrContext; values: Set<string> }>();
+  const classRe = new RegExp(`\\.${escapeRegExp(className)}(?![\\w-])`);
   for (const line of cssLines) {
     if (!line.includes(className)) continue;
-    for (const match of line.matchAll(classRe)) {
-      for (const attr of (match[1] ?? '').matchAll(ATTR_RE)) {
-        const values = found.get(attr[1]!) ?? new Set<string>();
-        if (attr[2] !== undefined) values.add(attr[2]);
-        found.set(attr[1]!, values);
-      }
+    // Unwrap one-line at-rules (`@media (…) { .slot[data-x] { … } }`) down to the style rule.
+    let rule = line;
+    while (rule.trimStart().startsWith('@') && rule.includes('{')) {
+      rule = rule.slice(rule.indexOf('{') + 1);
+    }
+    if (rule.trimStart().startsWith('@') || !rule.includes('{')) continue;
+    const prelude = rule.slice(0, rule.indexOf('{'));
+    for (const selector of splitTopLevel(prelude, (c) => c === ',')) {
+      const compounds = splitTopLevel(selector, (c) => /[\s>+~]/.test(c));
+      const at = compounds.findIndex((compound) => classRe.test(compound));
+      if (at === -1) continue;
+      compounds.forEach((compound, index) => {
+        const context: AttrContext = index === at ? 'self' : index < at ? 'ancestor' : 'descendant';
+        for (const attr of compound.matchAll(ATTR_RE)) {
+          if (GLOBAL_ATTRS.has(attr[1]!)) continue;
+          const key = `${context} ${attr[1]}`;
+          const entry = found.get(key) ?? { context, values: new Set<string>() };
+          if (attr[2] !== undefined) entry.values.add(attr[2]);
+          found.set(key, entry);
+        }
+      });
     }
   }
-  return found;
+  return [...found].map(([key, entry]) => ({
+    attribute: key.slice(key.indexOf(' ') + 1),
+    ...entry,
+  }));
 }
 
 /** One pass over the CSS: component variable name -> properties that read it via `var()`. */
@@ -281,21 +326,25 @@ export async function extractAllStylingHooks(): Promise<Record<string, StylingHo
       // State attributes: every data-* the library's own CSS selects on that is not an axis.
       const stateByAttr = new Map<string, StylingState>();
       for (const { slot, className } of classes) {
-        for (const [attribute, values] of stateAttrsFor(cssLines, className)) {
+        for (const { attribute, context, values } of stateAttrsFor(cssLines, className)) {
           if (axisAttrs.has(attribute)) continue;
-          const state = stateByAttr.get(attribute) ?? {
+          const key = `${context} ${attribute}`;
+          const state = stateByAttr.get(key) ?? {
             recipe: name,
             attribute,
+            context,
             values: [],
             slots: [],
           };
           for (const value of values) if (!state.values.includes(value)) state.values.push(value);
           if (!state.slots.includes(slot)) state.slots.push(slot);
-          stateByAttr.set(attribute, state);
+          stateByAttr.set(key, state);
         }
       }
       states.push(
-        ...[...stateByAttr.values()].sort((a, b) => a.attribute.localeCompare(b.attribute)),
+        ...[...stateByAttr.values()].sort(
+          (a, b) => a.attribute.localeCompare(b.attribute) || a.context.localeCompare(b.context),
+        ),
       );
 
       const registry = meta.varRegistry;
