@@ -96,7 +96,7 @@ Register `@font-face` rules with `fonts` on `createDesignTheme` (or on a
 family names. Use `defineFonts` to generate stacks from face definitions:
 
 ```ts
-import { createDesignTheme, defineFonts, groteskMono } from '@var-ui/core';
+import { createDesignTheme, defineFonts } from '@var-ui/core';
 
 const brand = defineFonts({
   body: {
@@ -119,6 +119,38 @@ export const acme = createDesignTheme({
 
 Host font files under your app's `public/fonts/` directory. Root-relative
 `url('/fonts/…')` works with Astro, Vite, and Next static serving.
+
+### Font presets
+
+`groteskMono()`, `figtreeGrotesk()` and `alloGrotesk()` are ready-made pairings. They return the
+same `{ fonts, tokens }` shape as `defineFonts`. Var UI does **not** ship the
+font files: the presets point at files you host, under `/fonts/` unless you
+pass `baseUrl`. If a file is missing, the `@font-face` request 404s and text
+silently falls back to the next font in the stack.
+
+| Preset             | Files to host                                                                                            |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| `groteskMono()`    | `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2`                                                |
+| `figtreeGrotesk()` | `figtree-latin.woff2`, `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2`                         |
+| `alloGrotesk()`    | `allo-latin.woff2`, `allo-latin-italic.woff2`, `space-grotesk-latin.woff2`, `jetbrains-mono-latin.woff2` |
+
+Each file is the latin subset of the family's variable font, from Google Fonts
+or Fontsource (for example `@fontsource-variable/jetbrains-mono`).
+
+```ts
+import { createDesignTheme, groteskMono } from '@var-ui/core';
+
+const fonts = groteskMono({ baseUrl: '/assets/fonts/' });
+
+export const app = createDesignTheme({
+  name: 'app',
+  fonts: fonts.fonts,
+  tokens: { fontFamily: fonts.tokens.fontFamily },
+});
+```
+
+Loading a family some other way (a Google Fonts `<link>`) works too. The
+default `fontFamily` stacks already start with `"JetBrains Mono"`.
 
 ## Split across files
 
