@@ -57,6 +57,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "progressCircle",
       "proseRules",
       "recipeVars",
+      "reducedMotionKeyframes",
       "resizeHandle",
       "resolveScrollAreaFade",
       "scrollArea",
@@ -208,7 +209,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
     "runtimeByCategory": {
       "constant": 2,
       "fonts": 4,
-      "helper": 63,
+      "helper": 64,
       "icons": 1,
       "layout": 5,
       "object": 6,
@@ -219,7 +220,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "tokens": 16,
     },
     "runtimeByKind": {
-      "function": 148,
+      "function": 149,
       "number": 4,
       "object": 21,
       "string": 5,
