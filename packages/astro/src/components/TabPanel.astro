@@ -1,0 +1,35 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { tabs as tabsRecipe } from '@var-ui/core/components/tabs';
+import { mergeProps } from '../utils';
+import { tabIds } from '../lib/tabIds';
+
+type Props = Omit<HTMLAttributes<'div'>, 'id' | 'role' | 'hidden'> & {
+  /** The `id` of the `<Tabs panels={false}>` this panel belongs to. */
+  tabs: string;
+  /** The tab `value` this panel shows for. */
+  value: string;
+  /** Shown on first paint: the `Tabs` `defaultValue` (or first tab). @default false */
+  selected?: boolean;
+  className?: string;
+};
+
+/**
+ * A tab panel rendered outside its `Tabs`, in any layout region: the tab list and the panel are
+ * linked by id (`aria-controls` / `aria-labelledby`), not by DOM nesting.
+ */
+const { tabs, value, selected = false, className, ...rest } = Astro.props;
+const ids = tabIds(tabs, value);
+const t = tabsRecipe({});
+---
+
+<div
+  {...rest}
+  role="tabpanel"
+  id={ids.panel}
+  aria-labelledby={ids.tab}
+  hidden={selected ? undefined : true}
+  {...mergeProps(t.panel, className)}
+>
+  <slot />
+</div>

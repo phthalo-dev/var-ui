@@ -7,15 +7,13 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@1.3.0
   vite-plus: 1.3.0
   typescript: ^6.0.0
-  typestyles: ^0.35.2
-  '@typestyles/vite': ^0.7.1
-  '@typestyles/rollup': ^0.6.1
-  '@typestyles/build-runner': ^0.8.1
+  typestyles: ^0.37.0
+  '@typestyles/vite': ^0.9.0
+  '@typestyles/rollup': ^0.6.2
+  '@typestyles/build-runner': ^0.10.0
   react: ^19.0.0
   react-dom: ^19.0.0
   react-aria-components: ^1.19.0
-  # One copy, shared with react-aria-components (which pins it exactly): #234.
-  react-aria: ^3.50.0
   '@internationalized/date': ^3.12.2
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0
@@ -43,3 +41,7 @@ peerDependencyRules:
   allowedVersions:
     vite: '*'
 preferWorkspacePackages: true
+minimumReleaseAgeExclude:
+  - '@typestyles/build-runner@0.9.0 || 0.10.0'
+  - '@typestyles/vite@0.8.0 || 0.9.0'
+  - typestyles@0.37.0 || 0.37.0

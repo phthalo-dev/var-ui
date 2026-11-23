@@ -32,6 +32,8 @@ const UNDOCUMENTED_HOOKS = [
   // SideNav `persistKey`: the storage key on the nav and each collapsible section's id (#200).
   'data-persist-key',
   'data-section-id',
+  // TextAreaField `autosize` without `maxRows`: no height cap (#142).
+  'data-max-rows',
   // Pressable Card (`onClick`): the root flag and the stretched title button (#143).
   'data-pressable',
   'data-card-action',
@@ -58,6 +60,8 @@ const UNDOCUMENTED_HOOKS = [
   'data-closed',
   'data-code',
   'data-codeblock',
+  // Code block root: the fence's language id (`ts`, `bash`), for language-specific styling.
+  'data-language',
   'data-codeblock-body',
   'data-codeblock-copy-icon',
   'data-codeblock-feedback',
@@ -186,10 +190,17 @@ function sourceFiles(dir: string): string[] {
   return files;
 }
 
+/** Core modules that build markup both bindings render (their attributes are part of the contract). */
+const CORE_MARKUP = [join(srcRoot, 'core/src/components/codeBlockMarkup.ts')];
+
 function mentionedHooks(): Set<string> {
   const found = new Set<string>();
-  for (const pkg of ['react', 'astro']) {
-    for (const file of sourceFiles(join(srcRoot, pkg, 'src'))) {
+  for (const files of [
+    sourceFiles(join(srcRoot, 'react', 'src')),
+    sourceFiles(join(srcRoot, 'astro', 'src')),
+    CORE_MARKUP,
+  ]) {
+    for (const file of files) {
       const text = readFileSync(file, 'utf8');
       for (const match of text.matchAll(/(?<![A-Za-z0-9_-])data-[a-z][a-z0-9-]*/g)) {
         // A trailing hyphen is a template-literal prefix (`data-var-ui-top-nav-${zone}`).
@@ -202,7 +213,7 @@ function mentionedHooks(): Set<string> {
 
 const isInternal = (name: string) => INTERNAL_PREFIXES.some((prefix) => name.startsWith(prefix));
 
-describe('data-* attribute contract (React + Astro sources)', () => {
+describe('data-* attribute contract (React + Astro sources, shared core markup)', () => {
   const found = mentionedHooks();
 
   it('only mentions documented or explicitly listed hooks', () => {

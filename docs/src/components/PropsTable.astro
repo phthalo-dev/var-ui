@@ -2,7 +2,7 @@
 import { docsProseTableWrap } from '@var-ui/docs/styles';
 import { PropsTable as ReactPropsTable } from './PropsTable';
 import { getAstroComponentDoc, hasAstroBinding } from '../lib/astro-component-docs';
-import { getHtmlApiDoc, getRecipeDefaults } from '../lib/html-api-docs';
+import { getHtmlApiDoc } from '../lib/html-api-docs';
 import { loadReactPropsDoc } from '../lib/load-react-props';
 import { mergeProps } from '../lib/mergeProps';
 import { docsPropsTable } from '@var-ui/docs/styles';
@@ -26,7 +26,7 @@ const astroBound = framework === 'astro' ? hasAstroBinding(slug) : false;
 
 {
   framework === 'react' && (
-    <ReactPropsTable slug={slug} doc={reactDoc} recipeDefaults={getRecipeDefaults(slug)} />
+    <ReactPropsTable slug={slug} doc={reactDoc} />
   )
 }
 

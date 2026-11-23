@@ -24,9 +24,13 @@ export function inlineScrollFade(
   };
   const fade = keyframes.create(name, stops);
   const startStop = start ? `transparent, black ${start.var}` : 'black';
+  // Gradients have no logical direction: the inline start is on the right in RTL.
+  const mask = (side: 'right' | 'left') =>
+    `linear-gradient(to ${side}, ${startStop}, black calc(100% - ${end.var}), transparent)`;
   return {
     '@supports (animation-timeline: scroll())': {
-      maskImage: `linear-gradient(to right, ${startStop}, black calc(100% - ${end.var}), transparent)`,
+      maskImage: mask('right'),
+      '&:dir(rtl)': { maskImage: mask('left') },
       animationName: fade,
       animationDuration: '1ms',
       animationTimingFunction: 'linear',

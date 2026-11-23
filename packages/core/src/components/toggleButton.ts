@@ -56,8 +56,10 @@ export const toggleButton = typestyles.recipe({
         justifyContent: 'center',
         gap: t.space.xs.var,
         transition: t.transition.controlSurface.var,
+        // Through the var, not `backgroundColor`: a direct declaration here would beat the
+        // selected hover below and pair a light fill with the light selected foreground.
         '&:hover': {
-          backgroundColor: t.color.background.subtle.var,
+          [vars.background.name]: t.color.background.subtle.var,
         },
         '&:focus-visible': {
           ...focusRing,

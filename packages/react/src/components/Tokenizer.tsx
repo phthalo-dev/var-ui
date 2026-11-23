@@ -14,7 +14,7 @@ import {
 import { NativePopover } from '../internal/NativePopover';
 import { tokenizer } from '@var-ui/core/components/tokenizer';
 import { Icon } from '../icons';
-import type { FieldMeta } from './Field';
+import { labelText, type FieldMeta } from './Field';
 import { FieldFrame, useFieldFrame } from './FieldFrame';
 import { disabledKeysOf } from '../internal/racProps';
 import { mergeProps } from 'typestyles';
@@ -146,7 +146,7 @@ export function Tokenizer({
     >
       <Group {...mergeProps(tk.group)} isDisabled={disabled}>
         <TagGroup
-          aria-label={label ?? tokensLabel}
+          aria-label={labelText(label) ?? tokensLabel}
           {...mergeProps(tk.tokenList)}
           onRemove={(keys) => {
             for (const key of keys) removeToken(String(key));
@@ -171,7 +171,7 @@ export function Tokenizer({
           </TagList>
         </TagGroup>
         <AriaComboBox
-          aria-label={label ?? searchLabel}
+          aria-label={labelText(label) ?? searchLabel}
           id={frame.controlId}
           inputValue={inputValue}
           onInputChange={setInputValue}

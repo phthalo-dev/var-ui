@@ -367,15 +367,19 @@ describe('popups inside a dialog (Select on NativePopover, no shim)', () => {
 describe('API surface', () => {
   test('native props and ref reach the <dialog>; Trigger merges onto a Button component', async () => {
     const ref = { current: null as HTMLDialogElement | null };
+    // Tokens live on the theme surface (`theme-var-ui-default`), not `:root`: without it the
+    // Button has no size and Playwright will not click it.
     render(
-      <Dialog.Root>
-        <Dialog.Trigger>
-          <Button>Open</Button>
-        </Dialog.Trigger>
-        <Dialog.Popup ref={ref} id="d" className="mine" data-x="1">
-          <Dialog.Title>T</Dialog.Title>
-        </Dialog.Popup>
-      </Dialog.Root>,
+      <DesignSystemProvider>
+        <Dialog.Root>
+          <Dialog.Trigger>
+            <Button>Open</Button>
+          </Dialog.Trigger>
+          <Dialog.Popup ref={ref} id="d" className="mine" data-x="1">
+            <Dialog.Title>T</Dialog.Title>
+          </Dialog.Popup>
+        </Dialog.Root>
+      </DesignSystemProvider>,
     );
     expect(ref.current).toBe(dlg());
     expect(dlg().id).toBe('d');

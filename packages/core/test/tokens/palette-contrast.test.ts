@@ -114,3 +114,26 @@ describe('text.tertiary (#189)', () => {
     });
   }
 });
+
+describe('color.hue (#144)', () => {
+  const stone = baseColorPalettes.stone;
+  const light = { surface: '#ffffff', subtle: stone['1'] };
+  const dark = { surface: 'oklch(0.2 0.007 60)', subtle: 'oklch(0.235 0.008 60)' };
+
+  it('every named hue is readable as text (AA) on surface and subtle in both modes', () => {
+    const failures: string[] = [];
+    for (const family of PALETTE_FAMILIES) {
+      const ramp = baseColorPalettes[family];
+      for (const [mode, color, bgs] of [
+        ['light', ramp['7'], light],
+        ['dark', ramp['4'], dark],
+      ] as const) {
+        for (const [bg, value] of Object.entries(bgs)) {
+          const ratio = contrastRatio(color, value);
+          if (ratio < WCAG_AA) failures.push(`${family} ${mode} on ${bg}: ${ratio.toFixed(2)}`);
+        }
+      }
+    }
+    expect(failures).toEqual([]);
+  });
+});

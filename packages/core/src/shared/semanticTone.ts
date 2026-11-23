@@ -1,6 +1,7 @@
 import { variant, type VariantOptions } from 'typestyles';
 import { designTokens as t } from '../tokens';
 import { TONE_KEYS } from '../tokens/schema/color/tone';
+import { PALETTE_FAMILIES, type PaletteFamily } from '../tokens/schema/color/palette';
 
 /**
  * Every component tone. `neutral` sits outside the color tokens; the rest are
@@ -94,8 +95,6 @@ type ControlChannelRefs = {
   semantic: { name: string; var: string };
   solidBg: { name: string; var: string };
   solidFg: { name: string; var: string };
-  /** Ghost hover / open fill, set per tone by {@link controlToneAssignments}. */
-  ghostHover: { name: string; var: string };
 };
 
 type TonePaintRefs = {
@@ -163,16 +162,12 @@ export function toneChannelAssignments(v: SemanticChannelRefs, key: Tone) {
 export const neutralHoverChip = `color-mix(in oklch, ${t.color.navItem.hoverBackground.var}, ${t.color.text.primary.var} 4%)`;
 
 /**
- * Tone channels for controls (button): the shared channels plus the ghost hover/open fill.
- * Neutral ghost controls take the same warm chip as nav items ({@link neutralHoverChip}), so
- * an icon button beside the top nav hovers and opens in the nav's tint, not a grey ink mix.
+ * Tone channels for controls (button). The ghost hover/open fill is derived from the tone's
+ * `semantic` channel in {@link controlAppearancePaint}; neutral ghost controls swap it for the
+ * warm nav chip ({@link neutralHoverChip}) with {@link neutralGhostHoverPaint}.
  */
 export function controlToneAssignments(v: ControlChannelRefs, key: Tone) {
-  return {
-    ...toneChannelAssignments(v, key),
-    [v.ghostHover.name]:
-      key === 'neutral' ? neutralHoverChip : subtleBackgroundColor(v.semantic.var),
-  };
+  return toneChannelAssignments(v, key);
 }
 
 /** One style entry per shared tone. */
@@ -231,14 +226,26 @@ export function controlAppearancePaint(v: ControlPaintRefs, appearance: ToneAppe
         [v.background.name]: 'transparent',
         [v.foreground.name]: v.semantic.var,
         [hoverWhenEnabled]: {
-          [v.background.name]: v.ghostHover.var,
+          [v.background.name]: subtleBackgroundColor(v.semantic.var),
         },
         // A ghost trigger keeps its hover fill while its popup is open.
         '&[aria-expanded="true"]': {
-          [v.background.name]: v.ghostHover.var,
+          [v.background.name]: subtleBackgroundColor(v.semantic.var),
         },
       };
   }
+}
+
+/**
+ * Neutral ghost controls hover and open in the same warm chip as nav items
+ * ({@link neutralHoverChip}), so an icon button beside the top nav matches it instead of taking a
+ * grey ink mix. Use as the `style` of a `tone: neutral` × `appearance: ghost` compound variant.
+ */
+export function neutralGhostHoverPaint(v: Pick<TonePaintRefs, 'background'>) {
+  return {
+    [hoverWhenEnabled]: { [v.background.name]: neutralHoverChip },
+    '&[aria-expanded="true"]': { [v.background.name]: neutralHoverChip },
+  };
 }
 
 /** Resolve tokenized subtle background from a tone foreground channel var. */
@@ -360,5 +367,36 @@ export function appearanceSurface(
           borderBlockStyle: 'solid',
           borderBlockColor: subtleBorder,
         }),
+  };
+}
+
+/**
+ * Identity color axis: every base palette name (`blue`, `red`, `sage`, …). For roles, kinds and
+ * labels, not status. `none` (the default) leaves `tone` in charge.
+ */
+export const hueColor = variant.enum(['none', ...PALETTE_FAMILIES], { default: 'none' });
+
+export type HueColor = PaletteFamily;
+
+/** One style entry per hue (`none` paints nothing). */
+export function mapHue<Style>(
+  paint: (key: HueColor) => Style,
+): Record<HueColor | 'none', Style | Record<string, never>> {
+  return {
+    none: {},
+    ...(Object.fromEntries(PALETTE_FAMILIES.map((key) => [key, paint(key)])) as Record<
+      HueColor,
+      Style
+    >),
+  };
+}
+
+/** Channels for a named hue: ink and fill are the hue, solid text is the surface. */
+export function hueChannelAssignments(v: SemanticChannelRefs, key: HueColor) {
+  const hue = t.color.hue[key].var;
+  return {
+    [v.semantic.name]: hue,
+    [v.solidBg.name]: hue,
+    [v.solidFg.name]: t.color.background.surface.var,
   };
 }

@@ -9,9 +9,6 @@ import {
   Label,
   ListBox,
   ListBoxItem,
-  Menu,
-  MenuItem,
-  MenuTrigger,
   Select,
   SelectValue,
 } from 'react-aria-components';
@@ -345,61 +342,9 @@ describe('dismissal', () => {
   });
 });
 
-describe('MenuTrigger', () => {
-  const MenuDemo = () => (
-    <MenuTrigger>
-      <Button data-testid="trigger">Menu</Button>
-      <NativePopover className="np">
-        <Menu aria-label="Actions" onAction={() => {}}>
-          <MenuItem id="x">Alpha</MenuItem>
-          <MenuItem id="y">Beta</MenuItem>
-        </Menu>
-      </NativePopover>
-    </MenuTrigger>
-  );
-
-  test('ArrowDown opens with the FIRST item focused (children mount at open)', async () => {
-    render(<MenuDemo />);
-    trigger().focus();
-    await userEvent.keyboard('{ArrowDown}');
-    await raf();
-    expect(isOpen()).toBe(true);
-    expect(document.activeElement).toBe(item('Alpha'));
-    await userEvent.keyboard('{ArrowDown}');
-    expect(document.activeElement).toBe(item('Beta'));
-  });
-
-  test('Escape closes the menu and focus returns to the trigger', async () => {
-    render(<MenuDemo />);
-    trigger().focus();
-    await userEvent.keyboard('{ArrowDown}');
-    await raf();
-    await userEvent.keyboard('{Escape}');
-    await closed();
-    expect(isOpen()).toBe(false);
-    expect(document.activeElement).toBe(trigger());
-  });
-
-  test('activating an item closes the menu, focus returns to the trigger', async () => {
-    render(<MenuDemo />);
-    await userEvent.click(trigger());
-    await raf();
-    await userEvent.click(item('Beta'));
-    await closed();
-    expect(isOpen()).toBe(false);
-    expect(document.activeElement).toBe(trigger());
-  });
-
-  test('click open, click away closes', async () => {
-    render(<MenuDemo />);
-    await userEvent.click(trigger());
-    await raf();
-    expect(isOpen()).toBe(true);
-    await userEvent.click(document.body, { position: { x: 400, y: 400 } });
-    await closed();
-    expect(isOpen()).toBe(false);
-  });
-});
+// Menus: the var-ui `Menu` provides react-aria's menu contexts itself (no RAC `MenuTrigger`, whose
+// press responder would reach the items); its keyboard, focus and dismissal contract is covered in
+// `components/Menu.browser.test.tsx`.
 
 describe('ComboBox (non-modal: focus stays in the input)', () => {
   const Combo = () => (
@@ -450,32 +395,7 @@ describe('ComboBox (non-modal: focus stays in the input)', () => {
 });
 
 describe('inside a native modal dialog', () => {
-  test('a Menu popup is hit-testable and a trusted click activates an item', async () => {
-    const onAction = vi.fn();
-    const dialog = document.createElement('dialog');
-    document.body.append(dialog);
-    const host = document.createElement('div');
-    dialog.append(host);
-    render(
-      <MenuTrigger>
-        <Button data-testid="trigger">Menu</Button>
-        <NativePopover className="np">
-          <Menu aria-label="Actions" onAction={onAction}>
-            <MenuItem id="x">Alpha</MenuItem>
-            <MenuItem id="y">Beta</MenuItem>
-          </Menu>
-        </NativePopover>
-      </MenuTrigger>,
-      { container: host },
-    );
-    dialog.showModal();
-    await settled(dialog);
-    await userEvent.click(trigger());
-    await raf();
-    await userEvent.click(item('Beta'));
-    expect(onAction.mock.calls[0]?.[0]).toBe('y');
-    dialog.close();
-  });
+  // A Menu inside a modal dialog: `components/Menu.browser.test.tsx` ('Menu inside a modal Dialog').
 
   test('RAC contexts are cleared for the content (clearContexts): no Button context leak', async () => {
     // Select clears the trigger's Button/Label/Text contexts; a Button inside the popup must be a
@@ -499,6 +419,7 @@ describe('inside a native modal dialog', () => {
     expect(inner.getAttribute('aria-haspopup')).toBeNull();
   });
 
+  // `DialogTrigger` only supplies the open state here: the content has nothing pressable.
   test('a RAC DatePicker-style DialogTrigger content keeps its own dialog role', async () => {
     render(
       <DialogTrigger>
