@@ -6,10 +6,14 @@ import { atDarkMode, atForcedColors } from '../theme/conditions';
 import { forced } from '../internal/forcedColors';
 import { focusRing } from '../internal/focusRing';
 import { transitionOf } from '../internal/motion';
+import { inlineScrollFade } from '../internal/scrollFade';
 import { pressedState } from '../internal/press';
 import { neutralHoverChip } from '../shared/semanticTone';
 /** Internal CSS variables for theme overrides (`vars` on `createDesignTheme`). */
 const topNavVarDefinitions = {
+  /** Edge fades of the `start` zone when its items overflow (scroll-driven). */
+  scrollFadeStart: { ...atProperty.length, value: '0px' },
+  scrollFadeEnd: { ...atProperty.length, value: '0px' },
   background: {
     ...atProperty.color,
     value: t.color.background.surface.var,
@@ -177,7 +181,20 @@ export const topNav = typestyles.recipe({
           display: 'flex',
           alignItems: 'center',
           gap: t.space.xxs.var,
+          // On a narrow bar the items scroll sideways instead of running under the end zone, with
+          // edge fades while there is more to see (scroll-driven; none when nothing overflows).
+          flex: '1 1 auto',
           minWidth: 0,
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
+          // A scroller clips its block axis too: keep room for focus rings above and below.
+          paddingBlock: t.space.xxs.var,
+          marginBlock: `calc(-1 * ${t.space.xxs.var})`,
+          ...inlineScrollFade('var-ui-top-nav-scroll-fade', {
+            start: vars.scrollFadeStart,
+            end: vars.scrollFadeEnd,
+          }),
           // The selected pill: one shape that slides between items (`observeTopNavIndicator`).
           // Without the script, the selected item paints its own fill instead.
           '&::before': {
@@ -225,6 +242,8 @@ export const topNav = typestyles.recipe({
         item: {
           position: 'relative',
           zIndex: 1,
+          // Items keep their width; the zone scrolls instead (see `start`).
+          flexShrink: 0,
           display: 'inline-flex',
           alignItems: 'center',
           gap: t.space.xs.var,

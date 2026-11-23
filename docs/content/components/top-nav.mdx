@@ -21,6 +21,13 @@ Mix `TopNav.Item`s with a `TopNav.Menu` hover/focus popover of rich items (title
 
 <Demo id="top-nav.menu" />
 
+### Narrow screens
+
+When the items don't fit, the start zone scrolls sideways instead of running under `endContent`.
+Its edges fade while there is more to see in that direction (scroll-driven, no JavaScript), and the
+selected item is scrolled into view. For a long section list on phones, pair the bar with
+`MobileNav` and hide the items below a breakpoint.
+
 ## Props
 
 <PropsTable slug="top-nav" />

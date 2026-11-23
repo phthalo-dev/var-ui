@@ -2281,6 +2281,8 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-top-nav-megapanelbackground",
       "--var-ui-top-nav-megapanelborder",
       "--var-ui-top-nav-menutriggercolor",
+      "--var-ui-top-nav-scrollfadeend",
+      "--var-ui-top-nav-scrollfadestart",
     ],
   },
   "tree": {
