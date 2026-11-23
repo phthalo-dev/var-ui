@@ -4,7 +4,7 @@ import { codeBlock, codeLanguageLabel, type CodeBlockVariantProps } from './code
 export type CodeBlockAttributes = { class: string } & Record<string, string | undefined>;
 
 export type CodeBlockMarkupOptions = {
-  /** The source, for the copy button's `data-code`. */
+  /** The source, for the copy button's `data-var-ui-code`. */
   code: string;
   /** Language id (`ts`, `bash`); shown as its label (`TypeScript`, `Shell`). */
   language?: string;
@@ -64,8 +64,8 @@ export function codeBlockMarkup({
 }: CodeBlockMarkupOptions): CodeBlockMarkup {
   const cb = codeBlock({ variant });
   return {
-    root: attributes(cb.root, { 'data-codeblock': '', 'data-language': language || undefined }),
-    header: attributes(cb.header, { 'data-codeblock-header': '' }),
+    root: attributes(cb.root, { 'data-language': language || undefined }),
+    header: attributes(cb.header),
     title: attributes(cb.title),
     filename: filename ? { attributes: attributes(cb.filename), text: filename } : null,
     language: language
@@ -76,10 +76,10 @@ export function codeBlockMarkup({
       ? {
           ...attributes(cb.copyButton, {
             'data-var-ui-code-copy': '',
-            'data-code': code.replace(/\n$/, ''),
-            'data-copy-label': copyLabel,
-            'data-copied-label': copiedLabel,
-            'data-error-label': errorLabel,
+            'data-var-ui-code': code.replace(/\n$/, ''),
+            'data-var-ui-copy-label': copyLabel,
+            'data-var-ui-copied-label': copiedLabel,
+            'data-var-ui-error-label': errorLabel,
             'aria-label': copyLabel,
           }),
           type: 'button',
@@ -88,13 +88,13 @@ export function codeBlockMarkup({
     copyIcon: { 'data-codeblock-copy-icon': '' },
     feedback: copyable
       ? attributes(cb.feedback, {
-          'data-codeblock-feedback': '',
+          'data-var-ui-codeblock-feedback': '',
           role: 'status',
           'aria-live': 'polite',
         })
       : null,
-    body: attributes(cb.body, { 'data-codeblock-body': '' }),
-    pre: attributes(cb.pre, { 'data-codeblock-pre': '' }),
+    body: attributes(cb.body),
+    pre: attributes(cb.pre),
     code: attributes(cb.code),
   };
 }

@@ -11,7 +11,7 @@ export function render(): string {
   );
   return serializeHtmlTag(
     'div',
-    { ...mergeProps(b.root), 'data-banner': true, role: 'status' },
+    { ...mergeProps(b.root), 'data-var-ui-banner': true, role: 'status' },
     content,
   );
 }

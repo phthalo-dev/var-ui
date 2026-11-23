@@ -61,8 +61,8 @@ export function applyDocsAppearanceSelection(
   const swatch = root.querySelector<HTMLElement>('[data-docs-appearance-swatch]');
   if (swatch && theme?.swatch) swatch.style.backgroundColor = theme.swatch;
 
-  root.querySelectorAll<HTMLElement>('[data-item-id]').forEach((item) => {
-    const id = item.getAttribute('data-item-id') ?? '';
+  root.querySelectorAll<HTMLElement>('[data-var-ui-item-id]').forEach((item) => {
+    const id = item.getAttribute('data-var-ui-item-id') ?? '';
     if (id.startsWith(MODE_ITEM_PREFIX)) {
       item.setAttribute('aria-checked', String(id === `${MODE_ITEM_PREFIX}${state.mode}`));
     } else if (id.startsWith(THEME_ITEM_PREFIX) && theme) {
@@ -91,7 +91,7 @@ export function initDocsAppearanceMenu(root: Element, options: DocsAppearanceMen
   const controller: DocsThemeController | null =
     presets.length > 0
       ? createDocsThemeController(presets, {
-          storageKey: root.getAttribute('data-storage-key') ?? undefined,
+          storageKey: root.getAttribute('data-var-ui-storage-key') ?? undefined,
           fallbackClassName: root.getAttribute('data-fallback-class') ?? undefined,
         })
       : null;

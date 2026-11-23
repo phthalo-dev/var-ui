@@ -21,6 +21,12 @@ Clamp the range with `min` / `max` and set `step` for how far each stepper click
 
 <Demo id="number-input.bounds" />
 
+### When `onValueChange` fires
+
+`onValueChange` fires when the value is committed: on blur, Enter, the stepper buttons or arrow
+keys. A partly typed number such as `-` or `1.` isn't a value yet. To enable a Save button while
+the user types, listen to the native `onChange` too, which fires on every keystroke.
+
 ## Props
 
 <PropsTable slug="number-input" />

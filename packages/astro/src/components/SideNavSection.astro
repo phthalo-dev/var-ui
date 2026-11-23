@@ -38,6 +38,8 @@ const {
   ...rest
 } = Astro.props;
 const selectionStyleAttr = selectionStyle === 'text' ? 'text' : undefined;
+// Names the section for `SideNav persistKey`.
+const sectionId = (rest as { id?: string }).id ?? title;
 const s = sideNav();
 const hasTitleSlot = Astro.slots.has('title');
 const showHeader = hasTitleSlot || title != null || subtitle != null || Astro.slots.has('end');
@@ -49,6 +51,7 @@ const showHeader = hasTitleSlot || title != null || subtitle != null || Astro.sl
       {...(rest as Record<string, unknown>)}
       {...mergeProps(s.section, className)}
       open={defaultOpen || undefined}
+      data-var-ui-section-id={sectionId}
       data-collapsible
       data-selection-style={selectionStyleAttr}
     >

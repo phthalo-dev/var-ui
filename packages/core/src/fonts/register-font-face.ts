@@ -19,6 +19,10 @@ export function registerFontFace(face: FontFaceDefinition): void {
     fontStyle: face.fontStyle,
     fontDisplay: face.fontDisplay,
     unicodeRange: face.unicodeRange,
+    sizeAdjust: face.sizeAdjust,
+    ascentOverride: face.ascentOverride,
+    descentOverride: face.descentOverride,
+    lineGapOverride: face.lineGapOverride,
   });
 }
 

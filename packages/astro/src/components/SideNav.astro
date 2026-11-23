@@ -27,6 +27,12 @@ type Props = Omit<HTMLAttributes<'nav'>, 'class:list'> & {
   resizable?: boolean | ResizableConfig;
   /** Accessible name of the drag handle rendered by `resizable`. @default 'Resize side navigation' */
   resizeHandleLabel?: string;
+  /**
+   * Remember which collapsible sections the reader opened or closed, in `localStorage` under this
+   * key. Sections are told apart by their `id`, or else their title. The section holding the
+   * current page (`aria-current="page"`) always starts open.
+   */
+  persistKey?: string;
   className?: string;
 };
 
@@ -35,6 +41,7 @@ const {
   collapsible,
   resizable,
   resizeHandleLabel = 'Resize side navigation',
+  persistKey,
   className,
   ...rest
 } = Astro.props;
@@ -60,10 +67,11 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
   {...rest}
   data-collapsed={collapsibleConfig.defaultCollapsed ? '' : undefined}
   data-var-ui-side-nav
+  data-var-ui-persist-key={persistKey}
   data-collapsible={collapsibleEnabled || undefined}
-  data-resizable={resizableEnabled || undefined}
-  data-collapsible-config={collapsibleEnabled ? JSON.stringify(collapsibleConfig) : undefined}
-  data-resizable-config={resizableEnabled ? JSON.stringify(resizableConfig) : undefined}
+  data-var-ui-resizable={resizableEnabled || undefined}
+  data-var-ui-collapsible-config={collapsibleEnabled ? JSON.stringify(collapsibleConfig) : undefined}
+  data-var-ui-resizable-config={resizableEnabled ? JSON.stringify(resizableConfig) : undefined}
   {...mergeProps(s.root, className)}
 >
   {
@@ -98,4 +106,6 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
 <script>
   import { initSideNavs } from '../scripts/sideNav';
   initSideNavs();
+  // Pages swapped in by Astro's client router bring new navs (already-initialized ones are skipped).
+  document.addEventListener('astro:page-load', initSideNavs);
 </script>

@@ -641,7 +641,7 @@ describe('Menu.ContextMenu anchoring', () => {
     expect(Math.round(p.left)).toBe(150);
     expect(p.top).toBeGreaterThanOrEqual(160 - 1);
     expect(p.top).toBeLessThan(160 + 20);
-    const anchor = document.querySelector<HTMLElement>('[data-context-menu-anchor]')!;
+    const anchor = document.querySelector<HTMLElement>('[data-var-ui-context-menu-anchor]')!;
     expect(anchor.style.left).toBe('150px');
     expect(anchor.style.top).toBe('160px');
     // The menu itself holds focus (opened without a focus strategy); arrows reach the items.
@@ -660,7 +660,7 @@ describe('Menu.ContextMenu anchoring', () => {
     // Chrome's initial `position-visibility` is `anchors-visible`: a `visibility: hidden`
     // virtual anchor would hide the whole popup, so it would be open but neither painted nor
     // hit-testable.
-    const anchor = document.querySelector<HTMLElement>('[data-context-menu-anchor]')!;
+    const anchor = document.querySelector<HTMLElement>('[data-var-ui-context-menu-anchor]')!;
     expect(getComputedStyle(anchor).visibility).toBe('visible');
     const r = item('Copy').getBoundingClientRect();
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);

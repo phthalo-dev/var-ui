@@ -192,7 +192,6 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-button-background",
       "--var-ui-button-border",
       "--var-ui-button-foreground",
-      "--var-ui-button-ghosthover",
       "--var-ui-button-semantic",
       "--var-ui-button-solidbg",
       "--var-ui-button-solidfg",
@@ -1974,6 +1973,7 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
   },
   "text-area-field": {
     "axes": [
+      "autosize",
       "data-size",
       "size",
     ],
@@ -1991,6 +1991,9 @@ exports[`recipe class, variable and axis contract > matches the inventory snapsh
       "--var-ui-text-area-field-inputborder",
       "--var-ui-text-area-field-inputforeground",
       "--var-ui-text-area-field-labelcolor",
+      "--var-ui-text-area-field-maxrows",
+      "--var-ui-text-area-field-minrows",
+      "--var-ui-text-area-field-paddingblock",
       "--var-ui-text-area-field-placeholdercolor",
     ],
   },

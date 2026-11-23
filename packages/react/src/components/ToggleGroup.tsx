@@ -90,9 +90,9 @@ type ToggleGroupContextValue = {
 
 const ToggleGroupContext = createContext<ToggleGroupContextValue | null>(null);
 
-const ITEM_ATTR = 'data-toggle-group-item';
+const ITEM_ATTR = 'data-var-ui-toggle-group-item';
 const ITEM_SELECTOR = `button[${ITEM_ATTR}]`;
-const SCOPE_SELECTOR = '[role="group"][data-toggle-group]';
+const SCOPE_SELECTOR = '[role="group"][data-var-ui-toggle-group]';
 
 /**
  * Grouped toggle buttons where one or several can be pressed: text formatting, alignment, view
@@ -192,7 +192,7 @@ export function ToggleGroup(props: ToggleGroupProps): JSX.Element {
       <div
         {...rest}
         role="group"
-        data-toggle-group=""
+        data-var-ui-toggle-group=""
         data-required={required ? '' : undefined}
         {...mergeProps(g.root, className)}
         ref={setRoot}

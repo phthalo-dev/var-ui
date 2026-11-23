@@ -17,20 +17,20 @@ describe('initCopyButton', () => {
       <button
         type="button"
         data-var-ui-copy-button
-        data-value="${options?.value ?? 'npx @var-ui/cli init'}"
-        ${options?.timeout !== undefined ? `data-timeout="${options.timeout}"` : ''}
-        data-copy-label="Copy"
-        data-copied-label="${options?.copiedLabel ?? 'Copied'}"
-        data-error-label="${options?.errorLabel ?? 'Error'}"
-        data-class-idle="btn idle"
-        data-class-copied="btn copied"
-        data-class-error="btn error"
+        data-var-ui-value="${options?.value ?? 'npx @var-ui/cli init'}"
+        ${options?.timeout !== undefined ? `data-var-ui-timeout="${options.timeout}"` : ''}
+        data-var-ui-copy-label="Copy"
+        data-var-ui-copied-label="${options?.copiedLabel ?? 'Copied'}"
+        data-var-ui-error-label="${options?.errorLabel ?? 'Error'}"
+        data-var-ui-class-idle="btn idle"
+        data-var-ui-class-copied="btn copied"
+        data-var-ui-class-error="btn error"
         aria-label="Copy"
       >
-        <span data-copy-button-icon>
+        <span data-var-ui-copy-button-icon>
           <svg data-icon="copy"><path d="copy"></path></svg>
         </span>
-        <span data-copy-button-text>Copy</span>
+        <span data-var-ui-copy-button-text>Copy</span>
       </button>
     `;
     return document.querySelector<HTMLButtonElement>('[data-var-ui-copy-button]')!;
@@ -55,8 +55,8 @@ describe('initCopyButton', () => {
     expect(btn.getAttribute('data-copied')).toBe('');
     expect(btn.getAttribute('aria-label')).toBe('Copied');
     expect(btn.className).toBe('btn copied');
-    expect(btn.querySelector('[data-copy-button-text]')?.textContent).toBe('Copied');
-    expect(btn.querySelector('[data-copy-button-icon] svg path')?.getAttribute('d')).toBe(
+    expect(btn.querySelector('[data-var-ui-copy-button-text]')?.textContent).toBe('Copied');
+    expect(btn.querySelector('[data-var-ui-copy-button-icon] svg path')?.getAttribute('d')).toBe(
       'M4.5 12.5l5 5L19.5 7',
     );
   });
@@ -72,8 +72,8 @@ describe('initCopyButton', () => {
     expect(btn.getAttribute('data-error')).toBe('');
     expect(btn.getAttribute('aria-label')).toBe('Could not copy');
     expect(btn.className).toBe('btn error');
-    expect(btn.querySelector('[data-copy-button-text]')?.textContent).toBe('Could not copy');
-    expect(btn.querySelector('[data-copy-button-icon] svg path')?.getAttribute('d')).toBe(
+    expect(btn.querySelector('[data-var-ui-copy-button-text]')?.textContent).toBe('Could not copy');
+    expect(btn.querySelector('[data-var-ui-copy-button-icon] svg path')?.getAttribute('d')).toBe(
       'M12 7.5v5.5M12 16.5h.01',
     );
   });
@@ -120,8 +120,10 @@ describe('initCopyButton', () => {
       expect(btn.getAttribute('data-copied')).toBeNull();
       expect(btn.getAttribute('aria-label')).toBe('Copy');
       expect(btn.className).toBe('btn idle');
-      expect(btn.querySelector('[data-copy-button-text]')?.textContent).toBe('Copy');
-      expect(btn.querySelector('[data-copy-button-icon] svg rect')?.getAttribute('x')).toBe('9');
+      expect(btn.querySelector('[data-var-ui-copy-button-text]')?.textContent).toBe('Copy');
+      expect(btn.querySelector('[data-var-ui-copy-button-icon] svg rect')?.getAttribute('x')).toBe(
+        '9',
+      );
     } finally {
       vi.useRealTimers();
     }
@@ -161,11 +163,11 @@ describe('initCopyButton', () => {
     const writeText = stubClipboard(() => Promise.resolve());
 
     document.body.innerHTML = `
-      <button type="button" data-var-ui-copy-button data-value="a" aria-label="Copy">
-        <span data-copy-button-icon></span><span data-copy-button-text>Copy</span>
+      <button type="button" data-var-ui-copy-button data-var-ui-value="a" aria-label="Copy">
+        <span data-var-ui-copy-button-icon></span><span data-var-ui-copy-button-text>Copy</span>
       </button>
-      <button type="button" data-var-ui-copy-button data-value="b" aria-label="Copy">
-        <span data-copy-button-icon></span><span data-copy-button-text>Copy</span>
+      <button type="button" data-var-ui-copy-button data-var-ui-value="b" aria-label="Copy">
+        <span data-var-ui-copy-button-icon></span><span data-var-ui-copy-button-text>Copy</span>
       </button>
     `;
     initCopyButtons();

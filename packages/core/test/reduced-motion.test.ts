@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vite-plus/test';
 import { getRegisteredCss, reset } from 'typestyles';
 import { createDesignTheme } from '../src/theme/create-theme';
-import { atReducedMotion } from '../src/theme/conditions';
+import { atReducedMotion, reducedMotionKeyframes } from '../src/theme/conditions';
 import { defaultTheme, registerDefaultTheme } from '../src/theme/register-default';
 import { typestyles } from '../src/runtime';
 import { registerTestGlobals } from './lib/register-test-globals';
@@ -65,6 +65,22 @@ describe('reduced motion at the token level', () => {
   it('atReducedMotion still emits a media block for keyframe animations', () => {
     expect(atReducedMotion({ animation: 'none' })).toEqual({
       '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+    });
+  });
+});
+
+describe('reducedMotionKeyframes (#198)', () => {
+  it('drops motion properties from every stop and keeps the rest', () => {
+    expect(
+      reducedMotionKeyframes({
+        from: { opacity: 0, translate: '0 0.5rem', transform: 'scale(0.9)', color: 'red' },
+        '50%': { rotate: '10deg', scale: '1.1' },
+        to: { opacity: 1, translate: '0' },
+      }),
+    ).toEqual({
+      from: { opacity: 0, color: 'red' },
+      '50%': {},
+      to: { opacity: 1 },
     });
   });
 });

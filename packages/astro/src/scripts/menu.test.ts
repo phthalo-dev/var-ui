@@ -68,10 +68,10 @@ function mountMenu(): HTMLElement {
       <div data-var-ui-menu-popover data-placement="bottom start" id="menu-1-popover" popover="auto">
         <div role="menu" id="menu-1" aria-label="Actions">
           <div role="presentation">File</div>
-          <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="new" tabindex="-1">
+          <button type="button" role="menuitem" data-var-ui-menu-item data-var-ui-item-id="new" tabindex="-1">
             <span>New</span>
           </button>
-          <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="open" tabindex="-1">
+          <button type="button" role="menuitem" data-var-ui-menu-item data-var-ui-item-id="open" tabindex="-1">
             <span>Open</span>
           </button>
           <button
@@ -79,13 +79,13 @@ function mountMenu(): HTMLElement {
             role="menuitem"
             aria-disabled="true"
             data-var-ui-menu-item
-            data-item-id="save"
+            data-var-ui-item-id="save"
             tabindex="-1"
           >
             <span>Save</span>
           </button>
           <div role="separator"></div>
-          <a role="menuitem" href="#docs" data-var-ui-menu-item data-item-id="docs" tabindex="-1">
+          <a role="menuitem" href="#docs" data-var-ui-menu-item data-var-ui-item-id="docs" tabindex="-1">
             <span>Docs</span>
           </a>
         </div>
@@ -99,7 +99,7 @@ function mountMenu(): HTMLElement {
 function mountRadioMenu(): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
-    <div data-var-ui-menu-root data-selection-mode="single">
+    <div data-var-ui-menu-root data-var-ui-selection-mode="single">
       <button
         type="button"
         data-var-ui-menu-trigger
@@ -117,7 +117,7 @@ function mountRadioMenu(): HTMLElement {
             role="menuitemradio"
             aria-checked="false"
             data-var-ui-menu-item
-            data-item-id="default"
+            data-var-ui-item-id="default"
             tabindex="-1"
           >
             <span>Default</span>
@@ -127,7 +127,7 @@ function mountRadioMenu(): HTMLElement {
             role="menuitemradio"
             aria-checked="true"
             data-var-ui-menu-item
-            data-item-id="forest"
+            data-var-ui-item-id="forest"
             tabindex="-1"
           >
             <span>Forest</span>
@@ -144,10 +144,10 @@ function mountRadioMenu(): HTMLElement {
 function mountGroupedRadioMenu(): HTMLElement {
   const radio = (id: string, checked: boolean) => `
     <button type="button" role="menuitemradio" aria-checked="${checked}" data-var-ui-menu-item
-      data-item-id="${id}" tabindex="-1"><span>${id}</span></button>`;
+      data-var-ui-item-id="${id}" tabindex="-1"><span>${id}</span></button>`;
   const host = document.createElement('div');
   host.innerHTML = `
-    <div data-var-ui-menu-root data-selection-mode="none">
+    <div data-var-ui-menu-root data-var-ui-selection-mode="none">
       <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
         aria-controls="menu-3" popovertarget="menu-3-popover">Appearance</button>
       <div data-var-ui-menu-popover data-placement="bottom end" id="menu-3-popover" popover="auto">
@@ -180,7 +180,7 @@ function isOpen(root: HTMLElement): boolean {
 }
 
 function item(root: HTMLElement, id: string): HTMLElement {
-  return root.querySelector(`[data-item-id="${id}"]`) as HTMLElement;
+  return root.querySelector(`[data-var-ui-item-id="${id}"]`) as HTMLElement;
 }
 
 function keydown(target: Element, key: string): void {
@@ -515,16 +515,16 @@ describe('row sections (layout: row)', () => {
   it('ArrowRight/Left step through a row; outside a row they do nothing', () => {
     const host = document.createElement('div');
     host.innerHTML = `
-      <div data-var-ui-menu-root data-selection-mode="none">
+      <div data-var-ui-menu-root data-var-ui-selection-mode="none">
         <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
           aria-controls="menu-r" popovertarget="menu-r-popover">Appearance</button>
         <div data-var-ui-menu-popover id="menu-r-popover" popover="auto">
           <div role="menu" id="menu-r" aria-label="Appearance">
             <div role="group" aria-label="Mode" data-layout="row">
-              <button type="button" role="menuitemradio" aria-checked="false" aria-label="Light" data-var-ui-menu-item data-item-id="light" tabindex="-1"></button>
-              <button type="button" role="menuitemradio" aria-checked="true" aria-label="Dark" data-var-ui-menu-item data-item-id="dark" tabindex="-1"></button>
+              <button type="button" role="menuitemradio" aria-checked="false" aria-label="Light" data-var-ui-menu-item data-var-ui-item-id="light" tabindex="-1"></button>
+              <button type="button" role="menuitemradio" aria-checked="true" aria-label="Dark" data-var-ui-menu-item data-var-ui-item-id="dark" tabindex="-1"></button>
             </div>
-            <button type="button" role="menuitem" data-var-ui-menu-item data-item-id="other" tabindex="-1">Other</button>
+            <button type="button" role="menuitem" data-var-ui-menu-item data-var-ui-item-id="other" tabindex="-1">Other</button>
           </div>
         </div>
       </div>`;
@@ -548,10 +548,10 @@ describe('row sections (layout: row)', () => {
     const id = `menu-a${appearanceCount}`;
     const radio = (itemId: string, checked: boolean) =>
       `<button type="button" role="menuitemradio" aria-checked="${checked}" aria-label="${itemId}"
-        data-var-ui-menu-item data-item-id="${itemId}" tabindex="-1"></button>`;
+        data-var-ui-menu-item data-var-ui-item-id="${itemId}" tabindex="-1"></button>`;
     const host = document.createElement('div');
     host.innerHTML = `
-      <div data-var-ui-menu-root data-selection-mode="none">
+      <div data-var-ui-menu-root data-var-ui-selection-mode="none">
         <button type="button" data-var-ui-menu-trigger aria-haspopup="menu" aria-expanded="false"
           aria-controls="${id}" popovertarget="${id}-popover">Appearance</button>
         <div data-var-ui-menu-popover id="${id}-popover" popover="auto">
@@ -561,8 +561,8 @@ describe('row sections (layout: row)', () => {
             </div>
             <div role="separator"></div>
             <div role="group" aria-label="Theme" data-var-ui-menu-group ${themeKeepsOpen ? 'data-var-ui-menu-keep-open' : ''}>
-              <button type="button" role="menuitemradio" aria-checked="true" data-var-ui-menu-item data-item-id="teal" tabindex="-1">Teal</button>
-              <button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-item-id="rose" tabindex="-1">Rose</button>
+              <button type="button" role="menuitemradio" aria-checked="true" data-var-ui-menu-item data-var-ui-item-id="teal" tabindex="-1">Teal</button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-var-ui-menu-item data-var-ui-item-id="rose" tabindex="-1">Rose</button>
             </div>
           </div>
         </div>

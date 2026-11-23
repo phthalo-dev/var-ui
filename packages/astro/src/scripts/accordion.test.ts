@@ -8,18 +8,18 @@ function mountAccordion(options?: { type?: string; collapsible?: boolean }): HTM
   root.innerHTML = `
     <div
       data-var-ui-accordion
-      data-accordion-type="${type}"
+      data-var-ui-accordion-type="${type}"
       data-collapsible="${collapsible ? 'true' : 'false'}"
     >
-      <details data-var-ui-accordion-item data-accordion-id="a" open>
+      <details data-var-ui-accordion-item data-var-ui-accordion-id="a" open>
         <summary data-var-ui-accordion-trigger>A</summary>
         <div>Panel A</div>
       </details>
-      <details data-var-ui-accordion-item data-accordion-id="b">
+      <details data-var-ui-accordion-item data-var-ui-accordion-id="b">
         <summary data-var-ui-accordion-trigger>B</summary>
         <div>Panel B</div>
       </details>
-      <details data-var-ui-accordion-item data-accordion-id="c">
+      <details data-var-ui-accordion-item data-var-ui-accordion-id="c">
         <summary data-var-ui-accordion-trigger>C</summary>
         <div>Panel C</div>
       </details>
@@ -30,7 +30,7 @@ function mountAccordion(options?: { type?: string; collapsible?: boolean }): HTM
 }
 
 function item(root: HTMLElement, id: string): HTMLDetailsElement {
-  const el = root.querySelector(`[data-accordion-id="${id}"]`);
+  const el = root.querySelector(`[data-var-ui-accordion-id="${id}"]`);
   if (!(el instanceof HTMLDetailsElement)) {
     throw new Error(`Missing accordion item ${id}`);
   }
@@ -38,7 +38,7 @@ function item(root: HTMLElement, id: string): HTMLDetailsElement {
 }
 
 function clickTrigger(root: HTMLElement, id: string): void {
-  const summary = root.querySelector(`[data-accordion-id="${id}"] summary`);
+  const summary = root.querySelector(`[data-var-ui-accordion-id="${id}"] summary`);
   if (!(summary instanceof HTMLElement)) {
     throw new Error(`Missing accordion trigger for ${id}`);
   }
@@ -90,8 +90,8 @@ describe('createAccordionController', () => {
   it('moves focus between triggers with arrow keys', () => {
     const root = mountAccordion();
     createAccordionController(root);
-    const triggerA = root.querySelector('[data-accordion-id="a"] summary') as HTMLElement;
-    const triggerB = root.querySelector('[data-accordion-id="b"] summary') as HTMLElement;
+    const triggerA = root.querySelector('[data-var-ui-accordion-id="a"] summary') as HTMLElement;
+    const triggerB = root.querySelector('[data-var-ui-accordion-id="b"] summary') as HTMLElement;
 
     triggerA.focus();
     triggerA.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));

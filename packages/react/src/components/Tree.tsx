@@ -96,7 +96,7 @@ export type TreeItemProps = Omit<ComponentPropsWithRef<'li'>, 'id' | 'children' 
   endContent?: ReactNode;
 };
 
-const DATA_ID_ATTR = 'data-tree-item-id';
+const DATA_ID_ATTR = 'data-var-ui-tree-item-id';
 
 type TreeStyleSlots = ReturnType<typeof treeStyles>;
 

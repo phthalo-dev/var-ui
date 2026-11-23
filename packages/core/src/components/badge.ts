@@ -59,6 +59,7 @@ export const badge = typestyles.recipe({
         alignItems: 'center',
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.semibold.var,
+        fontVariantNumeric: 'tabular-nums',
         lineHeight: 1,
         padding: `${t.space.xxs.var} ${t.space.xs.var}`,
         borderRadius: t.radius.full.var,

@@ -90,7 +90,13 @@ const slotLabel = (recipe: string, slots: string[]) =>
                       ))}
                     </td>
                     <td>—</td>
-                    <td>{slotLabel(state.recipe, state.slots)}</td>
+                    <td>
+                      {state.context === 'ancestor'
+                        ? `ancestor of ${slotLabel(state.recipe, state.slots)}`
+                        : state.context === 'descendant'
+                          ? `element inside ${slotLabel(state.recipe, state.slots)}`
+                          : slotLabel(state.recipe, state.slots)}
+                    </td>
                   </tr>
                 ))}
               </tbody>

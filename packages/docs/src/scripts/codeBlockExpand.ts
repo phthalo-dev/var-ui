@@ -8,7 +8,7 @@ function lineCount(code: string): number {
 }
 
 function setCollapsed(section: HTMLElement, collapsed: boolean): void {
-  const body = section.querySelector<HTMLElement>('[data-codeblock-body]');
+  const body = section.querySelector<HTMLElement>('.var-ui-code-block__body');
   const button = section.querySelector<HTMLButtonElement>('[data-demo-expand]');
   const fade = section.querySelector<HTMLElement>('[data-demo-fade]');
 

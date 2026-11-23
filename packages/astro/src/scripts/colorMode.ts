@@ -62,7 +62,7 @@ export function colorModeToggleValue(
 }
 
 function syncToggleRoot(root: Element, storageKey: string): void {
-  const includeSystem = root.getAttribute('data-include-system') === 'true';
+  const includeSystem = root.getAttribute('data-var-ui-include-system') === 'true';
   setSegmentedControlValue(root, colorModeToggleValue(storageKey, includeSystem));
 }
 
@@ -71,7 +71,7 @@ export const COLOR_MODE_CHANGE_EVENT = 'var-ui:color-mode-change';
 
 function syncColorModeToggles(storageKey?: string): void {
   document.querySelectorAll('[data-var-ui-color-mode-toggle]').forEach((root) => {
-    const key = storageKey ?? root.getAttribute('data-storage-key') ?? 'theme-mode';
+    const key = storageKey ?? root.getAttribute('data-var-ui-storage-key') ?? 'theme-mode';
     syncToggleRoot(root, key);
   });
 }
@@ -85,7 +85,7 @@ export function initColorModeToggle(): void {
     if (root.hasAttribute('data-var-ui-color-mode-initialized')) return;
     root.setAttribute('data-var-ui-color-mode-initialized', '');
 
-    const storageKey = root.getAttribute('data-storage-key') ?? 'theme-mode';
+    const storageKey = root.getAttribute('data-var-ui-storage-key') ?? 'theme-mode';
 
     initSegmentedControl(root);
     syncToggleRoot(root, storageKey);

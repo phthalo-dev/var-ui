@@ -5,7 +5,7 @@ import {
 
 /**
  * Event dispatched (bubbling) from the control root after the selection changes.
- * `event.detail.id` holds the selected segment's `data-segment-id` value.
+ * `event.detail.id` holds the selected segment's `data-var-ui-segment-id` value.
  */
 export const SEGMENTED_CONTROL_CHANGE_EVENT = 'var-ui:segmented-control-change';
 
@@ -21,7 +21,7 @@ export function nextSegmentedControlName(): string {
 }
 
 function segmentsOf(root: Element): HTMLElement[] {
-  return Array.from(root.querySelectorAll<HTMLElement>(':scope > [data-segment-id]'));
+  return Array.from(root.querySelectorAll<HTMLElement>(':scope > [data-var-ui-segment-id]'));
 }
 
 function radioOf(segment: Element): HTMLInputElement | null {
@@ -34,7 +34,7 @@ function radioOf(segment: Element): HTMLInputElement | null {
  */
 export function setSegmentedControlValue(root: Element, value: string | null): void {
   segmentsOf(root).forEach((segment) => {
-    const selected = segment.getAttribute('data-segment-id') === value;
+    const selected = segment.getAttribute('data-var-ui-segment-id') === value;
     segment.toggleAttribute('data-selected', selected);
     const radio = radioOf(segment);
     if (radio) radio.checked = selected;
@@ -44,10 +44,10 @@ export function setSegmentedControlValue(root: Element, value: string | null): v
   }
 }
 
-/** Current `data-segment-id` of the checked segment, or `null`. */
+/** Current `data-var-ui-segment-id` of the checked segment, or `null`. */
 export function getSegmentedControlValue(root: Element): string | null {
   const checked = segmentsOf(root).find((segment) => radioOf(segment)?.checked);
-  return checked?.getAttribute('data-segment-id') ?? null;
+  return checked?.getAttribute('data-var-ui-segment-id') ?? null;
 }
 
 export function initSegmentedControl(root: Element): void {
@@ -59,9 +59,9 @@ export function initSegmentedControl(root: Element): void {
   root.addEventListener('change', (event) => {
     const radio = event.target;
     if (!(radio instanceof HTMLInputElement) || radio.type !== 'radio') return;
-    const segment = radio.closest('[data-segment-id]');
+    const segment = radio.closest('[data-var-ui-segment-id]');
     if (!segment || segment.parentElement !== root) return;
-    const id = segment.getAttribute('data-segment-id');
+    const id = segment.getAttribute('data-var-ui-segment-id');
     setSegmentedControlValue(root, id);
     root.dispatchEvent(
       new CustomEvent(SEGMENTED_CONTROL_CHANGE_EVENT, {

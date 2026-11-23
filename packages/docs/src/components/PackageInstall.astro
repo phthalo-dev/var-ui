@@ -23,8 +23,8 @@ const cb = codeBlock({ variant: 'default' });
 const uid = `pkg-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<div {...mergeProps(cb.root)} data-codeblock data-package-install>
-  <div {...mergeProps(cb.header)} data-codeblock-header>
+<div {...mergeProps(cb.root)} data-package-install>
+  <div {...mergeProps(cb.header)}>
     <div {...mergeProps(cb.tabs)} role="tablist" aria-label="Package manager">
       {
         managers.map((manager, index) => (
@@ -48,23 +48,22 @@ const uid = `pkg-${Math.random().toString(36).slice(2, 8)}`;
         type="button"
         {...mergeProps(cb.copyButton)}
         data-var-ui-code-copy
-        data-code={managers[0].command}
-        data-copy-label="Copy command"
-        data-copied-label="Copied"
-        data-error-label="Copy failed"
+        data-var-ui-code={managers[0].command}
+        data-var-ui-copy-label="Copy command"
+        data-var-ui-copied-label="Copied"
+        data-var-ui-error-label="Copy failed"
         aria-label="Copy command"
       >
         <span data-codeblock-copy-icon set:html={copySvg} />
       </button>
-      <span {...mergeProps(cb.feedback)} data-codeblock-feedback role="status" aria-live="polite" />
+      <span {...mergeProps(cb.feedback)} data-var-ui-codeblock-feedback role="status" aria-live="polite" />
     </div>
   </div>
-  <div {...mergeProps(cb.body)} data-codeblock-body>
+  <div {...mergeProps(cb.body)}>
     {
       managers.map((manager, index) => (
         <pre
           {...mergeProps(cb.pre)}
-          data-codeblock-pre
           role="tabpanel"
           id={`${uid}-panel-${manager.id}`}
           aria-labelledby={`${uid}-tab-${manager.id}`}

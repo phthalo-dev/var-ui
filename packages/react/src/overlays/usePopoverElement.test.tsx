@@ -35,7 +35,7 @@ function TestPopover({ mode, open, defaultOpen, onOpenChange }: Props) {
 }
 
 const pop = () => screen.getByTestId('pop');
-const isOpen = () => pop().hasAttribute('data-popover-open');
+const isOpen = () => pop().hasAttribute('data-var-ui-popover-open');
 const calls = (h: ReturnType<typeof vi.fn<OverlayOpenChangeHandler>>) =>
   h.mock.calls.map(([open, d]) => [open, d.reason]);
 

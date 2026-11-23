@@ -56,7 +56,7 @@ function text(value: string): HastNode {
   return { type: 'text', value };
 }
 
-/** DOM attribute names to hast property names (`data-codeblock-pre` -> `dataCodeblockPre`). */
+/** DOM attribute names to hast property names (`data-var-ui-code-copy` -> `dataVarUiCodeCopy`). */
 function hastProps(
   attributes: CodeBlockAttributes | Record<string, string>,
 ): Record<string, unknown> {

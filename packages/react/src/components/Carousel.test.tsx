@@ -29,7 +29,7 @@ describe('Carousel', () => {
     );
     const viewport = screen
       .getByRole('region', { name: 'Featured' })
-      .querySelector('[data-carousel-viewport]') as HTMLElement;
+      .querySelector('[data-var-ui-carousel-viewport]') as HTMLElement;
     const scrollBy = vi.fn();
     viewport.scrollBy = scrollBy;
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));

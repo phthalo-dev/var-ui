@@ -48,9 +48,53 @@ const themeWhen = {
  * Durations and `transition` tokens already collapse under reduced motion, so recipes that only
  * use tokens need nothing; use this to stop `animation: …` loops (spinner, skeleton, pulse).
  * Only one `atReducedMotion` per style object (a second spread replaces the first).
+ *
+ * It cannot override a property an animation is driving: animated values beat normal
+ * declarations in the cascade, so `atReducedMotion({ transform: 'none' })` leaves a sliding
+ * `@keyframes` sliding. Swap the animation instead, to `animation: 'none'` or to a fade-only twin
+ * from {@link reducedMotionKeyframes}:
+ *
+ * ```ts
+ * const stops = { from: { opacity: 0, translate: '0 0.5rem' }, to: { opacity: 1, translate: '0' } };
+ * const enter = keyframes.create('bar-enter', stops);
+ * const enterFade = keyframes.create('bar-enter-fade', reducedMotionKeyframes(stops));
+ * // in a recipe:
+ * { animationName: enter, ...atReducedMotion({ animationName: enterFade }) }
+ * ```
  */
 export function atReducedMotion(style: VariantOptionStyle) {
   return typestyles.atRuleBlock(toMediaAtRuleKey(reducedMotionQuery), style);
+}
+
+/** Properties that move, resize or turn an element: dropped by {@link reducedMotionKeyframes}. */
+const MOTION_PROPERTIES = new Set([
+  'transform',
+  'translate',
+  'rotate',
+  'scale',
+  'offsetPath',
+  'offsetDistance',
+  'offsetRotate',
+  'offset-path',
+  'offset-distance',
+  'offset-rotate',
+]);
+
+/**
+ * The reduced-motion twin of a set of keyframe stops: the same stops without `transform`,
+ * `translate`, `rotate`, `scale` or motion-path properties. Opacity, color and the rest stay, so
+ * an enter animation becomes a plain fade. Pair it with {@link atReducedMotion} (see there).
+ */
+export function reducedMotionKeyframes<S extends Record<string, Record<string, unknown>>>(
+  stops: S,
+): { [K in keyof S]: Partial<S[K]> } {
+  const out: Record<string, Record<string, unknown>> = {};
+  for (const [stop, declarations] of Object.entries(stops)) {
+    out[stop] = Object.fromEntries(
+      Object.entries(declarations).filter(([property]) => !MOTION_PROPERTIES.has(property)),
+    );
+  }
+  return out as { [K in keyof S]: Partial<S[K]> };
 }
 
 /**

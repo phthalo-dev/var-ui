@@ -31,7 +31,7 @@ describe('Timeline', () => {
         <Timeline.Item title="Shipped">Pending</Timeline.Item>
       </Timeline>,
     );
-    const items = container.querySelectorAll('[data-timeline-item]');
+    const items = container.querySelectorAll('.var-ui-timeline__item');
     expect(items[0]?.getAttribute('data-active')).toBe('');
     expect(items[1]?.getAttribute('data-pending')).toBe('');
   });

@@ -155,7 +155,7 @@ function createToastElement(
   item.className = 'var-ui-toast__item';
   applyDataTone(item, tone, appearance);
   item.setAttribute('role', 'status');
-  item.setAttribute('data-toast-id', id);
+  item.setAttribute('data-var-ui-toast-id', id);
 
   const icon = document.createElement('span');
   icon.className = 'var-ui-toast__icon';
@@ -233,7 +233,7 @@ function updateToastElement(el: HTMLElement, patch: Partial<ToastShowInput>): vo
 }
 
 function createToastController(root: HTMLElement): ToastController {
-  const maxVisible = Number(root.dataset.maxVisible ?? 3);
+  const maxVisible = Number(root.dataset.varUiMaxVisible ?? 3);
   const queue: ToastEntry[] = [];
 
   function render(): void {
@@ -359,7 +359,7 @@ function ensureDefaultRegion(): ToastController {
   region.setAttribute('data-var-ui-toast-region', '');
   region.setAttribute('popover', 'manual');
   region.setAttribute('data-placement', 'bottom-end');
-  region.setAttribute('data-max-visible', '3');
+  region.setAttribute('data-var-ui-max-visible', '3');
   region.setAttribute('aria-live', 'polite');
   region.setAttribute('aria-relevant', 'additions');
   document.body.append(region);

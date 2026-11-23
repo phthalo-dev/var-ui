@@ -31,7 +31,7 @@ function select(root: HTMLElement, id: string): void {
     }
   });
   const copy = root.querySelector<HTMLElement>('[data-var-ui-code-copy]');
-  if (copy && command) copy.setAttribute('data-code', command);
+  if (copy && command) copy.setAttribute('data-var-ui-code', command);
 }
 
 /** Tab switching for `PackageInstall`; the chosen manager is shared across blocks and visits. */

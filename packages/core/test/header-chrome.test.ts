@@ -35,7 +35,7 @@ describe('app header chrome recipes', () => {
     topNav();
     const css = getRegisteredCss();
     expect(css).toContain('.var-ui-top-nav__itemLabel::after');
-    expect(css).toMatch(/content:\s*attr\(data-label\) \/ ""/);
+    expect(css).toMatch(/content:\s*attr\(data-var-ui-label\) \/ ""/);
     // No drop shadow on the bar.
     expect(css).not.toMatch(/\.var-ui-top-nav\s*\{[^}]*box-shadow/);
   });

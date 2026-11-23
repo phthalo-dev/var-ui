@@ -29,7 +29,7 @@ describe('LoadingOverlay', () => {
       </LoadingOverlay>,
     );
     const root = container.firstElementChild as HTMLElement;
-    const content = root.querySelector('[data-loading-overlay-content]') as HTMLElement;
+    const content = root.querySelector('.var-ui-loading-overlay__content') as HTMLElement;
     expect(root.getAttribute('aria-busy')).toBe('true');
     expect(content.hasAttribute('inert')).toBe(true);
     rerender(

@@ -92,7 +92,6 @@ function TimelineItemContent({
       {...rest}
       {...mergeProps(styles.item, className)}
       ref={ref}
-      data-timeline-item={index}
       data-active={active ? '' : undefined}
       data-pending={pending ? '' : undefined}
     >
@@ -168,7 +167,7 @@ export function Timeline({
 
   return (
     <TimelineContext.Provider value={contextValue}>
-      <ol {...rest} {...mergeProps(styles.root, className)} ref={ref} data-timeline>
+      <ol {...rest} {...mergeProps(styles.root, className)} ref={ref}>
         {enhancedChildren ?? itemNodes}
       </ol>
     </TimelineContext.Provider>

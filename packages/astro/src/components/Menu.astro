@@ -102,7 +102,7 @@ const itemContents = await Promise.all(
 );
 ---
 
-<div data-var-ui-menu-root data-selection-mode={singleSelection ? "single" : "none"} {...rootRecipe}>
+<div data-var-ui-menu-root data-var-ui-selection-mode={singleSelection ? "single" : "none"} {...rootRecipe}>
   <button
     type="button"
     data-var-ui-menu-trigger
@@ -210,7 +210,7 @@ const itemContents = await Promise.all(
                 aria-label={row ? item.label : undefined}
                 title={row ? item.label : undefined}
                 data-var-ui-menu-item
-                data-item-id={item.id}
+                data-var-ui-item-id={item.id}
                 tabindex="-1"
                 {...itemRecipe}
               >
@@ -227,7 +227,7 @@ const itemContents = await Promise.all(
                 title={row ? item.label : undefined}
                 aria-disabled={disabled || undefined}
                 data-var-ui-menu-item
-                data-item-id={item.id}
+                data-var-ui-item-id={item.id}
                 tabindex="-1"
                 {...itemRecipe}
               >
