@@ -1,5 +1,27 @@
 # @var-ui/cli
 
+## 0.14.0
+
+### Minor Changes
+
+- [#240](https://github.com/phthalo-dev/var-ui/pull/240) [`a340f9f`](https://github.com/phthalo-dev/var-ui/commit/a340f9fffa3633941c76db439887ccfd52021720) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `var-ui tokens [query] [--json]`: lists design tokens with their CSS variable and default value (light / dark for colours). The query matches the token path or variable name, ignoring case and separators, so a pasted `--var-ui-font-size-md` finds `--var-ui-fontSize-md`. The catalog gains a `tokens` array from `listDesignTokens()`, and the AGENTS.md block mentions the command.
+
+### Patch Changes
+
+- [#281](https://github.com/phthalo-dev/var-ui/pull/281) [`6ac0e2c`](https://github.com/phthalo-dev/var-ui/commit/6ac0e2cb2c52c3acb9b5d159cc729954faa05187) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `@var-ui/react` no longer depends on `react-aria`, directly or as a peer: install `react`, `react-dom`, `react-aria-components` and `@var-ui/core`. Our popups no longer render under a react-aria trigger's press responder, which removes the one reason we imported `react-aria` (its `Overlay`, to clear that responder).
+  
+  - `Menu` provides react-aria's menu contexts itself (`MenuContext`, `RootMenuTriggerStateContext`, the popover and overlay-state contexts) instead of wrapping in RAC `MenuTrigger`. The trigger handles its own click and keys: ArrowDown, Enter and Space open with the first item focused, ArrowUp with the last. Submenus, Menubar and the presets are unchanged.
+  - `ColorInput`'s picker is a var-ui `Popover` (a light-dismiss native popover) instead of RAC `DialogTrigger`. It still takes focus when it opens and gives it back to the swatch.
+  - The internal popover shell renders its content in place, without `Overlay`. If a var-ui popup is placed inside a RAC `MenuTrigger` / `DialogTrigger`, it keeps its anchor and warns in development.
+
+- [#265](https://github.com/phthalo-dev/var-ui/pull/265) [`765e234`](https://github.com/phthalo-dev/var-ui/commit/765e234720745d2d276a3ecc79547d8d336a85ec) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Component props data includes recipe variant defaults (`size`, `tone`, `appearance`, …), so `var-ui component <name>` and the docs Markdown views show them, not only the docs props table. JSDoc `@default` still wins.
+
+- [#250](https://github.com/phthalo-dev/var-ui/pull/250) [`993ae7f`](https://github.com/phthalo-dev/var-ui/commit/993ae7f2902079c2bfe56221bf5efcf4dd97fc7c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `react-aria` is now a peer dependency (`^3.50.0`) instead of an exact dependency, so apps install one copy: the one `react-aria-components` uses. Two copies made menu items take over their trigger's ref, so `Menu` popups anchored to their own first item and rendered at the window's corner. A popup now ignores a trigger that sits inside itself and warns in development that `react-aria` is duplicated. `@react-aria/i18n` is gone (`isRTL` comes from `react-aria-components`).
+  
+  Install it next to `react-aria-components`: `pnpm add react-aria`, then check `npm ls react-aria` lists one version.
+
+- [#254](https://github.com/phthalo-dev/var-ui/pull/254) [`f066000`](https://github.com/phthalo-dev/var-ui/commit/f066000932f40cb1bfffc5e3d4cc7cc70d6cd121) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Every published package now ships its `CHANGELOG.md`. A new **Upgrading** guide (`/docs/upgrading`) covers the 0.6 → 0.13 breaks: platform prop names, `filled` → `solid`, native overlays, space tokens and removed exports. The core README lists `typestyles` as the one TypeStyles export (no root `recipe`/`style`), and the React README no longer describes the package as React Aria wrappers. `IconButton` warns once in development when it renders without an `icon` (any cause, including the pre-0.7 `name="close"`).
+
 ## 0.13.0
 
 No changes in this release.
