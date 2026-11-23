@@ -23,7 +23,11 @@ function listFiles(dir: string, extension: string): string[] {
   return files;
 }
 
-const mdxFiles = listFiles(docsDir, '.mdx');
+// The upgrade guide is where removed names belong: it maps each one to its replacement.
+const MIGRATION_NOTES = ['upgrading.mdx'];
+const mdxFiles = listFiles(docsDir, '.mdx').filter(
+  (file) => !MIGRATION_NOTES.some((name) => file.endsWith(`/${name}`)),
+);
 const demoFiles = [
   ...listFiles(join(docsDir, '../src/demos'), '.ts'),
   ...listFiles(join(docsDir, '../src/demos'), '.tsx'),

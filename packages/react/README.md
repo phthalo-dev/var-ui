@@ -2,7 +2,7 @@
 
 React component library built with [typestyles](https://typestyles.dev) and [`@var-ui/core`](../core/README.md) tokens. Consumed by the docs site and `examples/vite-app`.
 
-Framework-specific wrappers around accessible primitives ([React Aria Components](https://react-spectrum.adobe.com/react-aria/)) with typed variants, design tokens, and theme context.
+Components with native DOM props (`disabled`, `open`, `onClick`, `onValueChange`), typed variants, design tokens and theme context. Overlays are native `<dialog>` and `popover` elements. Collections and complex widgets (Select, Combobox, Menu, date pickers) build on [React Aria Components](https://react-spectrum.adobe.com/react-aria/) internally. See [Upgrading](https://var-ui.dev/docs/upgrading) when moving between minor versions.
 
 ## Install
 
@@ -133,7 +133,7 @@ or `@var-ui/core/styles.css`.
 
 ```text
 src/
-  components/     # React Aria–based UI
+  components/     # UI components (native elements; React Aria for collections)
   icons/          # IconProvider, useIcons, Icon, empty fallback
   hooks/          # useMediaQuery, useCopy, …
   colorMode.tsx             # useColorMode, getColorModeInitScript
