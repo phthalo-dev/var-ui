@@ -1,5 +1,48 @@
 # @var-ui/docs
 
+## 0.14.0
+
+### Minor Changes
+
+- [#238](https://github.com/phthalo-dev/var-ui/pull/238) [`e97729d`](https://github.com/phthalo-dev/var-ui/commit/e97729de25f8d93d88a373708ef5efabd11bc2db) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `prose` gains an opt-out, and the docs-only prose recipe moves out of core.
+  
+  - **`data-not-prose`** (`NOT_PROSE_ATTRIBUTE`): prose element styles skip the marked element and everything inside it (a live demo, an embedded widget), while the element still takes part in the vertical flow. **`proseRules()`** scopes your own element rules the same way when you extend prose.
+  - **`proseContent` is removed from `@var-ui/core`** (class `docs-prose`). It was the docs site's reading style, and it sat in the `utilities` layer, so it overrode component styles and needed `data-prose-isolate` to keep out of demos. `@var-ui/docs` now has `docsProse` (in `@var-ui/docs/styles`), which sets `prose`'s vars to the docs ramp and adds the docs extras. It lives in the `base` layer, so components inside win. `data-prose-isolate` is replaced by `data-not-prose`.
+  - `prose` no longer gives inline children of list items and blockquotes (`code`, badges) a bottom margin; only block children are spaced.
+  - `Table` sets `display: table` on its `<table>`, so it keeps its layout inside `Prose` (which makes bare tables scrollable blocks).
+
+- [#233](https://github.com/phthalo-dev/var-ui/pull/233) [`8af0092`](https://github.com/phthalo-dev/var-ui/commit/8af0092b83f602a5de6843ece7f91eea7f2c6844) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `CodeBlock` and `CopyButton` share one set of copy props and events.
+  
+  - **`CodeBlock`** (React and Astro): `copyErrorLabel` is now `errorLabel`, matching `CopyButton`. `copyText` and `errorText` are removed: the copy button is icon-only, so `copyLabel` / `copiedLabel` / `errorLabel` (its accessible name in each state) are the only labels. A copy failure shows the error icon, as `CopyButton` does.
+  - **React `CodeBlock`** gains `onCopied(value)` and `onCopyError(error, value)` and is built on `useCopy`. It resets after 2 seconds like `CopyButton` (it was 1.2s). The status region now announces success as well as failure; success is screen-reader-only.
+  - **Astro**: `CodeBlock` fires the same events as `CopyButton`, renamed to `var-ui:copied` / `var-ui:copy-error` (`COPIED_EVENT` / `COPY_ERROR_EVENT`; previously `COPY_BUTTON_COPIED_EVENT` / `COPY_BUTTON_ERROR_EVENT`), and honours `data-var-ui-timeout`. The hand-written markup contract uses `data-var-ui-error-label` (was `data-copy-error-label`) and drops the `[data-codeblock-copy-text]` span.
+  - **`CopyButton`**'s default `errorLabel` is now `Copy failed` (was `Error`), and `useCopy` clears `error` after the timeout, as it already did for `copied`.
+
+### Patch Changes
+
+- [#291](https://github.com/phthalo-dev/var-ui/pull/291) [`df5fd15`](https://github.com/phthalo-dev/var-ui/commit/df5fd15c995cb56d5b6f8634d8b9969656b193f8) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - **Fonts.** Add the `alloGrotesk` pairing: Allo (Latin subset, variable weight) for body and UI, Space Grotesk for display, JetBrains Mono for code, each webfont backed by a metric-matched Arial fallback so text doesn't rewrap when the webfont swaps in. `defineFonts` slots accept several faces (upright + italic of one family), register a face shared by two slots once, and take an optional `metricFallback` face; `FontFaceDefinition` gains `sizeAdjust`, `ascentOverride`, `descentOverride` and `lineGapOverride`.
+  
+  **Letter-spacing tokens resolve at the text that uses them.** `letterSpacing.*` tokens were registered as `<length-percentage>`, so `em` values computed once against the root font size: `caps` (0.06em) rendered as 0.08em on 12px labels and `display` tracking didn't scale with headline size. They are now unregistered (`*` syntax), so `em` resolves at the use site.
+  
+  **Tabular figures** on `badge` and the `slider` output.
+  
+  **Docs prose:** H3–H6 use the body face (H3 at weight 650); the lead paragraph and page-header lead track at −0.005em.
+
+- [#273](https://github.com/phthalo-dev/var-ui/pull/273) [`70443fb`](https://github.com/phthalo-dev/var-ui/commit/70443fbaa5f1bebdee7c73f9062444f70d1092e7) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New `codeBlockMarkup({ code, language, filename, copyable, … })` in core: the structure of a code block (header, language label, copy button, body, `pre`, `code`) as plain attribute maps. The React and Astro `CodeBlock`s and the docs Shiki transformer all render from it, so they can't drift. They had: markdown fences put the language in the filename slot, showed a visible "Copy" label, and used `data-copy-error-label`, which the copy script never read. The root also carries `data-language`.
+  
+  **Fix (react):** a `CodeBlock` without highlighted HTML double-escaped its code, so `<div>` showed as `&lt;div&gt;`.
+
+- [#272](https://github.com/phthalo-dev/var-ui/pull/272) [`0ef2a05`](https://github.com/phthalo-dev/var-ui/commit/0ef2a059a916e900445b7ce353b6a821dee44c5c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - New reading type tokens: `fontSize.prose.{body, lead, h1, h2, h3}` (16 / 19 / 44 / 28 / 20px) and the paired fixed line heights `lineHeight.prose.*` (26 / 28 / 48 / 34 / 28px), so themes can tune long-form type apart from the 14px control scale. The docs kit (`docsProse`, the page header lead) uses them instead of hard-coded rems. `Prose` itself stays relative to its inherited font size.
+
+- [#261](https://github.com/phthalo-dev/var-ui/pull/261) [`c3313b6`](https://github.com/phthalo-dev/var-ui/commit/c3313b64c8fcf24c5a85f7e9e453c70ceacc159f) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Collapsible `SideNav` sections can be controlled and remembered.
+  
+  - **react** `SideNav.Section` takes `open` / `onOpenChange` (controlled). A parent that ignores the change keeps the section as it is.
+  - **react, astro** `SideNav persistKey` remembers which collapsible sections the reader opened or closed, in `localStorage`. Sections are keyed by `id`, or else their title. The section holding the current page always starts open. Astro `SideNav` also initializes navs swapped in by the client router (`astro:page-load`).
+  - **core** `persistDisclosures(root, key)` (`@var-ui/core/shared/disclosureState`) is the framework-agnostic helper behind both.
+  - **docs** The sidebar uses `persistKey`. The custom `docsSidebarState` script is removed.
+
+- [#254](https://github.com/phthalo-dev/var-ui/pull/254) [`f066000`](https://github.com/phthalo-dev/var-ui/commit/f066000932f40cb1bfffc5e3d4cc7cc70d6cd121) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Every published package now ships its `CHANGELOG.md`. A new **Upgrading** guide (`/docs/upgrading`) covers the 0.6 → 0.13 breaks: platform prop names, `filled` → `solid`, native overlays, space tokens and removed exports. The core README lists `typestyles` as the one TypeStyles export (no root `recipe`/`style`), and the React README no longer describes the package as React Aria wrappers. `IconButton` warns once in development when it renders without an `icon` (any cause, including the pre-0.7 `name="close"`).
+
 ## 0.13.0
 
 ### Minor Changes
