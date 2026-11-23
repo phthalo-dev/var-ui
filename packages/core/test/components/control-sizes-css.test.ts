@@ -34,7 +34,8 @@ describe('control size variants', () => {
     ['dateTimeInput__segment', dateTimeInput],
     ['timeInput__segment', timeInput],
   ] as const)('%s takes text-field type at each size', (slot, recipe) => {
-    recipe();
+    // The recipes' variant signatures differ, so the union isn't callable as-is.
+    (recipe as () => unknown)();
     expect(rule(`var-ui-${slot}`, 'sm')).toMatch(/font-size:\s*var\(--var-ui-fontSize-sm\)/);
     expect(rule(`var-ui-${slot}`, 'md')).toMatch(/font-size:\s*var\(--var-ui-fontSize-md\)/);
     expect(rule(`var-ui-${slot}`, 'lg')).toMatch(/font-size:\s*var\(--var-ui-fontSize-lg\)/);

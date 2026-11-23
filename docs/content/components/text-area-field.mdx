@@ -17,6 +17,16 @@ Multi-line text input with label and validation.
 
 `size` (`sm`, `md`, `lg`) scales the type and inset to match `TextField`; the minimum height follows the control height. It falls back to the surrounding control size (`InputGroup`, `Toolbar`, `Select.Root`), then `md`.
 
+### Autosize
+
+`autosize` grows the field with its content (CSS `field-sizing: content`) between `minRows`
+(default 2) and `maxRows` (no cap by default). Past `maxRows` it scrolls. Browsers without
+`field-sizing` keep a fixed height and scroll.
+
+```tsx
+<TextAreaField label="Message" autosize minRows={2} maxRows={8} />
+```
+
 ## Props
 
 <PropsTable slug="text-area-field" />
