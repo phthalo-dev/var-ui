@@ -63,6 +63,14 @@
       "types": "./dist/icons/arrowsUpDown.d.mts",
       "import": "./dist/icons/arrowsUpDown.mjs"
     },
+    "./glyphs/box": {
+      "types": "./dist/glyph-data/box.d.mts",
+      "import": "./dist/glyph-data/box.mjs"
+    },
+    "./box": {
+      "types": "./dist/icons/box.d.mts",
+      "import": "./dist/icons/box.mjs"
+    },
     "./glyphs/check": {
       "@var-ui/source": "./src/glyph-data/check.ts",
       "types": "./dist/glyph-data/check.d.mts",
@@ -122,6 +130,14 @@
       "@var-ui/source": "./src/icons/close.tsx",
       "types": "./dist/icons/close.d.mts",
       "import": "./dist/icons/close.mjs"
+    },
+    "./glyphs/code": {
+      "types": "./dist/glyph-data/code.d.mts",
+      "import": "./dist/glyph-data/code.mjs"
+    },
+    "./code": {
+      "types": "./dist/icons/code.d.mts",
+      "import": "./dist/icons/code.mjs"
     },
     "./glyphs/colorModeDark": {
       "@var-ui/source": "./src/glyph-data/colorModeDark.ts",
@@ -183,6 +199,14 @@
       "types": "./dist/icons/error.d.mts",
       "import": "./dist/icons/error.mjs"
     },
+    "./glyphs/externalLink": {
+      "types": "./dist/glyph-data/externalLink.d.mts",
+      "import": "./dist/glyph-data/externalLink.mjs"
+    },
+    "./externalLink": {
+      "types": "./dist/icons/externalLink.d.mts",
+      "import": "./dist/icons/externalLink.mjs"
+    },
     "./glyphs/eye": {
       "@var-ui/source": "./src/glyph-data/eye.ts",
       "types": "./dist/glyph-data/eye.d.mts",
@@ -203,6 +227,22 @@
       "types": "./dist/icons/eyeOff.d.mts",
       "import": "./dist/icons/eyeOff.mjs"
     },
+    "./glyphs/file": {
+      "types": "./dist/glyph-data/file.d.mts",
+      "import": "./dist/glyph-data/file.mjs"
+    },
+    "./file": {
+      "types": "./dist/icons/file.d.mts",
+      "import": "./dist/icons/file.mjs"
+    },
+    "./glyphs/github": {
+      "types": "./dist/glyph-data/github.d.mts",
+      "import": "./dist/glyph-data/github.mjs"
+    },
+    "./github": {
+      "types": "./dist/icons/github.d.mts",
+      "import": "./dist/icons/github.mjs"
+    },
     "./glyphs/info": {
       "@var-ui/source": "./src/glyph-data/info.ts",
       "types": "./dist/glyph-data/info.d.mts",
@@ -212,6 +252,14 @@
       "@var-ui/source": "./src/icons/info.tsx",
       "types": "./dist/icons/info.d.mts",
       "import": "./dist/icons/info.mjs"
+    },
+    "./glyphs/markdown": {
+      "types": "./dist/glyph-data/markdown.d.mts",
+      "import": "./dist/glyph-data/markdown.mjs"
+    },
+    "./markdown": {
+      "types": "./dist/icons/markdown.d.mts",
+      "import": "./dist/icons/markdown.mjs"
     },
     "./glyphs/menu": {
       "@var-ui/source": "./src/glyph-data/menu.ts",
@@ -263,6 +311,14 @@
       "types": "./dist/icons/search.d.mts",
       "import": "./dist/icons/search.mjs"
     },
+    "./glyphs/sliders": {
+      "types": "./dist/glyph-data/sliders.d.mts",
+      "import": "./dist/glyph-data/sliders.mjs"
+    },
+    "./sliders": {
+      "types": "./dist/icons/sliders.d.mts",
+      "import": "./dist/icons/sliders.mjs"
+    },
     "./glyphs/star": {
       "@var-ui/source": "./src/glyph-data/star.ts",
       "types": "./dist/glyph-data/star.d.mts",
@@ -293,6 +349,14 @@
       "types": "./dist/icons/success.d.mts",
       "import": "./dist/icons/success.mjs"
     },
+    "./glyphs/terminal": {
+      "types": "./dist/glyph-data/terminal.d.mts",
+      "import": "./dist/glyph-data/terminal.mjs"
+    },
+    "./terminal": {
+      "types": "./dist/icons/terminal.d.mts",
+      "import": "./dist/icons/terminal.mjs"
+    },
     "./glyphs/warning": {
       "@var-ui/source": "./src/glyph-data/warning.ts",
       "types": "./dist/glyph-data/warning.d.mts",
@@ -319,6 +383,7 @@
   },
   "scripts": {
     "build": "vp pack",
+    "generate": "node scripts/generate-icon-entries.mjs && vp fmt src package.json",
     "pack": "vp pack",
     "dev": "vp pack --watch"
   },
