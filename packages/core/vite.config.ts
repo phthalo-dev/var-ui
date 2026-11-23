@@ -25,6 +25,7 @@ export default defineConfig({
       'src/shared/commandSearch.ts',
       'src/shared/pointer.ts',
       'src/shared/colorLabel.ts',
+      'src/shared/disclosureState.ts',
       'src/theme/constants.ts',
       'src/theme/colorModeScript.ts',
       'src/vite.ts',

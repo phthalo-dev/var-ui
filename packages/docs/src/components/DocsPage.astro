@@ -165,7 +165,7 @@ const markdownGlyph =
               scrollable={false}
               {...mergeProps(page.sidebar)}
             >
-              <SideNav label="Section navigation" collapsible>
+              <SideNav label="Section navigation" collapsible persistKey="var-docs-sidebar-open">
                 <DocsSidebar sections={sidebarSections} isLinkActive={isSidebarLinkActive} />
               </SideNav>
             </LayoutPanel>
