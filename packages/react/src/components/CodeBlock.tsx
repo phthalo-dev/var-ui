@@ -108,7 +108,6 @@ export function CodeBlock({
         {...(rest as ComponentPropsWithoutRef<'code'>)}
         {...mergeProps(cb.root, cb.code.className, className)}
         ref={ref}
-        data-codeblock
       >
         {code}
       </code>

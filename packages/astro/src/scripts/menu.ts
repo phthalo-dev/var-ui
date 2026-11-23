@@ -12,7 +12,7 @@ import { menuArrowTarget } from '@var-ui/core/shared/menuNavigation';
 
 /**
  * Event dispatched (bubbling) from the menu root after an item is activated.
- * `event.detail.id` holds the item's `data-item-id` value.
+ * `event.detail.id` holds the item's `data-var-ui-item-id` value.
  */
 export const MENU_ACTION_EVENT = 'var-ui:menu-action';
 
@@ -82,7 +82,7 @@ export type MenuController = {
   open: () => void;
   close: () => void;
   toggle: () => void;
-  /** Moves `aria-checked` to the item with the given `data-item-id` (single mode). */
+  /** Moves `aria-checked` to the item with the given `data-var-ui-item-id` (single mode). */
   select: (id: string) => void;
 };
 
@@ -265,7 +265,7 @@ export function initMenu(root: Element): void {
     close: () => hideMenu(),
     toggle: () => (isOpenNow() ? hideMenu() : showMenu('none')),
     select: (id: string) => {
-      const match = items.find((candidate) => candidate.getAttribute('data-item-id') === id);
+      const match = items.find((candidate) => candidate.getAttribute('data-var-ui-item-id') === id);
       if (match?.getAttribute('role') === 'menuitemradio') syncCheckedItem(match);
     },
   };
@@ -368,7 +368,7 @@ export function initMenu(root: Element): void {
       rootEl.dispatchEvent(
         new CustomEvent<MenuActionDetail>(MENU_ACTION_EVENT, {
           bubbles: true,
-          detail: { id: item.getAttribute('data-item-id') },
+          detail: { id: item.getAttribute('data-var-ui-item-id') },
         }),
       );
       // A row (Light / Dark / System) or a `closeOnSelect: false` section is a setting beside

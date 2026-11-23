@@ -107,7 +107,7 @@ export const themePlaygroundStyles = typestyles.recipe({
         borderStyle: 'solid',
         borderColor: t.color.border.default.var,
         overflow: 'hidden',
-        '& [data-codeblock]': {
+        '& .var-ui-code-block': {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
@@ -116,10 +116,10 @@ export const themePlaygroundStyles = typestyles.recipe({
           boxShadow: 'none',
           borderRadius: 0,
         },
-        '& [data-codeblock-header]': {
+        '& .var-ui-code-block__header': {
           flexShrink: 0,
         },
-        '& [data-codeblock-body]': {
+        '& .var-ui-code-block__body': {
           flex: 1,
           minHeight: 0,
           overflow: 'auto',

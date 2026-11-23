@@ -15,13 +15,13 @@ const slides = [
 <section {...mergeProps(s.root)} role="region" aria-label="Featured themes">
   <div
     {...mergeProps(s.viewport)}
-    data-carousel-viewport
+    data-var-ui-carousel-viewport
     tabindex="0"
     style="grid-auto-columns: 13.75rem"
   >
     {
       slides.map((slide) => (
-        <div {...mergeProps(s.item)} data-carousel-item>
+        <div {...mergeProps(s.item)} data-var-ui-carousel-item>
           <div {...mergeProps(c.root)}>
             <h3 {...mergeProps(c.title)}>{slide.title}</h3>
             <div {...mergeProps(c.body)}>{slide.body}</div>

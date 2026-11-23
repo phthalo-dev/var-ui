@@ -43,13 +43,18 @@ Variant axes are written as data attributes on the slot that carries them, for e
 State is exposed as data attributes, the same set in React and Astro. Some come from
 react-aria-components in React, so they appear on the elements it controls.
 
-| Attribute                                                         | Meaning                                    |
-| ----------------------------------------------------------------- | ------------------------------------------ |
-| `data-disabled`, `data-invalid`, `data-required`, `data-readonly` | Field and control state                    |
-| `data-selected`, `data-checked`, `data-indeterminate`             | Selection state                            |
-| `data-open`, `data-expanded`                                      | Overlays, disclosures, tree and menu items |
-| `data-pressed`                                                    | Pointer or key press in progress           |
-| `data-orientation`, `data-placement`                              | Layout of the component or popup           |
+| Attribute                                                         | Meaning                                                                      |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `data-disabled`, `data-invalid`, `data-required`, `data-readonly` | Field and control state                                                      |
+| `data-valid`, `data-dirty`, `data-touched`                        | Field validation lifecycle (React `Field` root)                              |
+| `data-selected`, `data-checked`, `data-indeterminate`             | Selection state                                                              |
+| `data-open`, `data-expanded`                                      | Overlays, disclosures, tree and menu items                                   |
+| `data-has-children`                                               | Tree item with nested items                                                  |
+| `data-pressed`                                                    | Pointer or key press in progress                                             |
+| `data-orientation`, `data-placement`                              | Layout of the component or popup                                             |
+| `data-trigger`                                                    | Popup opened by a react-aria trigger: `Select`, `ComboBox`, `MenuTrigger`, … |
+| `data-row-header`                                                 | Table header cell that labels its row                                        |
+| `data-language`                                                   | Code block language id (`ts`, `bash`), for language-specific styling         |
 
 Overlay popups also get `data-open` and `data-closed`, which mirror the requested state. Enter and
 exit animation is CSS (`@starting-style` under `[open]` or `:popover-open`), so there are no
@@ -57,9 +62,12 @@ exit animation is CSS (`@starting-style` under `[open]` or `:popover-open`), so 
 `[aria-disabled="true"]` are used by the recipes too, and a link-rendered Button has no `disabled`
 attribute, only `aria-disabled`.
 
-Other `data-*` attributes exist (`data-has-*` layout flags, `data-var-ui-*` script wiring in Astro).
-They are not part of the contract; see `UNDOCUMENTED_HOOKS` in
-`packages/react/src/dataAttributeContract.test.ts`.
+Component-specific hooks (layout flags such as Layout's `data-has-header`, AppShell's
+`data-aside` and `data-mobile`, a code block's `data-wrap`) are listed in the **Styling hooks**
+table on each component page, generated from the recipes. Every other `data-*` attribute a
+component renders starts with `data-var-ui-`: script wiring and configuration for the Astro
+client scripts and React internals. Those are not a styling API and can change at any time.
+Parts of a component are selected by their slot class, not by an attribute.
 
 ### Component variables
 
@@ -320,6 +328,7 @@ import { Button } from '@var-ui/astro';
 
 Slot class names, component variable names and variant axes are snapshotted in
 `packages/core/test/class-contract.test.ts`, and the documented `data-*` hooks are enforced in
-`packages/react/src/dataAttributeContract.test.ts`. A rename of any of them is a deliberate,
-reviewed breaking change. `data-var-ui-*` and `data-class-*`
-attributes, `data-has-*` flags and DOM nesting depth are not part of the contract.
+`docs/src/lib/data-attribute-contract.test.ts`, which fails when a component renders a `data-*`
+attribute that is neither in a Styling hooks table, in this guide, nor prefixed `data-var-ui-`.
+A rename of any of them is a deliberate, reviewed breaking change. `data-var-ui-*` attributes and
+DOM nesting depth are not part of the contract.

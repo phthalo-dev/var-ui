@@ -18,16 +18,16 @@ describe('initCommandPalette', () => {
       <div
         id="palette"
         data-var-ui-command-palette-root
-        data-command-palette-id="palette"
-        data-class-result-link="result-link"
-        data-class-result-link-active="result-link-active"
-        data-class-result-body="result-body"
-        data-class-result-title="result-title"
-        data-class-result-meta="result-meta"
-        data-class-empty="empty"
-        data-class-group="group"
-        data-class-group-heading="group-heading"
-        data-hotkey="false"
+        data-var-ui-command-palette-id="palette"
+        data-var-ui-class-result-link="result-link"
+        data-var-ui-class-result-link-active="result-link-active"
+        data-var-ui-class-result-body="result-body"
+        data-var-ui-class-result-title="result-title"
+        data-var-ui-class-result-meta="result-meta"
+        data-var-ui-class-empty="empty"
+        data-var-ui-class-group="group"
+        data-var-ui-class-group-heading="group-heading"
+        data-var-ui-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
             <input data-var-ui-command-palette-input />
@@ -65,8 +65,8 @@ describe('initCommandPalette', () => {
       <div
         id="palette"
         data-var-ui-command-palette-root
-        data-command-palette-id="palette"
-        data-hotkey="false"
+        data-var-ui-command-palette-id="palette"
+        data-var-ui-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
             <input data-var-ui-command-palette-input />
@@ -92,14 +92,14 @@ describe('initCommandPalette', () => {
     };
 
     document.body.innerHTML = `
-      <div data-var-ui-search-input data-variant="command" data-command-palette="palette">
+      <div data-var-ui-search-input data-variant="command" data-var-ui-command-palette="palette">
         <button type="button" data-var-ui-search-input-trigger aria-expanded="false">Search</button>
       </div>
       <div
         id="palette"
         data-var-ui-command-palette-root
-        data-command-palette-id="palette"
-        data-hotkey="false"
+        data-var-ui-command-palette-id="palette"
+        data-var-ui-hotkey="false"
       >
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
             <input data-var-ui-command-palette-input role="combobox" aria-expanded="false" />
@@ -137,8 +137,8 @@ describe('command palette results (round 2)', () => {
       this.open = false;
     };
     document.body.innerHTML = `
-      <div id="p2" data-var-ui-command-palette-root data-command-palette-id="p2" data-hotkey="false"
-        data-class-mark="mark" data-class-result-icon="result-icon" ${extra}>
+      <div id="p2" data-var-ui-command-palette-root data-var-ui-command-palette-id="p2" data-var-ui-hotkey="false"
+        data-var-ui-class-mark="mark" data-var-ui-class-result-icon="result-icon" ${extra}>
         <dialog data-var-ui-command-palette-dialog aria-label="Search">
           <input data-var-ui-command-palette-input />
           <div data-var-ui-command-palette-results role="listbox"></div>
@@ -181,7 +181,7 @@ describe('command palette results (round 2)', () => {
     const root = mount('', items);
     type(root, 'start');
     expect(root.querySelector('mark.mark')?.textContent).toBe('start');
-    const plain = mount('data-highlight-matches="false"', items);
+    const plain = mount('data-var-ui-highlight-matches="false"', items);
     type(plain, 'start');
     expect(plain.querySelector('mark')).toBeNull();
   });
@@ -194,9 +194,9 @@ describe('command palette results (round 2)', () => {
 
   it('lists chosen items under Recent while the query is empty', () => {
     localStorage.removeItem('p2-recent');
-    const root = mount('data-recent-key="p2-recent"', items);
+    const root = mount('data-var-ui-recent-key="p2-recent"', items);
     expect(root.querySelector('[data-group="recent"]')).toBeNull();
-    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    const button = root.querySelector<HTMLElement>('[data-var-ui-item-id="/button"]')!;
     button.addEventListener('click', (event) => event.preventDefault());
     button.click();
     expect(JSON.parse(localStorage.getItem('p2-recent') ?? '[]')).toEqual(['/button']);
@@ -211,7 +211,7 @@ describe('command palette results (round 2)', () => {
   });
 
   it('echoes the query in the empty state, adds the hint and flags the frame', () => {
-    const root = mount('data-empty-hint="Try button"', items);
+    const root = mount('data-var-ui-empty-hint="Try button"', items);
     const frame = root.querySelector('dialog')!;
     expect(frame.hasAttribute('data-empty')).toBe(false);
     type(root, 'zzz');
@@ -226,7 +226,7 @@ describe('command palette results (round 2)', () => {
   it('names the section of Recent items in their subtitle', () => {
     localStorage.setItem('p3-recent', JSON.stringify(['/t']));
     const root = mount(
-      'data-recent-key="p3-recent"',
+      'data-var-ui-recent-key="p3-recent"',
       JSON.stringify([{ id: '/t', title: 'Overview', meta: 'Start here', group: 'Theming' }]),
     );
     const recent = root.querySelector('[data-group="recent"]');
@@ -250,24 +250,24 @@ describe('command palette results (round 2)', () => {
   }
 
   it('"but" lists Button first and makes it the active option', () => {
-    const root = mount('data-class-result-link-active="active"', ranked);
+    const root = mount('data-var-ui-class-result-link-active="active"', ranked);
     const input = type(root, 'but');
     const [first] = options(root);
-    expect(first?.dataset.itemId).toBe('/components/button');
+    expect(first?.dataset.varUiItemId).toBe('/components/button');
     expect(first?.getAttribute('aria-selected')).toBe('true');
     expect(first?.classList.contains('active')).toBe(true);
     expect(input.getAttribute('aria-activedescendant')).toBe(first?.id);
   });
 
   it('shows the highlighted snippet around a description-only match', () => {
-    const root = mount('data-class-result-meta="result-meta"', ranked);
+    const root = mount('data-var-ui-class-result-meta="result-meta"', ranked);
     type(root, 'butt');
-    const overlay = root.querySelector('[data-item-id="/docs/overlays"] .result-meta');
+    const overlay = root.querySelector('[data-var-ui-item-id="/docs/overlays"] .result-meta');
     expect(overlay?.textContent?.startsWith('…')).toBe(true);
     expect(overlay?.textContent).toContain('trigger button');
     expect(overlay?.querySelector('mark.mark')?.textContent).toBe('butt');
     // A short description is left whole.
-    const css = root.querySelector('[data-item-id="/docs/css"] .result-meta');
+    const css = root.querySelector('[data-var-ui-item-id="/docs/css"] .result-meta');
     expect(css?.textContent).toBe('Style a button without JS');
   });
 
@@ -292,7 +292,7 @@ describe('command palette results (round 2)', () => {
     // With view transitions the palette can live in a persisted element: navigating does not
     // unload it, so a click has to close it the way Enter does.
     const root = mount('', items);
-    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    const button = root.querySelector<HTMLElement>('[data-var-ui-item-id="/button"]')!;
     let navigated = false;
     button.addEventListener('click', (event) => {
       navigated = !event.defaultPrevented;
@@ -306,7 +306,7 @@ describe('command palette results (round 2)', () => {
 
   it('stays open when a result is opened in a new tab (modifier click)', () => {
     const root = mount('', items);
-    const button = root.querySelector<HTMLElement>('[data-item-id="/button"]')!;
+    const button = root.querySelector<HTMLElement>('[data-var-ui-item-id="/button"]')!;
     button.addEventListener('click', (event) => event.preventDefault());
     button.dispatchEvent(
       new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true }),

@@ -21,7 +21,7 @@ function renderTocList(list: HTMLOListElement, headings: TocHeading[]): void {
     link.className = mergeProps(s.link).className;
     link.href = `#${heading.id}`;
     link.textContent = heading.text;
-    link.dataset.tocLink = heading.id;
+    link.dataset.varUiTocLink = heading.id;
 
     item.append(link);
     list.append(item);
@@ -31,8 +31,8 @@ function renderTocList(list: HTMLOListElement, headings: TocHeading[]): void {
 export function setActive(list: HTMLOListElement, id: string | null): void {
   let activeLink: HTMLAnchorElement | null = null;
 
-  for (const link of list.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')) {
-    const isActive = link.dataset.tocLink === id;
+  for (const link of list.querySelectorAll<HTMLAnchorElement>('[data-var-ui-toc-link]')) {
+    const isActive = link.dataset.varUiTocLink === id;
     if (isActive) {
       link.setAttribute('data-selected', '');
       link.setAttribute('aria-current', 'location');
@@ -57,21 +57,21 @@ function disposeToc(root: HTMLElement): void {
 export function initToc(root: HTMLElement): () => void {
   if (root.hasAttribute(INITIALIZED_ATTR)) return () => disposeToc(root);
 
-  const isAuto = root.dataset.auto === 'true' || root.dataset.auto === '';
+  const isAuto = root.dataset.varUiAuto === 'true' || root.dataset.varUiAuto === '';
   if (!isAuto) return () => {};
 
-  const contentSelector = root.dataset.contentSelector;
+  const contentSelector = root.dataset.varUiContentSelector;
   const list = root.querySelector<HTMLOListElement>('[data-var-ui-toc-list]');
   if (!contentSelector || !list) return () => {};
 
   const contentRoot = document.querySelector(contentSelector);
   if (!contentRoot) return () => {};
 
-  const minHeadings = Number.parseInt(root.dataset.minHeadings ?? '2', 10);
+  const minHeadings = Number.parseInt(root.dataset.varUiMinHeadings ?? '2', 10);
   const headerOffset = root.dataset.headerOffset
     ? Number.parseInt(root.dataset.headerOffset, 10)
     : undefined;
-  const headingSelector = root.dataset.headingSelector;
+  const headingSelector = root.dataset.varUiHeadingSelector;
 
   root.setAttribute(INITIALIZED_ATTR, '');
 

@@ -179,7 +179,9 @@ describe('Menu', () => {
 
     fireEvent.contextMenu(host, { clientX: 120, clientY: 240 });
     expect(await screen.findByRole('menuitem', { name: 'Copy' })).toBeTruthy();
-    const anchor = document.querySelector('[data-context-menu-anchor]') as HTMLElement | null;
+    const anchor = document.querySelector(
+      '[data-var-ui-context-menu-anchor]',
+    ) as HTMLElement | null;
     expect(anchor).toBeTruthy();
     expect(anchor?.style.left).toBe('120px');
     expect(anchor?.style.top).toBe('240px');
@@ -236,7 +238,7 @@ describe('Menu', () => {
       }) as DOMRect;
     fireEvent.contextMenu(surface, { clientX: 0, clientY: 0 });
     const anchor = await waitFor(() => {
-      const el = document.querySelector('[data-context-menu-anchor]') as HTMLElement;
+      const el = document.querySelector('[data-var-ui-context-menu-anchor]') as HTMLElement;
       expect(el).toBeTruthy();
       return el;
     });

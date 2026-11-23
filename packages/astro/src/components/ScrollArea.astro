@@ -29,23 +29,23 @@ const edges = scrollAreaFadeEdgesFor(fadeMode);
   <div {...mergeProps(s.viewport, viewportClassName)}>
     {
       edges.block ? (
-        <div aria-hidden="true" {...mergeProps(s.fadeTop)} data-edge="block-start" />
+        <div aria-hidden="true" {...mergeProps(s.fadeTop)} />
       ) : null
     }
     {
       edges.inline ? (
-        <div aria-hidden="true" {...mergeProps(s.fadeStart)} data-edge="inline-start" />
+        <div aria-hidden="true" {...mergeProps(s.fadeStart)} />
       ) : null
     }
     <slot />
     {
       edges.inline ? (
-        <div aria-hidden="true" {...mergeProps(s.fadeEnd)} data-edge="inline-end" />
+        <div aria-hidden="true" {...mergeProps(s.fadeEnd)} />
       ) : null
     }
     {
       edges.block ? (
-        <div aria-hidden="true" {...mergeProps(s.fadeBottom)} data-edge="block-end" />
+        <div aria-hidden="true" {...mergeProps(s.fadeBottom)} />
       ) : null
     }
   </div>

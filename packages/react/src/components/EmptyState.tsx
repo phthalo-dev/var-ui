@@ -43,7 +43,7 @@ export function EmptyState({
   return (
     <div {...rest} {...mergeProps(e.root, className)} ref={ref}>
       {icon ? (
-        <div {...mergeProps(e.icon)} data-empty-state-icon aria-hidden="true">
+        <div {...mergeProps(e.icon)} aria-hidden="true">
           {icon}
         </div>
       ) : null}

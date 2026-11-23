@@ -93,7 +93,7 @@ export const codeBlock = typestyles.recipe({
       },
       // Inside a demo card the code block drops its own frame: the card is the frame.
       codeBlock: {
-        '& [data-codeblock]': {
+        '& .var-ui-code-block': {
           border: 'none',
           borderRadius: 0,
           boxShadow: 'none',

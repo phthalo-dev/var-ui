@@ -352,7 +352,7 @@ describe('Menu.Submenu inside Menubar', () => {
     );
   }
   const barTrigger = (label: string) =>
-    [...document.querySelectorAll<HTMLElement>('[data-menubar-trigger]')].find(
+    [...document.querySelectorAll<HTMLElement>('[data-var-ui-menubar-trigger]')].find(
       (b) => b.textContent === label,
     )!;
 

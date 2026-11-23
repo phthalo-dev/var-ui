@@ -158,7 +158,7 @@ export const docsProse = typestyles.recipe({
         '& a > code': {
           color: 'inherit',
         },
-        '& a[data-alert-action]': {
+        '& a.var-ui-alert__actionLink': {
           color: 'inherit',
           fontWeight: 'inherit',
           textDecoration: 'underline',
@@ -168,7 +168,7 @@ export const docsProse = typestyles.recipe({
             textDecoration: 'none',
           },
         },
-        '& pre:not([data-codeblock-pre])': {
+        '& pre:not(.var-ui-code-block__pre)': {
           fontSize: '0.8125rem',
           lineHeight: '1.375rem',
           backgroundColor: vars.preBackground.var,
@@ -186,16 +186,17 @@ export const docsProse = typestyles.recipe({
           whiteSpace: 'pre',
         },
         // Code blocks and demos sit as siblings of prose: 24px from text, 12px between a pair.
-        '& > :is([data-codeblock], [data-code-block])': {
+        '& > :is(.var-ui-code-block, [data-code-block])': {
           marginBlock: t.space.lg.var,
         },
-        '& > :is([data-codeblock], [data-code-block]) + :is([data-codeblock], [data-code-block])': {
-          marginTop: t.space.sm.var,
-        },
-        '& > :is([data-codeblock], [data-code-block]):first-child': {
+        '& > :is(.var-ui-code-block, [data-code-block]) + :is(.var-ui-code-block, [data-code-block])':
+          {
+            marginTop: t.space.sm.var,
+          },
+        '& > :is(.var-ui-code-block, [data-code-block]):first-child': {
           marginTop: 0,
         },
-        '& > :is([data-codeblock], [data-code-block]):last-child': {
+        '& > :is(.var-ui-code-block, [data-code-block]):last-child': {
           marginBottom: 0,
         },
         '& blockquote': {

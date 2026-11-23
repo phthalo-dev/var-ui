@@ -49,19 +49,11 @@ export function ScrollArea({
   return (
     <div {...props} {...mergeProps(s.root, className)} ref={ref}>
       <div ref={viewportRef} {...mergeProps(s.viewport, viewportClassName)}>
-        {edges.block ? (
-          <div aria-hidden {...mergeProps(s.fadeTop)} data-edge="block-start" />
-        ) : null}
-        {edges.inline ? (
-          <div aria-hidden {...mergeProps(s.fadeStart)} data-edge="inline-start" />
-        ) : null}
+        {edges.block ? <div aria-hidden {...mergeProps(s.fadeTop)} /> : null}
+        {edges.inline ? <div aria-hidden {...mergeProps(s.fadeStart)} /> : null}
         {children}
-        {edges.inline ? (
-          <div aria-hidden {...mergeProps(s.fadeEnd)} data-edge="inline-end" />
-        ) : null}
-        {edges.block ? (
-          <div aria-hidden {...mergeProps(s.fadeBottom)} data-edge="block-end" />
-        ) : null}
+        {edges.inline ? <div aria-hidden {...mergeProps(s.fadeEnd)} /> : null}
+        {edges.block ? <div aria-hidden {...mergeProps(s.fadeBottom)} /> : null}
       </div>
     </div>
   );

@@ -83,7 +83,7 @@ const useHighlightedHtml = Boolean(codeHtml || lineHtml) && !terminal;
 
 {
   inline ? (
-    <code {...rest} {...mergeProps(cb.root, cb.code.className, className)} data-codeblock>
+    <code {...rest} {...mergeProps(cb.root, cb.code.className, className)}>
       {code}
     </code>
   ) : (

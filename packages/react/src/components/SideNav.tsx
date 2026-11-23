@@ -528,7 +528,7 @@ export function SideNav({
         ref={ref}
         data-collapsed={isCollapsed ? '' : undefined}
         data-collapsible={collapsibleEnabled ? '' : undefined}
-        data-resizable={resizableEnabled ? '' : undefined}
+        data-var-ui-resizable={resizableEnabled ? '' : undefined}
         style={navWidth != null ? { ...style, width: navWidth } : style}
         {...mergeProps(s.root, className)}
       >

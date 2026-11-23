@@ -33,7 +33,7 @@ export function dispatchCopyResult(target: EventTarget, ok: boolean, value: stri
   );
 }
 
-/** Reads a button's `data-timeout`, falling back to {@link DEFAULT_COPY_TIMEOUT_MS}. */
+/** Reads a button's `data-var-ui-timeout`, falling back to {@link DEFAULT_COPY_TIMEOUT_MS}. */
 export function copyTimeout(btn: HTMLElement): number {
-  return Number(btn.getAttribute('data-timeout')) || DEFAULT_COPY_TIMEOUT_MS;
+  return Number(btn.getAttribute('data-var-ui-timeout')) || DEFAULT_COPY_TIMEOUT_MS;
 }

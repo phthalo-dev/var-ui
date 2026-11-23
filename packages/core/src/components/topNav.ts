@@ -270,7 +270,7 @@ export const topNav = typestyles.recipe({
             pointerEvents: 'none',
           },
         },
-        // Reserves the semibold width (hidden `::after` copy of `data-label`) so selecting an
+        // Reserves the semibold width (hidden `::after` copy of `data-var-ui-label`) so selecting an
         // item never shifts its neighbours.
         itemLabel: {
           display: 'inline-flex',
@@ -278,7 +278,7 @@ export const topNav = typestyles.recipe({
           alignItems: 'center',
           '&::after': {
             // Empty alt text keeps the duplicate out of the accessibility tree.
-            content: 'attr(data-label) / ""',
+            content: 'attr(data-var-ui-label) / ""',
             height: 0,
             overflow: 'hidden',
             visibility: 'hidden',

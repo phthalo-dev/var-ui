@@ -140,7 +140,7 @@ export function MenuContextMenu({
         }}
       >
         <MenuTrigger>
-          <span data-context-menu-anchor="" tabIndex={-1} {...point.props} />
+          <span data-var-ui-context-menu-anchor="" tabIndex={-1} {...point.props} />
         </MenuTrigger>
         <MenuPopup {...popupProps} placement={placement}>
           <MenuContent sections={sections} />

@@ -29,7 +29,7 @@ export function LoadingOverlay({
   return (
     <div {...rest} {...mergeProps(lo.root, className)} aria-busy={visible || undefined}>
       {/* `inert` blocks focus and clicks under the overlay. */}
-      <div data-loading-overlay-content {...mergeProps(lo.content)} inert={visible}>
+      <div {...mergeProps(lo.content)} inert={visible}>
         {children}
       </div>
       {visible ? (
