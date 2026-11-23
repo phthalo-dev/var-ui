@@ -68,7 +68,23 @@ Theme overrides use two layers:
   overrides; patch the `color` namespace for semantic tokens, compiled to `light-dark()`)
 
 Custom namespaces from `createDesignTheme({ tokens })` appear on the theme's
-`.tokens` object alongside built-in refs.
+`.tokens` object alongside built-in refs, with the same `{ name, var }` leaves:
+`theme.tokens.space.md.var` and `theme.tokens.app.heroCover.var`. The `tokens` passed to
+`components` factories have the same shape.
+
+An app that only needs a few values of its own adds a namespace on a child of the default theme
+(`extend` adds namespaces; `tokens` patches existing ones),
+with no need to rebuild the whole token tree:
+
+```ts
+import { defaultTheme } from '@var-ui/core';
+
+export const libraryTheme = defaultTheme.override({
+  name: 'library',
+  extend: { app: { heroCover: '18rem', heroTitle: 'clamp(2rem, 5vw, 3.5rem)' } },
+});
+export const appTokens = libraryTheme.tokens.app; // appTokens.heroCover.var
+```
 
 Syntax-highlighting colors live under `color.code` (`designTokens.color.code`).
 `lightSyntaxValues` / `darkSyntaxValues` are exported aliases for theme presets.
