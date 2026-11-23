@@ -80,12 +80,12 @@ export function initSideNav(root: HTMLElement): () => void {
   }
 
   const collapsibleEnabled = root.hasAttribute('data-collapsible');
-  const resizableEnabled = root.hasAttribute('data-resizable');
+  const resizableEnabled = root.hasAttribute('data-var-ui-resizable');
   const collapsibleConfig = parseJsonConfig<SideNavCollapsibleConfig>(
-    root.dataset.collapsibleConfig,
+    root.dataset.varUiCollapsibleConfig,
     {},
   );
-  const resizableConfig = parseJsonConfig<ResizableConfig>(root.dataset.resizableConfig, {});
+  const resizableConfig = parseJsonConfig<ResizableConfig>(root.dataset.varUiResizableConfig, {});
 
   const minWidth = resizableConfig.minWidth ?? DEFAULT_MIN_WIDTH;
   const maxWidth = resizableConfig.maxWidth ?? DEFAULT_MAX_WIDTH;
@@ -162,7 +162,7 @@ export function initSideNav(root: HTMLElement): () => void {
 
   const cleanups: Array<() => void> = [];
 
-  const persistKey = root.dataset.persistKey;
+  const persistKey = root.dataset.varUiPersistKey;
   if (persistKey) cleanups.push(persistDisclosures(root, persistKey));
 
   if (collapseButton && collapsibleEnabled) {

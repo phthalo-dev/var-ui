@@ -28,7 +28,7 @@ export function stubNativeDialog(): void {
 
 /**
  * jsdom has no `popover` API. Call once at the top of a test file to stub `showPopover` /
- * `hidePopover` / `togglePopover` with their observable effects: `data-popover-open` stands in for
+ * `hidePopover` / `togglePopover` with their observable effects: `data-var-ui-popover-open` stands in for
  * `:popover-open`, and `beforetoggle` (cancelable when opening) and `toggle` events carry
  * `newState`/`oldState`/`source` like `ToggleEvent`. Returns `fire` to simulate native-initiated
  * changes (light dismiss, an invoker click) on an element.
@@ -37,7 +37,7 @@ export function stubNativePopover(): {
   fire: (el: HTMLElement, newState: 'open' | 'closed', source?: Element | null) => void;
 } {
   const proto = HTMLElement.prototype;
-  const isOpen = (el: HTMLElement) => el.hasAttribute('data-popover-open');
+  const isOpen = (el: HTMLElement) => el.hasAttribute('data-var-ui-popover-open');
   const fire = (el: HTMLElement, newState: 'open' | 'closed', source: Element | null = null) => {
     if (isOpen(el) === (newState === 'open')) return;
     const before = Object.assign(new Event('beforetoggle', { cancelable: newState === 'open' }), {
@@ -47,8 +47,8 @@ export function stubNativePopover(): {
     });
     el.dispatchEvent(before);
     if (before.defaultPrevented) return;
-    if (newState === 'open') el.setAttribute('data-popover-open', '');
-    else el.removeAttribute('data-popover-open');
+    if (newState === 'open') el.setAttribute('data-var-ui-popover-open', '');
+    else el.removeAttribute('data-var-ui-popover-open');
     queueMicrotask(() =>
       el.dispatchEvent(
         Object.assign(new Event('toggle'), {

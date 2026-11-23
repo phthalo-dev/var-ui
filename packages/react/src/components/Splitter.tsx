@@ -59,7 +59,7 @@ export function SplitterPanel({
       {...mergeProps(s.panel, className)}
       ref={ref}
       id={ctx?.id ?? id}
-      data-splitter-panel=""
+      data-var-ui-splitter-panel=""
       data-collapsed={ctx?.collapsed ? '' : undefined}
       style={{ ...(ctx ? styleVars([[splitterVars.size, ctx.size]]) : undefined), ...style }}
     />
@@ -307,7 +307,7 @@ function SplitterRoot({
     const el = rootEl.current;
     if (!el) return 1;
     let pixels = 0;
-    for (const panel of el.querySelectorAll<HTMLElement>(':scope > [data-splitter-panel]')) {
+    for (const panel of el.querySelectorAll<HTMLElement>(':scope > [data-var-ui-splitter-panel]')) {
       const rect = panel.getBoundingClientRect();
       pixels += horizontal ? rect.width : rect.height;
     }

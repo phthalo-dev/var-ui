@@ -22,8 +22,8 @@ describe('persistDisclosures', () => {
   it('restores stored state and writes back toggles', async () => {
     localStorage.setItem(KEY, JSON.stringify({ guides: false }));
     const root = mount(`
-      <details data-section-id="guides" open><summary>Guides</summary></details>
-      <details data-section-id="api"><summary>API</summary></details>
+      <details data-var-ui-section-id="guides" open><summary>Guides</summary></details>
+      <details data-var-ui-section-id="api"><summary>API</summary></details>
       <details open><summary>Untracked</summary></details>`);
     const [guides, api, untracked] = root.querySelectorAll('details');
     const cleanup = persistDisclosures(root, KEY);
@@ -44,7 +44,7 @@ describe('persistDisclosures', () => {
   it('keeps the section holding the current page open, whatever was stored', () => {
     localStorage.setItem(KEY, JSON.stringify({ guides: false }));
     const root = mount(`
-      <details data-section-id="guides"><summary>Guides</summary>
+      <details data-var-ui-section-id="guides"><summary>Guides</summary>
         <a href="/x" aria-current="page">X</a>
       </details>`);
     persistDisclosures(root, KEY);
@@ -53,7 +53,7 @@ describe('persistDisclosures', () => {
 
   it('ignores corrupt storage', () => {
     localStorage.setItem(KEY, '{not json');
-    const root = mount(`<details data-section-id="a" open><summary>A</summary></details>`);
+    const root = mount(`<details data-var-ui-section-id="a" open><summary>A</summary></details>`);
     expect(() => persistDisclosures(root, KEY)).not.toThrow();
     expect(root.querySelector('details')!.open).toBe(true);
   });

@@ -4,7 +4,7 @@ export function initDismissibleBanner(): void {
     btn.setAttribute('data-var-ui-banner-dismiss-initialized', '');
 
     btn.addEventListener('click', () => {
-      const root = btn.closest('[data-banner]');
+      const root = btn.closest('[data-var-ui-banner]');
       root?.remove();
     });
   });

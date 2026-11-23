@@ -67,11 +67,11 @@ const hasFooterZone = hasFooter || hasFooterIcons || hasCollapseButton;
   {...rest}
   data-collapsed={collapsibleConfig.defaultCollapsed ? '' : undefined}
   data-var-ui-side-nav
-  data-persist-key={persistKey}
+  data-var-ui-persist-key={persistKey}
   data-collapsible={collapsibleEnabled || undefined}
-  data-resizable={resizableEnabled || undefined}
-  data-collapsible-config={collapsibleEnabled ? JSON.stringify(collapsibleConfig) : undefined}
-  data-resizable-config={resizableEnabled ? JSON.stringify(resizableConfig) : undefined}
+  data-var-ui-resizable={resizableEnabled || undefined}
+  data-var-ui-collapsible-config={collapsibleEnabled ? JSON.stringify(collapsibleConfig) : undefined}
+  data-var-ui-resizable-config={resizableEnabled ? JSON.stringify(resizableConfig) : undefined}
   {...mergeProps(s.root, className)}
 >
   {

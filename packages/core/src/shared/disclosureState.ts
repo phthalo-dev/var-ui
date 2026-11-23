@@ -1,12 +1,12 @@
 /** The attribute naming a disclosure for {@link persistDisclosures}. */
-export const DISCLOSURE_ID_ATTRIBUTE = 'data-section-id';
+export const DISCLOSURE_ID_ATTRIBUTE = 'data-var-ui-section-id';
 
 /**
  * Remembers which `<details>` disclosures inside `root` the reader opened or closed, in
  * `localStorage` under `storageKey`. Framework-agnostic: `SideNav persistKey` (React and Astro)
  * uses it for collapsible sections.
  *
- * - A disclosure takes part when it has a `data-section-id` (the section's `id`, or its title).
+ * - A disclosure takes part when it has a `data-var-ui-section-id` (the section's `id`, or its title).
  * - On init each one is set to its stored state. One that holds the current page
  *   (`[aria-current="page"]`) always stays open, so the reader never lands inside a closed group.
  * - Every later `toggle` is written back. Without storage (private mode), state isn't remembered.

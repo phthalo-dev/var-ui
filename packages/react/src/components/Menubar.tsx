@@ -102,9 +102,9 @@ type MenubarContextValue = {
 
 const MenubarContext = createContext<MenubarContextValue | null>(null);
 
-const TRIGGER_ATTR = 'data-menubar-trigger';
+const TRIGGER_ATTR = 'data-var-ui-menubar-trigger';
 const TRIGGER_SELECTOR = `[${TRIGGER_ATTR}]`;
-const ROOT_SELECTOR = '[role="menubar"][data-menubar]';
+const ROOT_SELECTOR = '[role="menubar"][data-var-ui-menubar]';
 
 /**
  * A horizontal bar of menus, like a desktop application menu (File, Edit, View...).
@@ -262,7 +262,7 @@ export function Menubar(props: MenubarProps): JSX.Element {
       <div
         {...rest}
         role="menubar"
-        data-menubar=""
+        data-var-ui-menubar=""
         {...mergeProps(m.root, className)}
         ref={setRoot}
         onKeyDown={handleKeyDown}

@@ -270,7 +270,7 @@ describe('SideNav', () => {
     expect(navRef.current).toBe(nav);
     expect(nav.className).toContain('custom');
     expect(nav.style.color).toBe('red');
-    expect(nav.hasAttribute('data-resizable')).toBe(true);
+    expect(nav.hasAttribute('data-var-ui-resizable')).toBe(true);
     expect(screen.getByRole('separator', { name: 'Drag' })).toBeTruthy();
     expect(screen.getByTestId('heading').className).toContain('hd');
     expect(screen.getByTestId('section').className).toContain('sec');

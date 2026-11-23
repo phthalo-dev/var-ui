@@ -55,7 +55,7 @@ export function Carousel({
   const nudge = (direction: 1 | -1) => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-    const item = viewport.querySelector('[data-carousel-item]');
+    const item = viewport.querySelector('[data-var-ui-carousel-item]');
     const step = item instanceof HTMLElement ? item.offsetWidth : viewport.clientWidth;
     viewport.scrollBy({ left: direction * step, behavior: 'smooth' });
   };
@@ -72,7 +72,7 @@ export function Carousel({
       <div
         ref={viewportRef}
         {...mergeProps(s.viewport)}
-        data-carousel-viewport
+        data-var-ui-carousel-viewport
         tabIndex={0}
         role="group"
         aria-label={viewportLabel ?? label}
@@ -82,7 +82,7 @@ export function Carousel({
           <div
             key={index}
             {...mergeProps(s.item)}
-            data-carousel-item
+            data-var-ui-carousel-item
             role="group"
             aria-roledescription="slide"
             aria-label={getSlideLabel(index + 1, slideCount)}

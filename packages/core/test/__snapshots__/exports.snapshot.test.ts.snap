@@ -225,7 +225,7 @@ exports[`@var-ui/core public exports > matches the export inventory snapshot 1`]
       "object": 21,
       "string": 5,
     },
-    "runtimeExports": 178,
+    "runtimeExports": 179,
     "typeOnlyExports": 154,
   },
   "typeOnlyExports": [

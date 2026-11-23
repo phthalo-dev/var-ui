@@ -146,7 +146,6 @@ export function AppShell({
         {...mergeProps(s.root, className)}
         data-mobile={isMobile ? '' : undefined}
         data-aside={aside ? '' : undefined}
-        data-has-top-nav={topNav ? '' : undefined}
         data-has-side-nav={sideNav ? '' : undefined}
         data-layout={layout === 'alt' ? 'alt' : undefined}
         data-side-nav-collapsed={sideNavCollapsed ? '' : undefined}

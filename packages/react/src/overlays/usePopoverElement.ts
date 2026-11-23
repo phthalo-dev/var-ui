@@ -51,12 +51,12 @@ type Gesture = { kind: 'escape' | 'pointer'; event: Event; at: number };
 
 type ToggleLike = Event & { newState?: string; source?: Element | null };
 
-/** `:popover-open`, with a `data-popover-open` fallback for the jsdom stub (no such selector). */
+/** `:popover-open`, with a `data-var-ui-popover-open` fallback for the jsdom stub (no such selector). */
 export function isPopoverShowing(el: Element): boolean {
   try {
     return el.matches(':popover-open');
   } catch {
-    return el.hasAttribute('data-popover-open');
+    return el.hasAttribute('data-var-ui-popover-open');
   }
 }
 

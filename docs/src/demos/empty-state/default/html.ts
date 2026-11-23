@@ -9,7 +9,7 @@ export function render(): string {
   const e = emptyState();
   const iconWell = serializeHtmlTag(
     'div',
-    { ...mergeProps(e.icon), 'data-empty-state-icon': true, 'aria-hidden': 'true' },
+    { ...mergeProps(e.icon), 'aria-hidden': 'true' },
     searchIcon,
   );
   const title = serializeHtmlTag('h3', mergeProps(e.title), 'No results');

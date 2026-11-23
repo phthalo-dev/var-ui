@@ -74,7 +74,7 @@ const defaultSwatch = presets[0]?.swatch;
   class={s.root}
   data-docs-appearance-menu
   data-presets={presetsJson}
-  data-storage-key={storageKey}
+  data-var-ui-storage-key={storageKey}
   data-fallback-class={fallbackClassName}
   data-color-mode-storage-key={colorModeStorageKey}
 >
@@ -130,8 +130,8 @@ const defaultSwatch = presets[0]?.swatch;
           });
         var swatch = root.querySelector("[data-docs-appearance-swatch]");
         if (swatch && theme && theme.swatch) swatch.style.backgroundColor = theme.swatch;
-        root.querySelectorAll("[data-item-id]").forEach(function (item) {
-          var id = item.getAttribute("data-item-id") || "";
+        root.querySelectorAll("[data-var-ui-item-id]").forEach(function (item) {
+          var id = item.getAttribute("data-var-ui-item-id") || "";
           if (id.indexOf("mode-") === 0) item.setAttribute("aria-checked", String(id === "mode-" + mode));
           else if (theme && id.indexOf("theme-") === 0)
             item.setAttribute("aria-checked", String(id === "theme-" + theme.id));

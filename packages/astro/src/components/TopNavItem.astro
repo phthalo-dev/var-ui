@@ -35,13 +35,13 @@ const sharedProps = {
   href ? (
     <a {...rest} href={href} {...sharedProps}>
       <slot name="icon" />
-      {!iconOnly ? <span data-label={label} {...mergeProps(s.itemLabel)}>{label}</span> : null}
+      {!iconOnly ? <span data-var-ui-label={label} {...mergeProps(s.itemLabel)}>{label}</span> : null}
       {!iconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
     </a>
   ) : (
     <button type="button" {...(rest as object)} disabled={disabled} {...sharedProps}>
       <slot name="icon" />
-      {!iconOnly ? <span data-label={label} {...mergeProps(s.itemLabel)}>{label}</span> : null}
+      {!iconOnly ? <span data-var-ui-label={label} {...mergeProps(s.itemLabel)}>{label}</span> : null}
       {!iconOnly && Astro.slots.has('end') ? <slot name="end" /> : null}
     </button>
   )

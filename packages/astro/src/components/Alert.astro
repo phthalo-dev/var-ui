@@ -44,7 +44,7 @@ const hasIcon = Astro.slots.has('icon');
     {
       action ? (
         <div {...mergeProps(a.action)}>
-          <a {...mergeProps(a.actionLink)} href={action.href} data-alert-action>
+          <a {...mergeProps(a.actionLink)} href={action.href}>
             {action.label}
           </a>
         </div>

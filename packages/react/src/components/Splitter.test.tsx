@@ -6,7 +6,9 @@ import { Splitter } from './Splitter';
 afterEach(() => window.localStorage.clear());
 
 const separators = () => screen.getAllByRole('separator');
-const panelEls = (c: HTMLElement) => [...c.querySelectorAll<HTMLElement>('[data-splitter-panel]')];
+const panelEls = (c: HTMLElement) => [
+  ...c.querySelectorAll<HTMLElement>('[data-var-ui-splitter-panel]'),
+];
 
 describe('Splitter', () => {
   it('renders a separator between each pair of panels with APG attributes', () => {

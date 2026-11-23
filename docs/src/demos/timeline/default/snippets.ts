@@ -27,7 +27,7 @@ import { Timeline, TimelineItem } from '@var-ui/astro';
   <TimelineItem title="In review" timestamp="1 hour ago" description="Waiting on approval" />
   <TimelineItem title="Merged" timestamp="Just now" description="PR #42" tone="success" />
 </Timeline>`,
-  html: `<ol class="var-ui-timeline" data-timeline>
+  html: `<ol class="var-ui-timeline">
   <li class="var-ui-timeline__item" data-active>
   ...
 </ol>`,

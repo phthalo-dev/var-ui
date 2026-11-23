@@ -8,7 +8,7 @@ import {
 } from '@var-ui/core';
 
 /** Layout ancestor must include `codeHljsScope.root` so rules match `CodeBlock` output. */
-const cb = '[data-codeblock]';
+const cb = '.var-ui-code-block';
 
 function scopeSelectorList(list: string): string {
   return list
@@ -89,7 +89,7 @@ function hljsSyntaxStyles(colors: SyntaxFaceValues): VariantOptionStyle {
  * `color-scheme` / `light-dark()` on semantic tokens.
  *
  * Compose **`codeHljsScope.root`** on a page shell so selectors apply inside
- * `[data-codeblock]` wrappers.
+ * `.var-ui-code-block` wrappers.
  */
 export const codeHljsScope = typestyles.recipe({
   name: 'docs-hljs',

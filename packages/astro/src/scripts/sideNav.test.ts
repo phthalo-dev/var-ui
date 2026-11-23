@@ -10,7 +10,7 @@ function mountSideNav(attrs: Record<string, string> = {}): HTMLElement {
       return;
     }
     if (key === 'resizable') {
-      root.toggleAttribute('data-resizable', true);
+      root.toggleAttribute('data-var-ui-resizable', true);
       return;
     }
     root.setAttribute(key, value);
@@ -44,7 +44,7 @@ describe('initSideNav', () => {
   it('applies width when resizable', () => {
     const root = mountSideNav({
       resizable: '',
-      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+      'data-var-ui-resizable-config': JSON.stringify({ defaultWidth: 300 }),
     });
     initSideNav(root);
     expect(root.style.width).toBe('300px');
@@ -64,7 +64,7 @@ describe('initSideNav', () => {
     const root = mountSideNav({
       collapsible: '',
       resizable: '',
-      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+      'data-var-ui-resizable-config': JSON.stringify({ defaultWidth: 300 }),
     });
     initSideNav(root);
     const button = root.querySelector('[data-var-ui-side-nav-collapse]') as HTMLButtonElement;
@@ -79,7 +79,7 @@ describe('initSideNav', () => {
   it('preserves a custom resize handle aria-label from markup', () => {
     const root = mountSideNav({
       resizable: '',
-      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+      'data-var-ui-resizable-config': JSON.stringify({ defaultWidth: 300 }),
     });
     const handle = root.querySelector('[data-var-ui-side-nav-resize]') as HTMLElement;
     handle.setAttribute('aria-label', 'Drag nav edge');
@@ -94,7 +94,7 @@ describe('initSideNav', () => {
   it('defaults the resize handle aria-label when markup omits one', () => {
     const root = mountSideNav({
       resizable: '',
-      'data-resizable-config': JSON.stringify({ defaultWidth: 300 }),
+      'data-var-ui-resizable-config': JSON.stringify({ defaultWidth: 300 }),
     });
     initSideNav(root);
     const handle = root.querySelector('[data-var-ui-side-nav-resize]') as HTMLElement;

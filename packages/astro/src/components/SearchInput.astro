@@ -57,7 +57,7 @@ const iconRecipe = mergeProps(icon({ size: size === 'lg' ? 'lg' : size === 'sm' 
   style={style}
   data-var-ui-search-input
   data-variant={variant}
-  data-command-palette={commandPaletteId}
+  data-var-ui-command-palette={commandPaletteId}
 >
   <span {...mergeProps(s.icon)} aria-hidden="true">
     <span {...iconRecipe} set:html={searchSvg} />

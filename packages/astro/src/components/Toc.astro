@@ -52,10 +52,10 @@ const rootStyle = [baseStyle, stickyStyle].filter(Boolean).join('; ') || undefin
   style={rootStyle}
   aria-label={resolvedLabel}
   data-var-ui-toc
-  data-auto={auto || undefined}
-  data-content-selector={auto ? contentSelector : undefined}
-  data-heading-selector={auto && headingSelector ? headingSelector : undefined}
-  data-min-headings={auto ? String(minHeadings) : undefined}
+  data-var-ui-auto={auto || undefined}
+  data-var-ui-content-selector={auto ? contentSelector : undefined}
+  data-var-ui-heading-selector={auto && headingSelector ? headingSelector : undefined}
+  data-var-ui-min-headings={auto ? String(minHeadings) : undefined}
   data-header-offset={auto && headerOffset != null ? String(headerOffset) : undefined}
   hidden={auto || undefined}
 >

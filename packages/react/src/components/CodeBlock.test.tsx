@@ -48,7 +48,7 @@ describe('CodeBlock', () => {
     expect(container.querySelector('pre[data-wrap]')).toBeTruthy();
     expect(container.querySelector('code[data-line-numbers]')).toBeTruthy();
     const lines = container.querySelectorAll<HTMLElement>(
-      '[data-codeblock-pre] [data-highlighted]',
+      '.var-ui-code-block__pre [data-highlighted]',
     );
     expect(lines.length).toBe(1);
     expect(lines[0].textContent).toContain('beta');
@@ -64,7 +64,7 @@ describe('CodeBlock', () => {
         copyable={false}
       />,
     );
-    const body = container.querySelector<HTMLElement>('[data-codeblock-body]')!;
+    const body = container.querySelector<HTMLElement>('.var-ui-code-block__body')!;
     expect(body.style.getPropertyValue('--var-ui-code-block-maxheight')).toBe('20rem');
     expect(
       Array.from(container.querySelectorAll('[data-line-tone]')).map((line) =>
@@ -75,7 +75,7 @@ describe('CodeBlock', () => {
 
   it('renders the inline variant as a single code element with both slot classes', () => {
     const { container } = render(<CodeBlock code="const x = 1" variant="inline" />);
-    const code = container.querySelector('code[data-codeblock]')!;
+    const code = container.querySelector('code.var-ui-code-block')!;
     expect(code.className).toContain('var-ui-code-block');
   });
 

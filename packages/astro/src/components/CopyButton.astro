@@ -42,19 +42,19 @@ const error = combine(cb.button, cb.buttonError, className);
   type="button"
   {...rest}
   data-var-ui-copy-button
-  data-value={value}
-  data-timeout={timeout}
-  data-copy-label={copyLabel}
-  data-copied-label={copiedLabel}
-  data-error-label={errorLabel}
-  data-class-idle={idle.className}
-  data-class-copied={copied.className}
-  data-class-error={error.className}
+  data-var-ui-value={value}
+  data-var-ui-timeout={timeout}
+  data-var-ui-copy-label={copyLabel}
+  data-var-ui-copied-label={copiedLabel}
+  data-var-ui-error-label={errorLabel}
+  data-var-ui-class-idle={idle.className}
+  data-var-ui-class-copied={copied.className}
+  data-var-ui-class-error={error.className}
   aria-label={copyLabel}
   {...idle}
 >
-  <span data-copy-button-icon set:html={copySvg} />
-  <span data-copy-button-text>{copyLabel}</span>
+  <span data-var-ui-copy-button-icon set:html={copySvg} />
+  <span data-var-ui-copy-button-text>{copyLabel}</span>
 </button>
 
 <script>

@@ -4,7 +4,7 @@ import { initCodeBlockExpand } from './codeBlockExpand';
 function mountDemoCode(code: string): HTMLElement {
   document.body.innerHTML = `
     <section data-code-block-code data-demo-code="${code.replace(/"/g, '&quot;')}">
-      <div data-codeblock-body></div>
+      <div class="var-ui-code-block__body"></div>
       <div data-demo-fade></div>
       <div data-demo-expand-wrap>
         <button type="button" data-demo-expand>Expand code</button>
@@ -31,7 +31,7 @@ describe('initCodeBlockExpand', () => {
     const section = mountDemoCode(lines);
     initCodeBlockExpand();
 
-    const body = section.querySelector<HTMLElement>('[data-codeblock-body]')!;
+    const body = section.querySelector<HTMLElement>('.var-ui-code-block__body')!;
     const button = section.querySelector<HTMLButtonElement>('[data-demo-expand]')!;
 
     expect(section.hasAttribute('data-demo-collapsed')).toBe(true);

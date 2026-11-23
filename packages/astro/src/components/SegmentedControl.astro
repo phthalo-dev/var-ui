@@ -90,7 +90,7 @@ const optionContent = await Promise.all(
     )?.content;
     return (
       <label
-        data-segment-id={option.value}
+        data-var-ui-segment-id={option.value}
         data-selected={selected ? "" : undefined}
         data-disabled={optionDisabled ? "" : undefined}
         title={iconOnly ? (option["aria-label"] ?? option.label) : undefined}

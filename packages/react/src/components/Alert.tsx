@@ -55,7 +55,7 @@ export function Alert({
         <div {...mergeProps(a.content)}>{children}</div>
         {action ? (
           <div {...mergeProps(a.action)}>
-            <a {...mergeProps(a.actionLink)} href={action.href} data-alert-action>
+            <a {...mergeProps(a.actionLink)} href={action.href}>
               {action.label}
             </a>
           </div>

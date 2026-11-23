@@ -51,7 +51,7 @@ const showHeader = hasTitleSlot || title != null || subtitle != null || Astro.sl
       {...(rest as Record<string, unknown>)}
       {...mergeProps(s.section, className)}
       open={defaultOpen || undefined}
-      data-section-id={sectionId}
+      data-var-ui-section-id={sectionId}
       data-collapsible
       data-selection-style={selectionStyleAttr}
     >
