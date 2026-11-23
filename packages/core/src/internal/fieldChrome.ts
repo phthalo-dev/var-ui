@@ -28,6 +28,12 @@ export function fieldChrome(colors: FieldChromeColors) {
       fontSize: t.fontSize.md.var,
       fontWeight: t.fontWeight.medium.var,
       color: colors.label,
+      // Required fields get a visual marker. The empty alt text keeps it out of the accessible
+      // name: `required` / `aria-required` already announce it.
+      ':where([data-required]) > &::after': {
+        content: '" *" / ""',
+        color: colors.error,
+      },
     },
     description: {
       fontSize: t.fontSize.sm.var,

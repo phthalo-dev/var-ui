@@ -74,6 +74,7 @@ export const componentCatalog = typestyles.recipe({
         fontFamily: t.fontFamily.body.var,
         fontSize: t.fontSize.sm.var,
         fontWeight: t.fontWeight.normal.var,
+        fontVariantNumeric: 'tabular-nums',
         color: t.color.text.secondary.var,
       },
       // Compact cards: 15px/600 name over a two-line description, about 96px tall.

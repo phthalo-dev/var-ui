@@ -39,4 +39,28 @@ describe('defineFonts', () => {
     expect(result.tokens.fontFamily).toEqual({ body: '"Inter", sans-serif' });
     expect(result.tokens.fontFamily.mono).toBeUndefined();
   });
+
+  it('accepts several faces per slot and registers shared faces once', () => {
+    const upright = { family: 'Allo', src: "url('/a.woff2')", fontStyle: 'normal' };
+    const italic = { family: 'Allo', src: "url('/a-i.woff2')", fontStyle: 'italic' };
+    const result = defineFonts({
+      body: { face: [upright, italic], fallback: 'sans-serif' },
+      display: { face: [upright, italic], fallback: 'sans-serif' },
+    });
+
+    expect(result.fonts).toEqual([upright, italic]);
+    expect(result.tokens.fontFamily).toEqual({
+      body: '"Allo", sans-serif',
+      display: '"Allo", sans-serif',
+    });
+  });
+
+  it('puts a metric fallback face between the webfont and the generic stack', () => {
+    const face = { family: 'Allo', src: "url('/a.woff2')" };
+    const metricFallback = { family: 'Allo Fallback', src: "local('Arial')", sizeAdjust: '105%' };
+    const result = defineFonts({ body: { face, metricFallback, fallback: 'sans-serif' } });
+
+    expect(result.fonts).toEqual([face, metricFallback]);
+    expect(result.tokens.fontFamily.body).toBe('"Allo", "Allo Fallback", sans-serif');
+  });
 });

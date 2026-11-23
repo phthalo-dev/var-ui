@@ -95,8 +95,6 @@ type ControlChannelRefs = {
   semantic: { name: string; var: string };
   solidBg: { name: string; var: string };
   solidFg: { name: string; var: string };
-  /** Ghost hover / open fill, set per tone by {@link controlToneAssignments}. */
-  ghostHover: { name: string; var: string };
 };
 
 type TonePaintRefs = {
@@ -164,16 +162,12 @@ export function toneChannelAssignments(v: SemanticChannelRefs, key: Tone) {
 export const neutralHoverChip = `color-mix(in oklch, ${t.color.navItem.hoverBackground.var}, ${t.color.text.primary.var} 4%)`;
 
 /**
- * Tone channels for controls (button): the shared channels plus the ghost hover/open fill.
- * Neutral ghost controls take the same warm chip as nav items ({@link neutralHoverChip}), so
- * an icon button beside the top nav hovers and opens in the nav's tint, not a grey ink mix.
+ * Tone channels for controls (button). The ghost hover/open fill is derived from the tone's
+ * `semantic` channel in {@link controlAppearancePaint}; neutral ghost controls swap it for the
+ * warm nav chip ({@link neutralHoverChip}) with {@link neutralGhostHoverPaint}.
  */
 export function controlToneAssignments(v: ControlChannelRefs, key: Tone) {
-  return {
-    ...toneChannelAssignments(v, key),
-    [v.ghostHover.name]:
-      key === 'neutral' ? neutralHoverChip : subtleBackgroundColor(v.semantic.var),
-  };
+  return toneChannelAssignments(v, key);
 }
 
 /** One style entry per shared tone. */
@@ -232,14 +226,26 @@ export function controlAppearancePaint(v: ControlPaintRefs, appearance: ToneAppe
         [v.background.name]: 'transparent',
         [v.foreground.name]: v.semantic.var,
         [hoverWhenEnabled]: {
-          [v.background.name]: v.ghostHover.var,
+          [v.background.name]: subtleBackgroundColor(v.semantic.var),
         },
         // A ghost trigger keeps its hover fill while its popup is open.
         '&[aria-expanded="true"]': {
-          [v.background.name]: v.ghostHover.var,
+          [v.background.name]: subtleBackgroundColor(v.semantic.var),
         },
       };
   }
+}
+
+/**
+ * Neutral ghost controls hover and open in the same warm chip as nav items
+ * ({@link neutralHoverChip}), so an icon button beside the top nav matches it instead of taking a
+ * grey ink mix. Use as the `style` of a `tone: neutral` × `appearance: ghost` compound variant.
+ */
+export function neutralGhostHoverPaint(v: Pick<TonePaintRefs, 'background'>) {
+  return {
+    [hoverWhenEnabled]: { [v.background.name]: neutralHoverChip },
+    '&[aria-expanded="true"]': { [v.background.name]: neutralHoverChip },
+  };
 }
 
 /** Resolve tokenized subtle background from a tone foreground channel var. */

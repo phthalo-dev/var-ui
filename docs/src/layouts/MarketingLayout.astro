@@ -1,4 +1,5 @@
 ---
+import FontPreload from '../components/FontPreload.astro';
 import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
 import { cx } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
@@ -32,6 +33,7 @@ const searchItems = buildDocsSearchIndex();
   <DocsThemeScript slot="themeScript" />
   <FrameworkSwitcher slot="tools" />
   <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" fullWidth />
+  <FontPreload slot="head" />
   <slot name="head" slot="head" />
   <slot />
   <SiteFooter slot="footer" />
