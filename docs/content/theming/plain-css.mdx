@@ -196,6 +196,12 @@ with the tokens and they collapse too:
 Looping keyframe animations (spinner, skeleton, status dot, indeterminate progress) are not driven
 by tokens; var-ui turns them off with its own reduced-motion rule. Do the same for yours.
 
+A reduced-motion rule can't override a property an animation is driving. Animated values beat
+normal declarations in the cascade, so `transform: none` doesn't stop a `@keyframes` slide. Swap
+the animation itself: `animation: none`, or a fade-only twin. In TypeStyles, `atReducedMotion`
+plus `reducedMotionKeyframes(stops)` from `@var-ui/core` builds that twin by dropping `transform`,
+`translate`, `rotate` and `scale` from each stop.
+
 **Forced colors.** Components add `@media (forced-colors: active)` rules where a boundary, selected
 state or fill would otherwise vanish, using the system colors `Canvas`, `CanvasText`, `Highlight`,
 `HighlightText` and `GrayText`. Focus is an `outline`, which the browser keeps. If you restyle a

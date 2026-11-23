@@ -24,8 +24,6 @@ const collapsible = sections.length > 1;
         collapsible={collapsible && section.title != null}
         count={section.items.length}
         defaultOpen={current || total <= COLLAPSE_THRESHOLD}
-        data-docs-sidebar-section={section.title}
-        data-current={current || undefined}
       >
         {section.items.map((item) => (
           <SideNavItem label={item.text} href={item.link} selected={isLinkActive(item.link)} />
@@ -35,7 +33,3 @@ const collapsible = sections.length > 1;
   })
 }
 
-<script>
-  import { initDocsSidebarState } from '../scripts/docsSidebarState';
-  initDocsSidebarState();
-</script>

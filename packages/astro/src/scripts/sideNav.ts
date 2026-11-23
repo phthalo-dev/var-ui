@@ -1,5 +1,6 @@
 import { svg as chevronLeftSvg } from '@var-ui/icons/glyphs/chevronLeft';
 import { svg as chevronRightSvg } from '@var-ui/icons/glyphs/chevronRight';
+import { persistDisclosures } from '@var-ui/core/shared/disclosureState';
 import { createResizeHandle } from './resizeHandle';
 
 /** Keep in sync with `SIDE_NAV_COLLAPSED_WIDTH` in `@var-ui/core`. */
@@ -160,6 +161,9 @@ export function initSideNav(root: HTMLElement): () => void {
   }
 
   const cleanups: Array<() => void> = [];
+
+  const persistKey = root.dataset.varUiPersistKey;
+  if (persistKey) cleanups.push(persistDisclosures(root, persistKey));
 
   if (collapseButton && collapsibleEnabled) {
     const handleCollapseClick = () => applyCollapsed(!isCollapsed);
