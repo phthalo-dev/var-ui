@@ -132,6 +132,7 @@ export const docsPageHeader = typestyles.recipe({
         maxWidth: '40rem',
         fontSize: t.fontSize.prose.lead.var,
         lineHeight: t.lineHeight.prose.lead.var,
+        letterSpacing: '-0.005em',
         color: t.color.text.secondary.var,
         [belowMd]: {
           fontSize: '1.0625rem',
