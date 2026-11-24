@@ -61,3 +61,25 @@ describe('initDocsTopBar', () => {
     expect(docs.hasAttribute('data-selected')).toBe(false);
   });
 });
+
+describe('nested matches (#339)', () => {
+  it('selects only the longest matching prefix', () => {
+    document.body.innerHTML = `
+      <nav data-docs-top-bar>
+        <a href="/docs" data-docs-top-nav-match="/docs">Docs</a>
+        <a href="/docs/changelog" data-docs-top-nav-match="/docs/changelog">Changelog</a>
+        <a href="https://github.com/x" target="_blank">GitHub</a>
+      </nav>
+    `;
+    const [docs, changelog, github] = Array.from(document.querySelectorAll('a'));
+    syncDocsTopBarSelection('/docs/changelog/0-14/');
+    expect(changelog.hasAttribute('data-selected')).toBe(true);
+    expect(docs.hasAttribute('data-selected')).toBe(false);
+    expect(docs.hasAttribute('aria-current')).toBe(false);
+    expect(github.hasAttribute('data-selected')).toBe(false);
+
+    syncDocsTopBarSelection('/docs/getting-started/');
+    expect(docs.hasAttribute('data-selected')).toBe(true);
+    expect(changelog.hasAttribute('data-selected')).toBe(false);
+  });
+});

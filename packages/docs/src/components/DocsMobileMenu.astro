@@ -10,6 +10,7 @@
 import { MobileNav, SideNavItem, SideNavSection, combine } from '@var-ui/astro';
 import { docsTopNav } from '../styles/docsTopNav';
 import type { DocsBrand, TopNavItem as TopNavItemType } from '../types';
+import { selectedTopNavMatch, topNavLinkAttributes } from '../utils/top-nav';
 
 type Props = {
   topNav: readonly TopNavItemType[];
@@ -23,6 +24,10 @@ const nav = docsTopNav();
 const hasToolsSlot = Astro.slots.has('tools');
 const hasBrandSlot = Astro.slots.has('brand');
 const hasPageNav = Astro.slots.has('default');
+const selectedMatch = selectedTopNavMatch(
+  topNav.map((item) => item.match),
+  currentPath,
+);
 ---
 
 <MobileNav side="end" label={`${brand.heading} navigation`}>
@@ -38,7 +43,8 @@ const hasPageNav = Astro.slots.has('default');
               <SideNavItem
                 label={item.text}
                 href={item.link}
-                selected={currentPath.startsWith(item.match)}
+                selected={item.match !== undefined && item.match === selectedMatch}
+                {...topNavLinkAttributes(item)}
               />
             ))}
           </SideNavSection>

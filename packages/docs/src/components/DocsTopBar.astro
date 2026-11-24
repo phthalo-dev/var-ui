@@ -14,6 +14,7 @@ import { docsTopNav } from '../styles/docsTopNav';
 import DocsAppearanceMenu from './DocsAppearanceMenu.astro';
 import DocsSearch from './DocsSearch.astro';
 import type { DocsBrand, DocsSearchItem, TopNavItem as TopNavItemType } from '../types';
+import { selectedTopNavMatch, topNavLinkAttributes } from '../utils/top-nav';
 
 type Props = {
   topNav: readonly TopNavItemType[];
@@ -42,6 +43,10 @@ const toolsSlotHtml = Astro.slots.has('tools')
   ? (await Astro.slots.render('tools')).trim()
   : '';
 const hasToolsSlot = toolsSlotHtml.length > 0;
+const selectedMatch = selectedTopNavMatch(
+  topNav.map((item) => item.match),
+  currentPath,
+);
 ---
 
 <TopNav
@@ -64,9 +69,13 @@ const hasToolsSlot = toolsSlotHtml.length > 0;
       <TopNavItem
         label={item.text}
         href={item.link}
-        selected={currentPath.startsWith(item.match)}
+        iconOnly={Boolean(item.iconOnly && item.icon)}
+        selected={item.match !== undefined && item.match === selectedMatch}
         data-docs-top-nav-match={item.match}
-      />
+        {...topNavLinkAttributes(item)}
+      >
+        {item.icon ? <Fragment slot="icon" set:html={item.icon} /> : null}
+      </TopNavItem>
     ))
   }
   <div slot="end" {...combine(nav.tools)}>

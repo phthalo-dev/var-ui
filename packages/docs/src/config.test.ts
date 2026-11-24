@@ -134,3 +134,36 @@ describe('parseVarDocsConfig', () => {
     });
   });
 });
+
+describe('topNav items', () => {
+  const base = {
+    title: 'Docs',
+    theme: { defaultClassName: 'theme-var-ui-default' },
+    typestyles: { entry: 'typestyles-entry.ts' },
+  };
+
+  it('accepts external icon-only items without match', () => {
+    const config = parseVarDocsConfig({
+      ...base,
+      topNav: [
+        {
+          text: 'GitHub',
+          link: 'https://github.com',
+          external: true,
+          icon: '<svg/>',
+          iconOnly: true,
+        },
+      ],
+    });
+    expect(config.topNav?.[0]).toMatchObject({ external: true, iconOnly: true });
+  });
+
+  it('rejects iconOnly without an icon', () => {
+    expect(() =>
+      parseVarDocsConfig({
+        ...base,
+        topNav: [{ text: 'GitHub', link: 'https://github.com', iconOnly: true }],
+      }),
+    ).toThrow(/iconOnly/);
+  });
+});
