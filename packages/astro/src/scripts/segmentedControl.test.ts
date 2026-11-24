@@ -3,7 +3,7 @@ import {
   getSegmentedControlValue,
   initSegmentedControl,
   initSegmentedControls,
-  nextSegmentedControlName,
+  segmentedControlName,
   SEGMENTED_CONTROL_CHANGE_EVENT,
   setSegmentedControlValue,
 } from './segmentedControl';
@@ -14,7 +14,9 @@ class ResizeObserverMock {
 }
 
 /** Mirrors `SegmentedControl.astro`: a radiogroup of labels wrapping native radios. */
-function mountSegments(name = nextSegmentedControlName()): HTMLElement {
+const testRender = {};
+
+function mountSegments(name = segmentedControlName(testRender, '/test/')): HTMLElement {
   const host = document.createElement('div');
   host.innerHTML = `
     <div role="radiogroup" aria-label="View" data-var-ui-segmented-control>
@@ -106,8 +108,14 @@ describe('initSegmentedControl', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 
-  it('generates distinct group names', () => {
-    expect(nextSegmentedControlName()).not.toBe(nextSegmentedControlName());
+  it('generates distinct group names within a render, stable across renders', () => {
+    const first = {};
+    const second = {};
+    const a = [segmentedControlName(first, '/docs/'), segmentedControlName(first, '/docs/')];
+    const b = [segmentedControlName(second, '/docs/'), segmentedControlName(second, '/docs/')];
+    expect(a[0]).not.toBe(a[1]);
+    expect(b).toEqual(a);
+    expect(segmentedControlName({}, '/other/')).not.toBe(a[0]);
   });
 
   it('initSegmentedControls initializes every root on the page', () => {

@@ -4,7 +4,7 @@ import { segmentedControl } from '@var-ui/core/components/segmentedControl';
 import { toggleButton } from '@var-ui/core/components/toggleButton';
 import type { ControlSize } from '@var-ui/core';
 import { mergeProps } from "../utils";
-import { nextSegmentedControlName } from "../scripts/segmentedControl";
+import { segmentedControlName } from "../scripts/segmentedControl";
 import { icon as iconStyles } from '@var-ui/core/components/icon';
 import { iconMarkup, type AstroIcon } from "../lib/icon";
 
@@ -27,7 +27,10 @@ type Props = Omit<HTMLAttributes<'div'>, 'class' | 'role'> & {
   options: SegmentOption[];
   /** Initially selected segment value. Defaults to the first option. */
   defaultValue?: string;
-  /** Radio group name (also submitted with a form). Defaults to a unique generated name. */
+  /**
+   * Radio group name (also submitted with a form). Defaults to a name derived from the page path
+   * and the control's position on the page, stable across builds.
+   */
   name?: string;
   /** Disables every segment. */
   disabled?: boolean;
@@ -44,7 +47,7 @@ type Props = Omit<HTMLAttributes<'div'>, 'class' | 'role'> & {
 const {
   options,
   defaultValue = options[0]?.value,
-  name = nextSegmentedControlName(),
+  name = segmentedControlName(Astro.request, Astro.url.pathname),
   disabled = false,
   size = "md",
   layout = "default",
