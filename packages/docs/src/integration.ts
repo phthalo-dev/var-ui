@@ -4,6 +4,7 @@ import { AstroError } from 'astro/errors';
 import { fileURLToPath } from 'node:url';
 import rehypeSlug from 'rehype-slug';
 import { parseVarDocsConfig, type VarDocsConfig, type VarDocsUserConfig } from './config';
+import rehypeWrapTables from './utils/rehype-wrap-tables';
 import { buildDocsThemeStyles, docsThemeStylesDevPlugin } from './integrations/theme-css-extract';
 import { vitePluginVarDocsTypestyles } from './integrations/typestyles';
 import { vitePluginVarDocsPackageExports } from './integrations/vite-package-exports';
@@ -118,7 +119,7 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
           astroConfig.integrations.splice(
             selfIndex + 1,
             0,
-            mdx({ rehypePlugins: [rehypeSlug], optimize: true }),
+            mdx({ rehypePlugins: [rehypeSlug, rehypeWrapTables], optimize: true }),
           );
           logger.info('Added @astrojs/mdx with rehype-slug');
         }
