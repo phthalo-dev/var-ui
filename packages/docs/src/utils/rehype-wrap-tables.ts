@@ -12,6 +12,15 @@ function isTable(node: unknown): node is Element {
   );
 }
 
+function isWrapper(node: ElementContent): boolean {
+  return (
+    node.type === 'element' &&
+    node.tagName === 'div' &&
+    Array.isArray(node.properties?.className) &&
+    node.properties.className.includes(CLASS_NAME)
+  );
+}
+
 /**
  * Rehype plugin that wraps bare markdown tables in a scrollable container so they
  * do not overflow narrow viewports.
@@ -38,7 +47,11 @@ const rehypeWrapTables: Plugin<[], Root> = () => {
         }
       }
       parent.children = nextChildren;
-      queue.push(...parent.children.filter((c): c is Element => c.type === 'element'));
+      // Do not re-enqueue the wrappers we just created: their only child is the
+      // table we already processed, and revisiting them would wrap it again.
+      queue.push(
+        ...parent.children.filter((c): c is Element => c.type === 'element' && !isWrapper(c)),
+      );
     }
   };
 };
