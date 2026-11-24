@@ -18,6 +18,10 @@ export type MenuItemDefinition = {
   disabled?: boolean;
   danger?: boolean;
   onAction?: () => void;
+  /** Renders the item as a link that navigates natively (React Aria routes it through `RouterProvider`). */
+  href?: string;
+  /** With `href`: open the link in a new tab (`target="_blank"`, `rel="noopener noreferrer"`). */
+  external?: boolean;
   /** Leading icon from the icon registry. In a `layout: 'row'` section, the item shows only it. */
   icon?: IconName;
   /** Leading color swatch (e.g. theme pickers). Any CSS color value. */
@@ -195,6 +199,9 @@ function renderItem(
       textValue={item.label}
       isDisabled={item.disabled}
       onAction={item.onAction}
+      href={item.href}
+      target={item.href && item.external ? '_blank' : undefined}
+      rel={item.href && item.external ? 'noopener noreferrer' : undefined}
       aria-label={row ? item.label : undefined}
       {...combine(m.item, item.danger && m.itemDanger)}
     >

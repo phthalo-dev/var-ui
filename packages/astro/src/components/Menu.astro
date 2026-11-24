@@ -206,6 +206,8 @@ const itemContents = await Promise.all(
               <a
                 role="menuitem"
                 href={disabled ? undefined : item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 aria-disabled={disabled || undefined}
                 aria-label={row ? item.label : undefined}
                 title={row ? item.label : undefined}
