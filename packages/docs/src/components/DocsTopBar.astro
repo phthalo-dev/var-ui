@@ -34,8 +34,14 @@ const {
 } = Astro.props;
 
 const nav = docsTopNav();
-const hasBrandSlot = Astro.slots.has('brand');
-const hasToolsSlot = Astro.slots.has('tools');
+const brandSlotHtml = Astro.slots.has('brand')
+  ? (await Astro.slots.render('brand')).trim()
+  : '';
+const hasBrandSlot = brandSlotHtml.length > 0;
+const toolsSlotHtml = Astro.slots.has('tools')
+  ? (await Astro.slots.render('tools')).trim()
+  : '';
+const hasToolsSlot = toolsSlotHtml.length > 0;
 ---
 
 <TopNav
@@ -47,7 +53,7 @@ const hasToolsSlot = Astro.slots.has('tools');
   {
     hasBrandSlot ? (
       <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} aria-label={brand.heading}>
-        <slot name="brand" />
+        <Fragment set:html={brandSlotHtml} />
       </TopNavHeading>
     ) : (
       <TopNavHeading slot="heading" heading={brand.heading} headingHref={brand.href} />
@@ -68,7 +74,7 @@ const hasToolsSlot = Astro.slots.has('tools');
     {
       hasToolsSlot ? (
         <div {...combine(nav.toolbarExtra)}>
-          <slot name="tools" />
+          <Fragment set:html={toolsSlotHtml} />
         </div>
       ) : null
     }

@@ -55,6 +55,10 @@ const data = entry.data as {
 const title = `${data.title} · ${config.title}`;
 const wide = data.wide === true;
 const showToc = data.tableOfContents !== false;
+const previewSlotHtml = Astro.slots.has('preview')
+  ? (await Astro.slots.render('preview')).trim()
+  : '';
+const hasPreviewSlot = previewSlotHtml.length > 0;
 const sectionName = matched.collection.replace(/[-_]/g, ' ');
 const eyebrow = data.eyebrow ?? sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
 
@@ -71,7 +75,7 @@ Astro.locals.varDocsRoute = {
 <Layout title={title} showToc={showToc}>
   {Astro.slots.has('rail') ? <slot name="rail" slot="rail" /> : null}
   <DocsPageHeader title={data.title} eyebrow={eyebrow} lead={data.description}>
-    {Astro.slots.has('preview') ? <slot name="preview" slot="preview" /> : null}
+    {hasPreviewSlot ? <Fragment slot="preview" set:html={previewSlotHtml} /> : null}
   </DocsPageHeader>
   <DocsGuideArticle wide={wide}>
     <Content components={{ ...mdxComponents }} />

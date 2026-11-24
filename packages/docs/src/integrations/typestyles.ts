@@ -10,11 +10,16 @@ import type { Plugin } from 'vite';
  */
 const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
 
-/** Wire `@typestyles/vite` for the configured extraction entry. */
+/**
+ * Wire `@typestyles/vite` for the configured extraction entry.
+ *
+ * Always includes `@var-ui/docs/styles` so the docs kit chrome recipes are extracted
+ * even when the site entry only imports `@var-ui/core` and `@var-ui/react`.
+ */
 export function vitePluginVarDocsTypestyles(entry: string): Plugin {
   return typestylesVite({
     extract: {
-      modules: [entry],
+      modules: [entry, '@var-ui/docs/styles'],
       fileName: TYPESTYLES_CSS_FILE_NAME,
     },
   }) as Plugin;
