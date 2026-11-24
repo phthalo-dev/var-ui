@@ -12,6 +12,7 @@ export * from './buttonGroup';
 export * from './calendar';
 export * from './card';
 export * from './carousel';
+export * from './bleed';
 export * from './center';
 export * from './chat';
 export * from './checkbox';

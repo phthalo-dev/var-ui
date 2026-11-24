@@ -1,0 +1,31 @@
+---
+title: Bleed
+description: Spans a padded, centred frame edge to edge while its content stays on the column.
+---
+
+# Bleed
+
+A band that reaches past its column to the edges of the page frame: a sticky page bar, a banner, a
+wide figure. By default (`align="content"`) the band bleeds but its children stay lined up with
+the column. `align="edge"` lets them bleed too.
+
+## Examples
+
+### Default
+
+<Demo id="bleed.default" />
+
+## How it works
+
+The frame must be an inline-size container (`container-type: inline-size`). The band's reach is
+`calc((100cqw - 100%) / 2 + gutter)`: the slack between the centred column and the container, plus
+`gutter`, the container's own inline padding (`100cqw` measures its content box). It is pure CSS,
+so it works in SSR and extracted stylesheets, and it follows the gutter when that changes at a
+breakpoint.
+
+In a TypeStyles recipe, spread `bleedStyle({ gutter })` from `@var-ui/core` into a slot instead
+of rendering a `Bleed`.
+
+## Props
+
+<PropsTable slug="bleed" />

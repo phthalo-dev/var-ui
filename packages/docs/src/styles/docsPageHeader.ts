@@ -1,5 +1,6 @@
 import {
   atReducedMotion,
+  bleedStyle,
   codeBlock,
   designTokens as t,
   stage,
@@ -10,8 +11,6 @@ import { docsMainContainer, docsPage, narrowMain, pageBarHeight } from './docsPa
 import { container } from 'typestyles';
 
 const gutter = docsPage.vars.gutter.var;
-/** Distance from the page frame's edge to the content area's edge (gutter + centring slack). */
-const bleed = `calc((100cqw - 100%) / 2 + ${gutter})`;
 
 const belowMd = typestyles.breakpoint('md', 'max');
 const belowLg = typestyles.breakpoint('lg', 'max');
@@ -352,8 +351,7 @@ export const docsPageBar = typestyles.recipe({
         gap: t.space.lg.var,
         // Full-bleed sub-header: edge to edge across the content area, with its content inset back
         // onto the page frame so it lines up with the hero, tabs and columns below.
-        marginInline: `calc(-1 * ${bleed})`,
-        paddingInline: bleed,
+        ...bleedStyle({ gutter }),
         borderBlockEnd: `${t.borderWidth.default.var} solid ${t.color.border.default.var}`,
         // Opaque: nothing scrolling underneath may print through the bar.
         backgroundColor: t.color.background.surface.var,
