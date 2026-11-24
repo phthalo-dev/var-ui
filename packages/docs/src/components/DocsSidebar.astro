@@ -5,12 +5,11 @@ import type { SidebarSection } from '../types';
 type Props = {
   sections: readonly SidebarSection[];
   isLinkActive: (link: string) => boolean;
+  /** Past this many links the sidebar collapses every group except the current one. @default 40 */
+  collapseThreshold?: number;
 };
 
-/** Past this many links the sidebar collapses every group except the current one. */
-const COLLAPSE_THRESHOLD = 40;
-
-const { sections, isLinkActive } = Astro.props;
+const { sections, isLinkActive, collapseThreshold = 40 } = Astro.props;
 const total = sections.reduce((sum, section) => sum + section.items.length, 0);
 const collapsible = sections.length > 1;
 ---
@@ -23,7 +22,7 @@ const collapsible = sections.length > 1;
         title={section.title}
         collapsible={collapsible && section.title != null}
         count={section.items.length}
-        defaultOpen={current || total <= COLLAPSE_THRESHOLD}
+        defaultOpen={current || total <= collapseThreshold}
       >
         {section.items.map((item) => (
           <SideNavItem label={item.text} href={item.link} selected={isLinkActive(item.link)} />

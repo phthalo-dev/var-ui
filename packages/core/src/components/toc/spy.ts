@@ -38,6 +38,12 @@ export function findScrollContainer(element: HTMLElement): HTMLElement | null {
   return null;
 }
 
+function isScrolledToBottom(scrollContainer: HTMLElement | null): boolean {
+  if (!scrollContainer) return false;
+  const { scrollTop, clientHeight, scrollHeight } = scrollContainer;
+  return scrollTop + clientHeight >= scrollHeight - 4;
+}
+
 /** Pick the last heading that has scrolled past the active zone top. */
 export function pickActiveHeadingByPosition(
   ids: readonly string[],
@@ -45,6 +51,12 @@ export function pickActiveHeadingByPosition(
   offset = TOC_HEADER_OFFSET,
 ): string | null {
   if (ids.length === 0) return null;
+
+  // At the bottom of the page the last heading may sit above the active zone,
+  // so always select the final section once the reader has reached the end.
+  if (isScrolledToBottom(scrollContainer)) {
+    return ids[ids.length - 1] ?? null;
+  }
 
   const containerTop = scrollContainer?.getBoundingClientRect().top ?? 0;
   const activeLine = containerTop + offset;
