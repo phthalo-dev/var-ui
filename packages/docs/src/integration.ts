@@ -132,8 +132,14 @@ export default function varDocs(userOpts: VarDocsUserConfig): AstroIntegration {
         const vitePlugins = [
           vitePluginVarDocsPackageExports(docsPkgRoot),
           vitePluginVarDocsVirtualModules(config, { root: astroConfig.root }),
-          vitePluginVarDocsTypestyles(config.typestyles.entry),
         ];
+        if (config.typestyles.extract) {
+          vitePlugins.push(vitePluginVarDocsTypestyles(config.typestyles.entry));
+        } else {
+          logger.info(
+            'typestyles.extract is false: not registering @typestyles/vite. Your extractor must emit typestyles.css and import @var-ui/docs/styles.',
+          );
+        }
 
         if (lazyPresets.length > 0) {
           vitePlugins.push(

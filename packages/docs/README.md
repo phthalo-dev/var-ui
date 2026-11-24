@@ -56,7 +56,7 @@ import * as mdxComponents from '../../lib/guide-mdx-components';
 `varDocs()` wires:
 
 - Config validation (`title`, `theme` incl. optional `presets`, `typestyles`, free-form `routes`, `components`)
-- `@typestyles/vite` extraction for the configured entry
+- `@typestyles/vite` extraction for the configured entry (turn it off with `typestyles: { entry, extract: false }` when the site runs its own extractor, such as `@typestyles/astro`; that extractor must emit `typestyles.css`, the file `DocsPage` links, and its entry must import `@var-ui/docs/styles`)
 - Design-token Shiki theme for MDX fenced code (theme-owned `color.code.*`)
 - Lazy showcase theme CSS in dev + `astro:build:start` extract when `theme.presets` includes `lazyCss` entries
 - `@astrojs/mdx` + `rehype-slug` when MDX is not already registered
