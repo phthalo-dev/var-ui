@@ -39,9 +39,10 @@ describe('codeBlockShikiTransformer (#194)', () => {
     expect(button.properties).toMatchObject({
       type: 'button',
       dataVarUiCodeCopy: '',
-      dataVarUiCode: 'echo hi',
       dataVarUiErrorLabel: 'Copy failed',
       ariaLabel: 'Copy code',
     });
+    // The copy script reads the fence's `pre code`; the source is not repeated (#336).
+    expect(button.properties).not.toHaveProperty('dataVarUiCode');
   });
 });

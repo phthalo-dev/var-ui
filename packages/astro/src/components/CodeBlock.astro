@@ -64,6 +64,8 @@ const codeBlockVars = recipeVars(codeBlock);
 // Same structure as React and the docs Shiki transformer (#194).
 const m = codeBlockMarkup({
   code,
+  // Line numbers and diff rows put more than the source in `pre code`.
+  embedCode: showLineNumbers || variant === 'diff',
   language,
   filename,
   variant: variant === 'inline' ? 'default' : variant,

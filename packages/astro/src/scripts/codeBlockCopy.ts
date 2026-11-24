@@ -39,8 +39,24 @@ function setState(btn: HTMLButtonElement, state: CopyState): void {
 }
 
 /**
+ * The text a copy button copies: its `data-var-ui-code` when set, else the text of the nearest
+ * enclosing block's visible `pre` (its `code` when it has one), minus one trailing newline.
+ */
+export function codeBlockCopyText(btn: Element): string {
+  const embedded = btn.getAttribute('data-var-ui-code');
+  if (embedded !== null) return embedded;
+  let block = btn.parentElement;
+  while (block && !block.querySelector('pre')) block = block.parentElement;
+  const pre = Array.from(block?.querySelectorAll<HTMLElement>('pre') ?? []).find(
+    (candidate) => !candidate.hidden,
+  );
+  const source = pre?.querySelector('code') ?? pre;
+  return (source?.textContent ?? '').replace(/\n$/, '');
+}
+
+/**
  * Wires every `[data-var-ui-code-copy]` button (Astro `CodeBlock`, or the same markup by hand):
- * copies `data-var-ui-code`, swaps the icon and name for `data-var-ui-timeout` ms (default 2000), announces
+ * copies {@link codeBlockCopyText} (`data-var-ui-code`, else the block's visible `pre code`), swaps the icon and name for `data-var-ui-timeout` ms (default 2000), announces
  * the result in the sibling `[data-var-ui-codeblock-feedback]`, and fires `var-ui:copied` /
  * `var-ui:copy-error` like `CopyButton`.
  */
@@ -51,7 +67,7 @@ export function initCodeBlockCopy(root: ParentNode = document): void {
     if (!btn.getAttribute('aria-label')) btn.setAttribute('aria-label', labels(btn).idle);
 
     btn.addEventListener('click', async () => {
-      const code = btn.getAttribute('data-var-ui-code') ?? '';
+      const code = codeBlockCopyText(btn);
       const ok = await copyText(code);
       setState(btn, ok ? 'copied' : 'error');
       dispatchCopyResult(btn, ok, code);

@@ -11,11 +11,17 @@ describe('codeBlockMarkup (#194)', () => {
     expect(m.copyButton).toMatchObject({
       type: 'button',
       'data-var-ui-code-copy': '',
-      'data-var-ui-code': 'pnpm add x',
       'data-var-ui-error-label': 'Copy failed',
       'aria-label': 'Copy code',
     });
     expect(m.feedback).toMatchObject({ role: 'status', 'aria-live': 'polite' });
+    // The copy script reads `pre code`, so the source is not in the HTML twice (#336).
+    expect(m.copyButton?.['data-var-ui-code']).toBeUndefined();
+  });
+
+  it('puts the source on the copy button only with embedCode', () => {
+    const m = codeBlockMarkup({ code: 'pnpm add x\n', embedCode: true });
+    expect(m.copyButton?.['data-var-ui-code']).toBe('pnpm add x');
   });
 
   it('drops the actions when not copyable', () => {

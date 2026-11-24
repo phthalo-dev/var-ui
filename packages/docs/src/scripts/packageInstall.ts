@@ -1,9 +1,10 @@
 const INIT_ATTR = 'data-package-install-initialized';
-const STORAGE_KEY = 'var-docs-package-manager';
+/** localStorage key holding the reader's package manager (`pnpm`, `npm`, …), shared by every block. */
+export const PACKAGE_MANAGER_STORAGE_KEY = 'var-docs-package-manager';
 
 function readPreferred(): string | null {
   try {
-    return window.localStorage.getItem(STORAGE_KEY);
+    return window.localStorage.getItem(PACKAGE_MANAGER_STORAGE_KEY);
   } catch {
     return null;
   }
@@ -11,33 +12,38 @@ function readPreferred(): string | null {
 
 function writePreferred(id: string): void {
   try {
-    window.localStorage.setItem(STORAGE_KEY, id);
+    window.localStorage.setItem(PACKAGE_MANAGER_STORAGE_KEY, id);
   } catch {
     // Storage can be unavailable (private mode); the choice just isn't remembered.
   }
 }
 
 function select(root: HTMLElement, id: string): void {
-  const tabs = root.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-  let command = '';
+  const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+  // A block without this manager keeps its current tab.
+  if (!tabs.some((tab) => tab.dataset.packageManager === id)) return;
   tabs.forEach((tab) => {
     const selected = tab.dataset.packageManager === id;
     tab.setAttribute('aria-selected', String(selected));
     tab.tabIndex = selected ? 0 : -1;
-    const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
-    if (panel) {
-      panel.hidden = !selected;
-      if (selected) command = panel.textContent ?? '';
-    }
+    // Looked up inside the block, so two blocks with the same ids still switch independently.
+    const panelId = tab.getAttribute('aria-controls') ?? '';
+    const panel = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]')).find(
+      (candidate) => candidate.id === panelId,
+    );
+    if (panel) panel.hidden = !selected;
   });
-  const copy = root.querySelector<HTMLElement>('[data-var-ui-code-copy]');
-  if (copy && command) copy.setAttribute('data-var-ui-code', command);
+  // The copy button copies the visible panel (`initCodeBlockCopy` reads the unhidden `pre`).
 }
 
-/** Tab switching for `PackageInstall`; the chosen manager is shared across blocks and visits. */
-export function initPackageInstall(): void {
+/**
+ * Tab switching for `PackageInstall` / `packageInstallMarkup` blocks under `container`; the
+ * chosen manager is shared across blocks and visits (`PACKAGE_MANAGER_STORAGE_KEY`). Safe to
+ * call again after new blocks are added.
+ */
+export function initPackageInstall(container: ParentNode = document): void {
   const preferred = readPreferred();
-  document.querySelectorAll<HTMLElement>('[data-package-install]').forEach((root) => {
+  container.querySelectorAll<HTMLElement>('[data-package-install]').forEach((root) => {
     if (preferred) select(root, preferred);
     if (root.hasAttribute(INIT_ATTR)) return;
     root.setAttribute(INIT_ATTR, '');

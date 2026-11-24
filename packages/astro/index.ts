@@ -98,7 +98,7 @@ export {
   type ToastShowInput,
 } from './src/scripts/toast';
 export { createResizeHandle } from './src/scripts/resizeHandle';
-export { initCodeBlockCopy } from './src/scripts/codeBlockCopy';
+export { codeBlockCopyText, initCodeBlockCopy } from './src/scripts/codeBlockCopy';
 export { COPIED_EVENT, COPY_ERROR_EVENT, copyText, type CopyEventDetail } from './src/scripts/copy';
 export {
   applyColorModeToDocument,

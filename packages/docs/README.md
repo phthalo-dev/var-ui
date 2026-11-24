@@ -138,6 +138,24 @@ import DocsPage from '@var-ui/docs/DocsPage';
 </DocsPage>
 ```
 
+### Install commands (`PackageInstall`, `packageInstallMarkup`)
+
+`<PackageInstall packages="@var-ui/core typestyles" />` renders one code block with a tab per package manager (`dev` for dev dependencies); pass `commands={[{ id: 'pnpm', command: '…' }, …]}` instead when the commands come from content. Sites that build HTML strings (a markdown pipeline) get the same markup from `@var-ui/docs/package-install`:
+
+```ts
+import {
+  initPackageInstall,
+  packageInstallCommands,
+  packageInstallMarkup,
+  PACKAGE_MANAGER_STORAGE_KEY,
+} from '@var-ui/docs/package-install';
+
+const html = packageInstallMarkup({ commands: packageInstallCommands('@var-ui/core') });
+// On the client: initPackageInstall() for the tabs, initCodeBlockCopy() (@var-ui/astro) for copy.
+```
+
+The chosen manager is shared by every block and remembered under `PACKAGE_MANAGER_STORAGE_KEY` in `localStorage`. Copy buttons copy the visible `pre code`, so the command is not repeated in an attribute.
+
 ### Examples + source (`CodeBlock`)
 
 Register `@var-ui/docs/styles` in your TypeStyles entry (includes the `codeBlock` recipe).
