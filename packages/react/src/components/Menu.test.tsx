@@ -138,6 +138,31 @@ describe('Menu', () => {
     expect(await screen.findByRole('menuitem', { name: 'Edit' })).toBeTruthy();
   });
 
+  it('renders href items as links, opening external ones in a new tab', async () => {
+    wrap(
+      <Menu.FromSections
+        trigger={<Button>Links</Button>}
+        sections={[
+          {
+            items: [
+              { id: 'docs', label: 'Docs', href: '/docs' },
+              { id: 'claude', label: 'Ask Claude', href: 'https://claude.ai/new', external: true },
+            ],
+          },
+        ]}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Links' }));
+    const docs = await screen.findByRole('menuitem', { name: 'Docs' });
+    const claude = screen.getByRole('menuitem', { name: 'Ask Claude' });
+    expect(docs.tagName).toBe('A');
+    expect(docs.getAttribute('href')).toBe('/docs');
+    expect(docs.hasAttribute('target')).toBe(false);
+    expect(claude.getAttribute('href')).toBe('https://claude.ai/new');
+    expect(claude.getAttribute('target')).toBe('_blank');
+    expect(claude.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
   it('preset items reserve a check column only in single-choice sections', async () => {
     wrap(
       <Menu.FromSections

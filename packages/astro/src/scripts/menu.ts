@@ -41,6 +41,8 @@ export type MenuItemDefinition = {
   danger?: boolean;
   /** Renders the item as a link that navigates natively instead of a button. */
   href?: string;
+  /** With `href`: open the link in a new tab (`target="_blank"`, `rel="noopener noreferrer"`). */
+  external?: boolean;
   /** Leading color swatch (e.g. theme pickers). Any CSS color value. */
   swatch?: string;
   /**
