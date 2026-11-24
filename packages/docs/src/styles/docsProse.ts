@@ -303,14 +303,26 @@ export function docsArticleProse() {
   return [prose(), docsProse()] as const;
 }
 
-/** Scroll container for a wide table inside docs prose (wrap it by hand). */
+/** Scroll container for a wide table inside docs prose. */
 export const docsProseTableWrap = typestyles.recipe({
   name: 'docs-prose-table-wrap',
   layer: 'components',
   styles: () => ({
     base: {
       overflowX: 'auto',
-      marginBottom: t.space.sm.var,
+      marginBlock: `${t.space.md.var} ${t.space.lg.var}`,
+      // Edge shadows hint that the table is scrollable on narrow viewports.
+      backgroundImage: [
+        `linear-gradient(to right, ${t.color.background.app.var}, transparent)`,
+        `linear-gradient(to left, ${t.color.background.app.var}, transparent)`,
+      ].join(', '),
+      backgroundPosition: '0 0, 100% 0',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: `${t.space.md.var} 100%`,
+      backgroundAttachment: 'local, local',
+      '& table': {
+        marginBlock: 0,
+      },
     },
   }),
 });

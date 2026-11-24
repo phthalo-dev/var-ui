@@ -620,6 +620,9 @@ importers:
       '@astrojs/mdx':
         specifier: ^4.3.0
         version: 4.3.14(astro@5.18.2(patch_hash=9d89166f7e7a3b3e84b17f3137ee643bac9851ea4db9c3b97ef27365a2dab868)(@netlify/blobs@10.7.9(supports-color@7.2.0))(@types/node@24.13.2)(@volar/typescript@2.4.28(typescript@6.0.3))(jiti@2.7.0)(rollup@4.62.2)(supports-color@7.2.0)(terser@5.48.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))(supports-color@7.2.0)
+      '@types/hast':
+        specifier: ^3.0.4
+        version: 3.0.4
       '@typestyles/build-runner':
         specifier: 'catalog:'
         version: 0.10.0
@@ -629,6 +632,9 @@ importers:
       rehype-slug:
         specifier: ^6.0.0
         version: 6.0.0
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
       zod:
         specifier: ^4.4.3
         version: 4.4.3
