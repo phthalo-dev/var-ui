@@ -4,20 +4,36 @@ import {
 } from '@var-ui/core/components/indicators/segmented-control';
 
 /**
- * Event dispatched (bubbling) from the control root after the selection changes.
- * `event.detail.id` holds the selected segment's `data-var-ui-segment-id` value.
+ * Event dispatched (bubbling) from the control root after the user changes the selection.
+ * `event.detail.id` holds the selected segment's `data-var-ui-segment-id` value (the option's
+ * `value`). `setSegmentedControlValue` does not dispatch it.
  */
 export const SEGMENTED_CONTROL_CHANGE_EVENT = 'var-ui:segmented-control-change';
 
-let nameCounter = 0;
+const namesPerRender = new WeakMap<object, number>();
+
+/** FNV-1a, base 36: a short stable tag for a page path. */
+function pathTag(pathname: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < pathname.length; i += 1) {
+    hash ^= pathname.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(36);
+}
 
 /**
- * Unique radio-group `name` for a server-rendered segmented control. The random part keeps names
- * distinct across pages whose elements outlive a view transition (`transition:persist`).
+ * Default radio-group `name` for a server-rendered segmented control: a tag for the page path
+ * plus the control's position in that render (`var-ui-segmented-<path>-<n>`). It is the same on
+ * every build, so static HTML does not change between builds, and differs between pages, so
+ * names stay distinct when elements outlive a view transition (`transition:persist`).
+ *
+ * `render` is any object unique to one page render (Astro's `Astro.request`).
  */
-export function nextSegmentedControlName(): string {
-  nameCounter += 1;
-  return `var-ui-segmented-${Math.random().toString(36).slice(2, 8)}-${nameCounter}`;
+export function segmentedControlName(render: object, pathname: string): string {
+  const index = (namesPerRender.get(render) ?? 0) + 1;
+  namesPerRender.set(render, index);
+  return `var-ui-segmented-${pathTag(pathname)}-${index}`;
 }
 
 function segmentsOf(root: Element): HTMLElement[] {

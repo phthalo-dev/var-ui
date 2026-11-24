@@ -21,6 +21,20 @@ Drive selection with `value` and `onValueChange` when the active segment must sy
 
 <Demo id="segmented-control.controlled" />
 
+## Astro: change event and `name`
+
+In Astro, the control dispatches a bubbling `var-ui:segmented-control-change` event (`SEGMENTED_CONTROL_CHANGE_EVENT` from `@var-ui/astro`) on its root when the user picks a segment; `event.detail.id` is the chosen option's `value`. `setSegmentedControlValue(root, value)` updates the selection from script without firing it.
+
+```ts
+import { SEGMENTED_CONTROL_CHANGE_EVENT } from '@var-ui/astro';
+
+root.addEventListener(SEGMENTED_CONTROL_CHANGE_EVENT, (event) => {
+  const { id } = (event as CustomEvent<{ id: string }>).detail;
+});
+```
+
+The radios share a `name`, which is also the field name submitted with a form. Without one, Astro derives it from the page path and the control's position on the page, so it is the same on every build; pass `name` when a form reads the value or when you want a fixed name.
+
 ## Props
 
 <PropsTable slug="segmented-control" />
