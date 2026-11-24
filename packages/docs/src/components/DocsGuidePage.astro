@@ -10,13 +10,14 @@ import config from 'virtual:var-docs/config';
 import DocsGuideArticle from './DocsGuideArticle.astro';
 import DocsPageHeader from './DocsPageHeader.astro';
 import { matchGuideRoute, resolveGuideRouteConfig, stripAstroBase } from '../utils/routing';
+import type { DocsGuideLayoutProps, VarDocsRoute } from '../types';
 
 const {
   layout: Layout,
   mdxComponents,
   stripBase = false,
 } = Astro.props as {
-  layout: (props: { title: string; showToc?: boolean }) => unknown;
+  layout: (props: DocsGuideLayoutProps) => unknown;
   mdxComponents: Record<string, unknown>;
   /** When true, strip Astro `base` before route matching (injected static routes). */
   stripBase?: boolean;
@@ -43,7 +44,7 @@ if (!entry) {
   return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const data = entry.data as {
   title: string;
   description?: string;
@@ -62,7 +63,7 @@ const hasPreviewSlot = previewSlotHtml.length > 0;
 const sectionName = matched.collection.replace(/[-_]/g, ' ');
 const eyebrow = data.eyebrow ?? sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
 
-Astro.locals.varDocsRoute = {
+const varDocsRoute: VarDocsRoute = {
   collection: matched.collection,
   id: matched.id,
   pathname: matched.pathname,
@@ -70,9 +71,11 @@ Astro.locals.varDocsRoute = {
   description: data.description,
   template: data.template,
 };
+
+Astro.locals.varDocsRoute = varDocsRoute;
 ---
 
-<Layout title={title} showToc={showToc}>
+<Layout title={title} showToc={showToc} eyebrow={eyebrow} entry={entry} headings={headings} varDocsRoute={varDocsRoute}>
   {Astro.slots.has('rail') ? <slot name="rail" slot="rail" /> : null}
   <DocsPageHeader title={data.title} eyebrow={eyebrow} lead={data.description}>
     {hasPreviewSlot ? <Fragment slot="preview" set:html={previewSlotHtml} /> : null}

@@ -22,6 +22,7 @@ const {
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
   bleed = false,
+  searchEmptyHint,
 } = Astro.props as {
   title?: string;
   themeClassName: string;
@@ -29,6 +30,8 @@ const {
   topNav: readonly TopNavItemType[];
   searchItems?: readonly DocsSearchItem[];
   brand?: DocsBrand;
+  /** Second line of the search palette's empty state. */
+  searchEmptyHint?: string;
   htmlAttributes?: Record<string, string | undefined>;
   /**
    * Drop the main column's padding so sections can run edge to edge (full-bleed bands,
@@ -73,6 +76,7 @@ const hasFooterSlot = Astro.slots.has('footer');
         brand={brand}
         currentPath={currentPath}
         mobileNav={showMobileNav}
+        searchEmptyHint={searchEmptyHint}
       >
         {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
         {hasToolsSlot ? <slot name="tools" slot="tools" /> : null}
