@@ -44,18 +44,6 @@ export const collapsible = typestyles.recipe({
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          // Native `<details>` exposes `[open]` on the root.
-          [`&[open] .var-ui-collapsible__triggerIcon`]: {
-            transform: 'rotate(180deg)',
-          },
-          // RAC Disclosure sets `data-expanded` on the root when open.
-          [`&[data-expanded] .var-ui-collapsible__triggerIcon`]: {
-            transform: 'rotate(180deg)',
-          },
-          // Fallback when expanded state is only on the trigger button.
-          [`&:has([aria-expanded="true"]) .var-ui-collapsible__triggerIcon`]: {
-            transform: 'rotate(180deg)',
-          },
         },
         heading: {
           margin: 0,
@@ -89,6 +77,18 @@ export const collapsible = typestyles.recipe({
           flexShrink: 0,
           transition: t.transition.transform.var,
           '& svg': { width: '1rem', height: '1rem' },
+          // Native `<details>` exposes `[open]` on the root.
+          '[open] &': {
+            transform: 'rotate(180deg)',
+          },
+          // RAC Disclosure sets `data-expanded` on the root when open.
+          '[data-expanded] &': {
+            transform: 'rotate(180deg)',
+          },
+          // Fallback when expanded state is only on the trigger button.
+          '[aria-expanded="true"] &': {
+            transform: 'rotate(180deg)',
+          },
         },
         panel: {
           padding: `${t.space.xs.var} ${t.space.sm.var} ${t.space.sm.var}`,
