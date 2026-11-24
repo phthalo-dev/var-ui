@@ -10,11 +10,11 @@ This guide is the happy path for a **Vite + React 19** app: install from npm, im
 
 ## Install
 
-<PackageInstall packages="@var-ui/react @var-ui/core @var-ui/icons react react-dom react-aria-components" />
+<PackageInstall packages="@var-ui/react @var-ui/core @var-ui/icons typestyles react react-dom react-aria-components" />
 
 `@var-ui/icons` is optional. Without it, pass `icons={{}}` to `IconProvider`.
 
-You do not add `typestyles` to the app. It arrives with `@var-ui/core`.
+`typestyles` is a peer dependency of `@var-ui/core`, `@var-ui/react` and `@var-ui/astro`, so the app and every package share one TypeStyles runtime (one class and token registry). You only import it yourself when you write your own recipes.
 
 ## Import CSS
 
@@ -113,7 +113,7 @@ Caveats:
 
 ## Astro without React
 
-<PackageInstall packages="@var-ui/astro @var-ui/core" />
+<PackageInstall packages="@var-ui/astro @var-ui/core @var-ui/icons typestyles" />
 
 Import the same stylesheet in a layout, then import Astro components:
 

@@ -39,9 +39,6 @@
     "pack": "vp pack",
     "dev": "vp pack --watch"
   },
-  "dependencies": {
-    "typestyles": "catalog:"
-  },
   "devDependencies": {
     "@hookform/resolvers": "catalog:",
     "@internationalized/date": "catalog:",
@@ -58,6 +55,7 @@
     "react-aria-components": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
+    "typestyles": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "zod": "catalog:"
@@ -68,7 +66,8 @@
     "@var-ui/icons": "workspace:>=0.1.0 <1.0.0",
     "react": "catalog:",
     "react-aria-components": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "typestyles": "catalog:"
   },
   "peerDependenciesMeta": {
     "@var-ui/icons": {

@@ -7,7 +7,7 @@ Components with native DOM props (`disabled`, `open`, `onClick`, `onValueChange`
 ## Install
 
 ```bash
-pnpm add @var-ui/react @var-ui/core react react-dom react-aria-components
+pnpm add @var-ui/react @var-ui/core typestyles react react-dom react-aria-components
 ```
 
 Within this monorepo:
