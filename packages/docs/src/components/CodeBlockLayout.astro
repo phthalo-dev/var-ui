@@ -28,7 +28,10 @@ const {
   showLineNumbers,
 } = Astro.props as CodeBlockLayoutProps;
 
-const hasPreview = Astro.slots.has('preview');
+const previewSlotHtml = Astro.slots.has('preview')
+  ? (await Astro.slots.render('preview')).trim()
+  : '';
+const hasPreview = previewSlotHtml.length > 0;
 const s = codeBlockRecipe();
 ---
 
@@ -44,7 +47,7 @@ const s = codeBlockRecipe();
         <div {...mergeProps(s.stageWrap)}>
           <div {...combine(stage(), s.preview)} data-not-prose data-demo-stage>
             <div {...mergeProps(s.previewInner)} data-demo-stage-inner>
-              <slot name="preview" />
+              <Fragment set:html={previewSlotHtml} />
             </div>
           </div>
           <div {...mergeProps(s.toolbar)} role="toolbar" aria-label="Preview options">

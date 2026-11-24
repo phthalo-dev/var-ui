@@ -14,9 +14,12 @@ type Props = {
 };
 
 const props = Astro.props as Props;
-const hasPreview = Astro.slots.has('default');
+const defaultSlotHtml = Astro.slots.has('default')
+  ? (await Astro.slots.render('default')).trim()
+  : '';
+const hasPreview = defaultSlotHtml.length > 0;
 ---
 
 <CodeBlockLayout {...props}>
-  {hasPreview ? <slot slot="preview" /> : null}
+  {hasPreview ? <Fragment slot="preview" set:html={defaultSlotHtml} /> : null}
 </CodeBlockLayout>

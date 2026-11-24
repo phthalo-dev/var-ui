@@ -1,5 +1,6 @@
 import typestylesVite from '@typestyles/vite';
 import type { Plugin } from 'vite';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Stable sheet path, matched by the `<link>` tags in DocsPage /
@@ -10,11 +11,20 @@ import type { Plugin } from 'vite';
  */
 const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
 
-/** Wire `@typestyles/vite` for the configured extraction entry. */
+function resolveDocsStyles(): string {
+  return fileURLToPath(import.meta.resolve('@var-ui/docs/styles', import.meta.url));
+}
+
+/**
+ * Wire `@typestyles/vite` for the configured extraction entry.
+ *
+ * Always includes `@var-ui/docs/styles` so the docs kit chrome recipes are extracted
+ * even when the site entry only imports `@var-ui/core` and `@var-ui/react`.
+ */
 export function vitePluginVarDocsTypestyles(entry: string): Plugin {
   return typestylesVite({
     extract: {
-      modules: [entry],
+      modules: [entry, resolveDocsStyles()],
       fileName: TYPESTYLES_CSS_FILE_NAME,
     },
   }) as Plugin;

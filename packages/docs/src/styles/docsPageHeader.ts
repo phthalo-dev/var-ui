@@ -270,6 +270,10 @@ export const docsGuideArticle = typestyles.recipe({
     base: {
       root: {
         minWidth: 0,
+        // Anchor links and TOC clicks should land below the sticky page bar.
+        '& h2, & h3, & h4, & h5': {
+          scrollMarginTop: `calc(${pageBarHeight} + ${t.space.lg.var})`,
+        },
         '& > h1:first-child': {
           display: 'none',
         },
@@ -291,8 +295,9 @@ const barHidden = {
   opacity: 0,
   transform: 'translateY(-0.25rem)',
   visibility: 'hidden',
-  // Hide: fade, then drop visibility once the fade has finished.
-  transition: `opacity ${t.duration.medium.var} ${t.easing.standard.var}, transform ${t.duration.medium.var} ${t.easing.standard.var}, visibility 0s linear ${t.duration.medium.var}`,
+  // Do not transition the initial hidden state: on first paint the bar must be invisible
+  // immediately so it does not paint a ghost of the page title over the hero.
+  transition: 'none',
 } as const;
 
 const barShown = {

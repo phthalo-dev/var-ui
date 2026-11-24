@@ -93,9 +93,9 @@ const hasFooterSlot = Astro.slots.has('footer');
 
       <Layout height="fill" padding="none" {...combine(page.siteLayout)}>
         <LayoutContent label="Main content">
-          <main {...mergeProps(page.main)}>
+          <div {...mergeProps(page.main)}>
             <slot />
-          </main>
+          </div>
           {hasFooterSlot ? <slot name="footer" /> : null}
         </LayoutContent>
       </Layout>
