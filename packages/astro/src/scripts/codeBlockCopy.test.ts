@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { initCodeBlockCopy } from './codeBlockCopy';
+import { codeBlockCopyText, initCodeBlockCopy } from './codeBlockCopy';
 import { COPIED_EVENT, COPY_ERROR_EVENT, copyText } from './copy';
 
 const stubClipboard = (writeText: (text: string) => Promise<void>) => {
@@ -114,5 +114,37 @@ describe('initCodeBlockCopy', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('codeBlockCopyText (#336)', () => {
+  it('prefers data-var-ui-code', () => {
+    document.body.innerHTML = `<div><button data-var-ui-code="embedded"></button><pre><code>shown</code></pre></div>`;
+    expect(codeBlockCopyText(document.querySelector('button')!)).toBe('embedded');
+  });
+
+  it('otherwise copies the visible pre code of the enclosing block', () => {
+    document.body.innerHTML = `
+      <div data-block>
+        <div><div><button data-var-ui-code-copy></button></div></div>
+        <div>
+          <pre hidden><code>npm install x</code></pre>
+          <pre><code><span>pnpm</span> <span>add x</span>
+</code></pre>
+        </div>
+      </div>
+      <pre><code>other block</code></pre>
+    `;
+    expect(codeBlockCopyText(document.querySelector('button')!)).toBe('pnpm add x');
+  });
+
+  it('copies the DOM text on click', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    stubClipboard(writeText);
+    document.body.innerHTML = `<div><button data-var-ui-code-copy></button><pre><code>const a = 1;\nconst b = 2;</code></pre></div>`;
+    initCodeBlockCopy();
+    document.querySelector('button')!.click();
+    await tick();
+    expect(writeText).toHaveBeenCalledWith('const a = 1;\nconst b = 2;');
   });
 });

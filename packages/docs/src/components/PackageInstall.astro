@@ -1,78 +1,28 @@
 ---
 /**
  * One code block for an install command, with a tab per package manager.
- * `<PackageInstall packages="@var-ui/react @var-ui/core" />` · `dev` for devDependencies.
+ * `<PackageInstall packages="@var-ui/react @var-ui/core" />` · `dev` for devDependencies ·
+ * `commands` for commands that are not a plain install (`[{ id: 'pnpm', command: '…' }]`).
+ * The same markup as `packageInstallMarkup()` from `@var-ui/docs/package-install`.
  */
-import { codeBlock } from '@var-ui/core';
-import { mergeProps } from '@var-ui/astro';
-import { svg as copySvg } from '@var-ui/icons/glyphs/copy';
+import {
+  nextPackageInstallId,
+  packageInstallCommands,
+  packageInstallMarkup,
+  type PackageInstallCommand,
+} from '../utils/package-install';
 
-type Props = {
-  packages: string;
-  dev?: boolean;
-};
+type Props =
+  | { packages: string; dev?: boolean; commands?: never }
+  | { commands: readonly PackageInstallCommand[]; packages?: never; dev?: never };
 
-const { packages, dev = false } = Astro.props;
-const managers = [
-  { id: 'pnpm', command: `pnpm add${dev ? ' -D' : ''} ${packages}` },
-  { id: 'npm', command: `npm install${dev ? ' -D' : ''} ${packages}` },
-  { id: 'yarn', command: `yarn add${dev ? ' -D' : ''} ${packages}` },
-  { id: 'bun', command: `bun add${dev ? ' -d' : ''} ${packages}` },
-] as const;
-const cb = codeBlock({ variant: 'default' });
-const uid = `pkg-${Math.random().toString(36).slice(2, 8)}`;
+const props = Astro.props;
+const commands = props.commands ?? packageInstallCommands(props.packages, { dev: props.dev });
+// Ids count up per page render, so the HTML is the same on every build.
+const html = packageInstallMarkup({ commands, id: nextPackageInstallId(Astro.request) });
 ---
 
-<div {...mergeProps(cb.root)} data-package-install>
-  <div {...mergeProps(cb.header)}>
-    <div {...mergeProps(cb.tabs)} role="tablist" aria-label="Package manager">
-      {
-        managers.map((manager, index) => (
-          <button
-            type="button"
-            role="tab"
-            id={`${uid}-tab-${manager.id}`}
-            aria-controls={`${uid}-panel-${manager.id}`}
-            aria-selected={index === 0 ? 'true' : 'false'}
-            tabindex={index === 0 ? 0 : -1}
-            data-package-manager={manager.id}
-            {...mergeProps(cb.tab)}
-          >
-            {manager.id}
-          </button>
-        ))
-      }
-    </div>
-    <div {...mergeProps(cb.actions)}>
-      <button
-        type="button"
-        {...mergeProps(cb.copyButton)}
-        data-var-ui-code-copy
-        data-var-ui-code={managers[0].command}
-        data-var-ui-copy-label="Copy command"
-        data-var-ui-copied-label="Copied"
-        data-var-ui-error-label="Copy failed"
-        aria-label="Copy command"
-      >
-        <span data-codeblock-copy-icon set:html={copySvg} />
-      </button>
-      <span {...mergeProps(cb.feedback)} data-var-ui-codeblock-feedback role="status" aria-live="polite" />
-    </div>
-  </div>
-  <div {...mergeProps(cb.body)}>
-    {
-      managers.map((manager, index) => (
-        <pre
-          {...mergeProps(cb.pre)}
-          role="tabpanel"
-          id={`${uid}-panel-${manager.id}`}
-          aria-labelledby={`${uid}-tab-${manager.id}`}
-          hidden={index !== 0 || undefined}
-        ><code {...mergeProps(cb.code)}>{manager.command}</code></pre>
-      ))
-    }
-  </div>
-</div>
+<Fragment set:html={html} />
 
 <script>
   import { initPackageInstall } from '../scripts/packageInstall';

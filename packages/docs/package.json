@@ -31,6 +31,7 @@
     "./utils": "./src/utils/index.ts",
     "./theme-client": "./src/utils/theme/client.ts",
     "./highlight": "./src/utils/highlightCodeBlock.ts",
+    "./package-install": "./src/utils/package-install.ts",
     "./guide-entry": "./src/utils/guideEntry.ts",
     "./styles": "./src/styles/index.ts",
     "./shiki": "./src/utils/shiki-theme.ts",

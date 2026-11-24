@@ -399,7 +399,6 @@ The `codeBlock` recipe's `copyButton` and `feedback` slots carry the copy chrome
         type="button"
         class="var-ui-code-block__copyButton"
         data-var-ui-code-copy
-        data-var-ui-code="npm i @var-ui/react"
         data-var-ui-copy-label="Copy code"
         data-var-ui-copied-label="Copied"
         data-var-ui-error-label="Copy failed"
@@ -410,13 +409,13 @@ The `codeBlock` recipe's `copyButton` and `feedback` slots carry the copy chrome
       <span class="var-ui-code-block__feedback" data-var-ui-codeblock-feedback role="status"></span>
     </div>
   </div>
-  <pre><code>...</code></pre>
+  <pre><code>npm i @var-ui/react</code></pre>
 </div>
 ```
 
 Behaviour:
 
-1. On click, write `data-var-ui-code` to `navigator.clipboard`.
+1. On click, write the text of the block's visible `pre code` to `navigator.clipboard` (or the button's `data-var-ui-code`, when the `pre` holds more than the source, such as line numbers; `codeBlockMarkup({ code, embedCode: true })` sets it).
 2. Set `data-copied` or `data-error` on the button (the recipe colours it), swap the icon (check / error), and set `aria-label` to `data-var-ui-copied-label` or `data-var-ui-error-label`.
 3. Put the same label in `[data-var-ui-codeblock-feedback]` with `data-tone="success"` or `"error"`. The recipe shows it only for errors; a success is announced but not shown.
 4. After 2 seconds (`data-var-ui-timeout`), clear all of it and restore `data-var-ui-copy-label`.

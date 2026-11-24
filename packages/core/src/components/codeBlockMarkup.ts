@@ -4,8 +4,17 @@ import { codeBlock, codeLanguageLabel, type CodeBlockVariantProps } from './code
 export type CodeBlockAttributes = { class: string } & Record<string, string | undefined>;
 
 export type CodeBlockMarkupOptions = {
-  /** The source, for the copy button's `data-var-ui-code`. */
-  code: string;
+  /**
+   * The source. Only written to the copy button (`data-var-ui-code`) with `embedCode`; otherwise
+   * `initCodeBlockCopy` copies the text of the block's visible `pre code`, so the source is not
+   * in the HTML twice.
+   */
+  code?: string;
+  /**
+   * Put `code` on the copy button. Needed only when the `pre code` text is not the source, for
+   * example with line numbers or per-line diff markup. @default false
+   */
+  embedCode?: boolean;
   /** Language id (`ts`, `bash`); shown as its label (`TypeScript`, `Shell`). */
   language?: string;
   filename?: string;
@@ -54,6 +63,7 @@ const attributes = (slot: Slot, extra: Record<string, string | undefined> = {}) 
  */
 export function codeBlockMarkup({
   code,
+  embedCode = false,
   language,
   filename,
   variant = 'default',
@@ -76,7 +86,8 @@ export function codeBlockMarkup({
       ? {
           ...attributes(cb.copyButton, {
             'data-var-ui-code-copy': '',
-            'data-var-ui-code': code.replace(/\n$/, ''),
+            'data-var-ui-code':
+              embedCode && code !== undefined ? code.replace(/\n$/, '') : undefined,
             'data-var-ui-copy-label': copyLabel,
             'data-var-ui-copied-label': copiedLabel,
             'data-var-ui-error-label': errorLabel,
