@@ -1,5 +1,6 @@
 import typestylesVite from '@typestyles/vite';
 import type { Plugin } from 'vite';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Stable sheet path, matched by the `<link>` tags in DocsPage /
@@ -10,6 +11,10 @@ import type { Plugin } from 'vite';
  */
 const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
 
+function resolveDocsStyles(): string {
+  return fileURLToPath(import.meta.resolve('@var-ui/docs/styles', import.meta.url));
+}
+
 /**
  * Wire `@typestyles/vite` for the configured extraction entry.
  *
@@ -19,7 +24,7 @@ const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
 export function vitePluginVarDocsTypestyles(entry: string): Plugin {
   return typestylesVite({
     extract: {
-      modules: [entry, '@var-ui/docs/styles'],
+      modules: [entry, resolveDocsStyles()],
       fileName: TYPESTYLES_CSS_FILE_NAME,
     },
   }) as Plugin;
