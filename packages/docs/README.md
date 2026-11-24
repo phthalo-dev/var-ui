@@ -138,6 +138,27 @@ import DocsPage from '@var-ui/docs/DocsPage';
 </DocsPage>
 ```
 
+`topNav` items are `{ text, link, match?, external?, icon?, iconOnly? }`. `match` is the path
+prefix that selects the item; when several match, only the longest is selected, so
+`{ match: '/docs' }` and `{ match: '/docs/changelog' }` select just `Changelog` on
+`/docs/changelog/…`. Leave `match` out for links that never select. `external` opens the link in
+a new tab, and `icon` (inline SVG markup) with `iconOnly` renders an icon button with `text` as
+its accessible name; the mobile menu always shows `text`:
+
+```ts
+const topNav = [
+  { text: 'Docs', link: '/docs', match: '/docs' },
+  { text: 'Changelog', link: '/docs/changelog', match: '/docs/changelog' },
+  {
+    text: 'GitHub',
+    link: 'https://github.com/acme/kit',
+    external: true,
+    icon: githubSvg,
+    iconOnly: true,
+  },
+];
+```
+
 ### Examples + source (`CodeBlock`)
 
 Register `@var-ui/docs/styles` in your TypeStyles entry (includes the `codeBlock` recipe).

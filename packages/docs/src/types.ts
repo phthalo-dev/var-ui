@@ -10,9 +10,20 @@ export type SidebarSection = {
 };
 
 export type TopNavItem = {
+  /** Link text; the accessible name when `iconOnly`. */
   text: string;
   link: string;
-  match: string;
+  /**
+   * Path prefix that selects this item. When several items match, only the longest prefix is
+   * selected. Omit it for links that never select (an external GitHub link).
+   */
+  match?: string;
+  /** Open in a new tab (`target="_blank"`, `rel="noopener noreferrer"`). */
+  external?: boolean;
+  /** Inline SVG markup rendered before the label (in the header only). */
+  icon?: string;
+  /** Show only `icon` in the header, with `text` as the accessible name. Requires `icon`. */
+  iconOnly?: boolean;
 };
 
 export type DocsSearchItem = {

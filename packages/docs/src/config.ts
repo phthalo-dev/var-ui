@@ -1,10 +1,18 @@
 import { z } from 'zod';
 
-const TopNavItemSchema = z.object({
-  text: z.string(),
-  link: z.string(),
-  match: z.string(),
-});
+const TopNavItemSchema = z
+  .object({
+    text: z.string(),
+    link: z.string(),
+    match: z.string().optional(),
+    external: z.boolean().optional(),
+    icon: z.string().optional(),
+    iconOnly: z.boolean().optional(),
+  })
+  .refine((item) => !item.iconOnly || Boolean(item.icon), {
+    message: '`iconOnly` top nav items need an `icon`',
+    path: ['iconOnly'],
+  });
 
 const SidebarItemSchema = z.object({
   text: z.string(),

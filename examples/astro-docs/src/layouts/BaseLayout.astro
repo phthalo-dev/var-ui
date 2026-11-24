@@ -1,6 +1,7 @@
 ---
 import DocsPage from '@var-ui/docs/DocsPage';
 import { defaultThemeClassName } from '@var-ui/core';
+import { defaultIconSvg } from '@var-ui/icons/glyphs';
 import { docsSearchItems, docsSidebarSections } from '../data/navigation';
 
 const {
@@ -19,7 +20,16 @@ const {
   contentWidth={contentWidth}
   showToc={showTocProp}
   themeClassName={defaultThemeClassName}
-  topNav={[{ text: 'Docs', link: '/docs', match: '/docs' }]}
+  topNav={[
+    { text: 'Docs', link: '/docs', match: '/docs' },
+    {
+      text: 'Var UI on GitHub',
+      link: 'https://github.com/phthalo-dev/var-ui',
+      external: true,
+      icon: defaultIconSvg('star'),
+      iconOnly: true,
+    },
+  ]}
   sidebarSections={docsSidebarSections}
   searchItems={docsSearchItems}
   brand={{ heading: 'Example Docs', href: '/' }}
