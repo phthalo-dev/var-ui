@@ -1,7 +1,8 @@
 ---
 /**
  * Marketing shell: top nav and search without sidebar or TOC grid.
- * Use for homepages, landing pages, and other full-width marketing content.
+ * Use for homepages, landing pages, and other full-width marketing content, and with `fill` for
+ * full-height tool pages (an editor beside a preview, a playground).
  */
 import { ClientRouter } from 'astro:transitions';
 import { AppShell, Layout, LayoutContent, mergeProps, ThemeScript, combine } from '@var-ui/astro';
@@ -22,6 +23,7 @@ const {
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
   bleed = false,
+  fill = false,
 } = Astro.props as {
   title?: string;
   themeClassName: string;
@@ -36,6 +38,13 @@ const {
    * @default false
    */
   bleed?: boolean;
+  /**
+   * Full-height tool page: the content fills the area under the top bar, unpadded and without
+   * the page scroller, so the page lays out (and scrolls) its own panes. The `footer` slot is
+   * not rendered.
+   * @default false
+   */
+  fill?: boolean;
 };
 
 const pathname = stripAstroBase(Astro.url.pathname, import.meta.env.BASE_URL);
@@ -48,8 +57,8 @@ const hasDrawerBrandSlot = Astro.slots.has('drawerBrand');
 const hasThemeScriptSlot = Astro.slots.has('themeScript');
 const showMobileNav = topNav.length > 0;
 
-const page = docsMarketingPage({ bleed });
-const hasFooterSlot = Astro.slots.has('footer');
+const page = docsMarketingPage({ bleed, fill });
+const hasFooterSlot = !fill && Astro.slots.has('footer');
 ---
 
 <html lang="en" class={themeClassName} {...htmlAttributes}>
@@ -92,7 +101,7 @@ const hasFooterSlot = Astro.slots.has('footer');
       }
 
       <Layout height="fill" padding="none" {...combine(page.siteLayout)}>
-        <LayoutContent label="Main content">
+        <LayoutContent label="Main content" scrollable={!fill}>
           <div {...mergeProps(page.main)}>
             <slot />
           </div>

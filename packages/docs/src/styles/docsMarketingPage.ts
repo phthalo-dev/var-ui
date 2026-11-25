@@ -9,6 +9,11 @@ export const docsMarketingPage = typestyles.recipe({
   variants: {
     /** Edge-to-edge main: no inline/block padding; the page owns its gutters. */
     bleed: variant.boolean({ default: false }),
+    /**
+     * Full-height tool page (editor + preview): the main fills the area under the top bar with
+     * no padding, and does not scroll; the page scrolls its own panes.
+     */
+    fill: variant.boolean({ default: false }),
   },
   styles: () => ({
     base: {
@@ -37,6 +42,21 @@ export const docsMarketingPage = typestyles.recipe({
             paddingBlock: 0,
             paddingBottom: 0,
             minHeight: 'auto',
+          },
+        },
+        false: {},
+      },
+      fill: {
+        true: {
+          main: {
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            minHeight: 0,
+            paddingInline: 0,
+            paddingBlock: 0,
+            paddingBottom: 0,
+            overflow: 'hidden',
           },
         },
         false: {},
