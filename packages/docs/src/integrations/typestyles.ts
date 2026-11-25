@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
  * and retargets only Vite HTML inputs via `transformIndexHtml` — Astro SSR
  * pages never run that hook, so the hashed URL would 404 in production.
  */
-const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
+export const TYPESTYLES_CSS_FILE_NAME = 'typestyles.css';
 
 function resolveDocsStyles(): string {
   return fileURLToPath(import.meta.resolve('@var-ui/docs/styles', import.meta.url));
@@ -23,6 +23,7 @@ function resolveDocsStyles(): string {
  */
 export function vitePluginVarDocsTypestyles(entry: string): Plugin {
   return typestylesVite({
+    mode: 'build',
     extract: {
       modules: [entry, resolveDocsStyles()],
       fileName: TYPESTYLES_CSS_FILE_NAME,

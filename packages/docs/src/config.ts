@@ -79,6 +79,13 @@ export const VarDocsTypestylesConfigSchema = z.object({
    */
   entry: z.string().min(1),
   /**
+   * Register the kit's own `@typestyles/vite` extractor (default `true`). Set to `false` when
+   * the site runs its own extractor (for example `@typestyles/astro`): two extractors both emit
+   * `typestyles.css`. Your extractor must then emit `typestyles.css` (the file `DocsPage` links)
+   * and its entry must import `@var-ui/docs/styles` so the kit chrome is extracted.
+   */
+  extract: z.boolean().optional().default(true),
+  /**
    * Optional glob of theme preset modules for per-preset lazy CSS (Phase 5).
    */
   extractPresets: z.string().optional(),
