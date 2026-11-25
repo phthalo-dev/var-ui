@@ -138,6 +138,20 @@ import DocsPage from '@var-ui/docs/DocsPage';
 </DocsPage>
 ```
 
+### Full-text search (`searchIndexUrl`)
+
+`searchItems` are inlined into every page, so keep them to titles, descriptions, keywords and headings. For body text, serve a JSON array of `DocsSearchIndexEntry` (`{ id, body }`, `id` matching a search item's `id`) and pass its URL as `searchIndexUrl` to `DocsPage` / `DocsMarketingPage` (or `DocsTopBar` / `DocsSearch`). The palette fetches it the first time it opens and matches bodies after every other field, at word starts (phrases too), showing the passage around the match. If the fetch fails, search keeps working on the inline fields.
+
+```ts
+// src/pages/search-index.json.ts
+import type { DocsSearchIndexEntry } from '@var-ui/docs';
+
+export async function GET() {
+  const entries: DocsSearchIndexEntry[] = pages.map((page) => ({ id: page.url, body: page.text }));
+  return new Response(JSON.stringify(entries), { headers: { 'Content-Type': 'application/json' } });
+}
+```
+
 ### Examples + source (`CodeBlock`)
 
 Register `@var-ui/docs/styles` in your TypeStyles entry (includes the `codeBlock` recipe).

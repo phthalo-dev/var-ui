@@ -56,6 +56,11 @@ export type CommandPaletteItem = {
    */
   headings?: string[];
   /**
+   * Full text (a page body), searched by the default filter after every other field; when it is
+   * the match, the passage around it is shown as the subtitle.
+   */
+  body?: string;
+  /**
    * Section heading. Consecutive items with the same `group` render together under that heading;
    * keyboard navigation still moves through all items in order. Items without a `group` render
    * without a heading. While filtering, items sharing a `group` are gathered and groups are ordered

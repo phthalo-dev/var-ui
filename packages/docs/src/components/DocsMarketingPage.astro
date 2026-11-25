@@ -19,6 +19,7 @@ const {
   bodyClassName,
   topNav,
   searchItems = [],
+  searchIndexUrl,
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
   bleed = false,
@@ -28,6 +29,11 @@ const {
   bodyClassName?: string;
   topNav: readonly TopNavItemType[];
   searchItems?: readonly DocsSearchItem[];
+  /**
+   * URL of a JSON array of `{ id, body }` (each page's full text), fetched when search first
+   * opens and searched after titles, descriptions, keywords and headings.
+   */
+  searchIndexUrl?: string;
   brand?: DocsBrand;
   htmlAttributes?: Record<string, string | undefined>;
   /**
@@ -70,6 +76,7 @@ const hasFooterSlot = Astro.slots.has('footer');
         slot="topNav"
         topNav={topNav}
         searchItems={searchItems}
+        searchIndexUrl={searchIndexUrl}
         brand={brand}
         currentPath={currentPath}
         mobileNav={showMobileNav}

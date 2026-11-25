@@ -15,6 +15,14 @@ export type TopNavItem = {
   match: string;
 };
 
+/** One entry of a lazily loaded full-text search index (`searchIndexUrl`). */
+export type DocsSearchIndexEntry = {
+  /** The `DocsSearchItem` `id` (its URL). */
+  id: string;
+  /** The page's plain text. */
+  body: string;
+};
+
 export type DocsSearchItem = {
   id: string;
   title: string;

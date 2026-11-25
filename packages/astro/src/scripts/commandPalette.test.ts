@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vite-plus/test';
+import { describe, expect, it, beforeEach, vi } from 'vite-plus/test';
 import { getCommandPaletteController, initCommandPalette } from './commandPalette';
 
 describe('initCommandPalette', () => {
@@ -167,6 +167,46 @@ describe('command palette results (round 2)', () => {
     },
     { id: '/button', title: 'Button', meta: 'Actions' },
   ]);
+
+  it('fetches searchIndexUrl once on first open and searches the bodies (#334)', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [
+        { id: '/docs', body: 'Pick a package manager, then import the stylesheet once.' },
+        { id: '/missing', body: 'ignored' },
+      ],
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      const root = mount('data-var-ui-search-index-url="/search-index.json"', items);
+      const input = type(root, 'stylesheet');
+      expect(root.querySelector('[data-var-ui-command-palette-empty]')).toBeTruthy();
+      await vi.waitFor(() => expect(root.getAttribute('data-var-ui-search-index')).toBe('loaded'));
+      // The open query re-runs against the loaded bodies.
+      const hit = root.querySelector('[data-var-ui-command-palette-item]');
+      expect(hit?.getAttribute('data-var-ui-item-id')).toBe('/docs');
+      expect(hit?.textContent).toContain('import the stylesheet once');
+      expect(input.value).toBe('stylesheet');
+      getCommandPaletteController(root)?.close();
+      getCommandPaletteController(root)?.open();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith('/search-index.json');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('keeps searching the inline fields when the index fails to load', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+    try {
+      const root = mount('data-var-ui-search-index-url="/search-index.json"', items);
+      await vi.waitFor(() => expect(root.getAttribute('data-var-ui-search-index')).toBe('error'));
+      type(root, 'button');
+      expect(root.querySelector('[data-var-ui-item-id="/button"]')).toBeTruthy();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 
   it('drops aria-activedescendant when nothing matches', () => {
     const root = mount('', items);

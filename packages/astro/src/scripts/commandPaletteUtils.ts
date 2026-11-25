@@ -10,6 +10,11 @@ export type CommandPaletteItem = {
   keywords?: string[];
   /** Section headings inside the item (a page's h2/h3s): searched, and a match is the subtitle. */
   headings?: string[];
+  /**
+   * Full text (a page body), searched after every other field; a match shows the passage around
+   * it. Usually loaded lazily with `searchIndexUrl` instead of inlined on every page.
+   */
+  body?: string;
   group?: string;
   /** Leading type icon (page, component, theme…), resolved from the icon registry. */
   icon?: IconName;
@@ -24,8 +29,29 @@ export type CommandPaletteGroup<T = CommandPaletteItem> = {
   items: T[];
 };
 
+/** One entry of a lazily fetched search index (`searchIndexUrl`): an item `id` and its text. */
+export type CommandPaletteSearchIndexEntry = { id: string; body: string };
+
+/**
+ * Copies `body` from search index `entries` onto the matching `items` (by `id`). Entries for
+ * unknown ids and malformed entries are ignored.
+ */
+export function mergeCommandPaletteSearchIndex(
+  items: CommandPaletteClientItem[],
+  entries: unknown,
+): void {
+  if (!Array.isArray(entries)) return;
+  const byId = new Map(items.map((item) => [item.id, item]));
+  for (const entry of entries) {
+    if (!entry || typeof entry !== 'object') continue;
+    const { id, body } = entry as Partial<CommandPaletteSearchIndexEntry>;
+    const item = typeof id === 'string' ? byId.get(id) : undefined;
+    if (item && typeof body === 'string') item.body = body;
+  }
+}
+
 export function matchCommandPaletteItem(
-  item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings'>,
+  item: Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings' | 'body'>,
   query: string,
 ): boolean {
   return matchCommandItem(item, query);
@@ -37,7 +63,7 @@ export function matchCommandPaletteItem(
  * item is the top hit. An empty query keeps the original order.
  */
 export function filterCommandPaletteItems<
-  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings' | 'group'>,
+  T extends Pick<CommandPaletteItem, 'title' | 'meta' | 'keywords' | 'headings' | 'body' | 'group'>,
 >(items: ReadonlyArray<T>, query: string): T[] {
   return rankCommandItems(items, query);
 }

@@ -10,6 +10,12 @@ export type CommandSearchFields = {
    * and description, and the matched heading becomes the subtitle.
    */
   headings?: ReadonlyArray<string>;
+  /**
+   * The item's full text (a page body). Matched last, at the start of a word (a phrase matches
+   * too), and the passage around the match becomes the subtitle. Palettes can fetch it lazily
+   * (`searchIndexUrl` on the Astro `CommandPalette`).
+   */
+  body?: string;
   group?: string;
 };
 
@@ -21,25 +27,30 @@ export type CommandSearchFields = {
  * of a word (`sel` in Carousel) is closer to noise and ranks below description word-starts.
  */
 export const commandMatchTier = {
-  exactTitle: 12,
-  titlePrefix: 11,
+  exactTitle: 13,
+  titlePrefix: 12,
   /** At the start of a later word of the title (after a space or punctuation): `Icon button`. */
-  titleWordStart: 10,
+  titleWordStart: 11,
   /** At a camelCase hump: `IconButton`, `ChatComposer`. */
-  titleHump: 9,
+  titleHump: 10,
   /** At the start of a keyword or one of its words. */
-  keyword: 8,
+  keyword: 9,
   /** The description starts with the query: it is about that thing. */
-  metaPrefix: 7,
+  metaPrefix: 8,
   /**
    * At the start of a word in one of the item's section `headings` (`providers` → Getting
    * started's "Providers"): an authored section title, above a passing word in a description.
    */
-  heading: 6,
-  metaWordStart: 5,
+  heading: 7,
+  metaWordStart: 6,
   /** Inside a title or keyword word, not at its start: `sel` in Carousel (or its `carousel` slug). */
-  titleSubstring: 4,
-  meta: 3,
+  titleSubstring: 5,
+  meta: 4,
+  /**
+   * At the start of a word in the item's `body` (full text): below everything in the visible
+   * fields, above typo matches.
+   */
+  body: 3,
   /**
    * One typo (insertion, deletion, substitution or swap) at the start of the title, for queries
    * of 4+ characters: `buton` → Button. Only counted when nothing matches as typed.
@@ -149,10 +160,24 @@ function headingMatch(item: CommandSearchFields, q: string): string | undefined 
   });
 }
 
+/** Index of the first word-start match of `q` (lowercased) in `text`, or `-1`. */
+function wordStartIndex(text: string, q: string): number {
+  const lower = text.toLowerCase();
+  if (lower.startsWith(q)) return 0;
+  for (let at = lower.indexOf(q, 1); at > 0; at = lower.indexOf(q, at + 1)) {
+    if (!isWordChar(text[at - 1])) return at;
+  }
+  return -1;
+}
+
+function bodyMatch(item: CommandSearchFields, q: string): number {
+  return item.body ? wordStartIndex(item.body, q) : -1;
+}
+
 /**
  * Scores `item` against `query`: exact title > title prefix > title word-start > title camelCase
  * hump > keyword word-start > description prefix > section heading word-start > description
- * word-start > mid-word title or keyword substring > description substring > title with one typo. Returns `null` when nothing matches, and `0` for an empty
+ * word-start > mid-word title or keyword substring > description substring > body word-start > title with one typo. Returns `null` when nothing matches, and `0` for an empty
  * query (everything matches equally).
  */
 export function scoreCommandItem(
@@ -182,6 +207,7 @@ export function scoreCommandItem(
     return commandMatchTier.titleSubstring;
   }
   if (metaAt > 0) return commandMatchTier.meta;
+  if (bodyMatch(item, q) >= 0) return commandMatchTier.body;
   const typo = typoWordMatch(item.title, q);
   if (typo.index === 0) return commandMatchTier.titleTypoPrefix;
   if (typo.index > 0) return commandMatchTier.titleTypo;
@@ -207,7 +233,7 @@ function isMetaTier(tier: number | null): boolean {
   );
 }
 
-/** Whether `item` matches `query` at all (title, keywords or description). */
+/** Whether `item` matches `query` at all (title, keywords, description, headings or body). */
 export function matchCommandItem(item: CommandSearchFields, query: string): boolean {
   return scoreCommandItem(item, query) !== null;
 }
@@ -245,13 +271,13 @@ export function rankCommandItems<T extends CommandSearchFields>(
   });
 
   // Typo matches only rescue a query that found nothing as typed.
-  const exactHit = [...groups.values()].some((group) => group.best >= commandMatchTier.meta);
+  const exactHit = [...groups.values()].some((group) => group.best >= commandMatchTier.body);
   return [...groups.values()]
     .map((group) =>
       exactHit && !isMatch
         ? {
             ...group,
-            entries: group.entries.filter((entry) => entry.score >= commandMatchTier.meta),
+            entries: group.entries.filter((entry) => entry.score >= commandMatchTier.body),
           }
         : group,
     )
@@ -280,6 +306,10 @@ export function commandMetaSnippet(item: CommandSearchFields, query: string): st
   if (tier === commandMatchTier.heading) {
     return headingMatch(item, query.trim().toLowerCase()) ?? meta;
   }
+  // Found only in the full text: show the passage around the match.
+  if (tier === commandMatchTier.body && item.body) {
+    return bodySnippet(item.body, query.trim().toLowerCase());
+  }
   if (!meta || !isMetaTier(tier)) return meta;
   const match = findTextMatch(meta, query);
   if (!match || match[0] <= SNIPPET_LEAD) return meta;
@@ -288,4 +318,24 @@ export function commandMetaSnippet(item: CommandSearchFields, query: string): st
   const space = meta.slice(start, match[0]).search(/\s\S/);
   if (space >= 0) start += space + 1;
   return `…${meta.slice(start)}`;
+}
+
+/** Characters of body text kept after the match start in a body snippet. */
+const BODY_SNIPPET_LENGTH = 120;
+
+/** The body around the match of `q`: from a word start shortly before it, cut at a word end. */
+function bodySnippet(body: string, q: string): string {
+  const text = body.replace(/\s+/g, ' ');
+  const collapsedAt = Math.max(0, wordStartIndex(text, q.replace(/\s+/g, ' ')));
+  let start = Math.max(0, collapsedAt - SNIPPET_LEAD);
+  if (start > 0) {
+    const space = text.slice(start, collapsedAt).search(/\s\S/);
+    start = space >= 0 ? start + space + 1 : collapsedAt;
+  }
+  let end = Math.min(text.length, collapsedAt + BODY_SNIPPET_LENGTH);
+  if (end < text.length) {
+    const lastSpace = text.lastIndexOf(' ', end);
+    if (lastSpace > collapsedAt) end = lastSpace;
+  }
+  return `${start > 0 ? '…' : ''}${text.slice(start, end).trim()}${end < text.length ? '…' : ''}`;
 }

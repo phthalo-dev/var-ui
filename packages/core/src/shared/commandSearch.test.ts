@@ -212,3 +212,33 @@ describe('commandMetaSnippet', () => {
     expect(commandMetaSnippet({ title: 'Overlay' }, 'butt')).toBeUndefined();
   });
 });
+
+describe('body (full text, #334)', () => {
+  const body =
+    'Recipes compose slots.   When a variant changes, the runtime swaps one class.\n\nUse compile mode to drop the recipe runtime from client bundles entirely.';
+  const page = { title: 'Recipes', meta: 'Styling components', body };
+
+  it('matches at a word start, phrases included, below every visible field', () => {
+    expect(scoreCommandItem(page, 'runtime')).toBe(commandMatchTier.body);
+    expect(scoreCommandItem(page, 'compile mode')).toBe(commandMatchTier.body);
+    expect(scoreCommandItem(page, 'untime')).toBeNull();
+    expect(commandMatchTier.body).toBeLessThan(commandMatchTier.meta);
+    expect(commandMatchTier.body).toBeGreaterThan(commandMatchTier.titleTypoPrefix);
+  });
+
+  it('ranks body hits after visible-field hits, and keeps them next to exact hits', () => {
+    const items = [{ title: 'Install', body: 'Pick a theme first.' }, { title: 'Theme' }];
+    expect(rankCommandItems(items, 'theme').map((item) => item.title)).toEqual([
+      'Theme',
+      'Install',
+    ]);
+  });
+
+  it('shows the passage around a body match as the subtitle', () => {
+    const snippet = commandMetaSnippet(page, 'compile mode');
+    expect(snippet).toMatch(/^…/);
+    expect(snippet).toContain('compile mode to drop the recipe runtime');
+    expect(snippet).not.toContain('\n');
+    expect(commandMetaSnippet(page, 'recipes')).toBe('Styling components');
+  });
+});

@@ -13,6 +13,11 @@ type Props = {
   id?: string;
   /** Second line of the "No results" state. */
   emptyHint?: string;
+  /**
+   * URL of a JSON array of `{ id, body }` (each page's full text), fetched when search first
+   * opens and searched after titles, descriptions, keywords and headings.
+   */
+  searchIndexUrl?: string;
 };
 
 const {
@@ -22,6 +27,7 @@ const {
   label = 'Search docs',
   id: paletteId = 'docs-search',
   emptyHint = "Try a component name like “button”, or a topic like “tokens”.",
+  searchIndexUrl,
 } = Astro.props;
 ---
 
@@ -41,5 +47,6 @@ const {
     aria-label={label}
     recentKey={`${paletteId}-recent`}
     emptyHint={emptyHint}
+    searchIndexUrl={searchIndexUrl}
   />
 </div>
