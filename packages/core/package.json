@@ -85,12 +85,13 @@
     "pack": "vp pack && node scripts/generate-styles-css.mjs",
     "dev": "vp pack --watch"
   },
-  "dependencies": {
-    "typestyles": "catalog:"
-  },
   "devDependencies": {
     "@typestyles/build-runner": "catalog:",
+    "typestyles": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "typestyles": "catalog:"
   }
 }

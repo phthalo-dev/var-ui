@@ -10,10 +10,10 @@ See the full design spec:
 ## Install
 
 ```bash
-pnpm add @var-ui/astro @var-ui/core astro
+pnpm add @var-ui/astro @var-ui/core @var-ui/icons typestyles astro
 ```
 
-**Peer dependencies:** `astro`, `@var-ui/core`. No `react`, `react-aria-components`,
+**Peer dependencies:** `astro`, `@var-ui/core`, `@var-ui/icons`, `typestyles`. No `react`, `react-aria-components`,
 or `@var-ui/react`.
 
 ## Styles

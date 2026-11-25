@@ -22,20 +22,20 @@ Install published `@var-ui/*` packages from npm. For the copy-paste Vite + React
 
 ## Peer dependencies
 
-| Peer                      | Notes                               |
-| ------------------------- | ----------------------------------- |
-| `react` / `react-dom`     | 19                                  |
-| `react-aria-components`   | Required by `@var-ui/react`         |
-| `@internationalized/date` | Required when using date components |
+| Peer                      | Notes                                                           |
+| ------------------------- | --------------------------------------------------------------- |
+| `react` / `react-dom`     | 19                                                              |
+| `react-aria-components`   | Required by `@var-ui/react`                                     |
+| `@internationalized/date` | Required when using date components                             |
+| `typestyles`              | Required by `@var-ui/core`, `@var-ui/react` and `@var-ui/astro` |
 
-`typestyles` is a transitive dependency of `@var-ui/core`. Do not add it unless you extract CSS (below) or import TypeStyles directly.
+`typestyles` is a peer dependency, not a dependency, so an app (or a workspace that links its own `typestyles`) never ends up with two runtimes, which would mean two class and token registries.
 
 ## Advanced: extract CSS
 
 Use this path for custom `createDesignTheme` modules, app-owned recipes, or tree-shaken CSS. Do **not** import `@var-ui/core/styles.css` in the same app — that doubles the stylesheet.
 
 ```bash
-pnpm add typestyles
 pnpm add -D @typestyles/vite
 ```
 
