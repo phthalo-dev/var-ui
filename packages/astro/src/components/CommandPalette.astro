@@ -63,6 +63,12 @@ type Props = Omit<HTMLAttributes<'dialog'>, 'id' | 'class:list'> & {
   emptyHint?: string;
   /** Label of the Cancel button shown on touch-first devices (no Escape key). @default 'Cancel' */
   cancelLabel?: string;
+  /**
+   * URL of a JSON array of `{ id, body }` (an item's full text, e.g. a page body), fetched the
+   * first time the palette opens and searched after the inline fields. Keeps long text out of
+   * every page's HTML.
+   */
+  searchIndexUrl?: string;
   className?: string;
 };
 
@@ -79,6 +85,7 @@ const {
   emptyLabel = 'No results',
   emptyHint,
   cancelLabel = 'Cancel',
+  searchIndexUrl,
   className,
   ...rest
 } = Astro.props;
@@ -130,6 +137,7 @@ const footerHintRecipe = mergeProps(cp.footerHint);
   data-var-ui-class-mark={markClass}
   data-var-ui-highlight-matches={highlightMatches ? undefined : 'false'}
   data-var-ui-recent-key={recentKey}
+  data-var-ui-search-index-url={searchIndexUrl}
   data-var-ui-recent-label={recentLabel}
   data-var-ui-empty-label={emptyLabel}
   data-var-ui-class-group={groupClass}

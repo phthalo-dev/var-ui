@@ -36,6 +36,7 @@ const {
   topNav,
   sidebarSections = null,
   searchItems = [],
+  searchIndexUrl,
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
 } = Astro.props as {
@@ -52,6 +53,11 @@ const {
   topNav: readonly TopNavItemType[];
   sidebarSections?: readonly SidebarSection[] | null;
   searchItems?: readonly DocsSearchItem[];
+  /**
+   * URL of a JSON array of `{ id, body }` (each page's full text), fetched when search first
+   * opens and searched after titles, descriptions, keywords and headings.
+   */
+  searchIndexUrl?: string;
   brand?: DocsBrand;
   /** Extra attributes on `<html>` (e.g. `data-framework`). */
   htmlAttributes?: Record<string, string | undefined>;
@@ -129,6 +135,7 @@ const markdownGlyph =
         slot="topNav"
         topNav={topNav}
         searchItems={searchItems}
+        searchIndexUrl={searchIndexUrl}
         brand={brand}
         currentPath={currentPath}
         mobileNav={showMobileNav}

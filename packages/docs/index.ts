@@ -11,6 +11,7 @@ export {
 
 export type {
   DocsBrand,
+  DocsSearchIndexEntry,
   DocsSearchItem,
   SidebarItem,
   SidebarSection,

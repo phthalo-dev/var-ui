@@ -1,4 +1,11 @@
-export type { DocsBrand, DocsSearchItem, SidebarItem, SidebarSection, TopNavItem } from '../types';
+export type {
+  DocsBrand,
+  DocsSearchIndexEntry,
+  DocsSearchItem,
+  SidebarItem,
+  SidebarSection,
+  TopNavItem,
+} from '../types';
 
 export {
   DOCS_TOC_CONTENT_SELECTOR,

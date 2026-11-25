@@ -122,9 +122,11 @@ export {
   flattenCommandPaletteGroups,
   groupCommandPaletteResults,
   matchCommandPaletteItem,
+  mergeCommandPaletteSearchIndex,
   moveCommandPaletteActiveIndex,
   type CommandPaletteGroup,
   type CommandPaletteItem,
+  type CommandPaletteSearchIndexEntry,
 } from './src/scripts/commandPaletteUtils';
 export { initSearchInput, initSearchInputs } from './src/scripts/searchInput';
 export {

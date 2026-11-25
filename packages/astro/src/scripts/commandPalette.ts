@@ -5,6 +5,7 @@ import {
   filterCommandPaletteItems,
   flattenCommandPaletteGroups,
   groupCommandPaletteResults,
+  mergeCommandPaletteSearchIndex,
   moveCommandPaletteActiveIndex,
   readRecentCommandPaletteIds,
   rememberCommandPaletteId,
@@ -121,8 +122,30 @@ export function initCommandPalette(root: HTMLElement): () => void {
     root.dataset.varUiClassGroupHeading ?? 'var-ui-command-palette__groupHeading';
   const paletteId = root.id || root.dataset.varUiCommandPaletteId || '';
 
+  const searchIndexUrl = root.dataset.varUiSearchIndexUrl || '';
+  let searchIndexRequested = false;
+
+  /** Fetch the full-text index once, on first open, and re-run the current query with it. */
+  function loadSearchIndex(): void {
+    if (!searchIndexUrl || searchIndexRequested || typeof fetch !== 'function') return;
+    searchIndexRequested = true;
+    root.setAttribute('data-var-ui-search-index', 'loading');
+    fetch(searchIndexUrl)
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((entries: unknown) => {
+        mergeCommandPaletteSearchIndex(index, entries);
+        root.setAttribute('data-var-ui-search-index', 'loaded');
+        if (dialog.open && input.value.trim()) render(input.value);
+      })
+      .catch(() => {
+        // Search keeps working on the inline fields; a later open does not retry.
+        root.setAttribute('data-var-ui-search-index', 'error');
+      });
+  }
+
   function setOpen(open: boolean): void {
     if (open) {
+      loadSearchIndex();
       if (!dialog.open) dialog.showModal();
       input.value = '';
       render('');
