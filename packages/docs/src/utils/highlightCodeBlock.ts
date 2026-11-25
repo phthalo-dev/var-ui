@@ -1,5 +1,12 @@
 import { highlightCode, highlightCodeClassName } from './highlightCode';
 
+/**
+ * Sync highlight.js highlighting. The `hljs-*` classes it emits are coloured with the theme's
+ * `color.code.*` tokens by `@var-ui/docs/styles` (inside a `CodeBlock`), the same palette as the
+ * design-token Shiki theme on MDX fences.
+ */
+export { highlightCode, highlightCodeClassName };
+
 export type HighlightedCodeBlockContent = {
   codeHtml?: string;
   codeClassName?: string;

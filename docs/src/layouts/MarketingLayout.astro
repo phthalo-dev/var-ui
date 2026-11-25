@@ -1,8 +1,6 @@
 ---
 import FontPreload from '../components/FontPreload.astro';
 import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
-import { cx } from '@var-ui/astro';
-import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
@@ -14,14 +12,12 @@ import { buildDocsSearchIndex } from '../lib/search-index';
 const { title = 'Var UI', bleed = false } = Astro.props as { title?: string; bleed?: boolean };
 
 const framework = Astro.locals.framework;
-const hljsScopeClass = cx(codeHljsScope().root);
 const searchItems = buildDocsSearchIndex();
 ---
 
 <DocsMarketingPage
   title={title}
   themeClassName={defaultThemeClassName}
-  bodyClassName={hljsScopeClass}
   topNav={topNavItems}
   searchItems={searchItems}
   brand={{ heading: 'Var UI', href: '/' }}

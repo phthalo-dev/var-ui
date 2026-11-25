@@ -1,8 +1,6 @@
 ---
 import FontPreload from '../components/FontPreload.astro';
 import DocsPage from '../../../packages/docs/src/components/DocsPage.astro';
-import { cx } from '@var-ui/astro';
-import { codeHljsScope } from '@/styles/codeHighlight';
 import { defaultThemeClassName } from '@var-ui/core';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
@@ -40,7 +38,6 @@ const sidebarSections = currentPath.startsWith('/components')
       ? docsSidebarSections
       : null;
 
-const hljsScopeClass = cx(codeHljsScope().root);
 const searchItems = buildDocsSearchIndex();
 ---
 
@@ -51,7 +48,6 @@ const searchItems = buildDocsSearchIndex();
   tocHidden={tocHidden}
   tocContentSelector={tocContentSelector}
   themeClassName={defaultThemeClassName}
-  bodyClassName={hljsScopeClass}
   topNav={topNavItems}
   sidebarSections={sidebarSections}
   searchItems={searchItems}

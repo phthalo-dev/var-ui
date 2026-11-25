@@ -1,5 +1,4 @@
 // Docs-owned styles registered for @typestyles/vite extraction.
-import './codeHighlight';
 import './varUiWordmark';
 import './homePage';
 import './homeBento';
