@@ -1,5 +1,18 @@
 # @var-ui/core
 
+## 0.15.0
+
+### Minor Changes
+
+- [#344](https://github.com/phthalo-dev/var-ui/pull/344) [`818dbba`](https://github.com/phthalo-dev/var-ui/commit/818dbba4fa25f673767c9056e09e21b3271ffa03) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - **Breaking:** `typestyles` is now a peer dependency of `@var-ui/core`, `@var-ui/react` and `@var-ui/astro` instead of a regular dependency, so an app that has its own `typestyles` (for example a workspace that links it with `workspace:*`) no longer gets a second runtime with its own class and token registry. Add `typestyles` to the app if your package manager does not install peers automatically ([#332](https://github.com/phthalo-dev/var-ui/issues/332)).
+
+### Patch Changes
+
+- [#328](https://github.com/phthalo-dev/var-ui/pull/328) [`a35a91b`](https://github.com/phthalo-dev/var-ui/commit/a35a91bcc374a84da5132cadf4c9100154aca61c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix Collapsible chevron and wrap prose tables for mobile
+  
+  - Size the Collapsible trigger icon and rotate it for native `<details open>`.
+  - Wrap bare markdown tables in a scrollable container with edge shadows so they do not overflow phone viewports.
+
 ## 0.14.0
 
 ### Minor Changes
