@@ -1,18 +1,10 @@
 ---
 import FontPreload from '../components/FontPreload.astro';
-import { ClientRouter } from 'astro:transitions';
-import { AppShell, cx, Layout, LayoutContent, mergeProps, ThemeScript, combine } from '@var-ui/astro';
+import DocsMarketingPage from '@var-ui/docs/DocsMarketingPage';
+import { cx, mergeProps } from '@var-ui/astro';
 import { codeHljsScope } from '@/styles/codeHighlight';
 import { playgroundLayout } from '@/styles/playgroundLayout';
 import { defaultThemeClassName } from '@var-ui/core';
-import { normalizeDocsPath } from '@var-ui/docs/utils';
-/*
- * Kit chrome via relative paths so Netlify SSR (Node ESM) does not load workspace `.astro`
- * through package exports (same as BaseLayout).
- */
-import DocsFavicon from '../../../packages/docs/src/components/DocsFavicon.astro';
-import DocsMobileMenu from '../../../packages/docs/src/components/DocsMobileMenu.astro';
-import DocsTopBar from '../../../packages/docs/src/components/DocsTopBar.astro';
 import DocsThemeScript from '../components/DocsThemeScript.astro';
 import VarUiWordmark from '../components/VarUiWordmark.astro';
 import FrameworkSwitcher from '@var-ui/docs-components/FrameworkSwitcher';
@@ -24,58 +16,32 @@ const { title = 'Var UI', bleed = false } = Astro.props as {
   bleed?: boolean;
 };
 const framework = Astro.locals.framework;
-const currentPath = normalizeDocsPath(Astro.url.pathname);
 const searchItems = buildDocsSearchIndex();
-const hljsScopeClass = cx(codeHljsScope().root);
 const frame = playgroundLayout({ bleed });
+const hljsScopeClass = cx(codeHljsScope().root);
 ---
 
-<html lang="en" class={defaultThemeClassName} data-framework={framework}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
-    <ThemeScript themeClass={defaultThemeClassName} />
-    <DocsThemeScript />
-    <DocsFavicon />
-    <FontPreload />
-    <link rel="stylesheet" href="/typestyles.css" />
-    <ClientRouter />
-  </head>
-  <body {...combine('docs-body', 'docs-body--playground', hljsScopeClass)}>
-    <AppShell variant="wash" height="fill" contentPadding="none" mobileBreakpoint="md">
-      <DocsTopBar
-        slot="topNav"
-        topNav={topNavItems}
-        searchItems={searchItems}
-        brand={{ heading: 'Var UI', href: '/' }}
-        currentPath={currentPath}
-      >
-        <VarUiWordmark slot="brand" size="bar" />
-        <FrameworkSwitcher slot="tools" />
-      </DocsTopBar>
+<DocsMarketingPage
+  title={title}
+  themeClassName={defaultThemeClassName}
+  bodyClassName={hljsScopeClass}
+  topNav={topNavItems}
+  searchItems={searchItems}
+  brand={{ heading: 'Var UI', href: '/' }}
+  htmlAttributes={{ 'data-framework': framework }}
+  fill
+>
+  <VarUiWordmark slot="brand" size="bar" />
+  <VarUiWordmark slot="drawerBrand" size="lockup" />
+  <DocsThemeScript slot="themeScript" />
+  <FrameworkSwitcher slot="tools" />
+  <FrameworkSwitcher slot="drawerTools" appearance="iconsAndLabels" fullWidth />
+  <FontPreload slot="head" />
+  <div {...mergeProps(frame.content)}>
+    <slot />
+  </div>
+</DocsMarketingPage>
 
-      <DocsMobileMenu
-        slot="mobileNav"
-        topNav={topNavItems}
-        currentPath={currentPath}
-        brand={{ heading: 'Var UI', href: '/' }}
-      >
-        <VarUiWordmark slot="brand" size="lockup" />
-        <FrameworkSwitcher slot="tools" appearance="iconsAndLabels" fullWidth />
-      </DocsMobileMenu>
-
-      <Layout height="fill" padding="none" className={frame.layout.className}>
-        <LayoutContent label="Playground">
-          <div {...mergeProps(frame.content)}>
-            <slot />
-          </div>
-        </LayoutContent>
-      </Layout>
-    </AppShell>
-    <script>
-      import '../../typestyles-entry.ts';
-      import '../scripts/reattachTypestyles.ts';
-    </script>
-  </body>
-</html>
+<script>
+  import '../../typestyles-entry.ts';
+</script>

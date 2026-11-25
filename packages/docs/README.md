@@ -39,6 +39,8 @@ export default defineConfig({
 
 Guide-only sites do **not** need React. The header (`DocsTopBar`: brand, section links, search, a `tools` slot and the `DocsAppearanceMenu` for colour mode and `theme.presets`) is plain Astro + JS, like the rest of the kit chrome, and is shared by `DocsPage` and `DocsMarketingPage` (or use it directly in a custom layout with `DocsMobileMenu`). It persists across view transitions, so it never jumps or cross-fades between pages. `theme.presets` CSS extraction does not require React either.
 
+For a full-height tool page (an editor beside a preview, a playground), use `<DocsMarketingPage fill>`: the same props, slots and `<head>` wiring, with the content filling the area under the top bar, unpadded and without the page scroller, so the page lays out and scrolls its own panes. `bleed` only drops the padding of the scrolling main.
+
 `output: 'static'` is supported. Injected `/docs` routes prerender, including when Astro `base` is set. Static injected routes accept **exactly one** `routes` prefix in this release (default `/docs`). Sites with several prefixes should use `output: 'server'`, or `disableGuideRoutes` plus `DocsGuidePage` in their own pages:
 
 ```astro
