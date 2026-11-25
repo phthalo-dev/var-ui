@@ -1,5 +1,26 @@
 # @var-ui/docs
 
+## 0.15.0
+
+### Minor Changes
+
+- [#345](https://github.com/phthalo-dev/var-ui/pull/345) [`200de02`](https://github.com/phthalo-dev/var-ui/commit/200de02bd52ad2d2270df8b28af496f82e7da9a4) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - `varDocs({ typestyles: { entry, extract: false } })` skips the kit's own `@typestyles/vite` extractor, for sites that already run one (for example `@typestyles/astro`); two extractors both emitted `typestyles.css`. The kit's extractor now sets `mode: 'build'` explicitly ([#333](https://github.com/phthalo-dev/var-ui/issues/333)).
+
+### Patch Changes
+
+- [#328](https://github.com/phthalo-dev/var-ui/pull/328) [`a35a91b`](https://github.com/phthalo-dev/var-ui/commit/a35a91bcc374a84da5132cadf4c9100154aca61c) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix Collapsible chevron and wrap prose tables for mobile
+  
+  - Size the Collapsible trigger icon and rotate it for native `<details open>`.
+  - Wrap bare markdown tables in a scrollable container with edge shadows so they do not overflow phone viewports.
+
+- [#327](https://github.com/phthalo-dev/var-ui/pull/327) [`6f46bdd`](https://github.com/phthalo-dev/var-ui/commit/6f46bdd84bdb32b5c8245c02662e48eca239b821) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - Fix docs shell layout and slot forwarding bugs
+  
+  - Forward brand/tools/preview slots only when they render non-empty content, preventing empty brand links and demo stages.
+  - Remove the duplicate `<main>` landmark in `DocsMarketingPage`.
+  - Stop the collapsed page bar from painting briefly on load.
+  - Add `scroll-margin-top` to guide headings and retry hash scrolling after the nested scroller has layout.
+  - Always extract `@var-ui/docs/styles` in the Typestyles plugin and add fallback sizing to the TOC action icon.
+
 ## 0.14.0
 
 ### Minor Changes

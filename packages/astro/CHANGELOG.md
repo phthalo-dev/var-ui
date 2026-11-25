@@ -1,5 +1,11 @@
 # @var-ui/astro
 
+## 0.15.0
+
+### Minor Changes
+
+- [#344](https://github.com/phthalo-dev/var-ui/pull/344) [`818dbba`](https://github.com/phthalo-dev/var-ui/commit/818dbba4fa25f673767c9056e09e21b3271ffa03) Thanks [@dbanksdesign](https://github.com/dbanksdesign)! - **Breaking:** `typestyles` is now a peer dependency of `@var-ui/core`, `@var-ui/react` and `@var-ui/astro` instead of a regular dependency, so an app that has its own `typestyles` (for example a workspace that links it with `workspace:*`) no longer gets a second runtime with its own class and token registry. Add `typestyles` to the app if your package manager does not install peers automatically ([#332](https://github.com/phthalo-dev/var-ui/issues/332)).
+
 ## 0.14.0
 
 ### Minor Changes
