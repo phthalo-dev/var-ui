@@ -172,6 +172,13 @@ Code-only (no default slot):
 Set `copyable={false}` to hide the copy button. Use `@var-ui/docs/CodeDemoCodeBlock` for a
 plain highlighted `@var-ui/astro` `CodeBlock` without the docs card chrome.
 
+Outside MDX (marked, scripts, your own Astro components), highlight synchronously with
+`@var-ui/docs/highlight`: `highlightCode(code, lang)` returns highlight.js HTML and
+`highlightCodeBlockContent(code, lang)` returns `CodeBlock`'s `codeHtml` / `codeClassName`.
+`@var-ui/docs/styles` colours the `hljs-*` classes inside a `CodeBlock` (`.var-ui-code-block`)
+with the theme's `color.code.*` tokens, the palette the design-token Shiki theme gives MDX
+fences, so no extra stylesheet is needed.
+
 See `docs/superpowers/specs/2026-08-11-var-docs-kit-design.md`.
 
 Import kit chrome recipes from your TypeStyles extract entry so `DocsPage` header CSS is emitted:
