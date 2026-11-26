@@ -38,6 +38,7 @@ const {
   searchItems = [],
   brand = { heading: 'Docs', href: '/' },
   htmlAttributes = {},
+  searchEmptyHint,
 } = Astro.props as {
   title?: string;
   contentWidth?: 'default' | 'full';
@@ -53,6 +54,8 @@ const {
   sidebarSections?: readonly SidebarSection[] | null;
   searchItems?: readonly DocsSearchItem[];
   brand?: DocsBrand;
+  /** Second line of the search palette's empty state. */
+  searchEmptyHint?: string;
   /** Extra attributes on `<html>` (e.g. `data-framework`). */
   htmlAttributes?: Record<string, string | undefined>;
 };
@@ -132,6 +135,7 @@ const markdownGlyph =
         brand={brand}
         currentPath={currentPath}
         mobileNav={showMobileNav}
+        searchEmptyHint={searchEmptyHint}
       >
         {hasBrandSlot ? <slot name="brand" slot="brand" /> : null}
         {hasToolsSlot ? <slot name="tools" slot="tools" /> : null}

@@ -197,9 +197,10 @@ export function initCommandPalette(root: HTMLElement): () => void {
             const meta = metaText
               ? `<span class="${resultMetaClass}">${text(metaText)}</span>`
               : '';
+            const href = escapeAttr(item.href ?? item.id);
             return `<a
                 class="${resultLinkClass}${active}"
-                href="${escapeAttr(item.id)}"
+                href="${href}"
                 role="option"
                 data-var-ui-command-palette-item
                 data-var-ui-item-id="${escapeAttr(item.id)}"

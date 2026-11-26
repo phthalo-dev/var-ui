@@ -23,6 +23,8 @@ type Props = {
   currentPath: string;
   /** Renders the hamburger for `DocsMobileMenu`. @default true */
   mobileNav?: boolean;
+  /** Second line of the search palette's empty state. */
+  searchEmptyHint?: string;
 };
 
 const {
@@ -31,6 +33,7 @@ const {
   brand = { heading: 'Docs', href: '/' },
   currentPath,
   mobileNav = true,
+  searchEmptyHint,
 } = Astro.props;
 
 const nav = docsTopNav();
@@ -70,7 +73,7 @@ const hasToolsSlot = toolsSlotHtml.length > 0;
     ))
   }
   <div slot="end" {...combine(nav.tools)}>
-    <DocsSearch items={searchItems} />
+    <DocsSearch items={searchItems} emptyHint={searchEmptyHint} />
     {
       hasToolsSlot ? (
         <div {...combine(nav.toolbarExtra)}>

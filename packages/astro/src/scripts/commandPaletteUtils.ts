@@ -2,7 +2,7 @@ import type { IconName } from '@var-ui/core';
 import { matchCommandItem, rankCommandItems } from '@var-ui/core/shared/commandSearch';
 
 export type CommandPaletteItem = {
-  /** Destination URL (the result is a link). */
+  /** Stable item key. Also used as the destination URL when `href` is not provided. */
   id: string;
   title: string;
   /** Muted one-line subtitle under the title (also searched). */
@@ -13,6 +13,8 @@ export type CommandPaletteItem = {
   group?: string;
   /** Leading type icon (page, component, theme…), resolved from the icon registry. */
   icon?: IconName;
+  /** Explicit destination URL. When set, `id` is used only as the stable item key. */
+  href?: string;
 };
 
 /** An item as serialized for the client script: the icon resolved to SVG markup. */

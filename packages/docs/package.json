@@ -52,7 +52,8 @@
     "./CodeDemoCodeBlock": "./src/components/CodeDemoCodeBlock.astro",
     "./DocsThemeScript": "./src/components/DocsThemeScript.astro",
     "./DocsFavicon": "./src/components/DocsFavicon.astro",
-    "./theme-css": "./src/integrations/theme-css-extract.ts"
+    "./theme-css": "./src/integrations/theme-css-extract.ts",
+    "./env": "./src/env.d.ts"
   },
   "publishConfig": {
     "access": "public"

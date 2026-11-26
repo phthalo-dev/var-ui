@@ -11,8 +11,10 @@ export {
 
 export type {
   DocsBrand,
+  DocsGuideLayoutProps,
   DocsSearchItem,
   SidebarItem,
   SidebarSection,
   TopNavItem,
+  VarDocsRoute,
 } from './src/types';
